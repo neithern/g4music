@@ -143,7 +143,6 @@ namespace Music {
 
         public async void add_files_async (owned File[] files) {
             foreach (var file in files) {
-                print (@"add file: $(file.get_path ())\n");
                 yield add_file_async (file);
             }
         }
@@ -156,8 +155,12 @@ namespace Music {
                 } else {
                     var type = info.get_content_type ();
                     if (type?.ascii_ncasecmp ("audio/", 6) == 0) {
-                        var song = add_from_file_info ("", info);
+                        var song = new_song_file_info ("", info);
                         song.url = file.get_uri ();
+                        var sinfo = yield parse_id3v2_tags_async (song.url);
+                        if (sinfo != null)
+                            song.from_info (sinfo);
+                        _store.append (song);
                     }
                 }
             } catch (Error e) {
@@ -178,7 +181,11 @@ namespace Music {
                     } else {
                         var type = info.get_content_type ();
                         if (type?.ascii_ncasecmp ("audio/", 6) == 0) {
-                            add_from_file_info (base_uri, info, type);
+                            var song = new_song_file_info (base_uri, info, type);
+                            var sinfo = yield parse_id3v2_tags_async (song.url);
+                            if (sinfo != null)
+                                song.from_info (sinfo);
+                            _store.append (song);
                         }
                     }
                 }
@@ -186,19 +193,18 @@ namespace Music {
                 warning ("Enumerate %s: %s\n", dir.get_path (), e.message);
             }
         }
+    }
 
-        private Song add_from_file_info (string base_uri, FileInfo info, string? type = null) {
-            var name = info.get_name ();
-            var song = new Song ();
-            song.album = "";
-            song.artist = "";
-            song.title = parse_name_from_path (name);
-            song.type = type ?? info.get_content_type ();
-            song.url = base_uri + name;
-            song.update_keys ();
-            _store.insert_sorted (song, Song.compare_by_title);
-            return song;
-        }
+    public static Song new_song_file_info (string base_uri, FileInfo info, string? type = null) {
+        var name = info.get_name ();
+        var song = new Song ();
+        song.album = "";
+        song.artist = "";
+        song.title = parse_name_from_path (name);
+        song.type = type ?? info.get_content_type ();
+        song.url = base_uri + name;
+        song.update_keys ();
+        return song;
     }
 
     public static string parse_abbreviation (string text) {

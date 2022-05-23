@@ -7,6 +7,7 @@ dependencies = [
   dependency('libadwaita-1'),
   dependency('gnome-desktop-4'),
   dependency('gstreamer-1.0'),
+  dependency('gstreamer-tag-1.0'),
   dependency('tracker-sparql-3.0'),
 ]
 
@@ -18,6 +19,7 @@ sources = [
   'play-bar.vala',
   'song-entry.vala',
   'song-store.vala',
+  'tag-parser.vala',
   'thumbnailer.vala',
   'window.vala',
 ]

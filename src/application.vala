@@ -83,6 +83,7 @@ namespace Music {
         public override void open (File[] files, string hint) {
             _song_store.add_files_async.begin (files, (obj, res) => {
                 _song_store.add_files_async.end (res);
+                _song_store.sort ();
                 Idle.add (() => {
                     current_item = 0;
                     return false;
