@@ -127,6 +127,15 @@ namespace Music {
             }
         }
 
+        public Gdk.Paintable? previous {
+            get {
+                return _previous;
+            }
+            set {
+                _previous = previous;
+            }
+        }
+
         protected override void on_change (Gdk.Paintable? previous, Gdk.Paintable? paintable) {
             _previous = previous;
             base.on_change (previous, paintable);

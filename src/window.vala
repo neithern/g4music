@@ -180,6 +180,9 @@ namespace Music {
                 queue_draw ();
             });
             var animation = new Adw.TimedAnimation (cover_image, 1 - _cover_paintable.fade, 0, 500, target);
+            animation.done.connect (() => {
+                _cover_paintable.previous = null;
+            });
             animation.play ();
         }
 
