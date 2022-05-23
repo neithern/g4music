@@ -1,0 +1,15 @@
+[Desktop Entry]
+Name=g4music
+Name[zh_CN]=音乐
+GenericName=Music Player
+GenericName[zh_CN]=音乐播放器
+Exec=g4music %U
+Icon=com.github.neithern.g4music
+Terminal=false
+Type=Application
+Categories=GNOME;GTK;Music;Audio;AudioVideo;
+MimeType=audio/wav;audio/webm;audio/x-aac;audio/x-aiff;audio/x-ape;audio/x-flac;audio/x-it;audio/x-m4a;audio/x-m4b;audio/x-matroska;audio/x-mod;audio/x-mp1;audio/x-mp2;audio/x-mp3;audio/x-mpg;audio/x-mpeg;audio/x-mpegurl;audio/x-ms-asf;audio/x-ms-asx;audio/x-ms-wax;audio/x-ms-wma;audio/x-musepack;audio/x-opus+ogg;audio/x-pn-aiff;audio/x-pn-au;audio/x-pn-realaudio;audio/x-pn-realaudio-plugin;audio/x-pn-wav;audio/x-pn-windows-acm;audio/x-realaudio;audio/x-real-audio;audio/x-s3m;audio/x-sbc;audio/x-scpls;audio/x-shorten;audio/x-speex;audio/x-stm;audio/x-tta;audio/x-wav;audio/x-wavpack;audio/x-vorbis;audio/x-vorbis+ogg;audio/x-xm;
+Keywords=music;sound;player;media;audio;playlist;
+Keywords[zh_CN]=music;sound;player;media;audio;playlist;音乐;播放队列
+StartupNotify=true
+X-SingleMainWindow=true

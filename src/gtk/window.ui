@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <template class="MusicWindow" parent="AdwApplicationWindow">
+    <property name="title" translatable="yes">G4Music</property>
+    <property name="icon_name">com.github.neithern.g4music</property>
+    <property name="resizable">true</property>
+    <property name="default_width">640</property>
+    <property name="default_height">600</property>
+    <property name="content">
+      <object class="GtkWindowHandle">
+        <child>
+          <object class="AdwFlap" id="flap">
+            <property name="orientation">horizontal</property>
+            <property name="vexpand">true</property>
+            <property name="flap">
+              <object class="GtkScrolledWindow" id="scroll_view">
+                <property name="hscrollbar_policy">never</property>
+                <property name="vscrollbar_policy">automatic</property>
+                <property name="propagate_natural_height">true</property>
+                <property name="width_request">280</property>
+                <property name="vexpand">true</property>
+                <child>
+                  <object class="GtkListView" id="list_view">
+                    <property name="single_click_activate">true</property>
+                    <style>
+                      <class name="navigation-sidebar"/>
+                    </style>
+                  </object>
+                </child>
+              </object>
+            </property>
+            <property name="content">
+              <object class="GtkBox">
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkHeaderBar" id="header_bar">
+                    <style>
+                      <class name="flat"/>
+                    </style>
+                    <child type="title">
+                      <object class="GtkLabel">
+                        <property name="visible">false</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkToggleButton" id="reveal_btn">
+                        <property name="icon_name">sidebar-show-symbolic</property>
+                        <property name="active" bind-source="flap" bind-property="reveal-flap" bind-flags="sync-create|bidirectional"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkToggleButton" id="shuffle_btn">
+                        <property name="icon_name">media-playlist-shuffle-symbolic</property>
+                        <property name="action_name">app.shuffle</property>
+                      </object>
+                    </child>
+                    <child type="end">
+                      <object class="GtkMenuButton">
+                        <property name="icon_name">open-menu-symbolic</property>
+                        <property name="menu_model">primary_menu</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkBox" id="content_box">
+                    <property name="orientation">vertical</property>
+                    <property name="valign">center</property>
+                    <property name="vexpand">true</property>
+                    <property name="margin_start">32</property>
+                    <property name="margin_end">32</property>
+                    <property name="margin_top">16</property>
+                    <property name="margin_bottom">16</property>
+                    <child>
+                      <object class="GtkImage" id="cover_image">
+                        <property name="pixel_size">256</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkBox" id="song_details">
+                        <property name="orientation">vertical</property>
+                        <property name="valign">start</property>
+                        <property name="margin_top">24</property>
+                        <property name="height_request">80</property>
+                        <child>
+                          <object class="GtkLabel" id="song_title">
+                            <property name="ellipsize">end</property>
+                            <style>
+                              <class name="title-4"/>
+                            </style>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="song_artist">
+                            <property name="ellipsize">end</property>
+                            <property name="margin_top">4</property>
+                            <style>
+                              <class name="dim-label"/>
+                            </style>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="song_album">
+                            <property name="ellipsize">end</property>
+                            <property name="margin_top">4</property>
+                            <style>
+                              <class name="dim-label"/>
+                            </style>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </property>
+          </object>
+        </child>
+      </object>
+    </property>
+  </template>
+
+  <menu id="primary_menu">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Preferences</attribute>
+        <attribute name="action">app.preferences</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Keyboard Shortcuts</attribute>
+        <attribute name="action">win.show-help-overlay</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_About G4Music</attribute>
+        <attribute name="action">app.about</attribute>
+      </item>
+    </section>
+  </menu>
+</interface>
