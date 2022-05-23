@@ -11,6 +11,7 @@ namespace Music {
             _connection = connection;
 
             app.song_changed.connect (on_song_changed);
+            app.song_tag_parsed.connect (on_song_tag_parsed);
             app.player.state_changed.connect (on_state_changed);
         }
 
@@ -45,6 +46,21 @@ namespace Music {
         }
 
         private void on_song_changed (Song song) {
+            send_meta_data (song);
+            send_property ("CanGoNext", can_go_next);
+            send_property ("CanGoPrevious", can_go_previous);
+            send_property ("CanPlay", can_play);
+        }
+
+        private void on_song_tag_parsed (Song song, uint8[]? image) {
+            send_meta_data (song);
+        }
+
+        private void on_state_changed (Gst.State state) {
+            send_property ("PlaybackStatus", state == Gst.State.PLAYING ? "Playing" : "Stopped");
+        }
+
+        private void send_meta_data (Song song) {
             var data = new HashTable<string, Variant> (str_hash, str_equal);
             string[] array = { song.artist };
             data.insert ("xesam:artist", array);
@@ -54,14 +70,6 @@ namespace Music {
             } catch (ConvertError _) {
             }
             send_property ("Metadata", data);
-
-            send_property ("CanGoNext", can_go_next);
-            send_property ("CanGoPrevious", can_go_previous);
-            send_property ("CanPlay", can_play);
-        }
-
-        private void on_state_changed (Gst.State state) {
-            send_property ("PlaybackStatus", state == Gst.State.PLAYING ? "Playing" : "Stopped");
         }
 
         private void send_property (string name, Variant variant) {

@@ -186,15 +186,15 @@ namespace Music {
         public void show_about () {
             string[] authors = { "Nanling" };
             Gtk.show_about_dialog (this.active_window,
-                                   "program-name", "g4music Player",
+                                   "program-name", "G4Music Player",
                                    "authors", authors,
                                    "version", "0.1.0");
         }
 
         private void on_bus_acquired (DBusConnection connection, string name) {
             try {
-                connection.register_object ("/org/mpris/MediaPlayer2", new MprisRoot ());
                 connection.register_object ("/org/mpris/MediaPlayer2", new MprisPlayer (this, connection));
+                connection.register_object ("/org/mpris/MediaPlayer2", new MprisRoot ());
             } catch (Error e) {
                 warning ("Register MPRIS failed: %s\n", e.message);
             }
