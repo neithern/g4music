@@ -39,14 +39,6 @@ namespace Music {
 
             _song_list.model = _song_store.store;
 
-            _song_store.query_async.begin ((obj, res) => {
-                _song_store.query_async.end (res);
-                Idle.add (() => {
-                    current_item = _song_list.filter != null ? 0 : Random.int_range (0, (int) _song_list.get_n_items ());
-                    return false;
-                });
-            });
-
             _player.end_of_stream.connect (() => {
                 current_item = current_item + 1;
             });
@@ -70,11 +62,33 @@ namespace Music {
 
         public override void activate () {
             base.activate ();
-            var window = active_window ?? new Window (this);
+
+            if (active_window != null) {
+                active_window.present ();
+                return;
+            }
+
+            _song_store.add_sparql_async.begin ((obj, res) => {
+                _song_store.add_sparql_async.end (res);
+                Idle.add (() => {
+                    current_item = _song_list.filter != null ? 0 : Random.int_range (0, (int) _song_list.get_n_items ());
+                    return false;
+                });
+            });
+
+            var window = new Window (this);
             window.present ();
         }
 
-		public override void open (File[] files, string hint) {
+        public override void open (File[] files, string hint) {
+            _song_store.add_files_async.begin (files, (obj, res) => {
+                _song_store.add_files_async.end (res);
+                Idle.add (() => {
+                    current_item = 0;
+                    return false;
+                });
+            });
+/*
             var items = new GenericSet<string> (str_hash, str_equal);
             foreach (var file in files) {
                 items.add (file.get_uri ());
@@ -83,6 +97,7 @@ namespace Music {
                 Song song = item as Song;
                 return items.contains (song.url);
             });
+*/
             var window = active_window ?? new Window (this);
             window.present ();
         }

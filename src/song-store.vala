@@ -111,7 +111,7 @@ namespace Music {
             _store.sort (Song.compare_by_title);
         }
 
-        public async uint query_async () {
+        public async uint add_sparql_async () {
             var arr = new GenericArray<Object> (4096);
             Tracker.Sparql.Connection connection = null;
             try {
@@ -139,6 +139,66 @@ namespace Music {
             _store.splice (0, 0, arr.data);
             return arr.length;
         }
+
+
+        public async void add_files_async (owned File[] files) {
+            foreach (var file in files) {
+                print (@"add file: $(file.get_path ())\n");
+                yield add_file_async (file);
+            }
+        }
+
+        public async void add_file_async (File file) {
+            try {
+                var info = yield file.query_info_async ("standard::*", FileQueryInfoFlags.NONE);
+                if (info.get_file_type () == FileType.DIRECTORY) {
+                    yield add_directory_async (file);
+                } else {
+                    var type = info.get_content_type ();
+                    if (type?.ascii_ncasecmp ("audio/", 6) == 0) {
+                        var song = add_from_file_info ("", info);
+                        song.url = file.get_uri ();
+                    }
+                }
+            } catch (Error e) {
+            }
+        }
+
+        private async void add_directory_async (File dir) {
+            try {
+                var base_uri = dir.get_uri ();
+                if (base_uri[base_uri.length - 1] != '/')
+                    base_uri += "/";
+                FileInfo info = null;
+                var enumerator = yield dir.enumerate_children_async ("standard::*", FileQueryInfoFlags.NONE);
+                while ((info = enumerator.next_file ()) != null) {
+                    if (info.get_file_type () == FileType.DIRECTORY) {
+                        var sub_dir = dir.resolve_relative_path (info.get_name ());
+                        yield add_directory_async (sub_dir);
+                    } else {
+                        var type = info.get_content_type ();
+                        if (type?.ascii_ncasecmp ("audio/", 6) == 0) {
+                            add_from_file_info (base_uri, info, type);
+                        }
+                    }
+                }
+            } catch (Error e) {
+                warning ("Enumerate %s: %s\n", dir.get_path (), e.message);
+            }
+        }
+
+        private Song add_from_file_info (string base_uri, FileInfo info, string? type = null) {
+            var name = info.get_name ();
+            var song = new Song ();
+            song.album = "";
+            song.artist = "";
+            song.title = parse_name_from_path (name);
+            song.type = type ?? info.get_content_type ();
+            song.url = base_uri + name;
+            song.update_keys ();
+            _store.insert_sorted (song, Song.compare_by_title);
+            return song;
+        }
     }
 
     public static string parse_abbreviation (string text) {
@@ -157,16 +217,20 @@ namespace Music {
         return text;
     }
 
+    public static string parse_name_from_path (string path) {
+        var begin = path.last_index_of_char ('/');
+        var end = path.last_index_of_char ('.');
+        if (end > begin)
+            return path.slice (begin + 1, end);
+        else if (begin > 0)
+            return path.slice (begin + 1, path.length);
+        return path;
+    }
+
     public static string parse_name_from_url (string url) {
         try {
             var uri = Uri.parse (url, UriFlags.NONE);
-            var path = uri.get_path ();
-            var begin = path.last_index_of_char ('/');
-            var end = path.last_index_of_char ('.');
-            if (end > begin)
-                return path.slice (begin + 1, end);
-            else if (begin > 0)
-                return path.slice (begin + 1, path.length);
+            return parse_name_from_path (uri.get_path ());
         } catch (Error e) {
             warning ("Parse %s: %s\n", url, e.message);
         }
