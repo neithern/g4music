@@ -26,6 +26,8 @@ namespace Music {
         public Window (Application app) {
             Object (application: app);
 
+            flap.bind_property ("folded", this, "flap_folded", BindingFlags.DEFAULT);
+
             _cover_paintable.paintable = _loading_paintable;
             cover_image.paintable = new RoundPaintable (9, _cover_paintable);
 
@@ -41,9 +43,6 @@ namespace Music {
                 var entry = item.child as SongEntry;
                 entry.cover = null;
             });
-
-            flap.bind_property ("folded", this, "flap_folded", BindingFlags.DEFAULT);
-
             list_view.factory = factory;
             list_view.model = new Gtk.NoSelection (app.song_list);
             list_view.activate.connect ((index) => {
@@ -158,6 +157,8 @@ namespace Music {
             this.title = @"$(song.artist) - $(song.title)";
         }
 
+        private Adw.Animation? _fade_animation = null;
+
         private void update_cover_paintable (Song song, Gdk.Paintable? paintable) {
             if (paintable == null) {
                 var app = application as Application;
@@ -179,11 +180,13 @@ namespace Music {
                 _bkgnd_paintable.fade = value;
                 queue_draw ();
             });
-            var animation = new Adw.TimedAnimation (cover_image, 1 - _cover_paintable.fade, 0, 500, target);
-            animation.done.connect (() => {
+            _fade_animation?.pause ();
+            _fade_animation = new Adw.TimedAnimation (cover_image, 1 - _cover_paintable.fade, 0, 500, target);
+            _fade_animation.done.connect (() => {
                 _cover_paintable.previous = null;
+                _fade_animation = null;
             });
-            animation.play ();
+            _fade_animation.play ();
         }
 
         private int _blur_width = 0;
