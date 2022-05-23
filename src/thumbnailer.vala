@@ -30,7 +30,7 @@ namespace Music {
             _cache.set (key, value);
             _size += size;
             access_order (key);
-            //  stdout.printf (@"cache size: $(_size)\n");
+            //  print (@"cache size: $(_size)\n");
         }
 
         public bool remove (string key) {
@@ -85,7 +85,7 @@ namespace Music {
                 var pixbuf = yield new Gdk.Pixbuf.from_stream_async (bis, null);
                 if (pixbuf != null) {
                     song.thumbnail = path;
-                    //  stdout.printf ("Load thumbnail: %s\n", song.title);
+                    //  print ("Load thumbnail: %s\n", song.title);
                     return create_clamp_texture (pixbuf, size);
                 }
             } catch (Error e) {
@@ -100,7 +100,7 @@ namespace Music {
                     var pixbuf = yield _factory.generate_thumbnail_async (url, song.type, null);
                     if (pixbuf != null) {
                         var texture = create_clamp_texture (pixbuf, size);
-                        //  stdout.printf ("Generate thumbnail: %s\n", song.title);
+                        //  print ("Generate thumbnail: %s\n", song.title);
                         yield _factory.save_thumbnail_async (pixbuf, url, song.mtime, null);
                         return texture;
                     } else {

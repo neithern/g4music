@@ -85,7 +85,7 @@ namespace Music {
         public void seek (Gst.ClockTime position) {
             var diff = (Gst.ClockTimeDiff) (position - _last_seeked_pos);
             if (diff > 10 * Gst.MSECOND || diff < -10 * Gst.MSECOND) {
-                //  stdout.printf ("Seek: %g -> %g\n", to_second (_last_seeked_pos), to_second (position));
+                //  print ("Seek: %g -> %g\n", to_second (_last_seeked_pos), to_second (position));
                 _last_seeked_pos = position;
                 _pipeline.seek_simple (Gst.Format.TIME, Gst.SeekFlags.ACCURATE | Gst.SeekFlags.FLUSH, (int64) position);
             }
@@ -107,7 +107,7 @@ namespace Music {
                     }
                     if (_state != state) {
                         _state = state;
-                        //  stdout.printf ("State changed: %d, %d\n", old, state);
+                        //  print ("State changed: %d, %d\n", old, state);
                         state_changed (_state);
                     }
                     if (state == Gst.State.PLAYING) {
@@ -128,7 +128,7 @@ namespace Music {
                     string debug;
                     message.parse_error (out err, out debug);
                     _state = Gst.State.NULL;
-                    stdout.printf ("Player error: %s, %s\n", err.message, debug);
+                    print ("Player error: %s, %s\n", err.message, debug);
                     error (err);
                     break;
 
@@ -191,7 +191,7 @@ namespace Music {
             if (_pipeline.query_duration (Gst.Format.TIME, out duration)
                     && _duration != duration) {
                 _duration = duration;
-                //  stdout.printf ("Duration changed: %lld\n", duration);
+                //  print ("Duration changed: %lld\n", duration);
                 duration_changed (duration);
             }
         }

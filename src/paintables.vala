@@ -152,7 +152,7 @@ namespace Music {
             if (_fade > 0) {
                 snapshot.pop ();
             }
-            //  stdout.printf ("fade: %g\n", _fade);
+            //  print ("fade: %g\n", _fade);
         }
     }
 

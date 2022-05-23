@@ -53,7 +53,7 @@ namespace Music {
                 action_set_enabled (Application.ACTION_PREFIX + Application.ACTION_PREV, index > 0);
                 action_set_enabled (Application.ACTION_PREFIX + Application.ACTION_NEXT, index < size - 1);
                 list_view.activate_action ("list.scroll-to-item", "u", index);
-                //  stdout.printf ("play item: %u\n", index);
+                //  print ("play item: %u\n", index);
             });
             app.song_changed.connect (on_song_changed);
             app.song_tag_parsed.connect (on_song_tag_parsed);
@@ -108,7 +108,7 @@ namespace Music {
 
             var app = application as Application;
             entry.playing = item.position == app.current_item;
-            //  stdout.printf ("bind: %u\n", item.position);
+            //  print ("bind: %u\n", item.position);
 
             var thumbnailer = app.thumbnailer;
             var paintable = thumbnailer.find (song.url);
@@ -121,7 +121,7 @@ namespace Music {
                 if (saved_song == song) {
                     saved_entry.cover = paintable2;
                 } else {
-                    stdout.printf ("item swapped: %u -> %u\n", saved_pos, item.position);
+                    print ("item swapped: %u -> %u\n", saved_pos, item.position);
                 }
             }
         }
@@ -133,7 +133,7 @@ namespace Music {
                 var pixbuf = yield new Gdk.Pixbuf.from_stream_async (new MemoryInputStream.from_data (image));
                 var paintable = Gdk.Texture.for_pixbuf (pixbuf);
                 update_cover_paintable (song, paintable);
-                //  stdout.printf ("tag parsed: %s, %p\n", song.url, image);
+                //  print ("tag parsed: %s, %p\n", song.url, image);
                 return;
             } catch (Error e) {
             }
@@ -147,7 +147,7 @@ namespace Music {
 
         private async void on_song_changed (Song song) {
             update_song_info (song);
-            stdout.printf ("play song: %s\n", song.url);
+            print ("play song: %s\n", song.url);
         }
 
         private void update_song_info (Song song) {
@@ -199,7 +199,7 @@ namespace Music {
                     _blur_width = width;
                     _blur_height = height;
                     _bkgnd_paintable.paintable = create_blur_texture (this, paintable, width, height);
-                    stdout.printf ("update blur: %dx%d\n", width, height);
+                    print ("update blur: %dx%d\n", width, height);
                     return true;
                 }
             } else if (force) {
