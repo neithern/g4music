@@ -224,23 +224,15 @@ namespace Music {
         var node = snapshot.free_to_node ();
         var rect = Graphene.Rect ().init (0, 0, width, height);
         return widget.get_native ().get_renderer ().render_texture (node, rect);
-        // Rasterization to avoid color gradations
-        //  var stride = width * 4;
-        //  var data = new uint8[stride * height];
-        //  texture.download (data, stride); // CAIRO_FORMAT_ARGB32
-        //  // Swap R and B
-        //  var p = 0;
-        //  for (int j = 0; j < height; j++) {
-        //      var saved = p;
-        //      for (int i = 0; i < width; i++) {
-        //          var b = data[p];
-        //          data[p] = data[p + 2];
-        //          data[p + 2] = b;
-        //          p += 4;
-        //      }
-        //      p = saved + stride;
-        //  }
-        //  var pixbuf = new Gdk.Pixbuf.from_data (data, Gdk.Colorspace.RGB, true, 8, width, height, stride);
-        //  return Gdk.Texture.for_pixbuf (pixbuf);
+    }
+
+    public static void draw_gray_linear_gradient_line (Gtk.Snapshot snapshot, Graphene.Rect rect) {
+        var color = Gdk.RGBA ();
+        var color2 = Gdk.RGBA ();
+        color.red = color.green = color.blue = color.alpha = 0;
+        color2.red = color2.green = color2.blue = color2.alpha = 0.5f;
+        Gsk.ColorStop[] stops = { { 0, color }, { 0.5f, color2 }, { 1, color } };
+        snapshot.append_linear_gradient (rect, rect.get_top_left (),
+            rect.get_bottom_right (), stops);
     }
 }

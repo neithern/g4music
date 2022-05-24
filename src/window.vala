@@ -96,17 +96,9 @@ namespace Music {
             var width = get_width ();
             var height = get_height ();
             if (!flap.folded) {
-                var color = Gdk.RGBA ();
-                var color2 = Gdk.RGBA ();
-                color.red = color.green = color.blue = color.alpha = 0;
-                color2.red = color2.green = color2.blue = color2.alpha = 0.5f;
-                Gsk.ColorStop[] stops = { { 0, color }, { 0.5f, color2 }, { 1, color } };
                 var left = list_view.get_width ();
                 var rect = Graphene.Rect ().init(left - 0.5f, 0, 0.5f, (float) height);
-                snapshot.append_linear_gradient (rect,
-                    Graphene.Point ().init (left - 1f, 0),
-                    Graphene.Point ().init (left, height),
-                    stops);
+                draw_gray_linear_gradient_line (snapshot, rect);
             }
             snapshot.push_opacity (0.25);
             _bkgnd_paintable.snapshot (snapshot, width, height);
