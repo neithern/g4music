@@ -11,7 +11,7 @@ namespace Music {
         public static string ACTION_SHUFFLE = "shuffle";
         public static string ACTION_QUIT = "quit";
 
-        private uint _current_item = 0;
+        private uint _current_item = -1;
         private Song? _current_song = null;
         private GstPlayer _player = new GstPlayer ();
         private Gtk.FilterListModel _song_list = new Gtk.FilterListModel (null, null);
@@ -100,9 +100,9 @@ namespace Music {
             set {
                 var count = _song_list.get_n_items ();
                 if ((int) value < 0)
-                    value = count - 1;
-                else if (value >= count)
                     value = 0;
+                else if (value >= count)
+                    value = count - 1;
                 if (value < count) {
                     var song = _song_list.get_item (value) as Song;
                     if (_current_song != song) {
@@ -170,7 +170,7 @@ namespace Music {
             shuffle = !_song_store.shuffle;
         }
 
-        private void find_current_item () {
+        public void find_current_item () {
             if (_song_list.get_item (_current_item) == _current_song)
                 return;
 
@@ -197,11 +197,9 @@ namespace Music {
             }
 
             var play_item = _current_item;
-            var saved_size = _song_store.size;
+            var is_empty = _song_store.size == 0;
             yield _song_store.add_files_async (files);
-            if (saved_size != 0) {
-                play_item = saved_size;
-            } else {
+            if (is_empty) {
                 _song_store.shuffle = false; // sort by title
                 try {
                     var dir = Environment.get_user_state_dir ();
@@ -220,6 +218,8 @@ namespace Music {
                     }
                 } catch (Error e) {
                 }
+            } else {
+                play_item = _song_list.get_n_items ();
             }
 
             Idle.add (() => {

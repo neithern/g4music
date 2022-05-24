@@ -7,9 +7,9 @@ namespace Music {
         [GtkChild]
         private unowned Gtk.Image cover_image;
         [GtkChild]
-        public unowned Gtk.Label song_album;
+        public unowned Gtk.ToggleButton song_album;
         [GtkChild]
-        public unowned Gtk.Label song_artist;
+        public unowned Gtk.ToggleButton song_artist;
         [GtkChild]
         public unowned Gtk.Label song_title;
         [GtkChild]
@@ -23,6 +23,9 @@ namespace Music {
         private CrossFadePaintable _cover_paintable = new CrossFadePaintable ();
         private TextPaintable _loading_paintable = new TextPaintable ("...");
 
+        private string? _filter_album = null;
+        private string? _filter_artist = null;
+
         public Window (Application app) {
             Object (application: app);
 
@@ -32,6 +35,15 @@ namespace Music {
 
             _cover_paintable.paintable = _loading_paintable;
             cover_image.paintable = new RoundPaintable (9, _cover_paintable);
+
+            song_album.toggled.connect (() => {
+                _filter_album = song_album.active ? app.current_song.album : null;
+                update_song_filter ();
+            });
+            song_artist.toggled.connect (() => {
+                _filter_artist = song_artist.active ? app.current_song.artist : null;
+                update_song_filter ();
+            });
 
             var play_bar = new PlayBar ();
             content_box.append (play_bar);
@@ -157,6 +169,23 @@ namespace Music {
             song_artist.label = song.artist;
             song_title.label = song.title;
             this.title = @"$(song.artist) - $(song.title)";
+        }
+
+        private void update_song_filter () {
+            var app = application as Application;
+            if (_filter_album == null && _filter_artist == null) {
+                app.song_list.filter = null;
+            } else {
+                app.song_list.filter = new Gtk.CustomFilter ((obj) => {
+                    var song = obj as Song;
+                    if (_filter_album != null && _filter_album != song.album)
+                        return false;
+                    if (_filter_artist != null && _filter_artist != song.artist)
+                        return false;
+                    return true;
+                });
+            }
+            app.find_current_item ();
         }
 
         private Adw.Animation? _fade_animation = null;
