@@ -76,42 +76,53 @@ namespace Music {
             WHERE { ?song a nmm:MusicPiece }
         """.replace ("\n", " ");
 
+        private bool _shuffled = false;
         private ListStore _store = new ListStore (typeof (Song));
 
-        public ListStore store { get { return _store; } }
+        public ListStore store {
+            get {
+                return _store;
+            }
+        }
 
-        public uint size { get { return _store.get_n_items (); } }
+        public uint size {
+            get {
+                return _store.get_n_items ();
+            }
+        }
+
+        public bool shuffle {
+            get {
+                return _shuffled;
+            }
+            set {
+                _shuffled = value;
+                if (value) {
+                    var count = (int) size;
+                    var arr = new GenericArray<Song> (count);
+                    for (var i = 0; i < count; i++) {
+                        arr.add (_store.get_item (i) as Song);
+                    }
+                    //  simple shuffle
+                    for (var i = arr.length - 1; i > 0; i--) {
+                        var r = Random.int_range (0, i);
+                        var s = arr[i];
+                        arr[i] = arr[r];
+                        arr[r] = s;
+                        arr[i].order = i;
+                    }
+                    _store.sort (Song.compare_by_order);
+                } else {
+                    _store.sort (Song.compare_by_title);
+                }
+            }
+        }
 
         public Song? get_song (uint position) {
             return _store.get_item (position) as Song;
         }
 
-        public void item_changed (uint position) {
-            _store.items_changed (position, 0, 0);
-        }
-
-        public void shuffle () {
-            var count = (int) size;
-            var arr = new GenericArray<Song> (count);
-            for (var i = 0; i < count; i++) {
-                arr.add (_store.get_item (i) as Song);
-            }
-            //  simple huffle
-            for (var i = arr.length - 1; i > 0; i--) {
-                var r = Random.int_range (0, i);
-                var s = arr[i];
-                arr[i] = arr[r];
-                arr[r] = s;
-                arr[i].order = i;
-            }
-            _store.sort (Song.compare_by_order);
-        }
-
-        public void sort () {
-            _store.sort (Song.compare_by_title);
-        }
-
-        public async uint add_sparql_async () {
+        public async void add_sparql_async () {
             var arr = new GenericArray<Object> (4096);
             Tracker.Sparql.Connection connection = null;
             try {
@@ -134,24 +145,22 @@ namespace Music {
             } finally {
                 connection?.close ();
             }
-
-            arr.sort (Song.compare_by_title);
             _store.splice (0, 0, arr.data);
-            return arr.length;
         }
-
 
         public async void add_files_async (owned File[] files) {
+            var arr = new GenericArray<Object> (4096);
             foreach (var file in files) {
-                yield add_file_async (file);
+                yield add_file_async (file, arr);
             }
+            _store.splice (0, 0, arr.data);
         }
 
-        public async void add_file_async (File file) {
+        private async void add_file_async (File file, GenericArray<Object> arr) {
             try {
                 var info = yield file.query_info_async ("standard::*", FileQueryInfoFlags.NONE);
                 if (info.get_file_type () == FileType.DIRECTORY) {
-                    yield add_directory_async (file);
+                    yield add_directory_async (file, arr);
                 } else {
                     var type = info.get_content_type ();
                     if (type?.ascii_ncasecmp ("audio/", 6) == 0) {
@@ -160,14 +169,14 @@ namespace Music {
                         var sinfo = yield parse_id3v2_tags_async (song.url);
                         if (sinfo != null)
                             song.from_info (sinfo);
-                        _store.append (song);
+                        arr.add (song);
                     }
                 }
             } catch (Error e) {
             }
         }
 
-        private async void add_directory_async (File dir) {
+        private async void add_directory_async (File dir, GenericArray<Object> arr) {
             try {
                 var base_uri = dir.get_uri ();
                 if (base_uri[base_uri.length - 1] != '/')
@@ -177,7 +186,7 @@ namespace Music {
                 while ((info = enumerator.next_file ()) != null) {
                     if (info.get_file_type () == FileType.DIRECTORY) {
                         var sub_dir = dir.resolve_relative_path (info.get_name ());
-                        yield add_directory_async (sub_dir);
+                        yield add_directory_async (sub_dir, arr);
                     } else {
                         var type = info.get_content_type ();
                         if (type?.ascii_ncasecmp ("audio/", 6) == 0) {
@@ -185,7 +194,7 @@ namespace Music {
                             var sinfo = yield parse_id3v2_tags_async (song.url);
                             if (sinfo != null)
                                 song.from_info (sinfo);
-                            _store.append (song);
+                            arr.add (song);
                         }
                     }
                 }

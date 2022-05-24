@@ -13,7 +13,6 @@ namespace Music {
 
         private uint _current_item = -1;
         private Song? _current_song = null;
-        private bool _shuffled = false;
         private GstPlayer _player = new GstPlayer ();
         private Gtk.FilterListModel _song_list = new Gtk.FilterListModel (null, null);
         private SongStore _song_store = new SongStore ();
@@ -31,7 +30,7 @@ namespace Music {
                 { ACTION_PLAY, this.play_pause },
                 { ACTION_PREV, this.play_previous },
                 { ACTION_NEXT, this.play_next },
-                { ACTION_SHUFFLE, this.shuffle_list },
+                { ACTION_SHUFFLE, this.toggle_shuffle },
                 { ACTION_QUIT, this.quit }
             };
             this.add_action_entries (action_entries, this);
@@ -51,7 +50,7 @@ namespace Music {
             });
 
             var mpris_id = Bus.own_name (BusType.SESSION,
-                @"org.mpris.MediaPlayer2." + APP_ID,
+                "org.mpris.MediaPlayer2." + APP_ID,
                 BusNameOwnerFlags.NONE,
                 on_bus_acquired,
                 null, null
@@ -70,6 +69,7 @@ namespace Music {
 
             _song_store.add_sparql_async.begin ((obj, res) => {
                 _song_store.add_sparql_async.end (res);
+                _song_store.shuffle = false;
                 Idle.add (() => {
                     current_item = _song_list.filter != null ? 0 : Random.int_range (0, (int) _song_list.get_n_items ());
                     return false;
@@ -83,22 +83,13 @@ namespace Music {
         public override void open (File[] files, string hint) {
             _song_store.add_files_async.begin (files, (obj, res) => {
                 _song_store.add_files_async.end (res);
-                _song_store.sort ();
+                _song_store.shuffle = false;
                 Idle.add (() => {
                     current_item = 0;
                     return false;
                 });
             });
-/*
-            var items = new GenericSet<string> (str_hash, str_equal);
-            foreach (var file in files) {
-                items.add (file.get_uri ());
-            }
-            _song_list.filter = new Gtk.CustomFilter ((item) => {
-                Song song = item as Song;
-                return items.contains (song.url);
-            });
-*/
+
             var window = active_window ?? new Window (this);
             window.present ();
         }
@@ -130,12 +121,13 @@ namespace Music {
             }
         }
 
-        public bool is_shuffled {
+        public bool shuffle {
             get {
-                return _shuffled;
+                return _song_store.shuffle;
             }
             set {
-                shuffle_list ();
+                _song_store.shuffle = value;
+                find_current_item ();
             }
         }
 
@@ -175,12 +167,13 @@ namespace Music {
             current_item = current_item - 1;
         }
 
-        public void shuffle_list () {
-            _shuffled = !_shuffled;
-            if (_shuffled)
-                _song_store.shuffle ();
-            else
-                _song_store.sort ();
+        public void toggle_shuffle () {
+            shuffle = !_song_store.shuffle;
+        }
+
+        private void find_current_item () {
+            if (_song_list.get_item (_current_item) == _current_song)
+                return;
 
             //  find current item
             var old_item = _current_item;
@@ -196,7 +189,6 @@ namespace Music {
                 _song_list.items_changed (_current_item, 0, 0);
                 index_changed (_current_item, count);
             }
-            (active_window as Window)?.shuffle_btn?.set_active (_shuffled);
         }
 
         public void show_about () {

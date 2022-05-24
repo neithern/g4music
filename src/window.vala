@@ -28,6 +28,8 @@ namespace Music {
 
             flap.bind_property ("folded", this, "flap_folded", BindingFlags.DEFAULT);
 
+            app.bind_property ("shuffle", shuffle_btn, "active", BindingFlags.SYNC_CREATE | BindingFlags.BIDIRECTIONAL);
+
             _cover_paintable.paintable = _loading_paintable;
             cover_image.paintable = new RoundPaintable (9, _cover_paintable);
 
