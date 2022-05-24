@@ -184,7 +184,9 @@ namespace Music {
                 FileInfo info = null;
                 var enumerator = yield dir.enumerate_children_async ("standard::*", FileQueryInfoFlags.NONE);
                 while ((info = enumerator.next_file ()) != null) {
-                    if (info.get_file_type () == FileType.DIRECTORY) {
+                    if (info.get_is_hidden ()) {
+                        continue;
+                    } else if (info.get_file_type () == FileType.DIRECTORY) {
                         var sub_dir = dir.resolve_relative_path (info.get_name ());
                         yield add_directory_async (sub_dir, arr);
                     } else {
