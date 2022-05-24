@@ -11,7 +11,7 @@ namespace Music {
         public static string ACTION_SHUFFLE = "shuffle";
         public static string ACTION_QUIT = "quit";
 
-        private uint _current_item = -1;
+        private uint _current_item = 0;
         private Song? _current_song = null;
         private GstPlayer _player = new GstPlayer ();
         private Gtk.FilterListModel _song_list = new Gtk.FilterListModel (null, null);
@@ -24,6 +24,7 @@ namespace Music {
 
         public Application () {
             Object (application_id: APP_ID, flags: ApplicationFlags.HANDLES_OPEN);
+            this.application_id = APP_ID; // must set again???
 
             ActionEntry[] action_entries = {
                 { ACTION_ABOUT, this.show_about },
@@ -67,31 +68,29 @@ namespace Music {
                 return;
             }
 
-            _song_store.add_sparql_async.begin ((obj, res) => {
-                _song_store.add_sparql_async.end (res);
-                _song_store.shuffle = false;
-                Idle.add (() => {
-                    current_item = _song_list.filter != null ? 0 : Random.int_range (0, (int) _song_list.get_n_items ());
-                    return false;
-                });
-            });
-
-            var window = new Window (this);
-            window.present ();
+            open ({}, "");
         }
 
         public override void open (File[] files, string hint) {
-            _song_store.add_files_async.begin (files, (obj, res) => {
-                _song_store.add_files_async.end (res);
-                _song_store.shuffle = false;
-                Idle.add (() => {
-                    current_item = 0;
-                    return false;
-                });
+            load_songs_async.begin (files, (obj, res) => {
+                load_songs_async.end (res);
             });
 
             var window = active_window ?? new Window (this);
             window.present ();
+        }
+
+        public override void shutdown () {
+            try {
+                var dir = Environment.get_user_state_dir ();
+                var file = File.new_build_filename (dir, application_id);
+                var key_file = new KeyFile ();
+                key_file.set_string ("playing", "url", _current_song?.url);
+                key_file.save_to_file (file.get_path ());
+            } catch (Error e) {
+                warning ("Save state failed: %s\n", e.message);
+            }
+            base.shutdown ();
         }
 
         public uint current_item {
@@ -189,6 +188,44 @@ namespace Music {
                 _song_list.items_changed (_current_item, 0, 0);
                 index_changed (_current_item, count);
             }
+        }
+
+        private async void load_songs_async (owned File[] files) {
+            if (files.length == 0) {
+                files.resize (1);
+                files[0] = File.new_for_path (Environment.get_user_special_dir (UserDirectory.MUSIC));
+            }
+
+            var play_item = _current_item;
+            var saved_size = _song_store.size;
+            yield _song_store.add_files_async (files);
+            if (saved_size != 0) {
+                play_item = saved_size;
+            } else {
+                _song_store.shuffle = false; // sort by title
+                try {
+                    var dir = Environment.get_user_state_dir ();
+                    var file = File.new_build_filename (dir, application_id);
+                    var bytes = yield file.load_bytes_async (null, null);
+                    var key_file = new KeyFile ();
+                    key_file.load_from_bytes (bytes, KeyFileFlags.NONE);
+                    var url = key_file.get_string ("playing", "url");
+                    if (url != null) {
+                        for (var i = 0; i < _song_store.size; i++) {
+                            if (url == _song_store.get_song (i)?.url) {
+                                play_item = i;
+                                break;
+                            }
+                        }
+                    }
+                } catch (Error e) {
+                }
+            }
+
+            Idle.add (() => {
+                current_item = play_item;
+                return false;
+            });
         }
 
         public void show_about () {

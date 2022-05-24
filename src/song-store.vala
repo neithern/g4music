@@ -145,7 +145,7 @@ namespace Music {
             } finally {
                 connection?.close ();
             }
-            _store.splice (0, 0, arr.data);
+            _store.splice (_store.get_n_items (), 0, arr.data);
         }
 
         public async void add_files_async (owned File[] files) {
@@ -153,7 +153,7 @@ namespace Music {
             foreach (var file in files) {
                 yield add_file_async (file, arr);
             }
-            _store.splice (0, 0, arr.data);
+            _store.splice (_store.get_n_items (), 0, arr.data);
         }
 
         private async void add_file_async (File file, GenericArray<Object> arr) {

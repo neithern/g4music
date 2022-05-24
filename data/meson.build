@@ -1,6 +1,6 @@
 desktop_file = i18n.merge_file(
-  input: 'g4music.desktop.in',
-  output: 'g4music.desktop',
+  input: 'com.github.neithern.g4music.desktop.in',
+  output: 'com.github.neithern.g4music.desktop',
   type: 'desktop',
   po_dir: '../po',
   install: true,
