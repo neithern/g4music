@@ -160,12 +160,12 @@ namespace Music {
         public static uint32[] colors = {
             0x83b6ec, // blue
             0x7ad9f1, // cyan
-            0x8de6b1, // green
             0xb5e98a, // lime
             0xf8e359, // yellow
             0xffcb62, // gold
             0xffa95a, // orange
             0xf78773, // raspberry
+            0x8de6b1, // green
             0xe973ab, // magenta
             0xcb78d4, // purple
             0x9e91e8, // violet
@@ -175,9 +175,10 @@ namespace Music {
         };
 
         private string? _text = null;
+        private uint _color = 0;
 
         public TextPaintable (string? text = null) {
-            _text = text;
+            this.text = text;
         }
 
         public string? text {
@@ -185,7 +186,8 @@ namespace Music {
                 return _text;
             }
             set {
-                _text = value;
+                _text = value ?? "";
+                _color = colors[str_hash (_text) % colors.length];
             }
         }
 
@@ -198,19 +200,17 @@ namespace Music {
         }
 
         protected override void on_snapshot (Gtk.Snapshot snapshot, double width, double height) {
-            var str = _text ?? "";
-            var color = colors[str_hash (str) % colors.length];
-            var rgb = Gdk.RGBA ();
-            rgb.parse (color.to_string ("#60%x"));
-
+            var red = ((_color >> 16) & 0xff) / 255f;
+            var green = ((_color >> 8) & 0xff) / 255f;
+            var blue = (_color & 0xff) / 255f;
             var rect = Graphene.Rect().init(0, 0, (float) width, (float) height);
             var ctx = snapshot.append_cairo (rect);
             ctx.select_font_face ("Serif", Cairo.FontSlant.NORMAL, Cairo.FontWeight.BOLD);
             ctx.set_antialias (Cairo.Antialias.BEST);
-            ctx.set_source_rgba (rgb.red, rgb.green, rgb.blue, rgb.alpha);
+            ctx.set_source_rgba (red, green, blue, 0.4f);
             ctx.set_font_size (height * 0.5);
             ctx.move_to (0, height);
-            ctx.show_text (str);
+            ctx.show_text (_text);
             ctx.paint ();
         }
     }
