@@ -193,18 +193,18 @@ namespace Music {
                 warning ("Enumerate %s: %s\n", dir.get_path (), e.message);
             }
         }
-    }
 
-    public static Song new_song_file_info (string base_uri, FileInfo info, string? type = null) {
-        var name = info.get_name ();
-        var song = new Song ();
-        song.album = "";
-        song.artist = "";
-        song.title = parse_name_from_path (name);
-        song.type = type ?? info.get_content_type ();
-        song.url = base_uri + name;
-        song.update_keys ();
-        return song;
+        private static Song new_song_file_info (string base_uri, FileInfo info, string? type = null) {
+            var name = info.get_name ();
+            var song = new Song ();
+            song.album = UNKOWN_ALBUM;
+            song.artist = UNKOWN_ARTIST;
+            song.title = parse_name_from_path (name);
+            song.type = type ?? info.get_content_type ();
+            song.url = base_uri + name;
+            song.update_keys ();
+            return song;
+        }
     }
 
     public static string parse_abbreviation (string text) {
