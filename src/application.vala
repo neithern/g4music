@@ -81,11 +81,12 @@ namespace Music {
         }
 
         public override void shutdown () {
-            try {
+            var url = _current_song?.url;
+            if (url != null) try {
                 var dir = Environment.get_user_state_dir ();
                 var file = File.new_build_filename (dir, application_id);
                 var key_file = new KeyFile ();
-                key_file.set_string ("playing", "url", _current_song?.url);
+                key_file.set_string ("playing", "url", url);
                 key_file.save_to_file (file.get_path ());
             } catch (Error e) {
                 warning ("Save state failed: %s\n", e.message);
@@ -255,7 +256,7 @@ namespace Music {
 
 int main (string[] args) {
     Music.GstPlayer.init (ref args);
-    Environment.set_application_name ("G4Music");
+    //  Environment.set_application_name ("G4Music");
     var app = new Music.Application ();
     return app.run (args);
 }
