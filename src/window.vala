@@ -55,7 +55,9 @@ namespace Music {
             });
 
             _cover_paintable.paintable = _loading_paintable;
-            cover_image.paintable = new RoundPaintable (9, _cover_paintable);
+            var scale_paintable = new ScalePaintable (new RoundPaintable (9, _cover_paintable));
+            scale_paintable.scale = 0.8;
+            cover_image.paintable = scale_paintable;
 
             song_album.activate_link.connect (on_song_info_link);
             song_artist.activate_link.connect (on_song_info_link);
@@ -86,6 +88,7 @@ namespace Music {
             });
             app.song_changed.connect (on_song_changed);
             app.song_tag_parsed.connect (on_song_tag_parsed);
+            app.player.state_changed.connect (player_state_changed);
         }
 
         public bool flap_folded {
@@ -170,6 +173,27 @@ namespace Music {
             }
         }
 
+        private Adw.Animation? _scale_animation = null;
+
+        private void player_state_changed (Gst.State state) {
+            if (state >= Gst.State.PAUSED) {
+                var scale_paintable = cover_image.paintable as ScalePaintable;
+                var target = new Adw.CallbackAnimationTarget ((value) => {
+                    scale_paintable.scale = value;
+                    cover_image.queue_draw ();
+                });
+                _scale_animation?.pause ();
+                _scale_animation = new Adw.TimedAnimation (cover_image,  scale_paintable.scale,
+                                            state == Gst.State.PLAYING ? 1 : 0.8, 500, target);
+                _scale_animation.play ();
+            }
+        }
+
+        private void on_song_changed (Song song) {
+            update_song_info (song);
+            print ("play song: %s\n", song.url);
+        }
+
         private async void on_song_tag_parsed (Song song, uint8[]? image) {
             update_song_info (song);
 
@@ -188,11 +212,6 @@ namespace Music {
             if (song == app.current_song) {
                 update_cover_paintable (song, paintable);
             }
-        }
-
-        private async void on_song_changed (Song song) {
-            update_song_info (song);
-            print ("play song: %s\n", song.url);
         }
 
         private bool on_song_info_link (string uri) {
@@ -255,7 +274,7 @@ namespace Music {
                 queue_draw ();
             });
             _fade_animation?.pause ();
-            _fade_animation = new Adw.TimedAnimation (cover_image, 1 - _cover_paintable.fade, 0, 500, target);
+            _fade_animation = new Adw.TimedAnimation (cover_image, 1 - _cover_paintable.fade, 0, 800, target);
             _fade_animation.done.connect (() => {
                 _cover_paintable.previous = null;
                 _fade_animation = null;

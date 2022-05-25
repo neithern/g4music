@@ -156,6 +156,39 @@ namespace Music {
         }
     }
 
+    public class ScalePaintable : BasePaintable {
+        private double _scale = 1;
+
+        public ScalePaintable (Gdk.Paintable? paintable = null) {
+            _paintable = paintable;
+        }
+
+        public double scale {
+            get {
+                return _scale;
+            }
+            set {
+                _scale = value;
+            }
+        }
+
+        protected override void on_snapshot (Gtk.Snapshot snapshot, double width, double height) {
+            if (_scale != 1) {
+                var point = Graphene.Point ().init (
+                                (float) (width * (1 - _scale) * 0.5),
+                                (float) (height * (1 - _scale) * 0.5));
+                snapshot.save ();
+                snapshot.translate (point);
+                snapshot.scale ((float) _scale, (float) _scale);
+            }
+            base.on_snapshot (snapshot, width, height);
+            if (_scale != 1) {
+                snapshot.restore ();
+            }
+            //  print ("scale: %g\n", _scale);
+        }
+    }
+
     public class TextPaintable : BasePaintable {
         public static uint32[] colors = {
             0x83b6ec, // blue
