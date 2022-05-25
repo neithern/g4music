@@ -13,7 +13,7 @@ namespace Music {
             margin_bottom = 4;
 
             _cover.pixel_size = 48;
-            _cover.paintable = new RoundPaintable (5, _paintable);
+            _cover.paintable = new RoundPaintable (_paintable, 5);
             append (_cover);
 
             var box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);

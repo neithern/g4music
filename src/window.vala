@@ -55,7 +55,7 @@ namespace Music {
             });
 
             _cover_paintable.paintable = _loading_paintable;
-            var scale_paintable = new ScalePaintable (new RoundPaintable (9, _cover_paintable));
+            var scale_paintable = new ScalePaintable (new RoundPaintable (_cover_paintable, 9, true));
             scale_paintable.scale = 0.8;
             cover_image.paintable = scale_paintable;
 

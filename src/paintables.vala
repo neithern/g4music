@@ -47,10 +47,12 @@ namespace Music {
 
     public class RoundPaintable : BasePaintable {
         private float _radius = 0;
+        private bool _shadow = false;
 
-        public RoundPaintable (float radius, Gdk.Paintable? paintable = null) {
+        public RoundPaintable (Gdk.Paintable? paintable = null, float radius = 0, bool shadow = false) {
             base (paintable);
             _radius = radius;
+            _shadow = shadow;
         }
 
         public float radius {
@@ -62,11 +64,20 @@ namespace Music {
             }
         }
 
+        public bool shadow {
+            get {
+                return _shadow;
+            }
+            set {
+                _shadow = value;
+            }
+        }
+
         protected override void on_snapshot (Gtk.Snapshot snapshot, double width, double height) {
             var rect = Graphene.Rect().init(0, 0, (float) width, (float) height);
+            var rounded = Gsk.RoundedRect ().init_from_rect (rect, _radius);
 
             if (_radius > 0) {
-                var rounded = Gsk.RoundedRect ().init_from_rect (rect, _radius);
                 snapshot.push_rounded_clip (rounded);
             }
 
@@ -74,6 +85,12 @@ namespace Music {
 
             if (_radius > 0) {
                 snapshot.pop ();
+            }
+            if (_shadow) {
+                var color = Gdk.RGBA ();
+                color.red = color.green = color.blue = 0.2f;
+                color.alpha = 0.2f;
+                snapshot.append_outset_shadow (rounded, color, _radius * 0.5f, _radius * 0.5f, _radius * 0.2f, _radius);
             }
         }
     }
@@ -236,7 +253,7 @@ namespace Music {
             var red = ((_color >> 16) & 0xff) / 255f;
             var green = ((_color >> 8) & 0xff) / 255f;
             var blue = (_color & 0xff) / 255f;
-            var rect = Graphene.Rect().init(0, 0, (float) width, (float) height);
+            var rect = Graphene.Rect ().init(0, 0, (float) width, (float) height);
             var ctx = snapshot.append_cairo (rect);
             ctx.select_font_face ("Serif", Cairo.FontSlant.NORMAL, Cairo.FontWeight.BOLD);
             ctx.set_antialias (Cairo.Antialias.BEST);
