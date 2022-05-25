@@ -12,20 +12,48 @@
         <child>
           <object class="AdwFlap" id="flap">
             <property name="orientation">horizontal</property>
-            <property name="vexpand">true</property>
             <property name="flap">
-              <object class="GtkScrolledWindow" id="scroll_view">
-                <property name="hscrollbar_policy">never</property>
-                <property name="vscrollbar_policy">automatic</property>
-                <property name="propagate_natural_height">true</property>
-                <property name="width_request">280</property>
-                <property name="vexpand">true</property>
+              <object class="GtkBox">
+                <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkListView" id="list_view">
-                    <property name="single_click_activate">true</property>
+                  <object class="GtkHeaderBar" id="search_bar">
+                    <property name="show_title_buttons">false</property>
                     <style>
-                      <class name="navigation-sidebar"/>
+                      <class name="flat"/>
                     </style>
+                    <child>
+                      <object class="GtkToggleButton" id="search_btn">
+                        <property name="icon_name">edit-find-symbolic</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkEntry" id="search_entry">
+                        <property name="width_request">220</property>
+                        <property name="visible">false</property>
+                      </object>
+                    </child>
+                    <child type="title">
+                      <object class="GtkLabel">
+                        <property name="visible">false</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkScrolledWindow" id="scroll_view">
+                    <property name="hscrollbar_policy">never</property>
+                    <property name="vscrollbar_policy">automatic</property>
+                    <property name="propagate_natural_height">true</property>
+                    <property name="width_request">280</property>
+                    <property name="valign">fill</property>
+                    <child>
+                      <object class="GtkListView" id="list_view">
+                        <property name="single_click_activate">true</property>
+                        <style>
+                          <class name="navigation-sidebar"/>
+                        </style>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>
@@ -67,7 +95,6 @@
                   <object class="GtkBox" id="content_box">
                     <property name="orientation">vertical</property>
                     <property name="valign">center</property>
-                    <property name="vexpand">true</property>
                     <property name="margin_start">32</property>
                     <property name="margin_end">32</property>
                     <property name="margin_top">16</property>
@@ -81,8 +108,8 @@
                       <object class="GtkBox" id="song_details">
                         <property name="orientation">vertical</property>
                         <property name="valign">start</property>
-                        <property name="margin_top">16</property>
-                        <property name="height_request">100</property>
+                        <property name="margin_top">24</property>
+                        <property name="height_request">80</property>
                         <child>
                           <object class="GtkLabel" id="song_title">
                             <property name="ellipsize">end</property>
@@ -92,23 +119,20 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkToggleButton" id="song_artist">
-                            <property name="halign">center</property>
-                            <property name="has_frame">false</property>
-                            <property name="margin_top">8</property>
+                          <object class="GtkLabel" id="song_artist">
+                            <property name="ellipsize">end</property>
+                            <property name="margin_top">4</property>
                             <style>
-                              <class name="accent"/>
-                              <class name="caption"/>
+                              <class name="dim-label"/>
                             </style>
                           </object>
                         </child>
                         <child>
-                          <object class="GtkToggleButton" id="song_album">
-                            <property name="halign">center</property>
-                            <property name="has_frame">false</property>
+                          <object class="GtkLabel" id="song_album">
+                            <property name="ellipsize">end</property>
+                            <property name="margin_top">4</property>
                             <style>
-                              <class name="accent"/>
-                              <class name="caption"/>
+                              <class name="dim-label"/>
                             </style>
                           </object>
                         </child>

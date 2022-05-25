@@ -1,5 +1,12 @@
 namespace Music {
 
+    enum SearchType {
+        ALL,
+        ALBUM,
+        ARTIST,
+        TITLE
+    }
+
     [GtkTemplate (ui = "/com/github/neithern/g4music/gtk/window.ui")]
     public class Window : Adw.ApplicationWindow {
         [GtkChild]
@@ -7,9 +14,9 @@ namespace Music {
         [GtkChild]
         private unowned Gtk.Image cover_image;
         [GtkChild]
-        public unowned Gtk.ToggleButton song_album;
+        public unowned Gtk.Label song_album;
         [GtkChild]
-        public unowned Gtk.ToggleButton song_artist;
+        public unowned Gtk.Label song_artist;
         [GtkChild]
         public unowned Gtk.Label song_title;
         [GtkChild]
@@ -17,14 +24,19 @@ namespace Music {
         [GtkChild]
         private unowned Gtk.ListView list_view;
         [GtkChild]
+        public unowned Gtk.ToggleButton search_btn;
+        [GtkChild]
+        public unowned Gtk.Entry search_entry;
+        [GtkChild]
         public unowned Gtk.ToggleButton shuffle_btn;
 
         private CrossFadePaintable _bkgnd_paintable = new CrossFadePaintable ();
         private CrossFadePaintable _cover_paintable = new CrossFadePaintable ();
         private TextPaintable _loading_paintable = new TextPaintable ("...");
 
-        private string? _filter_album = null;
-        private string? _filter_artist = null;
+        private string _search_text = "";
+        private string _search_property = "";
+        private SearchType _search_type = SearchType.ALL;
 
         public Window (Application app) {
             Object (application: app);
@@ -33,17 +45,20 @@ namespace Music {
 
             app.bind_property ("shuffle", shuffle_btn, "active", BindingFlags.SYNC_CREATE | BindingFlags.BIDIRECTIONAL);
 
+            search_entry.bind_property ("text", this, "search_text", BindingFlags.SYNC_CREATE | BindingFlags.BIDIRECTIONAL);
+            search_btn.bind_property ("active", search_entry, "visible", BindingFlags.SYNC_CREATE);
+            search_btn.toggled.connect (() => {
+                update_song_filter ();
+                if (search_btn.active)
+                    search_entry.grab_focus ();
+                app.find_current_item ();
+            });
+
             _cover_paintable.paintable = _loading_paintable;
             cover_image.paintable = new RoundPaintable (9, _cover_paintable);
 
-            song_album.toggled.connect (() => {
-                _filter_album = song_album.active ? app.current_song.album : null;
-                update_song_filter ();
-            });
-            song_artist.toggled.connect (() => {
-                _filter_artist = song_artist.active ? app.current_song.artist : null;
-                update_song_filter ();
-            });
+            song_album.activate_link.connect (on_song_info_link);
+            song_artist.activate_link.connect (on_song_info_link);
 
             var play_bar = new PlayBar ();
             content_box.append (play_bar);
@@ -75,15 +90,38 @@ namespace Music {
 
         public bool flap_folded {
             set {
+                var flap_box = flap.flap;
                 if (value) {
                     Timeout.add (flap.fold_duration, () => {
-                        if (flap.folded && !list_view.has_css_class ("background"))
-                            list_view.add_css_class ("background");
+                        if (flap.folded && !flap_box.has_css_class ("background"))
+                            flap_box.add_css_class ("background");
                         return false;
                     });
-                } else if (!value && list_view.has_css_class ("background")) {
-                    list_view.remove_css_class ("background");
+                } else if (!value && flap_box.has_css_class ("background")) {
+                    flap_box.remove_css_class ("background");
                 }
+            }
+        }
+
+        public string? search_text {
+            get {
+                return _search_text;
+            }
+            set {
+                if (value.ascii_ncasecmp ("album=", 6) == 0) {
+                    _search_property = value.substring (6);
+                    _search_type = SearchType.ALBUM;
+                } else if (value.ascii_ncasecmp ("artist=", 7) == 0) {
+                    _search_property = value.substring (7);
+                    _search_type = SearchType.ARTIST;
+                } else if (value.ascii_ncasecmp ("title=", 6) == 0) {
+                    _search_property = value.substring (6);
+                    _search_type = SearchType.TITLE;
+                } else {
+                    _search_type = SearchType.ALL;
+                }
+                _search_text = value;
+                update_song_filter ();
             }
         }
 
@@ -156,28 +194,40 @@ namespace Music {
             print ("play song: %s\n", song.url);
         }
 
+        private bool on_song_info_link (string uri) {
+            search_text = uri;
+            search_btn.active = true;
+            return true;
+        }
+
         private void update_song_info (Song song) {
-            song_album.label = song.album;
-            song_artist.label = song.artist;
+            song_album.set_markup (@"<a href=\"album=$(song.album)\">$(song.album)</a>");
+            song_artist.set_markup (@"<a href=\"artist=$(song.artist)\">$(song.artist)</a>");
             song_title.label = song.title;
             this.title = @"$(song.artist) - $(song.title)";
         }
 
         private void update_song_filter () {
             var app = application as Application;
-            if (_filter_album == null && _filter_artist == null) {
-                app.song_list.filter = null;
-            } else {
+            if (search_btn.active && _search_text.length > 0) {
                 app.song_list.filter = new Gtk.CustomFilter ((obj) => {
                     var song = obj as Song;
-                    if (_filter_album != null && _filter_album != song.album)
-                        return false;
-                    if (_filter_artist != null && _filter_artist != song.artist)
-                        return false;
-                    return true;
+                    switch (_search_type) {
+                        case SearchType.ALBUM:
+                            return song.album == _search_property;
+                        case SearchType.ARTIST:
+                            return song.artist == _search_property;
+                        case SearchType.TITLE:
+                            return song.title == _search_property;
+                        default:
+                            return song.album.contains (_search_text)
+                                || song.artist.contains (_search_text)
+                                || song.title.contains (_search_text);
+                    }
                 });
+            } else {
+                app.song_list.filter = null;
             }
-            app.find_current_item ();
         }
 
         private Adw.Animation? _fade_animation = null;
