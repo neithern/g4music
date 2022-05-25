@@ -46,6 +46,7 @@ namespace Music {
 
             _player.tag_parsed.connect ((info, image) => {
                 if (_current_song.from_info (info)) {
+                    _thumbnailer.remove_text_paintable (_current_song.url);
                     _song_list.items_changed (_current_item, 0, 0);
                 }
                 song_tag_parsed (_current_song, image);

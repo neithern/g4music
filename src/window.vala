@@ -176,9 +176,10 @@ namespace Music {
             if (image != null) try {
                 var pixbuf = yield new Gdk.Pixbuf.from_stream_async (new MemoryInputStream.from_data (image));
                 var paintable = Gdk.Texture.for_pixbuf (pixbuf);
-                update_cover_paintable (song, paintable);
-                //  print ("tag parsed: %s, %p\n", song.url, image);
-                return;
+                if (paintable != null) {
+                    update_cover_paintable (song, paintable);
+                    return;
+                }
             } catch (Error e) {
             }
 

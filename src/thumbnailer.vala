@@ -113,6 +113,13 @@ namespace Music {
             return null;
         }
 
+        public void remove_text_paintable (string url) {
+            var paintable = find (url);
+            if (paintable is TextPaintable) {
+                remove (url);
+            }
+        }
+
         protected override size_t size_of_value (Gdk.Paintable paintable) {
             if (paintable is TextPaintable) {
                 return (paintable as TextPaintable)?.text?.length ?? 0;
