@@ -19,18 +19,18 @@ namespace Music {
 
         public bool from_info (SongInfo info) {
             bool changed = false;
-            changed = album != info.album;
-            if (changed && info.album != null) {
+            changed = info.album != null && album != info.album;
+            if (changed) {
                 album = info.album;
                 //  _album_key = album?.collate_key ();
             }
-            changed = artist != info.artist;
-            if (changed && info.artist != null) {
+            changed = info.artist != null && artist != info.artist;
+            if (changed) {
                 artist = info.artist;
                 _artist_key = artist?.collate_key ();
             }
-            changed = title != info.title;
-            if (changed && info.title != null) {
+            changed = info.title != null && title != info.title;
+            if (changed) {
                 title = info.title;
                 _title_key = title?.collate_key ();
             }
