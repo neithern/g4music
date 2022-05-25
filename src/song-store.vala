@@ -218,20 +218,20 @@ namespace Music {
         }
     }
 
-    public static string parse_abbreviation (string text) {
-        var pos = text.last_index_of_char (' ');
+    public static string parse_abbreviation (owned string text) {
+        var pos = text.index_of_char (' ');
         if (pos > 0 && pos < text.length - 1) {
             unichar c = ' ';
             pos++; // skip current ' '
             if (text.get_next_char (ref pos, out c))
-                return text.get_char (0).to_string () + c.to_string ();
+                text = text.get_char (0).to_string () + c.to_string ();
         } else if (text.char_count () > 2) {
             unichar c = ' ';
             pos = 0;
             if (text.get_next_char (ref pos, out c) && text.get_next_char (ref pos, out c))
-                return text.substring (0, pos);
+                text = text.slice (0, pos);
         }
-        return text;
+        return text.up ();
     }
 
     public static string parse_name_from_path (string path) {
