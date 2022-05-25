@@ -90,7 +90,7 @@ namespace Music {
                 var color = Gdk.RGBA ();
                 color.red = color.green = color.blue = 0.2f;
                 color.alpha = 0.2f;
-                snapshot.append_outset_shadow (rounded, color, _radius * 0.5f, _radius * 0.5f, _radius * 0.2f, _radius);
+                snapshot.append_outset_shadow (rounded, color, _radius * 0.2f, _radius * 0.2f, _radius * 0.4f, _radius);
             }
         }
     }
