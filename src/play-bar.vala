@@ -17,7 +17,7 @@ namespace Music {
         private Gtk.Button _prev = new Gtk.Button ();
         private Gtk.Button _play = new Gtk.Button ();
         private Gtk.Button _next = new Gtk.Button ();
-        private int _position = -1;
+        private double _position = 0;
         private double _range = 1;
 
         construct {
@@ -45,12 +45,14 @@ namespace Music {
 
             _positive.halign = Gtk.Align.START;
             _positive.margin_start = 12;
+            _positive.label = "0:00";
             _positive.add_css_class ("caption");
             _positive.add_css_class ("dim-label");
             _positive.add_css_class ("numeric");
 
             _negative.halign = Gtk.Align.END;
             _negative.margin_end = 12;
+            _negative.label = "-0:00";
             _negative.add_css_class ("caption");
             _negative.add_css_class ("dim-label");
             _negative.add_css_class ("numeric");
@@ -94,7 +96,6 @@ namespace Music {
             player.state_changed.connect ((state) => {
                 var playing = state == Gst.State.PLAYING;
                 _play.icon_name = playing ? "media-playback-pause-symbolic" : "media-playback-start-symbolic";
-                _position = -1;
             });
         }
 
@@ -102,16 +103,15 @@ namespace Music {
             set {
                 _range = value;
                 _seek.set_range (0, value);
-                _negative.label = format_time(value - _seek.get_value ());
+                _negative.label = "-" + format_time(value - _position);
             }
         }
 
         public double position {
             set {
-                int seconds = (int) value;
-                if (_position != seconds) {
-                    _position = seconds;
-                    _positive.label = format_time(_seek.get_value (), true);
+                if ((int) _position != (int) value) {
+                    _position = value;
+                    _positive.label = format_time(value, true);
                     _negative.label = "-" + format_time(_range - value);
                 }
                 _seek.set_value (value);

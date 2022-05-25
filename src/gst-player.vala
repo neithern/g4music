@@ -116,11 +116,11 @@ namespace Music {
                             _timer?.set_callback (timeout_callback);
                             _timer?.attach (MainContext.default ());
                         }
-                        timeout_callback ();
                     } else {
                         _timer?.destroy ();
                         _timer = null;
                     }
+                    timeout_callback ();
                     break;
 
                 case Gst.MessageType.ERROR:
