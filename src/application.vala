@@ -13,6 +13,7 @@ namespace Music {
 
         private uint _current_item = -1;
         private Song? _current_song = null;
+        private string? _last_playing_url = null;
         private GstPlayer _player = new GstPlayer ();
         private Gtk.FilterListModel _song_list = new Gtk.FilterListModel (null, null);
         private SongStore _song_store = new SongStore ();
@@ -73,7 +74,11 @@ namespace Music {
 
         public override void open (File[] files, string hint) {
             load_songs_async.begin (files, (obj, res) => {
-                load_songs_async.end (res);
+                var play_item = load_songs_async.end (res);
+                Idle.add (() => {
+                    current_item = play_item;
+                    return false;
+                });
             });
 
             var window = active_window ?? new Window (this);
@@ -82,15 +87,10 @@ namespace Music {
 
         public override void shutdown () {
             var url = _current_song?.url;
-            if (url != null) try {
-                var dir = Environment.get_user_state_dir ();
-                var file = File.new_build_filename (dir, application_id);
-                var key_file = new KeyFile ();
-                key_file.set_string ("playing", "url", url);
-                key_file.save_to_file (file.get_path ());
-            } catch (Error e) {
-                warning ("Save state failed: %s\n", e.message);
+            if (url != null) {
+               save_playing_url (url);
             }
+
             base.shutdown ();
         }
 
@@ -100,10 +100,7 @@ namespace Music {
             }
             set {
                 var count = _song_list.get_n_items ();
-                if ((int) value < 0)
-                    value = 0;
-                else if (value >= count)
-                    value = count - 1;
+                value = value < count ? value : 0;
                 if (value < count) {
                     var song = _song_list.get_item (value) as Song;
                     if (_current_song != song) {
@@ -191,11 +188,12 @@ namespace Music {
             }
         }
 
-        private async void load_songs_async (owned File[] files) {
+        private async uint load_songs_async (owned File[] files) {
             var saved_size = _song_store.size;
             var play_item = _current_item;
 
             if (saved_size == 0 && files.length == 0) {
+                _last_playing_url = yield load_playing_url ();
                 yield _song_store.add_sparql_async ();
                 if (_song_store.size == 0) {
                     files.resize (1);
@@ -206,33 +204,22 @@ namespace Music {
                 yield _song_store.add_files_async (files);
             }
 
-            if (saved_size == 0) {
+            if (saved_size > 0) {
+                play_item = saved_size;
+            } else if (_current_song != null) {
+                play_item = _current_item;
+            } else {
                 _song_store.shuffle = false; // sort by title
-                try {
-                    var dir = Environment.get_user_state_dir ();
-                    var file = File.new_build_filename (dir, application_id);
-                    var bytes = yield file.load_bytes_async (null, null);
-                    var key_file = new KeyFile ();
-                    key_file.load_from_bytes (bytes, KeyFileFlags.NONE);
-                    var url = key_file.get_string ("playing", "url");
-                    if (url != null) {
-                        for (var i = 0; i < _song_store.size; i++) {
-                            if (url == _song_store.get_song (i)?.url) {
-                                play_item = i;
-                                break;
-                            }
+                if (_last_playing_url != null) {
+                    for (var i = 0; i < _song_store.size; i++) {
+                        if (_last_playing_url == _song_store.get_song (i)?.url) {
+                            play_item = i;
+                            break;
                         }
                     }
-                } catch (Error e) {
                 }
-            } else {
-                play_item = saved_size;
             }
-
-            Idle.add (() => {
-                current_item = play_item;
-                return false;
-            });
+            return play_item;
         }
 
         public void show_about () {
@@ -249,6 +236,31 @@ namespace Music {
                 connection.register_object ("/org/mpris/MediaPlayer2", new MprisRoot ());
             } catch (Error e) {
                 warning ("Register MPRIS failed: %s\n", e.message);
+            }
+        }
+
+        private async string? load_playing_url () {
+            try {
+                var dir = Environment.get_user_state_dir ();
+                var file = File.new_build_filename (dir, application_id);
+                var bytes = yield file.load_bytes_async (null, null);
+                var key_file = new KeyFile ();
+                key_file.load_from_bytes (bytes, KeyFileFlags.NONE);
+                return key_file.get_string ("playing", "url");
+            } catch (Error e) {
+            }
+            return null;
+        }
+
+        private void save_playing_url (string url) {
+            try {
+                var dir = Environment.get_user_state_dir ();
+                var file = File.new_build_filename (dir, application_id);
+                var key_file = new KeyFile ();
+                key_file.set_string ("playing", "url", url);
+                key_file.save_to_file (file.get_path ());
+            } catch (Error e) {
+                warning ("Save state failed: %s\n", e.message);
             }
         }
     }
