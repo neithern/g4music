@@ -1,7 +1,7 @@
 namespace Music {
 
     public class LruCache<V> : Object {
-        private static uint MAX_SIZE = 100 * 1024 * 1024;
+        private static uint MAX_SIZE = 50 * 1024 * 1024;
 
         private size_t _size = 0;
         private List<string> _accessed = new List<string> ();
@@ -86,10 +86,10 @@ namespace Music {
                 if (pixbuf != null) {
                     song.thumbnail = path;
                     //  print ("Load thumbnail: %s\n", song.title);
-                    return create_clamp_texture (pixbuf, size);
+                    return yield create_clamp_texture_async (pixbuf, size);
                 }
             } catch (Error e) {
-                //warning ("Load %s: %s\n", song.thumbnail, e.message);
+                //  warning ("Load %s: %s\n", song.thumbnail, e.message);
             }
 
             if (song.mtime == 0) try {
@@ -99,7 +99,7 @@ namespace Music {
                 if (!_factory.has_valid_failed_thumbnail (url, song.mtime)) {
                     var pixbuf = yield _factory.generate_thumbnail_async (url, song.type, null);
                     if (pixbuf != null) {
-                        var texture = create_clamp_texture (pixbuf, size);
+                        var texture = yield create_clamp_texture_async (pixbuf, size);
                         //  print ("Generate thumbnail: %s\n", song.title);
                         yield _factory.save_thumbnail_async (pixbuf, url, song.mtime, null);
                         return texture;
@@ -120,17 +120,30 @@ namespace Music {
             return paintable.get_intrinsic_width () * paintable.get_intrinsic_height () * 4;
         }
 
-        public static Gdk.Texture create_clamp_texture (Gdk.Pixbuf pixbuf, int size) {
+        public static async Gdk.Texture create_clamp_texture_async (Gdk.Pixbuf pixbuf, int size) {
             var width = pixbuf.width;
             var height = pixbuf.height;
             if (size > 0 && width > size && height > size) {
                 var scale = width > height ? (size / (double) height) : (size / (double) width);
                 var dx = (int) (width * scale + 0.5);
                 var dy = (int) (height * scale + 0.5);
-                var newbuf = pixbuf.scale_simple (dx, dy, Gdk.InterpType.TILES);
-                return Gdk.Texture.for_pixbuf (newbuf);
+                var newbuf = yield scale_pixbuf_async (pixbuf, dx, dy, Gdk.InterpType.TILES);
+                if (newbuf != null)
+                    pixbuf = newbuf;
             }
             return Gdk.Texture.for_pixbuf (pixbuf);
+        }
+
+        public static async Gdk.Pixbuf? scale_pixbuf_async (Gdk.Pixbuf pixbuf, int dx, int dy, Gdk.InterpType itype) {
+            try {
+                var future = Gee.task<Gdk.Pixbuf?> (() => {
+                    return pixbuf.scale_simple (dx, dy, itype);
+                });
+                return future.wait ();
+            } catch (Error e) {
+                //  print ("Scale pixbuf: %s\n", e.message);
+            }
+            return null;
         }
     }
 }
