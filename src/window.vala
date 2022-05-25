@@ -220,9 +220,9 @@ namespace Music {
                         case SearchType.TITLE:
                             return song.title == _search_property;
                         default:
-                            return song.album.contains (_search_text)
-                                || song.artist.contains (_search_text)
-                                || song.title.contains (_search_text);
+                            return _search_text.match_string (song.album, false)
+                                || _search_text.match_string (song.artist, false)
+                                || _search_text.match_string (song.title, false);
                     }
                 });
             } else {

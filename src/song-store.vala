@@ -191,7 +191,7 @@ namespace Music {
                         yield add_directory_async (sub_dir, arr);
                     } else {
                         var type = info.get_content_type ();
-                        if (type?.ascii_ncasecmp ("audio/", 6) == 0) {
+                        if (type?.has_prefix ("audio/")) {
                             var song = new_song_file_info (base_uri, info, type);
                             var sinfo = yield parse_tags_async (song.url);
                             if (sinfo != null)
