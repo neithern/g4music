@@ -166,7 +166,7 @@ namespace Music {
                     if (type?.ascii_ncasecmp ("audio/", 6) == 0) {
                         var song = new_song_file_info ("", info);
                         song.url = file.get_uri ();
-                        var sinfo = yield parse_id3v2_tags_async (song.url);
+                        var sinfo = yield parse_tags_async (song.url);
                         if (sinfo != null)
                             song.from_info (sinfo);
                         arr.add (song);
@@ -193,7 +193,7 @@ namespace Music {
                         var type = info.get_content_type ();
                         if (type?.ascii_ncasecmp ("audio/", 6) == 0) {
                             var song = new_song_file_info (base_uri, info, type);
-                            var sinfo = yield parse_id3v2_tags_async (song.url);
+                            var sinfo = yield parse_tags_async (song.url);
                             if (sinfo != null)
                                 song.from_info (sinfo);
                             arr.add (song);

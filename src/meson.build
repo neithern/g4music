@@ -1,13 +1,14 @@
 add_project_arguments('-DGNOME_DESKTOP_USE_UNSTABLE_API', language: 'c')
 
 dependencies = [
+  dependency('gee-0.8'),
   dependency('glib-2.0'),
   dependency('gobject-2.0'),
   dependency('gtk4'),
   dependency('libadwaita-1'),
   dependency('gnome-desktop-4'),
   dependency('gstreamer-1.0'),
-  dependency('gstreamer-tag-1.0'),
+  dependency('taglib_c'),
   dependency('tracker-sparql-3.0'),
 ]
 
