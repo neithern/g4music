@@ -191,15 +191,21 @@ namespace Music {
         }
 
         private async void load_songs_async (owned File[] files) {
-            if (files.length == 0) {
-                files.resize (1);
-                files[0] = File.new_for_path (Environment.get_user_special_dir (UserDirectory.MUSIC));
+            var saved_size = _song_store.size;
+            var play_item = _current_item;
+
+            if (saved_size == 0 && files.length == 0) {
+                yield _song_store.add_sparql_async ();
+                if (_song_store.size == 0) {
+                    files.resize (1);
+                    files[0] = File.new_for_path (Environment.get_user_special_dir (UserDirectory.MUSIC));
+                }
+            }
+            if (files.length > 0) {
+                yield _song_store.add_files_async (files);
             }
 
-            var play_item = _current_item;
-            var is_empty = _song_store.size == 0;
-            yield _song_store.add_files_async (files);
-            if (is_empty) {
+            if (saved_size == 0) {
                 _song_store.shuffle = false; // sort by title
                 try {
                     var dir = Environment.get_user_state_dir ();
@@ -219,7 +225,7 @@ namespace Music {
                 } catch (Error e) {
                 }
             } else {
-                play_item = _song_list.get_n_items ();
+                play_item = saved_size;
             }
 
             Idle.add (() => {
