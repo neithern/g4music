@@ -78,6 +78,8 @@ namespace Music {
                 var play_item = load_songs_async.end (res);
                 Idle.add (() => {
                     current_item = play_item;
+                    if (files.length > 0)
+                        _player.play ();
                     return false;
                 });
             });
@@ -102,20 +104,19 @@ namespace Music {
             set {
                 var count = _song_list.get_n_items ();
                 value = value < count ? value : 0;
-                if (value < count) {
-                    var song = _song_list.get_item (value) as Song;
-                    if (_current_song != song) {
-                        var old_item = _current_item;
-                        _current_song = song;
-                        _player.uri = song.url;
-                        _current_item = value;
-                        _song_list.items_changed (value, 0, 0);
-                        _song_list.items_changed (old_item, 0, 0);
-                        index_changed (value, count);
-                        song_changed (song);
-                    }
-                    _player.play ();
+                var playing = _player.playing;
+                var song = _song_list.get_item (value) as Song;
+                if (song != null && _current_song != song) {
+                    var old_item = _current_item;
+                    _current_song = song;
+                    _player.uri = song.url;
+                    _current_item = value;
+                    _song_list.items_changed (value, 0, 0);
+                    _song_list.items_changed (old_item, 0, 0);
+                    index_changed (value, count);
+                    song_changed (song);
                 }
+                _player.state = playing ? Gst.State.PLAYING : Gst.State.PAUSED;
             }
         }
 
