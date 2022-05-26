@@ -166,7 +166,7 @@ namespace Music {
                 var saved_pos = item.position;
                 var paintable2 = yield thumbnailer.load_async (song);
                 if (saved_pos != item.position) {
-                    print ("item swapped: %u -> %u\n", saved_pos, item.position);
+                    app.song_list.items_changed (saved_pos, 0, 0);
                 } else if (paintable2 != null) {
                     entry.cover = paintable2;
                 }
