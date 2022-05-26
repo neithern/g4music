@@ -104,7 +104,7 @@ namespace Music {
             set {
                 var count = _song_list.get_n_items ();
                 value = value < count ? value : 0;
-                var playing = _player.playing;
+                var playing = _current_song != null;
                 var song = _song_list.get_item (value) as Song;
                 if (song != null && _current_song != song) {
                     var old_item = _current_item;
