@@ -177,6 +177,7 @@ namespace Music {
             //  find current item
             var old_item = _current_item;
             var count = _song_list.get_n_items ();
+            _current_item = -1;
             for (var i = 0; i < count; i++) {
                 if (_current_song == _song_list.get_item (i)) {
                     _current_item = i;
