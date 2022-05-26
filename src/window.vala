@@ -164,13 +164,11 @@ namespace Music {
             entry.cover = paintable ?? _loading_paintable;
             if (paintable == null) {
                 var saved_pos = item.position;
-                var saved_entry = entry;
-                var saved_song = song;
-                var paintable2 = yield thumbnailer.load_async (this, song);
-                if (saved_song == song) {
-                    saved_entry.cover = paintable2;
-                } else {
+                var paintable2 = yield thumbnailer.load_async (song);
+                if (saved_pos != item.position) {
                     print ("item swapped: %u -> %u\n", saved_pos, item.position);
+                } else if (paintable2 != null) {
+                    entry.cover = paintable2;
                 }
             }
         }

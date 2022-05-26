@@ -57,7 +57,7 @@ namespace Music {
 
         private GenericSet<string> _loading = new GenericSet<string> (str_hash, str_equal);
 
-        public async Gdk.Paintable? load_async (Gtk.Widget widget, Song? song) {
+        public async Gdk.Paintable? load_async (Song? song) {
             var url = song?.url;
             if (url == null || _loading.contains (url))
                 return null;
