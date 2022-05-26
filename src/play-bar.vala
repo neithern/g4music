@@ -17,8 +17,8 @@ namespace Music {
         private Gtk.Button _prev = new Gtk.Button ();
         private Gtk.Button _play = new Gtk.Button ();
         private Gtk.Button _next = new Gtk.Button ();
-        private double _position = 0;
-        private double _range = 1;
+        private int _duration = 1;
+        private int _position = 0;
 
         construct {
             orientation = Gtk.Orientation.VERTICAL;
@@ -27,7 +27,7 @@ namespace Music {
 
             var app = GLib.Application.get_default () as Application;
 
-            _seek.set_range (0, _range);
+            _seek.set_range (0, _duration);
             _seek.halign = Gtk.Align.FILL;
             _seek.hexpand = true;
             _seek.width_request = 256;
@@ -45,14 +45,12 @@ namespace Music {
 
             _positive.halign = Gtk.Align.START;
             _positive.margin_start = 12;
-            _positive.label = "0:00";
             _positive.add_css_class ("caption");
             _positive.add_css_class ("dim-label");
             _positive.add_css_class ("numeric");
 
             _negative.halign = Gtk.Align.END;
             _negative.margin_end = 12;
-            _negative.label = "-0:00";
             _negative.add_css_class ("caption");
             _negative.add_css_class ("dim-label");
             _negative.add_css_class ("numeric");
@@ -101,25 +99,24 @@ namespace Music {
 
         public double duration {
             set {
-                _range = value;
-                _seek.set_range (0, value);
-                _negative.label = "-" + format_time(value - _position);
+                _duration = (int) (value + 0.5);
+                _seek.set_range (0, _duration);
+                _negative.label = "-" + format_time(_duration - _position);
             }
         }
 
         public double position {
             set {
-                if ((int) _position != (int) value) {
-                    _position = value;
-                    _positive.label = format_time(value, true);
-                    _negative.label = "-" + format_time(_range - value);
+                if (_position != (int) value) {
+                    _position = (int) value;
+                    _positive.label = format_time(_position);
+                    _negative.label = "-" + format_time(_duration - _position);
                 }
                 _seek.set_value (value);
             }
         }
 
-        public static string format_time (double value, bool round = false) {
-            int seconds = (int) (value + (round ? 0.5 : 0));
+        public static string format_time (int seconds) {
             int minutes = seconds / 60;
             seconds -= minutes * 60;
             var s = (seconds < 10 ? "0" : "") + seconds.to_string ();
