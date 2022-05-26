@@ -225,7 +225,7 @@ namespace Music {
         };
 
         private string? _text = null;
-        private uint _color = 0;
+        private Gdk.RGBA _color = Gdk.RGBA ();
 
         public TextPaintable (string? text = null) {
             this.text = text;
@@ -237,7 +237,11 @@ namespace Music {
             }
             set {
                 _text = value ?? "";
-                _color = colors[str_hash (_text) % colors.length];
+                var color = colors[str_hash (_text) % colors.length];
+                _color.red = ((color >> 16) & 0xff) / 255f;
+                _color.green = ((color >> 8) & 0xff) / 255f;
+                _color.blue = (color & 0xff) / 255f;
+                _color.alpha = 1;
             }
         }
 
@@ -250,18 +254,17 @@ namespace Music {
         }
 
         protected override void on_snapshot (Gtk.Snapshot snapshot, double width, double height) {
-            var red = ((_color >> 16) & 0xff) / 255f;
-            var green = ((_color >> 8) & 0xff) / 255f;
-            var blue = (_color & 0xff) / 255f;
             var rect = Graphene.Rect ().init(0, 0, (float) width, (float) height);
+            snapshot.append_color (_color, rect);
+
             var ctx = snapshot.append_cairo (rect);
             ctx.select_font_face ("Serif", Cairo.FontSlant.NORMAL, Cairo.FontWeight.BOLD);
             ctx.set_antialias (Cairo.Antialias.BEST);
-            ctx.set_source_rgba (red, green, blue, 0.4f);
             ctx.set_font_size (height * 0.5);
+            ctx.set_source_rgba (0, 0, 0, 0.25f);
             ctx.move_to (0, height);
             ctx.show_text (_text);
-            ctx.paint ();
+            ctx.paint_with_alpha (0);
         }
     }
 
