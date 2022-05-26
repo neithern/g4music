@@ -199,18 +199,19 @@ namespace Music {
         private async void on_song_tag_parsed (Song song, uint8[]? image) {
             update_song_info (song);
 
-            if (image != null) try {
-                var pixbuf = yield new Gdk.Pixbuf.from_stream_async (new MemoryInputStream.from_data (image));
-                var paintable = Gdk.Texture.for_pixbuf (pixbuf);
-                if (paintable != null) {
+            if (image != null) {
+                var pixbuf = yield run_task_async<Gdk.Pixbuf?> (() => {
+                    return load_clamp_pixbuf (image, 512);
+                });
+                if (pixbuf != null) {
+                    var paintable = Gdk.Texture.for_pixbuf (pixbuf);
                     update_cover_paintable (song, paintable);
                     return;
                 }
-            } catch (Error e) {
             }
 
             var app = application as Application;
-            var paintable = yield app.thumbnailer.load_directly_async (song);
+            var paintable = yield app.thumbnailer.load_directly_async (song, 512);
             if (song == app.current_song) {
                 update_cover_paintable (song, paintable);
             }

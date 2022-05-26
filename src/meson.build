@@ -1,7 +1,6 @@
 add_project_arguments('-DGNOME_DESKTOP_USE_UNSTABLE_API', language: 'c')
 
 dependencies = [
-  dependency('gee-0.8'),
   dependency('glib-2.0'),
   dependency('gobject-2.0'),
   dependency('gtk4'),
@@ -13,6 +12,7 @@ dependencies = [
 ]
 
 sources = [
+  'async-task.vala',
   'application.vala',
   'gst-player.vala',
   'mpris.vala',

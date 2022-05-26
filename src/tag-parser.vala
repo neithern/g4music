@@ -17,17 +17,6 @@ namespace Music {
         return null;
     }
 
-    public static async SongInfo? parse_tags_async (owned string url) {
-        try {
-            var future = Gee.task<SongInfo?> (() => {
-                return parse_tags (url);
-            });
-            return future.wait ();
-        } catch (Error e) {
-            print ("Parse task %s: %s\n", url, e.message);
-        }
-        return null;
-    }
 /*
     public static async SongInfo? parse_id3v2_tags_async (string url) {
         try {

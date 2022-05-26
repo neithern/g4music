@@ -76,17 +76,17 @@ namespace Music {
             return paintable;
         }
 
-        public async Gdk.Paintable? load_directly_async (Song song, int size = 0) {
+        protected Gdk.Pixbuf? load_directly (Song song, int size = 0) {
             var url = song.url;
             try {
                 var path = Gnome.DesktopThumbnail.path_for_uri (url, Gnome.DesktopThumbnailSize.LARGE);
-                var stream = yield File.new_for_path (path).read_async ();
+                var stream = File.new_for_path (path).read ();
                 var bis = new BufferedInputStream (stream);
-                var pixbuf = yield new Gdk.Pixbuf.from_stream_async (bis, null);
+                var pixbuf = new Gdk.Pixbuf.from_stream (bis, null);
                 if (pixbuf != null) {
                     song.thumbnail = path;
                     //  print ("Load thumbnail: %s\n", song.title);
-                    return yield create_clamp_texture_async (pixbuf, size);
+                    return create_clamp_pixbuf (pixbuf, size);
                 }
             } catch (Error e) {
                 //  warning ("Load %s: %s\n", song.thumbnail, e.message);
@@ -94,23 +94,30 @@ namespace Music {
 
             if (song.mtime == 0) try {
                 var file = File.new_for_uri (url);
-                var info = yield file.query_info_async ("time::modified", FileQueryInfoFlags.NOFOLLOW_SYMLINKS);
+                var info = file.query_info ("time::modified", FileQueryInfoFlags.NOFOLLOW_SYMLINKS);
                 song.mtime = (long) (info.get_modification_date_time ()?.to_unix () ?? 0);
                 if (!_factory.has_valid_failed_thumbnail (url, song.mtime)) {
-                    var pixbuf = yield _factory.generate_thumbnail_async (url, song.type, null);
+                    var pixbuf = _factory.generate_thumbnail (url, song.type);
                     if (pixbuf != null) {
-                        var texture = yield create_clamp_texture_async (pixbuf, size);
+                        var pixbuf2 = create_clamp_pixbuf (pixbuf, size);
                         //  print ("Generate thumbnail: %s\n", song.title);
-                        yield _factory.save_thumbnail_async (pixbuf, url, song.mtime, null);
-                        return texture;
+                        _factory.save_thumbnail (pixbuf, url, song.mtime);
+                        return pixbuf2;
                     } else {
-                        yield _factory.create_failed_thumbnail_async (url, song.mtime, null);
+                        _factory.create_failed_thumbnail (url, song.mtime);
                     }
                 }
             } catch (Error e) {
                 //  warning ("Generate %s: %s\n", url, e.message);
             }
             return null;
+        }
+
+        public async Gdk.Paintable? load_directly_async (Song song, int size = 0) {
+            var pixbuf = yield run_task_async<Gdk.Pixbuf?> (() => {
+                return load_directly (song, size);
+            });
+            return pixbuf != null ? Gdk.Texture.for_pixbuf (pixbuf) : null;
         }
 
         public void remove_text_paintable (string url) {
@@ -126,31 +133,28 @@ namespace Music {
             }
             return paintable.get_intrinsic_width () * paintable.get_intrinsic_height () * 4;
         }
+    }
 
-        public static async Gdk.Texture create_clamp_texture_async (Gdk.Pixbuf pixbuf, int size) {
-            var width = pixbuf.width;
-            var height = pixbuf.height;
-            if (size > 0 && width > size && height > size) {
-                var scale = width > height ? (size / (double) height) : (size / (double) width);
-                var dx = (int) (width * scale + 0.5);
-                var dy = (int) (height * scale + 0.5);
-                var newbuf = yield scale_pixbuf_async (pixbuf, dx, dy, Gdk.InterpType.TILES);
-                if (newbuf != null)
-                    pixbuf = newbuf;
-            }
-            return Gdk.Texture.for_pixbuf (pixbuf);
+    public static Gdk.Pixbuf create_clamp_pixbuf (Gdk.Pixbuf pixbuf, int size) {
+        var width = pixbuf.width;
+        var height = pixbuf.height;
+        if (size > 0 && width > size && height > size) {
+            var scale = width > height ? (size / (double) height) : (size / (double) width);
+            var dx = (int) (width * scale + 0.5);
+            var dy = (int) (height * scale + 0.5);
+            var newbuf = pixbuf.scale_simple (dx, dy, Gdk.InterpType.TILES);
+            if (newbuf != null)
+                return newbuf;
         }
+        return pixbuf;
+    }
 
-        public static async Gdk.Pixbuf? scale_pixbuf_async (Gdk.Pixbuf pixbuf, int dx, int dy, Gdk.InterpType itype) {
-            try {
-                var future = Gee.task<Gdk.Pixbuf?> (() => {
-                    return pixbuf.scale_simple (dx, dy, itype);
-                });
-                return future.wait ();
-            } catch (Error e) {
-                //  print ("Scale pixbuf: %s\n", e.message);
-            }
-            return null;
+    public static Gdk.Pixbuf? load_clamp_pixbuf (uint8[] image, int size) {
+        try {
+            var pixbuf = new Gdk.Pixbuf.from_stream (new MemoryInputStream.from_data (image));
+            return create_clamp_pixbuf (pixbuf, size);
+        } catch (Error e) {
         }
+        return null;
     }
 }

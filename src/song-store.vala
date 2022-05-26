@@ -124,49 +124,53 @@ namespace Music {
 
         public async void add_sparql_async () {
             var arr = new GenericArray<Object> (4096);
-            Tracker.Sparql.Connection connection = null;
-            try {
-                connection = yield Tracker.Sparql.Connection.bus_new_async ("org.freedesktop.Tracker3.Miner.Files", null);
-                var cursor = yield connection.query_async (SQL_QUERY_SONGS);
-                while (yield cursor.next_async ()) {
-                    var song = new Song ();
-                    song.album = cursor.get_string (0) ?? UNKOWN_ALBUM;
-                    song.artist = cursor.get_string (1) ?? UNKOWN_ARTIST;
-                    song.title = cursor.get_string (2);
-                    song.type = cursor.get_string (3) ?? DEFAULT_MIMETYPE;
-                    song.url = cursor.get_string (4);
-                    if (song.title == null)
-                        song.title = parse_name_from_url (song.url);
-                    song.update_keys ();
-                    arr.add (song);
+            yield run_task_async<void> (() => {
+                Tracker.Sparql.Connection connection = null;
+                try {
+                    connection = Tracker.Sparql.Connection.bus_new ("org.freedesktop.Tracker3.Miner.Files", null);
+                    var cursor = connection.query (SQL_QUERY_SONGS);
+                    while (cursor.next ()) {
+                        var song = new Song ();
+                        song.album = cursor.get_string (0) ?? UNKOWN_ALBUM;
+                        song.artist = cursor.get_string (1) ?? UNKOWN_ARTIST;
+                        song.title = cursor.get_string (2);
+                        song.type = cursor.get_string (3) ?? DEFAULT_MIMETYPE;
+                        song.url = cursor.get_string (4);
+                        if (song.title == null)
+                            song.title = parse_name_from_url (song.url);
+                        song.update_keys ();
+                        arr.add (song);
+                    }
+                } catch (Error e) {
+                    warning ("Query error: %s\n", e.message);
+                } finally {
+                    connection?.close ();
                 }
-            } catch (Error e) {
-                warning ("Query error: %s\n", e.message);
-            } finally {
-                connection?.close ();
-            }
+            });
             _store.splice (_store.get_n_items (), 0, arr.data);
         }
 
         public async void add_files_async (owned File[] files) {
             var arr = new GenericArray<Object> (4096);
-            foreach (var file in files) {
-                yield add_file_async (file, arr);
-            }
+            yield run_task_async<void> (() => {
+                foreach (var file in files) {
+                    add_file (file, arr);
+                }
+            });
             _store.splice (_store.get_n_items (), 0, arr.data);
         }
 
-        private async void add_file_async (File file, GenericArray<Object> arr) {
+        private void add_file (File file, GenericArray<Object> arr) {
             try {
-                var info = yield file.query_info_async ("standard::*", FileQueryInfoFlags.NONE);
+                var info = file.query_info ("standard::*", FileQueryInfoFlags.NONE);
                 if (info.get_file_type () == FileType.DIRECTORY) {
-                    yield add_directory_async (file, arr);
+                    add_directory (file, arr);
                 } else {
                     var type = info.get_content_type ();
                     if (type?.ascii_ncasecmp ("audio/", 6) == 0) {
                         var song = new_song_file_info ("", info);
                         song.url = file.get_uri ();
-                        var sinfo = yield parse_tags_async (song.url);
+                        var sinfo = parse_tags (song.url);
                         if (sinfo != null)
                             song.from_info (sinfo);
                         arr.add (song);
@@ -176,24 +180,24 @@ namespace Music {
             }
         }
 
-        private async void add_directory_async (File dir, GenericArray<Object> arr) {
+        private void add_directory (File dir, GenericArray<Object> arr) {
             try {
                 var base_uri = dir.get_uri ();
                 if (base_uri[base_uri.length - 1] != '/')
                     base_uri += "/";
                 FileInfo info = null;
-                var enumerator = yield dir.enumerate_children_async ("standard::*", FileQueryInfoFlags.NONE);
+                var enumerator = dir.enumerate_children ("standard::*", FileQueryInfoFlags.NONE);
                 while ((info = enumerator.next_file ()) != null) {
                     if (info.get_is_hidden ()) {
                         continue;
                     } else if (info.get_file_type () == FileType.DIRECTORY) {
                         var sub_dir = dir.resolve_relative_path (info.get_name ());
-                        yield add_directory_async (sub_dir, arr);
+                        add_directory (sub_dir, arr);
                     } else {
                         var type = info.get_content_type ();
                         if (type?.has_prefix ("audio/")) {
                             var song = new_song_file_info (base_uri, info, type);
-                            var sinfo = yield parse_tags_async (song.url);
+                            var sinfo = parse_tags (song.url);
                             if (sinfo != null)
                                 song.from_info (sinfo);
                             arr.add (song);
