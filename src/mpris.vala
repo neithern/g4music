@@ -52,7 +52,7 @@ namespace Music {
             send_property ("CanPlay", can_play);
         }
 
-        private void on_song_tag_parsed (Song song, uint8[]? image) {
+        private void on_song_tag_parsed (Song song, Bytes? image) {
             send_meta_data (song);
         }
 

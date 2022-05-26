@@ -194,12 +194,12 @@ namespace Music {
             print ("play song: %s\n", song.url);
         }
 
-        private async void on_song_tag_parsed (Song song, uint8[]? image) {
+        private async void on_song_tag_parsed (Song song, Bytes? image, string? mtype) {
             update_song_info (song);
 
             if (image != null) {
                 var pixbuf = yield run_task_async<Gdk.Pixbuf?> (() => {
-                    return load_clamp_pixbuf (image, 512);
+                    return load_clamp_pixbuf (image, 640);
                 });
                 if (pixbuf != null) {
                     var paintable = Gdk.Texture.for_pixbuf (pixbuf);
@@ -209,7 +209,7 @@ namespace Music {
             }
 
             var app = application as Application;
-            var paintable = yield app.thumbnailer.load_directly_async (song, 512);
+            var paintable = yield app.thumbnailer.load_directly_async (song, 640);
             if (song == app.current_song) {
                 update_cover_paintable (song, paintable);
             }

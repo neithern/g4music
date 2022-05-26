@@ -21,7 +21,7 @@ namespace Music {
 
         public signal void index_changed (uint index, uint size);
         public signal void song_changed (Song song);
-        public signal void song_tag_parsed (Song song, uint8[]? image);
+        public signal void song_tag_parsed (Song song, Bytes? image, string? mtype);
 
         public Application () {
             Object (application_id: APP_ID, flags: ApplicationFlags.HANDLES_OPEN);
@@ -44,12 +44,12 @@ namespace Music {
                 current_item = current_item + 1;
             });
 
-            _player.tag_parsed.connect ((info, image) => {
+            _player.tag_parsed.connect ((info, image, mtype) => {
                 if (_current_song.from_info (info)) {
                     _thumbnailer.remove_text_paintable (_current_song.url);
                     _song_list.items_changed (_current_item, 0, 0);
                 }
-                song_tag_parsed (_current_song, image);
+                song_tag_parsed (_current_song, image, mtype);
             });
 
             var mpris_id = Bus.own_name (BusType.SESSION,

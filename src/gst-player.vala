@@ -27,7 +27,7 @@ namespace Music {
         public signal void end_of_stream ();
         public signal void position_updated (Gst.ClockTime position);
         public signal void state_changed (Gst.State state);
-        public signal void tag_parsed (SongInfo info, uint8[]? image);
+        public signal void tag_parsed (SongInfo info, Bytes? image, string? mtype);
 
         public GstPlayer () {
             _pipeline.get_bus ()?.add_watch (Priority.DEFAULT, bus_callback);
@@ -153,26 +153,38 @@ namespace Music {
         private void parse_tags (Gst.Message message) {
             Gst.TagList tags;
             message.parse_tag (out tags);
-            uint8[] data = null;
             SongInfo info = new SongInfo ();
+            Gst.Sample sample = null;
             tags.get_string ("album", out info.album);
             tags.get_string ("artist", out info.artist);
             tags.get_string ("title", out info.title);
-            for (var i = 0; i < tags.n_tags (); i++) {
-                var tag = tags.nth_tag_name (i);
-                var value = tags.get_value_index (tag, 0);
-                if (value?.type () == typeof (Gst.Sample)) {
-                    Gst.Sample sample = null;
-                    if (tags.get_sample (tag, out sample)) {
-                        var buffer = sample?.get_buffer ();
-                        if (buffer != null) {
-                            buffer.extract_dup (0, buffer.get_size (), out data);
+            tags.get_sample ("image", out sample);
+            if (sample == null) {
+                for (var i = 0; i < tags.n_tags (); i++) {
+                    var tag = tags.nth_tag_name (i);
+                    var value = tags.get_value_index (tag, 0);
+                    if (value?.type () == typeof (Gst.Sample)
+                            && tags.get_sample (tag, out sample)) {
+                        var caps = sample.get_caps ();
+                        if (caps != null)
                             break;
-                        }
+                        print (@"unknown image tag: $(tag)\n");
                     }
+                    sample = null;
                 }
             }
-            tag_parsed (info, data);
+            Bytes? bytes = null;
+            string? mtype = null;
+            if (sample != null) {
+                uint8[] data = null;
+                var buffer = sample.get_buffer ();
+                buffer?.extract_dup (0, buffer.get_size (), out data);
+                if (data != null) {
+                    bytes = new Bytes.take (data);
+                    mtype = sample.get_caps ()?.to_string ();
+                }
+            }
+            tag_parsed (info, bytes, mtype);
         }
 
         private bool timeout_callback () {

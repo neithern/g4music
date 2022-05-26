@@ -149,9 +149,10 @@ namespace Music {
         return pixbuf;
     }
 
-    public static Gdk.Pixbuf? load_clamp_pixbuf (uint8[] image, int size) {
+    public static Gdk.Pixbuf? load_clamp_pixbuf (Bytes image, int size) {
         try {
-            var pixbuf = new Gdk.Pixbuf.from_stream (new MemoryInputStream.from_data (image));
+            var stream = new MemoryInputStream.from_bytes (image);
+            var pixbuf = new Gdk.Pixbuf.from_stream (stream);
             return create_clamp_pixbuf (pixbuf, size);
         } catch (Error e) {
         }
