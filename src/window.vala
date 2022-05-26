@@ -139,7 +139,7 @@ namespace Music {
             var width = get_width ();
             var height = get_height ();
             if (!flap.folded) {
-                var left = list_view.get_width ();
+                var left = flap.flap.get_width ();
                 var rect = Graphene.Rect ().init(left - 0.5f, 0, 0.5f, (float) height);
                 draw_gray_linear_gradient_line (snapshot, rect);
             }
