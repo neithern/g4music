@@ -3,10 +3,7 @@
   <requires lib="gtk" version="4.0"/>
   <template class="MusicWindow" parent="AdwApplicationWindow">
     <property name="title" translatable="yes">G4Music</property>
-    <property name="icon_name">com.github.neithern.g4music</property>
     <property name="resizable">true</property>
-    <property name="default_width">640</property>
-    <property name="default_height">600</property>
     <property name="content">
       <object class="GtkWindowHandle">
         <child>
@@ -15,11 +12,13 @@
             <property name="flap">
               <object class="GtkBox">
                 <property name="orientation">vertical</property>
+                <property name="hexpand">true</property>
+                <property name="width_request">300</property>
                 <child>
-                  <object class="GtkHeaderBar" id="search_bar">
-                    <property name="show_title_buttons">false</property>
+                  <object class="GtkBox" id="search_bar">
+                    <property name="orientation">horizontal</property>
                     <style>
-                      <class name="flat"/>
+                      <class name="toolbar"/>
                     </style>
                     <child>
                       <object class="GtkToggleButton" id="search_btn">
@@ -28,12 +27,7 @@
                     </child>
                     <child>
                       <object class="GtkEntry" id="search_entry">
-                        <property name="width_request">220</property>
-                        <property name="visible">false</property>
-                      </object>
-                    </child>
-                    <child type="title">
-                      <object class="GtkLabel">
+                        <property name="hexpand">true</property>
                         <property name="visible">false</property>
                       </object>
                     </child>
@@ -44,7 +38,6 @@
                     <property name="hscrollbar_policy">never</property>
                     <property name="vscrollbar_policy">automatic</property>
                     <property name="propagate_natural_height">true</property>
-                    <property name="width_request">280</property>
                     <property name="valign">fill</property>
                     <child>
                       <object class="GtkListView" id="list_view">
@@ -98,7 +91,7 @@
                     <property name="margin_start">32</property>
                     <property name="margin_end">32</property>
                     <property name="margin_top">16</property>
-                    <property name="margin_bottom">16</property>
+                    <property name="margin_bottom">24</property>
                     <child>
                       <object class="GtkImage" id="cover_image">
                         <property name="pixel_size">256</property>

@@ -40,6 +40,7 @@ namespace Music {
 
         public Window (Application app) {
             Object (application: app);
+            this.icon_name = app.application_id;
 
             flap.bind_property ("folded", this, "flap_folded", BindingFlags.DEFAULT);
 
@@ -94,6 +95,7 @@ namespace Music {
         public bool flap_folded {
             set {
                 var flap_box = flap.flap;
+                flap_box.hexpand = !value;
                 if (value) {
                     Timeout.add (flap.fold_duration, () => {
                         if (flap.folded && !flap_box.has_css_class ("background"))
