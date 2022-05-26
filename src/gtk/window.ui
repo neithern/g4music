@@ -3,6 +3,7 @@
   <requires lib="gtk" version="4.0"/>
   <template class="MusicWindow" parent="AdwApplicationWindow">
     <property name="title" translatable="yes">G4Music</property>
+    <property name="default_width">640</property>
     <property name="resizable">true</property>
     <property name="content">
       <object class="GtkWindowHandle">
