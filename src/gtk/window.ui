@@ -3,7 +3,7 @@
   <requires lib="gtk" version="4.0"/>
   <template class="MusicWindow" parent="AdwApplicationWindow">
     <property name="title" translatable="yes">G4Music</property>
-    <property name="default_width">640</property>
+    <property name="default_width">700</property>
     <property name="resizable">true</property>
     <property name="content">
       <object class="GtkWindowHandle">
@@ -13,10 +13,12 @@
             <property name="flap">
               <object class="GtkBox">
                 <property name="orientation">vertical</property>
+                <property name="halign">start</property>
                 <property name="width_request">320</property>
                 <child>
                   <object class="GtkBox" id="search_bar">
                     <property name="orientation">horizontal</property>
+                    <property name="halign">fill</property>
                     <style>
                       <class name="toolbar"/>
                     </style>
@@ -27,8 +29,8 @@
                     </child>
                     <child>
                       <object class="GtkEntry" id="search_entry">
-                        <property name="hexpand">true</property>
-                        <property name="visible">false</property>
+                      <property name="width_request">268</property>
+                        <property name="visible">true</property>
                       </object>
                     </child>
                   </object>
