@@ -138,14 +138,14 @@ namespace Music {
         public override void snapshot (Gtk.Snapshot snapshot) {
             var width = get_width ();
             var height = get_height ();
-            if (!flap.folded) {
-                var left = flap.flap.get_width ();
-                var rect = Graphene.Rect ().init(left - 0.5f, 0, 0.5f, (float) height);
-                draw_gray_linear_gradient_line (snapshot, rect);
-            }
             snapshot.push_opacity (0.25);
             _bkgnd_paintable.snapshot (snapshot, width, height);
             snapshot.pop ();
+            if (!flap.folded) {
+                var right = width - content_box.get_width ();
+                var rect = Graphene.Rect ().init(right - 0.5f, 0, 0.5f, (float) height);
+                draw_gray_linear_gradient_line (snapshot, rect);
+            }
             base.snapshot (snapshot);
         }
 
