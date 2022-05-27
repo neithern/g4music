@@ -52,6 +52,8 @@ namespace Music {
     }
 
     public class Thumbnailer : LruCache<Gdk.Paintable> {
+        public static int icon_size = 96;
+
         private Gnome.DesktopThumbnailFactory _factory = 
             new Gnome.DesktopThumbnailFactory (Gnome.DesktopThumbnailSize.LARGE);
 
@@ -63,15 +65,14 @@ namespace Music {
                 return null;
 
             _loading.add (url);
-            var texture = yield load_directly_async (song, 96);
+            var texture = yield load_directly_async (song, icon_size);
             _loading.remove (url);
             if (texture != null) {
                 put (url, texture);
                 return texture;
             }
 
-            string text = parse_abbreviation (song.album);
-            var paintable = new TextPaintable (text);
+            var paintable = create_song_album_text_paintable (song);
             put (url, paintable);
             return paintable;
         }
@@ -123,19 +124,23 @@ namespace Music {
         public void update_text_paintable (Song song) {
             var url = song.url;
             var paintable = find (url);
-            if (paintable is TextPaintable) {
-                string text = parse_abbreviation (song.album);
-                paintable = new TextPaintable (text);
+            if (! (paintable is Gdk.Texture)) {
+                var paintable2 = create_song_album_text_paintable (song);
                 remove (url);
-                put (url, paintable);
+                put (song.url, paintable2);
             }
         }
 
         protected override size_t size_of_value (Gdk.Paintable paintable) {
-            if (paintable is TextPaintable) {
-                return (paintable as TextPaintable)?.text?.length ?? 0;
-            }
             return paintable.get_intrinsic_width () * paintable.get_intrinsic_height () * 4;
+        }
+
+        protected static Gdk.Paintable create_song_album_text_paintable (Song song) {
+            string text = parse_abbreviation (song.album);
+            var paintable = create_text_paintable (text, icon_size, icon_size);
+            if (paintable == null)
+                paintable = new BasePaintable ();
+            return paintable;
         }
     }
 

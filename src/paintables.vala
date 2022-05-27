@@ -206,8 +206,8 @@ namespace Music {
         }
     }
 
-    public class TextPaintable : BasePaintable {
-        public static uint32[] colors = {
+    public static Gdk.Paintable? create_text_paintable (string text, int width = 128, int height = 128) {
+        uint32[] text_colors = {
             0x83b6ec, // blue
             0x7ad9f1, // cyan
             0xb5e98a, // lime
@@ -224,53 +224,32 @@ namespace Music {
             0xc0bfbc, // gray
         };
 
-        private string? _text = null;
-        private Gdk.RGBA _color = Gdk.RGBA ();
+        var color = text_colors[str_hash (text) % text_colors.length];
+        var c = Gdk.RGBA ();
+        c.red = ((color >> 16) & 0xff) / 255f;
+        c.green = ((color >> 8) & 0xff) / 255f;
+        c.blue = (color & 0xff) / 255f;
+        c.alpha = 1;
 
-        public TextPaintable (string? text = null) {
-            this.text = text;
-        }
+        var rect = Graphene.Rect ().init(0, 0, (float) width, (float) height);
+        var snapshot = new Gtk.Snapshot ();
+        snapshot.append_color (c, rect);
 
-        public string? text {
-            get {
-                return _text;
-            }
-            set {
-                _text = value ?? "";
-                var color = colors[str_hash (_text) % colors.length];
-                _color.red = ((color >> 16) & 0xff) / 255f;
-                _color.green = ((color >> 8) & 0xff) / 255f;
-                _color.blue = (color & 0xff) / 255f;
-                _color.alpha = 1;
-            }
-        }
+        var ctx = snapshot.append_cairo (rect);
+        ctx.select_font_face ("Serif", Cairo.FontSlant.NORMAL, Cairo.FontWeight.BOLD);
+        ctx.set_antialias (Cairo.Antialias.BEST);
+        ctx.set_font_size (height * 0.4);
+        ctx.set_source_rgba (0, 0, 0, 0.25f);
 
-        public override int get_intrinsic_width () {
-            return 1;
-        }
-
-        public override int get_intrinsic_height () {
-            return 1;
-        }
-
-        protected override void on_snapshot (Gtk.Snapshot snapshot, double width, double height) {
-            var rect = Graphene.Rect ().init(0, 0, (float) width, (float) height);
-            snapshot.append_color (_color, rect);
-
-            var ctx = snapshot.append_cairo (rect);
-            ctx.select_font_face ("Serif", Cairo.FontSlant.NORMAL, Cairo.FontWeight.BOLD);
-            ctx.set_antialias (Cairo.Antialias.BEST);
-            ctx.set_font_size (height * 0.4);
-            ctx.set_source_rgba (0, 0, 0, 0.25f);
-
-            Cairo.TextExtents extents;
-            ctx.text_extents (_text, out extents);
-            double x = (width - extents.width) * 0.5 - extents.x_bearing;
-            double y = (height - extents.height) * 0.5 - extents.y_bearing;
-            ctx.move_to (x > 0 ? x : 0, y);
-            ctx.show_text (_text);
-            ctx.paint_with_alpha (0);
-        }
+        Cairo.TextExtents extents;
+        ctx.text_extents (text, out extents);
+        double x = (width - extents.width) * 0.5 - extents.x_bearing;
+        double y = (height - extents.height) * 0.5 - extents.y_bearing;
+        ctx.move_to (x > 0 ? x : 0, y);
+        ctx.show_text (text);
+        ctx.paint_with_alpha (0);
+        var size = Graphene.Size ().init (width, height);
+        return snapshot.free_to_paintable (size);
     }
 
     public static Gdk.Texture create_blur_texture (Gtk.Widget widget, Gdk.Paintable paintable, int width = 128, int height = 128, double blur = 80) {

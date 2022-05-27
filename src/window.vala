@@ -32,7 +32,7 @@ namespace Music {
 
         private CrossFadePaintable _bkgnd_paintable = new CrossFadePaintable ();
         private CrossFadePaintable _cover_paintable = new CrossFadePaintable ();
-        private TextPaintable _loading_paintable = new TextPaintable ("...");
+        private Gdk.Paintable? _loading_paintable = create_text_paintable ("...");
 
         private string _search_text = "";
         private string _search_property = "";
