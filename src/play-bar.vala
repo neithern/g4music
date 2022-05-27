@@ -24,12 +24,12 @@ namespace Music {
             orientation = Gtk.Orientation.VERTICAL;
             halign = Gtk.Align.CENTER;
             margin_top = 16;
+            margin_bottom = 24;
 
             var app = GLib.Application.get_default () as Application;
 
             _seek.set_range (0, _duration);
             _seek.halign = Gtk.Align.FILL;
-            _seek.hexpand = true;
             _seek.width_request = 256;
             _seek.adjust_bounds.connect ((value) => {
                 app.player.seek (GstPlayer.from_second (value));
@@ -38,7 +38,6 @@ namespace Music {
 
             var times = new Gtk.CenterBox ();
             times.halign = Gtk.Align.FILL;
-            times.hexpand = true;
             times.set_start_widget (_positive);
             times.set_end_widget (_negative);
             append(times);
@@ -57,7 +56,6 @@ namespace Music {
 
             var buttons = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
             buttons.halign = Gtk.Align.CENTER;
-            buttons.hexpand = true;
             buttons.margin_top = 8;
             buttons.append (_prev);
             buttons.append (_play);

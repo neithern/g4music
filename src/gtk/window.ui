@@ -9,16 +9,14 @@
       <object class="GtkWindowHandle">
         <child>
           <object class="AdwFlap" id="flap">
-            <property name="orientation">horizontal</property>
             <property name="flap">
               <object class="GtkBox">
                 <property name="orientation">vertical</property>
-                <property name="halign">start</property>
+                <property name="hexpand">false</property>
                 <property name="width_request">320</property>
                 <child>
                   <object class="GtkBox" id="search_bar">
                     <property name="orientation">horizontal</property>
-                    <property name="halign">fill</property>
                     <style>
                       <class name="toolbar"/>
                     </style>
@@ -29,7 +27,7 @@
                     </child>
                     <child>
                       <object class="GtkEntry" id="search_entry">
-                      <property name="width_request">268</property>
+                        <property name="width_request">268</property>
                         <property name="visible">true</property>
                       </object>
                     </child>
@@ -39,8 +37,7 @@
                   <object class="GtkScrolledWindow" id="scroll_view">
                     <property name="hscrollbar_policy">never</property>
                     <property name="vscrollbar_policy">automatic</property>
-                    <property name="propagate_natural_height">true</property>
-                    <property name="valign">fill</property>
+                    <property name="vexpand">true</property>
                     <child>
                       <object class="GtkListView" id="list_view">
                         <property name="single_click_activate">true</property>
@@ -54,7 +51,8 @@
               </object>
             </property>
             <property name="content">
-              <object class="GtkBox">
+              <object class="GtkBox" id="content_box">
+                <property name="hexpand">true</property>
                 <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkHeaderBar" id="header_bar">
@@ -87,13 +85,12 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkBox" id="content_box">
+                  <object class="GtkBox">
                     <property name="orientation">vertical</property>
                     <property name="valign">center</property>
                     <property name="margin_start">32</property>
                     <property name="margin_end">32</property>
                     <property name="margin_top">16</property>
-                    <property name="margin_bottom">24</property>
                     <child>
                       <object class="GtkImage" id="cover_image">
                         <property name="pixel_size">256</property>
