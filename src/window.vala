@@ -95,7 +95,6 @@ namespace Music {
         public bool flap_folded {
             set {
                 var flap_box = flap.flap;
-                flap_box.hexpand = !value;
                 if (value) {
                     Timeout.add (flap.fold_duration, () => {
                         if (flap.folded && !flap_box.has_css_class ("background"))
