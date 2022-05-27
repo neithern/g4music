@@ -46,7 +46,6 @@ namespace Music {
 
             app.bind_property ("shuffle", shuffle_btn, "active", BindingFlags.SYNC_CREATE | BindingFlags.BIDIRECTIONAL);
 
-            search_entry.bind_property ("text", this, "search_text", BindingFlags.SYNC_CREATE | BindingFlags.BIDIRECTIONAL);
             search_btn.bind_property ("active", search_entry, "visible", BindingFlags.SYNC_CREATE);
             search_btn.toggled.connect (() => {
                 update_song_filter ();
@@ -54,6 +53,7 @@ namespace Music {
                     search_entry.grab_focus ();
                 app.find_current_item ();
             });
+            search_entry.changed.connect (on_search_text_changed);
 
             _cover_paintable.paintable = _loading_paintable;
             var scale_paintable = new ScalePaintable (new RoundPaintable (_cover_paintable, 9, true));
@@ -89,7 +89,7 @@ namespace Music {
             });
             app.song_changed.connect (on_song_changed);
             app.song_tag_parsed.connect (on_song_tag_parsed);
-            app.player.state_changed.connect (player_state_changed);
+            app.player.state_changed.connect (on_player_state_changed);
         }
 
         public bool flap_folded {
@@ -104,28 +104,6 @@ namespace Music {
                 } else if (!value && flap_box.has_css_class ("background")) {
                     flap_box.remove_css_class ("background");
                 }
-            }
-        }
-
-        public string? search_text {
-            get {
-                return _search_text;
-            }
-            set {
-                if (value.ascii_ncasecmp ("album=", 6) == 0) {
-                    _search_property = value.substring (6);
-                    _search_type = SearchType.ALBUM;
-                } else if (value.ascii_ncasecmp ("artist=", 7) == 0) {
-                    _search_property = value.substring (7);
-                    _search_type = SearchType.ARTIST;
-                } else if (value.ascii_ncasecmp ("title=", 6) == 0) {
-                    _search_property = value.substring (6);
-                    _search_type = SearchType.TITLE;
-                } else {
-                    _search_type = SearchType.ALL;
-                }
-                _search_text = value;
-                update_song_filter ();
             }
         }
 
@@ -178,7 +156,7 @@ namespace Music {
 
         private Adw.Animation? _scale_animation = null;
 
-        private void player_state_changed (Gst.State state) {
+        private void on_player_state_changed (Gst.State state) {
             if (state >= Gst.State.PAUSED) {
                 var scale_paintable = cover_image.paintable as ScalePaintable;
                 var target = new Adw.CallbackAnimationTarget ((value) => {
@@ -190,6 +168,24 @@ namespace Music {
                                             state == Gst.State.PLAYING ? 1 : 0.8, 500, target);
                 _scale_animation.play ();
             }
+        }
+
+        private void on_search_text_changed () {
+            string text = search_entry.text;
+            if (text.ascii_ncasecmp ("album=", 6) == 0) {
+                _search_property = text.substring (6);
+                _search_type = SearchType.ALBUM;
+            } else if (text.ascii_ncasecmp ("artist=", 7) == 0) {
+                _search_property = text.substring (7);
+                _search_type = SearchType.ARTIST;
+            } else if (text.ascii_ncasecmp ("title=", 6) == 0) {
+                _search_property = text.substring (6);
+                _search_type = SearchType.TITLE;
+            } else {
+                _search_type = SearchType.ALL;
+            }
+            _search_text = text;
+            update_song_filter ();
         }
 
         private void on_song_changed (Song song) {
@@ -219,7 +215,7 @@ namespace Music {
         }
 
         private bool on_song_info_link (string uri) {
-            search_text = uri;
+            search_entry.text = uri;
             search_btn.active = true;
             return true;
         }
