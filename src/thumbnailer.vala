@@ -120,10 +120,14 @@ namespace Music {
             return pixbuf != null ? Gdk.Texture.for_pixbuf (pixbuf) : null;
         }
 
-        public void remove_text_paintable (string url) {
+        public void update_text_paintable (Song song) {
+            var url = song.url;
             var paintable = find (url);
             if (paintable is TextPaintable) {
+                string text = parse_abbreviation (song.album);
+                paintable = new TextPaintable (text);
                 remove (url);
+                put (url, paintable);
             }
         }
 

@@ -260,9 +260,14 @@ namespace Music {
             var ctx = snapshot.append_cairo (rect);
             ctx.select_font_face ("Serif", Cairo.FontSlant.NORMAL, Cairo.FontWeight.BOLD);
             ctx.set_antialias (Cairo.Antialias.BEST);
-            ctx.set_font_size (height * 0.5);
+            ctx.set_font_size (height * 0.4);
             ctx.set_source_rgba (0, 0, 0, 0.25f);
-            ctx.move_to (0, height);
+
+            Cairo.TextExtents extents;
+            ctx.text_extents (_text, out extents);
+            double x = (width - extents.width) * 0.5 - extents.x_bearing;
+            double y = (height - extents.height) * 0.5 - extents.y_bearing;
+            ctx.move_to (x > 0 ? x : 0, y);
             ctx.show_text (_text);
             ctx.paint_with_alpha (0);
         }

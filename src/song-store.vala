@@ -19,18 +19,18 @@ namespace Music {
 
         public bool from_info (SongInfo info) {
             bool changed = false;
-            changed = info.album != null && album != info.album;
-            if (changed) {
+            if (info.album != null && album != info.album) {
+                changed = true;
                 album = info.album;
                 //  _album_key = album?.collate_key ();
             }
-            changed = info.artist != null && artist != info.artist;
-            if (changed) {
+            if (info.artist != null && artist != info.artist) {
+                changed = true;
                 artist = info.artist;
                 _artist_key = artist?.collate_key ();
             }
-            changed = info.title != null && title != info.title;
-            if (changed) {
+            if (info.title != null && title != info.title) {
+                changed = true;
                 title = info.title;
                 _title_key = title?.collate_key ();
             }
@@ -222,18 +222,38 @@ namespace Music {
         }
     }
 
+    public static int find_first_letter (string text) {
+        var index = 0;
+        var next = 0;
+        var c = text.get_char (index);
+        do {
+            if ((c >= '0' && c <= '9')
+                    || (c >= 'a' && c <= 'z')
+                    || (c >= 'A' && c <= 'Z')
+                    || c >= 0xff) {
+                return index;
+            }
+            index = next;
+        }  while (text.get_next_char (ref next, out c));
+        return -1;
+    }
+
     public static string parse_abbreviation (owned string text) {
-        var pos = text.index_of_char (' ');
-        if (pos > 0 && pos < text.length - 1) {
-            unichar c = ' ';
-            pos++; // skip current ' '
-            if (text.get_next_char (ref pos, out c))
-                text = text.get_char (0).to_string () + c.to_string ();
+        StringBuilder sb = new StringBuilder ();
+        foreach (var s in text.split (" ")) {
+            var index = find_first_letter (s);
+            if (index >= 0) {
+                sb.append (s.get_char (index).to_string ());
+                if (sb.str.char_count () >= 2)
+                    break;
+            }
+        }
+
+        if (sb.str.char_count () >= 2) {
+            text = sb.str;
         } else if (text.char_count () > 2) {
-            unichar c = ' ';
-            pos = 0;
-            if (text.get_next_char (ref pos, out c) && text.get_next_char (ref pos, out c))
-                text = text.slice (0, pos);
+            var index = text.index_of_nth_char (2);
+            text = text.substring (0, index);
         }
         return text.up ();
     }
