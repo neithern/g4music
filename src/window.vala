@@ -196,18 +196,24 @@ namespace Music {
         private async void on_song_tag_parsed (Song song, Bytes? image, string? mtype) {
             update_song_info (song);
 
+            var app = application as Application;
             if (image != null) {
-                var pixbuf = yield run_task_async<Gdk.Pixbuf?> (() => {
-                    return load_clamp_pixbuf (image, 640);
+                var pixbufs = new Gdk.Pixbuf?[2];
+                yield run_task_async<void> (() => {
+                    var pixbuf = pixbufs[0] = load_clamp_pixbuf (image, 640);
+                    pixbufs[1] = pixbuf != null ? create_clamp_pixbuf (pixbuf, Thumbnailer.icon_size) : null;
                 });
-                if (pixbuf != null) {
-                    var paintable = Gdk.Texture.for_pixbuf (pixbuf);
+                if (song == app.current_song && pixbufs[0] != null) {
+                    var paintable = Gdk.Texture.for_pixbuf (pixbufs[0]);
                     update_cover_paintable (song, paintable);
+                    if (pixbufs[1] != null) {
+                        app.thumbnailer.put (song.url, Gdk.Texture.for_pixbuf (pixbufs[1]));
+                        app.song_list.items_changed (app.current_item, 0, 0);
+                    }
                     return;
                 }
             }
 
-            var app = application as Application;
             var paintable = yield app.thumbnailer.load_directly_async (song, 640);
             if (song == app.current_song) {
                 update_cover_paintable (song, paintable);
