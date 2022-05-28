@@ -126,8 +126,7 @@ namespace Music {
             var paintable = find (url);
             if (! (paintable is Gdk.Texture)) {
                 var paintable2 = create_song_album_text_paintable (song);
-                remove (url);
-                put (song.url, paintable2);
+                put (url, paintable2);
             }
         }
 
