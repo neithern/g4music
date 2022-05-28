@@ -1,7 +1,11 @@
 namespace Music {
 
     public static SongInfo? parse_tags (string url) {
-        var file = new TagLib.File (File.new_for_uri (url).get_path ());
+        var path = File.new_for_uri (url).get_path ();
+        if (path == null) {
+            return null;
+        }
+        var file = new TagLib.File (path);
         if (file.is_valid ()) {
             unowned TagLib.Tag tag = file.tag;
             SongInfo info = new SongInfo ();
