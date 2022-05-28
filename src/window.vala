@@ -48,10 +48,9 @@ namespace Music {
 
             search_btn.bind_property ("active", search_entry, "visible", BindingFlags.SYNC_CREATE);
             search_btn.toggled.connect (() => {
-                update_song_filter ();
                 if (search_btn.active)
                     search_entry.grab_focus ();
-                app.find_current_item ();
+                update_song_filter ();
             });
             search_entry.changed.connect (on_search_text_changed);
 
@@ -78,12 +77,12 @@ namespace Music {
             list_view.factory = factory;
             list_view.model = new Gtk.NoSelection (app.song_list);
             list_view.activate.connect ((index) => {
-                app.current_item = index;
+                app.current_item = (int) index;
             });
 
             app.index_changed.connect ((index, size) => {
                 action_set_enabled (Application.ACTION_PREFIX + Application.ACTION_PREV, index > 0);
-                action_set_enabled (Application.ACTION_PREFIX + Application.ACTION_NEXT, index < size - 1);
+                action_set_enabled (Application.ACTION_PREFIX + Application.ACTION_NEXT, index < (int) size - 1);
                 list_view.activate_action ("list.scroll-to-item", "u", index);
                 //  print ("play item: %u\n", index);
             });
@@ -254,6 +253,7 @@ namespace Music {
             } else {
                 app.song_list.filter = null;
             }
+            app.find_current_item ();
         }
 
         private Adw.Animation? _fade_animation = null;

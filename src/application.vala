@@ -11,7 +11,7 @@ namespace Music {
         public static string ACTION_SHUFFLE = "shuffle";
         public static string ACTION_QUIT = "quit";
 
-        private uint _current_item = -1;
+        private int _current_item = -1;
         private Song? _current_song = null;
         private string? _last_playing_url = null;
         private GstPlayer _player = new GstPlayer ();
@@ -19,7 +19,7 @@ namespace Music {
         private SongStore _song_store = new SongStore ();
         private Thumbnailer _thumbnailer = new Thumbnailer ();
 
-        public signal void index_changed (uint index, uint size);
+        public signal void index_changed (int index, uint size);
         public signal void song_changed (Song song);
         public signal void song_tag_parsed (Song song, Bytes? image, string? mtype);
 
@@ -97,7 +97,7 @@ namespace Music {
             base.shutdown ();
         }
 
-        public uint current_item {
+        public int current_item {
             get {
                 return _current_item;
             }
@@ -191,7 +191,7 @@ namespace Music {
             }
         }
 
-        private async uint load_songs_async (owned File[] files) {
+        private async int load_songs_async (owned File[] files) {
             var saved_size = _song_store.size;
             var play_item = _current_item;
 
@@ -208,7 +208,7 @@ namespace Music {
             }
 
             if (saved_size > 0) {
-                play_item = saved_size;
+                play_item = (int) saved_size;
             } else if (_current_song != null) {
                 play_item = _current_item;
             } else {

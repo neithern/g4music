@@ -10,6 +10,7 @@ namespace Music {
             _app = app;
             _connection = connection;
 
+            app.index_changed.connect (on_index_changed);
             app.song_changed.connect (on_song_changed);
             app.song_tag_parsed.connect (on_song_tag_parsed);
             app.player.state_changed.connect (on_state_changed);
@@ -17,7 +18,7 @@ namespace Music {
 
         public bool can_go_next {
             get {
-                return _app.current_item < _app.song_list.get_n_items () - 1;
+                return _app.current_item < (int) _app.song_list.get_n_items () - 1;
             }
         }
 
@@ -29,7 +30,7 @@ namespace Music {
 
         public bool can_play {
             get {
-                return _app.current_item < _app.song_list.get_n_items ();
+                return _app.song_list.get_n_items () > 0;
             }
         }
 
@@ -45,11 +46,14 @@ namespace Music {
             _app.play_pause();
         }
 
-        private void on_song_changed (Song song) {
-            send_meta_data (song);
+        private void on_index_changed (int index, uint size) {
             send_property ("CanGoNext", can_go_next);
             send_property ("CanGoPrevious", can_go_previous);
             send_property ("CanPlay", can_play);
+        }
+
+        private void on_song_changed (Song song) {
+            send_meta_data (song);
         }
 
         private void on_song_tag_parsed (Song song, Bytes? image) {
@@ -65,8 +69,9 @@ namespace Music {
             string[] array = { song.artist };
             data.insert ("xesam:artist", array);
             data.insert ("xesam:title", song.title);
-            if (song.thumbnail != null) try {
-                data.insert ("mpris:artUrl", Filename.to_uri (song.thumbnail));
+            try {
+                if (song.thumbnail != null) 
+                    data.insert ("mpris:artUrl", Filename.to_uri (song.thumbnail));
             } catch (ConvertError _) {
             }
             send_property ("Metadata", data);
