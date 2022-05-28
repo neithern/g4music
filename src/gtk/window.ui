@@ -15,20 +15,25 @@
                 <property name="hexpand">false</property>
                 <property name="width_request">320</property>
                 <child>
-                  <object class="GtkBox" id="search_bar">
+                  <object class="GtkCenterBox" id="list_bar">
                     <property name="orientation">horizontal</property>
                     <style>
                       <class name="toolbar"/>
                     </style>
-                    <child>
+                    <child type="start">
                       <object class="GtkToggleButton" id="search_btn">
                         <property name="icon_name">edit-find-symbolic</property>
                       </object>
                     </child>
-                    <child>
+                    <child type="center">
                       <object class="GtkEntry" id="search_entry">
-                        <property name="width_request">268</property>
-                        <property name="visible">true</property>
+                        <property name="hexpand">true</property>
+                      </object>
+                    </child>
+                    <child type="end">
+                      <object class="GtkToggleButton" id="shuffle_btn">
+                        <property name="icon_name">media-playlist-shuffle-symbolic</property>
+                        <property name="action_name">app.shuffle</property>
                       </object>
                     </child>
                   </object>
@@ -68,12 +73,6 @@
                       <object class="GtkToggleButton" id="reveal_btn">
                         <property name="icon_name">sidebar-show-symbolic</property>
                         <property name="active" bind-source="flap" bind-property="reveal-flap" bind-flags="sync-create|bidirectional"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkToggleButton" id="shuffle_btn">
-                        <property name="icon_name">media-playlist-shuffle-symbolic</property>
-                        <property name="action_name">app.shuffle</property>
                       </object>
                     </child>
                     <child type="end">
