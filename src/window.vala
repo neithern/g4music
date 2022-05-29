@@ -54,10 +54,15 @@ namespace Music {
             });
             search_entry.changed.connect (on_search_text_changed);
 
+            _bkgnd_paintable.queue_draw.connect (this.queue_draw);
+
             _cover_paintable.paintable = _loading_paintable;
-            var scale_paintable = new ScalePaintable (new RoundPaintable (_cover_paintable, 9, true));
+            _cover_paintable.queue_draw.connect (cover_image.queue_draw);
+
+            var scale_paintable = new ScalePaintable (new RoundPaintable (_cover_paintable, 12, 2));
             scale_paintable.scale = 0.8;
             cover_image.paintable = scale_paintable;
+            scale_paintable.queue_draw.connect (cover_image.queue_draw);
 
             song_album.activate_link.connect (on_song_info_link);
             song_artist.activate_link.connect (on_song_info_link);
@@ -160,7 +165,6 @@ namespace Music {
                 var scale_paintable = cover_image.paintable as ScalePaintable;
                 var target = new Adw.CallbackAnimationTarget ((value) => {
                     scale_paintable.scale = value;
-                    cover_image.queue_draw ();
                 });
                 _scale_animation?.pause ();
                 _scale_animation = new Adw.TimedAnimation (cover_image,  scale_paintable.scale,
@@ -264,20 +268,16 @@ namespace Music {
                 paintable = app.thumbnailer.find (song.url) ?? _loading_paintable;
             }
             _cover_paintable.paintable = paintable;
-            //  cover_image.queue_draw ();
 
             var width = get_width ();
             var height = get_height ();
             if (width > 0 && height > 0) {
                 update_blur_paintable (width, height, true);
-                //  queue_draw ();
             }
 
             var target = new Adw.CallbackAnimationTarget ((value) => {
                 _cover_paintable.fade = value;
-                cover_image.queue_draw ();
                 _bkgnd_paintable.fade = value;
-                queue_draw ();
             });
             _fade_animation?.pause ();
             _fade_animation = new Adw.TimedAnimation (cover_image, 1 - _cover_paintable.fade, 0, 800, target);

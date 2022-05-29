@@ -3,6 +3,8 @@ namespace Music {
     public class BasePaintable : Object, Gdk.Paintable {
         protected Gdk.Paintable? _paintable = null;
 
+        public signal void queue_draw ();
+
         public BasePaintable (Gdk.Paintable? paintable = null) {
             _paintable = paintable;
         }
@@ -13,6 +15,7 @@ namespace Music {
             }
             set {
                 on_change (_paintable, value);
+                queue_draw ();
             }
         }
 
@@ -51,9 +54,9 @@ namespace Music {
 
     public class RoundPaintable : BasePaintable {
         private float _radius = 0;
-        private bool _shadow = false;
+        private float _shadow = 0;
 
-        public RoundPaintable (Gdk.Paintable? paintable = null, float radius = 0, bool shadow = false) {
+        public RoundPaintable (Gdk.Paintable? paintable = null, float radius = 0, float shadow = 0) {
             base (paintable);
             _radius = radius;
             _shadow = shadow;
@@ -65,15 +68,17 @@ namespace Music {
             }
             set {
                 _radius = value;
+                queue_draw ();
             }
         }
 
-        public bool shadow {
+        public float shadow {
             get {
                 return _shadow;
             }
             set {
                 _shadow = value;
+                queue_draw ();
             }
         }
 
@@ -90,11 +95,12 @@ namespace Music {
             if (_radius > 0) {
                 snapshot.pop ();
             }
-            if (_shadow) {
+
+            if (_shadow > 0) {
                 var color = Gdk.RGBA ();
                 color.red = color.green = color.blue = 0.2f;
                 color.alpha = 0.2f;
-                snapshot.append_outset_shadow (rounded, color, _radius * 0.2f, _radius * 0.2f, _radius * 0.4f, _radius);
+                snapshot.append_outset_shadow (rounded, color, _shadow, _shadow, _shadow * 0.5f, _radius);
             }
         }
     }
@@ -145,6 +151,7 @@ namespace Music {
             }
             set {
                 _fade = value;
+                queue_draw ();
             }
         }
 
@@ -154,6 +161,7 @@ namespace Music {
             }
             set {
                 _previous = previous;
+                queue_draw ();
             }
         }
 
@@ -190,6 +198,7 @@ namespace Music {
             }
             set {
                 _scale = value;
+                queue_draw ();
             }
         }
 

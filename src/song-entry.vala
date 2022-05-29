@@ -14,6 +14,7 @@ namespace Music {
 
             _cover.pixel_size = 48;
             _cover.paintable = new RoundPaintable (_paintable, 5);
+            _paintable.queue_draw.connect (_cover.queue_draw);
             append (_cover);
 
             var box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
@@ -64,7 +65,6 @@ namespace Music {
         public Gdk.Paintable? cover {
             set {
                 _paintable.paintable = value;
-                _cover.queue_draw ();
             }
         }
     }
