@@ -122,6 +122,7 @@ namespace Music {
             return _store.get_item (position) as Song;
         }
 
+#if HAS_TRACKER_SPARQL
         public async void add_sparql_async () {
             var arr = new GenericArray<Object> (4096);
             yield run_task_async<void> (() => {
@@ -149,6 +150,7 @@ namespace Music {
             });
             _store.splice (_store.get_n_items (), 0, arr.data);
         }
+#endif
 
         public async void add_files_async (owned File[] files) {
             var arr = new GenericArray<Object> (4096);

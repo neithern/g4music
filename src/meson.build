@@ -1,20 +1,7 @@
-add_project_arguments('-DGNOME_DESKTOP_USE_UNSTABLE_API', language: 'c')
-
-dependencies = [
-  dependency('glib-2.0'),
-  dependency('gobject-2.0'),
-  dependency('gtk4'),
-  dependency('gnome-desktop-4'),
-  dependency('gstreamer-1.0'),
-  dependency('libadwaita-1'),
-  dependency('taglib_c'),
-  dependency('tracker-sparql-3.0'),
-  meson.get_compiler('c').find_library('m', required: false),
-]
 
 sources = [
-  'async-task.vala',
   'application.vala',
+  'async-task.vala',
   'gst-player.vala',
   'mpris.vala',
   'paintables.vala',

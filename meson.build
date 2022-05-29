@@ -4,6 +4,24 @@ project('g4music', ['c', 'vala'],
 gnome = import('gnome')
 i18n = import('i18n')
 
+add_project_arguments('-DGNOME_DESKTOP_USE_UNSTABLE_API', language: 'c')
+
+libm_dep = meson.get_compiler('c').find_library('m', required: false)
+
+tracker_sparql_dep = dependency('tracker-sparql-3.0', required: false)
+if tracker_sparql_dep.found()
+  add_project_arguments('--define=HAS_TRACKER_SPARQL', language: 'vala')
+endif
+
+dependencies = [
+  dependency('gnome-desktop-4'),
+  dependency('gstreamer-1.0'),
+  dependency('libadwaita-1'),
+  dependency('taglib_c'),
+  libm_dep,
+  tracker_sparql_dep,
+]
+
 subdir('data')
 subdir('po')
 subdir('src')

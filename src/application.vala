@@ -197,7 +197,9 @@ namespace Music {
 
             if (saved_size == 0 && files.length == 0) {
                 _last_playing_url = yield load_playing_url ();
+#if HAS_TRACKER_SPARQL
                 yield _song_store.add_sparql_async ();
+#endif
                 if (_song_store.size == 0) {
                     files.resize (1);
                     files[0] = File.new_for_path (Environment.get_user_special_dir (UserDirectory.MUSIC));
