@@ -1,13 +1,17 @@
 namespace Music {
 
-    public class Application : Adw.Application {
-        public static string APP_ID = "com.github.neithern.g4music";
+    struct ActionShortKey {
+        public weak string name;
+        public weak string key;
+    }
 
+    public class Application : Adw.Application {
         public static string ACTION_PREFIX = "app.";
         public static string ACTION_ABOUT = "about";
         public static string ACTION_PLAY = "play";
         public static string ACTION_PREV = "prev";
         public static string ACTION_NEXT = "next";
+        public static string ACTION_SEARCH = "search";
         public static string ACTION_SHUFFLE = "shuffle";
         public static string ACTION_QUIT = "quit";
 
@@ -24,19 +28,31 @@ namespace Music {
         public signal void song_tag_parsed (Song song, Bytes? image, string? mtype);
 
         public Application () {
-            Object (application_id: APP_ID, flags: ApplicationFlags.HANDLES_OPEN);
-            this.application_id = APP_ID; // must set again???
+            Object (application_id: "com.github.neithern.g4music",
+                flags: ApplicationFlags.HANDLES_OPEN);
 
             ActionEntry[] action_entries = {
-                { ACTION_ABOUT, this.show_about },
-                { ACTION_PLAY, this.play_pause },
-                { ACTION_PREV, this.play_previous },
-                { ACTION_NEXT, this.play_next },
-                { ACTION_SHUFFLE, this.toggle_shuffle },
-                { ACTION_QUIT, this.quit }
+                { ACTION_ABOUT, show_about },
+                { ACTION_PLAY, play_pause },
+                { ACTION_PREV, play_previous },
+                { ACTION_NEXT, play_next },
+                { ACTION_SEARCH, toggle_seach },
+                { ACTION_SHUFFLE, toggle_shuffle },
+                { ACTION_QUIT, quit }
             };
-            this.add_action_entries (action_entries, this);
-            this.set_accels_for_action ("app.quit", {"<primary>q"});
+            add_action_entries (action_entries, this);
+
+            ActionShortKey[] action_keys = {
+                { ACTION_PLAY, "<primary>p" },
+                { ACTION_PREV, "<primary>Left" },
+                { ACTION_NEXT, "<primary>Right" },
+                { ACTION_SEARCH, "<primary>f" },
+                { ACTION_SHUFFLE, "<primary>t" },
+                { ACTION_QUIT, "<primary>q" }
+            };
+            foreach (var item in action_keys) {
+                set_accels_for_action (ACTION_PREFIX + item.name, {item.key});
+            }
 
             _song_list.model = _song_store.store;
 
@@ -53,7 +69,7 @@ namespace Music {
             });
 
             var mpris_id = Bus.own_name (BusType.SESSION,
-                "org.mpris.MediaPlayer2." + APP_ID,
+                "org.mpris.MediaPlayer2." + application_id,
                 BusNameOwnerFlags.NONE,
                 on_bus_acquired,
                 null, null
@@ -166,6 +182,12 @@ namespace Music {
             current_item = current_item - 1;
         }
 
+        public void toggle_seach () {
+            var win = active_window as Window;
+            if (win != null)
+                win.search_btn.active = ! win.search_btn.active;
+        }
+
         public void toggle_shuffle () {
             shuffle = !_song_store.shuffle;
         }
@@ -229,7 +251,7 @@ namespace Music {
 
         public void show_about () {
             string[] authors = { "Nanling" };
-            Gtk.show_about_dialog (this.active_window,
+            Gtk.show_about_dialog (active_window,
                                    "program-name", "G4Music Player",
                                    "authors", authors,
                                    "version", "0.1.0");

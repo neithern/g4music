@@ -123,19 +123,19 @@ namespace Music {
 
         public string desktop_entry {
             get {
-                return Application.APP_ID;
+                return GLib.Application.get_default ().application_id;
             }
         }
 
         public string identity {
             get {
-                return Application.APP_ID;
+                return GLib.Application.get_default ().application_id;
             }
         }
 
         public string[] supported_uri_schemes {
             owned get {
-                return {"file"};
+                return {"file", "smb"};
             }
         }
 
