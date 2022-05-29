@@ -148,6 +148,8 @@ namespace Music {
                     connection?.close ();
                 }
             });
+            if (!_shuffled)
+                arr.sort (Song.compare_by_title);
             _store.splice (_store.get_n_items (), 0, arr.data);
         }
 #endif
@@ -159,51 +161,48 @@ namespace Music {
                     add_file (file, arr);
                 }
             });
+            if (!_shuffled)
+                arr.sort (Song.compare_by_title);
             _store.splice (_store.get_n_items (), 0, arr.data);
         }
 
-        private void add_file (File file, GenericArray<Object> arr) {
+        private static void add_file (File file, GenericArray<Object> arr) {
             try {
                 var info = file.query_info ("standard::*", FileQueryInfoFlags.NONE);
                 if (info.get_file_type () == FileType.DIRECTORY) {
-                    add_directory (file, arr);
-                } else {
-                    var type = info.get_content_type ();
-                    if (type?.ascii_ncasecmp ("audio/", 6) == 0) {
-                        var song = new_song_file_info ("", info);
-                        song.url = file.get_uri ();
-                        var sinfo = parse_tags (song.url);
-                        if (sinfo != null)
-                            song.from_info (sinfo);
-                        arr.add (song);
+                    var stack = new GenericArray<File> (1024);
+                    stack.add (file);
+                    while (stack.length > 0) {
+                        add_directory (stack, arr);
                     }
+                } else {
+                    var base_url = get_url_with_end_sep (file.get_parent ());
+                    var song = new_song_from_info (base_url, info);
+                    if (song != null)
+                        arr.add (song);
                 }
             } catch (Error e) {
             }
         }
 
-        private void add_directory (File dir, GenericArray<Object> arr) {
+        private static void add_directory (GenericArray<File> stack, GenericArray<Object> arr) {
+            var last = stack.length - 1;
+            var dir = stack[last];
+            stack.remove_index_fast (last);
             try {
-                var base_uri = dir.get_uri ();
-                if (base_uri[base_uri.length - 1] != '/')
-                    base_uri += "/";
+                var base_url = get_url_with_end_sep (dir);
                 FileInfo info = null;
-                var enumerator = dir.enumerate_children ("standard::*", FileQueryInfoFlags.NONE);
+                var enumerator = dir.enumerate_children ("standard::*", FileQueryInfoFlags.NOFOLLOW_SYMLINKS);
                 while ((info = enumerator.next_file ()) != null) {
                     if (info.get_is_hidden ()) {
                         continue;
                     } else if (info.get_file_type () == FileType.DIRECTORY) {
                         var sub_dir = dir.resolve_relative_path (info.get_name ());
-                        add_directory (sub_dir, arr);
+                        stack.add (sub_dir);
                     } else {
-                        var type = info.get_content_type ();
-                        if (type?.has_prefix ("audio/")) {
-                            var song = new_song_file_info (base_uri, info, type);
-                            var sinfo = parse_tags (song.url);
-                            if (sinfo != null)
-                                song.from_info (sinfo);
+                        var song = new_song_from_info (base_url, info);
+                        if (song != null)
                             arr.add (song);
-                        }
                     }
                 }
             } catch (Error e) {
@@ -211,16 +210,27 @@ namespace Music {
             }
         }
 
-        private static Song new_song_file_info (string base_uri, FileInfo info, string? type = null) {
-            var name = info.get_name ();
-            var song = new Song ();
-            song.album = UNKOWN_ALBUM;
-            song.artist = UNKOWN_ARTIST;
-            song.title = parse_name_from_path (name);
-            song.type = type ?? info.get_content_type ();
-            song.url = base_uri + name;
-            song.update_keys ();
-            return song;
+        private static Song? new_song_from_info (string base_url, FileInfo info) {
+            var type = info.get_content_type ();
+            if (type != null && type.has_prefix ("audio/") && !type.has_suffix ("url")) {
+                var name = info.get_name ();
+                var song = new Song ();
+                song.type = type;
+                song.url = base_url + name;
+                var sinfo = parse_tags (song.url);
+                if (sinfo != null) {
+                    song.album = sinfo.album ?? UNKOWN_ALBUM;
+                    song.artist = sinfo.artist ?? UNKOWN_ARTIST;
+                    song.title = sinfo.title ?? parse_name_from_path (name);
+                } else {
+                    song.album = UNKOWN_ALBUM;
+                    song.artist = UNKOWN_ARTIST;
+                    song.title = parse_name_from_path (name);
+                }
+                song.update_keys ();
+                return song;
+            }
+            return null;
         }
     }
 
@@ -238,6 +248,13 @@ namespace Music {
             index = next;
         }  while (text.get_next_char (ref next, out c));
         return -1;
+    }
+
+    public static string get_url_with_end_sep (File file) {
+        var url = file.get_uri ();
+        if (url[url.length - 1] != '/')
+            url += "/";
+        return url;
     }
 
     public static string parse_abbreviation (owned string text) {

@@ -217,6 +217,7 @@ namespace Music {
             var saved_size = _song_store.size;
             var play_item = _current_item;
 
+            var begin_time = get_monotonic_time ();
             if (saved_size == 0 && files.length == 0) {
                 _last_playing_url = yield load_playing_url ();
 #if HAS_TRACKER_SPARQL
@@ -230,19 +231,18 @@ namespace Music {
             if (files.length > 0) {
                 yield _song_store.add_files_async (files);
             }
+            print ("Found %u songs in %g seconds\n", _song_store.size - saved_size,
+                (get_monotonic_time () - begin_time) / 1e6);
 
             if (saved_size > 0) {
                 play_item = (int) saved_size;
             } else if (_current_song != null) {
                 play_item = _current_item;
-            } else {
-                _song_store.shuffle = false; // sort by title
-                if (_last_playing_url != null) {
-                    for (var i = 0; i < _song_store.size; i++) {
-                        if (_last_playing_url == _song_store.get_song (i)?.url) {
-                            play_item = i;
-                            break;
-                        }
+            } else if (_last_playing_url != null) {
+                for (var i = 0; i < _song_store.size; i++) {
+                    if (_last_playing_url == _song_store.get_song (i)?.url) {
+                        play_item = i;
+                        break;
                     }
                 }
             }
