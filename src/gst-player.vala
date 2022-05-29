@@ -28,6 +28,7 @@ namespace Music {
         public signal void position_updated (Gst.ClockTime position);
         public signal void state_changed (Gst.State state);
         public signal void tag_parsed (SongInfo info, Bytes? image, string? mtype);
+        public signal void peak_parsed (double peak);
 
         public GstPlayer () {
             _pipeline.get_bus ()?.add_watch (Priority.DEFAULT, bus_callback);
@@ -35,6 +36,13 @@ namespace Music {
             var sink = Gst.ElementFactory.make ("pipewiresink", "audiosink");
             if (sink != null)
                 _pipeline.audio_sink = sink;
+
+            dynamic var level = Gst.ElementFactory.make ("level", "level");
+            if (level != null) {
+                level.interval = Gst.MSECOND * 66;
+                level.post_messages = true;
+                _pipeline.audio_filter = level;
+            }
         }
 
         ~GstPlayer () {
@@ -144,10 +152,29 @@ namespace Music {
                     }
                     break;
 
+                case Gst.MessageType.ELEMENT:
+                    if (message.has_name ("level")) {
+                        parse_peak (message);
+                    }
+                    break;
+
                 default:
                     break;
             }
             return true;
+        }
+
+        private void parse_peak (dynamic Gst.Message message) {
+            unowned var structure = message.get_structure ();
+            var value = structure?.get_value ("peak");
+            unowned ValueArray arr = (ValueArray*) value?.get_boxed ();
+            if (arr != null) {
+                double total = 0;
+                for (var i = 0; i < arr?.n_values; i++) {
+                    total += Math.pow (10, arr.get_nth (0).get_double () / 20);
+                }
+                peak_parsed (total / arr.n_values);
+            }
         }
 
         private void parse_tags (Gst.Message message) {

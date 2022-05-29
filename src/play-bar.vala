@@ -1,17 +1,8 @@
 namespace Music {
 
-    //  [GtkTemplate (ui = "/com/github/neithern/g4music/gtk/play-bar.ui")]
     public class PlayBar : Gtk.Box {
-        //  [GtkChild]
-        //  private unowned Gtk.Scale _seek;
-        //  [GtkChild]
-        //  private unowned Gtk.Label _positive;
-        //  [GtkChild]
-        //  private unowned Gtk.Label _negative;
-        //  [GtkChild]
-        //  private unowned Gtk.Button _play;
-
         private Gtk.Scale _seek = new Gtk.Scale (Gtk.Orientation.HORIZONTAL, null);
+        private Gtk.Label _peak = new Gtk.Label (null);
         private Gtk.Label _positive = new Gtk.Label ("0:00");
         private Gtk.Label _negative = new Gtk.Label ("-0:00");
         private Gtk.Button _prev = new Gtk.Button ();
@@ -19,6 +10,7 @@ namespace Music {
         private Gtk.Button _next = new Gtk.Button ();
         private int _duration = 1;
         private int _position = 0;
+        private int _peak_length = 0;
 
         construct {
             orientation = Gtk.Orientation.VERTICAL;
@@ -34,13 +26,24 @@ namespace Music {
             _seek.adjust_bounds.connect ((value) => {
                 app.player.seek (GstPlayer.from_second (value));
             });
-            append(_seek);
+            append (_seek);
 
             var times = new Gtk.CenterBox ();
+            times.baseline_position = Gtk.BaselinePosition.CENTER;
             times.halign = Gtk.Align.FILL;
             times.set_start_widget (_positive);
             times.set_end_widget (_negative);
-            append(times);
+
+            var overlay = new Gtk.Overlay ();
+            overlay.child = times;
+            overlay.add_overlay (_peak);
+            append (overlay);
+
+            _peak.halign = Gtk.Align.CENTER;
+            _peak.valign = Gtk.Align.CENTER;
+            _peak.add_css_class ("caption");
+            _peak.add_css_class ("dim-label");
+            _peak.add_css_class ("numeric");
 
             _positive.halign = Gtk.Align.START;
             _positive.margin_start = 12;
@@ -56,11 +59,11 @@ namespace Music {
 
             var buttons = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
             buttons.halign = Gtk.Align.CENTER;
-            buttons.margin_top = 8;
+            buttons.margin_top = 16;
             buttons.append (_prev);
             buttons.append (_play);
             buttons.append (_next);
-            append(buttons);
+            append (buttons);
 
             _prev.valign = Gtk.Align.CENTER;
             _prev.action_name = Application.ACTION_PREFIX + Application.ACTION_PREV;
@@ -90,6 +93,17 @@ namespace Music {
             player.state_changed.connect ((state) => {
                 var playing = state == Gst.State.PLAYING;
                 _play.icon_name = playing ? "media-playback-pause-symbolic" : "media-playback-start-symbolic";
+                if (state < Gst.State.PLAYING) {
+                    _peak_length = 0;
+                    _peak.label = null;
+                }
+            });
+            player.peak_parsed.connect ((peak) => {
+                var length = (int) (peak * 18) / 2 * 2 + 1;
+                if (_peak_length != length) {
+                    _peak_length = length;
+                    _peak.label = string.nfill (length, '=');
+                }
             });
         }
 
@@ -97,7 +111,7 @@ namespace Music {
             set {
                 _duration = (int) (value + 0.5);
                 _seek.set_range (0, _duration);
-                _negative.label = "-" + format_time(_duration - _position);
+                _negative.label = "-" + format_time (_duration - _position);
             }
         }
 
@@ -105,18 +119,19 @@ namespace Music {
             set {
                 if (_position != (int) value) {
                     _position = (int) value;
-                    _positive.label = format_time(_position);
-                    _negative.label = "-" + format_time(_duration - _position);
+                    _positive.label = format_time (_position);
+                    _negative.label = "-" + format_time (_duration - _position);
                 }
                 _seek.set_value (value);
             }
         }
+    }
 
-        public static string format_time (int seconds) {
-            int minutes = seconds / 60;
-            seconds -= minutes * 60;
-            var s = (seconds < 10 ? "0" : "") + seconds.to_string ();
-            return minutes.to_string () + ":" + s;
-        }
+    public static string format_time (int seconds) {
+        int minutes = seconds / 60;
+        seconds -= minutes * 60;
+        var sb = new StringBuilder ();
+        sb.printf ("%d:%02d", minutes, seconds);
+        return sb.str;
     }
 }

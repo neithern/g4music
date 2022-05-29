@@ -4,11 +4,12 @@ dependencies = [
   dependency('glib-2.0'),
   dependency('gobject-2.0'),
   dependency('gtk4'),
-  dependency('libadwaita-1'),
   dependency('gnome-desktop-4'),
   dependency('gstreamer-1.0'),
+  dependency('libadwaita-1'),
   dependency('taglib_c'),
   dependency('tracker-sparql-3.0'),
+  meson.get_compiler('c').find_library('m', required: false),
 ]
 
 sources = [
