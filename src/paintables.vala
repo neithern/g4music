@@ -24,6 +24,10 @@ namespace Music {
             return _paintable?.get_flags () ?? 0;
         }
 
+        public virtual double get_intrinsic_aspect_ratio () {
+            return _paintable?.get_intrinsic_aspect_ratio () ?? 0;
+        }
+
         public virtual int get_intrinsic_width () {
             return _paintable?.get_intrinsic_width () ?? 0;
         }
