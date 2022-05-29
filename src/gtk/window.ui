@@ -56,7 +56,7 @@
               </object>
             </property>
             <property name="content">
-              <object class="GtkBox" id="content_box">
+              <object class="GtkBox">
                 <property name="hexpand">true</property>
                 <property name="orientation">vertical</property>
                 <child>
@@ -84,9 +84,8 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkBox">
+                  <object class="GtkBox" id="content_box">
                     <property name="orientation">vertical</property>
-                    <property name="valign">center</property>
                     <property name="margin_start">32</property>
                     <property name="margin_end">32</property>
                     <property name="margin_top">16</property>

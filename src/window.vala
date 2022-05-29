@@ -123,7 +123,7 @@ namespace Music {
             _bkgnd_paintable.snapshot (snapshot, width, height);
             snapshot.pop ();
             if (!flap.folded) {
-                var right = width - content_box.get_width ();
+                var right = width - flap.content.get_width ();
                 var rect = Graphene.Rect ().init(right - 0.5f, 0, 0.5f, (float) height);
                 draw_gray_linear_gradient_line (snapshot, rect);
             }
