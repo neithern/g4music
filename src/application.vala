@@ -8,6 +8,7 @@ namespace Music {
     public class Application : Adw.Application {
         public static string ACTION_PREFIX = "app.";
         public static string ACTION_ABOUT = "about";
+        public static string ACTION_PREFS = "preferences";
         public static string ACTION_PLAY = "play";
         public static string ACTION_PREV = "prev";
         public static string ACTION_NEXT = "next";
@@ -32,6 +33,7 @@ namespace Music {
 
             ActionEntry[] action_entries = {
                 { ACTION_ABOUT, show_about },
+                { ACTION_PREFS, show_preferences },
                 { ACTION_PLAY, play_pause },
                 { ACTION_PREV, play_previous },
                 { ACTION_NEXT, play_next },
@@ -82,10 +84,9 @@ namespace Music {
 
             if (active_window != null) {
                 active_window.present ();
-                return;
+            } else {
+                open ({}, "");
             }
-
-            open ({}, "");
         }
 
         public override void open (File[] files, string hint) {
@@ -169,6 +170,13 @@ namespace Music {
             }
         }
 
+        public File get_music_folder (Settings settings) {
+            var music_path = settings.get_string ("music-dir");
+            if (music_path == null || music_path.length == 0)
+                music_path = Environment.get_user_special_dir (UserDirectory.MUSIC);
+            return File.new_for_uri (music_path);
+        }
+
         public void play_next () {
             current_item = current_item + 1;
         }
@@ -179,6 +187,14 @@ namespace Music {
 
         public void play_previous () {
             current_item = current_item - 1;
+        }
+
+        public void reload_song_store () {
+            _song_store.clear ();
+            _current_item = -1;
+            load_songs_async.begin ({}, (obj, res) => {
+                load_songs_async.end (res);
+            });
         }
 
         public void toggle_seach () {
@@ -218,12 +234,15 @@ namespace Music {
 
             var begin_time = get_monotonic_time ();
             if (saved_size == 0 && files.length == 0) {
+                var settings = new Settings (application_id);
 #if HAS_TRACKER_SPARQL
-                yield _song_store.add_sparql_async ();
+                if (settings.get_boolean ("tracker-mode")) {
+                    yield _song_store.add_sparql_async ();
+                }
 #endif
                 if (_song_store.size == 0) {
                     files.resize (1);
-                    files[0] = File.new_for_path (Environment.get_user_special_dir (UserDirectory.MUSIC));
+                    files[0] = get_music_folder (settings);
                 }
             }
             if (files.length > 0) {
@@ -256,6 +275,15 @@ namespace Music {
                                    "program-name", "G4Music Player",
                                    "authors", authors,
                                    "version", "0.1.0");
+        }
+
+        public void show_preferences () {
+            activate ();
+            var win = new PreferencesWindow (this);
+            win.destroy_with_parent = true;
+            win.transient_for = active_window;
+            win.modal = true;
+            win.present ();
         }
 
         private void on_bus_acquired (DBusConnection connection, string name) {

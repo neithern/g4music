@@ -2,6 +2,7 @@
 <gresources>
   <gresource prefix="/com/github/neithern/g4music">
     <file>gtk/help-overlay.ui</file>
+    <file>gtk/preferences.ui</file>
     <file>gtk/window.ui</file>
   </gresource>
 </gresources>

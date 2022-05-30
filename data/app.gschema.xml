@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist gettext-domain="g4music">
-	<schema id="@app_id@" path="/com/github/neithern/g4music/">
-	</schema>
+  <schema id="@app_id@" path="/com/github/neithern/g4music/">
+    <key name="tracker-mode" type="b">
+      <default>false</default>
+      <summary>Load music from Tracker database</summary>
+    </key>
+    <key name="music-dir" type="s">
+      <default>''</default>
+      <summary>Load music from local directory</summary>
+    </key>
+  </schema>
 </schemalist>

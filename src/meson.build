@@ -6,6 +6,7 @@ sources = [
   'mpris.vala',
   'paintables.vala',
   'play-bar.vala',
+  'preferences.vala',
   'song-entry.vala',
   'song-store.vala',
   'tag-parser.vala',

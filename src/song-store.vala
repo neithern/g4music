@@ -108,6 +108,10 @@ namespace Music {
             }
         }
 
+        public void clear () {
+            _store.remove_all ();
+        }
+
         public Song? get_song (uint position) {
             return _store.get_item (position) as Song;
         }
@@ -125,7 +129,7 @@ namespace Music {
 
         public async void add_sparql_async () {
             var arr = new GenericArray<Object> (4096);
-            yield run_task_async<void> (() => {
+            yield run_async<void> (() => {
                 Tracker.Sparql.Connection connection = null;
                 try {
                     connection = Tracker.Sparql.Connection.bus_new ("org.freedesktop.Tracker3.Miner.Files", null);
