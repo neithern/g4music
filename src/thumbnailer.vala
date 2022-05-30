@@ -1,41 +1,38 @@
 namespace Music {
 
+    //  Sorted by insert order
     public class LruCache<V> : Object {
-        private static uint MAX_SIZE = 50 * 1024 * 1024;
+        public static uint MAX_SIZE = 50 * 1024 * 1024;
+        public static CompareDataFunc<string> compare_string = (a, b) => { return strcmp (a, b); };
 
         private size_t _size = 0;
-        private Tree<string, int> _accessed = new Tree<string, int> ((a, b) => { return strcmp (a, b); });
-        private HashTable<string, V> _cache = new HashTable<string, V> (str_hash, str_equal);
+        private Tree<string, V> _cache = new Tree<string, V> (compare_string);
 
         public V? find (string key) {
-            var value = _cache.get (key);
-            if (value != null) {
-                access_order (key);
-            }
-            return value;
+            return _cache.lookup (key);
         }
 
         public void put (string key, V value) {
             var size = size_of_value (value);
-            unowned TreeNode<string, int>? first = null;
-            while (_size + size > MAX_SIZE && (first = _accessed.node_first ()) != null) {
-                unowned var key0 = first.key ();
-                remove (key0);
-                _accessed.remove (key0);
+            unowned TreeNode<string, V>? first = null;
+            while (_size + size > MAX_SIZE && (first = _cache.node_first ()) != null) {
+                _size -= size_of_value (first.value ());
+                _cache.remove (first.key ());
             }
 
-            var cur = _cache.get (key);
+            var cur = _cache.lookup (key);
             if (cur != null) {
                 _size -= size_of_value (cur);
+                _cache.replace (key, value);
+            } else {
+                _cache.insert (key, value);
             }
-            _cache.set (key, value);
             _size += size;
-            access_order (key);
             //  print (@"cache size: $(_size)\n");
         }
 
         public bool remove (string key) {
-            var value = _cache.get (key);
+            var value = _cache.lookup (key);
             if (value != null) {
                 _size -= size_of_value (value);
             }
@@ -44,10 +41,6 @@ namespace Music {
 
         protected virtual size_t size_of_value (V value) {
             return 1;
-        }
-
-        private void access_order (string key) {
-            _accessed.replace (key, 0);
         }
     }
 
