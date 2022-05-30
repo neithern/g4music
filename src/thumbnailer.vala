@@ -115,7 +115,7 @@ namespace Music {
         }
 
         public async Gdk.Paintable? load_directly_async (Song song, int size = 0) {
-            var pixbuf = yield run_task_async<Gdk.Pixbuf?> (() => {
+            var pixbuf = yield run_async<Gdk.Pixbuf?> (() => {
                 return load_directly (song, size);
             });
             return pixbuf != null ? Gdk.Texture.for_pixbuf (pixbuf) : null;

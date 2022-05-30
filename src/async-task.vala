@@ -27,11 +27,11 @@ namespace Music {
         private static Once<ThreadPool<Worker<V>>> async_pool;
         internal static unowned ThreadPool<Worker> get_async_pool () {
             return async_pool.once(() => {
-                int num_threads = (int)get_num_processors ();
+                var num_threads = get_num_processors ();
                 try {
-                    return new ThreadPool<Worker<V>>.with_owned_data((tdata) => {
+                    return new ThreadPool<Worker<V>>.with_owned_data ((tdata) => {
                         tdata.run();
-                    }, num_threads, false);
+                    }, (int) num_threads, false);
                 } catch (Error err) {
                     Process.abort ();
                 }
@@ -39,8 +39,8 @@ namespace Music {
         }
     }
 
-    public static async V run_task_async<V> (TaskFunc<V> task) {
-        var worker  = new Worker<V> (task, run_task_async<V>.callback);
+    public static async V run_async<V> (TaskFunc<V> task) {
+        var worker = new Worker<V> (task, run_async<V>.callback);
         try {
             Worker.get_async_pool ().add (worker);
             yield;

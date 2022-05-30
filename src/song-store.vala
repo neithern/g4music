@@ -156,7 +156,7 @@ namespace Music {
 
         public async void add_files_async (owned File[] files) {
             var arr = new GenericArray<Object> (4096);
-            yield run_task_async<void> (() => {
+            yield run_async<void> (() => {
                 foreach (var file in files) {
                     add_file (file, arr);
                 }

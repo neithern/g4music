@@ -237,7 +237,7 @@ namespace Music {
             } else if (_current_song != null) {
                 play_item = _current_item;
             } else {
-                var url = yield run_task_async<string?> (load_playing_url);
+                var url = yield run_async<string?> (load_playing_url);
                 if (url != null) {
                     for (var i = 0; i < _song_store.size; i++) {
                         if (url == _song_store.get_song (i)?.url) {

@@ -202,7 +202,7 @@ namespace Music {
             var app = application as Application;
             if (image != null) {
                 var pixbufs = new Gdk.Pixbuf?[2];
-                yield run_task_async<void> (() => {
+                yield run_async<void> (() => {
                     var pixbuf = pixbufs[0] = load_clamp_pixbuf (image, 640);
                     pixbufs[1] = pixbuf != null ? create_clamp_pixbuf (pixbuf, Thumbnailer.icon_size) : null;
                 });
