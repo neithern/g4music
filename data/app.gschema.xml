@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist gettext-domain="g4music">
-	<schema id="com.github.neithern.g4music" path="/com/github/neithern/g4music/">
+	<schema id="@app_id@" path="/com/github/neithern/g4music/">
 	</schema>
 </schemalist>

@@ -1,6 +1,9 @@
-data/com.github.neithern.g4music.desktop.in
-data/com.github.neithern.g4music.appdata.xml.in
-data/com.github.neithern.g4music.gschema.xml
-src/window.ui
+data/app.desktop.in
+data/app.appdata.xml.in
+data/app.gschema.xml
+src/gtk/help-overlay.ui
+src/gtk/window.ui
+src/application.vala
+src/play-bar.vala
+src/song-store.vala
 src/window.vala
-

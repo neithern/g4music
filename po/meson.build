@@ -1,1 +1,1 @@
-i18n.gettext('vala-demo', preset: 'glib')
+i18n.gettext(app_id, preset: 'glib')

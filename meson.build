@@ -1,9 +1,15 @@
-project('g4music', ['c', 'vala'],
-  version : '0.1')
+project('com.github.neithern.g4music',
+  ['c', 'vala'],
+  version: '0.1'
+)
 
 gnome = import('gnome')
 i18n = import('i18n')
 
+app_id = meson.project_name()
+version = meson.project_version()
+
+add_project_arguments('-DGETTEXT_PACKAGE="' + app_id + '"', language: 'c')
 add_project_arguments('-DGNOME_DESKTOP_USE_UNSTABLE_API', language: 'c')
 
 libm_dep = meson.get_compiler('c').find_library('m', required: false)
