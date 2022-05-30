@@ -66,16 +66,6 @@ namespace Music {
         public static string UNKOWN_ARTIST = "Unknown Aritst";
         public static string DEFAULT_MIMETYPE = "audio/mpeg";
 
-        public static string SQL_QUERY_SONGS = """
-            SELECT 
-                nie:title(nmm:musicAlbum(?song)) AS ?album
-                nmm:artistName (nmm:artist (?song)) AS ?artist
-                nie:title (?song) AS ?title
-                nie:mimeType (?song) AS ?mtype
-                nie:isStoredAs (?song) AS ?url
-            WHERE { ?song a nmm:MusicPiece }
-        """.replace ("\n", " ");
-
         private bool _shuffled = false;
         private ListStore _store = new ListStore (typeof (Song));
 
@@ -123,6 +113,16 @@ namespace Music {
         }
 
 #if HAS_TRACKER_SPARQL
+        public static string SQL_QUERY_SONGS = """
+            SELECT 
+                nie:title(nmm:musicAlbum(?song)) AS ?album
+                nmm:artistName (nmm:artist (?song)) AS ?artist
+                nie:title (?song) AS ?title
+                nie:mimeType (?song) AS ?mtype
+                nie:isStoredAs (?song) AS ?url
+            WHERE { ?song a nmm:MusicPiece }
+        """;
+
         public async void add_sparql_async () {
             var arr = new GenericArray<Object> (4096);
             yield run_task_async<void> (() => {
