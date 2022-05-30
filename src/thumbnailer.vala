@@ -4,7 +4,7 @@ namespace Music {
         private static uint MAX_SIZE = 50 * 1024 * 1024;
 
         private size_t _size = 0;
-        private List<string> _accessed = new List<string> ();
+        private Tree<string, int> _accessed = new Tree<string, int> ((a, b) => { return strcmp (a, b); });
         private HashTable<string, V> _cache = new HashTable<string, V> (str_hash, str_equal);
 
         public V? find (string key) {
@@ -17,10 +17,11 @@ namespace Music {
 
         public void put (string key, V value) {
             var size = size_of_value (value);
-            while (_size + size > MAX_SIZE && _accessed.length () > 0) {
-                unowned var first = _accessed.first ();
-                remove (first.data);
-                _accessed.remove_link (first);
+            unowned TreeNode<string, int>? first = null;
+            while (_size + size > MAX_SIZE && (first = _accessed.node_first ()) != null) {
+                unowned var key0 = first.key ();
+                remove (key0);
+                _accessed.remove (key0);
             }
 
             var cur = _cache.get (key);
@@ -46,8 +47,7 @@ namespace Music {
         }
 
         private void access_order (string key) {
-            _accessed.remove_link (_accessed.find_custom (key, strcmp));
-            _accessed.append (key);
+            _accessed.replace (key, 0);
         }
     }
 
