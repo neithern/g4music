@@ -66,14 +66,11 @@ namespace Music {
 
         private void send_meta_data (Song song) {
             var data = new HashTable<string, Variant> (str_hash, str_equal);
-            string[] array = { song.artist };
-            data.insert ("xesam:artist", array);
+            string[] artist = { song.artist };
+            data.insert ("xesam:artist", artist);
             data.insert ("xesam:title", song.title);
-            try {
-                if (song.thumbnail != null) 
-                    data.insert ("mpris:artUrl", Filename.to_uri (song.thumbnail));
-            } catch (ConvertError _) {
-            }
+            if (song.thumbnail != null) 
+                data.insert ("mpris:artUrl", File.new_for_path (song.thumbnail).get_uri ());
             send_property ("Metadata", data);
         }
 

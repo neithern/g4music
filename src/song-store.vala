@@ -258,7 +258,7 @@ namespace Music {
     }
 
     public static string parse_abbreviation (owned string text) {
-        StringBuilder sb = new StringBuilder ();
+        var sb = new StringBuilder ();
         foreach (var s in text.split (" ")) {
             var index = find_first_letter (s);
             if (index >= 0) {
