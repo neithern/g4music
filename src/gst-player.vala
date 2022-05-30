@@ -14,7 +14,7 @@ namespace Music {
             return (Gst.ClockTime) (time * Gst.SECOND);
         }
 
-        private dynamic Gst.Element _pipeline = Gst.ElementFactory.make ("playbin3", "player");
+        private dynamic Gst.Element _pipeline = Gst.ElementFactory.make ("playbin", "player");
         private Gst.ClockTime _duration = Gst.CLOCK_TIME_NONE;
         private Gst.ClockTime _position = Gst.CLOCK_TIME_NONE;
         private Gst.ClockTime _last_seeked_pos = Gst.CLOCK_TIME_NONE;
@@ -32,17 +32,6 @@ namespace Music {
 
         public GstPlayer () {
             _pipeline.get_bus ()?.add_watch (Priority.DEFAULT, bus_callback);
-
-            var sink = Gst.ElementFactory.make ("pipewiresink", "audiosink");
-            if (sink != null)
-                _pipeline.audio_sink = sink;
-
-            dynamic var level = Gst.ElementFactory.make ("level", "level");
-            if (level != null) {
-                level.interval = Gst.MSECOND * 66;
-                level.post_messages = true;
-                _pipeline.audio_filter = level;
-            }
         }
 
         ~GstPlayer () {
@@ -90,12 +79,45 @@ namespace Music {
             _pipeline.set_state (Gst.State.PAUSED);
         }
 
+        public void restart () {
+            var saved_state = _state;
+            if (saved_state != Gst.State.NULL) {
+                _pipeline.set_state (Gst.State.NULL);
+                _pipeline.set_state (saved_state);
+            }
+        }
+
         public void seek (Gst.ClockTime position) {
             var diff = (Gst.ClockTimeDiff) (position - _last_seeked_pos);
             if (diff > 10 * Gst.MSECOND || diff < -10 * Gst.MSECOND) {
                 //  print ("Seek: %g -> %g\n", to_second (_last_seeked_pos), to_second (position));
                 _last_seeked_pos = position;
                 _pipeline.seek_simple (Gst.Format.TIME, Gst.SeekFlags.ACCURATE | Gst.SeekFlags.FLUSH, (int64) position);
+            }
+        }
+
+        public void show_peak (bool show) {
+            if (show) {
+                dynamic var level = Gst.ElementFactory.make ("level", "filter");
+                if (level != null) {
+                    level.interval = Gst.MSECOND * 66; // 15fps
+                    level.post_messages = true;
+                }
+                _pipeline.audio_filter = level;
+            } else {
+                _pipeline.audio_filter = null;
+            }
+        }
+
+        public void use_pipewire (bool use) {
+            if (use) {
+                var sink = Gst.ElementFactory.make ("pipewiresink", "audiosink");
+                if (sink != null) {
+                    _pipeline.audio_sink = sink;
+                    print ("Enable pipewire\n");
+                }
+            } else {
+                _pipeline.audio_sink = null;
             }
         }
 

@@ -8,15 +8,23 @@ namespace Music {
         unowned Gtk.Switch tracker_btn;
         [GtkChild]
         unowned Gtk.Button music_dir_btn;
+        [GtkChild]
+        unowned Gtk.Switch pipewire_btn;
+        [GtkChild]
+        unowned Gtk.Switch peak_btn;
 
         public PreferencesWindow (Application app) {
-#if HAS_TRACKER_SPARQL
             var settings = new Settings (app.application_id);
+
+#if HAS_TRACKER_SPARQL
+            settings.bind ("tracker-mode", tracker_btn, "state", SettingsBindFlags.DEFAULT);
             tracker_row.visible = true;
-            tracker_btn.state = settings.get_boolean ("tracker-mode");
             tracker_btn.state_set.connect ((state) => {
-                settings.set_boolean ("tracker-mode", state);
-                app.reload_song_store ();
+                // reload later after setting apply
+                Idle.add (() => {
+                    app.reload_song_store ();
+                    return false;
+                });
                 return false;
             });
 #else
@@ -44,6 +52,20 @@ namespace Music {
                     }
                 });
                 chooser.show ();
+            });
+
+            settings.bind ("pipewire-sink", pipewire_btn, "state", SettingsBindFlags.DEFAULT);
+            pipewire_btn.state_set.connect ((state) => {
+                app.player.use_pipewire (state);
+                app.player.restart ();
+                return false;
+            });
+
+            settings.bind ("show-peak", peak_btn, "state", SettingsBindFlags.DEFAULT);
+            peak_btn.state_set.connect ((state) => {
+                app.player.show_peak (state);
+                app.player.restart ();
+                return false;
             });
         }
     }

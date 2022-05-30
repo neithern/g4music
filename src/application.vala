@@ -57,6 +57,10 @@ namespace Music {
 
             _song_list.model = _song_store.store;
 
+            var settings = new Settings (application_id);
+            _player.show_peak (settings.get_boolean ("show-peak"));
+            _player.use_pipewire (settings.get_boolean ("pipewire-sink"));
+
             _player.end_of_stream.connect (() => {
                 current_item = current_item + 1;
             });

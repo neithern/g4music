@@ -9,5 +9,13 @@
       <default>''</default>
       <summary>Load music from local directory</summary>
     </key>
+    <key name="pipewire-sink" type="b">
+      <default>false</default>
+      <summary>Prefer pipewire audio sink</summary>
+    </key>
+    <key name="show-peak" type="b">
+      <default>true</default>
+      <summary>Show audio peak when playing</summary>
+    </key>
   </schema>
 </schemalist>
