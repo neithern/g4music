@@ -17,7 +17,6 @@ namespace Music {
 
         private int _current_item = -1;
         private Song? _current_song = null;
-        private string? _last_playing_url = null;
         private GstPlayer _player = new GstPlayer ();
         private Gtk.FilterListModel _song_list = new Gtk.FilterListModel (null, null);
         private SongStore _song_store = new SongStore ();
@@ -219,7 +218,6 @@ namespace Music {
 
             var begin_time = get_monotonic_time ();
             if (saved_size == 0 && files.length == 0) {
-                _last_playing_url = yield load_playing_url ();
 #if HAS_TRACKER_SPARQL
                 yield _song_store.add_sparql_async ();
 #endif
@@ -238,11 +236,14 @@ namespace Music {
                 play_item = (int) saved_size;
             } else if (_current_song != null) {
                 play_item = _current_item;
-            } else if (_last_playing_url != null) {
-                for (var i = 0; i < _song_store.size; i++) {
-                    if (_last_playing_url == _song_store.get_song (i)?.url) {
-                        play_item = i;
-                        break;
+            } else {
+                var url = yield run_task_async<string?> (load_playing_url);
+                if (url != null) {
+                    for (var i = 0; i < _song_store.size; i++) {
+                        if (url == _song_store.get_song (i)?.url) {
+                            play_item = i;
+                            break;
+                        }
                     }
                 }
             }
@@ -266,11 +267,11 @@ namespace Music {
             }
         }
 
-        private async string? load_playing_url () {
+        private string? load_playing_url () {
             try {
                 var dir = Environment.get_user_state_dir ();
                 var file = File.new_build_filename (dir, application_id);
-                var bytes = yield file.load_bytes_async (null, null);
+                var bytes = file.load_bytes (null, null);
                 var key_file = new KeyFile ();
                 key_file.load_from_bytes (bytes, KeyFileFlags.NONE);
                 return key_file.get_string ("playing", "url");
