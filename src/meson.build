@@ -3,6 +3,7 @@ sources = [
   'application.vala',
   'async-task.vala',
   'gst-player.vala',
+  'main.vala',
   'mpris.vala',
   'paintables.vala',
   'play-bar.vala',

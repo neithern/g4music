@@ -276,9 +276,13 @@ namespace Music {
         public void show_about () {
             string[] authors = { "Nanling" };
             Gtk.show_about_dialog (active_window,
-                                   "program-name", "G4Music Player",
+                                   "logo-icon-name", application_id,
+                                   "program-name", "G4Music",
                                    "authors", authors,
-                                   "version", "0.1.0");
+                                   "version", "0.1.0",
+                                   "license-type", Gtk.License.GPL_3_0,
+                                   "comments", "A fast, flurent, light weight music player written in GTK4."
+                                  );
         }
 
         public void show_preferences () {
@@ -324,11 +328,4 @@ namespace Music {
             }
         }
     }
-}
-
-int main (string[] args) {
-    Music.GstPlayer.init (ref args);
-    //  Environment.set_application_name ("G4Music");
-    var app = new Music.Application ();
-    return app.run (args);
 }
