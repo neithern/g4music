@@ -86,8 +86,8 @@ namespace Music {
             });
 
             app.index_changed.connect ((index, size) => {
-                action_set_enabled (Application.ACTION_PREFIX + Application.ACTION_PREV, index > 0);
-                action_set_enabled (Application.ACTION_PREFIX + Application.ACTION_NEXT, index < (int) size - 1);
+                action_set_enabled (ACTION_APP + ACTION_PREV, index > 0);
+                action_set_enabled (ACTION_APP + ACTION_NEXT, index < (int) size - 1);
                 list_view.activate_action ("list.scroll-to-item", "u", index);
                 //  print ("play item: %u\n", index);
             });

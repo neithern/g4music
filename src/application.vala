@@ -1,4 +1,14 @@
 namespace Music {
+    public const string APP_ID = "com.github.neithern.g4music";
+    public const string ACTION_APP = "app.";
+    public const string ACTION_ABOUT = "about";
+    public const string ACTION_PREFS = "preferences";
+    public const string ACTION_PLAY = "play";
+    public const string ACTION_PREV = "prev";
+    public const string ACTION_NEXT = "next";
+    public const string ACTION_SEARCH = "search";
+    public const string ACTION_SHUFFLE = "shuffle";
+    public const string ACTION_QUIT = "quit";
 
     struct ActionShortKey {
         public weak string name;
@@ -6,16 +16,6 @@ namespace Music {
     }
 
     public class Application : Adw.Application {
-        public static string ACTION_PREFIX = "app.";
-        public static string ACTION_ABOUT = "about";
-        public static string ACTION_PREFS = "preferences";
-        public static string ACTION_PLAY = "play";
-        public static string ACTION_PREV = "prev";
-        public static string ACTION_NEXT = "next";
-        public static string ACTION_SEARCH = "search";
-        public static string ACTION_SHUFFLE = "shuffle";
-        public static string ACTION_QUIT = "quit";
-
         private int _current_item = -1;
         private Song? _current_song = null;
         private GstPlayer _player = new GstPlayer ();
@@ -28,8 +28,7 @@ namespace Music {
         public signal void song_tag_parsed (Song song, Bytes? image, string? mtype);
 
         public Application () {
-            Object (application_id: "com.github.neithern.g4music",
-                flags: ApplicationFlags.HANDLES_OPEN);
+            Object (application_id: APP_ID, flags: ApplicationFlags.HANDLES_OPEN);
 
             ActionEntry[] action_entries = {
                 { ACTION_ABOUT, show_about },
@@ -52,7 +51,7 @@ namespace Music {
                 { ACTION_QUIT, "<primary>q" }
             };
             foreach (var item in action_keys) {
-                set_accels_for_action (ACTION_PREFIX + item.name, {item.key});
+                set_accels_for_action (ACTION_APP + item.name, {item.key});
             }
 
             _song_list.model = _song_store.store;

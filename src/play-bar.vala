@@ -66,12 +66,12 @@ namespace Music {
             append (buttons);
 
             _prev.valign = Gtk.Align.CENTER;
-            _prev.action_name = Application.ACTION_PREFIX + Application.ACTION_PREV;
+            _prev.action_name = ACTION_APP + ACTION_PREV;
             _prev.icon_name = "media-skip-backward-symbolic";
             _prev.add_css_class ("circular");
 
             _play.valign = Gtk.Align.CENTER;
-            _play.action_name = Application.ACTION_PREFIX + Application.ACTION_PLAY;
+            _play.action_name = ACTION_APP + ACTION_PLAY;
             _play.icon_name = "media-playback-start-symbolic"; // media-playback-pause-symbolic
             _next.margin_start = 24;
             _prev.margin_end = 24;
@@ -79,7 +79,7 @@ namespace Music {
             _play.set_size_request (48, 48);
 
             _next.valign = Gtk.Align.CENTER;
-            _next.action_name = Application.ACTION_PREFIX + Application.ACTION_NEXT;
+            _next.action_name = ACTION_APP + ACTION_NEXT;
             _next.icon_name = "media-skip-forward-symbolic";
             _next.add_css_class ("circular");
 

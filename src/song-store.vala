@@ -1,4 +1,7 @@
 namespace Music {
+    public const string UNKOWN_ALBUM = "Unknown Album";
+    public const string UNKOWN_ARTIST = "Unknown Aritst";
+    public const string DEFAULT_MIMETYPE = "audio/mpeg";
 
     public class SongInfo : Object {
         public string album;
@@ -62,10 +65,6 @@ namespace Music {
     }
 
     public class SongStore : Object {
-        public static string UNKOWN_ALBUM = "Unknown Album";
-        public static string UNKOWN_ARTIST = "Unknown Aritst";
-        public static string DEFAULT_MIMETYPE = "audio/mpeg";
-
         private bool _shuffled = false;
         private ListStore _store = new ListStore (typeof (Song));
 
@@ -117,7 +116,7 @@ namespace Music {
         }
 
 #if HAS_TRACKER_SPARQL
-        public static string SQL_QUERY_SONGS = """
+        public const string SQL_QUERY_SONGS = """
             SELECT 
                 nie:title(nmm:musicAlbum(?song)) AS ?album
                 nmm:artistName (nmm:artist (?song)) AS ?artist
