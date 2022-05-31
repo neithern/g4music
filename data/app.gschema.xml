@@ -3,7 +3,7 @@
   <schema id="@app_id@" path="/com/github/neithern/g4music/">
     <key name="tracker-mode" type="b">
       <default>false</default>
-      <summary>Load music from Tracker database</summary>
+      <summary>Load music from tracker service</summary>
     </key>
     <key name="music-dir" type="s">
       <default>''</default>
