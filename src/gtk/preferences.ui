@@ -3,17 +3,17 @@
   <requires lib="gtk" version="4.0"/>
   <template class="MusicPreferencesWindow" parent="AdwPreferencesWindow">
     <property name="default-width">480</property>
-    <property name="default-height">340</property>
     <property name="search-enabled">false</property>
     <property name="modal">true</property>
     <child>
       <object class="AdwPreferencesPage">
         <child>
           <object class="AdwPreferencesGroup">
+            <property name="title" translatable="yes">Music Store</property>
             <child>
               <object class="AdwActionRow" id="tracker_row">
-                <property name="title" translatable="true">Load music from tracker service</property>
-                <property name="subtitle" translatable="true">Try if the music files are on a slow disk</property>
+                <property name="title" translatable="yes">Load music from tracker service</property>
+                <property name="subtitle" translatable="yes">Try if the music files are on a slow disk</property>
                 <property name="activatable_widget">tracker_btn</property>
                 <child>
                   <object class="GtkSwitch" id="tracker_btn">
@@ -24,7 +24,7 @@
             </child>
             <child>
               <object class="AdwActionRow">
-                <property name="title" translatable="true">Load music from local directory</property>
+                <property name="title" translatable="yes">Load music from local folder</property>
                 <property name="activatable_widget">music_dir_btn</property>
                 <child>
                   <object class="GtkButton" id="music_dir_btn">
@@ -37,9 +37,10 @@
         </child>
         <child>
           <object class="AdwPreferencesGroup">
+            <property name="title" translatable="yes">Playback</property>
             <child>
               <object class="AdwActionRow">
-                <property name="title" translatable="true">Prefer pipewire audio sink</property>
+                <property name="title" translatable="yes">Prefer pipewire audio sink</property>
                 <property name="activatable_widget">pipewire_btn</property>
                 <child>
                   <object class="GtkSwitch" id="pipewire_btn">
@@ -50,7 +51,7 @@
             </child>
             <child>
               <object class="AdwActionRow">
-                <property name="title" translatable="true">Show audio peak when playing</property>
+                <property name="title" translatable="yes">Show audio peak when playing</property>
                 <property name="activatable_widget">peak_btn</property>
                 <child>
                   <object class="GtkSwitch" id="peak_btn">

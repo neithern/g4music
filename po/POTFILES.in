@@ -2,8 +2,10 @@ data/app.desktop.in
 data/app.appdata.xml.in
 data/app.gschema.xml
 src/gtk/help-overlay.ui
+src/gtk/preferences.ui
 src/gtk/window.ui
 src/application.vala
+src/main.vala
 src/play-bar.vala
 src/song-store.vala
 src/window.vala

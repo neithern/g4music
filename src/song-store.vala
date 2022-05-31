@@ -1,6 +1,6 @@
 namespace Music {
-    public const string UNKOWN_ALBUM = "Unknown Album";
-    public const string UNKOWN_ARTIST = "Unknown Aritst";
+    public const string UNKOWN_ALBUM = _("Unknown Album");
+    public const string UNKOWN_ARTIST = _("Unknown Aritst");
     public const string DEFAULT_MIMETYPE = "audio/mpeg";
 
     public class SongInfo : Object {

@@ -1,5 +1,4 @@
 namespace Music {
-    public const string APP_ID = "com.github.neithern.g4music";
     public const string ACTION_APP = "app.";
     public const string ACTION_ABOUT = "about";
     public const string ACTION_PREFS = "preferences";
@@ -28,7 +27,7 @@ namespace Music {
         public signal void song_tag_parsed (Song song, Bytes? image, string? mtype);
 
         public Application () {
-            Object (application_id: APP_ID, flags: ApplicationFlags.HANDLES_OPEN);
+            Object (application_id: Config.APP_ID, flags: ApplicationFlags.HANDLES_OPEN);
 
             ActionEntry[] action_entries = {
                 { ACTION_ABOUT, show_about },
@@ -276,11 +275,11 @@ namespace Music {
             string[] authors = { "Nanling" };
             Gtk.show_about_dialog (active_window,
                                    "logo-icon-name", application_id,
-                                   "program-name", "G4Music",
+                                   "program-name", _("G4Music"),
                                    "authors", authors,
-                                   "version", "0.1.0",
+                                   "version", Config.VERSION,
                                    "license-type", Gtk.License.GPL_3_0,
-                                   "comments", "A fast, flurent, light weight music player written in GTK4."
+                                   "comments", _("A fast, flurent, light weight music player written in GTK4.")
                                   );
         }
 

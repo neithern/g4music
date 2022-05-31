@@ -7,7 +7,7 @@
     </key>
     <key name="music-dir" type="s">
       <default>''</default>
-      <summary>Load music from local directory</summary>
+      <summary>Load music from local folder</summary>
     </key>
     <key name="pipewire-sink" type="b">
       <default>false</default>

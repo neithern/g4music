@@ -173,7 +173,7 @@ namespace Music {
             var name = this.title.replace ("/", "&") + "." + _cover_type?.substring (pos + 1);
             var filter = new Gtk.FileFilter ();
             filter.add_mime_type (_cover_type ??  "image/*");
-            var chooser = new Gtk.FileChooserNative ("Export Cover", this, Gtk.FileChooserAction.SAVE, null, null);
+            var chooser = new Gtk.FileChooserNative (null, this, Gtk.FileChooserAction.SAVE, null, null);
             chooser.set_current_name (name);
             chooser.set_filter (filter);
             chooser.modal = true;

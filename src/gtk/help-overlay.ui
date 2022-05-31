@@ -34,13 +34,13 @@
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">Play next</property>
+                <property name="title" translatable="yes" context="shortcut window">Play Next</property>
                 <property name="action-name">app.next</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">Play previous</property>
+                <property name="title" translatable="yes" context="shortcut window">Play Previous</property>
                 <property name="action-name">app.prev</property>
               </object>
             </child>
@@ -57,7 +57,7 @@
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">Toggle shuffle</property>
+                <property name="title" translatable="yes" context="shortcut window">Toggle Shuffle</property>
                 <property name="action-name">app.shuffle</property>
               </object>
             </child>

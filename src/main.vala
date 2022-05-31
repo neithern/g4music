@@ -16,7 +16,15 @@
  */
 
 int main (string[] args) {
+    Intl.bindtextdomain (Config.APP_ID, Config.LOCALEDIR);
+    Intl.bind_textdomain_codeset (Config.APP_ID, "UTF-8");
+    Intl.textdomain (Config.APP_ID);
+
+    Environment.set_prgname (Config.APP_ID);
+    Environment.set_application_name (_("G4Music"));
+
     Music.GstPlayer.init (ref args);
+
     var app = new Music.Application ();
     return app.run (args);
 }
