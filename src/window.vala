@@ -1,5 +1,8 @@
 namespace Music {
 
+    public const string ACTION_WIN = "win.";
+    public const string ACTION_EXPORT_COVER = "export-cover";
+
     enum SearchType {
         ALL,
         ALBUM,
@@ -34,6 +37,9 @@ namespace Music {
         private CrossFadePaintable _cover_paintable = new CrossFadePaintable ();
         private Gdk.Paintable? _loading_paintable = create_text_paintable ("...");
 
+        private Bytes? _cover_data = null;
+        private string? _cover_type = null;
+
         private string _search_text = "";
         private string _search_property = "";
         private SearchType _search_type = SearchType.ALL;
@@ -41,6 +47,10 @@ namespace Music {
         public Window (Application app) {
             Object (application: app);
             this.icon_name = app.application_id;
+
+            add_action_entries ({
+                { ACTION_EXPORT_COVER, on_export_cover }
+            }, this);
 
             flap.bind_property ("folded", this, "flap_folded", BindingFlags.DEFAULT);
 
@@ -158,6 +168,26 @@ namespace Music {
             }
         }
 
+        private void on_export_cover () {
+            var pos = _cover_type?.index_of_char ('/');
+            var name = this.title.replace ("/", "&") + "." + _cover_type?.substring (pos + 1);
+            var filter = new Gtk.FileFilter ();
+            filter.add_mime_type (_cover_type ??  "image/*");
+            var chooser = new Gtk.FileChooserNative ("Export Cover", this, Gtk.FileChooserAction.SAVE, null, null);
+            chooser.set_current_name (name);
+            chooser.set_filter (filter);
+            chooser.modal = true;
+            chooser.response.connect ((id) => {
+                var file = chooser.get_file ();
+                if (id == Gtk.ResponseType.ACCEPT && file != null && _cover_data != null) {
+                    save_data_to_file.begin (file, _cover_data, (obj, res) => {
+                        save_data_to_file.end (res);
+                    });
+                }
+            });
+            chooser.show ();
+        }
+
         private Adw.Animation? _scale_animation = null;
 
         private void on_player_state_changed (Gst.State state) {
@@ -198,6 +228,10 @@ namespace Music {
 
         private async void on_song_tag_parsed (Song song, Bytes? image, string? mtype) {
             update_song_info (song);
+
+            _cover_data = image;
+            _cover_type = mtype;
+            action_set_enabled (ACTION_WIN + ACTION_EXPORT_COVER, image != null);
 
             var app = application as Application;
             if (image != null) {
@@ -306,6 +340,15 @@ namespace Music {
                 return true;
             }
             return false;
+        }
+    }
+
+    public static async void save_data_to_file (File file, Bytes data) {
+        try {
+            var stream = yield file.create_async (FileCreateFlags.NONE);
+            yield stream.write_bytes_async (data);
+            yield stream.close_async ();
+        } catch (Error e) {
         }
     }
 }

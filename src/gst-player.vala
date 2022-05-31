@@ -169,8 +169,8 @@ namespace Music {
 
                 case Gst.MessageType.TAG:
                     if (!_tag_parsed) {
-                        parse_tags (message);
                         _tag_parsed = true;
+                        parse_tags (message);
                     }
                     break;
 
@@ -230,7 +230,7 @@ namespace Music {
                 buffer?.extract_dup (0, buffer.get_size (), out data);
                 if (data != null) {
                     bytes = new Bytes.take (data);
-                    mtype = sample.get_caps ()?.to_string ();
+                    mtype = sample.get_caps ()?.get_structure (0)?.get_name ();
                 }
             }
             tag_parsed (info, bytes, mtype);
