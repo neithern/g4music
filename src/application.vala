@@ -21,6 +21,7 @@ namespace Music {
         private Gtk.FilterListModel _song_list = new Gtk.FilterListModel (null, null);
         private SongStore _song_store = new SongStore ();
         private Thumbnailer _thumbnailer = new Thumbnailer ();
+        private Settings _settings = new Settings (Config.APP_ID);
 
         public signal void index_changed (int index, uint size);
         public signal void song_changed (Song song);
@@ -55,9 +56,8 @@ namespace Music {
 
             _song_list.model = _song_store.store;
 
-            var settings = new Settings (application_id);
-            _player.show_peak (settings.get_boolean ("show-peak"));
-            _player.use_pipewire (settings.get_boolean ("pipewire-sink"));
+            _player.show_peak (_settings.get_boolean ("show-peak"));
+            _player.use_pipewire (_settings.get_boolean ("pipewire-sink"));
 
             _player.end_of_stream.connect (() => {
                 current_item = current_item + 1;
@@ -107,10 +107,7 @@ namespace Music {
         }
 
         public override void shutdown () {
-            var url = _current_song?.url;
-            if (url != null) {
-               save_playing_url (url);
-            }
+             _settings.set_string ("played-url", _current_song?.url ?? "");
 
             base.shutdown ();
         }
@@ -125,14 +122,16 @@ namespace Music {
                 var playing = _current_song != null;
                 var song = _song_list.get_item (value) as Song;
                 if (song != null && _current_song != song) {
-                    var old_item = _current_item;
                     _current_song = song;
                     _player.uri = song.url;
+                    song_changed (song);
+                }
+                if (_current_item != value) {
+                    var old_item = _current_item;
                     _current_item = value;
                     _song_list.items_changed (value, 0, 0);
                     _song_list.items_changed (old_item, 0, 0);
                     index_changed (value, count);
-                    song_changed (song);
                 }
                 _player.state = playing ? Gst.State.PLAYING : Gst.State.PAUSED;
             }
@@ -160,6 +159,12 @@ namespace Music {
             }
         }
 
+        public Settings settings {
+            get {
+                return _settings;
+            }
+        }
+
         public Gtk.FilterListModel song_list {
             get {
                 return _song_list;
@@ -172,8 +177,8 @@ namespace Music {
             }
         }
 
-        public File get_music_folder (Settings settings) {
-            var music_path = settings.get_string ("music-dir");
+        public File get_music_folder () {
+            var music_path = _settings.get_string ("music-dir");
             if (music_path == null || music_path.length == 0)
                 music_path = Environment.get_user_special_dir (UserDirectory.MUSIC);
             return File.new_for_uri (music_path);
@@ -236,15 +241,14 @@ namespace Music {
 
             var begin_time = get_monotonic_time ();
             if (saved_size == 0 && files.length == 0) {
-                var settings = new Settings (application_id);
 #if HAS_TRACKER_SPARQL
-                if (settings.get_boolean ("tracker-mode")) {
+                if (_settings.get_boolean ("tracker-mode")) {
                     yield _song_store.add_sparql_async ();
                 }
 #endif
                 if (_song_store.size == 0) {
                     files.resize (1);
-                    files[0] = get_music_folder (settings);
+                    files[0] = get_music_folder ();
                 }
             }
             if (files.length > 0) {
@@ -255,13 +259,15 @@ namespace Music {
 
             if (saved_size > 0) {
                 play_item = (int) saved_size;
-            } else if (_current_song != null) {
+            } else if (_current_song != null && _current_song == _song_list.get_item (_current_item)) {
                 play_item = _current_item;
             } else {
-                var url = yield run_async<string?> (load_playing_url);
-                if (url != null) {
-                    for (var i = 0; i < _song_store.size; i++) {
-                        if (url == _song_store.get_song (i)?.url) {
+                var url = _current_song?.url ?? _settings.get_string ("played-url");
+                if (url != null && url.length > 0) {
+                    var count = _song_list.get_n_items ();
+                    for (var i = 0; i < count; i++) {
+                        var song = _song_list.get_item (i) as Song;
+                        if (url == song?.url) {
                             play_item = i;
                             break;
                         }
@@ -298,31 +304,6 @@ namespace Music {
                 connection.register_object ("/org/mpris/MediaPlayer2", new MprisRoot ());
             } catch (Error e) {
                 warning ("Register MPRIS failed: %s\n", e.message);
-            }
-        }
-
-        private string? load_playing_url () {
-            try {
-                var dir = Environment.get_user_state_dir ();
-                var file = File.new_build_filename (dir, application_id);
-                var bytes = file.load_bytes (null, null);
-                var key_file = new KeyFile ();
-                key_file.load_from_bytes (bytes, KeyFileFlags.NONE);
-                return key_file.get_string ("playing", "url");
-            } catch (Error e) {
-            }
-            return null;
-        }
-
-        private void save_playing_url (string url) {
-            try {
-                var dir = Environment.get_user_state_dir ();
-                var file = File.new_build_filename (dir, application_id);
-                var key_file = new KeyFile ();
-                key_file.set_string ("playing", "url", url);
-                key_file.save_to_file (file.get_path ());
-            } catch (Error e) {
-                warning ("Save state failed: %s\n", e.message);
             }
         }
     }

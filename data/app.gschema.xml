@@ -17,5 +17,9 @@
       <default>true</default>
       <summary>Show audio peak when playing</summary>
     </key>
+    <key name="played-url" type="s">
+      <default>''</default>
+      <summary>Last played url when quit</summary>
+    </key>
   </schema>
 </schemalist>

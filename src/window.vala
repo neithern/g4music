@@ -66,7 +66,6 @@ namespace Music {
 
             _bkgnd_paintable.queue_draw.connect (this.queue_draw);
 
-            _cover_paintable.paintable = _loading_paintable;
             _cover_paintable.queue_draw.connect (cover_image.queue_draw);
 
             var scale_paintable = new ScalePaintable (new RoundPaintable (_cover_paintable, 12, 2));
@@ -76,9 +75,13 @@ namespace Music {
 
             song_album.activate_link.connect (on_song_info_link);
             song_artist.activate_link.connect (on_song_info_link);
+            song_title.label = _("Loading...");
 
             var play_bar = new PlayBar ();
             content_box.append (play_bar);
+            action_set_enabled (ACTION_APP + ACTION_PREV, false);
+            action_set_enabled (ACTION_APP + ACTION_PLAY, false);
+            action_set_enabled (ACTION_APP + ACTION_NEXT, false);
 
             var factory = new Gtk.SignalListItemFactory ();
             factory.setup.connect ((item) => {
@@ -223,6 +226,7 @@ namespace Music {
 
         private void on_song_changed (Song song) {
             update_song_info (song);
+            action_set_enabled (ACTION_APP + ACTION_PLAY, true);
             print ("play song: %s\n", song.url);
         }
 
@@ -267,7 +271,7 @@ namespace Music {
             song_album.set_markup (@"<a href=\"album=$(song.album)\">$(song.album)</a>");
             song_artist.set_markup (@"<a href=\"artist=$(song.artist)\">$(song.artist)</a>");
             song_title.label = song.title;
-            this.title = @"$(song.artist) - $(song.title)";
+            this.title = song.artist == UNKOWN_ARTIST ? song.title : @"$(song.artist) - $(song.title)";
         }
 
         private void update_song_filter () {
@@ -296,10 +300,10 @@ namespace Music {
 
         private Adw.Animation? _fade_animation = null;
 
-        private void update_cover_paintable (Song song, Gdk.Paintable? paintable) {
+        private void update_cover_paintable (Song song, owned Gdk.Paintable? paintable) {
             if (paintable == null) {
                 var app = application as Application;
-                paintable = app.thumbnailer.find (song.url) ?? _loading_paintable;
+                paintable = app.thumbnailer.find (song.url);
             }
             _cover_paintable.paintable = paintable;
 

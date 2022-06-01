@@ -14,7 +14,7 @@ namespace Music {
         unowned Gtk.Switch peak_btn;
 
         public PreferencesWindow (Application app) {
-            var settings = new Settings (app.application_id);
+            var settings = app.settings;
 
 #if HAS_TRACKER_SPARQL
             settings.bind ("tracker-mode", tracker_btn, "state", SettingsBindFlags.DEFAULT);
@@ -31,7 +31,7 @@ namespace Music {
             tracker_row.visible = false;
 #endif
 
-            var music_dir = app.get_music_folder (settings);
+            var music_dir = app.get_music_folder ();
             music_dir_btn.label = music_dir.get_basename ();
             music_dir_btn.clicked.connect (() => {
                 var chooser = new Gtk.FileChooserNative (null, this,
