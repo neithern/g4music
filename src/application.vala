@@ -63,12 +63,13 @@ namespace Music {
                 current_item = current_item + 1;
             });
 
-            _player.tag_parsed.connect ((info, image, mtype) => {
-                if (_current_song.from_info (info)) {
-                    _thumbnailer.update_text_paintable (_current_song);
+            _player.tag_parsed.connect ((album, artist, title, image, mtype) => {
+                if (_current_song?.update (album, artist, title) ?? false) {
+                    _thumbnailer.update_text_paintable ((!)_current_song);
                     _song_list.items_changed (_current_item, 0, 0);
                 }
-                song_tag_parsed (_current_song, image, mtype);
+                if (_current_song != null)
+                    song_tag_parsed ((!)_current_song, image, mtype);
             });
 
             var mpris_id = Bus.own_name (BusType.SESSION,
@@ -84,7 +85,8 @@ namespace Music {
         public override void activate () {
             base.activate ();
 
-            if (active_window != null) {
+            Gtk.Window? awindow = active_window;
+            if (awindow != null) {
                 active_window.present ();
             } else {
                 open ({}, "");
@@ -102,7 +104,8 @@ namespace Music {
                 });
             });
 
-            var window = active_window ?? new Window (this);
+            Gtk.Window? awindow = active_window;
+            var window = awindow ?? new Window (this);
             window.present ();
         }
 
@@ -123,14 +126,14 @@ namespace Music {
                 var song = _song_list.get_item (value) as Song;
                 if (song != null && _current_song != song) {
                     _current_song = song;
-                    _player.uri = song.url;
-                    song_changed (song);
+                    _player.uri = ((!)song).url;
+                    song_changed ((!)song);
                 }
                 if (_current_item != value) {
                     var old_item = _current_item;
                     _current_item = value;
-                    _song_list.items_changed (value, 0, 0);
                     _song_list.items_changed (old_item, 0, 0);
+                    _song_list.items_changed (value, 0, 0);
                     index_changed (value, count);
                 }
                 _player.state = playing ? Gst.State.PLAYING : Gst.State.PAUSED;
@@ -147,7 +150,7 @@ namespace Music {
             }
         }
 
-        public Song current_song {
+        public Song? current_song {
             get {
                 return _current_song;
             }
@@ -179,7 +182,7 @@ namespace Music {
 
         public File get_music_folder () {
             var music_path = _settings.get_string ("music-dir");
-            if (music_path == null || music_path.length == 0)
+            if (music_path.length == 0)
                 music_path = Environment.get_user_special_dir (UserDirectory.MUSIC);
             return File.new_for_uri (music_path);
         }
@@ -207,7 +210,7 @@ namespace Music {
         public void toggle_seach () {
             var win = active_window as Window;
             if (win != null)
-                win.search_btn.active = ! win.search_btn.active;
+                ((!)win).search_btn.active = ! ((!)win).search_btn.active;
         }
 
         public void toggle_shuffle () {
@@ -263,11 +266,11 @@ namespace Music {
                 play_item = _current_item;
             } else {
                 var url = _current_song?.url ?? _settings.get_string ("played-url");
-                if (url != null && url.length > 0) {
+                if (url.length > 0) {
                     var count = _song_list.get_n_items ();
                     for (var i = 0; i < count; i++) {
-                        var song = _song_list.get_item (i) as Song;
-                        if (url == song?.url) {
+                        var song = (!)(_song_list.get_item (i) as Song);
+                        if (url == song.url) {
                             play_item = i;
                             break;
                         }

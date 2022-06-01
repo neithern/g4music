@@ -28,19 +28,19 @@ namespace Music {
         }
 
         public virtual double get_intrinsic_aspect_ratio () {
-            return _paintable?.get_intrinsic_aspect_ratio () ?? 0;
+            return _paintable?.get_intrinsic_aspect_ratio () ?? 1;
         }
 
         public virtual int get_intrinsic_width () {
-            return _paintable?.get_intrinsic_width () ?? 0;
+            return _paintable?.get_intrinsic_width () ?? 1;
         }
 
         public virtual int get_intrinsic_height () {
-            return _paintable?.get_intrinsic_height () ?? 0;
+            return _paintable?.get_intrinsic_height () ?? 1;
         }
 
         public void snapshot (Gdk.Snapshot shot, double width, double height) {
-            on_snapshot (shot as Gtk.Snapshot, width, height);
+            on_snapshot ((!)(shot as Gtk.Snapshot), width, height);
         }
 
         protected virtual void on_change (Gdk.Paintable? previous, Gdk.Paintable? paintable) {
@@ -83,8 +83,8 @@ namespace Music {
         }
 
         protected override void on_snapshot (Gtk.Snapshot snapshot, double width, double height) {
-            var rect = Graphene.Rect().init(0, 0, (float) width, (float) height);
-            var rounded = Gsk.RoundedRect ().init_from_rect (rect, _radius);
+            var rect = (!)Graphene.Rect ().init (0, 0, (float) width, (float) height);
+            var rounded = (!)Gsk.RoundedRect ().init_from_rect (rect, _radius);
 
             if (_radius > 0) {
                 snapshot.push_rounded_clip (rounded);
@@ -110,11 +110,7 @@ namespace Music {
             base (paintable);
         }
 
-        public override int get_intrinsic_width () {
-            return 1;
-        }
-
-        public override int get_intrinsic_height () {
+        public override double get_intrinsic_aspect_ratio () {
             return 1;
         }
 
@@ -123,14 +119,14 @@ namespace Music {
             var image_height = base.get_intrinsic_height ();
             
             if (image_width != image_height) {
-                snapshot.save();
+                snapshot.save ();
                 var ratio = image_width / (double) image_height;
                 if (ratio > 1)
                     snapshot.scale ((float) (1 / ratio), 1);
                 else
                     snapshot.scale (1, (float) (1 / ratio));
                 base.on_snapshot (snapshot, width, height);
-                snapshot.restore();
+                snapshot.restore ();
             } else {
                 base.on_snapshot (snapshot, width, height);
             }
@@ -204,7 +200,7 @@ namespace Music {
 
         protected override void on_snapshot (Gtk.Snapshot snapshot, double width, double height) {
             if (_scale != 1) {
-                var point = Graphene.Point ().init (
+                var point = (!)Graphene.Point ().init (
                                 (float) (width * (1 - _scale) * 0.5),
                                 (float) (height * (1 - _scale) * 0.5));
                 snapshot.save ();
@@ -244,7 +240,7 @@ namespace Music {
         c.blue = (color & 0xff) / 255f;
         c.alpha = 1;
 
-        var rect = Graphene.Rect ().init(0, 0, (float) width, (float) height);
+        var rect = (!)Graphene.Rect ().init (0, 0, (float) width, (float) height);
         var snapshot = new Gtk.Snapshot ();
         snapshot.append_color (c, rect);
 
@@ -265,15 +261,17 @@ namespace Music {
         return snapshot.free_to_paintable (size);
     }
 
-    public static Gdk.Texture create_blur_texture (Gtk.Widget widget, Gdk.Paintable paintable, int width = 128, int height = 128, double blur = 80) {
+    public static Gdk.Texture? create_blur_texture (Gtk.Widget widget, Gdk.Paintable paintable, int width = 128, int height = 128, double blur = 80) {
         var snapshot = new Gtk.Snapshot ();
         snapshot.push_blur (blur);
         paintable.snapshot (snapshot, width, height);
         snapshot.pop ();
         // Render to a new texture
         var node = snapshot.free_to_node ();
+        if (node == null)
+            return null;
         var rect = Graphene.Rect ().init (0, 0, width, height);
-        return widget.get_native ().get_renderer ().render_texture (node, rect);
+        return widget.get_native ()?.get_renderer ()?.render_texture ((!)node, rect);
     }
 
     public static void draw_gray_linear_gradient_line (Gtk.Snapshot snapshot, Graphene.Rect rect) {

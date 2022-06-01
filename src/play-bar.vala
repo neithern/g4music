@@ -18,13 +18,14 @@ namespace Music {
             margin_top = 16;
             margin_bottom = 24;
 
-            var app = GLib.Application.get_default () as Application;
+            var app = (!)(GLib.Application.get_default () as Application);
+            var player = app.player;
 
             _seek.set_range (0, _duration);
             _seek.halign = Gtk.Align.FILL;
             _seek.width_request = 256;
             _seek.adjust_bounds.connect ((value) => {
-                app.player.seek (GstPlayer.from_second (value));
+                player.seek (GstPlayer.from_second (value));
             });
             append (_seek);
 
@@ -86,7 +87,6 @@ namespace Music {
             _next.tooltip_text = _("Play Next");
             _next.add_css_class ("circular");
 
-            var player = app.player;
             player.duration_changed.connect ((duration) => {
                 this.duration = GstPlayer.to_second (duration);
             });
@@ -98,7 +98,7 @@ namespace Music {
                 _play.icon_name = playing ? "media-playback-pause-symbolic" : "media-playback-start-symbolic";
                 if (state < Gst.State.PLAYING) {
                     _peak_length = 0;
-                    _peak.label = null;
+                    _peak.label = "";
                 }
             });
             player.peak_parsed.connect ((peak) => {

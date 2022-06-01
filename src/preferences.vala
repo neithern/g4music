@@ -44,9 +44,9 @@ namespace Music {
                 chooser.response.connect ((id) => {
                     if (id == Gtk.ResponseType.ACCEPT) {
                         var dir = chooser.get_file ();
-                        if (dir != music_dir) {
-                            music_dir_btn.label = dir.get_basename ();
-                            settings.set_string ("music-dir", dir.get_uri ());
+                        if (dir != null && dir != music_dir) {
+                            music_dir_btn.label = dir?.get_basename () ?? "";
+                            settings.set_string ("music-dir", dir?.get_uri () ?? "");
                             app.reload_song_store ();
                         }
                     }

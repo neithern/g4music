@@ -2,8 +2,7 @@ namespace Music {
 
     public delegate V TaskFunc<V> ();
 
-    private class Worker<V> : Object {
-
+    private class Worker<V> {
         private TaskFunc<V> _task;
         private SourceFunc _callback;
         private V? _result = null;

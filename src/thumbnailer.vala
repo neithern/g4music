@@ -1,14 +1,14 @@
 namespace Music {
 
     //  Sorted by insert order
-    public class LruCache<V> : Object {
+    public class LruCache<V> {
         public static uint MAX_SIZE = 50 * 1024 * 1024;
         public static CompareDataFunc<string> compare_string = (a, b) => { return strcmp (a, b); };
 
         private size_t _size = 0;
         private Tree<string, V> _cache = new Tree<string, V> (compare_string);
 
-        public V? find (string key) {
+        public V find (string key) {
             return _cache.lookup (key);
         }
 
@@ -16,8 +16,8 @@ namespace Music {
             var size = size_of_value (value);
             unowned TreeNode<string, V>? first = null;
             while (_size + size > MAX_SIZE && (first = _cache.node_first ()) != null) {
-                _size -= size_of_value (first.value ());
-                _cache.remove (first.key ());
+                _size -= size_of_value (((!)first).value ());
+                _cache.remove (((!)first).key ());
             }
 
             var cur = _cache.lookup (key);
@@ -44,7 +44,7 @@ namespace Music {
         }
     }
 
-    public class Thumbnailer : LruCache<Gdk.Paintable> {
+    public class Thumbnailer : LruCache<Gdk.Paintable?> {
         public static int icon_size = 96;
 
         private Gnome.DesktopThumbnailFactory _factory = 
@@ -52,16 +52,16 @@ namespace Music {
 
         private GenericSet<string> _loading = new GenericSet<string> (str_hash, str_equal);
 
-        public async Gdk.Paintable? load_async (Song? song) {
-            var url = song?.url;
-            if (url == null || _loading.contains (url))
+        public async Gdk.Paintable? load_async (Song song) {
+            var url = song.url;
+            if (url in _loading)
                 return null;
 
             _loading.add (url);
             var texture = yield load_directly_async (song, icon_size);
             _loading.remove (url);
             if (texture != null) {
-                put (url, texture);
+                put (url, (!)texture);
                 return texture;
             }
 
@@ -74,14 +74,10 @@ namespace Music {
             var url = song.url;
             try {
                 var path = Gnome.DesktopThumbnail.path_for_uri (url, Gnome.DesktopThumbnailSize.LARGE);
-                var stream = File.new_for_path (path).read ();
-                var bis = new BufferedInputStream (stream);
-                var pixbuf = new Gdk.Pixbuf.from_stream (bis, null);
-                if (pixbuf != null) {
-                    song.thumbnail = path;
-                    //  print ("Load thumbnail: %s\n", song.title);
-                    return create_clamp_pixbuf (pixbuf, size);
-                }
+                var pixbuf = new Gdk.Pixbuf.from_file_at_scale (path, size, -1, true);
+                song.thumbnail = path;
+                //  print ("Load thumbnail: %dx%d, %s\n", pixbuf.width, pixbuf.height, song.url);
+                return pixbuf;
             } catch (Error e) {
                 //  warning ("Load %s: %s\n", song.thumbnail, e.message);
             }
@@ -92,14 +88,10 @@ namespace Music {
                 song.mtime = (long) (info.get_modification_date_time ()?.to_unix () ?? 0);
                 if (!_factory.has_valid_failed_thumbnail (url, song.mtime)) {
                     var pixbuf = _factory.generate_thumbnail (url, song.type);
-                    if (pixbuf != null) {
-                        var pixbuf2 = create_clamp_pixbuf (pixbuf, size);
-                        //  print ("Generate thumbnail: %s\n", song.title);
-                        _factory.save_thumbnail (pixbuf, url, song.mtime);
-                        return pixbuf2;
-                    } else {
-                        _factory.create_failed_thumbnail (url, song.mtime);
-                    }
+                    //  print ("Generate thumbnail: %s\n", song.url);
+                    var pixbuf2 = create_clamp_pixbuf (pixbuf, size);
+                    _factory.save_thumbnail (pixbuf, url, song.mtime);
+                    return pixbuf2;
                 }
             } catch (Error e) {
                 //  warning ("Generate %s: %s\n", url, e.message);
@@ -111,7 +103,9 @@ namespace Music {
             var pixbuf = yield run_async<Gdk.Pixbuf?> (() => {
                 return load_directly (song, size);
             });
-            return pixbuf != null ? Gdk.Texture.for_pixbuf (pixbuf) : null;
+            if (pixbuf != null)
+                return Gdk.Texture.for_pixbuf ((!)pixbuf);
+            return null;
         }
 
         public void update_text_paintable (Song song) {
@@ -123,16 +117,16 @@ namespace Music {
             }
         }
 
-        protected override size_t size_of_value (Gdk.Paintable paintable) {
-            return paintable.get_intrinsic_width () * paintable.get_intrinsic_height () * 4;
+        protected override size_t size_of_value (Gdk.Paintable? paintable) {
+            return (paintable?.get_intrinsic_width () ?? 0) * (paintable?.get_intrinsic_height () ?? 0) * 4;
         }
 
         protected static Gdk.Paintable create_song_album_text_paintable (Song song) {
-            string text = parse_abbreviation (song.album);
+            var text = parse_abbreviation (song.album);
             var paintable = create_text_paintable (text, icon_size, icon_size);
-            if (paintable == null)
-                paintable = new BasePaintable ();
-            return paintable;
+            if (paintable != null)
+                return (!)paintable;
+            return new BasePaintable ();
         }
     }
 
@@ -145,7 +139,7 @@ namespace Music {
             var dy = (int) (height * scale + 0.5);
             var newbuf = pixbuf.scale_simple (dx, dy, Gdk.InterpType.TILES);
             if (newbuf != null)
-                return newbuf;
+                return (!)newbuf;
         }
         return pixbuf;
     }

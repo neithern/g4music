@@ -1,24 +1,20 @@
 namespace Music {
 
-    public static SongInfo? parse_tags (string url) {
+    public static bool parse_tags (string url, string name, Song song) {
         var path = File.new_for_uri (url).get_path ();
         if (path == null) {
-            return null;
+            return false;
         }
-        var file = new TagLib.File (path);
+        var file = new TagLib.File ((!)path);
         if (file.is_valid ()) {
-            unowned TagLib.Tag tag = file.tag;
-            SongInfo info = new SongInfo ();
-            if (tag.album != null && tag.album.length > 0)
-                info.album = tag.album;
-            if (tag.artist != null && tag.artist.length > 0)
-                info.artist = tag.artist;
-            if (tag.title != null && tag.title.length > 0)
-                info.title = tag.title;
-            //  print ("Parse: %s\n", url);
-            return info;
+            unowned var tag = file.tag;
+            if (tag.album.length > 0)
+                song.album = tag.album;
+            if (tag.artist.length > 0)
+                song.artist = tag.artist;
+            song.title = tag.title.length > 0 ? tag.title : parse_name_from_path (name);
         }
-        return null;
+        return false;
     }
 
 /*

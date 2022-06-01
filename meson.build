@@ -11,6 +11,7 @@ version = meson.project_version()
 
 add_project_arguments('-DGETTEXT_PACKAGE="' + app_id + '"', language: 'c')
 add_project_arguments('-DGNOME_DESKTOP_USE_UNSTABLE_API', language: 'c')
+add_project_arguments('--enable-experimental-non-null', language: 'vala')
 
 libm_dep = meson.get_compiler('c').find_library('m', required: false)
 

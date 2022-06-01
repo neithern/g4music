@@ -69,7 +69,7 @@ namespace Music {
             string[] artist = { song.artist };
             data.insert ("xesam:artist", artist);
             data.insert ("xesam:title", song.title);
-            if (song.thumbnail != null) 
+            if (song.thumbnail.length > 0) 
                 data.insert ("mpris:artUrl", File.new_for_path (song.thumbnail).get_uri ());
             send_property ("Metadata", data);
         }
@@ -120,13 +120,13 @@ namespace Music {
 
         public string desktop_entry {
             get {
-                return GLib.Application.get_default ().application_id;
+                return Config.APP_ID;
             }
         }
 
         public string identity {
             get {
-                return GLib.Application.get_default ().application_id;
+                return Config.APP_ID;
             }
         }
 
@@ -143,11 +143,11 @@ namespace Music {
         }
 
         public void quit () throws Error {
-            GLib.Application.get_default ().quit ();
+            GLib.Application.get_default ()?.quit ();
         }
 
         public void raise () throws Error {
-            GLib.Application.get_default ().activate ();
+            GLib.Application.get_default ()?.activate ();
         }
     }
 }

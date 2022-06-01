@@ -14,7 +14,7 @@ namespace Music {
             return (Gst.ClockTime) (time * Gst.SECOND);
         }
 
-        private dynamic Gst.Element _pipeline = Gst.ElementFactory.make ("playbin", "player");
+        private dynamic Gst.Element? _pipeline = Gst.ElementFactory.make ("playbin", "player");
         private Gst.ClockTime _duration = Gst.CLOCK_TIME_NONE;
         private Gst.ClockTime _position = Gst.CLOCK_TIME_NONE;
         private Gst.ClockTime _last_seeked_pos = Gst.CLOCK_TIME_NONE;
@@ -27,15 +27,15 @@ namespace Music {
         public signal void end_of_stream ();
         public signal void position_updated (Gst.ClockTime position);
         public signal void state_changed (Gst.State state);
-        public signal void tag_parsed (SongInfo info, Bytes? image, string? mtype);
+        public signal void tag_parsed (string? album, string? artist, string? title, Bytes? image, string? mtype);
         public signal void peak_parsed (double peak);
 
         public GstPlayer () {
-            _pipeline.get_bus ()?.add_watch (Priority.DEFAULT, bus_callback);
+            _pipeline?.get_bus ()?.add_watch (Priority.DEFAULT, bus_callback);
         }
 
         ~GstPlayer () {
-            _pipeline.set_state (Gst.State.NULL);
+            _pipeline?.set_state (Gst.State.NULL);
             _timer?.destroy ();
         }
 
@@ -53,37 +53,40 @@ namespace Music {
                 return _state;
             }
             set {
-                _pipeline.set_state (value);
+                _pipeline?.set_state (value);
             }
         }
 
         public string? uri {
             get {
-                return _pipeline.uri;
+                if (_pipeline != null)
+                    return ((!)_pipeline).uri;
+                return null;
             }
             set {
                 _duration = Gst.CLOCK_TIME_NONE;
                 _position = Gst.CLOCK_TIME_NONE;
                 _state = Gst.State.NULL;
                 _tag_parsed = false;
-                _pipeline.set_state (Gst.State.READY);
-                _pipeline.uri = value;
+                _pipeline?.set_state (Gst.State.READY);
+                if (_pipeline != null)
+                    ((!)_pipeline).uri = value;
             }
         }
 
         public void play () {
-            _pipeline.set_state (Gst.State.PLAYING);
+            _pipeline?.set_state (Gst.State.PLAYING);
         }
 
         public void pause () {
-            _pipeline.set_state (Gst.State.PAUSED);
+            _pipeline?.set_state (Gst.State.PAUSED);
         }
 
         public void restart () {
             var saved_state = _state;
             if (saved_state != Gst.State.NULL) {
-                _pipeline.set_state (Gst.State.NULL);
-                _pipeline.set_state (saved_state);
+                _pipeline?.set_state (Gst.State.NULL);
+                _pipeline?.set_state (saved_state);
             }
         }
 
@@ -92,32 +95,32 @@ namespace Music {
             if (diff > 10 * Gst.MSECOND || diff < -10 * Gst.MSECOND) {
                 //  print ("Seek: %g -> %g\n", to_second (_last_seeked_pos), to_second (position));
                 _last_seeked_pos = position;
-                _pipeline.seek_simple (Gst.Format.TIME, Gst.SeekFlags.ACCURATE | Gst.SeekFlags.FLUSH, (int64) position);
+                _pipeline?.seek_simple (Gst.Format.TIME, Gst.SeekFlags.ACCURATE | Gst.SeekFlags.FLUSH, (int64) position);
             }
         }
 
         public void show_peak (bool show) {
-            if (show) {
+            if (show && _pipeline != null) {
                 dynamic var level = Gst.ElementFactory.make ("level", "filter");
                 if (level != null) {
-                    level.interval = Gst.MSECOND * 66; // 15fps
-                    level.post_messages = true;
+                    ((!)level).interval = Gst.MSECOND * 66; // 15fps
+                    ((!)level).post_messages = true;
                 }
-                _pipeline.audio_filter = level;
-            } else {
-                _pipeline.audio_filter = null;
+                ((!)_pipeline).audio_filter = level;
+            } else if (!show && _pipeline != null) {
+                ((!)_pipeline).audio_filter = null;
             }
         }
 
         public void use_pipewire (bool use) {
-            if (use) {
+            if (use && _pipeline != null) {
                 var sink = Gst.ElementFactory.make ("pipewiresink", "audiosink");
                 if (sink != null) {
-                    _pipeline.audio_sink = sink;
+                    ((!)_pipeline).audio_sink = sink;
                     print ("Enable pipewire\n");
                 }
-            } else {
-                _pipeline.audio_sink = null;
+            } else if (!use && _pipeline != null) {
+                ((!)_pipeline).audio_sink = null;
             }
         }
 
@@ -189,24 +192,28 @@ namespace Music {
         private void parse_peak (dynamic Gst.Message message) {
             unowned var structure = message.get_structure ();
             var value = structure?.get_value ("peak");
-            unowned ValueArray arr = (ValueArray*) value?.get_boxed ();
+            unowned ValueArray? arr = (ValueArray*) value?.get_boxed ();
             if (arr != null) {
                 double total = 0;
-                for (var i = 0; i < arr?.n_values; i++) {
-                    total += Math.pow (10, arr.get_nth (0).get_double () / 20);
+                var count = ((!)arr).n_values;
+                for (var i = 0; i < count; i++) {
+                    var v = ((!)arr).get_nth (0);
+                    if (v != null)
+                        total += Math.pow (10, ((!)v).get_double () / 20);
                 }
-                peak_parsed (total / arr.n_values);
+                if (count > 0)
+                    peak_parsed (total / count);
             }
         }
 
         private void parse_tags (Gst.Message message) {
             Gst.TagList tags;
             message.parse_tag (out tags);
-            SongInfo info = new SongInfo ();
-            Gst.Sample sample = null;
-            tags.get_string ("album", out info.album);
-            tags.get_string ("artist", out info.artist);
-            tags.get_string ("title", out info.title);
+            string? album = null, artist = null, title = null;
+            Gst.Sample? sample = null;
+            tags.get_string ("album", out album);
+            tags.get_string ("artist", out artist);
+            tags.get_string ("title", out title);
             tags.get_sample ("image", out sample);
             if (sample == null) {
                 for (var i = 0; i < tags.n_tags (); i++) {
@@ -214,7 +221,7 @@ namespace Music {
                     var value = tags.get_value_index (tag, 0);
                     if (value?.type () == typeof (Gst.Sample)
                             && tags.get_sample (tag, out sample)) {
-                        var caps = sample.get_caps ();
+                        var caps = sample?.get_caps ();
                         if (caps != null)
                             break;
                         print (@"unknown image tag: $(tag)\n");
@@ -222,23 +229,23 @@ namespace Music {
                     sample = null;
                 }
             }
-            Bytes? bytes = null;
+            Bytes? image = null;
             string? mtype = null;
             if (sample != null) {
-                uint8[] data = null;
-                var buffer = sample.get_buffer ();
-                buffer?.extract_dup (0, buffer.get_size (), out data);
+                uint8[]? data = null;
+                var buffer = sample?.get_buffer ();
+                buffer?.extract_dup (0, buffer?.get_size () ?? 0, out data);
                 if (data != null) {
-                    bytes = new Bytes.take (data);
-                    mtype = sample.get_caps ()?.get_structure (0)?.get_name ();
+                    image = new Bytes.take (data);
+                    mtype = sample?.get_caps ()?.get_structure (0)?.get_name ();
                 }
             }
-            tag_parsed (info, bytes, mtype);
+            tag_parsed (album, artist, title, image, mtype);
         }
 
         private bool timeout_callback () {
             int64 position = (int64) Gst.CLOCK_TIME_NONE;
-            if (_pipeline.query_position (Gst.Format.TIME, out position)
+            if ((_pipeline?.query_position (Gst.Format.TIME, out position) ?? false)
                     && _position != position) {
                 _position = position;
                 _last_seeked_pos = position;
@@ -249,7 +256,7 @@ namespace Music {
 
         private void on_duration_changed () {
             int64 duration = (int64) Gst.CLOCK_TIME_NONE;
-            if (_pipeline.query_duration (Gst.Format.TIME, out duration)
+            if ((_pipeline?.query_duration (Gst.Format.TIME, out duration) ?? false)
                     && _duration != duration) {
                 _duration = duration;
                 //  print ("Duration changed: %lld\n", duration);

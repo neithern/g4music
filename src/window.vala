@@ -89,7 +89,7 @@ namespace Music {
             });
             factory.bind.connect (on_bind_item);
             factory.unbind.connect ((item) => {
-                var entry = item.child as SongEntry;
+                var entry = (!)(item.child as SongEntry);
                 entry.cover = null;
             });
             list_view.factory = factory;
@@ -137,19 +137,19 @@ namespace Music {
             snapshot.pop ();
             if (!flap.folded) {
                 var right = width - flap.content.get_width ();
-                var rect = Graphene.Rect ().init(right - 0.5f, 0, 0.5f, (float) height);
+                var rect = (!)Graphene.Rect ().init (right - 0.5f, 0, 0.5f, (float) height);
                 draw_gray_linear_gradient_line (snapshot, rect);
             }
             base.snapshot (snapshot);
         }
 
         private async void on_bind_item (Gtk.ListItem item) {
-            var entry = item.child as SongEntry;
-            var song = item.item as Song;
+            var entry = (!)(item.child as SongEntry);
+            var song = (!)(item.item as Song);
             entry.artist = song.artist;
             entry.title = song.title;
 
-            var app = application as Application;
+            var app = (!)(application as Application);
             entry.playing = item.position == app.current_item;
             //  print ("bind: %u\n", item.position);
 
@@ -172,8 +172,9 @@ namespace Music {
         }
 
         private void on_export_cover () {
-            var pos = _cover_type?.index_of_char ('/');
-            var name = this.title.replace ("/", "&") + "." + _cover_type?.substring (pos + 1);
+            var pos = _cover_type?.index_of_char ('/') ?? -1;
+            var ext = _cover_type?.substring (pos + 1) ?? "";
+            var name = this.title.replace ("/", "&") + "." + ext;
             var filter = new Gtk.FileFilter ();
             filter.add_mime_type (_cover_type ??  "image/*");
             var chooser = new Gtk.FileChooserNative (null, this, Gtk.FileChooserAction.SAVE, null, null);
@@ -183,7 +184,7 @@ namespace Music {
             chooser.response.connect ((id) => {
                 var file = chooser.get_file ();
                 if (id == Gtk.ResponseType.ACCEPT && file != null && _cover_data != null) {
-                    save_data_to_file.begin (file, _cover_data, (obj, res) => {
+                    save_data_to_file.begin ((!)file, (!)_cover_data, (obj, res) => {
                         save_data_to_file.end (res);
                     });
                 }
@@ -195,14 +196,14 @@ namespace Music {
 
         private void on_player_state_changed (Gst.State state) {
             if (state >= Gst.State.PAUSED) {
-                var scale_paintable = cover_image.paintable as ScalePaintable;
+                var scale_paintable = (!)(cover_image.paintable as ScalePaintable);
                 var target = new Adw.CallbackAnimationTarget ((value) => {
                     scale_paintable.scale = value;
                 });
                 _scale_animation?.pause ();
                 _scale_animation = new Adw.TimedAnimation (cover_image,  scale_paintable.scale,
                                             state == Gst.State.PLAYING ? 1 : 0.8, 500, target);
-                _scale_animation.play ();
+                _scale_animation?.play ();
             }
         }
 
@@ -237,18 +238,19 @@ namespace Music {
             _cover_type = mtype;
             action_set_enabled (ACTION_WIN + ACTION_EXPORT_COVER, image != null);
 
-            var app = application as Application;
+            var app = (!)(application as Application);
             if (image != null) {
-                var pixbufs = new Gdk.Pixbuf?[2];
+                var pixbufs = new Gdk.Pixbuf?[2] {null, null};
                 yield run_async<void> (() => {
-                    var pixbuf = pixbufs[0] = load_clamp_pixbuf (image, 640);
-                    pixbufs[1] = pixbuf != null ? create_clamp_pixbuf (pixbuf, Thumbnailer.icon_size) : null;
+                    var pixbuf = pixbufs[0] = load_clamp_pixbuf ((!)image, 640);
+                    if (pixbuf != null)
+                        pixbufs[1] = create_clamp_pixbuf ((!)pixbuf, Thumbnailer.icon_size);
                 });
                 if (song == app.current_song && pixbufs[0] != null) {
-                    var paintable = Gdk.Texture.for_pixbuf (pixbufs[0]);
+                    var paintable = Gdk.Texture.for_pixbuf ((!)pixbufs[0]);
                     update_cover_paintable (song, paintable);
                     if (pixbufs[1] != null) {
-                        app.thumbnailer.put (song.url, Gdk.Texture.for_pixbuf (pixbufs[1]));
+                        app.thumbnailer.put (song.url, Gdk.Texture.for_pixbuf ((!)pixbufs[1]));
                         app.song_list.items_changed (app.current_item, 0, 0);
                     }
                     return;
@@ -275,10 +277,10 @@ namespace Music {
         }
 
         private void update_song_filter () {
-            var app = application as Application;
+            var app = (!)(application as Application);
             if (search_btn.active && _search_text.length > 0) {
                 app.song_list.filter = new Gtk.CustomFilter ((obj) => {
-                    var song = obj as Song;
+                    var song = (!)(obj as Song);
                     switch (_search_type) {
                         case SearchType.ALBUM:
                             return song.album == _search_property;
@@ -293,19 +295,16 @@ namespace Music {
                     }
                 });
             } else {
-                app.song_list.filter = null;
+                app.song_list.set_filter (null);
             }
             app.find_current_item ();
         }
 
         private Adw.Animation? _fade_animation = null;
 
-        private void update_cover_paintable (Song song, owned Gdk.Paintable? paintable) {
-            if (paintable == null) {
-                var app = application as Application;
-                paintable = app.thumbnailer.find (song.url);
-            }
-            _cover_paintable.paintable = paintable;
+        private void update_cover_paintable (Song song, Gdk.Paintable? paintable) {
+            var app = (!)(application as Application);
+            _cover_paintable.paintable = paintable ?? app.thumbnailer.find (song.url);
 
             var width = get_width ();
             var height = get_height ();
@@ -319,11 +318,11 @@ namespace Music {
             });
             _fade_animation?.pause ();
             _fade_animation = new Adw.TimedAnimation (cover_image, 1 - _cover_paintable.fade, 0, 800, target);
-            _fade_animation.done.connect (() => {
+            ((!)_fade_animation).done.connect (() => {
                 _cover_paintable.previous = null;
                 _fade_animation = null;
             });
-            _fade_animation.play ();
+            _fade_animation?.play ();
         }
 
         private int _blur_width = 0;
@@ -335,7 +334,7 @@ namespace Music {
                 if (force || _blur_width != width || _blur_height != height) {
                     _blur_width = width;
                     _blur_height = height;
-                    _bkgnd_paintable.paintable = create_blur_texture (this, paintable, width, height);
+                    _bkgnd_paintable.paintable = create_blur_texture (this, (!)paintable, width, height);
                     print ("update blur: %dx%d\n", width, height);
                     return true;
                 }
