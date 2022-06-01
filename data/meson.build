@@ -1,6 +1,7 @@
 conf = configuration_data()
 conf.set('app_id', app_id)
 conf.set('version', version)
+conf.set('bindir', get_option('prefix') / get_option('bindir'))
 
 desktop_conf = configure_file(
   input: 'app.desktop.in',
@@ -23,6 +24,17 @@ if desktop_utils.found()
     args: [desktop_file]
   )
 endif
+
+service_file = configure_file(
+  input: 'app.service.in',
+  output: '@0@.service'.format(app_id),
+  configuration: conf,
+)
+
+install_data(
+  service_file,
+  install_dir: get_option('datadir') / 'dbus-1' / 'services'
+)
 
 appstream_conf = configure_file(
   input: 'app.appdata.xml.in',
