@@ -219,7 +219,8 @@ namespace Music {
                 var name = info.get_name ();
                 var song = new Song ();
                 song.type = type;
-                song.url = base_url + name;
+                // build same file url as tracker sparql
+                song.url = base_url + Uri.escape_string (name, null, false);
                 var sinfo = parse_tags (song.url);
                 if (sinfo != null) {
                     song.album = sinfo.album ?? UNKOWN_ALBUM;
