@@ -95,6 +95,8 @@ namespace Music {
                         var pixbuf2 = create_clamp_pixbuf (pixbuf, size);
                         _factory.save_thumbnail (pixbuf, url, song.mtime);
                         return pixbuf2;
+                    } else {
+                        _factory.create_failed_thumbnail (url, song.mtime);
                     }
                 }
             } catch (Error e) {
