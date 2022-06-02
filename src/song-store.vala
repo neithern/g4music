@@ -8,7 +8,7 @@ namespace Music {
         public string artist = UNKOWN_ARTIST;
         public string title = "";
         public string type = "";
-        public string url = "";
+        public string uri = "";
         public string thumbnail = "";
         public long mtime = 0;
         public int order = 0;
@@ -50,7 +50,7 @@ namespace Music {
             if (ret == 0)
                 ret = strcmp (s1._artist_key, s2._artist_key);
             if (ret == 0)
-                ret = strcmp (s1.url, s2.url);
+                ret = strcmp (s1.uri, s2.uri);
             return ret;
         }
 
@@ -119,7 +119,7 @@ namespace Music {
                 nmm:artistName (nmm:artist (?song)) AS ?artist
                 nie:title (?song) AS ?title
                 nie:mimeType (?song) AS ?mtype
-                nie:isStoredAs (?song) AS ?url
+                nie:isStoredAs (?song) AS ?uri
             WHERE { ?song a nmm:MusicPiece }
         """;
 
@@ -136,9 +136,9 @@ namespace Music {
                         song.artist = cursor.get_string (1) ?? UNKOWN_ARTIST;
                         song.title = cursor.get_string (2) ?? "";
                         song.type = cursor.get_string (3) ?? DEFAULT_MIMETYPE;
-                        song.url = cursor.get_string (4) ?? "";
+                        song.uri = cursor.get_string (4) ?? "";
                         if (song.title.length == 0)
-                            song.title = parse_name_from_url (song.url);
+                            song.title = parse_name_from_uri (song.uri);
                         song.update_keys ();
                         arr.add (song);
                     }
@@ -175,8 +175,8 @@ namespace Music {
                     }
                 } else {
                     var parent = file.get_parent ();
-                    var base_url = parent != null ? get_url_with_end_sep ((!)parent) : "";
-                    var song = new_song_from_info (base_url, info);
+                    var base_uri = parent != null ? get_uri_with_end_sep ((!)parent) : "";
+                    var song = new_song_from_info (base_uri, info);
                     if (song != null)
                         arr.add ((!)song);
                 }
@@ -189,7 +189,7 @@ namespace Music {
             var dir = stack[last];
             stack.remove_index_fast (last);
             try {
-                var base_url = get_url_with_end_sep (dir);
+                var base_uri = get_uri_with_end_sep (dir);
                 FileInfo? info = null;
                 var enumerator = dir.enumerate_children ("standard::*", FileQueryInfoFlags.NOFOLLOW_SYMLINKS);
                 while ((info = enumerator.next_file ()) != null) {
@@ -200,7 +200,7 @@ namespace Music {
                         var sub_dir = dir.resolve_relative_path (pi.get_name ());
                         stack.add (sub_dir);
                     } else {
-                        var song = new_song_from_info (base_url, pi);
+                        var song = new_song_from_info (base_uri, pi);
                         if (song != null)
                             arr.add ((!)song);
                     }
@@ -210,15 +210,15 @@ namespace Music {
             }
         }
 
-        private static Song? new_song_from_info (string base_url, FileInfo info) {
+        private static Song? new_song_from_info (string base_uri, FileInfo info) {
             var type = info.get_content_type ();
             if (type != null && ((!)type).has_prefix ("audio/") && !((!)type).has_suffix ("url")) {
                 var name = info.get_name ();
                 var song = new Song ();
                 song.type = (!)type;
-                // build same file url as tracker sparql
-                song.url = base_url + Uri.escape_string (name, null, false);
-                parse_tags (song.url, name, song);
+                // build same file uri as tracker sparql
+                song.uri = base_uri + Uri.escape_string (name, null, false);
+                parse_tags (song.uri, name, song);
                 song.update_keys ();
                 return song;
             }
@@ -242,11 +242,11 @@ namespace Music {
         return -1;
     }
 
-    public static string get_url_with_end_sep (File file) {
-        var url = file.get_uri ();
-        if (url[url.length - 1] != '/')
-            url += "/";
-        return url;
+    public static string get_uri_with_end_sep (File file) {
+        var uri = file.get_uri ();
+        if (uri[uri.length - 1] != '/')
+            uri += "/";
+        return uri;
     }
 
     public static string parse_abbreviation (string text) {
@@ -279,13 +279,13 @@ namespace Music {
         return path;
     }
 
-    public static string parse_name_from_url (string url) {
+    public static string parse_name_from_uri (string uri) {
         try {
-            var uri = Uri.parse (url, UriFlags.NONE);
-            return parse_name_from_path (uri.get_path ());
+            var u = Uri.parse (uri, UriFlags.NONE);
+            return parse_name_from_path (u.get_path ());
         } catch (Error e) {
-            warning ("Parse %s: %s\n", url, e.message);
+            warning ("Parse %s: %s\n", uri, e.message);
         }
-        return url;
+        return uri;
     }
 }

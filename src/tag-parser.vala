@@ -1,7 +1,7 @@
 namespace Music {
 
-    public static bool parse_tags (string url, string name, Song song) {
-        var path = File.new_for_uri (url).get_path ();
+    public static bool parse_tags (string uri, string name, Song song) {
+        var path = File.new_for_uri (uri).get_path ();
         if (path == null) {
             return false;
         }
@@ -18,9 +18,9 @@ namespace Music {
     }
 
 /*
-    public static async SongInfo? parse_id3v2_tags_async (string url) {
+    public static async SongInfo? parse_id3v2_tags_async (string uri) {
         try {
-            var file = File.new_for_uri (url);
+            var file = File.new_for_uri (uri);
             var stream = yield file.read_async ();
             var header = new uint8[Gst.Tag.ID3V2_HEADER_SIZE];
             var n = yield stream.read_async (header);
@@ -49,7 +49,7 @@ namespace Music {
             tags.get_string ("title", out info.title);
             return info;
         } catch (Error e) {
-            print ("Parse %s: %s\n", url, e.message);
+            print ("Parse %s: %s\n", uri, e.message);
         }
         return null;
     }

@@ -110,7 +110,7 @@ namespace Music {
         }
 
         public override void shutdown () {
-             _settings.set_string ("played-url", _current_song?.url ?? "");
+             _settings.set_string ("played-uri", _current_song?.uri ?? "");
 
             base.shutdown ();
         }
@@ -126,7 +126,7 @@ namespace Music {
                 var song = _song_list.get_item (value) as Song;
                 if (song != null && _current_song != song) {
                     _current_song = song;
-                    _player.uri = ((!)song).url;
+                    _player.uri = ((!)song).uri;
                     song_changed ((!)song);
                 }
                 if (_current_item != value) {
@@ -265,12 +265,12 @@ namespace Music {
             } else if (_current_song != null && _current_song == _song_list.get_item (_current_item)) {
                 play_item = _current_item;
             } else {
-                var url = _current_song?.url ?? _settings.get_string ("played-url");
-                if (url.length > 0) {
+                var uri = _current_song?.uri ?? _settings.get_string ("played-uri");
+                if (uri.length > 0) {
                     var count = _song_list.get_n_items ();
                     for (var i = 0; i < count; i++) {
                         var song = (!)(_song_list.get_item (i) as Song);
-                        if (url == song.url) {
+                        if (uri == song.uri) {
                             play_item = i;
                             break;
                         }

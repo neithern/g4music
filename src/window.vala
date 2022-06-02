@@ -154,7 +154,7 @@ namespace Music {
             //  print ("bind: %u\n", item.position);
 
             var thumbnailer = app.thumbnailer;
-            var paintable = thumbnailer.find (song.url);
+            var paintable = thumbnailer.find (song.uri);
             entry.cover = paintable ?? _loading_paintable;
             if (paintable == null) {
                 var saved_pos = item.position;
@@ -228,7 +228,7 @@ namespace Music {
         private void on_song_changed (Song song) {
             update_song_info (song);
             action_set_enabled (ACTION_APP + ACTION_PLAY, true);
-            print ("play song: %s\n", song.url);
+            print ("play song: %s\n", song.uri);
         }
 
         private async void on_song_tag_parsed (Song song, Bytes? image, string? mtype) {
@@ -250,7 +250,7 @@ namespace Music {
                     var paintable = Gdk.Texture.for_pixbuf ((!)pixbufs[0]);
                     update_cover_paintable (song, paintable);
                     if (pixbufs[1] != null) {
-                        app.thumbnailer.put (song.url, Gdk.Texture.for_pixbuf ((!)pixbufs[1]));
+                        app.thumbnailer.put (song.uri, Gdk.Texture.for_pixbuf ((!)pixbufs[1]));
                         app.song_list.items_changed (app.current_item, 0, 0);
                     }
                     return;
@@ -304,7 +304,7 @@ namespace Music {
 
         private void update_cover_paintable (Song song, Gdk.Paintable? paintable) {
             var app = (!)(application as Application);
-            _cover_paintable.paintable = paintable ?? app.thumbnailer.find (song.url);
+            _cover_paintable.paintable = paintable ?? app.thumbnailer.find (song.uri);
 
             var width = get_width ();
             var height = get_height ();
