@@ -215,7 +215,7 @@ namespace Music {
         }
     }
 
-    public static Gdk.Paintable? create_text_paintable (string text, int width = 128, int height = 128) {
+    public static Gdk.Paintable? create_text_paintable (string text, int width = 128, int height = 128, uint color = 0) {
         uint32[] text_colors = {
             0x83b6ec, // blue
             0x7ad9f1, // cyan
@@ -233,7 +233,9 @@ namespace Music {
             0xc0bfbc, // gray
         };
 
-        var color = text_colors[str_hash (text) % text_colors.length];
+        if (color == 0)
+            color = text_colors[str_hash (text) % text_colors.length];
+
         var c = Gdk.RGBA ();
         c.red = ((color >> 16) & 0xff) / 255f;
         c.green = ((color >> 8) & 0xff) / 255f;

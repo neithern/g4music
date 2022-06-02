@@ -123,7 +123,8 @@ namespace Music {
 
         protected static Gdk.Paintable create_song_album_text_paintable (Song song) {
             var text = parse_abbreviation (song.album);
-            var paintable = create_text_paintable (text, icon_size, icon_size);
+            var color = song.album == UNKOWN_ALBUM ? (int) 0xffc0bfbc : 0;
+            var paintable = create_text_paintable (text, icon_size, icon_size, color);
             if (paintable != null)
                 return (!)paintable;
             return new BasePaintable ();
