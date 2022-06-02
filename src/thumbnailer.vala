@@ -75,11 +75,13 @@ namespace Music {
             try {
                 var path = Gnome.DesktopThumbnail.path_for_uri (url, Gnome.DesktopThumbnailSize.LARGE);
                 var pixbuf = new Gdk.Pixbuf.from_file_at_scale (path, size, -1, true);
-                song.thumbnail = path;
-                //  print ("Load thumbnail: %dx%d, %s\n", pixbuf.width, pixbuf.height, song.url);
-                return pixbuf;
+                if (pixbuf is Gdk.Pixbuf) {
+                    song.thumbnail = path;
+                    //  print ("Load thumbnail: %dx%d, %s\n", pixbuf.width, pixbuf.height, url);
+                    return pixbuf;
+                }
             } catch (Error e) {
-                //  warning ("Load %s: %s\n", song.thumbnail, e.message);
+                //  warning ("Load thumbnail %s: %s\n", url, e.message);
             }
 
             if (song.mtime == 0) try {
@@ -88,13 +90,15 @@ namespace Music {
                 song.mtime = (long) (info.get_modification_date_time ()?.to_unix () ?? 0);
                 if (!_factory.has_valid_failed_thumbnail (url, song.mtime)) {
                     var pixbuf = _factory.generate_thumbnail (url, song.type);
-                    //  print ("Generate thumbnail: %s\n", song.url);
-                    var pixbuf2 = create_clamp_pixbuf (pixbuf, size);
-                    _factory.save_thumbnail (pixbuf, url, song.mtime);
-                    return pixbuf2;
+                    if (pixbuf is Gdk.Pixbuf) {
+                        //  print ("General thumbnail: %dx%d, %s\n", pixbuf.width, pixbuf.height, url);
+                        var pixbuf2 = create_clamp_pixbuf (pixbuf, size);
+                        _factory.save_thumbnail (pixbuf, url, song.mtime);
+                        return pixbuf2;
+                    }
                 }
             } catch (Error e) {
-                //  warning ("Generate %s: %s\n", url, e.message);
+                //  warning ("Generate thumbnail %s: %s\n", url, e.message);
             }
             return null;
         }
@@ -149,7 +153,8 @@ namespace Music {
         try {
             var stream = new MemoryInputStream.from_bytes (image);
             var pixbuf = new Gdk.Pixbuf.from_stream (stream);
-            return create_clamp_pixbuf (pixbuf, size);
+            if (pixbuf is Gdk.Pixbuf)
+                return create_clamp_pixbuf (pixbuf, size);
         } catch (Error e) {
         }
         return null;
