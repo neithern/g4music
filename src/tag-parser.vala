@@ -7,15 +7,23 @@ namespace Music {
         }
 
         string? album = null, artist = null, title = null;
-        Bytes? image = null;
-        string? itype = null;
         var ret = false;
 #if HAS_TAGLIB_C
-        ret = parse_tags_with_taglib ((!)path, out album, out artist, out title);
+        var file = new TagLib.File ((!)path);
+        ret = file.is_valid ();
+        if (ret) {
+            unowned var tag = file.tag;
+            album = tag.album;
+            artist = tag.artist;
+            title = tag.title;
+        }
 #else
         var tags = parse_gst_tags ((!)path, song.type);
-        if (tags != null)
-            ret = parse_from_tag_list ((!)tags, out album, out artist, out title, false, out image, out itype);
+        if (tags != null) {
+            ret = tags?.get_string ("album", out album) ?? false;
+            ret |= tags?.get_string ("artist", out artist) ?? false;
+            ret |= tags?.get_string ("title", out title) ?? false;
+        }
 #endif
         if (ret) {
             if (album != null && ((!)album).length > 0)
@@ -29,23 +37,6 @@ namespace Music {
             song.title = parse_name_from_path (name);
         return ret;
     }
-
-#if HAS_TAGLIB_C
-    public static bool parse_tags_with_taglib (string path,
-                                            out string? album, out string? artist, out string? title) {
-        var file = new TagLib.File (path);
-        if (file.is_valid ()) {
-            unowned var tag = file.tag;
-            album = tag.album;
-            artist = tag.artist;
-            title = tag.title;
-            return true;
-        } else {
-            album = artist = title = null;
-            return false;
-        }
-    }
-#endif
 
     public static Gst.TagList? parse_gst_tags (string path, string ctype) {
         var tags = parse_id3v2_tags ((!)path);
@@ -159,45 +150,34 @@ namespace Music {
         }
     }
 
-    public static bool parse_from_tag_list (Gst.TagList tags,
-                                            out string? album, out string? artist, out string? title,
-                                            bool parse_image, out Bytes? image, out string? itype) {
-        Gst.Sample? sample = null;
-        var ret = tags.get_string ("album", out album);
-        ret |= tags.get_string ("artist", out artist);
-        ret |= tags.get_string ("title", out title);
-
+    public static bool parse_image_from_tag_list (Gst.TagList tags, out Bytes? image, out string? itype) {
         image = null;
         itype = null;
-        if (parse_image) {
-            if (tags.get_sample ("image", out sample)) {
-                ret = true;
-            }/* else {
-                for (var i = 0; i < tags.n_tags (); i++) {
-                    var tag = tags.nth_tag_name (i);
-                    var value = tags.get_value_index (tag, 0);
-                    if (value?.type () == typeof (Gst.Sample)
-                            && tags.get_sample (tag, out sample)) {
-                        var caps = sample?.get_caps ();
-                        if (caps != null) {
-                            ret = true;
-                            break;
-                        }
-                        print (@"unknown image tag: $(tag)\n");
+        Gst.Sample? sample = null;
+        if (!tags.get_sample ("image", out sample)) {
+            for (var i = 0; i < tags.n_tags (); i++) {
+                var tag = tags.nth_tag_name (i);
+                var value = tags.get_value_index (tag, 0);
+                if (value?.type () == typeof (Gst.Sample)
+                        && tags.get_sample (tag, out sample)) {
+                    var caps = sample?.get_caps ();
+                    if (caps != null) {
+                        break;
                     }
-                    sample = null;
+                    //  print (@"unknown image tag: $(tag)\n");
                 }
-            }*/
-            if (sample != null) {
-                uint8[]? data = null;
-                var buffer = sample?.get_buffer ();
-                buffer?.extract_dup (0, buffer?.get_size () ?? 0, out data);
-                if (data != null) {
-                    image = new Bytes.take (data);
-                    itype = sample?.get_caps ()?.get_structure (0)?.get_name ();
-                }
+                sample = null;
             }
         }
-        return ret;
+        if (sample != null) {
+            uint8[]? data = null;
+            var buffer = sample?.get_buffer ();
+            buffer?.extract_dup (0, buffer?.get_size () ?? 0, out data);
+            if (data != null) {
+                image = new Bytes.take (data);
+                itype = sample?.get_caps ()?.get_structure (0)?.get_name ();
+            }
+        }
+        return image != null;
     }
 }

@@ -208,10 +208,16 @@ namespace Music {
         private void parse_tags (Gst.Message message) {
             Gst.TagList tags;
             message.parse_tag (out tags);
+
             string? album = null, artist = null, title = null;
+            var ret = tags.get_string ("album", out album);
+            ret |= tags.get_string ("artist", out artist);
+            ret |= tags.get_string ("title", out title);
+
             Bytes? image = null;
             string? itype = null;
-            _tag_parsed = parse_from_tag_list (tags, out album, out artist, out title, true, out image, out itype);
+            ret |= parse_image_from_tag_list (tags, out image, out itype);
+            _tag_parsed = ret;
             tag_parsed (album, artist, title, image, itype);
         }
 

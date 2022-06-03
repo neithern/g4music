@@ -115,10 +115,9 @@ namespace Music {
             if (tags == null)
                 return null;
 
-            string? album = null, artist = null, title = null;
             Bytes? image = null;
             string? itype = null;
-            if (parse_from_tag_list ((!)tags, out album, out artist, out title, true, out image, out itype)
+            if (parse_image_from_tag_list ((!)tags, out image, out itype)
                     && image != null) {
                 return load_clamp_pixbuf ((!)image, size);
             }
