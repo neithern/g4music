@@ -145,9 +145,9 @@ namespace Music {
                 } catch (Error e) {
                     warning ("Query error: %s\n", e.message);
                 }
+                if (!_shuffled)
+                    arr.sort (Song.compare_by_title);
             });
-            if (!_shuffled)
-                arr.sort (Song.compare_by_title);
             _store.splice (_store.get_n_items (), 0, arr.data);
         }
 #endif
@@ -158,9 +158,9 @@ namespace Music {
                 foreach (var file in files) {
                     add_file (file, arr);
                 }
+                if (!_shuffled)
+                    arr.sort (Song.compare_by_title);
             });
-            if (!_shuffled)
-                arr.sort (Song.compare_by_title);
             _store.splice (_store.get_n_items (), 0, arr.data);
         }
 
