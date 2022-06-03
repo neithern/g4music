@@ -181,10 +181,12 @@ namespace Music {
         }
 
         public File get_music_folder () {
-            var music_path = _settings.get_string ("music-dir");
-            if (music_path.length == 0)
-                music_path = Environment.get_user_special_dir (UserDirectory.MUSIC);
-            return File.new_for_uri (music_path);
+            var music_uri = _settings.get_string ("music-dir");
+            if (music_uri.length > 0) {
+                return File.new_for_uri (music_uri);
+            }
+            var music_path = Environment.get_user_special_dir (UserDirectory.MUSIC);
+            return File.new_for_path (music_path);
         }
 
         public void play_next () {
