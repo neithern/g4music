@@ -8,7 +8,9 @@
             "type": "gdb",
             "request": "launch",
             "name": "Launch",
-            "program": "${workspaceFolder}/build/src/${workspaceFolderBasename}",
+            "target": "${workspaceFolder}/build/src/${workspaceFolderBasename}",
+            "cwd": "${workspaceRoot}",
+            "valuesFormatting": "parseText",
             "preLaunchTask": "Compile"
         }
     ]
