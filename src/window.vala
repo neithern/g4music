@@ -264,14 +264,22 @@ namespace Music {
         }
 
         private bool on_song_info_link (string uri) {
-            search_entry.text = uri;
+            search_entry.text = Uri.unescape_string (uri) ?? uri;
             search_btn.active = true;
             return true;
         }
 
+        private static string simple_html_encode (string text) {
+            return text.replace ("&", "&amp;").replace ("<",  "&lt;").replace (">", "&gt;");
+        }
+
         private void update_song_info (Song song) {
-            song_album.set_markup (@"<a href=\"album=$(song.album)\">$(song.album)</a>");
-            song_artist.set_markup (@"<a href=\"artist=$(song.artist)\">$(song.artist)</a>");
+            var album_uri = Uri.escape_string (song.album);
+            var artist_uri = Uri.escape_string (song.artist);
+            var album_text = simple_html_encode (song.album);
+            var artist_text = simple_html_encode (song.artist);
+            song_album.set_markup (@"<a href=\"album=$(album_uri)\">$(album_text)</a>");
+            song_artist.set_markup (@"<a href=\"artist=$(artist_uri)\">$(artist_text)</a>");
             song_title.label = song.title;
             this.title = song.artist == UNKOWN_ARTIST ? song.title : @"$(song.artist) - $(song.title)";
         }
