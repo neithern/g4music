@@ -38,10 +38,14 @@ namespace Music {
         }
     }
 
-    public static async V run_async<V> (TaskFunc<V> task) {
+    public static async V run_async<V> (TaskFunc<V> task, bool front = false) {
         var worker = new Worker<V> (task, run_async<V>.callback);
         try {
-            Worker.get_async_pool ().add (worker);
+            unowned var pool = Worker.get_async_pool ();
+            pool.add (worker);
+            if (front) {
+                pool.move_to_front (worker);
+            }
             yield;
         } catch (Error e) {
         }

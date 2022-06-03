@@ -245,7 +245,7 @@ namespace Music {
                     var pixbuf = pixbufs[0] = load_clamp_pixbuf ((!)image, 640);
                     if (pixbuf != null)
                         pixbufs[1] = create_clamp_pixbuf ((!)pixbuf, Thumbnailer.icon_size);
-                });
+                }, true);
                 if (song == app.current_song && pixbufs[0] != null) {
                     var paintable = Gdk.Texture.for_pixbuf ((!)pixbufs[0]);
                     update_cover_paintable (song, paintable);
