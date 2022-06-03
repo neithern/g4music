@@ -47,9 +47,6 @@ namespace Music {
     public class Thumbnailer : LruCache<Gdk.Paintable?> {
         public static int icon_size = 96;
 
-        private Gnome.DesktopThumbnailFactory _factory = 
-            new Gnome.DesktopThumbnailFactory (Gnome.DesktopThumbnailSize.LARGE);
-
         private GenericSet<string> _loading = new GenericSet<string> (str_hash, str_equal);
 
         public async Gdk.Paintable? load_async (Song song) {
@@ -69,6 +66,10 @@ namespace Music {
             put (uri, paintable);
             return paintable;
         }
+
+#if HAS_GNOME_DESKTOP
+        private Gnome.DesktopThumbnailFactory _factory =
+            new Gnome.DesktopThumbnailFactory (Gnome.DesktopThumbnailSize.LARGE);
 
         protected Gdk.Pixbuf? load_directly (Song song, int size = 0) {
             var uri = song.uri;
@@ -104,6 +105,26 @@ namespace Music {
             }
             return null;
         }
+#else
+        protected Gdk.Pixbuf? load_directly (Song song, int size = 0) {
+            var path = File.new_for_uri (song.uri).get_path ();
+            if (path == null)
+                return null;
+
+            var tags = parse_gst_tags ((!)path, song.type);
+            if (tags == null)
+                return null;
+
+            string? album = null, artist = null, title = null;
+            Bytes? image = null;
+            string? itype = null;
+            if (parse_from_tag_list ((!)tags, out album, out artist, out title, true, out image, out itype)
+                    && image != null) {
+                return load_clamp_pixbuf ((!)image, size);
+            }
+            return null;
+        }
+#endif
 
         public async Gdk.Paintable? load_directly_async (Song song, int size = 0) {
             var pixbuf = yield run_async<Gdk.Pixbuf?> (() => {
@@ -131,9 +152,7 @@ namespace Music {
             var text = parse_abbreviation (song.album);
             var color = song.album == UNKOWN_ALBUM ? (int) 0xffc0bfbc : 0;
             var paintable = create_text_paintable (text, icon_size, icon_size, color);
-            if (paintable != null)
-                return (!)paintable;
-            return new BasePaintable ();
+            return paintable ?? new BasePaintable ();
         }
     }
 

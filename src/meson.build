@@ -29,6 +29,7 @@ sources += gnome.compile_resources('g4music-resources',
 executable('g4music', sources,
   vala_args: [
     meson.project_source_root() + '/src/config.vapi',
+    meson.project_source_root() + '/src/gst-tag.vapi',
     '--gresourcesdir=' + meson.current_build_dir(),
   ],
   dependencies: dependencies,

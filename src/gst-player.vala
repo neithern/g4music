@@ -27,7 +27,7 @@ namespace Music {
         public signal void end_of_stream ();
         public signal void position_updated (Gst.ClockTime position);
         public signal void state_changed (Gst.State state);
-        public signal void tag_parsed (string? album, string? artist, string? title, Bytes? image, string? mtype);
+        public signal void tag_parsed (string? album, string? artist, string? title, Bytes? image, string? itype);
         public signal void peak_parsed (double peak);
 
         public GstPlayer () {
@@ -172,7 +172,6 @@ namespace Music {
 
                 case Gst.MessageType.TAG:
                     if (!_tag_parsed) {
-                        _tag_parsed = true;
                         parse_tags (message);
                     }
                     break;
@@ -210,37 +209,10 @@ namespace Music {
             Gst.TagList tags;
             message.parse_tag (out tags);
             string? album = null, artist = null, title = null;
-            Gst.Sample? sample = null;
-            tags.get_string ("album", out album);
-            tags.get_string ("artist", out artist);
-            tags.get_string ("title", out title);
-            tags.get_sample ("image", out sample);
-            if (sample == null) {
-                for (var i = 0; i < tags.n_tags (); i++) {
-                    var tag = tags.nth_tag_name (i);
-                    var value = tags.get_value_index (tag, 0);
-                    if (value?.type () == typeof (Gst.Sample)
-                            && tags.get_sample (tag, out sample)) {
-                        var caps = sample?.get_caps ();
-                        if (caps != null)
-                            break;
-                        print (@"unknown image tag: $(tag)\n");
-                    }
-                    sample = null;
-                }
-            }
             Bytes? image = null;
-            string? mtype = null;
-            if (sample != null) {
-                uint8[]? data = null;
-                var buffer = sample?.get_buffer ();
-                buffer?.extract_dup (0, buffer?.get_size () ?? 0, out data);
-                if (data != null) {
-                    image = new Bytes.take (data);
-                    mtype = sample?.get_caps ()?.get_structure (0)?.get_name ();
-                }
-            }
-            tag_parsed (album, artist, title, image, mtype);
+            string? itype = null;
+            _tag_parsed = parse_from_tag_list (tags, out album, out artist, out title, true, out image, out itype);
+            tag_parsed (album, artist, title, image, itype);
         }
 
         private bool timeout_callback () {
