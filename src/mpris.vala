@@ -64,13 +64,14 @@ namespace Music {
             send_property ("PlaybackStatus", state == Gst.State.PLAYING ? "Playing" : "Stopped");
         }
 
-        private void send_meta_data (Song song) {
+        internal void send_meta_data (Song song, string? art_path = null) {
             var data = new HashTable<string, Variant> (str_hash, str_equal);
             string[] artist = { song.artist };
             data.insert ("xesam:artist", artist);
             data.insert ("xesam:title", song.title);
-            if (song.thumbnail.length > 0) 
-                data.insert ("mpris:artUrl", File.new_for_path (song.thumbnail).get_uri ());
+            var path = art_path ?? song.thumbnail;
+            if (path.length > 0)
+                data.insert ("mpris:artUrl", File.new_for_path (path).get_uri ());
             send_property ("Metadata", data);
         }
 

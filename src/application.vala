@@ -22,6 +22,7 @@ namespace Music {
         private SongStore _song_store = new SongStore ();
         private Thumbnailer _thumbnailer = new Thumbnailer ();
         private Settings _settings = new Settings (Config.APP_ID);
+        private MprisPlayer? _mpris = null;
 
         public signal void index_changed (int index, uint size);
         public signal void song_changed (Song song);
@@ -63,14 +64,7 @@ namespace Music {
                 current_item = current_item + 1;
             });
 
-            _player.tag_parsed.connect ((album, artist, title, image, mtype) => {
-                if (_current_song?.update (album, artist, title) ?? false) {
-                    _thumbnailer.update_text_paintable ((!)_current_song);
-                    _song_list.items_changed (_current_item, 0, 0);
-                }
-                if (_current_song != null)
-                    song_tag_parsed ((!)_current_song, image, mtype);
-            });
+            _player.tag_parsed.connect (on_tag_parsed);
 
             var mpris_id = Bus.own_name (BusType.SESSION,
                 "org.mpris.MediaPlayer2." + application_id,
@@ -304,11 +298,41 @@ namespace Music {
         }
 
         private void on_bus_acquired (DBusConnection connection, string name) {
+            _mpris = new MprisPlayer (this, connection);
             try {
-                connection.register_object ("/org/mpris/MediaPlayer2", new MprisPlayer (this, connection));
+                connection.register_object ("/org/mpris/MediaPlayer2", _mpris);
                 connection.register_object ("/org/mpris/MediaPlayer2", new MprisRoot ());
             } catch (Error e) {
                 warning ("Register MPRIS failed: %s\n", e.message);
+            }
+        }
+
+        private File? _cover_tmp_file = null;
+
+        private async void on_tag_parsed (string? album, string? artist, string? title, Bytes? image, string? itype) {
+            if (_current_song != null) {
+                var song = (!)current_song;
+                if (song.update (album, artist, title)) {
+                    _thumbnailer.update_text_paintable (song);
+                    _song_list.items_changed (_current_item, 0, 0);
+                }
+                song_tag_parsed (song, image, itype);
+
+                if (image != null && song.thumbnail.length == 0) try {
+                    if (_cover_tmp_file != null) {
+                        yield ((!)_cover_tmp_file).delete_async ();
+                    }
+                    FileIOStream stream;
+                    _cover_tmp_file = File.new_tmp (null, out stream);
+                    yield stream.get_output_stream ().write_async (((!)image).get_data ());
+                    yield stream.close_async ();
+                    if (song == _current_song) {
+                        var tmp_path = _cover_tmp_file?.get_path ();
+                        _mpris?.send_meta_data (song, tmp_path);
+                    }
+                } catch (Error e) {
+                    print ("Temp file failed: %s\n", e.message);
+                }
             }
         }
     }
