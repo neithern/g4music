@@ -8,7 +8,7 @@ namespace Music {
         private size_t _size = 0;
         private Tree<string, V> _cache = new Tree<string, V> (compare_string);
 
-        public V find (string key) {
+        public unowned V find (string key) {
             return _cache.lookup (key);
         }
 
@@ -20,7 +20,7 @@ namespace Music {
                 _cache.remove (((!)first).key ());
             }
 
-            var cur = _cache.lookup (key);
+            unowned var cur = _cache.lookup (key);
             if (cur != null) {
                 _size -= size_of_value (cur);
                 _cache.replace (key, value);
@@ -32,7 +32,7 @@ namespace Music {
         }
 
         public bool remove (string key) {
-            var value = _cache.lookup (key);
+            unowned var value = _cache.lookup (key);
             if (value != null) {
                 _size -= size_of_value (value);
             }
@@ -57,7 +57,7 @@ namespace Music {
         }
 
         public async Gdk.Paintable? load_async (Song song) {
-            var uri = song.uri;
+            unowned var uri = song.uri;
             if (uri in _loading)
                 return null;
 
@@ -102,7 +102,7 @@ namespace Music {
         }
 
         public void update_text_paintable (Song song) {
-            var uri = song.uri;
+            unowned var uri = song.uri;
             var paintable = find (uri);
             if (! (paintable is Gdk.Texture)) {
                 var paintable2 = create_song_album_text_paintable (song);
@@ -115,8 +115,9 @@ namespace Music {
         }
 
         protected static Gdk.Paintable create_song_album_text_paintable (Song song) {
-            var text = parse_abbreviation (song.album);
-            var color = (song.album.length == 0 || song.album == UNKOWN_ALBUM) ? (int) 0xffc0bfbc : 0;
+            unowned var album = song.album;
+            var text = parse_abbreviation (album);
+            var color = (album.length == 0 || album == UNKOWN_ALBUM) ? (int) 0xffc0bfbc : 0;
             var paintable = create_text_paintable (text, icon_size, icon_size, color);
             return paintable ?? new BasePaintable ();
         }
