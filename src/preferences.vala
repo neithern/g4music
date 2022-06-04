@@ -17,7 +17,7 @@ namespace Music {
             var settings = app.settings;
 
 #if HAS_TRACKER_SPARQL
-            settings.bind ("tracker-mode", tracker_btn, "state", SettingsBindFlags.DEFAULT);
+            settings.bind ("tracker-mode", tracker_btn, "state", SettingsBindFlags.GET_NO_CHANGES);
             tracker_row.visible = true;
             tracker_btn.state_set.connect ((state) => {
                 // reload later after setting apply
@@ -54,14 +54,14 @@ namespace Music {
                 chooser.show ();
             });
 
-            settings.bind ("pipewire-sink", pipewire_btn, "state", SettingsBindFlags.DEFAULT);
+            settings.bind ("pipewire-sink", pipewire_btn, "state", SettingsBindFlags.GET_NO_CHANGES);
             pipewire_btn.state_set.connect ((state) => {
                 app.player.use_pipewire (state);
                 app.player.restart ();
                 return false;
             });
 
-            settings.bind ("show-peak", peak_btn, "state", SettingsBindFlags.DEFAULT);
+            settings.bind ("show-peak", peak_btn, "state", SettingsBindFlags.GET_NO_CHANGES);
             peak_btn.state_set.connect ((state) => {
                 app.player.show_peak (state);
                 app.player.restart ();
