@@ -55,6 +55,8 @@ namespace Music {
                 { ACTION_EXPORT_COVER, on_export_cover }
             }, this);
 
+            setup_drop_target ();
+
             flap.bind_property ("folded", this, "flap_folded", BindingFlags.DEFAULT);
 
             app.bind_property ("shuffle", shuffle_btn, "active", BindingFlags.SYNC_CREATE | BindingFlags.BIDIRECTIONAL);
@@ -232,7 +234,7 @@ namespace Music {
         private void on_index_changed (int index, uint size) {
             action_set_enabled (ACTION_APP + ACTION_PREV, index > 0);
             action_set_enabled (ACTION_APP + ACTION_NEXT, index < (int) size - 1);
-            list_view.activate_action ("list.scroll-to-item", "u", index);
+            scroll_to_item (index);
             index_title.label = @"$(index+1)/$(size)";
         }
 
@@ -278,6 +280,31 @@ namespace Music {
             search_entry.text = Uri.unescape_string (uri) ?? uri;
             search_btn.active = true;
             return true;
+        }
+
+        private void scroll_to_item (int index) {
+            list_view.activate_action ("list.scroll-to-item", "u", index);
+        }
+
+        private void setup_drop_target () {
+            var drop_target = new Gtk.DropTarget (Type.INVALID, Gdk.DragAction.COPY);
+            drop_target.set_gtypes ({typeof (Gdk.FileList)});
+            drop_target.on_drop.connect ((value, x, y) => {
+                var file_list = ((Gdk.FileList) value).get_files ();
+                var count = file_list.length ();
+                var files = new File[count];
+                var index = 0;
+                foreach (var file in file_list) {
+                    files[index++] = file;
+                }
+                var app = (Application) application;
+                app.load_songs_async.begin (files, (obj, res) => {
+                    var item = app.load_songs_async.end (res);
+                    scroll_to_item (item);
+                });
+                return true;
+            });
+            this.content.add_controller (drop_target);
         }
 
         private static string simple_html_encode (string text) {

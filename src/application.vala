@@ -239,7 +239,7 @@ namespace Music {
             return false;
         }
 
-        private async int load_songs_async (owned File[] files) {
+        public async int load_songs_async (owned File[] files) {
             var saved_size = _song_store.size;
             var play_item = _current_item;
             loading_changed (true, saved_size);
