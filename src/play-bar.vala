@@ -18,7 +18,7 @@ namespace Music {
             margin_top = 16;
             margin_bottom = 24;
 
-            var app = (!)(GLib.Application.get_default () as Application);
+            var app = (Application) GLib.Application.get_default ();
             var player = app.player;
 
             _seek.set_range (0, _duration);

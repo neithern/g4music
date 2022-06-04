@@ -90,7 +90,7 @@ namespace Music {
             });
             factory.bind.connect (on_bind_item);
             factory.unbind.connect ((item) => {
-                var entry = (!)(item.child as SongEntry);
+                var entry = (SongEntry) item.child;
                 entry.cover = null;
             });
             list_view.factory = factory;
@@ -144,12 +144,12 @@ namespace Music {
         }
 
         private async void on_bind_item (Gtk.ListItem item) {
-            var entry = (!)(item.child as SongEntry);
-            var song = (!)(item.item as Song);
+            var entry = (SongEntry) item.child;
+            var song = (Song) item.item;
             entry.artist = song.artist;
             entry.title = song.title;
 
-            var app = (!)(application as Application);
+            var app = (Application) application;
             entry.playing = item.position == app.current_item;
             //  print ("bind: %u\n", item.position);
 
@@ -249,7 +249,7 @@ namespace Music {
             _cover_type = itype;
             action_set_enabled (ACTION_WIN + ACTION_EXPORT_COVER, image != null);
 
-            var app = (!)(application as Application);
+            var app = (Application) application;
             if (image != null) {
                 var pixbufs = new Gdk.Pixbuf?[2] {null, null};
                 yield run_async<void> (() => {
@@ -296,10 +296,10 @@ namespace Music {
         }
 
         private void update_song_filter () {
-            var app = (!)(application as Application);
+            var app = (Application) application;
             if (search_btn.active && _search_text.length > 0) {
                 app.song_list.filter = new Gtk.CustomFilter ((obj) => {
-                    var song = (!)(obj as Song);
+                    var song = (Song) obj;
                     switch (_search_type) {
                         case SearchType.ALBUM:
                             return song.album == _search_property;
@@ -324,7 +324,7 @@ namespace Music {
         private Adw.Animation? _fade_animation = null;
 
         private void update_cover_paintable (Song song, Gdk.Paintable? paintable) {
-            var app = (!)(application as Application);
+            var app = (Application) application;
             _cover_paintable.paintable = paintable ?? app.thumbnailer.find (song.uri);
 
             var width = get_width ();

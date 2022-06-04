@@ -75,8 +75,8 @@ namespace Music {
         }
 
         public static int compare_by_title (Object obj1, Object obj2) {
-            var s1 = (!)(obj1 as Song);
-            var s2 = (!)(obj2 as Song);
+            var s1 = (Song) obj1;
+            var s2 = (Song) obj2;
             int ret = strcmp (s1._title_key, s2._title_key);
             if (ret == 0)
                 ret = strcmp (s1._artist_key, s2._artist_key);
@@ -86,8 +86,8 @@ namespace Music {
         }
 
         public static int compare_by_order (Object obj1, Object obj2) {
-            var s1 = (!)(obj1 as Song);
-            var s2 = (!)(obj2 as Song);
+            var s1 = (Song) obj1;
+            var s2 = (Song) obj2;
             return s1.order - s2.order;
         }
     }
@@ -115,10 +115,10 @@ namespace Music {
             set {
                 _shuffled = value;
                 if (value) {
-                    var count = size;
+                    var count = _store.get_n_items ();
                     var arr = new GenericArray<Song> (count);
                     for (var i = 0; i < count; i++) {
-                        arr.add ((!)(_store.get_item (i) as Song));
+                        arr.add ((Song) _store.get_item (i));
                     }
                     //  simple shuffle
                     for (var i = arr.length - 1; i > 0; i--) {

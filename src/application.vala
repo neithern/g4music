@@ -272,7 +272,7 @@ namespace Music {
                 if (uri.length > 0) {
                     var count = _song_list.get_n_items ();
                     for (var i = 0; i < count; i++) {
-                        var song = (!)(_song_list.get_item (i) as Song);
+                        var song = (Song) _song_list.get_item (i);
                         if (uri == song.uri) {
                             play_item = i;
                             break;
