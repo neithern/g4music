@@ -4,8 +4,8 @@ namespace Music {
     public const string DEFAULT_MIMETYPE = "audio/mpeg";
 
     public class Song : Object {
-        public string album = UNKOWN_ALBUM;
-        public string artist = UNKOWN_ARTIST;
+        public string album = "";
+        public string artist = "";
         public string title = "";
         public string type = "";
         public string uri = "";
@@ -218,7 +218,17 @@ namespace Music {
                 song.type = (!)type;
                 // build same file uri as tracker sparql
                 song.uri = base_uri + Uri.escape_string (name, null, false);
-                parse_tags (song.uri, name, song);
+                if (parse_tags (song.uri, song)) {
+                    // not be empty only if parsed
+                    if (song.album.length == 0)
+                        song.album = UNKOWN_ALBUM;
+                    if (song.artist.length == 0)
+                        song.artist = UNKOWN_ARTIST;
+                }
+                if (song.title.length == 0) {
+                    // title should not be empty always
+                    song.title = parse_name_from_path (name);
+                }
                 song.update_keys ();
                 return song;
             }

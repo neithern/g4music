@@ -1,6 +1,6 @@
 namespace Music {
 
-    public static bool parse_tags (string uri, string name, Song song) {
+    public static bool parse_tags (string uri, Song song) {
         var path = File.new_for_uri (uri).get_path ();
         if (path == null) {
             return false;
@@ -33,15 +33,13 @@ namespace Music {
             if (title != null && ((!)title).length > 0)
                 song.title = (!)title;
         }
-        if (song.title.length == 0 && name.length > 0)
-            song.title = parse_name_from_path (name);
         return ret;
     }
 
     public static Gst.TagList? parse_gst_tags (string path, string ctype) {
-        var tags = parse_id3v2_tags ((!)path);
+        var tags = parse_id3v2_tags (path);
         if (tags == null)
-            tags = parse_demux_tags ((!)path, ctype);
+            tags = parse_demux_tags (path, ctype);
         return tags;
     }
 
@@ -68,7 +66,7 @@ namespace Music {
             buffer = buffer.append (buffer2);
             return Gst.Tag.list_from_id3v2_tag (buffer);
         } catch (Error e) {
-            print ("Id3v2 error %s: %s\n", path, e.message);
+            //  print ("id3v2 error %s: %s\n", uri, e.message);
         }
         return null;
     }
