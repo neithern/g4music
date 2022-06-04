@@ -13,6 +13,8 @@ namespace Music {
     [GtkTemplate (ui = "/com/github/neithern/g4music/gtk/window.ui")]
     public class Window : Adw.ApplicationWindow {
         [GtkChild]
+        private unowned Gtk.Label index_title;
+        [GtkChild]
         private unowned Gtk.Box content_box;
         [GtkChild]
         private unowned Gtk.Image cover_image;
@@ -37,6 +39,7 @@ namespace Music {
         private CrossFadePaintable _cover_paintable = new CrossFadePaintable ();
         private Gdk.Paintable? _loading_paintable = create_text_paintable ("...");
 
+        private string _loading_text = _("Loading...");
         private Bytes? _cover_data = null;
         private string? _cover_type = null;
 
@@ -56,7 +59,6 @@ namespace Music {
 
             app.bind_property ("shuffle", shuffle_btn, "active", BindingFlags.SYNC_CREATE | BindingFlags.BIDIRECTIONAL);
 
-            search_btn.bind_property ("active", search_entry, "visible", BindingFlags.SYNC_CREATE);
             search_btn.toggled.connect (() => {
                 if (search_btn.active)
                     search_entry.grab_focus ();
@@ -75,7 +77,6 @@ namespace Music {
 
             song_album.activate_link.connect (on_song_info_link);
             song_artist.activate_link.connect (on_song_info_link);
-            song_title.label = _("Loading...");
 
             var play_bar = new PlayBar ();
             content_box.append (play_bar);
@@ -98,12 +99,11 @@ namespace Music {
                 app.current_item = (int) index;
             });
 
-            app.index_changed.connect ((index, size) => {
-                action_set_enabled (ACTION_APP + ACTION_PREV, index > 0);
-                action_set_enabled (ACTION_APP + ACTION_NEXT, index < (int) size - 1);
-                list_view.activate_action ("list.scroll-to-item", "u", index);
-                //  print ("play item: %u\n", index);
+            index_title.label = _loading_text;
+            app.loading_changed.connect ((loading, size) => {
+                index_title.label = loading ? _loading_text : size.to_string ();
             });
+            app.index_changed.connect (on_index_changed);
             app.song_changed.connect (on_song_changed);
             app.song_tag_parsed.connect (on_song_tag_parsed);
             app.player.state_changed.connect (on_player_state_changed);
@@ -225,6 +225,13 @@ namespace Music {
             update_song_filter ();
         }
 
+        private void on_index_changed (int index, uint size) {
+            action_set_enabled (ACTION_APP + ACTION_PREV, index > 0);
+            action_set_enabled (ACTION_APP + ACTION_NEXT, index < (int) size - 1);
+            list_view.activate_action ("list.scroll-to-item", "u", index);
+            index_title.label = @"$(index+1)/$(size)";
+        }
+
         private void on_song_changed (Song song) {
             update_song_info (song);
             action_set_enabled (ACTION_APP + ACTION_PLAY, true);
@@ -305,7 +312,9 @@ namespace Music {
             } else {
                 app.song_list.set_filter (null);
             }
-            app.find_current_item ();
+            if (!app.find_current_item ()) {
+                app.index_changed (app.current_item, app.song_list.get_n_items ());
+            }
         }
 
         private Adw.Animation? _fade_animation = null;

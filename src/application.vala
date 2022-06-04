@@ -24,6 +24,7 @@ namespace Music {
         private Settings _settings = new Settings (Config.APP_ID);
         private MprisPlayer? _mpris = null;
 
+        public signal void loading_changed (bool loading, uint size);
         public signal void index_changed (int index, uint size);
         public signal void song_changed (Song song);
         public signal void song_tag_parsed (Song song, Bytes? image, string? mtype);
@@ -198,8 +199,9 @@ namespace Music {
         public void reload_song_store () {
             _song_store.clear ();
             _current_item = -1;
+            index_changed (-1, 0);
             load_songs_async.begin ({}, (obj, res) => {
-                load_songs_async.end (res);
+                current_item = load_songs_async.end (res);
             });
         }
 
@@ -213,9 +215,9 @@ namespace Music {
             shuffle = !_song_store.shuffle;
         }
 
-        public void find_current_item () {
+        public bool find_current_item () {
             if (_song_list.get_item (_current_item) == _current_song)
-                return;
+                return false;
 
             //  find current item
             var old_item = _current_item;
@@ -231,19 +233,22 @@ namespace Music {
                 _song_list.items_changed (old_item, 0, 0);
                 _song_list.items_changed (_current_item, 0, 0);
                 index_changed (_current_item, count);
+                return true;
             }
+            return false;
         }
 
         private async int load_songs_async (owned File[] files) {
             var saved_size = _song_store.size;
             var play_item = _current_item;
+            loading_changed (true, saved_size);
 
             var begin_time = get_monotonic_time ();
             if (saved_size == 0 && files.length == 0) {
 #if HAS_TRACKER_SPARQL
                 if (_settings.get_boolean ("tracker-mode")) {
                     yield _song_store.add_sparql_async ();
-                }
+                } 
 #endif
                 if (_song_store.size == 0) {
                     files.resize (1);
@@ -256,6 +261,7 @@ namespace Music {
             print ("Found %u songs in %g seconds\n", _song_store.size - saved_size,
                 (get_monotonic_time () - begin_time) / 1e6);
 
+            loading_changed (false, _song_store.size);
             if (saved_size > 0) {
                 play_item = (int) saved_size;
             } else if (_current_song != null && _current_song == _song_list.get_item (_current_item)) {
