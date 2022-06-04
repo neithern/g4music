@@ -1,39 +1,26 @@
 namespace Music {
 
-    public static bool parse_tags (string uri, Song song) {
-        var path = File.new_for_uri (uri).get_path ();
-        if (path == null) {
-            return false;
-        }
-
+    public static void parse_tags (string path, Song song) {
         string? album = null, artist = null, title = null;
-        var ret = false;
 #if HAS_TAGLIB_C
-        var file = new TagLib.File ((!)path);
-        ret = file.is_valid ();
-        if (ret) {
+        var file = new TagLib.File (path);
+        if (file.is_valid ()) {
             unowned var tag = file.tag;
             album = tag.album;
             artist = tag.artist;
             title = tag.title;
         }
 #else
-        var tags = parse_gst_tags ((!)path, song.type);
+        var tags = parse_gst_tags (path, song.type);
         if (tags != null) {
-            ret = tags?.get_string ("album", out album) ?? false;
-            ret |= tags?.get_string ("artist", out artist) ?? false;
-            ret |= tags?.get_string ("title", out title) ?? false;
+            tags?.get_string ("album", out album);
+            tags?.get_string ("artist", out artist);
+            tags?.get_string ("title", out title);
         }
 #endif
-        if (ret) {
-            if (album != null && ((!)album).length > 0)
-                song.album = (!)album;
-            if (artist != null && ((!)artist).length > 0)
-                song.artist = (!)artist;
-            if (title != null && ((!)title).length > 0)
-                song.title = (!)title;
-        }
-        return ret;
+        song.album = album ?? UNKOWN_ALBUM;
+        song.artist = artist ?? UNKOWN_ARTIST;
+        song.title = title ?? song.title;
     }
 
     public static Gst.TagList? parse_gst_tags (string path, string ctype) {

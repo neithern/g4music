@@ -218,12 +218,10 @@ namespace Music {
                 song.type = (!)type;
                 // build same file uri as tracker sparql
                 song.uri = base_uri + Uri.escape_string (name, null, false);
-                if (parse_tags (song.uri, song)) {
-                    // not be empty only if parsed
-                    if (song.album.length == 0)
-                        song.album = UNKOWN_ALBUM;
-                    if (song.artist.length == 0)
-                        song.artist = UNKOWN_ARTIST;
+                var path = File.new_for_uri (song.uri).get_path ();
+                if (path != null) {
+                    // parse local path only
+                    parse_tags ((!)path, song);
                 }
                 if (song.title.length == 0) {
                     // title should not be empty always
