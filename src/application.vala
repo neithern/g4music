@@ -248,9 +248,9 @@ namespace Music {
 #if HAS_TRACKER_SPARQL
                 if (_settings.get_boolean ("tracker-mode")) {
                     yield _song_store.add_sparql_async ();
-                } 
+                } else
 #endif
-                if (_song_store.size == 0) {
+                {
                     files.resize (1);
                     files[0] = get_music_folder ();
                 }
