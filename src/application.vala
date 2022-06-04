@@ -60,6 +60,7 @@ namespace Music {
 
             _player.show_peak (_settings.get_boolean ("show-peak"));
             _player.use_pipewire (_settings.get_boolean ("pipewire-sink"));
+            _thumbnailer.remote_thumbnail = _settings.get_boolean ("remote-thumbnail");
 
             _player.end_of_stream.connect (() => {
                 current_item = current_item + 1;

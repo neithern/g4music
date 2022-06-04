@@ -1,80 +1,64 @@
 namespace Music {
 
-    public static void parse_tags (string path, Song song) {
-        string? album = null, artist = null, title = null;
-#if HAS_TAGLIB_C
-        var file = new TagLib.File (path);
-        if (file.is_valid ()) {
-            unowned var tag = file.tag;
-            album = tag.album;
-            artist = tag.artist;
-            title = tag.title;
-        }
-#else
-        var tags = parse_gst_tags (path, song.type);
-        if (tags != null) {
-            tags?.get_string ("album", out album);
-            tags?.get_string ("artist", out artist);
-            tags?.get_string ("title", out title);
-        }
-#endif
-        song.album = album ?? UNKOWN_ALBUM;
-        song.artist = artist ?? UNKOWN_ARTIST;
-        song.title = title ?? song.title;
-    }
-
-    public static Gst.TagList? parse_gst_tags (string path, string ctype) {
-        var tags = parse_id3v2_tags (path);
-        if (tags == null)
-            tags = parse_demux_tags (path, ctype);
-        return tags;
-    }
-
-    public static Gst.TagList? parse_id3v2_tags (string path) {
+    public static Gst.TagList? parse_gst_tags (File file, string ctype) {
+        FileInputStream? stream = null;
         try {
-            var file = File.new_for_path (path);
-            var stream = file.read ();
-            var header = new uint8[Gst.Tag.ID3V2_HEADER_SIZE];
-            var n = stream.read (header);
-            if (n != Gst.Tag.ID3V2_HEADER_SIZE)
-                return null;
-
-            var buffer = Gst.Buffer.new_wrapped_full (0, header, 0, header.length, null);
-            var size = Gst.Tag.get_id3v2_tag_size (buffer);
-            if (size == 0)
-                return null;
-
-            var data = new uint8[size];
-            n = stream.read (data);
-            if (n != size)
-                return null;
-
-            var buffer2 = Gst.Buffer.new_wrapped_full (0, data, 0, data.length, null);
-            buffer = buffer.append (buffer2);
-            return Gst.Tag.list_from_id3v2_tag (buffer);
+            stream = file.read ();
         } catch (Error e) {
-            //  print ("id3v2 error %s: %s\n", uri, e.message);
+            return null;
+        }
+
+        try {
+            return parse_id3v2_tags ((!)stream);
+        } catch (Error e) {
+        }
+
+        try {
+            stream?.seek (0, SeekType.SET);
+            return parse_demux_tags ((!)stream, ctype);
+        } catch (Error e) {
         }
         return null;
     }
 
-    public static Gst.TagList? parse_demux_tags (string path, string ctype) {
-        var demux_name = get_demux_name (ctype);
-        if (demux_name == null)
-            return null;
-
-        var str = @"filesrc name=src ! $((!)demux_name) ! fakesink";
-        dynamic Gst.Pipeline? pipeline = null;
-        try {
-            pipeline = Gst.parse_launch (str) as Gst.Pipeline;
-            dynamic Gst.Element? src = pipeline?.get_by_name ("src");
-            ((!)src).location = path;
-        } catch (Error e) {
-            print ("Parse error: %s, %s\n", path, e.message);
-            return null;
+    public static Gst.TagList? parse_id3v2_tags (InputStream stream) throws Error {
+        var header = new uint8[Gst.Tag.ID3V2_HEADER_SIZE];
+        var n = stream.read (header);
+        if (n != Gst.Tag.ID3V2_HEADER_SIZE) {
+            throw new IOError.INVALID_DATA (@"read $(n) bytes");
         }
-        if (pipeline?.set_state (Gst.State.PLAYING) == Gst.StateChangeReturn.FAILURE)
-            return null;
+
+        var buffer = Gst.Buffer.new_wrapped_full (0, header, 0, header.length, null);
+        var size = Gst.Tag.get_id3v2_tag_size (buffer);
+        if (size == 0) {
+            throw new IOError.INVALID_DATA ("invalid id3v2");
+        }
+
+        var data = new uint8[size];
+        n = stream.read (data);
+        if (n != size) {
+            throw new IOError.INVALID_DATA (@"read $(n) bytes");
+        }
+
+        var buffer2 = Gst.Buffer.new_wrapped_full (0, data, 0, data.length, null);
+        buffer = buffer.append (buffer2);
+        return Gst.Tag.list_from_id3v2_tag (buffer);
+    }
+
+    public static Gst.TagList? parse_demux_tags (InputStream stream, string ctype) throws Error {
+        var demux_name = get_demux_name (ctype);
+        if (demux_name == null) {
+            throw new ResourceError.NOT_FOUND (ctype);
+        }
+
+        var str = @"giostreamsrc name=src ! $((!)demux_name) ! fakesink";
+        dynamic Gst.Pipeline? pipeline = Gst.parse_launch (str) as Gst.Pipeline;
+        dynamic Gst.Element? src = pipeline?.get_by_name ("src");
+        ((!)src).stream = stream;
+
+        if (pipeline?.set_state (Gst.State.PLAYING) == Gst.StateChangeReturn.FAILURE) {
+            throw new UriError.FAILED ("change state failed");
+        }
 
         var bus = pipeline?.get_bus ();
         bool quit = false;

@@ -158,6 +158,7 @@ namespace Music {
             entry.cover = paintable ?? _loading_paintable;
             if (paintable == null) {
                 var saved_pos = item.position;
+                var saved_song = song;
                 var paintable2 = yield thumbnailer.load_async (song);
                 if (saved_pos != item.position) {
                     // item rebinded, notify changed later to update it
@@ -166,6 +167,9 @@ namespace Music {
                         return false;
                     });
                 } else if (paintable2 != null) {
+                    // maybe changed, update it
+                    entry.artist = saved_song.artist;
+                    entry.title = saved_song.title;
                     entry.cover = paintable2;
                 }
             }
@@ -264,8 +268,8 @@ namespace Music {
                 }
             }
 
-            var paintable = yield app.thumbnailer.load_directly_async (song, 640);
             if (song == app.current_song) {
+                var paintable = yield app.thumbnailer.load_directly_async (song, 640);
                 update_cover_paintable (song, paintable);
             }
         }

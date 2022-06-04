@@ -9,6 +9,8 @@ namespace Music {
         [GtkChild]
         unowned Gtk.Button music_dir_btn;
         [GtkChild]
+        unowned Gtk.Switch thumbnail_btn;
+        [GtkChild]
         unowned Gtk.Switch pipewire_btn;
         [GtkChild]
         unowned Gtk.Switch peak_btn;
@@ -52,6 +54,12 @@ namespace Music {
                     }
                 });
                 chooser.show ();
+            });
+
+            settings.bind ("remote-thumbnail", thumbnail_btn, "state", SettingsBindFlags.GET_NO_CHANGES);
+            thumbnail_btn.state_set.connect ((state) => {
+                app.thumbnailer.remote_thumbnail = state;
+                return false;
             });
 
             settings.bind ("pipewire-sink", pipewire_btn, "state", SettingsBindFlags.GET_NO_CHANGES);

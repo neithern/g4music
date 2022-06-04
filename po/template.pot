@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-01 08:00+0800\n"
+"POT-Creation-Date: 2022-06-04 15:53+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:278
+#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:291
 #: src/main.vala:24
 msgid "G4Music"
 msgstr ""
@@ -34,7 +34,7 @@ msgstr ""
 msgid "music;sound;player;media;audio;playlist;"
 msgstr ""
 
-#: data/app.appdata.xml.in:7 src/application.vala:282
+#: data/app.appdata.xml.in:7 src/application.vala:295
 msgid "A fast, flurent, light weight music player written in GTK4."
 msgstr ""
 
@@ -46,12 +46,20 @@ msgstr ""
 msgid "Load music from local folder"
 msgstr ""
 
-#: data/app.gschema.xml:14 src/gtk/preferences.ui:43
-msgid "Prefer pipewire audio sink"
+#: data/app.gschema.xml:14 src/gtk/preferences.ui:38
+msgid "Load thumbnails for non-local files"
 msgstr ""
 
 #: data/app.gschema.xml:18 src/gtk/preferences.ui:54
+msgid "Prefer pipewire audio sink"
+msgstr ""
+
+#: data/app.gschema.xml:22 src/gtk/preferences.ui:65
 msgid "Show audio peak when playing"
+msgstr ""
+
+#: data/app.gschema.xml:26
+msgid "Played uri when quit"
 msgstr ""
 
 #: src/gtk/help-overlay.ui:11
@@ -112,51 +120,51 @@ msgstr ""
 msgid "Try if the music files are on a slow disk"
 msgstr ""
 
-#: src/gtk/preferences.ui:40
+#: src/gtk/preferences.ui:51
 msgid "Playback"
 msgstr ""
 
-#: src/gtk/window.ui:26
+#: src/gtk/window.ui:27
 msgid "Search"
 msgstr ""
 
-#: src/gtk/window.ui:38
+#: src/gtk/window.ui:41
 msgid "Toggle Shuffle"
 msgstr ""
 
-#: src/gtk/window.ui:78
+#: src/gtk/window.ui:89
 msgid "Toggle Playlist"
 msgstr ""
 
-#: src/gtk/window.ui:85
+#: src/gtk/window.ui:96
 msgid "Main Menu"
 msgstr ""
 
-#: src/gtk/window.ui:148
+#: src/gtk/window.ui:159
 msgid "_Export Cover"
 msgstr ""
 
-#: src/gtk/window.ui:154
+#: src/gtk/window.ui:165
 msgid "_Preferences"
 msgstr ""
 
-#: src/gtk/window.ui:158
+#: src/gtk/window.ui:169
 msgid "_Keyboard Shortcuts"
 msgstr ""
 
-#: src/gtk/window.ui:162
+#: src/gtk/window.ui:173
 msgid "_About G4Music"
 msgstr ""
 
-#: src/play-bar.vala:71
+#: src/play-bar.vala:72
 msgid "Play Previous"
 msgstr ""
 
-#: src/play-bar.vala:77
+#: src/play-bar.vala:78
 msgid "Play/Pause"
 msgstr ""
 
-#: src/play-bar.vala:86
+#: src/play-bar.vala:87
 msgid "Play Next"
 msgstr ""
 
@@ -168,6 +176,6 @@ msgstr ""
 msgid "Unknown Aritst"
 msgstr ""
 
-#: src/window.vala:78
+#: src/window.vala:42
 msgid "Loading..."
 msgstr ""

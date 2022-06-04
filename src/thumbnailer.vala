@@ -48,6 +48,13 @@ namespace Music {
         public static int icon_size = 96;
 
         private GenericSet<string> _loading = new GenericSet<string> (str_hash, str_equal);
+        private bool _remote_thumbnail = false;
+
+        public bool remote_thumbnail {
+            set {
+                _remote_thumbnail = value;
+            }
+        }
 
         public async Gdk.Paintable? load_async (Song song) {
             var uri = song.uri;
@@ -67,70 +74,30 @@ namespace Music {
             return paintable;
         }
 
-#if HAS_GNOME_DESKTOP
-        private Gnome.DesktopThumbnailFactory _factory =
-            new Gnome.DesktopThumbnailFactory (Gnome.DesktopThumbnailSize.LARGE);
-
-        protected Gdk.Pixbuf? load_directly (Song song, int size = 0) {
-            var uri = song.uri;
-            try {
-                var path = Gnome.DesktopThumbnail.path_for_uri (uri, Gnome.DesktopThumbnailSize.LARGE);
-                var pixbuf = new Gdk.Pixbuf.from_file_at_scale (path, size, -1, true);
-                if (pixbuf is Gdk.Pixbuf) {
-                    song.thumbnail = path;
-                    //  print ("Load thumbnail: %dx%d, %s\n", pixbuf.width, pixbuf.height, uri);
-                    return pixbuf;
-                }
-            } catch (Error e) {
-                //  warning ("Load thumbnail %s: %s\n", uri, e.message);
-            }
-
-            if (song.mtime == 0) try {
-                var file = File.new_for_uri (uri);
-                var info = file.query_info ("time::modified", FileQueryInfoFlags.NOFOLLOW_SYMLINKS);
-                song.mtime = (long) (info.get_modification_date_time ()?.to_unix () ?? 0);
-                if (!_factory.has_valid_failed_thumbnail (uri, song.mtime)) {
-                    var pixbuf = _factory.generate_thumbnail (uri, song.type);
-                    if (pixbuf is Gdk.Pixbuf) {
-                        //  print ("General thumbnail: %dx%d, %s\n", pixbuf.width, pixbuf.height, uri);
-                        var pixbuf2 = create_clamp_pixbuf (pixbuf, size);
-                        _factory.save_thumbnail (pixbuf, uri, song.mtime);
-                        return pixbuf2;
-                    } else {
-                        _factory.create_failed_thumbnail (uri, song.mtime);
-                    }
-                }
-            } catch (Error e) {
-                //  warning ("Generate thumbnail %s: %s\n", uri, e.message);
-            }
-            return null;
-        }
-#else
-        protected Gdk.Pixbuf? load_directly (Song song, int size = 0) {
-            var path = File.new_for_uri (song.uri).get_path ();
-            if (path == null)
-                return null;
-
-            var tags = parse_gst_tags ((!)path, song.type);
-            if (tags == null)
-                return null;
-
-            Bytes? image = null;
-            string? itype = null;
-            if (parse_image_from_tag_list ((!)tags, out image, out itype)
-                    && image != null) {
-                return load_clamp_pixbuf ((!)image, size);
-            }
-            return null;
-        }
-#endif
-
         public async Gdk.Paintable? load_directly_async (Song song, int size = 0) {
+            var file = File.new_for_uri (song.uri);
+            if (!_remote_thumbnail && "file" != (file.get_uri_scheme () ?? "")) {
+                return null;
+            }
+
+            var tags = new Gst.TagList?[] { null };
             var pixbuf = yield run_async<Gdk.Pixbuf?> (() => {
-                return load_directly (song, size);
+                var t = tags[0] = parse_gst_tags (file, song.type);
+                Bytes? image = null;
+                string? itype = null;
+                if (t != null && parse_image_from_tag_list ((!)t, out image, out itype)
+                        && image != null) {
+                    return load_clamp_pixbuf ((!)image, size);
+                }
+                return null;
             });
-            if (pixbuf != null)
+            if (song.artist.length == 0) {
+                song.init_from_gst_tags (tags[0]);
+                song.update_keys ();
+            }
+            if (pixbuf != null) {
                 return Gdk.Texture.for_pixbuf ((!)pixbuf);
+            }
             return null;
         }
 

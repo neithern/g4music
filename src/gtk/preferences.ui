@@ -33,6 +33,17 @@
                 </child>
               </object>
             </child>
+            <child>
+              <object class="AdwActionRow">
+                <property name="title" translatable="yes">Load thumbnails for non-local files</property>
+                <property name="activatable_widget">thumbnail_btn</property>
+                <child>
+                  <object class="GtkSwitch" id="thumbnail_btn">
+                    <property name="valign">center</property>
+                  </object>
+                </child>
+              </object>
+            </child>
           </object>
         </child>
         <child>

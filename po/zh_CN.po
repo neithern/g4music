@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-01 08:00+0800\n"
+"POT-Creation-Date: 2022-06-04 15:53+0800\n"
 "PO-Revision-Date: 2022-05-31 20:35+0800\n"
 "Last-Translator: Alen <neithern@outlook.com>\n"
 "Language-Team: Chinese (simplified)\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:278
+#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:291
 #: src/main.vala:24
 msgid "G4Music"
 msgstr "G4音乐"
@@ -34,7 +34,7 @@ msgstr "播放音乐"
 msgid "music;sound;player;media;audio;playlist;"
 msgstr "音乐;声音;播放器;媒体;音频;播放列表;"
 
-#: data/app.appdata.xml.in:7 src/application.vala:282
+#: data/app.appdata.xml.in:7 src/application.vala:295
 msgid "A fast, flurent, light weight music player written in GTK4."
 msgstr "一个快速、流畅、轻量的，基于GTK4的音乐播放软件。"
 
@@ -46,13 +46,21 @@ msgstr "从Tracker服务加载音乐"
 msgid "Load music from local folder"
 msgstr "从本机文件夹加载音乐"
 
-#: data/app.gschema.xml:14 src/gtk/preferences.ui:43
+#: data/app.gschema.xml:14 src/gtk/preferences.ui:38
+msgid "Load thumbnails for non-local files"
+msgstr "加载非本地文件的缩略图"
+
+#: data/app.gschema.xml:18 src/gtk/preferences.ui:54
 msgid "Prefer pipewire audio sink"
 msgstr "优先使用Pipewire音频输出"
 
-#: data/app.gschema.xml:18 src/gtk/preferences.ui:54
+#: data/app.gschema.xml:22 src/gtk/preferences.ui:65
 msgid "Show audio peak when playing"
 msgstr "显示跳动的音频峰值"
+
+#: data/app.gschema.xml:26
+msgid "Played uri when quit"
+msgstr "退出时播放的文件"
 
 #: src/gtk/help-overlay.ui:11
 msgctxt "shortcut window"
@@ -112,51 +120,51 @@ msgstr "曲库"
 msgid "Try if the music files are on a slow disk"
 msgstr "如果音乐文件存在较慢的磁盘上请尝试"
 
-#: src/gtk/preferences.ui:40
+#: src/gtk/preferences.ui:51
 msgid "Playback"
 msgstr "播放"
 
-#: src/gtk/window.ui:26
+#: src/gtk/window.ui:27
 msgid "Search"
 msgstr "搜索"
 
-#: src/gtk/window.ui:38
+#: src/gtk/window.ui:41
 msgid "Toggle Shuffle"
 msgstr "切换乱序"
 
-#: src/gtk/window.ui:78
+#: src/gtk/window.ui:89
 msgid "Toggle Playlist"
 msgstr "切换列表"
 
-#: src/gtk/window.ui:85
+#: src/gtk/window.ui:96
 msgid "Main Menu"
 msgstr "主菜单"
 
-#: src/gtk/window.ui:148
+#: src/gtk/window.ui:159
 msgid "_Export Cover"
 msgstr "导出封面(_E)"
 
-#: src/gtk/window.ui:154
+#: src/gtk/window.ui:165
 msgid "_Preferences"
 msgstr "首选项(_P)"
 
-#: src/gtk/window.ui:158
+#: src/gtk/window.ui:169
 msgid "_Keyboard Shortcuts"
 msgstr "快捷键(_K)"
 
-#: src/gtk/window.ui:162
+#: src/gtk/window.ui:173
 msgid "_About G4Music"
 msgstr "关于G4音乐(_A)"
 
-#: src/play-bar.vala:71
+#: src/play-bar.vala:72
 msgid "Play Previous"
 msgstr "播放上一首"
 
-#: src/play-bar.vala:77
+#: src/play-bar.vala:78
 msgid "Play/Pause"
 msgstr "播放/暂停"
 
-#: src/play-bar.vala:86
+#: src/play-bar.vala:87
 msgid "Play Next"
 msgstr "播放下一首"
 
@@ -168,6 +176,6 @@ msgstr "未知专辑"
 msgid "Unknown Aritst"
 msgstr "未知艺术家"
 
-#: src/window.vala:78
+#: src/window.vala:42
 msgid "Loading..."
 msgstr "正在加载…"

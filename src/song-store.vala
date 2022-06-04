@@ -17,6 +17,37 @@ namespace Music {
         private string _artist_key = "";
         private string _title_key = "";
 
+        public void init_from_gst_tags (Gst.TagList? tags) {
+            string? al = null, ar = null, ti = null;
+            if (tags != null) {
+                tags?.get_string ("album", out al);
+                tags?.get_string ("artist", out ar);
+                tags?.get_string ("title", out ti);
+            }
+            this.album = (al != null && al?.length > 0) ? (!)al : UNKOWN_ALBUM;
+            this.artist = (ar != null && ar?.length > 0) ? (!)ar : UNKOWN_ARTIST;
+            if (ti != null && ti?.length > 0)
+                this.title = (!)ti;
+            update_keys ();
+        }
+
+#if HAS_TAGLIB_C
+        public void init_from_taglib (TagLib.File file) {
+            string? al = null, ar = null, ti = null;
+            if (file.is_valid ()) {
+                unowned var tags = file.tag;
+                al = tags.album;
+                ar = tags.artist;
+                ti = tags.title;
+            }
+            this.album = (al != null && al?.length > 0) ? (!)al : UNKOWN_ALBUM;
+            this.artist = (ar != null && ar?.length > 0) ? (!)ar : UNKOWN_ARTIST;
+            if (ti != null && ti?.length > 0)
+                this.title = (!)ti;
+            update_keys ();
+        }
+#endif
+
         public bool update (string? al, string? ar, string? ti) {
             bool changed = false;
             if (al != null && al != album) {
@@ -218,16 +249,22 @@ namespace Music {
                 song.type = (!)type;
                 // build same file uri as tracker sparql
                 song.uri = base_uri + Uri.escape_string (name, null, false);
-                var path = File.new_for_uri (song.uri).get_path ();
-                if (path != null) {
-                    // parse local path only
-                    parse_tags ((!)path, song);
+                var file = File.new_for_uri (song.uri);
+                var path = file.get_path ();
+                if (path != null) {  // parse local path only
+#if HAS_TAGLIB_C
+                    var tf = new TagLib.File ((!)path);
+                    song.init_from_taglib (tf);
+#else
+                    var tags = parse_gst_tags (file, song.type);
+                    song.init_from_gst_tags (tags);
+#endif
                 }
                 if (song.title.length == 0) {
                     // title should not be empty always
                     song.title = parse_name_from_path (name);
+                    song.update_keys ();
                 }
-                song.update_keys ();
                 return song;
             }
             return null;
