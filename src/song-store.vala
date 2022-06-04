@@ -115,11 +115,11 @@ namespace Music {
 #if HAS_TRACKER_SPARQL
         public const string SQL_QUERY_SONGS = """
             SELECT 
-                nie:title(nmm:musicAlbum(?song)) AS ?album
-                nmm:artistName (nmm:artist (?song)) AS ?artist
-                nie:title (?song) AS ?title
-                nie:mimeType (?song) AS ?mtype
-                nie:isStoredAs (?song) AS ?uri
+                nie:title(nmm:musicAlbum(?song))
+                nmm:artistName (nmm:artist (?song))
+                nie:title (?song)
+                nie:mimeType (?song)
+                nie:isStoredAs (?song)
             WHERE { ?song a nmm:MusicPiece }
         """;
 

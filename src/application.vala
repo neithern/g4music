@@ -27,7 +27,7 @@ namespace Music {
         public signal void loading_changed (bool loading, uint size);
         public signal void index_changed (int index, uint size);
         public signal void song_changed (Song song);
-        public signal void song_tag_parsed (Song song, Bytes? image, string? mtype);
+        public signal void song_tag_parsed (Song song, Bytes? image, string? itype);
 
         public Application () {
             Object (application_id: Config.APP_ID, flags: ApplicationFlags.HANDLES_OPEN);

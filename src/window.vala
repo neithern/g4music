@@ -238,11 +238,11 @@ namespace Music {
             print ("play song: %s\n", song.uri);
         }
 
-        private async void on_song_tag_parsed (Song song, Bytes? image, string? mtype) {
+        private async void on_song_tag_parsed (Song song, Bytes? image, string? itype) {
             update_song_info (song);
 
             _cover_data = image;
-            _cover_type = mtype;
+            _cover_type = itype;
             action_set_enabled (ACTION_WIN + ACTION_EXPORT_COVER, image != null);
 
             var app = (!)(application as Application);

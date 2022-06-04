@@ -58,8 +58,8 @@ namespace Music {
         return null;
     }
 
-    public static Gst.TagList? parse_demux_tags (string path, string mtype) {
-        var demux_name = get_demux_name (mtype);
+    public static Gst.TagList? parse_demux_tags (string path, string ctype) {
+        var demux_name = get_demux_name (ctype);
         if (demux_name == null)
             return null;
 
