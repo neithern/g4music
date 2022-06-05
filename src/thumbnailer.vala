@@ -76,7 +76,7 @@ namespace Music {
 
         public async Gdk.Paintable? load_directly_async (Song song, int size = 0) {
             var file = File.new_for_uri (song.uri);
-            if (!_remote_thumbnail && "file" != (file.get_uri_scheme () ?? "")) {
+            if (!_remote_thumbnail && !file.has_uri_scheme ("file")) {
                 return null;
             }
 
