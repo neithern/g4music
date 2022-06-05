@@ -90,7 +90,8 @@ namespace Music {
                     return load_clamp_pixbuf ((!)image, size);
                 }
                 return null;
-            });
+                 //  run in single_thread_pool for samba to save connections
+            }, false, file.has_uri_scheme ("smb"));
             //  Tag from SPARQL maybe not with correct encoding
             if (song.ttype == TagType.NONE || song.ttype == TagType.SPARQL) {
                 song.init_from_gst_tags (tags[0]);
