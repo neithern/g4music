@@ -89,7 +89,7 @@ namespace Music {
                 return parse_demux_tags (stream, uri.substring (pos + 1));
             }
         } catch (Error e) {
-            //  print ("Parse demux: %s\n", e.message);
+            //  print ("Parse demux %s: %s\n", file.get_parse_name (), e.message);
         }
         return null;
     }
@@ -169,16 +169,23 @@ namespace Music {
 
     // TODO: use typefind
     private static string? get_demux_name (string ext_name) {
-        if ("mp4" in ext_name || "m4a" in ext_name || "m4b" in ext_name)
-            return "qtdemux";
-        else if ("flac" in ext_name)
-            return "flacparse";
-        else if ("vobis" in ext_name)
-            return "flacparse";
-        else if ("ogg" in ext_name)
-            return "oggparse";
-        else if ("aiff" in ext_name)
+        var ext = ext_name.down ();
+        if ("aiff" == ext)
             return "aiffparse";
+        else if ("flac" == ext)
+            return "flacparse";
+        else if ("mp4" == ext || "m4a" == ext || "m4b" == ext)
+            return "qtdemux";
+        else if ("ogg" == ext || "oga" == ext)
+            return "oggdemux";
+        else if ("opus" == ext)
+            return "opusparse";
+        else if ("vobis" == ext)
+            return "flacparse";
+        else if ("wma" == ext)
+            return "asfparse";
+        else if ("wav" == ext)
+            return "wavparse";
         return "id3demux";
     }
 
