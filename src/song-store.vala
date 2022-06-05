@@ -29,7 +29,7 @@ namespace Music {
                 tags?.get_string ("album", out al);
                 tags?.get_string ("artist", out ar);
                 tags?.get_string ("title", out ti);
-            }
+            } 
             this.album = (al != null && al?.length > 0) ? (!)al : UNKOWN_ALBUM;
             this.artist = (ar != null && ar?.length > 0) ? (!)ar : UNKOWN_ARTIST;
             if (ti != null && ti?.length > 0)
@@ -51,7 +51,7 @@ namespace Music {
             this.artist = (ar != null && ar?.length > 0) ? (!)ar : UNKOWN_ARTIST;
             if (ti != null && ti?.length > 0)
                 this.title = (!)ti;
-            this.tag = TagType.TAGLIB;
+            this.ttype = TagType.TAGLIB;
             update_keys ();
         }
 #endif
@@ -225,6 +225,7 @@ namespace Music {
                         arr.add ((!)song);
                 }
             } catch (Error e) {
+                warning ("Query %s: %s\n", file.get_parse_name (), e.message);
             }
         }
 
@@ -250,7 +251,7 @@ namespace Music {
                     }
                 }
             } catch (Error e) {
-                warning ("Enumerate %s: %s\n", dir.get_uri (), e.message);
+                warning ("Enumerate %s: %s\n", dir.get_parse_name (), e.message);
             }
         }
 
