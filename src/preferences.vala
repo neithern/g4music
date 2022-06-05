@@ -34,7 +34,7 @@ namespace Music {
 #endif
 
             var music_dir = app.get_music_folder ();
-            music_dir_btn.label = music_dir.get_basename ();
+            music_dir_btn.label = get_display_name (music_dir);
             music_dir_btn.clicked.connect (() => {
                 var chooser = new Gtk.FileChooserNative (null, this,
                                 Gtk.FileChooserAction.SELECT_FOLDER, null, null);
@@ -47,8 +47,8 @@ namespace Music {
                     if (id == Gtk.ResponseType.ACCEPT) {
                         var dir = chooser.get_file ();
                         if (dir != null && dir != music_dir) {
-                            music_dir_btn.label = dir?.get_basename () ?? "";
-                            settings.set_string ("music-dir", dir?.get_uri () ?? "");
+                            music_dir_btn.label = get_display_name ((!)dir);
+                            settings.set_string ("music-dir", ((!)dir).get_uri ());
                             app.reload_song_store ();
                         }
                     }
@@ -75,6 +75,13 @@ namespace Music {
                 app.player.restart ();
                 return false;
             });
+        }
+
+        private static string get_display_name (File dir) {
+            var name = dir.get_basename () ?? "";
+            if (name.length == 0 || name == "/")
+                name = dir.get_parse_name ();
+            return name;
         }
     }
 }

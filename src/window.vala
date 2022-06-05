@@ -241,7 +241,7 @@ namespace Music {
         private void on_song_changed (Song song) {
             update_song_info (song);
             action_set_enabled (ACTION_APP + ACTION_PLAY, true);
-            print ("play song: %s\n", song.uri);
+            print ("Play: %s\n", Uri.unescape_string (song.uri) ?? song.uri);
         }
 
         private async void on_song_tag_parsed (Song song, Bytes? image, string? itype) {
@@ -383,7 +383,7 @@ namespace Music {
                     _blur_width = width;
                     _blur_height = height;
                     _bkgnd_paintable.paintable = create_blur_texture (this, (!)paintable, width, height);
-                    print ("update blur: %dx%d\n", width, height);
+                    print ("Update blur: %dx%d\n", width, height);
                     return true;
                 }
             } else if (force) {
