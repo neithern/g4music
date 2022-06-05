@@ -235,7 +235,7 @@ namespace Music {
             action_set_enabled (ACTION_APP + ACTION_PREV, index > 0);
             action_set_enabled (ACTION_APP + ACTION_NEXT, index < (int) size - 1);
             scroll_to_item (index);
-            index_title.label = @"$(index+1)/$(size)";
+            index_title.label = size > 0 ? @"$(index+1)/$(size)" : "0";
         }
 
         private void on_song_changed (Song song) {
