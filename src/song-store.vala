@@ -3,13 +3,19 @@ namespace Music {
     public const string UNKOWN_ARTIST = _("Unknown Aritst");
     public const string DEFAULT_MIMETYPE = "audio/mpeg";
 
+    public enum TagType {
+        NONE,
+        GST,
+        TAGLIB,
+        SPARQL
+    }
+
     public class Song : Object {
         public string album = "";
         public string artist = "";
         public string title = "";
-        public string type = "";
         public string uri = "";
-        public string thumbnail = "";
+        public TagType ttype = TagType.NONE;
         public long mtime = 0;
         public int order = 0;
 
@@ -28,6 +34,7 @@ namespace Music {
             this.artist = (ar != null && ar?.length > 0) ? (!)ar : UNKOWN_ARTIST;
             if (ti != null && ti?.length > 0)
                 this.title = (!)ti;
+            this.ttype = TagType.GST;
             update_keys ();
         }
 
@@ -44,6 +51,7 @@ namespace Music {
             this.artist = (ar != null && ar?.length > 0) ? (!)ar : UNKOWN_ARTIST;
             if (ti != null && ti?.length > 0)
                 this.title = (!)ti;
+            this.tag = TagType.TAGLIB;
             update_keys ();
         }
 #endif
@@ -149,7 +157,6 @@ namespace Music {
                 nie:title(nmm:musicAlbum(?song))
                 nmm:artistName (nmm:artist (?song))
                 nie:title (?song)
-                nie:mimeType (?song)
                 nie:isStoredAs (?song)
             WHERE { ?song a nmm:MusicPiece }
         """;
@@ -157,6 +164,7 @@ namespace Music {
         public async void add_sparql_async () {
             var arr = new GenericArray<Object> (4096);
             yield run_async<void> (() => {
+                var begin_time = get_monotonic_time ();
                 Tracker.Sparql.Connection connection;
                 try {
                     connection = Tracker.Sparql.Connection.bus_new ("org.freedesktop.Tracker3.Miner.Files", null);
@@ -166,10 +174,10 @@ namespace Music {
                         song.album = cursor.get_string (0) ?? UNKOWN_ALBUM;
                         song.artist = cursor.get_string (1) ?? UNKOWN_ARTIST;
                         song.title = cursor.get_string (2) ?? "";
-                        song.type = cursor.get_string (3) ?? DEFAULT_MIMETYPE;
-                        song.uri = cursor.get_string (4) ?? "";
+                        song.uri = cursor.get_string (3) ?? "";
                         if (song.title.length == 0)
                             song.title = parse_name_from_uri (song.uri);
+                        song.ttype = TagType.SPARQL;
                         song.update_keys ();
                         arr.add (song);
                     }
@@ -178,6 +186,8 @@ namespace Music {
                 }
                 if (!_shuffled)
                     arr.sort (Song.compare_by_title);
+                print ("Found %u songs in %g seconds\n", arr.length,
+                    (get_monotonic_time () - begin_time) / 1e6);
             });
             _store.splice (_store.get_n_items (), 0, arr.data);
         }
@@ -186,11 +196,14 @@ namespace Music {
         public async void add_files_async (File[] files) {
             var arr = new GenericArray<Object> (4096);
             yield run_async<void> (() => {
+                var begin_time = get_monotonic_time ();
                 foreach (var file in files) {
                     add_file (file, arr);
                 }
                 if (!_shuffled)
                     arr.sort (Song.compare_by_title);
+                print ("Found %u songs in %g seconds\n", arr.length,
+                        (get_monotonic_time () - begin_time) / 1e6);
             });
             _store.splice (_store.get_n_items (), 0, arr.data);
         }
@@ -246,7 +259,6 @@ namespace Music {
             if (type != null && ((!)type).has_prefix ("audio/") && !((!)type).has_suffix ("url")) {
                 unowned var name = info.get_name ();
                 var song = new Song ();
-                song.type = (!)type;
                 // build same file uri as tracker sparql
                 song.uri = base_uri + Uri.escape_string (name, null, false);
                 var file = File.new_for_uri (song.uri);
@@ -256,7 +268,7 @@ namespace Music {
                     var tf = new TagLib.File ((!)path);
                     song.init_from_taglib (tf);
 #else
-                    var tags = parse_gst_tags (file, song.type);
+                    var tags = parse_gst_tags (file);
                     song.init_from_gst_tags (tags);
 #endif
                 }

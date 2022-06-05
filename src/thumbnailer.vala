@@ -82,7 +82,7 @@ namespace Music {
 
             var tags = new Gst.TagList?[] { null };
             var pixbuf = yield run_async<Gdk.Pixbuf?> (() => {
-                var t = tags[0] = parse_gst_tags (file, song.type);
+                var t = tags[0] = parse_gst_tags (file);
                 Bytes? image = null;
                 string? itype = null;
                 if (t != null && parse_image_from_tag_list ((!)t, out image, out itype)
@@ -91,7 +91,8 @@ namespace Music {
                 }
                 return null;
             });
-            if (song.artist.length == 0) {
+            //  Tag from SPARQL maybe not with correct encoding
+            if (song.ttype == TagType.NONE || song.ttype == TagType.SPARQL) {
                 song.init_from_gst_tags (tags[0]);
                 song.update_keys ();
             }

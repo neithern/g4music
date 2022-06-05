@@ -244,7 +244,6 @@ namespace Music {
             var play_item = _current_item;
             loading_changed (true, saved_size);
 
-            var begin_time = get_monotonic_time ();
             if (saved_size == 0 && files.length == 0) {
 #if HAS_TRACKER_SPARQL
                 if (_settings.get_boolean ("tracker-mode")) {
@@ -259,8 +258,6 @@ namespace Music {
             if (files.length > 0) {
                 yield _song_store.add_files_async (files);
             }
-            print ("Found %u songs in %g seconds\n", _song_store.size - saved_size,
-                (get_monotonic_time () - begin_time) / 1e6);
 
             loading_changed (false, _song_store.size);
             if (saved_size > 0) {
@@ -319,13 +316,9 @@ namespace Music {
         private async void on_tag_parsed (string? album, string? artist, string? title, Bytes? image, string? itype) {
             if (_current_song != null) {
                 var song = (!)current_song;
-                if (song.update (album, artist, title)) {
-                    _thumbnailer.update_text_paintable (song);
-                    _song_list.items_changed (_current_item, 0, 0);
-                }
                 song_tag_parsed (song, image, itype);
 
-                if (image != null && song.thumbnail.length == 0) try {
+                if (image != null) try {
                     if (_cover_tmp_file != null) {
                         yield ((!)_cover_tmp_file).delete_async ();
                     }
@@ -334,8 +327,7 @@ namespace Music {
                     yield stream.get_output_stream ().write_async (((!)image).get_data ());
                     yield stream.close_async ();
                     if (song == _current_song) {
-                        var tmp_path = _cover_tmp_file?.get_path ();
-                        _mpris?.send_meta_data (song, tmp_path);
+                        _mpris?.send_meta_data (song, ((!)_cover_tmp_file).get_uri ());
                     }
                 } catch (Error e) {
                     print ("Temp file failed: %s\n", e.message);
