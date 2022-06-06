@@ -25,7 +25,7 @@ namespace Music {
                     Memory.copy (data, head, head.length);
                     if (stream.read_all (data[head.length:], out n)) {
                         var buffer2 = Gst.Buffer.new_wrapped_full (0, data, 0, data.length, null);
-                        return Gst.Tag.list_from_id3v2_tag (buffer2);
+                        return Gst.Tag.List.from_id3v2_tag (buffer2);
                     }
                 }
             } else if (Memory.cmp (head, "APETAGEX", 8) == 0 && stream.seek (0, SeekType.SET)) {
@@ -33,7 +33,7 @@ namespace Music {
                 var data = new_uint8_array (size);
                 Memory.copy (data, head, head.length);
                 if (stream.read_all (data[head.length:], out n)) {
-                    return parse_ape_tags_in_buffer (data);
+                    return TagDemux.ape_demux_parse_tags (data);
                 }
             }
         } catch (Error e) {
@@ -61,7 +61,7 @@ namespace Music {
                         if (stream.seek (- (int) (size), SeekType.CUR)) {
                             var data = new_uint8_array (size);
                             if (stream.read_all (data, out n)) {
-                                tags = parse_ape_tags_in_buffer (data);
+                                tags = TagDemux.ape_demux_parse_tags (data);
                             }
                         }
                     }
@@ -71,7 +71,7 @@ namespace Music {
                 if (stream.seek (- (int) (size), SeekType.END)) {
                     var data = new_uint8_array (size);
                     if (stream.read_all (data, out n)) {
-                        tags = parse_ape_tags_in_buffer (data);
+                        tags = TagDemux.ape_demux_parse_tags (data);
                     }
                 }
             }
@@ -100,23 +100,11 @@ namespace Music {
         return new uint8[size];
     }
 
-    public static uint32 read_uint32_le (uint8[] data, int pos) {
+    public static uint32 read_uint32_le (uint8[] data, int pos = 0) {
         return data[pos]
             | ((uint32) (data[pos+1]) << 8)
             | ((uint32) (data[pos+2]) << 16)
             | ((uint32) (data[pos+3]) << 24);
-    }
-
-    public static Gst.TagList? parse_ape_tags_in_buffer (uint8[] data) {
-        var apedemux = Gst.ElementFactory.make ("apedemux", null) as Gst.Tag.Demux;
-        if (apedemux == null)
-            return null;
-
-        Gst.TagList? tags = null;
-        uint size = data.length;
-        var buffer = Gst.Buffer.new_wrapped_full (0, data, 0, data.length, null);
-        var ret = ((!)apedemux).parse_tag (buffer, true, ref size, out tags);
-        return ret == Gst.Tag.DemuxResult.OK ? tags : null;
     }
 
     public static Gst.TagList? parse_demux_tags (InputStream stream, string ctype) throws Error {

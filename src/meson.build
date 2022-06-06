@@ -1,5 +1,6 @@
 
 sources = [
+  'ape-demux.c',
   'application.vala',
   'async-task.vala',
   'gst-player.vala',
@@ -28,9 +29,8 @@ sources += gnome.compile_resources('g4music-resources',
 
 executable('g4music', sources,
   vala_args: [
-    meson.project_source_root() + '/src/config.vapi',
-    meson.project_source_root() + '/src/gst-tag.vapi',
-    '--gresourcesdir=' + meson.current_build_dir(),
+    meson.current_source_dir () + '/config.vapi',
+    meson.current_source_dir () + '/gst-tag.vapi',
   ],
   dependencies: dependencies,
   install: true,
