@@ -34,7 +34,7 @@
             "sources": [
                 {
                     "type": "git",
-                    "url": "file:///home/alen/git/g4music"
+                    "url": "https://gitlab.gnome.org/neithern/g4music"
                 }
             ]
         }
