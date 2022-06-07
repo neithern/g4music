@@ -10,7 +10,7 @@ A fast, flurent, light weight music player written in GTK4, with a beautiful, mo
 - Low memory / storage costs, no thumbnail caches.
 - Gaussian blurred album cover as window background, follow GNOME 42 light/dark mode.
 - Album cover with original resolution, can be exported.
-- Flurent transition animations when switching songs and toogling play/pause.
+- Flurent transition animations when switching songs and toggling play/pause.
 - Supports full-text searching.
 - Supports drag-drop from file manager.
 - Supports pipewire audio sink.
