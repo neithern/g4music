@@ -44,7 +44,7 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkEntry" id="search_entry">
+                  <object class="GtkSearchEntry" id="search_entry">
                     <property name="hexpand">true</property>
                     <property name="margin_start">6</property>
                     <property name="margin_end">6</property>

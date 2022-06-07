@@ -31,7 +31,7 @@ namespace Music {
         [GtkChild]
         public unowned Gtk.ToggleButton search_btn;
         [GtkChild]
-        public unowned Gtk.Entry search_entry;
+        public unowned Gtk.SearchEntry search_entry;
         [GtkChild]
         public unowned Gtk.ToggleButton shuffle_btn;
 
@@ -66,7 +66,7 @@ namespace Music {
                     search_entry.grab_focus ();
                 update_song_filter ();
             });
-            search_entry.changed.connect (on_search_text_changed);
+            search_entry.search_changed.connect (on_search_text_changed);
 
             _bkgnd_paintable.queue_draw.connect (this.queue_draw);
 
@@ -229,6 +229,7 @@ namespace Music {
             }
             _search_text = text;
             update_song_filter ();
+            print (@"commit: $(text)\n");
         }
 
         private void on_index_changed (int index, uint size) {
