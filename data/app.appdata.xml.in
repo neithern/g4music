@@ -18,7 +18,7 @@
     <description>
       	<p>A fast, flurent, light weight music player written in GTK4.</p>
 
-        <h3 id="toc_1.1">Features</h3>
+        <p>Features</p>
 
         <ul dir="auto">
         <li>Supports most music file types,  samba or any other GIO supported remote protocols.</li>
