@@ -12,7 +12,11 @@
         "--socket=wayland",
         "--socket=pulseaudio",
         "--filesystem=xdg-music:ro",
-        "--filesystem=xdg-download:ro"
+        "--filesystem=xdg-download:ro",
+        "--filesystem=xdg-run/pipewire-0:ro",
+        "--filesystem=xdg-run/gvfsd",
+        "--talk-name=org.gtk.vfs.*",
+        "--talk-name=org.gnome.Shell"
     ],
     "cleanup": [
         "/include",
