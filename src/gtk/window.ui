@@ -23,7 +23,7 @@
                     <child type="start">
                       <object class="GtkToggleButton" id="search_btn">
                         <property name="icon_name">edit-find-symbolic</property>
-                        <property name="active" bind-source="search_entry" bind-property="visible" bind-flags="sync-create|bidirectional"/>
+                        <property name="active" bind-source="search_bar" bind-property="search_mode_enabled" bind-flags="bidirectional"/>
                         <property name="tooltip-text" translatable="yes">Search</property>
                       </object>
                     </child>
@@ -44,11 +44,12 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkSearchEntry" id="search_entry">
-                    <property name="hexpand">true</property>
-                    <property name="margin_start">6</property>
-                    <property name="margin_end">6</property>
-                    <property name="visible">false</property>
+                  <object class="GtkSearchBar" id="search_bar">
+                    <child>
+                      <object class="GtkSearchEntry" id="search_entry">
+                        <property name="hexpand">true</property>
+                      </object>
+                    </child>
                   </object>
                 </child>
                 <child>

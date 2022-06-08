@@ -31,6 +31,8 @@ namespace Music {
         [GtkChild]
         public unowned Gtk.ToggleButton search_btn;
         [GtkChild]
+        public unowned Gtk.SearchBar search_bar;
+        [GtkChild]
         public unowned Gtk.SearchEntry search_entry;
         [GtkChild]
         public unowned Gtk.ToggleButton shuffle_btn;
@@ -67,6 +69,11 @@ namespace Music {
                 update_song_filter ();
             });
             search_entry.search_changed.connect (on_search_text_changed);
+
+            var provider = new Gtk.CssProvider ();
+            provider.load_from_data ("searchbar revealer box {box-shadow: none; background-color: transparent}".data);
+            Gtk.StyleContext.add_provider_for_display (this.display, provider, Gtk.STYLE_PROVIDER_PRIORITY_USER);
+            search_bar.key_capture_widget = this.content;
 
             _bkgnd_paintable.queue_draw.connect (this.queue_draw);
 
