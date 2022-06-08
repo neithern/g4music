@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-04 15:53+0800\n"
+"POT-Creation-Date: 2022-06-07 21:41+0800\n"
 "PO-Revision-Date: 2022-05-31 20:35+0800\n"
 "Last-Translator: Alen <neithern@outlook.com>\n"
 "Language-Team: Chinese (simplified)\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:291
+#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:305
 #: src/main.vala:24
 msgid "G4Music"
 msgstr "G4音乐"
@@ -33,10 +33,6 @@ msgstr "播放音乐"
 #: data/app.desktop.in:12
 msgid "music;sound;player;media;audio;playlist;"
 msgstr "音乐;声音;播放器;媒体;音频;播放列表;"
-
-#: data/app.appdata.xml.in:7 src/application.vala:295
-msgid "A fast, flurent, light weight music player written in GTK4."
-msgstr "一个快速、流畅、轻量的，基于GTK4的音乐播放软件。"
 
 #: data/app.gschema.xml:6 src/gtk/preferences.ui:15
 msgid "Load music from tracker service"
@@ -58,7 +54,7 @@ msgstr "优先使用Pipewire音频输出"
 msgid "Show audio peak when playing"
 msgstr "显示跳动的音频峰值"
 
-#: data/app.gschema.xml:26
+#: data/app.gschema.xml:26 data/app.gschema.xml:30
 msgid "Played uri when quit"
 msgstr "退出时播放的文件"
 
@@ -156,15 +152,23 @@ msgstr "快捷键(_K)"
 msgid "_About G4Music"
 msgstr "关于G4音乐(_A)"
 
-#: src/play-bar.vala:72
+#: src/application.vala:309
+msgid "A fast, flurent, light weight music player written in GTK4."
+msgstr "一个快速、流畅、轻量的，基于GTK4的音乐播放软件。"
+
+#: src/play-bar.vala:75
+msgid "Repeat Song"
+msgstr "单曲循环"
+
+#: src/play-bar.vala:85
 msgid "Play Previous"
 msgstr "播放上一首"
 
-#: src/play-bar.vala:78
+#: src/play-bar.vala:91
 msgid "Play/Pause"
 msgstr "播放/暂停"
 
-#: src/play-bar.vala:87
+#: src/play-bar.vala:98
 msgid "Play Next"
 msgstr "播放下一首"
 

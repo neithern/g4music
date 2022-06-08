@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-04 15:53+0800\n"
+"POT-Creation-Date: 2022-06-07 21:41+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:291
+#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:305
 #: src/main.vala:24
 msgid "G4Music"
 msgstr ""
@@ -32,10 +32,6 @@ msgstr ""
 
 #: data/app.desktop.in:12
 msgid "music;sound;player;media;audio;playlist;"
-msgstr ""
-
-#: data/app.appdata.xml.in:7 src/application.vala:295
-msgid "A fast, flurent, light weight music player written in GTK4."
 msgstr ""
 
 #: data/app.gschema.xml:6 src/gtk/preferences.ui:15
@@ -58,7 +54,7 @@ msgstr ""
 msgid "Show audio peak when playing"
 msgstr ""
 
-#: data/app.gschema.xml:26
+#: data/app.gschema.xml:26 data/app.gschema.xml:30
 msgid "Played uri when quit"
 msgstr ""
 
@@ -156,15 +152,23 @@ msgstr ""
 msgid "_About G4Music"
 msgstr ""
 
-#: src/play-bar.vala:72
+#: src/application.vala:309
+msgid "A fast, flurent, light weight music player written in GTK4."
+msgstr ""
+
+#: src/play-bar.vala:75
+msgid "Repeat Song"
+msgstr ""
+
+#: src/play-bar.vala:85
 msgid "Play Previous"
 msgstr ""
 
-#: src/play-bar.vala:78
+#: src/play-bar.vala:91
 msgid "Play/Pause"
 msgstr ""
 
-#: src/play-bar.vala:87
+#: src/play-bar.vala:98
 msgid "Play Next"
 msgstr ""
 

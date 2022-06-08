@@ -5,9 +5,11 @@ namespace Music {
         private Gtk.Label _peak = new Gtk.Label (null);
         private Gtk.Label _positive = new Gtk.Label ("0:00");
         private Gtk.Label _negative = new Gtk.Label ("-0:00");
+        private Gtk.ToggleButton _repeat = new Gtk.ToggleButton ();
         private Gtk.Button _prev = new Gtk.Button ();
         private Gtk.Button _play = new Gtk.Button ();
         private Gtk.Button _next = new Gtk.Button ();
+        private Gtk.VolumeButton _volume = new Gtk.VolumeButton ();
         private int _duration = 1;
         private int _position = 0;
         private int _peak_length = 0;
@@ -58,13 +60,24 @@ namespace Music {
             _negative.add_css_class ("dim-label");
             _negative.add_css_class ("numeric");
 
-            var buttons = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
+            var buttons = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 16);
             buttons.halign = Gtk.Align.CENTER;
             buttons.margin_top = 16;
+            buttons.append (_repeat);
             buttons.append (_prev);
             buttons.append (_play);
             buttons.append (_next);
+            buttons.append (_volume);
             append (buttons);
+
+            _repeat.icon_name = "media-playlist-repeat-symbolic";
+            _repeat.valign = Gtk.Align.CENTER;
+            _repeat.tooltip_text = _("Repeat Song");
+            _repeat.add_css_class ("flat");
+            _repeat.toggled.connect (() => {
+                _repeat.icon_name = _repeat.active ? "media-playlist-repeat-song-symbolic" : "media-playlist-repeat-symbolic";
+                app.single_loop = ! app.single_loop;
+            });
 
             _prev.valign = Gtk.Align.CENTER;
             _prev.action_name = ACTION_APP + ACTION_PREV;
@@ -76,8 +89,6 @@ namespace Music {
             _play.action_name = ACTION_APP + ACTION_PLAY;
             _play.icon_name = "media-playback-start-symbolic"; // media-playback-pause-symbolic
             _play.tooltip_text = _("Play/Pause");
-            _play.margin_start = 24;
-            _play.margin_end = 24;
             _play.add_css_class ("circular");
             _play.set_size_request (48, 48);
 
@@ -86,6 +97,9 @@ namespace Music {
             _next.icon_name = "media-skip-forward-symbolic";
             _next.tooltip_text = _("Play Next");
             _next.add_css_class ("circular");
+
+            _volume.valign = Gtk.Align.CENTER;
+            player.bind_property ("volume", _volume, "value", BindingFlags.SYNC_CREATE | BindingFlags.BIDIRECTIONAL);
 
             player.duration_changed.connect ((duration) => {
                 this.duration = GstPlayer.to_second (duration);

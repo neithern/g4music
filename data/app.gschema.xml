@@ -25,5 +25,9 @@
       <default>''</default>
       <summary>Played uri when quit</summary>
     </key>
+    <key name="volume" type="d">
+      <default>1</default>
+      <summary>Played uri when quit</summary>
+    </key>
   </schema>
 </schemalist>

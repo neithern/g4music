@@ -60,10 +60,16 @@ namespace Music {
 
             _player.show_peak (_settings.get_boolean ("show-peak"));
             _player.use_pipewire (_settings.get_boolean ("pipewire-sink"));
+            _player.volume = _settings.get_double ("volume");
             _thumbnailer.remote_thumbnail = _settings.get_boolean ("remote-thumbnail");
 
             _player.end_of_stream.connect (() => {
-                current_item = current_item + 1;
+                if (single_loop) {
+                    _player.seek (0);
+                    _player.play ();
+                } else {
+                    current_item++;
+                }
             });
 
             _player.tag_parsed.connect (on_tag_parsed);
@@ -107,6 +113,7 @@ namespace Music {
 
         public override void shutdown () {
              _settings.set_string ("played-uri", _current_song?.uri ?? "");
+             _settings.set_double ("volume", _player.volume);
 
             base.shutdown ();
         }
@@ -163,6 +170,8 @@ namespace Music {
                 return _settings;
             }
         }
+
+        public bool single_loop { get; set; }
 
         public Gtk.FilterListModel song_list {
             get {

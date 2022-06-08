@@ -1,6 +1,6 @@
 namespace Music {
 
-    public class GstPlayer {
+    public class GstPlayer : Object {
 
         public static void init (ref weak string[]? args) {
             Gst.init (ref args);
@@ -31,7 +31,12 @@ namespace Music {
         public signal void peak_parsed (double peak);
 
         public GstPlayer () {
-            _pipeline?.get_bus ()?.add_watch (Priority.DEFAULT, bus_callback);
+            if (_pipeline != null) {
+                var pipeline = (!)_pipeline;
+                pipeline.flags = 0x0022; // audio | native audio
+                pipeline.bind_property ("volume", this, "volume", BindingFlags.SYNC_CREATE | BindingFlags.BIDIRECTIONAL);
+                pipeline.get_bus ()?.add_watch (Priority.DEFAULT, bus_callback);
+            }
         }
 
         ~GstPlayer () {
@@ -73,6 +78,8 @@ namespace Music {
                     ((!)_pipeline).uri = value;
             }
         }
+
+        public double volume { get; set; }
 
         public void play () {
             _pipeline?.set_state (Gst.State.PLAYING);
