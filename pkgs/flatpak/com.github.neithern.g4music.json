@@ -5,14 +5,17 @@
     "sdk": "org.gnome.Sdk",
     "command": "g4music",
     "finish-args": [
+        "--device=dri",
         "--share=network",
         "--share=ipc",
         "--socket=fallback-x11",
-        "--device=dri",
         "--socket=wayland",
         "--socket=pulseaudio",
         "--filesystem=xdg-music:ro",
-        "--filesystem=xdg-download:ro"
+        "--filesystem=xdg-download:ro",
+        "--filesystem=xdg-run/pipewire-0:ro",
+        "--filesystem=xdg-run/gvfsd",
+        "--talk-name=org.gtk.vfs.*"
     ],
     "cleanup": [
         "/include",
