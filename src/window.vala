@@ -71,7 +71,7 @@ namespace Music {
             search_entry.search_changed.connect (on_search_text_changed);
 
             var provider = new Gtk.CssProvider ();
-            provider.load_from_data ("searchbar revealer box {box-shadow: none; background-color: transparent}".data);
+            provider.load_from_data ("searchbar revealer box {box-shadow: none; background-color: transparent;}".data);
             Gtk.StyleContext.add_provider_for_display (this.display, provider, Gtk.STYLE_PROVIDER_PRIORITY_USER);
             search_bar.key_capture_widget = this.content;
 
