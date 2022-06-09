@@ -115,6 +115,10 @@ namespace Music {
              _settings.set_string ("played-uri", _current_song?.uri ?? "");
              _settings.set_double ("volume", _player.volume);
 
+             delete_cover_tmp_file_async.begin ((obj, res) => {
+                delete_cover_tmp_file_async.end (res);
+             });
+
             base.shutdown ();
         }
 
@@ -322,18 +326,35 @@ namespace Music {
 
         private File? _cover_tmp_file = null;
 
+        private async void delete_cover_tmp_file_async () {
+            try {
+                if (_cover_tmp_file != null) {
+                    yield ((!)_cover_tmp_file).delete_async ();
+                    _cover_tmp_file = null;
+                }
+            } catch (Error e) {
+            }
+        }
+
         private async void on_tag_parsed (string? album, string? artist, string? title, Bytes? image, string? itype) {
             if (_current_song != null) {
                 var song = (!)current_song;
                 song_tag_parsed (song, image, itype);
 
-                if (image != null) try {
-                    if (_cover_tmp_file != null) {
-                        yield ((!)_cover_tmp_file).delete_async ();
-                    }
+                yield delete_cover_tmp_file_async ();
+
+                var data = image;
+                if (data == null && active_window is Window) {
+                    var paintable = ((Window) active_window).cover_paintable;
+                    if (paintable == null)
+                        paintable = Thumbnailer.create_song_album_text_paintable (song);
+                    if (paintable != null)
+                        data = save_paintable_to_png_bytes (active_window, (!)paintable);
+                }
+                if (data != null) try {
                     FileIOStream stream;
                     _cover_tmp_file = File.new_tmp (null, out stream);
-                    yield stream.get_output_stream ().write_async (((!)image).get_data ());
+                    yield stream.get_output_stream ().write_async (((!)data).get_data ());
                     yield stream.close_async ();
                     if (song == _current_song) {
                         _mpris?.send_meta_data (song, ((!)_cover_tmp_file).get_uri ());

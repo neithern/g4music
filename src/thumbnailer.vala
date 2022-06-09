@@ -116,7 +116,7 @@ namespace Music {
             return (paintable?.get_intrinsic_width () ?? 0) * (paintable?.get_intrinsic_height () ?? 0) * 4;
         }
 
-        protected static Gdk.Paintable create_song_album_text_paintable (Song song) {
+        public static Gdk.Paintable create_song_album_text_paintable (Song song) {
             unowned var album = song.album;
             var text = parse_abbreviation (album);
             var color = (album.length == 0 || album == UNKOWN_ALBUM) ? (int) 0xffc0bfbc : 0;

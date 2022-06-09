@@ -118,6 +118,12 @@ namespace Music {
             app.player.state_changed.connect (on_player_state_changed);
         }
 
+        public Gdk.Paintable? cover_paintable {
+            get {
+                return _cover_paintable.paintable;
+            }
+        }
+
         public bool flap_folded {
             set {
                 var flap_box = flap.flap;
