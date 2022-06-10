@@ -352,12 +352,13 @@ namespace Music {
                         data = save_paintable_to_png_bytes (active_window, (!)paintable);
                 }
                 if (data != null) try {
-                    FileIOStream stream;
-                    _cover_tmp_file = File.new_tmp (null, out stream);
-                    yield stream.get_output_stream ().write_async (((!)data).get_data ());
+                    var file = File.new_build_filename (Environment.get_tmp_dir (), application_id + "_" + str_hash (song.uri).to_string ("%x"));
+                    var stream = yield file.create_async (FileCreateFlags.REPLACE_DESTINATION);
+                    yield stream.write_async (((!)data).get_data ());
                     yield stream.close_async ();
+                    _cover_tmp_file = file;
                     if (song == _current_song) {
-                        _mpris?.send_meta_data (song, ((!)_cover_tmp_file).get_uri ());
+                        _mpris?.send_meta_data (song, file.get_uri ());
                     }
                 } catch (Error e) {
                     print ("Temp file failed: %s\n", e.message);
