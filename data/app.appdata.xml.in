@@ -20,7 +20,7 @@
 
         <p>Features</p>
 
-        <ul dir="auto">
+        <ul>
         <li>Supports most music file types,  samba or any other GIO supported remote protocols.</li>
         <li>Fast loading music files and parsing tags.</li>
         <li>Low memory / storage costs, no thumbnail caches.</li>
@@ -43,6 +43,18 @@
     </screenshots>
 
     <releases>
+        <release version="0.2" date="2022-06-10">
+            <description>
+                <ul>
+                <li>Add volume button.</li>
+                <li>Repeat singl song mode.</li>
+                <li>Supports pipewire for flatpak.</li>
+                <li>Supports parsing GIO file tags for flatpak.</li>
+                <li>Press any key to search, ESC to quit search.</li>
+                <li>Show abbreviation as MPRIS's cover if no cover image.</li>
+                </ul>
+            </description>
+        </release>
         <release version="0.1" date="2022-06-06">
             <description>
                 <p>First release.</p>
