@@ -358,20 +358,10 @@ namespace Music {
                 var song = (!)current_song;
                 song_tag_parsed (song, image, itype);
 
-                var file = File.new_build_filename (Environment.get_tmp_dir (), application_id + "_" + str_hash (song.uri).to_string ("%x"));
-                try {
+                if (image != null) try {
+                    var file = File.new_build_filename (Environment.get_tmp_dir (), application_id + "_" + str_hash (song.uri).to_string ("%x"));
                     var stream = yield file.create_async (FileCreateFlags.REPLACE_DESTINATION);
-                    var data = image;
-                    if (data == null) {
-                        var paintable = thumbnailer.find (song.uri) ?? (Gdk.Paintable?) Thumbnailer.create_song_album_text_paintable (song);
-                        if (paintable != null) {
-                            var texture = paintable_to_texture ((!)paintable);
-                            data = yield run_async<Bytes?> (() => {
-                                return texture?.save_to_png_bytes ();
-                            });
-                        }
-                    }
-                    yield stream.write_async (data?.get_data ());
+                    yield stream.write_async (image?.get_data ());
                     yield stream.close_async ();
                     yield delete_cover_tmp_file_async ();
                     _cover_tmp_file = file;
