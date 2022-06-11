@@ -3,6 +3,8 @@ namespace Music {
     [GtkTemplate (ui = "/com/github/neithern/g4music/gtk/preferences.ui")]
     public class PreferencesWindow : Adw.PreferencesWindow {
         [GtkChild]
+        unowned Gtk.Switch dark_btn;
+        [GtkChild]
         unowned Adw.ActionRow tracker_row;
         [GtkChild]
         unowned Gtk.Switch tracker_btn;
@@ -17,6 +19,9 @@ namespace Music {
 
         public PreferencesWindow (Application app) {
             var settings = app.settings;
+
+            dark_btn.bind_property ("state", app, "dark_theme", BindingFlags.DEFAULT);
+            settings.bind ("dark-theme", dark_btn, "state", SettingsBindFlags.DEFAULT);
 
 #if HAS_TRACKER_SPARQL
             settings.bind ("tracker-mode", tracker_btn, "state", SettingsBindFlags.GET_NO_CHANGES);

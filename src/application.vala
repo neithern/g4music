@@ -64,6 +64,8 @@ namespace Music {
 
             _song_list.model = _song_store.store;
 
+            dark_theme = _settings.get_boolean ("dark-theme");
+
             sort_mode = (SortMode) _settings.get_uint ("sort-mode");
 
             _player.show_peak (_settings.get_boolean ("show-peak"));
@@ -158,6 +160,12 @@ namespace Music {
         public Song? current_song {
             get {
                 return _current_song;
+            }
+        }
+
+        public bool dark_theme {
+            set {
+                style_manager.color_scheme = value ? Adw.ColorScheme.FORCE_DARK : Adw.ColorScheme.DEFAULT;
             }
         }
 

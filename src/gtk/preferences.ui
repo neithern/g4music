@@ -9,6 +9,22 @@
       <object class="AdwPreferencesPage">
         <child>
           <object class="AdwPreferencesGroup">
+            <property name="title" translatable="yes">Appearance</property>
+            <child>
+              <object class="AdwActionRow" id="dark_theme">
+                <property name="title" translatable="yes">Force dark theme</property>
+                <property name="activatable_widget">dark_btn</property>
+                <child>
+                  <object class="GtkSwitch" id="dark_btn">
+                    <property name="valign">center</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="AdwPreferencesGroup">
             <property name="title" translatable="yes">Music Store</property>
             <child>
               <object class="AdwActionRow" id="tracker_row">

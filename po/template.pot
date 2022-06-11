@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-11 15:54+0800\n"
+"POT-Creation-Date: 2022-06-11 21:34+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:308
+#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:317
 #: src/main.vala:24
 msgid "G4Music"
 msgstr ""
@@ -35,30 +35,34 @@ msgid "music;sound;player;media;audio;playlist;"
 msgstr ""
 
 #: data/app.gschema.xml:6 src/gtk/preferences.ui:15
+msgid "Force dark theme"
+msgstr ""
+
+#: data/app.gschema.xml:10 src/gtk/preferences.ui:31
 msgid "Load music from tracker service"
 msgstr ""
 
-#: data/app.gschema.xml:10 src/gtk/preferences.ui:27
+#: data/app.gschema.xml:14 src/gtk/preferences.ui:43
 msgid "Load music from local folder"
 msgstr ""
 
-#: data/app.gschema.xml:14 src/gtk/preferences.ui:38
+#: data/app.gschema.xml:18 src/gtk/preferences.ui:54
 msgid "Load thumbnails for non-local files"
 msgstr ""
 
-#: data/app.gschema.xml:18 src/gtk/preferences.ui:54
+#: data/app.gschema.xml:22 src/gtk/preferences.ui:70
 msgid "Prefer pipewire audio sink"
 msgstr ""
 
-#: data/app.gschema.xml:22 src/gtk/preferences.ui:65
+#: data/app.gschema.xml:26 src/gtk/preferences.ui:81
 msgid "Show audio peak when playing"
 msgstr ""
 
-#: data/app.gschema.xml:27 src/gtk/window.ui:41
+#: data/app.gschema.xml:31 src/gtk/window.ui:41
 msgid "Sort Mode"
 msgstr ""
 
-#: data/app.gschema.xml:31 data/app.gschema.xml:35
+#: data/app.gschema.xml:35 data/app.gschema.xml:39
 msgid "Played uri when quit"
 msgstr ""
 
@@ -108,14 +112,18 @@ msgid "Search"
 msgstr ""
 
 #: src/gtk/preferences.ui:12
+msgid "Appearance"
+msgstr ""
+
+#: src/gtk/preferences.ui:28
 msgid "Music Store"
 msgstr ""
 
-#: src/gtk/preferences.ui:16
+#: src/gtk/preferences.ui:32
 msgid "Try if the music files are on a slow disk"
 msgstr ""
 
-#: src/gtk/preferences.ui:51
+#: src/gtk/preferences.ui:67
 msgid "Playback"
 msgstr ""
 
@@ -163,7 +171,7 @@ msgstr ""
 msgid "Shuffle"
 msgstr ""
 
-#: src/application.vala:312
+#: src/application.vala:321
 msgid "A fast, flurent, light weight music player written in GTK4."
 msgstr ""
 
