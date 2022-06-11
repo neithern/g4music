@@ -6,7 +6,7 @@ namespace Music {
     public const string ACTION_PREV = "prev";
     public const string ACTION_NEXT = "next";
     public const string ACTION_SEARCH = "search";
-    public const string ACTION_SHUFFLE = "shuffle";
+    public const string ACTION_SORT = "sort";
     public const string ACTION_QUIT = "quit";
 
     struct ActionShortKey {
@@ -39,17 +39,23 @@ namespace Music {
                 { ACTION_PREV, play_previous },
                 { ACTION_NEXT, play_next },
                 { ACTION_SEARCH, toggle_seach },
-                { ACTION_SHUFFLE, toggle_shuffle },
                 { ACTION_QUIT, quit }
             };
             add_action_entries (action_entries, this);
+
+            ActionEntry[] sort_entries = {
+                { ACTION_SORT, sort_by, "u", "0" },
+                { ACTION_SORT, sort_by, "u", "1" },
+                { ACTION_SORT, sort_by, "u", "2" },
+                { ACTION_SORT, sort_by, "u", "3" }
+            };
+            add_action_entries (sort_entries, this);
 
             ActionShortKey[] action_keys = {
                 { ACTION_PLAY, "<primary>p" },
                 { ACTION_PREV, "<primary>Left" },
                 { ACTION_NEXT, "<primary>Right" },
                 { ACTION_SEARCH, "<primary>f" },
-                { ACTION_SHUFFLE, "<primary>t" },
                 { ACTION_QUIT, "<primary>q" }
             };
             foreach (var item in action_keys) {
@@ -57,6 +63,8 @@ namespace Music {
             }
 
             _song_list.model = _song_store.store;
+
+            sort_mode = (SortMode) _settings.get_uint ("sort-mode");
 
             _player.show_peak (_settings.get_boolean ("show-peak"));
             _player.use_pipewire (_settings.get_boolean ("pipewire-sink"));
@@ -147,16 +155,6 @@ namespace Music {
             }
         }
 
-        public bool shuffle {
-            get {
-                return _song_store.shuffle;
-            }
-            set {
-                _song_store.shuffle = value;
-                find_current_item ();
-            }
-        }
-
         public Song? current_song {
             get {
                 return _current_song;
@@ -180,6 +178,15 @@ namespace Music {
         public Gtk.FilterListModel song_list {
             get {
                 return _song_list;
+            }
+        }
+
+        public SortMode sort_mode {
+            get {
+                return _song_store.sort_mode;
+            }
+            set {
+                _song_store.sort_mode = value;
             }
         }
 
@@ -219,14 +226,16 @@ namespace Music {
             });
         }
 
+        private void sort_by (SimpleAction action, Variant? parameter) {
+            sort_mode = (SortMode) (parameter?.get_uint32 () ?? 2);
+            _settings.set_uint ("sort-mode", sort_mode);
+            find_current_item ();
+        }
+
         public void toggle_seach () {
             var win = active_window as Window;
             if (win != null)
                 ((!)win).search_btn.active = ! ((!)win).search_btn.active;
-        }
-
-        public void toggle_shuffle () {
-            shuffle = !_song_store.shuffle;
         }
 
         public bool find_current_item () {

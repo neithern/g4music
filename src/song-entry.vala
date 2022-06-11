@@ -3,8 +3,8 @@ namespace Music {
     public class SongEntry : Gtk.Box {
 
         private Gtk.Image _cover = new Gtk.Image ();
-        private Gtk.Label _artist = new Gtk.Label (null);
         private Gtk.Label _title = new Gtk.Label (null);
+        private Gtk.Label _subtitle = new Gtk.Label (null);
         private Gtk.Image _playing = new Gtk.Image ();
         private CoverPaintable _paintable = new CoverPaintable ();
 
@@ -17,42 +17,35 @@ namespace Music {
             _paintable.queue_draw.connect (_cover.queue_draw);
             append (_cover);
 
-            var box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
-            box.hexpand = true;
-            box.margin_start = 16;
-            box.margin_end = 8;
-            box.append (_title);
-            box.append (_artist);
-            append (box);
+            var vbox = new Gtk.Box (Gtk.Orientation.VERTICAL, 8);
+            vbox.hexpand = true;
+            vbox.margin_start = 16;
+            vbox.margin_end = 4;
+            vbox.append (_title);
+            vbox.append (_subtitle);
+            append (vbox);
 
             _title.halign = Gtk.Align.START;
             _title.margin_top = 4;
             _title.ellipsize = Pango.EllipsizeMode.END;
             _title.add_css_class ("caption-heading");
 
-            _artist.halign = Gtk.Align.START;
-            _artist.margin_top = 8;
-            _artist.ellipsize = Pango.EllipsizeMode.END;
-            _artist.add_css_class ("caption");
-            _artist.add_css_class ("dim-label");
+            _subtitle.halign = Gtk.Align.START;
+            _subtitle.valign = Gtk.Align.CENTER;
+            _subtitle.ellipsize = Pango.EllipsizeMode.END;
+            _subtitle.add_css_class ("caption");
+            _subtitle.add_css_class ("dim-label");
 
             _playing.valign = Gtk.Align.CENTER;
-            _playing.margin_start = 8;
             _playing.icon_name = "media-playback-start-symbolic";
             _playing.pixel_size = 12;
             _playing.add_css_class ("dim-label");
             append (_playing);
         }
 
-        public string artist {
+        public Gdk.Paintable? cover {
             set {
-                _artist.label = value;
-            }
-        }
-
-        public string title {
-            set {
-                _title.label = value;
+                _paintable.paintable = value;
             }
         }
 
@@ -62,9 +55,22 @@ namespace Music {
             }
         }
 
-        public Gdk.Paintable? cover {
-            set {
-                _paintable.paintable = value;
+        public void update (Song song, SortMode sort) {
+            switch (sort) {
+                case SortMode.ALBUM:
+                    _title.label = song.album;
+                    _subtitle.label = song.title;
+                    break;
+
+                case SortMode.ARTIST:
+                    _title.label = song.artist;
+                    _subtitle.label = song.title;
+                    break;
+
+                default:
+                    _title.label = song.title;
+                    _subtitle.label = song.artist;
+                    break;
             }
         }
     }

@@ -15,15 +15,17 @@ namespace Music {
         [GtkChild]
         private unowned Gtk.Label index_title;
         [GtkChild]
+        private unowned Gtk.MenuButton sort_btn;
+        [GtkChild]
         private unowned Gtk.Box content_box;
         [GtkChild]
         private unowned Gtk.Image cover_image;
         [GtkChild]
-        public unowned Gtk.Label song_album;
+        private unowned Gtk.Label song_album;
         [GtkChild]
-        public unowned Gtk.Label song_artist;
+        private unowned Gtk.Label song_artist;
         [GtkChild]
-        public unowned Gtk.Label song_title;
+        private unowned Gtk.Label song_title;
         [GtkChild]
         private unowned Adw.Flap flap;
         [GtkChild]
@@ -31,11 +33,9 @@ namespace Music {
         [GtkChild]
         public unowned Gtk.ToggleButton search_btn;
         [GtkChild]
-        public unowned Gtk.SearchBar search_bar;
+        private unowned Gtk.SearchBar search_bar;
         [GtkChild]
-        public unowned Gtk.SearchEntry search_entry;
-        [GtkChild]
-        public unowned Gtk.ToggleButton shuffle_btn;
+        private unowned Gtk.SearchEntry search_entry;
 
         private CrossFadePaintable _bkgnd_paintable = new CrossFadePaintable ();
         private CrossFadePaintable _cover_paintable = new CrossFadePaintable ();
@@ -61,7 +61,8 @@ namespace Music {
 
             flap.bind_property ("folded", this, "flap_folded", BindingFlags.DEFAULT);
 
-            app.bind_property ("shuffle", shuffle_btn, "active", BindingFlags.SYNC_CREATE | BindingFlags.BIDIRECTIONAL);
+            app.bind_property ("sort_mode", this, "sort_mode", BindingFlags.DEFAULT);
+            sort_mode = app.sort_mode;
 
             search_btn.toggled.connect (() => {
                 if (search_btn.active)
@@ -139,6 +140,25 @@ namespace Music {
             }
         }
 
+        public SortMode sort_mode {
+            set {
+                switch (value) {
+                    case SortMode.ALBUM:
+                        sort_btn.set_icon_name ("media-optical-cd-audio-symbolic");
+                        break;
+                    case SortMode.ARTIST:
+                        sort_btn.set_icon_name ("system-users-symbolic");
+                        break;
+                    case SortMode.SHUFFLE:
+                        sort_btn.set_icon_name ("media-playlist-shuffle-symbolic");
+                        break;
+                    default:
+                        sort_btn.set_icon_name ("folder-music-symbolic");
+                        break;
+                }
+            }
+        }
+
         public override void size_allocate (int width, int height, int baseline) {
             base.size_allocate (width, height, baseline);
             update_blur_paintable (width, height);
@@ -159,13 +179,11 @@ namespace Music {
         }
 
         private async void on_bind_item (Gtk.ListItem item) {
+            var app = (Application) application;
             var entry = (SongEntry) item.child;
             var song = (Song) item.item;
-            entry.artist = song.artist;
-            entry.title = song.title;
-
-            var app = (Application) application;
             entry.playing = item.position == app.current_item;
+            entry.update (song, app.sort_mode);
             //  print ("bind: %u\n", item.position);
 
             var thumbnailer = app.thumbnailer;
@@ -183,9 +201,8 @@ namespace Music {
                     });
                 } else if (paintable2 != null) {
                     // maybe changed, update it
-                    entry.artist = saved_song.artist;
-                    entry.title = saved_song.title;
                     entry.cover = paintable2;
+                    entry.update (saved_song, app.sort_mode);
                 }
             }
         }

@@ -16,12 +16,11 @@ namespace Music {
         public string title = "";
         public string uri = "";
         public TagType ttype = TagType.NONE;
-        public long mtime = 0;
-        public int order = 0;
 
-        //  private string _album_key;
+        private string _album_key = "";
         private string _artist_key = "";
         private string _title_key = "";
+        private int _order = 0;
 
         public void init_from_gst_tags (Gst.TagList? tags) {
             string? al = null, ar = null, ti = null;
@@ -61,7 +60,7 @@ namespace Music {
             if (al != null && al != album) {
                 changed = true;
                 album = (!)al;
-                //  _album_key = album?.collate_key ();
+                _album_key = album.collate_key ();
             }
             if (ar != null && ar != artist) {
                 changed = true;
@@ -77,9 +76,31 @@ namespace Music {
         }
 
         public void update_keys () {
-            //  _album_key = album?.collate_key ();
+            _album_key = album.collate_key ();
             _artist_key = artist.collate_key ();
             _title_key = title.collate_key ();
+        }
+
+        public static int compare_by_album (Object obj1, Object obj2) {
+            var s1 = (Song) obj1;
+            var s2 = (Song) obj2;
+            int ret = strcmp (s1._album_key, s2._album_key);
+            if (ret == 0)
+                ret = strcmp (s1._title_key, s2._title_key);
+            if (ret == 0)
+                ret = strcmp (s1.uri, s2.uri);
+            return ret;
+        }
+
+        public static int compare_by_artist (Object obj1, Object obj2) {
+            var s1 = (Song) obj1;
+            var s2 = (Song) obj2;
+            int ret = strcmp (s1._artist_key, s2._artist_key);
+            if (ret == 0)
+                ret = strcmp (s1._title_key, s2._title_key);
+            if (ret == 0)
+                ret = strcmp (s1.uri, s2.uri);
+            return ret;
         }
 
         public static int compare_by_title (Object obj1, Object obj2) {
@@ -96,12 +117,30 @@ namespace Music {
         public static int compare_by_order (Object obj1, Object obj2) {
             var s1 = (Song) obj1;
             var s2 = (Song) obj2;
-            return s1.order - s2.order;
+            return s1._order - s2._order;
+        }
+
+        public static void shuffle_order (GenericArray<Object> arr) {
+            for (var i = arr.length - 1; i > 0; i--) {
+                var r = Random.int_range (0, i);
+                var s = arr[i];
+                arr[i] = arr[r];
+                arr[r] = s;
+                ((Song)arr[i])._order = i;
+            }
         }
     }
 
+    public enum SortMode {
+        ALBUM,
+        ARTIST,
+        TITLE,
+        SHUFFLE
+    }
+
     public class SongStore : Object {
-        private bool _shuffled = false;
+        private SortMode _sort_mode = SortMode.TITLE;
+        private CompareDataFunc<Object> _compare = Song.compare_by_title;
         private ListStore _store = new ListStore (typeof (Song));
 
         public ListStore store {
@@ -116,30 +155,35 @@ namespace Music {
             }
         }
 
-        public bool shuffle {
+        public SortMode sort_mode {
             get {
-                return _shuffled;
+                return _sort_mode;
             }
             set {
-                _shuffled = value;
-                if (value) {
-                    var count = _store.get_n_items ();
-                    var arr = new GenericArray<Song> (count);
-                    for (var i = 0; i < count; i++) {
-                        arr.add ((Song) _store.get_item (i));
-                    }
-                    //  simple shuffle
-                    for (var i = arr.length - 1; i > 0; i--) {
-                        var r = Random.int_range (0, i);
-                        var s = arr[i];
-                        arr[i] = arr[r];
-                        arr[r] = s;
-                        arr[i].order = i;
-                    }
-                    _store.sort (Song.compare_by_order);
-                } else {
-                    _store.sort (Song.compare_by_title);
+                _sort_mode = value;
+                switch (value) {
+                    case SortMode.ALBUM:
+                        _compare = Song.compare_by_album;
+                        break;
+                    case SortMode.ARTIST:
+                        _compare = Song.compare_by_artist;
+                        break;
+                    case SortMode.SHUFFLE:
+                        _compare = Song.compare_by_order;
+                        break;
+                    default:
+                        _compare = Song.compare_by_title;
+                        break;
                 }
+                if (_sort_mode == SortMode.SHUFFLE) {
+                    var count = _store.get_n_items ();
+                    var arr = new GenericArray<Object> (count);
+                    for (var i = 0; i < count; i++) {
+                        arr.add ((!)_store.get_item (i));
+                    }
+                    Song.shuffle_order (arr);
+                }
+                _store.sort (_compare);
             }
         }
 
@@ -184,8 +228,10 @@ namespace Music {
                 } catch (Error e) {
                     warning ("Query error: %s\n", e.message);
                 }
-                if (!_shuffled)
-                    arr.sort (Song.compare_by_title);
+                if (_sort_mode == SortMode.SHUFFLE) {
+                    Song.shuffle_order (arr);
+                }
+                arr.sort ((CompareFunc<Object>) _compare);
                 print ("Found %u songs in %g seconds\n", arr.length,
                     (get_monotonic_time () - begin_time) / 1e6);
             });
@@ -200,8 +246,10 @@ namespace Music {
                 foreach (var file in files) {
                     add_file (file, arr);
                 }
-                if (!_shuffled)
-                    arr.sort (Song.compare_by_title);
+                if (_sort_mode == SortMode.SHUFFLE) {
+                    Song.shuffle_order (arr);
+                }
+                arr.sort ((CompareFunc<Object>) _compare);
                 print ("Found %u songs in %g seconds\n", arr.length,
                         (get_monotonic_time () - begin_time) / 1e6);
             });

@@ -21,6 +21,11 @@
       <default>true</default>
       <summary>Show audio peak when playing</summary>
     </key>
+    <key name="sort-mode" type="u">
+      <range min="0" max="3"/>
+      <default>2</default>
+      <summary>Sort Mode</summary>
+    </key>
     <key name="played-uri" type="s">
       <default>''</default>
       <summary>Played uri when quit</summary>
