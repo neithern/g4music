@@ -19,6 +19,7 @@ namespace Music {
         private Gst.ClockTime _position = Gst.CLOCK_TIME_NONE;
         private Gst.ClockTime _last_seeked_pos = Gst.CLOCK_TIME_NONE;
         private Gst.State _state = Gst.State.NULL;
+        private uint _tag_hash = 0;
         private bool _tag_parsed = false;
         private TimeoutSource? _timer = null;
 
@@ -73,6 +74,7 @@ namespace Music {
                 _duration = Gst.CLOCK_TIME_NONE;
                 _position = Gst.CLOCK_TIME_NONE;
                 _state = Gst.State.NULL;
+                _tag_hash = 0;
                 _tag_parsed = false;
                 _pipeline?.set_state (Gst.State.READY);
                 if (_pipeline != null)
@@ -226,7 +228,14 @@ namespace Music {
             string? itype = null;
             ret |= parse_image_from_tag_list (tags, out image, out itype);
             _tag_parsed = ret;
-            tag_parsed (album, artist, title, image, itype);
+
+            var hash = str_hash (album ?? "") | str_hash (artist ?? "") | str_hash (title ?? "")
+                        | (image?.length ?? 0) | str_hash (itype ?? "");
+            if (_tag_hash != hash) {
+                _tag_hash = hash;
+                // notify only when changed
+                tag_parsed (album, artist, title, image, itype);
+            }
         }
 
         private bool timeout_callback () {
