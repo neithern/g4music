@@ -14,7 +14,7 @@ namespace Music {
             return (Gst.ClockTime) (time * Gst.SECOND);
         }
 
-        private dynamic Gst.Element? _pipeline = Gst.ElementFactory.make ("playbin", "player");
+        private dynamic Gst.Pipeline? _pipeline = Gst.ElementFactory.make ("playbin", "player") as Gst.Pipeline;
         private Gst.ClockTime _duration = Gst.CLOCK_TIME_NONE;
         private Gst.ClockTime _position = Gst.CLOCK_TIME_NONE;
         private Gst.ClockTime _last_seeked_pos = Gst.CLOCK_TIME_NONE;
@@ -33,9 +33,10 @@ namespace Music {
         public GstPlayer () {
             if (_pipeline != null) {
                 var pipeline = (!)_pipeline;
+                pipeline.async_handling = true;
                 pipeline.flags = 0x0022; // audio | native audio
                 pipeline.bind_property ("volume", this, "volume", BindingFlags.SYNC_CREATE | BindingFlags.BIDIRECTIONAL);
-                pipeline.get_bus ()?.add_watch (Priority.DEFAULT, bus_callback);
+                pipeline.get_bus ().add_watch (Priority.DEFAULT, bus_callback);
             }
         }
 
