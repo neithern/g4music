@@ -286,16 +286,20 @@ namespace Music {
             rect.get_bottom_right (), stops);
     }
 
-    public static Bytes? save_paintable_to_png_bytes (Gtk.Widget widget, Gdk.Paintable paintable) {
-        var width = paintable.get_intrinsic_width ();
-        var height = paintable.get_intrinsic_height ();
-        var snapshot = new Gtk.Snapshot ();
-        paintable.snapshot (snapshot, width, height);
-        var node = snapshot.free_to_node ();
-        if (node != null) {
-            var rect = (!)Graphene.Rect ().init (0, 0, width, height);
-            var texture = widget.get_native ()?.get_renderer ()?.render_texture ((!)node, rect);
-            return texture?.save_to_png_bytes ();
+    public static Gdk.Texture? paintable_to_texture (Gdk.Paintable paintable) {
+        var display = Gdk.Display.get_default ();
+        if (display != null) {
+            var width = paintable.get_intrinsic_width ();
+            var height = paintable.get_intrinsic_height ();
+            var snapshot = new Gtk.Snapshot ();
+            paintable.snapshot (snapshot, width, height);
+            var node = snapshot.free_to_node ();
+            if (node != null) {
+                var rect = (!)Graphene.Rect ().init (0, 0, width, height);
+                var surface = new Gdk.Surface.toplevel ((!)display);
+                var renderer = Gsk.Renderer.for_surface (surface);
+                return renderer?.render_texture ((!)node, rect);
+            }
         }
         return null;
     }
