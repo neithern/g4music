@@ -43,6 +43,15 @@
     </screenshots>
 
     <releases>
+        <release version="0.3" date="2022-06-11">
+            <description>
+                <ul>
+                <li>Sort songs by Album/Artist/Title</li>
+                <li>Option: Force dark theme</li>
+                <li>Optimized for responsiveness.</li>
+                </ul>
+            </description>
+        </release>
         <release version="0.2" date="2022-06-10">
             <description>
                 <ul>
