@@ -21,7 +21,7 @@
         <p>Features</p>
 
         <ul>
-        <li>Supports most music file types,  samba or any other GIO supported remote protocols.</li>
+        <li>Supports most music file types, samba and any other remote protocols.</li>
         <li>Fast loading music files and parsing tags.</li>
         <li>Low memory / storage costs, no thumbnail caches.</li>
         <li>Gaussian blurred album cover as window background, follow GNOME 42 light/dark mode.</li>
@@ -38,16 +38,25 @@
         
     <screenshots>
         <screenshot type="default">
-            <image>https://gitlab.gnome.org/neithern/g4music/-/raw/master/shots/the-falling.png</image>
+            <image>https://gitlab.gnome.org/neithern/g4music/-/raw/master/shots/beautiful_eyes.png</image>
         </screenshot>
     </screenshots>
 
     <releases>
+        <release version="0.4" date="2022-06-12">
+            <description>
+                <ul>
+                <li>Recognize external images as cover art, supports transparency.</li>
+                <li>Showing peak now works with pipewire in flatpak.</li>
+                <li>Don't support tracker_sparql because it is slow.</li>
+                </ul>
+            </description>
+        </release>
         <release version="0.3" date="2022-06-11">
             <description>
                 <ul>
-                <li>Sort songs by Album/Artist/Title</li>
-                <li>Option: Force dark theme</li>
+                <li>Sort songs by Album/Artist/Title.</li>
+                <li>Option: Force dark theme.</li>
                 <li>Optimized for responsiveness.</li>
                 </ul>
             </description>
