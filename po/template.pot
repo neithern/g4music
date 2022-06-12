@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-12 09:42+0800\n"
+"POT-Creation-Date: 2022-06-12 19:17+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -50,7 +50,7 @@ msgstr ""
 msgid "Prefer pipewire audio sink"
 msgstr ""
 
-#: data/app.gschema.xml:22 src/gtk/preferences.ui:69
+#: data/app.gschema.xml:22 src/gtk/preferences.ui:70
 msgid "Show audio peak when playing"
 msgstr ""
 
@@ -117,6 +117,10 @@ msgstr ""
 
 #: src/gtk/preferences.ui:55
 msgid "Playback"
+msgstr ""
+
+#: src/gtk/preferences.ui:59
+msgid "Experimental"
 msgstr ""
 
 #: src/gtk/window.ui:27

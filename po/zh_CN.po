@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-12 09:42+0800\n"
+"POT-Creation-Date: 2022-06-12 19:17+0800\n"
 "PO-Revision-Date: 2022-05-31 20:35+0800\n"
 "Last-Translator: Alen <neithern@outlook.com>\n"
 "Language-Team: Chinese (simplified)\n"
@@ -50,7 +50,7 @@ msgstr "加载非本地文件的缩略图"
 msgid "Prefer pipewire audio sink"
 msgstr "优先使用Pipewire音频输出"
 
-#: data/app.gschema.xml:22 src/gtk/preferences.ui:69
+#: data/app.gschema.xml:22 src/gtk/preferences.ui:70
 msgid "Show audio peak when playing"
 msgstr "显示跳动的音频峰值"
 
@@ -118,6 +118,10 @@ msgstr "曲库"
 #: src/gtk/preferences.ui:55
 msgid "Playback"
 msgstr "播放"
+
+#: src/gtk/preferences.ui:59
+msgid "Experimental"
+msgstr "实验性功能"
 
 #: src/gtk/window.ui:27
 msgid "Search"

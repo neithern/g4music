@@ -56,6 +56,7 @@
             <child>
               <object class="AdwActionRow">
                 <property name="title" translatable="yes">Prefer pipewire audio sink</property>
+                <property name="subtitle" translatable="yes">Experimental</property>
                 <property name="activatable_widget">pipewire_btn</property>
                 <child>
                   <object class="GtkSwitch" id="pipewire_btn">
