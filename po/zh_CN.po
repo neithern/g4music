@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-11 21:34+0800\n"
+"POT-Creation-Date: 2022-06-12 09:42+0800\n"
 "PO-Revision-Date: 2022-05-31 20:35+0800\n"
 "Last-Translator: Alen <neithern@outlook.com>\n"
 "Language-Team: Chinese (simplified)\n"
@@ -39,30 +39,26 @@ msgid "Force dark theme"
 msgstr "强制深色主题"
 
 #: data/app.gschema.xml:10 src/gtk/preferences.ui:31
-msgid "Load music from tracker service"
-msgstr "从Tracker服务加载音乐"
+msgid "Load music from folder"
+msgstr "从文件夹加载音乐"
 
-#: data/app.gschema.xml:14 src/gtk/preferences.ui:43
-msgid "Load music from local folder"
-msgstr "从本机文件夹加载音乐"
-
-#: data/app.gschema.xml:18 src/gtk/preferences.ui:54
+#: data/app.gschema.xml:14 src/gtk/preferences.ui:42
 msgid "Load thumbnails for non-local files"
 msgstr "加载非本地文件的缩略图"
 
-#: data/app.gschema.xml:22 src/gtk/preferences.ui:70
+#: data/app.gschema.xml:18 src/gtk/preferences.ui:58
 msgid "Prefer pipewire audio sink"
 msgstr "优先使用Pipewire音频输出"
 
-#: data/app.gschema.xml:26 src/gtk/preferences.ui:81
+#: data/app.gschema.xml:22 src/gtk/preferences.ui:69
 msgid "Show audio peak when playing"
 msgstr "显示跳动的音频峰值"
 
-#: data/app.gschema.xml:31 src/gtk/window.ui:41
+#: data/app.gschema.xml:27 src/gtk/window.ui:41
 msgid "Sort Mode"
 msgstr "排序方式"
 
-#: data/app.gschema.xml:35 data/app.gschema.xml:39
+#: data/app.gschema.xml:31 data/app.gschema.xml:35
 msgid "Played uri when quit"
 msgstr "退出时播放的文件"
 
@@ -119,11 +115,7 @@ msgstr "外观"
 msgid "Music Store"
 msgstr "曲库"
 
-#: src/gtk/preferences.ui:32
-msgid "Try if the music files are on a slow disk"
-msgstr "如果音乐文件存在较慢的磁盘上请尝试"
-
-#: src/gtk/preferences.ui:67
+#: src/gtk/preferences.ui:55
 msgid "Playback"
 msgstr "播放"
 
@@ -202,4 +194,3 @@ msgstr "未知艺术家"
 #: src/window.vala:44
 msgid "Loading..."
 msgstr "正在加载…"
-

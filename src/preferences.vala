@@ -4,10 +4,12 @@ namespace Music {
     public class PreferencesWindow : Adw.PreferencesWindow {
         [GtkChild]
         unowned Gtk.Switch dark_btn;
+#if HAS_TRACKER_SPARQL
         [GtkChild]
         unowned Adw.ActionRow tracker_row;
         [GtkChild]
         unowned Gtk.Switch tracker_btn;
+#endif
         [GtkChild]
         unowned Gtk.Button music_dir_btn;
         [GtkChild]
@@ -34,8 +36,6 @@ namespace Music {
                 });
                 return false;
             });
-#else
-            tracker_row.visible = false;
 #endif
 
             var music_dir = app.get_music_folder ();

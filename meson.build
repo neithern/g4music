@@ -19,18 +19,12 @@ if taglib_c_dep.found()
   add_project_arguments('--define=HAS_TAGLIB_C', language: 'vala')
 endif
 
-tracker_sparql_dep = dependency('tracker-sparql-3.0', required: false)
-if tracker_sparql_dep.found()
-  add_project_arguments('--define=HAS_TRACKER_SPARQL', language: 'vala')
-endif
-
 dependencies = [
   dependency('gstreamer-1.0'),
   dependency('gstreamer-tag-1.0'),
   dependency('libadwaita-1'),
   libm_dep,
   taglib_c_dep,
-  tracker_sparql_dep,
 ]
 
 subdir('data')

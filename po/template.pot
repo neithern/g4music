@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-11 21:34+0800\n"
+"POT-Creation-Date: 2022-06-12 09:42+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -39,30 +39,26 @@ msgid "Force dark theme"
 msgstr ""
 
 #: data/app.gschema.xml:10 src/gtk/preferences.ui:31
-msgid "Load music from tracker service"
+msgid "Load music from folder"
 msgstr ""
 
-#: data/app.gschema.xml:14 src/gtk/preferences.ui:43
-msgid "Load music from local folder"
-msgstr ""
-
-#: data/app.gschema.xml:18 src/gtk/preferences.ui:54
+#: data/app.gschema.xml:14 src/gtk/preferences.ui:42
 msgid "Load thumbnails for non-local files"
 msgstr ""
 
-#: data/app.gschema.xml:22 src/gtk/preferences.ui:70
+#: data/app.gschema.xml:18 src/gtk/preferences.ui:58
 msgid "Prefer pipewire audio sink"
 msgstr ""
 
-#: data/app.gschema.xml:26 src/gtk/preferences.ui:81
+#: data/app.gschema.xml:22 src/gtk/preferences.ui:69
 msgid "Show audio peak when playing"
 msgstr ""
 
-#: data/app.gschema.xml:31 src/gtk/window.ui:41
+#: data/app.gschema.xml:27 src/gtk/window.ui:41
 msgid "Sort Mode"
 msgstr ""
 
-#: data/app.gschema.xml:35 data/app.gschema.xml:39
+#: data/app.gschema.xml:31 data/app.gschema.xml:35
 msgid "Played uri when quit"
 msgstr ""
 
@@ -119,11 +115,7 @@ msgstr ""
 msgid "Music Store"
 msgstr ""
 
-#: src/gtk/preferences.ui:32
-msgid "Try if the music files are on a slow disk"
-msgstr ""
-
-#: src/gtk/preferences.ui:67
+#: src/gtk/preferences.ui:55
 msgid "Playback"
 msgstr ""
 

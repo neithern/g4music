@@ -5,13 +5,9 @@
       <default>false</default>
       <summary>Force dark theme</summary>
     </key>
-    <key name="tracker-mode" type="b">
-      <default>false</default>
-      <summary>Load music from tracker service</summary>
-    </key>
     <key name="music-dir" type="s">
       <default>''</default>
-      <summary>Load music from local folder</summary>
+      <summary>Load music from folder</summary>
     </key>
     <key name="remote-thumbnail" type="b">
       <default>false</default>
