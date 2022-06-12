@@ -117,14 +117,13 @@ namespace Music {
         protected override void on_snapshot (Gtk.Snapshot snapshot, double width, double height) {
             var image_width = base.get_intrinsic_width ();
             var image_height = base.get_intrinsic_height ();
-            
             if (image_width != image_height) {
                 snapshot.save ();
-                var ratio = image_width / (double) image_height;
+                var ratio = image_width / (float) image_height;
                 if (ratio > 1)
-                    snapshot.scale ((float) (1 / ratio), 1);
+                    snapshot.scale (ratio, 1);
                 else
-                    snapshot.scale (1, (float) (1 / ratio));
+                    snapshot.scale (1, 1 / ratio);
                 base.on_snapshot (snapshot, width, height);
                 snapshot.restore ();
             } else {
