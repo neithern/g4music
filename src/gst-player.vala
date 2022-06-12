@@ -15,9 +15,11 @@ namespace Music {
         }
 
         private dynamic Gst.Pipeline? _pipeline = Gst.ElementFactory.make ("playbin", "player") as Gst.Pipeline;
+        private dynamic Gst.Element? _audio_sink = null;
         private Gst.ClockTime _duration = Gst.CLOCK_TIME_NONE;
         private Gst.ClockTime _position = Gst.CLOCK_TIME_NONE;
         private Gst.ClockTime _last_seeked_pos = Gst.CLOCK_TIME_NONE;
+        private bool _show_peak = false;
         private Gst.State _state = Gst.State.NULL;
         private uint _tag_hash = 0;
         private bool _tag_parsed = false;
@@ -110,27 +112,19 @@ namespace Music {
         }
 
         public void show_peak (bool show) {
-            if (show && _pipeline != null) {
-                dynamic var level = Gst.ElementFactory.make ("level", "filter");
-                if (level != null) {
-                    ((!)level).interval = Gst.MSECOND * 66; // 15fps
-                    ((!)level).post_messages = true;
-                }
-                ((!)_pipeline).audio_filter = level;
-            } else if (!show && _pipeline != null) {
-                ((!)_pipeline).audio_filter = null;
+            _show_peak = show;
+            if (_timer != null) {
+                reset_timer ();
             }
+            peak_parsed (-1);
         }
 
         public void use_pipewire (bool use) {
-            if (use && _pipeline != null) {
-                var sink = Gst.ElementFactory.make ("pipewiresink", "audiosink");
-                if (sink != null) {
-                    ((!)_pipeline).audio_sink = sink;
-                    print ("Enable pipewire\n");
-                }
-            } else if (!use && _pipeline != null) {
-                ((!)_pipeline).audio_sink = null;
+            if (_pipeline != null) {
+                _audio_sink = Gst.ElementFactory.make (use ? "pipewiresink" : "pulsesink", "audiosink");
+                ((!)_audio_sink).enable_last_sample = true;
+                ((!)_pipeline).audio_sink = _audio_sink;
+                print (@"Enable pipewire: $(use && _audio_sink != null)\n");
             }
         }
 
@@ -154,11 +148,7 @@ namespace Music {
                         state_changed (_state);
                     }
                     if (state == Gst.State.PLAYING) {
-                        if (_timer == null) {
-                            _timer = new TimeoutSource (200);
-                            _timer?.set_callback (timeout_callback);
-                            _timer?.attach (MainContext.default ());
-                        }
+                        reset_timer ();
                     } else {
                         _timer?.destroy ();
                         _timer = null;
@@ -186,33 +176,17 @@ namespace Music {
                     }
                     break;
 
-                case Gst.MessageType.ELEMENT:
-                    if (message.has_name ("level")) {
-                        parse_peak (message);
-                    }
-                    break;
-
                 default:
                     break;
             }
             return true;
         }
 
-        private void parse_peak (dynamic Gst.Message message) {
-            unowned var structure = message.get_structure ();
-            var value = structure?.get_value ("peak");
-            unowned ValueArray? arr = (ValueArray*) value?.get_boxed ();
-            if (arr != null) {
-                double total = 0;
-                var count = ((!)arr).n_values;
-                for (var i = 0; i < count; i++) {
-                    var v = ((!)arr).get_nth (0);
-                    if (v != null)
-                        total += Math.pow (10, ((!)v).get_double () / 20);
-                }
-                if (count > 0)
-                    peak_parsed (total / count);
-            }
+        private void reset_timer () {
+            _timer?.destroy ();
+            _timer = new TimeoutSource (_show_peak ? 66 : 200);
+            _timer?.set_callback (timeout_callback);
+            _timer?.attach (MainContext.default ());
         }
 
         private void parse_tags (Gst.Message message) {
@@ -246,6 +220,17 @@ namespace Music {
                 _last_seeked_pos = position;
                 position_updated (position);
             }
+
+            if (_show_peak) {
+                dynamic var sink = _audio_sink ?? _pipeline?.audio_sink;
+                if (sink != null) {
+                    double peak = 0;
+                    dynamic Gst.Sample? sample = ((!)sink).last_sample;
+                    if (sample != null && parse_peak_in_sample ((!)sample, out peak)) {
+                        peak_parsed (peak);
+                    }
+                }
+            }
             return true;
         }
 
@@ -257,6 +242,74 @@ namespace Music {
                 //  print ("Duration changed: %lld\n", duration);
                 duration_changed (duration);
             }
+        }
+
+        public delegate void LevelCalculateFunc (void* data, uint num, uint channels, out double NCS, out double NPS);
+
+        private static bool parse_peak_in_sample (Gst.Sample sample, out double peak) {
+            peak = 0;
+
+            unowned var caps = sample.get_caps ();
+            unowned var st = caps?.get_structure (0);
+
+            int channels = 0;
+            st?.get_int ("channels", out channels);
+            if (channels == 0)
+                return false;
+
+            unowned var format = st?.get_string ("format");
+            //  print ("Sample format: %s\n", format ?? "");
+            if (format == null)
+                return false;
+
+            uint bps = 1;
+            LevelCalculateFunc process;
+            switch ((!)format) {
+                case "S8":
+                    bps = 1;
+                    process = GstExt.gst_level_calculate_gint8;
+                    break;
+                case "S16LE":
+                    bps = 2;
+                    process = GstExt.gst_level_calculate_gint16;
+                    break;
+                case "S32LE":
+                    bps = 4;
+                    process = GstExt.gst_level_calculate_gint32;
+                    break;
+                case "F32LE":
+                    bps = 4;
+                    process = GstExt.gst_level_calculate_gfloat;
+                    break;
+                case "F64LE":
+                    bps = 8;
+                    process = GstExt.gst_level_calculate_gdouble;
+                    break;
+                default:
+                    return false;
+            }
+
+            var block_size = channels * bps;
+            var buffer = sample.get_buffer ();
+            var size = buffer?.get_size () ?? 0;
+
+            Gst.MapInfo? map_info = null;
+            var ret = buffer?.map (out map_info, Gst.MapFlags.READ) ?? false;
+            if (!ret)
+                return false;
+
+            unowned uint8* p = ((!)map_info).data;
+            var num = (uint) (size / block_size);
+            double total_nps = 0;
+            for (var i = 0; i < channels; i++) {
+                double ncs = 0, nps = 0;
+                process (p + (bps * i), num, channels, out ncs, out nps);
+                total_nps += nps;
+            }
+            peak = total_nps / channels;
+
+            buffer?.unmap ((!)map_info);
+            return true;
         }
     }
 }

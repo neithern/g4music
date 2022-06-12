@@ -33,7 +33,7 @@ namespace Music {
                 var data = new_uint8_array (size);
                 Memory.copy (data, head, head.length);
                 if (stream.read_all (data[head.length:], out n)) {
-                    return TagDemux.ape_demux_parse_tags (data);
+                    return GstExt.ape_demux_parse_tags (data);
                 }
             }
         } catch (Error e) {
@@ -61,7 +61,7 @@ namespace Music {
                         if (stream.seek (- (int) (size), SeekType.CUR)) {
                             var data = new_uint8_array (size);
                             if (stream.read_all (data, out n)) {
-                                tags = TagDemux.ape_demux_parse_tags (data);
+                                tags = GstExt.ape_demux_parse_tags (data);
                             }
                         }
                     }
@@ -71,7 +71,7 @@ namespace Music {
                 if (stream.seek (- (int) (size), SeekType.END)) {
                     var data = new_uint8_array (size);
                     if (stream.read_all (data, out n)) {
-                        tags = TagDemux.ape_demux_parse_tags (data);
+                        tags = GstExt.ape_demux_parse_tags (data);
                     }
                 }
             }

@@ -116,10 +116,10 @@ namespace Music {
                 }
             });
             player.peak_parsed.connect ((peak) => {
-                var length = (int) (peak * 18) / 2 * 2 + 1;
+                var length = peak > 0 ? (int) (peak * 18) / 2 * 2 + 1 : 0;
                 if (_peak_length != length) {
                     _peak_length = length;
-                    _peak.label = string.nfill (length, '=');
+                    _peak.label = length > 0 ? string.nfill (length, '=') : "";
                 }
             });
         }

@@ -77,7 +77,6 @@ namespace Music {
             settings.bind ("show-peak", peak_btn, "state", SettingsBindFlags.GET_NO_CHANGES);
             peak_btn.state_set.connect ((state) => {
                 app.player.show_peak (state);
-                app.player.restart ();
                 return false;
             });
         }
