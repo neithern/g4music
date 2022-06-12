@@ -358,19 +358,24 @@ namespace Music {
                 var song = (!)current_song;
                 song_tag_parsed (song, image, itype);
 
+                string? cover_uri = null;
                 if (image != null) try {
-                    var file = File.new_build_filename (Environment.get_tmp_dir (), application_id + "_" + str_hash (song.uri).to_string ("%x"));
+                    var file = File.new_build_filename (Environment.get_tmp_dir (), application_id + "_" + str_hash (song.cover_uri).to_string ("%x"));
                     var stream = yield file.create_async (FileCreateFlags.REPLACE_DESTINATION);
                     yield stream.write_async (image?.get_data ());
                     yield stream.close_async ();
                     yield delete_cover_tmp_file_async ();
                     _cover_tmp_file = file;
-
-                    if (song == _current_song) {
-                        _mpris?.send_meta_data (song, file.get_uri ());
-                    }
+                    cover_uri = file.get_uri ();
                 } catch (Error e) {
                     //  print ("Temp file failed: %s\n", e.message);
+                }
+
+                if (song == _current_song) {
+                    if (cover_uri == null && song.cover_uri != song.uri) {
+                        cover_uri = song.cover_uri;
+                    }
+                    _mpris?.send_meta_data (song, cover_uri);
                 }
             }
         }

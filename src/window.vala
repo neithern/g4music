@@ -80,7 +80,7 @@ namespace Music {
 
             _cover_paintable.queue_draw.connect (cover_image.queue_draw);
 
-            var scale_paintable = new ScalePaintable (new RoundPaintable (_cover_paintable, 12, 2));
+            var scale_paintable = new ScalePaintable (new RoundPaintable (_cover_paintable, 12));
             scale_paintable.scale = 0.8;
             cover_image.paintable = scale_paintable;
             scale_paintable.queue_draw.connect (cover_image.queue_draw);
@@ -187,7 +187,7 @@ namespace Music {
             //  print ("bind: %u\n", item.position);
 
             var thumbnailer = app.thumbnailer;
-            var paintable = thumbnailer.find (song.uri);
+            var paintable = thumbnailer.find (song.cover_uri);
             entry.cover = paintable ?? _loading_paintable;
             if (paintable == null) {
                 var saved_pos = item.position;
@@ -294,7 +294,7 @@ namespace Music {
                     var paintable = Gdk.Texture.for_pixbuf ((!)pixbufs[0]);
                     update_cover_paintable (song, paintable);
                     if (pixbufs[1] != null) {
-                        app.thumbnailer.put (song.uri, Gdk.Texture.for_pixbuf ((!)pixbufs[1]));
+                        app.thumbnailer.put (song.cover_uri, Gdk.Texture.for_pixbuf ((!)pixbufs[1]));
                         app.song_list.items_changed (app.current_item, 0, 0);
                     }
                     return;
@@ -383,7 +383,7 @@ namespace Music {
 
         private void update_cover_paintable (Song song, Gdk.Paintable? paintable) {
             var app = (Application) application;
-            _cover_paintable.paintable = paintable ?? app.thumbnailer.find (song.uri);
+            _cover_paintable.paintable = paintable ?? app.thumbnailer.find (song.cover_uri);
 
             var width = get_width ();
             var height = get_height ();

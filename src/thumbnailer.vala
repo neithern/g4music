@@ -1,5 +1,49 @@
 namespace Music {
 
+    public class CoverFinder : Object {
+        private HashTable<string, string?> _cache = new HashTable<string, string?> (str_hash, str_equal);
+
+        public File? find (File file) {
+            var parent = file.get_parent ();
+            if (parent == null)
+                return null;
+
+            var dir = (!)parent;
+            var uri = dir.get_uri ();
+            lock (_cache) {
+                var art_uri = _cache[uri];
+                if (art_uri == null || ((!)art_uri).length == 0) {
+                    var art_file = find_no_lock (dir);
+                    art_uri = art_file?.get_uri ();
+                    _cache[uri] = art_uri ?? "";
+                }
+                return art_uri != null ? File.new_for_uri ((!)art_uri) : (File?) null;
+            }
+        }
+
+        private static File? find_no_lock (File dir) {
+            try {
+                FileInfo? info = null;
+                var enumerator = dir.enumerate_children ("standard::*", FileQueryInfoFlags.NOFOLLOW_SYMLINKS);
+                while ((info = enumerator.next_file ()) != null) {
+                    if (info?.get_content_type ()?.has_prefix ("image/") ?? false) {
+                        var name = info?.get_name () ?? "";
+                        if (name.ascii_ncasecmp ("Cover", 5) == 0
+                            || name.ascii_ncasecmp ("Folder", 6) == 0
+                            || name.ascii_ncasecmp ("AlbumArt", 8) == 0
+                            || name.ascii_ncasecmp ("AlbumArt_{", 10) == 0
+                            || name.ascii_ncasecmp ("AlbumArtSmall", 13) == 0) {
+                            //  print ("Find AlbumArt: %s\n", name);
+                            return dir.get_child (name);
+                        }
+                    }
+                }
+            } catch (Error e) {
+            }
+            return null;
+        }
+    }
+
     //  Sorted by insert order
     public class LruCache<V> {
         public static uint MAX_SIZE = 50 * 1024 * 1024;
@@ -48,6 +92,7 @@ namespace Music {
         public static int icon_size = 96;
 
         private GenericSet<string> _loading = new GenericSet<string> (str_hash, str_equal);
+        private CoverFinder _cover_finder = new CoverFinder ();
         private bool _remote_thumbnail = false;
 
         public bool remote_thumbnail {
@@ -57,13 +102,14 @@ namespace Music {
         }
 
         public async Gdk.Paintable? load_async (Song song) {
-            unowned var uri = song.uri;
+            unowned var uri = song.cover_uri;
             if (uri in _loading)
                 return null;
 
             _loading.add (uri);
             var texture = yield load_directly_async (song, icon_size);
             _loading.remove (uri);
+            uri = song.cover_uri; //  Update cover uri maybe changed when loading
             if (texture != null) {
                 put (uri, (!)texture);
                 return texture;
@@ -81,6 +127,7 @@ namespace Music {
             }
 
             var tags = new Gst.TagList?[] { null };
+            var cover_uri = new string?[] { null };
             var pixbuf = yield run_async<Gdk.Pixbuf?> (() => {
                 var t = tags[0] = parse_gst_tags (file);
                 Bytes? image = null;
@@ -89,27 +136,31 @@ namespace Music {
                         && image != null) {
                     return load_clamp_pixbuf ((!)image, size);
                 }
+                //  Try load album art cover file in the folder
+                try {
+                    var cover_file = _cover_finder.find (file);
+                    if (cover_file != null && (image = cover_file?.load_bytes ()) != null) {
+                        cover_uri[0] = cover_file?.get_uri ();
+                        return load_clamp_pixbuf ((!)image, size);
+                    }
+                } catch (Error e) {
+                }
                 return null;
                  //  run in single_thread_pool for samba to save connections
             }, false, file.has_uri_scheme ("smb"));
-            //  Tag from SPARQL maybe not with correct encoding
-            if (song.ttype == TagType.NONE || song.ttype == TagType.SPARQL) {
+            if (song.ttype != TagType.GST) {
+                //  Tag from others maybe not with correct encoding
                 song.init_from_gst_tags (tags[0]);
                 song.update_keys ();
+            }
+            if (cover_uri[0] != null) {
+                //  Update cover uri if available
+                song.cover_uri = (!)cover_uri[0];
             }
             if (pixbuf != null) {
                 return Gdk.Texture.for_pixbuf ((!)pixbuf);
             }
             return null;
-        }
-
-        public void update_text_paintable (Song song) {
-            unowned var uri = song.uri;
-            var paintable = find (uri);
-            if (! (paintable is Gdk.Texture)) {
-                var paintable2 = create_song_album_text_paintable (song);
-                put (uri, paintable2);
-            }
         }
 
         protected override size_t size_of_value (Gdk.Paintable? paintable) {

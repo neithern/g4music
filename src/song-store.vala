@@ -20,7 +20,17 @@ namespace Music {
         private string _album_key = "";
         private string _artist_key = "";
         private string _title_key = "";
+        private string? _cover_uri = null;
         private int _order = 0;
+
+        public string cover_uri {
+            get {
+                return _cover_uri ?? uri;
+            }
+            set {
+                _cover_uri = value;
+            }
+        }
 
         public void init_from_gst_tags (Gst.TagList? tags) {
             string? al = null, ar = null, ti = null;
