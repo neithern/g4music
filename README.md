@@ -1,21 +1,24 @@
 # G4Music
 
+Play your music, in elegant way.
+
 ![Screen shot](./shots/beautiful_eyes.png)
 
 A fast, flurent, light weight music player written in GTK4, with a beautiful, modern user interface, so named G4Music.
 
 ## Features
-- Supports most music file types, samba and any other remote protocols.
-- Fast loading music files and parsing tags.
-- Low memory / storage costs, no thumbnail caches.
-- Gaussian blurred album cover as window background, follow GNOME 42 light/dark mode.
-- Album cover with original resolution, can be exported.
-- Flurent transition animations when switching songs and toggling play/pause.
-- Supports MPRIS.
-- Supports full-text searching.
+- Supports most music file types, samba and any other remote protocols (thanks to great GIO and GStreamer).
+- Fast loading and parsing hundreds of music files, in less than 1 second.
+- Low memory usage for large playlist with album covers, no thumbnail caches to store.
+- Sort by album/artist/title or shuffle, supports full-text searching.
+- Album cover is original resolution, can be exported.
+- Gaussian blurred cover as window background. 
+- Follow GNOME 42 light/dark mode.
+- Supports MPRIS control.
 - Supports drag-drop from file manager.
 - Supports pipewire audio sink.
 - Show dynamic audio peak when playing.
+- All these in a small package less than 300KB.
 
 ## Install from Flathub
 <a href="https://flathub.org/apps/details/com.github.neithern.g4music">
