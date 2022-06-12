@@ -132,7 +132,13 @@ namespace Music {
             var msg = (!)message;
             switch (msg.type) {
                 case Gst.MessageType.TAG:
-                    msg.parse_tag (out tags);
+                    if (tags != null) {
+                        Gst.TagList? tags2 = null;
+                        msg.parse_tag (out tags2);
+                        tags = tags?.merge (tags2, Gst.TagMergeMode.APPEND);
+                    } else {
+                        msg.parse_tag (out tags);
+                    }
                     break;
 
                 case Gst.MessageType.ERROR:
