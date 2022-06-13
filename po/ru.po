@@ -1,0 +1,200 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-06-12 19:17+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: @daudix-UFO\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:317
+#: src/main.vala:24
+msgid "G4Music"
+msgstr "G4Music"
+
+#: data/app.desktop.in:4
+msgid "Music Player"
+msgstr "Музыкальный Плеер"
+
+#: data/app.desktop.in:5
+msgid "Play music"
+msgstr "Проигрываете музыку"
+
+#: data/app.desktop.in:12
+msgid "music;sound;player;media;audio;playlist;"
+msgstr "музыка;звук;плеере;медиа;аудио;плейлист;"
+
+#: data/app.gschema.xml:6 src/gtk/preferences.ui:15
+msgid "Prefer dark theme"
+msgstr "Предпочитать темную тему"
+
+#: data/app.gschema.xml:10 src/gtk/preferences.ui:31
+msgid "Load music from folder"
+msgstr "Загружать музыку из папки"
+
+#: data/app.gschema.xml:14 src/gtk/preferences.ui:42
+msgid "Load thumbnails for non-local files"
+msgstr "Загружать миниатюры для нелокальных файлов"
+
+#: data/app.gschema.xml:18 src/gtk/preferences.ui:58
+msgid "Use pipewire audio sink"
+msgstr "Использовать приемник звука pipewire"
+
+#: data/app.gschema.xml:22 src/gtk/preferences.ui:70
+msgid "Show audio peak level"
+msgstr "Показывать пик уровня звука"
+
+#: data/app.gschema.xml:27 src/gtk/window.ui:41
+msgid "Sort Mode"
+msgstr "Режим сортировки"
+
+#: data/app.gschema.xml:31 data/app.gschema.xml:35
+msgid "Played uri when quit"
+msgstr "uri, проигранный при выходе"
+
+#: src/gtk/help-overlay.ui:11
+msgctxt "shortcut window"
+msgid "General"
+msgstr "Общее"
+
+#: src/gtk/help-overlay.ui:14
+msgctxt "shortcut window"
+msgid "Show Shortcuts"
+msgstr "Показать комбинации клавиш"
+
+#: src/gtk/help-overlay.ui:20
+msgctxt "shortcut window"
+msgid "Quit"
+msgstr "Выйти"
+
+#: src/gtk/help-overlay.ui:28
+msgctxt "shortcut window"
+msgid "Playback"
+msgstr "Воспроизведение"
+
+#: src/gtk/help-overlay.ui:31
+msgctxt "shortcut window"
+msgid "Play/Pause"
+msgstr ""
+
+#: src/gtk/help-overlay.ui:37
+msgctxt "shortcut window"
+msgid "Play Next"
+msgstr ""
+
+#: src/gtk/help-overlay.ui:43
+msgctxt "shortcut window"
+msgid "Play Previous"
+msgstr ""
+
+#: src/gtk/help-overlay.ui:51
+msgctxt "shortcut window"
+msgid "Playlist"
+msgstr "Плейлист"
+
+#: src/gtk/help-overlay.ui:54
+msgctxt "shortcut window"
+msgid "Search"
+msgstr "Поиск"
+
+#: src/gtk/preferences.ui:12
+msgid "Appearance"
+msgstr "Внешний вид"
+
+#: src/gtk/preferences.ui:28
+msgid "Music Location"
+msgstr "Расположение музыки"
+
+#: src/gtk/preferences.ui:55
+msgid "Playback"
+msgstr "Воспроизведение"
+
+#: src/gtk/preferences.ui:59
+msgid "Experimental"
+msgstr "Экспериментальное"
+
+#: src/gtk/window.ui:27
+msgid "Search"
+msgstr "Поиск"
+
+#: src/gtk/window.ui:90
+msgid "Toggle Playlist"
+msgstr "Переключить плейлист"
+
+#: src/gtk/window.ui:97
+msgid "Main Menu"
+msgstr "Главное меню"
+
+#: src/gtk/window.ui:160
+msgid "_Export Cover"
+msgstr "_Экспортировать обложку"
+
+#: src/gtk/window.ui:166
+msgid "_Preferences"
+msgstr "_Параметры"
+
+#: src/gtk/window.ui:170
+msgid "_Keyboard Shortcuts"
+msgstr "_Комбинации клавиш"
+
+#: src/gtk/window.ui:174
+msgid "_About G4Music"
+msgstr "_О G4Music"
+
+#: src/gtk/window.ui:184
+msgid "By Album"
+msgstr "По альбому"
+
+#: src/gtk/window.ui:190
+msgid "By Artist"
+msgstr "По артисту"
+
+#: src/gtk/window.ui:196
+msgid "By Title"
+msgstr "По названию"
+
+#: src/gtk/window.ui:202
+msgid "Shuffle"
+msgstr "Перемешать"
+
+#: src/application.vala:321
+msgid "A fast, flurent, light weight music player written in GTK4."
+msgstr "Быстрый, флуоресцентный, легкий музыкальный проигрыватель, написанный на GTK4."
+
+#: src/play-bar.vala:75
+msgid "Repeat Song"
+msgstr "Повторить песню"
+
+#: src/play-bar.vala:85
+msgid "Play Previous"
+msgstr "Играть предыдущее"
+
+#: src/play-bar.vala:91
+msgid "Play/Pause"
+msgstr "Воспроизведение/Пауза"
+
+#: src/play-bar.vala:98
+msgid "Play Next"
+msgstr "Играть следующее"
+
+#: src/song-store.vala:2
+msgid "Unknown Album"
+msgstr "Неизвестный альбом"
+
+#: src/song-store.vala:3
+msgid "Unknown Aritst"
+msgstr "Неизвестный артист"
+
+#: src/window.vala:44
+msgid "Loading..."
+msgstr "Загрузка..."
