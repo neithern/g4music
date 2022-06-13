@@ -315,7 +315,7 @@ namespace Music {
 
         private static Song? new_song_from_info (string base_uri, FileInfo info) {
             var type = info.get_content_type ();
-            if (type != null && ((!)type).has_prefix ("audio/") && !((!)type).has_suffix ("url")) {
+            if (type != null && ContentType.is_mime_type ((!)type, "audio/*") && !((!)type).has_suffix ("url")) {
                 unowned var name = info.get_name ();
                 var song = new Song ();
                 // build same file uri as tracker sparql
