@@ -165,7 +165,7 @@ namespace Music {
 
         public bool dark_theme {
             set {
-                style_manager.color_scheme = value ? Adw.ColorScheme.FORCE_DARK : Adw.ColorScheme.DEFAULT;
+                style_manager.color_scheme = value ? Adw.ColorScheme.PREFER_DARK : Adw.ColorScheme.DEFAULT;
             }
         }
 

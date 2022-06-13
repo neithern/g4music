@@ -35,7 +35,7 @@ msgid "music;sound;player;media;audio;playlist;"
 msgstr ""
 
 #: data/app.gschema.xml:6 src/gtk/preferences.ui:15
-msgid "Force dark theme"
+msgid "Prefer dark theme"
 msgstr ""
 
 #: data/app.gschema.xml:10 src/gtk/preferences.ui:31
@@ -47,11 +47,11 @@ msgid "Load thumbnails for non-local files"
 msgstr ""
 
 #: data/app.gschema.xml:18 src/gtk/preferences.ui:58
-msgid "Prefer pipewire audio sink"
+msgid "Use pipewire audio sink"
 msgstr ""
 
 #: data/app.gschema.xml:22 src/gtk/preferences.ui:70
-msgid "Show audio peak when playing"
+msgid "Show audio peak level"
 msgstr ""
 
 #: data/app.gschema.xml:27 src/gtk/window.ui:41
@@ -112,7 +112,7 @@ msgid "Appearance"
 msgstr ""
 
 #: src/gtk/preferences.ui:28
-msgid "Music Store"
+msgid "Music Location"
 msgstr ""
 
 #: src/gtk/preferences.ui:55

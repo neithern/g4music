@@ -35,8 +35,8 @@ msgid "music;sound;player;media;audio;playlist;"
 msgstr "音乐;声音;播放器;媒体;音频;播放列表;"
 
 #: data/app.gschema.xml:6 src/gtk/preferences.ui:15
-msgid "Force dark theme"
-msgstr "强制深色主题"
+msgid "Prefer dark theme"
+msgstr "优先使用深色主题"
 
 #: data/app.gschema.xml:10 src/gtk/preferences.ui:31
 msgid "Load music from folder"
@@ -47,11 +47,11 @@ msgid "Load thumbnails for non-local files"
 msgstr "加载非本地文件的缩略图"
 
 #: data/app.gschema.xml:18 src/gtk/preferences.ui:58
-msgid "Prefer pipewire audio sink"
-msgstr "优先使用Pipewire音频输出"
+msgid "Use pipewire audio sink"
+msgstr "使用Pipewire音频输出"
 
 #: data/app.gschema.xml:22 src/gtk/preferences.ui:70
-msgid "Show audio peak when playing"
+msgid "Show audio peak level"
 msgstr "显示跳动的音频峰值"
 
 #: data/app.gschema.xml:27 src/gtk/window.ui:41
@@ -112,7 +112,7 @@ msgid "Appearance"
 msgstr "外观"
 
 #: src/gtk/preferences.ui:28
-msgid "Music Store"
+msgid "Music Location"
 msgstr "曲库"
 
 #: src/gtk/preferences.ui:55

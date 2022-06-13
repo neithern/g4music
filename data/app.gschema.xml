@@ -3,7 +3,7 @@
   <schema id="@app_id@" path="/com/github/neithern/g4music/">
     <key name="dark-theme" type="b">
       <default>false</default>
-      <summary>Force dark theme</summary>
+      <summary>Prefer dark theme</summary>
     </key>
     <key name="music-dir" type="s">
       <default>''</default>
@@ -15,11 +15,11 @@
     </key>
     <key name="pipewire-sink" type="b">
       <default>false</default>
-      <summary>Prefer pipewire audio sink</summary>
+      <summary>Use pipewire audio sink</summary>
     </key>
     <key name="show-peak" type="b">
       <default>true</default>
-      <summary>Show audio peak when playing</summary>
+      <summary>Show audio peak level</summary>
     </key>
     <key name="sort-mode" type="u">
       <range min="0" max="3"/>
