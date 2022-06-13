@@ -8,7 +8,7 @@ A fast, flurent, light weight music player written in GTK4, with a beautiful, mo
 
 ## Features
 - Supports most music file types, samba and any other remote protocols (thanks to great GIO and GStreamer).
-- Fast loading and parsing hundreds of music files, in less than 1 second.
+- Fast loading and parsing hundreds of music files, in very few seconds.
 - Low memory usage for large playlist with album covers, no thumbnail caches to store.
 - Sort by album/artist/title or shuffle, supports full-text searching.
 - Album cover is original resolution, can be exported.
