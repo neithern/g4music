@@ -9,15 +9,19 @@ namespace Music {
         }
 
         var stream = new BufferedInputStream ((!)fis);
-        Gst.TagList? tags = null;
         var head = new uint8[16];
+        size_t n = 0;
 
         try {
-            size_t n = 0;
             if (! stream.read_all (head, out n)) {
-                throw new IOError.INVALID_DATA (@"read $(n) bytes");
+                return null;
             }
+        } catch (Error e) {
+            //  Read 16 bytes failed, no need to do more parsing.
+            return null;
+        }
 
+        try {
             //  Try parse start tag: ID3v2 or APE
             if (Memory.cmp (head, "ID3", 3) == 0) {
                 var buffer = Gst.Buffer.new_wrapped_full (0, head, 0, head.length, null);
@@ -27,7 +31,7 @@ namespace Music {
                     Memory.copy (data, head, head.length);
                     if (stream.read_all (data[head.length:], out n)) {
                         var buffer2 = Gst.Buffer.new_wrapped_full (0, data, 0, data.length, null);
-                        tags = Gst.Tag.List.from_id3v2_tag (buffer2);
+                        return Gst.Tag.List.from_id3v2_tag (buffer2);
                     }
                 }
             } else if (Memory.cmp (head, "APETAGEX", 8) == 0 && stream.seek (0, SeekType.SET)) {
@@ -35,23 +39,20 @@ namespace Music {
                 var data = new_uint8_array (size);
                 Memory.copy (data, head, head.length);
                 if (stream.read_all (data[head.length:], out n)) {
-                    tags = GstExt.ape_demux_parse_tags (data);
+                    return GstExt.ape_demux_parse_tags (data);
                 }
             }
         } catch (Error e) {
             print ("Parse begin tag %s: %s\n", file.get_parse_name (), e.message);
         }
-        if (tags != null) {
-            return tags;
-        }
 
         try {
-            tags = parse_end_tags (stream);
+            var tags = parse_end_tags (stream);
+            if (tags != null) {
+                return tags;
+            }
         } catch (Error e) {
             print ("Parse end tag %s: %s\n", file.get_parse_name (), e.message);
-        }
-        if (tags != null) {
-            return tags;
         }
 
         try {
@@ -62,16 +63,13 @@ namespace Music {
                     var pos = uri.last_index_of_char ('.');
                     var ext = uri.substring (pos + 1);
                     demux_name = get_demux_name_by_extension (ext);
-                    if (demux_name == null) {
-                        throw new ResourceError.NOT_FOUND (ext);
-                    }
                 }
-                tags = parse_demux_tags (stream, (!)demux_name);
+                return parse_demux_tags (stream, (!)demux_name);
             }
         } catch (Error e) {
             //  print ("Parse demux %s: %s\n", file.get_parse_name (), e.message);
         }
-        return tags;
+        return null;
     }
 
     public static uint8[] new_uint8_array (uint size) throws Error {
@@ -201,7 +199,7 @@ namespace Music {
         return null;
     }
 
-    private static string? get_demux_name_by_extension (string ext_name) {
+    private static string get_demux_name_by_extension (string ext_name) {
         var ext = ext_name.down ();
         switch (ext) {
             case "aiff":
