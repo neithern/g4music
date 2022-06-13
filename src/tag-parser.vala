@@ -9,9 +9,11 @@ namespace Music {
         }
 
         var stream = new BufferedInputStream ((!)fis);
-        size_t n = 0;
+        Gst.TagList? tags = null;
+        var head = new uint8[16];
+
         try {
-            var head = new uint8[16];
+            size_t n = 0;
             if (! stream.read_all (head, out n)) {
                 throw new IOError.INVALID_DATA (@"read $(n) bytes");
             }
@@ -25,7 +27,7 @@ namespace Music {
                     Memory.copy (data, head, head.length);
                     if (stream.read_all (data[head.length:], out n)) {
                         var buffer2 = Gst.Buffer.new_wrapped_full (0, data, 0, data.length, null);
-                        return Gst.Tag.List.from_id3v2_tag (buffer2);
+                        tags = Gst.Tag.List.from_id3v2_tag (buffer2);
                     }
                 }
             } else if (Memory.cmp (head, "APETAGEX", 8) == 0 && stream.seek (0, SeekType.SET)) {
@@ -33,48 +35,18 @@ namespace Music {
                 var data = new_uint8_array (size);
                 Memory.copy (data, head, head.length);
                 if (stream.read_all (data[head.length:], out n)) {
-                    return GstExt.ape_demux_parse_tags (data);
+                    tags = GstExt.ape_demux_parse_tags (data);
                 }
             }
         } catch (Error e) {
-            print ("Parse start tag %s: %s\n", file.get_parse_name (), e.message);
+            print ("Parse begin tag %s: %s\n", file.get_parse_name (), e.message);
+        }
+        if (tags != null) {
+            return tags;
         }
 
-        Gst.TagList? tags = null;
         try {
-            //  Try parse end tag: ID3v1 or APE
-            if (! stream.seek (-128, SeekType.END))  {
-                throw new IOError.INVALID_DATA (@"seek -32");
-            }
-            var foot = new uint8[128];
-            if (! stream.read_all (foot, out n)) {
-                throw new IOError.INVALID_DATA (@"read $(n) bytes");
-            }
-
-            if (Memory.cmp (foot, "TAG", 3) == 0) {
-                tags = Gst.Tag.List.new_from_id3v1 (foot);
-                //  Try check if there is APE at front of ID3v1
-                if (stream.seek (- (int) (128 + 32), SeekType.END)) {
-                    var head = new uint8[32];
-                    if (stream.read_all (head, out n) && Memory.cmp (head, "APETAGEX", 8) == 0) {
-                        uint32 size = read_uint32_le (head, 12) + 32;
-                        if (stream.seek (- (int) (size), SeekType.CUR)) {
-                            var data = new_uint8_array (size);
-                            if (stream.read_all (data, out n)) {
-                                tags = GstExt.ape_demux_parse_tags (data);
-                            }
-                        }
-                    }
-                }
-            } else if (Memory.cmp (foot[128-32:], "APETAGEX", 8) == 0) {
-                var size = read_uint32_le (foot, foot.length - 32 + 12) + 32;
-                if (stream.seek (- (int) (size), SeekType.END)) {
-                    var data = new_uint8_array (size);
-                    if (stream.read_all (data, out n)) {
-                        tags = GstExt.ape_demux_parse_tags (data);
-                    }
-                }
-            }
+            tags = parse_end_tags (stream);
         } catch (Error e) {
             print ("Parse end tag %s: %s\n", file.get_parse_name (), e.message);
         }
@@ -84,14 +56,22 @@ namespace Music {
 
         try {
             if (stream.seek (0, SeekType.SET)) {
-                var uri = file.get_uri ();
-                var pos = uri.last_index_of_char ('.');
-                return parse_demux_tags (stream, uri.substring (pos + 1));
+                var demux_name = get_demux_name_by_content (head);
+                if (demux_name == null) {
+                    var uri = file.get_uri ();
+                    var pos = uri.last_index_of_char ('.');
+                    var ext = uri.substring (pos + 1);
+                    demux_name = get_demux_name_by_extension (ext);
+                    if (demux_name == null) {
+                        throw new ResourceError.NOT_FOUND (ext);
+                    }
+                }
+                tags = parse_demux_tags (stream, (!)demux_name);
             }
         } catch (Error e) {
             //  print ("Parse demux %s: %s\n", file.get_parse_name (), e.message);
         }
-        return null;
+        return tags;
     }
 
     public static uint8[] new_uint8_array (uint size) throws Error {
@@ -107,13 +87,49 @@ namespace Music {
             | ((uint32) (data[pos+3]) << 24);
     }
 
-    public static Gst.TagList? parse_demux_tags (InputStream stream, string ctype) throws Error {
-        var demux_name = get_demux_name (ctype);
-        if (demux_name == null) {
-            throw new ResourceError.NOT_FOUND (ctype);
+    public static Gst.TagList? parse_end_tags (BufferedInputStream stream) throws Error {
+        //  Try parse end tag: ID3v1 or APE
+        if (! stream.seek (-128, SeekType.END))  {
+            throw new IOError.INVALID_DATA (@"seek -32");
         }
 
-        var str = @"giostreamsrc name=src ! $((!)demux_name) ! fakesink";
+        size_t n = 0;
+        var foot = new uint8[128];
+        if (! stream.read_all (foot, out n)) {
+            throw new IOError.INVALID_DATA (@"read $(n) bytes");
+        }
+
+        Gst.TagList? tags = null;
+        if (Memory.cmp (foot, "TAG", 3) == 0) {
+            tags = Gst.Tag.List.new_from_id3v1 (foot);
+            //  Try check if there is APE at front of ID3v1
+            if (stream.seek (- (int) (128 + 32), SeekType.END)) {
+                var head = new uint8[32];
+                if (stream.read_all (head, out n) && Memory.cmp (head, "APETAGEX", 8) == 0) {
+                    uint32 size = read_uint32_le (head, 12) + 32;
+                    if (stream.seek (- (int) (size), SeekType.CUR)) {
+                        var data = new_uint8_array (size);
+                        if (stream.read_all (data, out n)) {
+                            var tags2 = GstExt.ape_demux_parse_tags (data);
+                            tags = tags?.merge (tags2, Gst.TagMergeMode.REPLACE);
+                        }
+                    }
+                }
+            }
+        } else if (Memory.cmp (foot[128-32:], "APETAGEX", 8) == 0) {
+            var size = read_uint32_le (foot, foot.length - 32 + 12) + 32;
+            if (stream.seek (- (int) (size), SeekType.END)) {
+                var data = new_uint8_array (size);
+                if (stream.read_all (data, out n)) {
+                    tags = GstExt.ape_demux_parse_tags (data);
+                }
+            }
+        }
+        return tags;
+    }
+
+    public static Gst.TagList? parse_demux_tags (BufferedInputStream stream, string demux_name) throws Error {
+        var str = @"giostreamsrc name=src ! $(demux_name) ! fakesink sync=false";
         dynamic Gst.Pipeline? pipeline = Gst.parse_launch (str) as Gst.Pipeline;
         dynamic Gst.Element? src = pipeline?.get_by_name ("src");
         ((!)src).stream = stream;
@@ -139,6 +155,12 @@ namespace Music {
                     } else {
                         msg.parse_tag (out tags);
                     }
+                    string? value = null;
+                    Gst.Sample? sample = null;
+                    if ((tags?.get_string ("title", out value) ?? false)
+                        || (tags?.get_sample ("image", out sample) ?? false)) {
+                        quit = true;
+                    }
                     break;
 
                 case Gst.MessageType.ERROR:
@@ -161,26 +183,49 @@ namespace Music {
         return tags;
     }
 
-    // TODO: use typefind
-    private static string? get_demux_name (string ext_name) {
-        var ext = ext_name.down ();
-        if ("aiff" == ext)
+    private static string? get_demux_name_by_content (uint8[] head) {
+        uint8* p = head;
+        if (Memory.cmp (p, "FORM", 4) == 0 && (Memory.cmp(p + 8, "AIFF", 4) == 0 || Memory.cmp(p + 8, "AIFC", 4) == 0)) {
             return "aiffparse";
-        else if ("flac" == ext)
+        } else if (Memory.cmp (p, "fLaC", 4) == 0) {
             return "flacparse";
-        else if ("mp4" == ext || "m4a" == ext || "m4b" == ext)
+        } else if (Memory.cmp (p + 4, "ftyp", 4) == 0) {
             return "qtdemux";
-        else if ("ogg" == ext || "oga" == ext)
+        } else if (Memory.cmp (p, "OggS", 4) == 0) {
             return "oggdemux";
-        else if ("opus" == ext)
-            return "opusparse";
-        else if ("vobis" == ext)
-            return "flacparse";
-        else if ("wma" == ext)
-            return "asfparse";
-        else if ("wav" == ext)
+        } else if (Memory.cmp (p, "RIFF", 4) == 0 && Memory.cmp(p + 8, "WAVE", 4) == 0) {
             return "wavparse";
-        return "id3demux";
+        } else if (Memory.cmp (p, "\x30\x26\xB2\x75\x8E\x66\xCF\x11\xA6\xD9\x00\xAA\x00\x62\xCE\x6C", 16) == 0) {
+            return "asfparse";
+        }
+        return null;
+    }
+
+    private static string? get_demux_name_by_extension (string ext_name) {
+        var ext = ext_name.down ();
+        switch (ext) {
+            case "aiff":
+                return "aiffparse";
+            case "flac":
+                return "flacparse";
+            case "m4a":
+            case "m4b":
+            case "mp4":
+                return "qtdemux";
+            case "ogg":
+            case "oga":
+                return "oggdemux";
+            case "opus":
+                return "opusparse";
+            case "vorbis":
+                return "vorbisparse";
+            case "wav":
+                return "wavparse";
+            case "wma":
+                return "asfparse";
+            default:
+                return "id3demux";
+        }
     }
 
     public static bool parse_image_from_tag_list (Gst.TagList tags, out Bytes? image, out string? itype) {
