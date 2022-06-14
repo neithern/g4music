@@ -23,7 +23,7 @@ namespace Music {
             var settings = app.settings;
 
             dark_btn.bind_property ("state", app, "dark_theme", BindingFlags.DEFAULT);
-            settings.bind ("dark-theme", dark_btn, "state", SettingsBindFlags.DEFAULT);
+            settings?.bind ("dark-theme", dark_btn, "state", SettingsBindFlags.DEFAULT);
 
 #if HAS_TRACKER_SPARQL
             settings.bind ("tracker-mode", tracker_btn, "state", SettingsBindFlags.GET_NO_CHANGES);
@@ -53,7 +53,7 @@ namespace Music {
                         var dir = chooser.get_file ();
                         if (dir != null && dir != music_dir) {
                             music_dir_btn.label = get_display_name ((!)dir);
-                            settings.set_string ("music-dir", ((!)dir).get_uri ());
+                            settings?.set_string ("music-dir", ((!)dir).get_uri ());
                             app.reload_song_store ();
                         }
                     }
@@ -61,20 +61,20 @@ namespace Music {
                 chooser.show ();
             });
 
-            settings.bind ("remote-thumbnail", thumbnail_btn, "state", SettingsBindFlags.GET_NO_CHANGES);
+            settings?.bind ("remote-thumbnail", thumbnail_btn, "state", SettingsBindFlags.GET_NO_CHANGES);
             thumbnail_btn.state_set.connect ((state) => {
                 app.thumbnailer.remote_thumbnail = state;
                 return false;
             });
 
-            settings.bind ("pipewire-sink", pipewire_btn, "state", SettingsBindFlags.GET_NO_CHANGES);
+            settings?.bind ("pipewire-sink", pipewire_btn, "state", SettingsBindFlags.GET_NO_CHANGES);
             pipewire_btn.state_set.connect ((state) => {
                 app.player.use_pipewire (state);
                 app.player.restart ();
                 return false;
             });
 
-            settings.bind ("show-peak", peak_btn, "state", SettingsBindFlags.GET_NO_CHANGES);
+            settings?.bind ("show-peak", peak_btn, "state", SettingsBindFlags.GET_NO_CHANGES);
             peak_btn.state_set.connect ((state) => {
                 app.player.show_peak (state);
                 return false;

@@ -14,6 +14,13 @@ namespace Music {
         public weak string key;
     }
 
+    internal Settings? new_application_settings () {
+        var source = SettingsSchemaSource.get_default ()?.lookup (Config.APP_ID, false);
+        if (source != null)
+            return new Settings.full ((!)source, null, null); 
+        return null; //  new Settings (Config.APP_ID);
+    }
+
     public class Application : Adw.Application {
         private int _current_item = -1;
         private Song? _current_song = null;
@@ -21,7 +28,7 @@ namespace Music {
         private Gtk.FilterListModel _song_list = new Gtk.FilterListModel (null, null);
         private SongStore _song_store = new SongStore ();
         private Thumbnailer _thumbnailer = new Thumbnailer ();
-        private Settings _settings = new Settings (Config.APP_ID);
+        private Settings? _settings = new_application_settings ();
         private MprisPlayer? _mpris = null;
 
         public signal void loading_changed (bool loading, uint size);
@@ -64,14 +71,14 @@ namespace Music {
 
             _song_list.model = _song_store.store;
 
-            dark_theme = _settings.get_boolean ("dark-theme");
+            dark_theme = _settings?.get_boolean ("dark-theme") ?? false;
 
-            sort_mode = (SortMode) _settings.get_uint ("sort-mode");
+            sort_mode = (SortMode) (_settings?.get_uint ("sort-mode") ?? SortMode.TITLE);
 
-            _player.show_peak (_settings.get_boolean ("show-peak"));
-            _player.use_pipewire (_settings.get_boolean ("pipewire-sink"));
-            _player.volume = _settings.get_double ("volume");
-            _thumbnailer.remote_thumbnail = _settings.get_boolean ("remote-thumbnail");
+            _player.show_peak (_settings?.get_boolean ("show-peak") ?? false);
+            _player.use_pipewire (_settings?.get_boolean ("pipewire-sink") ?? false);
+            _player.volume = _settings?.get_double ("volume") ?? 1;
+            _thumbnailer.remote_thumbnail = _settings?.get_boolean ("remote-thumbnail") ?? false;
 
             _player.end_of_stream.connect (() => {
                 if (single_loop) {
@@ -122,8 +129,8 @@ namespace Music {
         }
 
         public override void shutdown () {
-             _settings.set_string ("played-uri", _current_song?.uri ?? "");
-             _settings.set_double ("volume", _player.volume);
+             _settings?.set_string ("played-uri", _current_song?.uri ?? "");
+             _settings?.set_double ("volume", _player.volume);
 
              delete_cover_tmp_file_async.begin ((obj, res) => {
                 delete_cover_tmp_file_async.end (res);
@@ -175,7 +182,7 @@ namespace Music {
             }
         }
 
-        public Settings settings {
+        public Settings? settings {
             get {
                 return _settings;
             }
@@ -205,7 +212,7 @@ namespace Music {
         }
 
         public File get_music_folder () {
-            var music_uri = _settings.get_string ("music-dir");
+            var music_uri = _settings?.get_string ("music-dir") ?? "";
             if (music_uri.length > 0) {
                 return File.new_for_uri (music_uri);
             }
@@ -236,7 +243,7 @@ namespace Music {
 
         private void sort_by (SimpleAction action, Variant? parameter) {
             sort_mode = (SortMode) (parameter?.get_uint32 () ?? 2);
-            _settings.set_uint ("sort-mode", sort_mode);
+            _settings?.set_uint ("sort-mode", sort_mode);
             find_current_item ();
         }
 
@@ -295,12 +302,12 @@ namespace Music {
             } else if (_current_song != null && _current_song == _song_list.get_item (_current_item)) {
                 play_item = _current_item;
             } else {
-                var uri = _current_song?.uri ?? _settings.get_string ("played-uri");
-                if (uri.length > 0) {
+                var uri = _current_song?.uri ?? _settings?.get_string ("played-uri");
+                if (uri != null && ((!)uri).length > 0) {
                     var count = _song_list.get_n_items ();
                     for (var i = 0; i < count; i++) {
                         var song = (Song) _song_list.get_item (i);
-                        if (uri == song.uri) {
+                        if (((!)uri) == song.uri) {
                             play_item = i;
                             break;
                         }
