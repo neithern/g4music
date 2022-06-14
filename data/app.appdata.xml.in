@@ -33,10 +33,16 @@
         <li>All these in a small package less than 300KB.</li>
         </ul>
     </description>
-        
+
     <screenshots>
         <screenshot type="default">
-            <image>https://gitlab.gnome.org/neithern/g4music/-/raw/master/shots/beautiful_eyes.png</image>
+            <image>https://gitlab.gnome.org/neithern/g4music/-/raw/master/shots/window.png</image>
+        </screenshot>
+        <screenshot>
+            <image>https://gitlab.gnome.org/neithern/g4music/-/raw/master/shots/playbar.png</image>
+        </screenshot>
+        <screenshot>
+            <image>https://gitlab.gnome.org/neithern/g4music/-/raw/master/shots/playlist.png</image>
         </screenshot>
     </screenshots>
 
