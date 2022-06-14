@@ -6,6 +6,7 @@ sources = [
   'gst-player.vala',
   'gst-level.c',
   'main.vala',
+  'mini-bar.vala',
   'mpris.vala',
   'paintables.vala',
   'play-bar.vala',

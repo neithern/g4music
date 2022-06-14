@@ -35,11 +35,15 @@ namespace Music {
         [GtkChild]
         private unowned Gtk.ListView list_view;
         [GtkChild]
+        private unowned Gtk.Box mini_box;
+        [GtkChild]
         public unowned Gtk.ToggleButton search_btn;
         [GtkChild]
         private unowned Gtk.SearchBar search_bar;
         [GtkChild]
         private unowned Gtk.SearchEntry search_entry;
+
+        private MiniBar _mini_bar = new MiniBar ();
 
         private CrossFadePaintable _bkgnd_paintable = new CrossFadePaintable ();
         private CrossFadePaintable _cover_paintable = new CrossFadePaintable ();
@@ -83,6 +87,11 @@ namespace Music {
             provider.load_from_data ("searchbar revealer box {box-shadow: none; background-color: transparent;}".data);
             Gtk.StyleContext.add_provider_for_display (this.display, provider, Gtk.STYLE_PROVIDER_PRIORITY_USER);
             search_bar.key_capture_widget = this.content;
+
+            mini_box.append (_mini_bar);
+            _mini_bar.activated.connect (() => {
+                leaflet.navigate (Adw.NavigationDirection.FORWARD);
+            });
 
             _bkgnd_paintable.queue_draw.connect (this.queue_draw);
 
@@ -353,6 +362,7 @@ namespace Music {
             song_album.set_markup (@"<a href=\"album=$(album_uri)\">$(album_text)</a>");
             song_artist.set_markup (@"<a href=\"artist=$(artist_uri)\">$(artist_text)</a>");
             song_title.label = song.title;
+            _mini_bar.title = song.title;
             this.title = song.artist == UNKOWN_ARTIST ? song.title : @"$(song.artist) - $(song.title)";
         }
 
@@ -390,6 +400,7 @@ namespace Music {
                 paintable = app.thumbnailer.find (song.cover_uri);
             }
             _cover_paintable.paintable = paintable;
+            _mini_bar.cover = paintable;
 
             var width = get_width ();
             var height = get_height ();
