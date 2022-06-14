@@ -8,159 +8,189 @@
     <property name="content">
       <object class="GtkWindowHandle">
         <child>
-          <object class="AdwFlap" id="flap">
-            <property name="flap">
-              <object class="GtkBox">
-                <property name="orientation">vertical</property>
-                <property name="hexpand">false</property>
-                <property name="width_request">320</property>
-                <child>
-                  <object class="GtkCenterBox" id="list_bar">
-                    <property name="orientation">horizontal</property>
-                    <style>
-                      <class name="toolbar"/>
-                    </style>
-                    <child type="start">
-                      <object class="GtkToggleButton" id="search_btn">
-                        <property name="icon_name">edit-find-symbolic</property>
-                        <property name="active" bind-source="search_bar" bind-property="search_mode_enabled" bind-flags="bidirectional"/>
-                        <property name="tooltip-text" translatable="yes">Search</property>
-                      </object>
-                    </child>
-                    <child type="center">
-                      <object class="GtkLabel" id="index_title">
-                        <style>
-                          <class name="caption-heading"/>
-                        </style>
-                      </object>
-                    </child>
-                    <child type="end">
-                      <object class="GtkMenuButton" id="sort_btn">
-                        <property name="icon_name">audio-x-generic-symbolic</property>
-                        <property name="menu_model">sort_menu</property>
-                        <property name="tooltip-text" translatable="yes">Sort Mode</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkSearchBar" id="search_bar">
-                    <child>
-                      <object class="GtkSearchEntry" id="search_entry">
-                        <property name="hexpand">true</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkScrolledWindow" id="scroll_view">
-                    <property name="hscrollbar_policy">never</property>
-                    <property name="vscrollbar_policy">automatic</property>
-                    <property name="vexpand">true</property>
-                    <child>
-                      <object class="GtkListView" id="list_view">
-                        <property name="single_click_activate">true</property>
-                        <style>
-                          <class name="navigation-sidebar"/>
-                        </style>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </property>
-            <property name="content">
-              <object class="GtkBox">
-                <property name="hexpand">true</property>
-                <property name="orientation">vertical</property>
-                <child>
-                  <object class="GtkHeaderBar" id="header_bar">
-                    <style>
-                      <class name="flat"/>
-                    </style>
-                    <child type="title">
-                      <object class="GtkLabel">
-                        <property name="visible">false</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkToggleButton" id="reveal_btn">
-                        <property name="icon_name">sidebar-show-symbolic</property>
-                        <property name="active" bind-source="flap" bind-property="reveal-flap" bind-flags="sync-create|bidirectional"/>
-                        <property name="tooltip-text" translatable="yes">Toggle Playlist</property>
-                      </object>
-                    </child>
-                    <child type="end">
-                      <object class="GtkMenuButton">
-                        <property name="icon_name">open-menu-symbolic</property>
-                        <property name="menu_model">primary_menu</property>
-                        <property name="tooltip-text" translatable="yes">Main Menu</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkBox" id="content_box">
+          <object class="AdwLeaflet" id="leaflet">
+            <property name="can-navigate-back">true</property>
+            <property name="can-navigate-forward">true</property>
+            <child>
+              <object class="AdwLeafletPage">
+                <property name="navigatable">true</property>
+                <property name="child">
+                  <object class="GtkBox">
                     <property name="orientation">vertical</property>
-                    <property name="margin_start">32</property>
-                    <property name="margin_end">32</property>
-                    <property name="margin_top">16</property>
+                    <property name="hexpand">false</property>
+                    <property name="width_request">320</property>
                     <child>
-                      <object class="GtkImage" id="cover_image">
-                        <property name="pixel_size">240</property>
+                      <object class="GtkHeaderBar">
+                        <binding name="show-title-buttons">
+                          <lookup name="folded">leaflet</lookup>
+                        </binding>
+                        <style>
+                          <class name="flat"/>
+                        </style>
+                        <child type="start">
+                          <object class="GtkMenuButton">
+                            <property name="icon_name">open-menu-symbolic</property>
+                            <property name="menu_model">primary_menu</property>
+                            <property name="tooltip-text" translatable="yes">Main Menu</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="index_title">
+                            <style>
+                              <class name="caption-heading"/>
+                            </style>
+                          </object>
+                        </child>
+                        <child type="title">
+                          <object class="GtkLabel">
+                            <property name="visible">false</property>
+                          </object>
+                        </child>
+                        <child type="end">
+                          <object class="GtkToggleButton" id="search_btn">
+                            <property name="icon_name">edit-find-symbolic</property>
+                            <property name="active" bind-source="search_bar" bind-property="search_mode_enabled" bind-flags="bidirectional"/>
+                            <property name="tooltip-text" translatable="yes">Search</property>
+                          </object>
+                        </child>
+                        <child type="end">
+                          <object class="GtkMenuButton" id="sort_btn">
+                            <property name="icon_name">audio-x-generic-symbolic</property>
+                            <property name="menu_model">sort_menu</property>
+                            <property name="tooltip-text" translatable="yes">Sort Mode</property>
+                          </object>
+                        </child>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkBox" id="song_details">
-                        <property name="orientation">vertical</property>
-                        <property name="valign">start</property>
-                        <property name="margin_top">24</property>
-                        <property name="height_request">80</property>
+                      <object class="GtkSearchBar" id="search_bar">
                         <child>
-                          <object class="GtkLabel" id="song_title">
-                            <property name="ellipsize">end</property>
-                            <style>
-                              <class name="title-4"/>
-                            </style>
+                          <object class="GtkSearchEntry" id="search_entry">
+                            <property name="hexpand">true</property>
                           </object>
                         </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkScrolledWindow" id="scroll_view">
+                        <property name="hscrollbar_policy">never</property>
+                        <property name="vscrollbar_policy">automatic</property>
+                        <property name="vexpand">true</property>
                         <child>
-                          <object class="GtkLabel" id="song_artist">
-                            <property name="ellipsize">end</property>
-                            <property name="margin_top">4</property>
+                          <object class="GtkListView" id="list_view">
+                            <property name="single_click_activate">true</property>
                             <style>
-                              <class name="dim-label"/>
-                            </style>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkLabel" id="song_album">
-                            <property name="ellipsize">end</property>
-                            <property name="margin_top">4</property>
-                            <style>
-                              <class name="dim-label"/>
+                              <class name="navigation-sidebar"/>
                             </style>
                           </object>
                         </child>
                       </object>
                     </child>
                   </object>
-                </child>
+                </property>
               </object>
-            </property>
+            </child>
+            <child>
+              <object class="AdwLeafletPage">
+                <property name="navigatable">true</property>
+                <property name="child">
+                  <object class="GtkBox">
+                    <property name="hexpand">true</property>
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <object class="GtkHeaderBar" id="header_bar">
+                        <style>
+                          <class name="flat"/>
+                        </style>
+                         <child type="start">
+                          <object class="GtkButton" id="back_btn">
+                            <binding name="visible">
+                              <lookup name="folded">leaflet</lookup>
+                            </binding>
+                            <property name="icon-name">go-previous-symbolic</property>
+                            <property name="tooltip-text" translatable="yes">Back</property>
+                          </object>
+                        </child>
+                        <child type="title">
+                          <object class="GtkLabel">
+                            <property name="visible">false</property>
+                          </object>
+                        </child>
+                        <child type="end">
+                          <object class="GtkMenuButton">
+                            <property name="icon_name">view-more-symbolic</property>
+                            <property name="menu_model">content_menu</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkBox" id="content_box">
+                        <property name="orientation">vertical</property>
+                        <property name="margin_start">32</property>
+                        <property name="margin_end">32</property>
+                        <property name="margin_top">16</property>
+                        <child>
+                          <object class="GtkImage" id="cover_image">
+                            <property name="pixel_size">240</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkBox" id="song_details">
+                            <property name="orientation">vertical</property>
+                            <property name="valign">start</property>
+                            <property name="margin_top">24</property>
+                            <property name="height_request">80</property>
+                            <child>
+                              <object class="GtkLabel" id="song_title">
+                                <property name="ellipsize">end</property>
+                                <style>
+                                  <class name="title-4"/>
+                                </style>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="song_artist">
+                                <property name="ellipsize">end</property>
+                                <property name="margin_top">4</property>
+                                <style>
+                                  <class name="dim-label"/>
+                                </style>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="song_album">
+                                <property name="ellipsize">end</property>
+                                <property name="margin_top">4</property>
+                                <style>
+                                  <class name="dim-label"/>
+                                </style>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </property>
+              </object>
+            </child>
           </object>
         </child>
       </object>
     </property>
   </template>
 
-  <menu id="primary_menu">
+  <menu id="content_menu">
     <section>
       <item>
         <attribute name="label" translatable="yes">_Export Cover</attribute>
         <attribute name="action">win.export-cover</attribute>
       </item>
     </section>
+  </menu>
+
+  <menu id="primary_menu">
     <section>
       <item>
         <attribute name="label" translatable="yes">_Preferences</attribute>

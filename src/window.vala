@@ -13,9 +13,13 @@ namespace Music {
     [GtkTemplate (ui = "/com/github/neithern/g4music/gtk/window.ui")]
     public class Window : Adw.ApplicationWindow {
         [GtkChild]
+        private unowned Adw.Leaflet leaflet;
+        [GtkChild]
         private unowned Gtk.Label index_title;
         [GtkChild]
         private unowned Gtk.MenuButton sort_btn;
+        [GtkChild]
+        private unowned Gtk.Button back_btn;
         [GtkChild]
         private unowned Gtk.Box content_box;
         [GtkChild]
@@ -26,8 +30,6 @@ namespace Music {
         private unowned Gtk.Label song_artist;
         [GtkChild]
         private unowned Gtk.Label song_title;
-        [GtkChild]
-        private unowned Adw.Flap flap;
         [GtkChild]
         private unowned Gtk.ListView list_view;
         [GtkChild]
@@ -59,7 +61,11 @@ namespace Music {
 
             setup_drop_target ();
 
-            flap.bind_property ("folded", this, "flap_folded", BindingFlags.DEFAULT);
+            leaflet.bind_property ("folded", this, "leaflet_folded", BindingFlags.DEFAULT);
+            leaflet.navigate (Adw.NavigationDirection.FORWARD);
+            back_btn.clicked.connect (() => {
+            	leaflet.navigate (Adw.NavigationDirection.BACK);
+            });
 
             app.bind_property ("sort_mode", this, "sort_mode", BindingFlags.DEFAULT);
             sort_mode = app.sort_mode;
@@ -125,18 +131,9 @@ namespace Music {
             }
         }
 
-        public bool flap_folded {
+        public bool leaflet_folded {
             set {
-                var flap_box = flap.flap;
-                if (value) {
-                    Timeout.add (flap.fold_duration, () => {
-                        if (flap.folded && !flap_box.has_css_class ("background"))
-                            flap_box.add_css_class ("background");
-                        return false;
-                    });
-                } else if (!value && flap_box.has_css_class ("background")) {
-                    flap_box.remove_css_class ("background");
-                }
+                leaflet.navigate (Adw.NavigationDirection.FORWARD);
             }
         }
 
@@ -170,9 +167,10 @@ namespace Music {
             snapshot.push_opacity (0.25);
             _bkgnd_paintable.snapshot (snapshot, width, height);
             snapshot.pop ();
-            if (!flap.folded) {
-                var right = width - flap.content.get_width ();
-                var rect = (!)Graphene.Rect ().init (right - 0.5f, 0, 0.5f, (float) height);
+            if (!leaflet.folded) {
+                var page = (Adw.LeafletPage) leaflet.pages.get_item (0);
+                var right = page.child.get_width ();
+                var rect = (!)Graphene.Rect ().init (right - 0.5f, 0, 0.5f, height);
                 draw_gray_linear_gradient_line (snapshot, rect);
             }
             base.snapshot (snapshot);
@@ -383,7 +381,10 @@ namespace Music {
 
         private void update_cover_paintable (Song song, Gdk.Paintable? paintable) {
             var app = (Application) application;
-            _cover_paintable.paintable = paintable ?? app.thumbnailer.find (song.cover_uri);
+            if (paintable == null) {
+                paintable = app.thumbnailer.find (song.cover_uri);
+            }
+            _cover_paintable.paintable = paintable;
 
             var width = get_width ();
             var height = get_height ();
