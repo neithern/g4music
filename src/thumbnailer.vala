@@ -26,9 +26,9 @@ namespace Music {
                 FileInfo? info = null;
                 var enumerator = dir.enumerate_children ("standard::*", FileQueryInfoFlags.NOFOLLOW_SYMLINKS);
                 while ((info = enumerator.next_file ()) != null) {
-                    var type = info?.get_content_type ();
+                    unowned var type = ((!)info).get_content_type ();
                     if (type != null && ContentType.is_mime_type ((!)type, "image/*")) {
-                        var name = info?.get_name () ?? "";
+                        unowned var name = ((!)info).get_name ();
                         if (name.ascii_ncasecmp ("Cover", 5) == 0
                             || name.ascii_ncasecmp ("Folder", 6) == 0
                             || name.ascii_ncasecmp ("AlbumArt", 8) == 0
