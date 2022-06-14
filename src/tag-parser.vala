@@ -153,9 +153,9 @@ namespace Music {
                     } else {
                         msg.parse_tag (out tags);
                     }
-                    string? value = null;
+                    unowned string? title = null;
                     Gst.Sample? sample = null;
-                    if ((tags?.get_string ("title", out value) ?? false)
+                    if ((tags?.peek_string_index ("title", 0, out title) ?? false)
                         || (tags?.get_sample ("image", out sample) ?? false)) {
                         quit = true;
                     }
