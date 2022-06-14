@@ -35,6 +35,9 @@
                           </object>
                         </child>
                         <child>
+                          <object class="GtkSpinner" id="spinner"/>
+                        </child>
+                        <child>
                           <object class="GtkLabel" id="index_title">
                             <style>
                               <class name="caption-heading"/>

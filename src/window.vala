@@ -15,6 +15,8 @@ namespace Music {
         [GtkChild]
         private unowned Adw.Leaflet leaflet;
         [GtkChild]
+        private unowned Gtk.Spinner spinner;
+        [GtkChild]
         private unowned Gtk.Label index_title;
         [GtkChild]
         private unowned Gtk.MenuButton sort_btn;
@@ -115,8 +117,11 @@ namespace Music {
                 app.current_item = (int) index;
             });
 
+            spinner.spinning = true;
             index_title.label = _loading_text;
             app.loading_changed.connect ((loading, size) => {
+                spinner.spinning = loading;
+                spinner.visible = loading;
                 index_title.label = loading ? _loading_text : size.to_string ();
             });
             app.index_changed.connect (on_index_changed);
