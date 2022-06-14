@@ -135,25 +135,27 @@ namespace Music {
                     break;
 
                 case Gst.MessageType.STATE_CHANGED:
-                    Gst.State old = Gst.State.NULL;
-                    Gst.State state = Gst.State.NULL;
-                    Gst.State pending = Gst.State.NULL;
-                    message.parse_state_changed (out old, out state, out pending);
-                    if (old == Gst.State.READY && state == Gst.State.PAUSED) {
-                        on_duration_changed ();
+                    if (message.src == (!)_pipeline) {
+                        Gst.State old = Gst.State.NULL;
+                        Gst.State state = Gst.State.NULL;
+                        Gst.State pending = Gst.State.NULL;
+                        message.parse_state_changed (out old, out state, out pending);
+                        if (old == Gst.State.READY && state == Gst.State.PAUSED) {
+                            on_duration_changed ();
+                        }
+                        if (_state != state) {
+                            _state = state;
+                            //  print ("State changed: %d -> %d\n", old, state);
+                            state_changed (_state);
+                        }
+                        if (state == Gst.State.PLAYING) {
+                            reset_timer ();
+                        } else {
+                            _timer?.destroy ();
+                            _timer = null;
+                        }
+                        timeout_callback ();
                     }
-                    if (_state != state) {
-                        _state = state;
-                        //  print ("State changed: %d, %d\n", old, state);
-                        state_changed (_state);
-                    }
-                    if (state == Gst.State.PLAYING) {
-                        reset_timer ();
-                    } else {
-                        _timer?.destroy ();
-                        _timer = null;
-                    }
-                    timeout_callback ();
                     break;
 
                 case Gst.MessageType.ERROR:
