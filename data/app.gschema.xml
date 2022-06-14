@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist gettext-domain="g4music">
   <schema id="@app_id@" path="/com/github/neithern/g4music/">
+    <key name="width" type="i">
+      <default>700</default>
+    </key>
+    <key name="height" type="i">
+      <default>560</default>
+    </key>
     <key name="dark-theme" type="b">
       <default>false</default>
       <summary>Prefer dark theme</summary>

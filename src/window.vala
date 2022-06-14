@@ -61,6 +61,9 @@ namespace Music {
             Object (application: app);
             this.icon_name = app.application_id;
 
+            app.settings?.bind ("width", this, "default-width", SettingsBindFlags.DEFAULT);
+            app.settings?.bind ("height", this, "default-height", SettingsBindFlags.DEFAULT);
+
             add_action_entries ({
                 { ACTION_EXPORT_COVER, on_export_cover }
             }, this);
