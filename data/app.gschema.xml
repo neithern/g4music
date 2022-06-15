@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist gettext-domain="g4music">
   <schema id="@app_id@" path="/com/github/neithern/g4music/">
-    <key name="width" type="i">
-      <default>700</default>
-    </key>
-    <key name="height" type="i">
-      <default>560</default>
-    </key>
     <key name="dark-theme" type="b">
       <default>false</default>
       <summary>Prefer dark theme</summary>
@@ -32,13 +26,17 @@
       <default>2</default>
       <summary>Sort Mode</summary>
     </key>
+    <key name="width" type="i">
+      <default>700</default>
+    </key>
+    <key name="height" type="i">
+      <default>560</default>
+    </key>
     <key name="played-uri" type="s">
       <default>''</default>
-      <summary>Played uri when quit</summary>
     </key>
     <key name="volume" type="d">
       <default>1</default>
-      <summary>Played uri when quit</summary>
     </key>
   </schema>
 </schemalist>
