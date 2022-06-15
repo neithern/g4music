@@ -47,6 +47,18 @@
     </screenshots>
 
     <releases>
+        <release version="0.6" date="2022-06-15">
+            <description>
+                <ul>
+                <li>Use Adw.Leaflet to adapt to PC and phone screens.</li>
+                <li>Show a mini play bar when only the playlist on the window.</li>
+                <li>Show a spinner when loading songs.</li>
+                <li>Save and restore the window size.</li>
+                <li>Add Swedish translation, thanks to Åke Engelbrektson.</li>
+                <li>Faster parse FLAC tags.</li>
+                </ul>
+            </description>
+        </release>
         <release version="0.5" date="2022-06-13">
             <description>
                 <ul>

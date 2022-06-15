@@ -1,6 +1,6 @@
 # G4Music
 
-Play your music, in elegant way.
+Play your music in an elegant way.
 
 ![Screen shot](./shots/window.png)
 ![Screen shot](./shots/playbar.png)

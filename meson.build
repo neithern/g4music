@@ -1,6 +1,6 @@
 project('com.github.neithern.g4music',
   ['c', 'vala'],
-  version: '0.5.0'
+  version: '0.6.0'
 )
 
 gnome = import('gnome')
