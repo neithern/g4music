@@ -40,6 +40,8 @@ namespace Music {
                 pipeline.flags = 0x0022; // audio | native audio
                 pipeline.bind_property ("volume", this, "volume", BindingFlags.SYNC_CREATE | BindingFlags.BIDIRECTIONAL);
                 pipeline.get_bus ().add_watch (Priority.DEFAULT, bus_callback);
+            } else {
+                critical ("Create playbin failed\n");
             }
         }
 
