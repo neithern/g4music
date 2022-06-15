@@ -13,7 +13,7 @@ namespace Music {
         size_t n = 0;
 
         try {
-            if (! stream.read_all (head, out n)) {
+            if (! stream.read_all (head, out n) || n != head.length) {
                 return null;
             }
         } catch (Error e) {
@@ -30,7 +30,7 @@ namespace Music {
                     var data = new_uint8_array (size);
                     Memory.copy (data, head, head.length);
                     if (stream.read_all (data[head.length:], out n)) {
-                        var buffer2 = Gst.Buffer.new_wrapped_full (0, data, 0, data.length, null);
+                        var buffer2 = Gst.Buffer.new_wrapped_full (0, data, 0, head.length + n, null);
                         return Gst.Tag.List.from_id3v2_tag (buffer2);
                     }
                 }
@@ -39,7 +39,7 @@ namespace Music {
                 var data = new_uint8_array (size);
                 Memory.copy (data, head, head.length);
                 if (stream.read_all (data[head.length:], out n)) {
-                    return GstExt.ape_demux_parse_tags (data);
+                    return GstExt.ape_demux_parse_tags (data[0:head.length + n]);
                 }
             }
         } catch (Error e) {
@@ -56,16 +56,30 @@ namespace Music {
         }
 
         try {
-            if (stream.seek (0, SeekType.SET)) {
-                var demux_name = get_demux_name_by_content (head);
-                if (demux_name == null) {
-                    var uri = file.get_uri ();
-                    var pos = uri.last_index_of_char ('.');
-                    var ext = uri.substring (pos + 1);
-                    demux_name = get_demux_name_by_extension (ext);
-                }
-                return parse_demux_tags (stream, (!)demux_name);
+            if (! stream.seek (0, SeekType.SET)) {
+                return null;
             }
+        } catch (Error e) {
+            //  Seek to start failed, no need to do more parsing.
+        }
+
+        try {
+            uint8* p = head;
+            if (Memory.cmp (p, "fLaC", 4) == 0) {
+                return parse_flac_tags (stream);
+            }
+        } catch (Error e) {
+        }
+
+        try {
+            var demux_name = get_demux_name_by_content (head);
+            if (demux_name == null) {
+                var uri = file.get_uri ();
+                var pos = uri.last_index_of_char ('.');
+                var ext = uri.substring (pos + 1);
+                demux_name = get_demux_name_by_extension (ext);
+            }
+            return parse_demux_tags (stream, (!)demux_name);
         } catch (Error e) {
             //  print ("Parse demux %s: %s\n", file.get_parse_name (), e.message);
         }
@@ -78,7 +92,14 @@ namespace Music {
         return new uint8[size];
     }
 
-    public static uint32 read_uint32_le (uint8[] data, int pos = 0) {
+    public static uint32 read_uint32_be (uint8[] data, uint pos = 0) {
+        return data[pos + 3]
+            | ((uint32) (data[pos+2]) << 8)
+            | ((uint32) (data[pos+1]) << 16)
+            | ((uint32) (data[pos]) << 24);
+    }
+
+    public static uint32 read_uint32_le (uint8[] data, uint pos = 0) {
         return data[pos]
             | ((uint32) (data[pos+1]) << 8)
             | ((uint32) (data[pos+2]) << 16)
@@ -108,7 +129,7 @@ namespace Music {
                     if (stream.seek (- (int) (size), SeekType.CUR)) {
                         var data = new_uint8_array (size);
                         if (stream.read_all (data, out n)) {
-                            var tags2 = GstExt.ape_demux_parse_tags (data);
+                            var tags2 = GstExt.ape_demux_parse_tags (data[0:n]);
                             tags = tags?.merge (tags2, Gst.TagMergeMode.REPLACE);
                         }
                     }
@@ -119,8 +140,63 @@ namespace Music {
             if (stream.seek (- (int) (size), SeekType.END)) {
                 var data = new_uint8_array (size);
                 if (stream.read_all (data, out n)) {
-                    tags = GstExt.ape_demux_parse_tags (data);
+                    tags = GstExt.ape_demux_parse_tags (data[0:n]);
                 }
+            }
+        }
+        return tags;
+    }
+
+    public static Gst.TagList? parse_flac_tags (BufferedInputStream stream) throws Error {
+        var head = new uint8[4];
+        size_t n = 0;
+        if (! stream.read_all (head, out n) || n != 4
+                || Memory.cmp (head, "fLaC", 4) != 0) {
+            return null;
+        }
+        Gst.TagList? tags = null;
+        while (stream.read_all (head, out n) && n == 4) {
+            var type = head[0] & 0x7f;
+            var size = ((uint32) (head[1]) << 16) | ((uint32) (head[2]) << 8) | head[3];
+            //  print ("FLAC block: %d, %u\n", type, size);
+            if (type == 4) {
+                var data = new uint8[size+4];
+                if (stream.read_all (data[4:], out n)) {
+                    head[0] &= (~0x80); // clear the is-last flag
+                    Memory.copy (data, head, 4);
+                    var tags2 = Gst.Tag.List.from_vorbiscomment (data[0:n+4], head, null);
+                    if (tags != null)
+                        tags?.merge (tags2, Gst.TagMergeMode.APPEND);
+                    else
+                        tags = tags2;
+                } else {
+                    break;
+                }
+            } else if (type == 6) {
+                var data = new uint8[size];
+                if (stream.read_all (data, out n)) {
+                    uint pos = 0;
+                    var img_type = read_uint32_be (data, pos);
+                    pos += 4;
+                    var img_mimetype_len = read_uint32_be (data, pos);
+                    pos += 4 + img_mimetype_len;
+                    var img_description_len = read_uint32_be (data, pos);
+                    pos += 4 + img_description_len;
+                    pos += 4 * 4; // image properties
+                    var img_len = read_uint32_be (data, pos);
+                    pos += 4;
+                    if (pos + img_len <= n) {
+                        if (tags == null)
+                            tags = new Gst.TagList.empty ();
+                        Gst.Tag.List.add_id3_image ((!)tags, data[pos:pos+img_len], img_type);
+                    } else {
+                        break;
+                    }
+                } else {
+                    break;
+                }
+            } else if (! stream.seek (size, SeekType.CUR)) {
+                break;
             }
         }
         return tags;
