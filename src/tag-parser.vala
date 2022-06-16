@@ -8,88 +8,94 @@ namespace Music {
             return null;
         }
 
+        Gst.TagList? tags = null;
         var stream = new BufferedInputStream ((!)fis);
         var head = new uint8[16];
-        size_t n = 0;
 
-        try {
-            if (! stream.read_all (head, out n) || n != head.length) {
-                return null;
-            }
-        } catch (Error e) {
-            //  Read 16 bytes failed, no need to do more parsing.
-            return null;
-        }
-
-        try {
-            //  Try parse start tag: ID3v2 or APE
-            if (Memory.cmp (head, "ID3", 3) == 0) {
-                var buffer = Gst.Buffer.new_wrapped_full (0, head, 0, head.length, null);
-                var size = Gst.Tag.get_id3v2_tag_size (buffer);
-                if (size > head.length) {
+        //  Parse and merge all the leading tags as possible
+        while (true) {
+            try {
+                if (! read_full (stream, head)) {
+                    break;
+                }
+                //  Try parse start tag: ID3v2 or APE
+                if (Memory.cmp (head, "ID3", 3) == 0) {
+                    var buffer = Gst.Buffer.new_wrapped_full (0, head, 0, head.length, null);
+                    var size = Gst.Tag.get_id3v2_tag_size (buffer);
+                    if (size > head.length) {
+                        var data = new_uint8_array (size);
+                        Memory.copy (data, head, head.length);
+                        if (read_full (stream, data[head.length:])) {
+                            var buffer2 = Gst.Buffer.new_wrapped_full (0, data, 0, data.length, null);
+                            var tags2 = Gst.Tag.List.from_id3v2_tag (buffer2);
+                            tags = merge_tags (tags, tags2);
+                        }
+                    }
+                } else if (Memory.cmp (head, "APETAGEX", 8) == 0 && stream.seek (0, SeekType.SET)) {
+                    var size = read_uint32_le (head, 12) + 32;
                     var data = new_uint8_array (size);
                     Memory.copy (data, head, head.length);
-                    if (stream.read_all (data[head.length:], out n)) {
-                        var buffer2 = Gst.Buffer.new_wrapped_full (0, data, 0, head.length + n, null);
-                        return Gst.Tag.List.from_id3v2_tag (buffer2);
+                    if (read_full (stream, data[head.length:])) {
+                        var tags2 = GstExt.ape_demux_parse_tags (data);
+                        tags = merge_tags (tags, tags2);
                     }
+                } else {
+                    //  Parse by file container format
+                    if (stream.seek (-head.length, SeekType.CUR)) {
+                        if (Memory.cmp (head, "fLaC", 4) == 0) {
+                            var tags2 = parse_flac_tags (stream);
+                            tags = merge_tags (tags, tags2);
+                        }
+                    }
+                    // No ID3v2/APE any more, quit the loop
+                    break;
                 }
-            } else if (Memory.cmp (head, "APETAGEX", 8) == 0 && stream.seek (0, SeekType.SET)) {
-                var size = read_uint32_le (head, 12) + 32;
-                var data = new_uint8_array (size);
-                Memory.copy (data, head, head.length);
-                if (stream.read_all (data[head.length:], out n)) {
-                    return GstExt.ape_demux_parse_tags (data[0:head.length + n]);
-                }
+            } catch (Error e) {
+                print ("Parse begin tag %s: %s\n", file.get_parse_name (), e.message);
+                break;
             }
-        } catch (Error e) {
-            print ("Parse begin tag %s: %s\n", file.get_parse_name (), e.message);
         }
 
+        //  Parse and merge all the ending tags as possible
         try {
-            var tags = parse_end_tags (stream);
-            if (tags != null) {
-                return tags;
-            }
+            var tags2 = parse_end_tags (stream);
+            tags = merge_tags (tags, tags2);
         } catch (Error e) {
             print ("Parse end tag %s: %s\n", file.get_parse_name (), e.message);
         }
 
-        try {
-            if (! stream.seek (0, SeekType.SET)) {
-                return null;
-            }
-        } catch (Error e) {
-            //  Seek to start failed, no need to do more parsing.
+        if (tags != null) {
+            //  Fast parsing is done, just return
+            return tags;
         }
 
+        //  Parse tags by Gstreamer demux/parse, it is slow
         try {
-            uint8* p = head;
-            if (Memory.cmp (p, "fLaC", 4) == 0) {
-                return parse_flac_tags (stream);
+            if (stream.seek (0, SeekType.SET)) {
+                var demux_name = get_demux_name_by_content (head);
+                if (demux_name == null) {
+                    var uri = file.get_uri ();
+                    var pos = uri.last_index_of_char ('.');
+                    var ext = uri.substring (pos + 1);
+                    demux_name = get_demux_name_by_extension (ext);
+                }
+                tags = parse_demux_tags (stream, (!)demux_name);
             }
-        } catch (Error e) {
-        }
-
-        try {
-            var demux_name = get_demux_name_by_content (head);
-            if (demux_name == null) {
-                var uri = file.get_uri ();
-                var pos = uri.last_index_of_char ('.');
-                var ext = uri.substring (pos + 1);
-                demux_name = get_demux_name_by_extension (ext);
-            }
-            return parse_demux_tags (stream, (!)demux_name);
         } catch (Error e) {
             //  print ("Parse demux %s: %s\n", file.get_parse_name (), e.message);
         }
-        return null;
+        return tags;
     }
 
     public static uint8[] new_uint8_array (uint size) throws Error {
         if ((int) size <= 0 || size > int32.MAX)
             throw new IOError.INVALID_ARGUMENT ("invalid size");
         return new uint8[size];
+    }
+
+    public static bool read_full (BufferedInputStream stream, uint8[] buffer) throws Error {
+        size_t bytes = 0;
+        return stream.read_all (buffer, out bytes) && bytes == buffer.length;
     }
 
     public static uint32 read_uint32_be (uint8[] data, uint pos = 0) {
@@ -106,16 +112,20 @@ namespace Music {
             | ((uint32) (data[pos+3]) << 24);
     }
 
+    public static Gst.TagList? merge_tags (Gst.TagList? tags, Gst.TagList? tags2,
+                                            Gst.TagMergeMode mode = Gst.TagMergeMode.APPEND) {
+        return tags != null ? tags?.merge (tags2, mode) : tags2;
+    }
+
     public static Gst.TagList? parse_end_tags (BufferedInputStream stream) throws Error {
         //  Try parse end tag: ID3v1 or APE
         if (! stream.seek (-128, SeekType.END))  {
             throw new IOError.INVALID_DATA (@"seek -32");
         }
 
-        size_t n = 0;
         var foot = new uint8[128];
-        if (! stream.read_all (foot, out n)) {
-            throw new IOError.INVALID_DATA (@"read $(n) bytes");
+        if (! read_full (stream, foot)) {
+            throw new IOError.INVALID_DATA (@"read 128 bytes");
         }
 
         Gst.TagList? tags = null;
@@ -124,13 +134,14 @@ namespace Music {
             //  Try check if there is APE at front of ID3v1
             if (stream.seek (- (int) (128 + 32), SeekType.END)) {
                 var head = new uint8[32];
-                if (stream.read_all (head, out n) && Memory.cmp (head, "APETAGEX", 8) == 0) {
+                if (read_full (stream, head) && Memory.cmp (head, "APETAGEX", 8) == 0) {
                     uint32 size = read_uint32_le (head, 12) + 32;
                     if (stream.seek (- (int) (size), SeekType.CUR)) {
                         var data = new_uint8_array (size);
-                        if (stream.read_all (data, out n)) {
-                            var tags2 = GstExt.ape_demux_parse_tags (data[0:n]);
-                            tags = tags?.merge (tags2, Gst.TagMergeMode.REPLACE);
+                        if (read_full (stream, data)) {
+                            var tags2 = GstExt.ape_demux_parse_tags (data);
+                            //  APE is better than ID3v1, do REPLACE merge
+                            tags = merge_tags (tags, tags2, Gst.TagMergeMode.REPLACE);
                         }
                     }
                 }
@@ -139,8 +150,8 @@ namespace Music {
             var size = read_uint32_le (foot, foot.length - 32 + 12) + 32;
             if (stream.seek (- (int) (size), SeekType.END)) {
                 var data = new_uint8_array (size);
-                if (stream.read_all (data, out n)) {
-                    tags = GstExt.ape_demux_parse_tags (data[0:n]);
+                if (read_full (stream, data)) {
+                    tags = GstExt.ape_demux_parse_tags (data);
                 }
             }
         }
@@ -149,54 +160,47 @@ namespace Music {
 
     public static Gst.TagList? parse_flac_tags (BufferedInputStream stream) throws Error {
         var head = new uint8[4];
-        size_t n = 0;
-        if (! stream.read_all (head, out n) || n != 4
-                || Memory.cmp (head, "fLaC", 4) != 0) {
+        if (! read_full (stream, head) || Memory.cmp (head, "fLaC", 4) != 0) {
             return null;
         }
         Gst.TagList? tags = null;
-        while (stream.read_all (head, out n) && n == 4) {
+        while (read_full (stream, head)) {
             var type = head[0] & 0x7f;
             var size = ((uint32) (head[1]) << 16) | ((uint32) (head[2]) << 8) | head[3];
             //  print ("FLAC block: %d, %u\n", type, size);
             if (type == 4) {
-                var data = new uint8[size+4];
-                if (stream.read_all (data[4:], out n)) {
+                var data = new_uint8_array (size + 4);
+                if (read_full (stream, data[4:])) {
                     head[0] &= (~0x80); // clear the is-last flag
                     Memory.copy (data, head, 4);
-                    var tags2 = Gst.Tag.List.from_vorbiscomment (data[0:n+4], head, null);
-                    if (tags != null)
-                        tags?.merge (tags2, Gst.TagMergeMode.APPEND);
-                    else
-                        tags = tags2;
+                    var tags2 = Gst.Tag.List.from_vorbiscomment (data, head, null);
+                    tags = merge_tags (tags, tags2, Gst.TagMergeMode.APPEND);
                 } else {
                     break;
                 }
             } else if (type == 6) {
-                var data = new uint8[size];
-                if (stream.read_all (data, out n)) {
+                var data = new_uint8_array (size);
+                if (read_full (stream, data)) {
                     uint pos = 0;
                     var img_type = read_uint32_be (data, pos);
                     pos += 4;
                     var img_mimetype_len = read_uint32_be (data, pos);
                     pos += 4 + img_mimetype_len;
-                    if (pos + 4 > n){
+                    if (pos + 4 > size) {
                         break;
                     }
                     var img_description_len = read_uint32_be (data, pos);
                     pos += 4 + img_description_len;
                     pos += 4 * 4; // image properties
-                    if (pos + 4 > n){
+                    if (pos + 4 > size) {
                         break;
                     }
                     var img_len = read_uint32_be (data, pos);
                     pos += 4;
-                    if (pos + img_len > n) {
+                    if (pos + img_len > size) {
                         break;
                     }
-                    if (tags == null){
-                        tags = new Gst.TagList.empty ();
-                    }
+                    tags = tags ?? new Gst.TagList.empty ();
                     Gst.Tag.List.add_id3_image ((!)tags, data[pos:pos+img_len], img_type);
                 } else {
                     break;
@@ -231,7 +235,7 @@ namespace Music {
                     if (tags != null) {
                         Gst.TagList? tags2 = null;
                         msg.parse_tag (out tags2);
-                        tags = tags?.merge (tags2, Gst.TagMergeMode.APPEND);
+                        tags = merge_tags (tags, tags2, Gst.TagMergeMode.APPEND);
                     } else {
                         msg.parse_tag (out tags);
                     }
