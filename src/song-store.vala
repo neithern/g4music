@@ -311,7 +311,7 @@ namespace Music {
             try {
                 var base_uri = get_uri_with_end_sep (dir);
                 FileInfo? info = null;
-                var enumerator = dir.enumerate_children ("standard::*", FileQueryInfoFlags.NOFOLLOW_SYMLINKS);
+                var enumerator = dir.enumerate_children ("standard::*", FileQueryInfoFlags.NONE);
                 while ((info = enumerator.next_file ()) != null) {
                     var pi = (!)info;
                     if (pi.get_is_hidden ()) {
