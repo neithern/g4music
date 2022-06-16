@@ -38,7 +38,7 @@ namespace Music {
                 tags?.get_string ("album", out al);
                 tags?.get_string ("artist", out ar);
                 tags?.get_string ("title", out ti);
-            } 
+            }
             this.album = (al != null && al?.length > 0) ? (!)al : UNKOWN_ALBUM;
             this.artist = (ar != null && ar?.length > 0) ? (!)ar : UNKOWN_ARTIST;
             if (ti != null && ti?.length > 0)
@@ -270,8 +270,8 @@ namespace Music {
             try {
                 var info = file.query_info ("standard::*", FileQueryInfoFlags.NONE);
                 if (info.get_file_type () == FileType.DIRECTORY) {
-                    var stack = new GenericArray<File> (1024);
-                    stack.add (file);
+                    var stack = new Queue<File> ();
+                    stack.push_tail (file);
                     while (stack.length > 0) {
                         add_directory (stack, arr);
                     }
@@ -287,10 +287,8 @@ namespace Music {
             }
         }
 
-        private static void add_directory (GenericArray<File> stack, GenericArray<Object> arr) {
-            var last = stack.length - 1;
-            var dir = stack[last];
-            stack.remove_index_fast (last);
+        private static void add_directory (Queue<File> stack, GenericArray<Object> arr) {
+            var dir = stack.pop_tail ();
             try {
                 var base_uri = get_uri_with_end_sep (dir);
                 FileInfo? info = null;
@@ -301,7 +299,7 @@ namespace Music {
                         continue;
                     } else if (pi.get_file_type () == FileType.DIRECTORY) {
                         var sub_dir = dir.resolve_relative_path (pi.get_name ());
-                        stack.add (sub_dir);
+                        stack.push_tail (sub_dir);
                     } else {
                         var song = new_song_from_info (base_uri, pi);
                         if (song != null)
