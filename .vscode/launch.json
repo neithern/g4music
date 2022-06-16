@@ -12,6 +12,20 @@
             "cwd": "${workspaceRoot}",
             "valuesFormatting": "parseText",
             "preLaunchTask": "Compile"
+        },
+        {
+            "type": "cppdbg",
+            "request": "launch",
+            "name": "Launch2",
+            "program": "${workspaceFolder}/build/src/${workspaceFolderBasename}",
+            "cwd": "${workspaceRoot}",
+            "osx": {
+                "MIMode": "lldb"
+            },
+            "linux": {
+                "MIMode": "gdb"
+            },
+            "preLaunchTask": "Compile"
         }
     ]
 }
