@@ -180,18 +180,24 @@ namespace Music {
                     pos += 4;
                     var img_mimetype_len = read_uint32_be (data, pos);
                     pos += 4 + img_mimetype_len;
+                    if (pos + 4 > n){
+                        break;
+                    }
                     var img_description_len = read_uint32_be (data, pos);
                     pos += 4 + img_description_len;
                     pos += 4 * 4; // image properties
-                    var img_len = read_uint32_be (data, pos);
-                    pos += 4;
-                    if (pos + img_len <= n) {
-                        if (tags == null)
-                            tags = new Gst.TagList.empty ();
-                        Gst.Tag.List.add_id3_image ((!)tags, data[pos:pos+img_len], img_type);
-                    } else {
+                    if (pos + 4 > n){
                         break;
                     }
+                    var img_len = read_uint32_be (data, pos);
+                    pos += 4;
+                    if (pos + img_len > n) {
+                        break;
+                    }
+                    if (tags == null){
+                        tags = new Gst.TagList.empty ();
+                    }
+                    Gst.Tag.List.add_id3_image ((!)tags, data[pos:pos+img_len], img_type);
                 } else {
                     break;
                 }
