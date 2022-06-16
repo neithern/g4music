@@ -20,7 +20,7 @@ A fast, flurent, light weight music player written in GTK4, with a beautiful, ad
 - Supports drag-drop from file manager.
 - Supports pipewire audio sink.
 - Show dynamic audio peak when playing.
-- All these in a small package less than 300KB.
+- All these in a small package with 300KB.
 
 ## Install from Flathub
 <a href="https://flathub.org/apps/details/com.github.neithern.g4music">

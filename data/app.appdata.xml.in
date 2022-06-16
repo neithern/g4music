@@ -30,7 +30,7 @@
         <li>Supports drag-drop from file manager.</li>
         <li>Supports pipewire audio sink.</li>
         <li>Show dynamic audio peak when playing.</li>
-        <li>All these in a small package less than 300KB.</li>
+        <li>All these in a small package about 300KB.</li>
         </ul>
     </description>
 
@@ -47,6 +47,15 @@
     </screenshots>
 
     <releases>
+        <release version="0.7" date="2022-06-16">
+            <description>
+                <ul>
+                <li>Parallel parsing tags to make loading songs even faster.</li>
+                <li>Merge all kinds of tags as possible.</li>
+                <li>Fix crash when parsing some FLAC files, thanks to @GeoffreyCoulaud.</li>
+                </ul>
+            </description>
+        </release>
         <release version="0.6" date="2022-06-15">
             <description>
                 <ul>
