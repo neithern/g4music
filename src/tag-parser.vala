@@ -120,7 +120,7 @@ namespace Music {
     public static Gst.TagList? parse_end_tags (BufferedInputStream stream) throws Error {
         //  Try parse end tag: ID3v1 or APE
         if (! stream.seek (-128, SeekType.END))  {
-            throw new IOError.INVALID_DATA (@"seek -32");
+            throw new IOError.INVALID_DATA (@"seek -128");
         }
 
         var foot = new uint8[128];
@@ -174,7 +174,7 @@ namespace Music {
                     head[0] &= (~0x80); // clear the is-last flag
                     Memory.copy (data, head, 4);
                     var tags2 = Gst.Tag.List.from_vorbiscomment (data, head, null);
-                    tags = merge_tags (tags, tags2, Gst.TagMergeMode.APPEND);
+                    tags = merge_tags (tags, tags2);
                 } else {
                     break;
                 }
@@ -235,7 +235,7 @@ namespace Music {
                     if (tags != null) {
                         Gst.TagList? tags2 = null;
                         msg.parse_tag (out tags2);
-                        tags = merge_tags (tags, tags2, Gst.TagMergeMode.APPEND);
+                        tags = merge_tags (tags, tags2);
                     } else {
                         msg.parse_tag (out tags);
                     }
