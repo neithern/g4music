@@ -1,0 +1,200 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-06-16 12:22-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Radi4Ever <EMAIL@ADDRESS>\n"
+"Language-Team: Spanish <LL@li.org>\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:317
+#: src/main.vala:24
+msgid "G4Music"
+msgstr "G4Music"
+
+#: data/app.desktop.in:4
+msgid "Music Player"
+msgstr "Reproductor de musica"
+
+#: data/app.desktop.in:5
+msgid "Play music"
+msgstr "Reproduce musica"
+
+#: data/app.desktop.in:12
+msgid "music;sound;player;media;audio;playlist;"
+msgstr "musica;sonido;reproductor;medio;audio;lista de reproduccion"
+
+#: data/app.gschema.xml:6 src/gtk/preferences.ui:15
+msgid "Prefer dark theme"
+msgstr "Preferir modo oscuro"
+
+#: data/app.gschema.xml:10 src/gtk/preferences.ui:31
+msgid "Load music from folder"
+msgstr "Cargar musica desde carpeta"
+
+#: data/app.gschema.xml:14 src/gtk/preferences.ui:42
+msgid "Load thumbnails for non-local files"
+msgstr "Cargar miniaturas de archivos no-locales"
+
+#: data/app.gschema.xml:18 src/gtk/preferences.ui:58
+msgid "Use pipewire audio sink"
+msgstr "Usar receptor de audio pipewire"
+
+#: data/app.gschema.xml:22 src/gtk/preferences.ui:70
+msgid "Show audio peak level"
+msgstr "Mostrar pico de nivel de audio"
+
+#: data/app.gschema.xml:27 src/gtk/window.ui:41
+msgid "Sort Mode"
+msgstr "Modo de Clasificacion"
+
+#: data/app.gschema.xml:31 data/app.gschema.xml:35
+msgid "Played uri when quit"
+msgstr "Reproducir uri al Salir"
+
+#: src/gtk/help-overlay.ui:11
+msgctxt "shortcut window"
+msgid "General"
+msgstr "General"
+
+#: src/gtk/help-overlay.ui:14
+msgctxt "shortcut window"
+msgid "Show Shortcuts"
+msgstr "Mostrar Atajos"
+
+#: src/gtk/help-overlay.ui:20
+msgctxt "shortcut window"
+msgid "Quit"
+msgstr "Salir"
+
+#: src/gtk/help-overlay.ui:28
+msgctxt "shortcut window"
+msgid "Playback"
+msgstr "Reproduccion"
+
+#: src/gtk/help-overlay.ui:31
+msgctxt "shortcut window"
+msgid "Play/Pause"
+msgstr "Reproducir/Pausar"
+
+#: src/gtk/help-overlay.ui:37
+msgctxt "shortcut window"
+msgid "Play Next"
+msgstr "Reproducir Siguiente"
+
+#: src/gtk/help-overlay.ui:43
+msgctxt "shortcut window"
+msgid "Play Previous"
+msgstr "Reproducir anterior"
+
+#: src/gtk/help-overlay.ui:51
+msgctxt "shortcut window"
+msgid "Playlist"
+msgstr "Lista De Reproduccion"
+
+#: src/gtk/help-overlay.ui:54
+msgctxt "shortcut window"
+msgid "Search"
+msgstr "Buscar"
+
+#: src/gtk/preferences.ui:12
+msgid "Appearance"
+msgstr "Apariencia"
+
+#: src/gtk/preferences.ui:28
+msgid "Music Location"
+msgstr "Ubicacion de la Musica"
+
+#: src/gtk/preferences.ui:55
+msgid "Playback"
+msgstr "Reproduccion"
+
+#: src/gtk/preferences.ui:59
+msgid "Experimental"
+msgstr "Experimental"
+
+#: src/gtk/window.ui:27
+msgid "Search"
+msgstr "Buscar"
+
+#: src/gtk/window.ui:90
+msgid "Toggle Playlist"
+msgstr "Alternar Lista de Reproduccion"
+
+#: src/gtk/window.ui:97
+msgid "Main Menu"
+msgstr "Menu Principal"
+
+#: src/gtk/window.ui:160
+msgid "_Export Cover"
+msgstr "_Guardar Caratula"
+
+#: src/gtk/window.ui:166
+msgid "_Preferences"
+msgstr "_Preferencias"
+
+#: src/gtk/window.ui:170
+msgid "_Keyboard Shortcuts"
+msgstr "_Atajos de Teclado"
+
+#: src/gtk/window.ui:174
+msgid "_About G4Music"
+msgstr "_Acerca de G4Music"
+
+#: src/gtk/window.ui:184
+msgid "By Album"
+msgstr "Por Album"
+
+#: src/gtk/window.ui:190
+msgid "By Artist"
+msgstr "Por Artista"
+
+#: src/gtk/window.ui:196
+msgid "By Title"
+msgstr "Por Titulo"
+
+#: src/gtk/window.ui:202
+msgid "Shuffle"
+msgstr "Aleatorio"
+
+#: src/application.vala:321
+msgid "A fast, flurent, light weight music player written in GTK4."
+msgstr "Un rapido, fluido, ligero reproductor de musica escrito en GTK4."
+
+#: src/play-bar.vala:75
+msgid "Repeat Song"
+msgstr "Repetir Pista"
+
+#: src/play-bar.vala:85
+msgid "Play Previous"
+msgstr "Reproducir Anterior"
+
+#: src/play-bar.vala:91
+msgid "Play/Pause"
+msgstr "Reproducir/Pausa"
+
+#: src/play-bar.vala:98
+msgid "Play Next"
+msgstr "Reproducir siguiente"
+
+#: src/song-store.vala:2
+msgid "Unknown Album"
+msgstr "Album desconocido"
+
+#: src/song-store.vala:3
+msgid "Unknown Aritst"
+msgstr "Artista Desconocido"
+
+#: src/window.vala:44
+msgid "Loading..."
+msgstr "Cargando..."
