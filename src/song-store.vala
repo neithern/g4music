@@ -256,6 +256,25 @@ namespace Music {
                 foreach (var file in files) {
                     add_file (file, arr);
                 }
+
+                var queue = new AsyncQueue<Song?> ();
+                foreach (var obj in arr) {
+                    queue.push ((Song) obj);
+                }
+                var num_thread = get_num_processors ();
+                var threads = new Thread<void>[num_thread];
+                for (var i = 0; i < num_thread; i++) {
+                    threads[i] = new Thread<void> (@"thread$(i)",  () => {
+                        Song? song;
+                        while ((song = queue.try_pop ()) != null) {
+                            parse_song_tags ((!)song);
+                        }
+                    });
+                }
+                foreach (var thread in threads) {
+                    thread.join ();
+                }
+
                 if (_sort_mode == SortMode.SHUFFLE) {
                     Song.shuffle_order (arr);
                 }
@@ -318,25 +337,31 @@ namespace Music {
                 var song = new Song ();
                 // build same file uri as tracker sparql
                 song.uri = base_uri + Uri.escape_string (name, null, false);
-                var file = File.new_for_uri (song.uri);
-                var path = file.get_path ();
-                if (path != null) {  // parse local path only
-#if HAS_TAGLIB_C
-                    var tf = new TagLib.File ((!)path);
-                    song.init_from_taglib (tf);
-#else
-                    var tags = parse_gst_tags (file);
-                    song.init_from_gst_tags (tags);
-#endif
-                }
-                if (song.title.length == 0) {
-                    // title should not be empty always
-                    song.title = parse_name_from_path (name);
-                    song.update_keys ();
-                }
+                song.title = name;
                 return song;
             }
             return null;
+        }
+
+        private static void parse_song_tags (Song song) {
+            var file = File.new_for_uri (song.uri);
+            var path = file.get_path ();
+            var name = song.title;
+            song.title = "";
+            if (path != null) { // parse local path only
+#if HAS_TAGLIB_C
+                var tf = new TagLib.File ((!)path);
+                song.init_from_taglib (tf);
+#else
+                var tags = parse_gst_tags (file);
+                song.init_from_gst_tags (tags);
+#endif
+            }
+            if (song.title.length == 0) {
+                // title should not be empty always
+                song.title = parse_name_from_path (name);
+                song.update_keys ();
+            }
         }
     }
 
