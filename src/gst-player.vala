@@ -170,7 +170,6 @@ namespace Music {
                     break;
 
                 case Gst.MessageType.EOS:
-                    _pipeline?.set_state (Gst.State.READY);
                     end_of_stream ();
                     break;
 
