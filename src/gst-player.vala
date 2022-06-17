@@ -198,9 +198,9 @@ namespace Music {
             message.parse_tag (out tags);
 
             string? album = null, artist = null, title = null;
-            var ret = tags.get_string ("album", out album);
-            ret |= tags.get_string ("artist", out artist);
-            ret |= tags.get_string ("title", out title);
+            var ret = tags.get_string (Gst.Tags.ALBUM, out album);
+            ret |= tags.get_string (Gst.Tags.ARTIST, out artist);
+            ret |= tags.get_string (Gst.Tags.TITLE, out title);
 
             Bytes? image = null;
             string? itype = null;

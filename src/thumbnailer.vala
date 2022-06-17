@@ -130,19 +130,18 @@ namespace Music {
             var tags = new Gst.TagList?[] { null };
             var cover_uri = new string?[] { null };
             var pixbuf = yield run_async<Gdk.Pixbuf?> (() => {
-                var t = tags[0] = parse_gst_tags (file);
-                Bytes? image = null;
-                string? itype = null;
-                if (t != null && parse_image_from_tag_list ((!)t, out image, out itype)
-                        && image != null) {
-                    return load_clamp_pixbuf ((!)image, size);
+                var tag = tags[0] = parse_gst_tags (file);
+                Gst.Sample? sample = null;
+                if (tag != null && (sample = parse_image_sample_from_tag_list ((!)tag)) != null) {
+                    return load_clamp_pixbuf_from_gst_sample ((!)sample, size);
                 }
                 //  Try load album art cover file in the folder
                 try {
                     var cover_file = _cover_finder.find (file);
-                    if (cover_file != null && (image = cover_file?.load_bytes ()) != null) {
+                    var stream = cover_file?.read ();
+                    if (cover_file != null && stream != null) {
                         cover_uri[0] = cover_file?.get_uri ();
-                        return load_clamp_pixbuf ((!)image, size);
+                        return load_clamp_pixbuf_from_stream (new BufferedInputStream ((!)stream), size);
                     }
                 } catch (Error e) {
                 }
@@ -191,9 +190,21 @@ namespace Music {
         return pixbuf;
     }
 
-    public static Gdk.Pixbuf? load_clamp_pixbuf (Bytes image, int size) {
+    public static Gdk.Pixbuf? load_clamp_pixbuf_from_gst_sample (Gst.Sample sample, int size) {
+        var buffer = sample.get_buffer ();
+        Gst.MapInfo? info = null;
+        if (buffer?.map (out info, Gst.MapFlags.READ) ?? false) {
+            var bytes = new Bytes.static (info?.data);
+            var stream = new MemoryInputStream.from_bytes (bytes);
+            var pixbuf = load_clamp_pixbuf_from_stream (stream, size);
+            buffer?.unmap ((!)info);
+            return pixbuf;
+        }
+        return null;
+    }
+
+    public static Gdk.Pixbuf? load_clamp_pixbuf_from_stream (InputStream stream, int size) {
         try {
-            var stream = new MemoryInputStream.from_bytes (image);
             var pixbuf = new Gdk.Pixbuf.from_stream (stream);
             if (pixbuf is Gdk.Pixbuf)
                 return create_clamp_pixbuf (pixbuf, size);

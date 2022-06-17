@@ -87,6 +87,13 @@ namespace Music {
         return tags;
     }
 
+    public static bool tags_has_title_or_image (Gst.TagList? tags) {
+        string? title = null;
+        Gst.Sample? sample = null;
+        return ((tags?.peek_string_index (Gst.Tags.TITLE, 0, out title) ?? false)
+            || (tags?.get_sample (Gst.Tags.IMAGE, out sample) ?? false));
+    }
+
     public static uint8[] new_uint8_array (uint size) throws Error {
         if ((int) size <= 0 || size > int32.MAX)
             throw new IOError.INVALID_ARGUMENT ("invalid size");
@@ -239,10 +246,7 @@ namespace Music {
                     } else {
                         msg.parse_tag (out tags);
                     }
-                    unowned string? title = null;
-                    Gst.Sample? sample = null;
-                    if ((tags?.peek_string_index ("title", 0, out title) ?? false)
-                        || (tags?.get_sample ("image", out sample) ?? false)) {
+                    if (tags_has_title_or_image (tags)) {
                         quit = true;
                     }
                     break;
@@ -269,7 +273,7 @@ namespace Music {
 
     private static string? get_demux_name_by_content (uint8[] head) {
         uint8* p = head;
-        if (Memory.cmp (p, "FORM", 4) == 0 && (Memory.cmp(p + 8, "AIFF", 4) == 0 || Memory.cmp(p + 8, "AIFC", 4) == 0)) {
+        if (Memory.cmp (p, "FORM", 4) == 0 && (Memory.cmp (p + 8, "AIFF", 4) == 0 || Memory.cmp (p + 8, "AIFC", 4) == 0)) {
             return "aiffparse";
         } else if (Memory.cmp (p, "fLaC", 4) == 0) {
             return "flacparse";
@@ -277,7 +281,7 @@ namespace Music {
             return "qtdemux";
         } else if (Memory.cmp (p, "OggS", 4) == 0) {
             return "oggdemux";
-        } else if (Memory.cmp (p, "RIFF", 4) == 0 && Memory.cmp(p + 8, "WAVE", 4) == 0) {
+        } else if (Memory.cmp (p, "RIFF", 4) == 0 && Memory.cmp (p + 8, "WAVE", 4) == 0) {
             return "wavparse";
         } else if (Memory.cmp (p, "\x30\x26\xB2\x75\x8E\x66\xCF\x11\xA6\xD9\x00\xAA\x00\x62\xCE\x6C", 16) == 0) {
             return "asfparse";
@@ -312,25 +316,35 @@ namespace Music {
         }
     }
 
+    public static Gst.Sample? parse_image_sample_from_tag_list (Gst.TagList tags) {
+        Gst.Sample? sample = null;
+        if (tags.get_sample (Gst.Tags.IMAGE, out sample)) {
+            return sample;
+        }
+        if (tags.get_sample (Gst.Tags.PREVIEW_IMAGE, out sample)) {
+            return sample;
+        }
+
+        for (var i = 0; i < tags.n_tags (); i++) {
+            var tag = tags.nth_tag_name (i);
+            var value = tags.get_value_index (tag, 0);
+            sample = null;
+            if (value?.type () == typeof (Gst.Sample)
+                    && tags.get_sample (tag, out sample)) {
+                var caps = sample?.get_caps ();
+                if (caps != null) {
+                    return sample;
+                }
+                //  print (@"unknown image tag: $(tag)\n");
+            }
+        }
+        return null;
+    }
+
     public static bool parse_image_from_tag_list (Gst.TagList tags, out Bytes? image, out string? itype) {
         image = null;
         itype = null;
-        Gst.Sample? sample = null;
-        if (!tags.get_sample ("image", out sample)) {
-            for (var i = 0; i < tags.n_tags (); i++) {
-                var tag = tags.nth_tag_name (i);
-                var value = tags.get_value_index (tag, 0);
-                if (value?.type () == typeof (Gst.Sample)
-                        && tags.get_sample (tag, out sample)) {
-                    var caps = sample?.get_caps ();
-                    if (caps != null) {
-                        break;
-                    }
-                    //  print (@"unknown image tag: $(tag)\n");
-                }
-                sample = null;
-            }
-        }
+        Gst.Sample? sample = parse_image_sample_from_tag_list (tags);
         if (sample != null) {
             uint8[]? data = null;
             var buffer = sample?.get_buffer ();

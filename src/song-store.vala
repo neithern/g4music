@@ -35,9 +35,9 @@ namespace Music {
         public void init_from_gst_tags (Gst.TagList? tags) {
             string? al = null, ar = null, ti = null;
             if (tags != null) {
-                tags?.get_string ("album", out al);
-                tags?.get_string ("artist", out ar);
-                tags?.get_string ("title", out ti);
+                tags?.get_string (Gst.Tags.ALBUM, out al);
+                tags?.get_string (Gst.Tags.ARTIST, out ar);
+                tags?.get_string (Gst.Tags.TITLE, out ti);
             }
             this.album = (al != null && al?.length > 0) ? (!)al : UNKOWN_ALBUM;
             this.artist = (ar != null && ar?.length > 0) ? (!)ar : UNKOWN_ARTIST;

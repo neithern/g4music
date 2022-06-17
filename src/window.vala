@@ -301,7 +301,8 @@ namespace Music {
             if (image != null) {
                 var pixbufs = new Gdk.Pixbuf?[2] {null, null};
                 yield run_async<void> (() => {
-                    var pixbuf = pixbufs[0] = load_clamp_pixbuf ((!)image, 640);
+                    var stream = new MemoryInputStream.from_bytes ((!)image);
+                    var pixbuf = pixbufs[0] = load_clamp_pixbuf_from_stream (stream, 640);
                     if (pixbuf != null)
                         pixbufs[1] = create_clamp_pixbuf ((!)pixbuf, Thumbnailer.icon_size);
                 }, true);
