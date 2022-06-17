@@ -274,7 +274,6 @@ namespace Music {
             }
             _search_text = text;
             update_song_filter ();
-            print (@"commit: $(text)\n");
         }
 
         private void on_index_changed (int index, uint size) {
