@@ -83,7 +83,9 @@ namespace Music {
                     var ext = uri.substring (pos + 1);
                     demux_name = get_demux_name_by_extension (ext);
                 }
-                tags = parse_demux_tags (stream, (!)demux_name);
+                if (demux_name != null) {
+                    tags = parse_demux_tags (stream, (!)demux_name);
+                }
             }
         } catch (Error e) {
             //  print ("Parse demux %s: %s\n", file.get_parse_name (), e.message);
@@ -174,8 +176,9 @@ namespace Music {
         if (! read_full (stream, head) || Memory.cmp (head, "fLaC", 4) != 0) {
             return null;
         }
+        int flags = 0;
         Gst.TagList? tags = null;
-        while (read_full (stream, head)) {
+        while (read_full (stream, head) && (flags & 0x03) != 0x03) {
             var type = head[0] & 0x7f;
             var size = ((uint32) (head[1]) << 16) | ((uint32) (head[2]) << 8) | head[3];
             //  print ("FLAC block: %d, %u\n", type, size);
@@ -186,6 +189,7 @@ namespace Music {
                     Memory.copy (data, head, 4);
                     var tags2 = Gst.Tag.List.from_vorbiscomment (data, head, null);
                     tags = merge_tags (tags, tags2);
+                    flags |= 0x01;
                 } else {
                     break;
                 }
@@ -213,6 +217,7 @@ namespace Music {
                     }
                     tags = tags ?? new Gst.TagList.empty ();
                     Gst.Tag.List.add_id3_image ((!)tags, data[pos:pos+img_len], img_type);
+                    flags |= 0x02;
                 } else {
                     break;
                 }
@@ -293,7 +298,7 @@ namespace Music {
         return null;
     }
 
-    private static string get_demux_name_by_extension (string ext_name) {
+    private static string? get_demux_name_by_extension (string ext_name) {
         var ext = ext_name.down ();
         switch (ext) {
             case "aiff":
@@ -316,7 +321,7 @@ namespace Music {
             case "wma":
                 return "asfparse";
             default:
-                return "id3demux";
+                return null;
         }
     }
 
