@@ -168,7 +168,7 @@ msgid "Shuffle"
 msgstr "乱序"
 
 #: src/application.vala:321
-msgid "A fast, flurent, light weight music player written in GTK4."
+msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr "一个快速、流畅、轻量的，基于GTK4的音乐播放软件。"
 
 #: src/play-bar.vala:75

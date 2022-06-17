@@ -6,7 +6,7 @@ Play your music in an elegant way.
 ![Screen shot](./shots/playbar.png)
 ![Screen shot](./shots/playlist.png)
 
-A fast, flurent, light weight music player written in GTK4, with a beautiful, adaptive user interface, so named G4Music.
+A fast, fluent, light weight music player written in GTK4, with a beautiful, adaptive user interface, so named G4Music.
 
 ## Features
 - Supports most music file types, samba and any other remote protocols (thanks to great GIO and GStreamer).

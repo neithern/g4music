@@ -169,7 +169,7 @@ msgid "Shuffle"
 msgstr "Blanda"
 
 #: src/application.vala:321
-msgid "A fast, flurent, light weight music player written in GTK4."
+msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr "En snabb lättflytande musikspelare skriven i GTK4."
 
 #: src/play-bar.vala:75

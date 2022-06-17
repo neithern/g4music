@@ -325,7 +325,7 @@ namespace Music {
                                    "authors", authors,
                                    "version", Config.VERSION,
                                    "license-type", Gtk.License.GPL_3_0,
-                                   "comments", _("A fast, flurent, light weight music player written in GTK4.")
+                                   "comments", _("A fast, fluent, light weight music player written in GTK4.")
                                   );
         }
 
