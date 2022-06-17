@@ -59,7 +59,7 @@ namespace Music {
             switch (sort) {
                 case SortMode.ALBUM:
                     _title.label = song.album;
-                    _subtitle.label = song.title;
+                    _subtitle.label = (0 < song.track < int.MAX) ? @"$(song.track). $(song.title)" : song.title;
                     break;
 
                 case SortMode.ARTIST:

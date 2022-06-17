@@ -15,6 +15,7 @@ namespace Music {
         public string artist = "";
         public string title = "";
         public string uri = "";
+        public uint track = int.MAX;
         public TagType ttype = TagType.NONE;
 
         private string _album_key = "";
@@ -38,6 +39,7 @@ namespace Music {
                 tags?.get_string (Gst.Tags.ALBUM, out al);
                 tags?.get_string (Gst.Tags.ARTIST, out ar);
                 tags?.get_string (Gst.Tags.TITLE, out ti);
+                tags?.get_uint (Gst.Tags.TRACK_NUMBER, out track);
             }
             this.album = (al != null && al?.length > 0) ? (!)al : UNKOWN_ALBUM;
             this.artist = (ar != null && ar?.length > 0) ? (!)ar : UNKOWN_ARTIST;
@@ -55,6 +57,7 @@ namespace Music {
                 al = tags.album;
                 ar = tags.artist;
                 ti = tags.title;
+                track = tags.track;
             }
             this.album = (al != null && al?.length > 0) ? (!)al : UNKOWN_ALBUM;
             this.artist = (ar != null && ar?.length > 0) ? (!)ar : UNKOWN_ARTIST;
@@ -95,6 +98,8 @@ namespace Music {
             var s1 = (Song) obj1;
             var s2 = (Song) obj2;
             int ret = strcmp (s1._album_key, s2._album_key);
+            if (ret == 0)
+                ret = (int) (s1.track - s2.track);
             if (ret == 0)
                 ret = strcmp (s1._title_key, s2._title_key);
             if (ret == 0)
