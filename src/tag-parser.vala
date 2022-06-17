@@ -56,6 +56,10 @@ namespace Music {
             }
         }
 
+        if (tags_has_title_or_image (tags)) {
+            return tags;
+        }
+
         //  Parse and merge all the ending tags as possible
         try {
             var tags2 = parse_end_tags (stream);
