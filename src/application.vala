@@ -3,6 +3,7 @@ namespace Music {
     public const string ACTION_ABOUT = "about";
     public const string ACTION_PREFS = "preferences";
     public const string ACTION_EXPORT = "export";
+    public const string ACTION_OPENDIR = "opendir";
     public const string ACTION_PLAY = "play";
     public const string ACTION_PREV = "prev";
     public const string ACTION_NEXT = "next";
@@ -32,6 +33,7 @@ namespace Music {
         private Thumbnailer _thumbnailer = new Thumbnailer ();
         private Settings? _settings = new_application_settings ();
         private MprisPlayer? _mpris = null;
+        private Portal? _portal = null;
 
         public signal void loading_changed (bool loading, uint size);
         public signal void index_changed (int index, uint size);
@@ -45,6 +47,7 @@ namespace Music {
                 { ACTION_ABOUT, show_about },
                 { ACTION_PREFS, show_preferences },
                 { ACTION_EXPORT, export_cover },
+                { ACTION_OPENDIR, open_directory },
                 { ACTION_PLAY, play_pause },
                 { ACTION_PREV, play_previous },
                 { ACTION_NEXT, play_next },
@@ -385,6 +388,16 @@ namespace Music {
                     }
                 });
                 chooser.show ();
+            }
+        }
+
+        private void open_directory () {
+            var uri = _current_song?.uri;
+            if (uri != null) {
+                _portal = _portal ?? new Portal ();
+                ((!)_portal).open_directory_async.begin ((!)uri, (obj, res) => {
+                    ((!)_portal).open_directory_async.end (res);
+                });
             }
         }
 

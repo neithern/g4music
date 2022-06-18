@@ -199,6 +199,10 @@
         <attribute name="label" translatable="yes">_Export Cover</attribute>
         <attribute name="action">app.export</attribute>
       </item>
+      <item>
+        <attribute name="label" translatable="yes">_Show In Files</attribute>
+        <attribute name="action">app.opendir</attribute>
+      </item>
     </section>
   </menu>
 
