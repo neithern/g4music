@@ -2,6 +2,7 @@ namespace Music {
     public const string ACTION_APP = "app.";
     public const string ACTION_ABOUT = "about";
     public const string ACTION_PREFS = "preferences";
+    public const string ACTION_EXPORT = "export";
     public const string ACTION_PLAY = "play";
     public const string ACTION_PREV = "prev";
     public const string ACTION_NEXT = "next";
@@ -24,6 +25,7 @@ namespace Music {
     public class Application : Adw.Application {
         private int _current_item = -1;
         private Song? _current_song = null;
+        private Gst.Sample? _cover_image = null;
         private GstPlayer _player = new GstPlayer ();
         private Gtk.FilterListModel _song_list = new Gtk.FilterListModel (null, null);
         private SongStore _song_store = new SongStore ();
@@ -34,7 +36,7 @@ namespace Music {
         public signal void loading_changed (bool loading, uint size);
         public signal void index_changed (int index, uint size);
         public signal void song_changed (Song song);
-        public signal void song_tag_parsed (Song song, Bytes? image, string? itype);
+        public signal void song_tag_parsed (Song song, Gst.Sample? image);
 
         public Application () {
             Object (application_id: Config.APP_ID, flags: ApplicationFlags.HANDLES_OPEN);
@@ -42,6 +44,7 @@ namespace Music {
             ActionEntry[] action_entries = {
                 { ACTION_ABOUT, show_about },
                 { ACTION_PREFS, show_preferences },
+                { ACTION_EXPORT, export_cover },
                 { ACTION_PLAY, play_pause },
                 { ACTION_PREV, play_previous },
                 { ACTION_NEXT, play_next },
@@ -360,22 +363,44 @@ namespace Music {
             }
         }
 
-        private async void on_tag_parsed (string? album, string? artist, string? title, Bytes? image, string? itype) {
+        private void export_cover () {
+            if (_cover_image != null && active_window is Window) {
+                var sample = (!)_cover_image;
+                var itype = sample.get_caps ()?.get_structure (0)?.get_name ();
+                var pos = itype?.index_of_char ('/') ?? -1;
+                var ext = itype?.substring (pos + 1) ?? "";
+                var name = active_window.title.replace ("/", "&") + "." + ext;
+                var filter = new Gtk.FileFilter ();
+                filter.add_mime_type (itype ??  "image/*");
+                var chooser = new Gtk.FileChooserNative (null, active_window, Gtk.FileChooserAction.SAVE, null, null);
+                chooser.set_current_name (name);
+                chooser.set_filter (filter);
+                chooser.modal = true;
+                chooser.response.connect ((id) => {
+                    var file = chooser.get_file ();
+                    if (id == Gtk.ResponseType.ACCEPT && file != null) {
+                        save_sample_to_file.begin ((!)file, sample, (obj, res) => {
+                            save_sample_to_file.end (res);
+                        });
+                    }
+                });
+                chooser.show ();
+            }
+        }
+
+        private async void on_tag_parsed (string? album, string? artist, string? title, Gst.Sample? image) {
+            _cover_image = image;
             if (_current_song != null) {
                 var song = (!)current_song;
-                song_tag_parsed (song, image, itype);
+                song_tag_parsed (song, image);
 
                 string? cover_uri = null;
-                if (image != null) try {
+                if (image != null) {
                     var file = File.new_build_filename (Environment.get_tmp_dir (), application_id + "_" + str_hash (song.cover_uri).to_string ("%x"));
-                    var stream = yield file.create_async (FileCreateFlags.REPLACE_DESTINATION);
-                    yield stream.write_async (image?.get_data ());
-                    yield stream.close_async ();
+                    yield save_sample_to_file (file, (!)image);
                     yield delete_cover_tmp_file_async ();
                     _cover_tmp_file = file;
                     cover_uri = file.get_uri ();
-                } catch (Error e) {
-                    //  print ("Temp file failed: %s\n", e.message);
                 }
 
                 if (song == _current_song) {
@@ -385,6 +410,19 @@ namespace Music {
                     _mpris?.send_meta_data (song, cover_uri);
                 }
             }
+        }
+    }
+
+    public static async void save_sample_to_file (File file, Gst.Sample sample) {
+        try {
+            var buffer = sample.get_buffer ();
+            Gst.MapInfo? info = null;
+            if (buffer?.map (out info, Gst.MapFlags.READ) ?? false) {
+                var stream = yield file.create_async (FileCreateFlags.NONE);
+                yield stream.write_all_async (info?.data, Priority.DEFAULT, null, null);
+                buffer?.unmap ((!)info);
+            }
+        } catch (Error e) {
         }
     }
 }

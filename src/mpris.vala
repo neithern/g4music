@@ -56,7 +56,7 @@ namespace Music {
             send_meta_data (song);
         }
 
-        private void on_song_tag_parsed (Song song, Bytes? image) {
+        private void on_song_tag_parsed (Song song, Gst.Sample? image) {
             send_meta_data (song);
         }
 

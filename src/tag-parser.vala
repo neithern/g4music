@@ -325,7 +325,7 @@ namespace Music {
         }
     }
 
-    public static Gst.Sample? parse_image_sample_from_tag_list (Gst.TagList tags) {
+    public static Gst.Sample? parse_image_from_tag_list (Gst.TagList tags) {
         Gst.Sample? sample = null;
         if (tags.get_sample (Gst.Tags.IMAGE, out sample)) {
             return sample;
@@ -348,21 +348,5 @@ namespace Music {
             }
         }
         return null;
-    }
-
-    public static bool parse_image_from_tag_list (Gst.TagList tags, out Bytes? image, out string? itype) {
-        image = null;
-        itype = null;
-        Gst.Sample? sample = parse_image_sample_from_tag_list (tags);
-        if (sample != null) {
-            uint8[]? data = null;
-            var buffer = sample?.get_buffer ();
-            buffer?.extract_dup (0, buffer?.get_size () ?? 0, out data);
-            if (data != null) {
-                image = new Bytes.take (data);
-                itype = sample?.get_caps ()?.get_structure (0)?.get_name ();
-            }
-        }
-        return image != null;
     }
 }

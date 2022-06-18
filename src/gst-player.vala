@@ -30,7 +30,7 @@ namespace Music {
         public signal void end_of_stream ();
         public signal void position_updated (Gst.ClockTime position);
         public signal void state_changed (Gst.State state);
-        public signal void tag_parsed (string? album, string? artist, string? title, Bytes? image, string? itype);
+        public signal void tag_parsed (string? album, string? artist, string? title, Gst.Sample? image);
         public signal void peak_parsed (double peak);
 
         public GstPlayer () {
@@ -201,17 +201,16 @@ namespace Music {
             ret |= tags.get_string (Gst.Tags.ARTIST, out artist);
             ret |= tags.get_string (Gst.Tags.TITLE, out title);
 
-            Bytes? image = null;
-            string? itype = null;
-            ret |= parse_image_from_tag_list (tags, out image, out itype);
+            Gst.Sample? image = parse_image_from_tag_list (tags);
+            ret |= image != null;
             _tag_parsed = ret;
 
             var hash = str_hash (album ?? "") | str_hash (artist ?? "") | str_hash (title ?? "")
-                        | (image?.length ?? 0) | str_hash (itype ?? "");
+                        | (image?.get_buffer ()?.get_size () ?? 0);
             if (_tag_hash != hash) {
                 _tag_hash = hash;
                 // notify only when changed
-                tag_parsed (album, artist, title, image, itype);
+                tag_parsed (album, artist, title, image);
             }
         }
 

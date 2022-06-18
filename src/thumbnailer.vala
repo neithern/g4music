@@ -132,7 +132,7 @@ namespace Music {
             var pixbuf = yield run_async<Gdk.Pixbuf?> (() => {
                 var tag = tags[0] = parse_gst_tags (file);
                 Gst.Sample? sample = null;
-                if (tag != null && (sample = parse_image_sample_from_tag_list ((!)tag)) != null) {
+                if (tag != null && (sample = parse_image_from_tag_list ((!)tag)) != null) {
                     return load_clamp_pixbuf_from_gst_sample ((!)sample, size);
                 }
                 //  Try load album art cover file in the folder

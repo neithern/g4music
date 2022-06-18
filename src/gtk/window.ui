@@ -197,7 +197,7 @@
     <section>
       <item>
         <attribute name="label" translatable="yes">_Export Cover</attribute>
-        <attribute name="action">win.export-cover</attribute>
+        <attribute name="action">app.export</attribute>
       </item>
     </section>
   </menu>

@@ -1,8 +1,5 @@
 namespace Music {
 
-    public const string ACTION_WIN = "win.";
-    public const string ACTION_EXPORT_COVER = "export-cover";
-
     enum SearchType {
         ALL,
         ALBUM,
@@ -50,8 +47,6 @@ namespace Music {
         private Gdk.Paintable? _loading_paintable = create_text_paintable ("...");
 
         private string _loading_text = _("Loading...");
-        private Bytes? _cover_data = null;
-        private string? _cover_type = null;
 
         private string _search_text = "";
         private string _search_property = "";
@@ -63,10 +58,6 @@ namespace Music {
 
             app.settings?.bind ("width", this, "default-width", SettingsBindFlags.DEFAULT);
             app.settings?.bind ("height", this, "default-height", SettingsBindFlags.DEFAULT);
-
-            add_action_entries ({
-                { ACTION_EXPORT_COVER, on_export_cover }
-            }, this);
 
             setup_drop_target ();
 
@@ -222,27 +213,6 @@ namespace Music {
             }
         }
 
-        private void on_export_cover () {
-            var pos = _cover_type?.index_of_char ('/') ?? -1;
-            var ext = _cover_type?.substring (pos + 1) ?? "";
-            var name = this.title.replace ("/", "&") + "." + ext;
-            var filter = new Gtk.FileFilter ();
-            filter.add_mime_type (_cover_type ??  "image/*");
-            var chooser = new Gtk.FileChooserNative (null, this, Gtk.FileChooserAction.SAVE, null, null);
-            chooser.set_current_name (name);
-            chooser.set_filter (filter);
-            chooser.modal = true;
-            chooser.response.connect ((id) => {
-                var file = chooser.get_file ();
-                if (id == Gtk.ResponseType.ACCEPT && file != null && _cover_data != null) {
-                    save_data_to_file.begin ((!)file, (!)_cover_data, (obj, res) => {
-                        save_data_to_file.end (res);
-                    });
-                }
-            });
-            chooser.show ();
-        }
-
         private Adw.Animation? _scale_animation = null;
 
         private void on_player_state_changed (Gst.State state) {
@@ -289,19 +259,16 @@ namespace Music {
             print ("Play: %s\n", Uri.unescape_string (song.uri) ?? song.uri);
         }
 
-        private async void on_song_tag_parsed (Song song, Bytes? image, string? itype) {
+        private async void on_song_tag_parsed (Song song, Gst.Sample? image) {
             update_song_info (song);
 
-            _cover_data = image;
-            _cover_type = itype;
-            action_set_enabled (ACTION_WIN + ACTION_EXPORT_COVER, image != null);
+            action_set_enabled (ACTION_APP + ACTION_EXPORT, image != null);
 
             var app = (Application) application;
             if (image != null) {
                 var pixbufs = new Gdk.Pixbuf?[2] {null, null};
                 yield run_async<void> (() => {
-                    var stream = new MemoryInputStream.from_bytes ((!)image);
-                    var pixbuf = pixbufs[0] = load_clamp_pixbuf_from_stream (stream, 640);
+                    var pixbuf = load_clamp_pixbuf_from_gst_sample ((!)image, 640);
                     if (pixbuf != null)
                         pixbufs[1] = create_clamp_pixbuf ((!)pixbuf, Thumbnailer.icon_size);
                 }, true);
@@ -442,15 +409,6 @@ namespace Music {
                 return true;
             }
             return false;
-        }
-    }
-
-    public static async void save_data_to_file (File file, Bytes data) {
-        try {
-            var stream = yield file.create_async (FileCreateFlags.NONE);
-            yield stream.write_bytes_async (data);
-            yield stream.close_async ();
-        } catch (Error e) {
         }
     }
 }
