@@ -30,7 +30,7 @@
         <li>Supports drag-drop from file manager.</li>
         <li>Supports pipewire audio sink.</li>
         <li>Show dynamic audio peak when playing.</li>
-        <li>All these in a small package about 300KB.</li>
+        <li>All these in a small package with 300KB.</li>
         </ul>
     </description>
 
@@ -47,6 +47,17 @@
     </screenshots>
 
     <releases>
+        <release version="0.8" date="2022-06-18">
+            <description>
+                <ul>
+                <li>Show current song in Files.</li>
+                <li>Sort by track number in an album.</li>
+                <li>Sort text by prefix number.</li>
+                <li>Always follow sym-links when enumerate a foldes.</li>
+                <li>Add spanish translation, thanks to @Radi4Ever.</li>
+                </ul>
+            </description>
+        </release>
         <release version="0.7" date="2022-06-16">
             <description>
                 <ul>

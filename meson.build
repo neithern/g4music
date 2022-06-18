@@ -1,6 +1,6 @@
 project('com.github.neithern.g4music',
   ['c', 'vala'],
-  version: '0.7.0'
+  version: '0.8.0'
 )
 
 gnome = import('gnome')
@@ -13,6 +13,7 @@ add_project_arguments('-DGETTEXT_PACKAGE="' + app_id + '"', language: 'c')
 add_project_arguments('--enable-experimental-non-null', language: 'vala')
 
 libm_dep = meson.get_compiler('c').find_library('m', required: false)
+posix_dep = meson.get_compiler('vala').find_library('posix', required: false)
 
 taglib_c_dep = dependency('taglib_c', required: false)
 if taglib_c_dep.found()
@@ -24,6 +25,7 @@ dependencies = [
   dependency('gstreamer-tag-1.0'),
   dependency('libadwaita-1'),
   libm_dep,
+  posix_dep,
   taglib_c_dep,
 ]
 
