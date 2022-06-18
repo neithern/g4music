@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-14 20:25+0300\n"
+"POT-Creation-Date: 2022-06-18 20:47+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: @daudix-UFO\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:317
+#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:330
 #: src/main.vala:24
 msgid "G4Music"
 msgstr "G4Music"
@@ -54,13 +54,9 @@ msgstr "Использовать приемник звука pipewire"
 msgid "Show audio peak level"
 msgstr "Показывать пик уровня звука"
 
-#: data/app.gschema.xml:27 src/gtk/window.ui:41
+#: data/app.gschema.xml:27 src/gtk/window.ui:62
 msgid "Sort Mode"
 msgstr "Режим сортировки"
-
-#: data/app.gschema.xml:31 data/app.gschema.xml:35
-msgid "Played uri when quit"
-msgstr "uri, проигранный при выходе"
 
 #: src/gtk/help-overlay.ui:11
 msgctxt "shortcut window"
@@ -123,51 +119,55 @@ msgstr "Воспроизведение"
 msgid "Experimental"
 msgstr "Экспериментальное"
 
-#: src/gtk/window.ui:27
-msgid "Search"
-msgstr "Поиск"
-
-#: src/gtk/window.ui:90
-msgid "Toggle Playlist"
-msgstr "Переключить плейлист"
-
-#: src/gtk/window.ui:97
+#: src/gtk/window.ui:33
 msgid "Main Menu"
 msgstr "Главное меню"
 
-#: src/gtk/window.ui:160
+#: src/gtk/window.ui:55
+msgid "Search"
+msgstr "Поиск"
+
+#: src/gtk/window.ui:123
+msgid "Back"
+msgstr ""
+
+#: src/gtk/window.ui:199
 msgid "_Export Cover"
 msgstr "_Экспортировать обложку"
 
-#: src/gtk/window.ui:166
+#: src/gtk/window.ui:203
+msgid "_Show In Files"
+msgstr ""
+
+#: src/gtk/window.ui:212
 msgid "_Preferences"
 msgstr "_Параметры"
 
-#: src/gtk/window.ui:170
+#: src/gtk/window.ui:216
 msgid "_Keyboard Shortcuts"
 msgstr "_Комбинации клавиш"
 
-#: src/gtk/window.ui:174
+#: src/gtk/window.ui:220
 msgid "_About G4Music"
 msgstr "_О G4Music"
 
-#: src/gtk/window.ui:184
+#: src/gtk/window.ui:230
 msgid "By Album"
 msgstr "По альбому"
 
-#: src/gtk/window.ui:190
+#: src/gtk/window.ui:236
 msgid "By Artist"
 msgstr "По артисту"
 
-#: src/gtk/window.ui:196
+#: src/gtk/window.ui:242
 msgid "By Title"
 msgstr "По названию"
 
-#: src/gtk/window.ui:202
+#: src/gtk/window.ui:248
 msgid "Shuffle"
 msgstr "Перемешать"
 
-#: src/application.vala:321
+#: src/application.vala:334
 msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr "Быстрый, флуоресцентный, легкий музыкальный проигрыватель, написанный на GTK4."
 
@@ -187,14 +187,14 @@ msgstr "Воспроизведение/Пауза"
 msgid "Play Next"
 msgstr "Играть следующее"
 
-#: src/song-store.vala:2
+#: src/song.vala:2
 msgid "Unknown Album"
 msgstr "Неизвестный альбом"
 
-#: src/song-store.vala:3
+#: src/song.vala:3
 msgid "Unknown Aritst"
 msgstr "Неизвестный артист"
 
-#: src/window.vala:44
+#: src/window.vala:49
 msgid "Loading..."
 msgstr "Загрузка..."

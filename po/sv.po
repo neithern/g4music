@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-12 19:17+0800\n"
+"POT-Creation-Date: 2022-06-18 20:47+0800\n"
 "PO-Revision-Date: 2022-06-14 13:01+0200\n"
 "Last-Translator: Åke Engelbrektson <eson@svenskasprakfiler.se>\n"
 "Language-Team: \n"
@@ -18,7 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.1\n"
 
-#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:317
+#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:330
 #: src/main.vala:24
 msgid "G4Music"
 msgstr "G4Music"
@@ -55,13 +55,9 @@ msgstr "Använd pipewire ljudbehållare"
 msgid "Show audio peak level"
 msgstr "Visa ljudtoppnivå"
 
-#: data/app.gschema.xml:27 src/gtk/window.ui:41
+#: data/app.gschema.xml:27 src/gtk/window.ui:62
 msgid "Sort Mode"
 msgstr "Sorteringsläge"
-
-#: data/app.gschema.xml:31 data/app.gschema.xml:35
-msgid "Played uri when quit"
-msgstr "Spelad URI vid avslut"
 
 #: src/gtk/help-overlay.ui:11
 msgctxt "shortcut window"
@@ -124,51 +120,55 @@ msgstr "Uppspelning"
 msgid "Experimental"
 msgstr "Experimentellt"
 
-#: src/gtk/window.ui:27
-msgid "Search"
-msgstr "Sök"
-
-#: src/gtk/window.ui:90
-msgid "Toggle Playlist"
-msgstr "Spelningslista på/av"
-
-#: src/gtk/window.ui:97
+#: src/gtk/window.ui:33
 msgid "Main Menu"
 msgstr "Huvudmeny"
 
-#: src/gtk/window.ui:160
+#: src/gtk/window.ui:55
+msgid "Search"
+msgstr "Sök"
+
+#: src/gtk/window.ui:123
+msgid "Back"
+msgstr ""
+
+#: src/gtk/window.ui:199
 msgid "_Export Cover"
 msgstr "_Exportera omslag"
 
-#: src/gtk/window.ui:166
+#: src/gtk/window.ui:203
+msgid "_Show In Files"
+msgstr ""
+
+#: src/gtk/window.ui:212
 msgid "_Preferences"
 msgstr "_Inställningar"
 
-#: src/gtk/window.ui:170
+#: src/gtk/window.ui:216
 msgid "_Keyboard Shortcuts"
 msgstr "_Tangentbordsgenvägar"
 
-#: src/gtk/window.ui:174
+#: src/gtk/window.ui:220
 msgid "_About G4Music"
 msgstr "_Om G4Music"
 
-#: src/gtk/window.ui:184
+#: src/gtk/window.ui:230
 msgid "By Album"
 msgstr "Efter album"
 
-#: src/gtk/window.ui:190
+#: src/gtk/window.ui:236
 msgid "By Artist"
 msgstr "Efter artist"
 
-#: src/gtk/window.ui:196
+#: src/gtk/window.ui:242
 msgid "By Title"
 msgstr "Efter titel"
 
-#: src/gtk/window.ui:202
+#: src/gtk/window.ui:248
 msgid "Shuffle"
 msgstr "Blanda"
 
-#: src/application.vala:321
+#: src/application.vala:334
 msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr "En snabb lättflytande musikspelare skriven i GTK4."
 
@@ -188,14 +188,14 @@ msgstr "Spela/Pausa"
 msgid "Play Next"
 msgstr "Spela nästa"
 
-#: src/song-store.vala:2
+#: src/song.vala:2
 msgid "Unknown Album"
 msgstr "Okänt album"
 
-#: src/song-store.vala:3
+#: src/song.vala:3
 msgid "Unknown Aritst"
 msgstr "Okänd artist"
 
-#: src/window.vala:44
+#: src/window.vala:49
 msgid "Loading..."
 msgstr "Hämtar..."

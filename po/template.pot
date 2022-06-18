@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-12 19:17+0800\n"
+"POT-Creation-Date: 2022-06-18 20:47+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:317
+#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:330
 #: src/main.vala:24
 msgid "G4Music"
 msgstr ""
@@ -54,12 +54,8 @@ msgstr ""
 msgid "Show audio peak level"
 msgstr ""
 
-#: data/app.gschema.xml:27 src/gtk/window.ui:41
+#: data/app.gschema.xml:27 src/gtk/window.ui:62
 msgid "Sort Mode"
-msgstr ""
-
-#: data/app.gschema.xml:31 data/app.gschema.xml:35
-msgid "Played uri when quit"
 msgstr ""
 
 #: src/gtk/help-overlay.ui:11
@@ -123,51 +119,55 @@ msgstr ""
 msgid "Experimental"
 msgstr ""
 
-#: src/gtk/window.ui:27
-msgid "Search"
-msgstr ""
-
-#: src/gtk/window.ui:90
-msgid "Toggle Playlist"
-msgstr ""
-
-#: src/gtk/window.ui:97
+#: src/gtk/window.ui:33
 msgid "Main Menu"
 msgstr ""
 
-#: src/gtk/window.ui:160
+#: src/gtk/window.ui:55
+msgid "Search"
+msgstr ""
+
+#: src/gtk/window.ui:123
+msgid "Back"
+msgstr ""
+
+#: src/gtk/window.ui:199
 msgid "_Export Cover"
 msgstr ""
 
-#: src/gtk/window.ui:166
+#: src/gtk/window.ui:203
+msgid "_Show In Files"
+msgstr ""
+
+#: src/gtk/window.ui:212
 msgid "_Preferences"
 msgstr ""
 
-#: src/gtk/window.ui:170
+#: src/gtk/window.ui:216
 msgid "_Keyboard Shortcuts"
 msgstr ""
 
-#: src/gtk/window.ui:174
+#: src/gtk/window.ui:220
 msgid "_About G4Music"
 msgstr ""
 
-#: src/gtk/window.ui:184
+#: src/gtk/window.ui:230
 msgid "By Album"
 msgstr ""
 
-#: src/gtk/window.ui:190
+#: src/gtk/window.ui:236
 msgid "By Artist"
 msgstr ""
 
-#: src/gtk/window.ui:196
+#: src/gtk/window.ui:242
 msgid "By Title"
 msgstr ""
 
-#: src/gtk/window.ui:202
+#: src/gtk/window.ui:248
 msgid "Shuffle"
 msgstr ""
 
-#: src/application.vala:321
+#: src/application.vala:334
 msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr ""
 
@@ -187,14 +187,14 @@ msgstr ""
 msgid "Play Next"
 msgstr ""
 
-#: src/song-store.vala:2
+#: src/song.vala:2
 msgid "Unknown Album"
 msgstr ""
 
-#: src/song-store.vala:3
+#: src/song.vala:3
 msgid "Unknown Aritst"
 msgstr ""
 
-#: src/window.vala:44
+#: src/window.vala:49
 msgid "Loading..."
 msgstr ""
