@@ -6,8 +6,8 @@ namespace Music {
         public async void open_directory_async (string uri) {
             _bus = _bus ?? yield get_connection_async ();
             if (_bus != null) try {
-                var file = File.new_for_uri (uri);
-                var fd = GLib.open ((!)file.get_path (), 02 | 02000000); // O_RDWR | O_CLOEXEC
+                var file = File.new_for_uri (uri);                
+                var fd = Posix.open ((!)file.get_path (), 02000000); // O_CLOEXEC
                 var fd_list = new GLib.UnixFDList ();
                 fd_list.append (fd);
                 var param = new Variant ("(sha{sv})", "", 0);

@@ -34,7 +34,6 @@ sources += gnome.compile_resources('g4music-resources',
 executable('g4music', sources,
   vala_args: [
     meson.current_source_dir () + '/config.vapi',
-    meson.current_source_dir () + '/glib-ext.vapi',
     meson.current_source_dir () + '/gst-ext.vapi',
   ],
   dependencies: dependencies,
