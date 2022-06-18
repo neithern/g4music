@@ -148,10 +148,9 @@ namespace Music {
                 return null;
                  //  run in single_thread_pool for samba to save connections
             }, false, file.has_uri_scheme ("smb"));
-            if (song.ttype != TagType.GST) {
-                //  Tag from others maybe not with correct encoding
-                song.init_from_gst_tags (tags[0]);
-                song.update_keys ();
+            if (! song.has_tags) {
+                //  Update tags if not has
+                song.from_gst_tags (tags[0]);
             }
             if (cover_uri[0] != null) {
                 //  Update cover uri if available
