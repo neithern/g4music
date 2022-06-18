@@ -129,7 +129,7 @@ msgstr "Поиск"
 
 #: src/gtk/window.ui:123
 msgid "Back"
-msgstr ""
+msgstr "Назад"
 
 #: src/gtk/window.ui:199
 msgid "_Export Cover"
@@ -137,7 +137,7 @@ msgstr "_Экспортировать обложку"
 
 #: src/gtk/window.ui:203
 msgid "_Show In Files"
-msgstr ""
+msgstr "_Показать в файлах"
 
 #: src/gtk/window.ui:212
 msgid "_Preferences"
