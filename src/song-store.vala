@@ -213,7 +213,7 @@ namespace Music {
                 song.from_taglib (tf);
             }
 #else
-            if (file.has_uri_scheme ("file")) {
+            if (file.is_native ()) {
                 var tags = parse_gst_tags (file);
                 song.from_gst_tags (tags);
             }
