@@ -13,6 +13,10 @@
       <default>false</default>
       <summary>Load thumbnails for non-local files</summary>
     </key>
+    <key name="remain-progress" type="b">
+      <default>false</default>
+      <summary>Show remain progress</summary>
+    </key>
     <key name="pipewire-sink" type="b">
       <default>false</default>
       <summary>Use pipewire audio sink</summary>

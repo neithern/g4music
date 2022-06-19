@@ -4,12 +4,13 @@ namespace Music {
         private Gtk.Scale _seek = new Gtk.Scale (Gtk.Orientation.HORIZONTAL, null);
         private Gtk.Label _peak = new Gtk.Label (null);
         private Gtk.Label _positive = new Gtk.Label ("0:00");
-        private Gtk.Label _negative = new Gtk.Label ("-0:00");
+        private Gtk.Label _negative = new Gtk.Label ("0:00");
         private Gtk.ToggleButton _repeat = new Gtk.ToggleButton ();
         private Gtk.Button _prev = new Gtk.Button ();
         private Gtk.Button _play = new Gtk.Button ();
         private Gtk.Button _next = new Gtk.Button ();
         private Gtk.VolumeButton _volume = new Gtk.VolumeButton ();
+        private bool _negative_progress = false;
         private int _duration = 1;
         private int _position = 0;
         private int _peak_length = 0;
@@ -59,6 +60,17 @@ namespace Music {
             _negative.add_css_class ("caption");
             _negative.add_css_class ("dim-label");
             _negative.add_css_class ("numeric");
+
+            var settings = app.settings;
+            _negative_progress = settings?.get_boolean ("remain-progress") ?? false;
+
+            var controller = new Gtk.GestureClick ();
+            _negative.add_controller (controller);
+            controller.released.connect (() => {
+                _negative_progress = !_negative_progress;
+                update_negative_label ();
+                settings?.set_boolean ("remain-progress", _negative_progress);
+            });
 
             var buttons = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 16);
             buttons.halign = Gtk.Align.CENTER;
@@ -128,7 +140,7 @@ namespace Music {
             set {
                 _duration = (int) (value + 0.5);
                 _seek.set_range (0, _duration);
-                _negative.label = "-" + format_time (_duration - _position);
+                update_negative_label ();
             }
         }
 
@@ -137,10 +149,18 @@ namespace Music {
                 if (_position != (int) value) {
                     _position = (int) value;
                     _positive.label = format_time (_position);
-                    _negative.label = "-" + format_time (_duration - _position);
+                    if (_negative_progress)
+                        _negative.label = "-" + format_time (_duration - _position);
                 }
                 _seek.set_value (value);
             }
+        }
+
+        private void update_negative_label () {
+            if (_negative_progress)
+                _negative.label = "-" + format_time (_duration - _position);
+            else
+                _negative.label = format_time (_duration);
         }
     }
 
