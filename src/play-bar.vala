@@ -18,15 +18,15 @@ namespace Music {
         construct {
             orientation = Gtk.Orientation.VERTICAL;
             halign = Gtk.Align.CENTER;
-            margin_top = 16;
-            margin_bottom = 24;
+            margin_top = 9;
+            margin_bottom = 32;
 
             var app = (Application) GLib.Application.get_default ();
             var player = app.player;
 
             _seek.set_range (0, _duration);
             _seek.halign = Gtk.Align.FILL;
-            _seek.width_request = 256;
+            _seek.width_request = 272;
             _seek.adjust_bounds.connect ((value) => {
                 player.seek (GstPlayer.from_second (value));
             });

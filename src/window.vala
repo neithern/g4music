@@ -262,7 +262,7 @@ namespace Music {
             if (image != null) {
                 var pixbufs = new Gdk.Pixbuf?[2] {null, null};
                 yield run_async<void> (() => {
-                    var pixbuf = load_clamp_pixbuf_from_gst_sample ((!)image, 480);
+                    var pixbuf = load_clamp_pixbuf_from_gst_sample ((!)image, 1024);
                     if (pixbuf != null)
                         pixbufs[1] = create_clamp_pixbuf ((!)pixbuf, Thumbnailer.icon_size);
                 }, true);
@@ -278,7 +278,7 @@ namespace Music {
             }
 
             if (song == app.current_song) {
-                var paintable = yield app.thumbnailer.load_directly_async (song, 480);
+                var paintable = yield app.thumbnailer.load_directly_async (song, 1024);
                 update_cover_paintable (song, paintable);
             }
         }

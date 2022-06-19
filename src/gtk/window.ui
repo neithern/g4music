@@ -144,6 +144,8 @@
                         <property name="margin_top">16</property>
                         <child>
                           <object class="GtkImage" id="cover_image">
+                            <property name="hexpand">true</property>
+                            <property name="vexpand">true</property>
                             <property name="pixel_size">240</property>
                           </object>
                         </child>
