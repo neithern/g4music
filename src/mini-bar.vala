@@ -3,13 +3,12 @@ namespace Music {
     public class MiniBar : Adw.ActionRow {
         private Gtk.Image _cover = new Gtk.Image ();
         private Gtk.Label _title = new Gtk.Label (null);
-        private Gtk.Label _peak = new Gtk.Label (null);
+        private PeakBar _peak = new PeakBar ();
         private Gtk.Button _play = new Gtk.Button ();
         private Gtk.Button _next = new Gtk.Button ();
 
         private CrossFadePaintable _paintable = new CrossFadePaintable ();
         private Adw.Animation? _fade_animation = null;
-        private int _peak_length = 0;
 
         construct {
             halign = Gtk.Align.FILL;
@@ -32,10 +31,11 @@ namespace Music {
             _title.ellipsize = Pango.EllipsizeMode.END;
             _title.add_css_class ("caption-heading");
 
-            _peak.halign = Gtk.Align.START;
-            _peak.add_css_class ("caption");
+            _peak.halign = Gtk.Align.FILL;
+            _peak.hexpand = true;
+            _peak.width_request = 160;
+            _peak.height_request = 15;
             _peak.add_css_class ("dim-label");
-            _peak.add_css_class ("numeric");
 
             _cover.valign = Gtk.Align.CENTER;
             _cover.pixel_size = 40;
@@ -70,17 +70,9 @@ namespace Music {
             player.state_changed.connect ((state) => {
                 var playing = state == Gst.State.PLAYING;
                 _play.icon_name = playing ? "media-playback-pause-symbolic" : "media-playback-start-symbolic";
-                if (state < Gst.State.PLAYING) {
-                    _peak_length = 0;
-                    _peak.label = "";
-                }
             });
             player.peak_parsed.connect ((peak) => {
-                var length = peak > 0 ? (int) (peak * 18) / 2 * 2 + 1 : 0;
-                if (_peak_length != length) {
-                    _peak_length = length;
-                    _peak.label = length > 0 ? string.nfill (length, '=') : "";
-                }
+                _peak.peak = peak;
             });
         }
 

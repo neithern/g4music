@@ -9,6 +9,7 @@ sources = [
   'mini-bar.vala',
   'mpris.vala',
   'paintables.vala',
+  'peak-bar.vala',
   'play-bar.vala',
   'portal.vala',
   'preferences.vala',

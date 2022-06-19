@@ -2,7 +2,7 @@ namespace Music {
 
     public class PlayBar : Gtk.Box {
         private Gtk.Scale _seek = new Gtk.Scale (Gtk.Orientation.HORIZONTAL, null);
-        private Gtk.Label _peak = new Gtk.Label (null);
+        private PeakBar _peak = new PeakBar ();
         private Gtk.Label _positive = new Gtk.Label ("0:00");
         private Gtk.Label _negative = new Gtk.Label ("0:00");
         private Gtk.ToggleButton _repeat = new Gtk.ToggleButton ();
@@ -13,7 +13,6 @@ namespace Music {
         private bool _negative_progress = false;
         private int _duration = 1;
         private int _position = 0;
-        private int _peak_length = 0;
 
         construct {
             orientation = Gtk.Orientation.VERTICAL;
@@ -43,11 +42,10 @@ namespace Music {
             overlay.add_overlay (_peak);
             append (overlay);
 
+            _peak.align = Gtk.Align.CENTER;
             _peak.halign = Gtk.Align.CENTER;
-            _peak.valign = Gtk.Align.CENTER;
-            _peak.add_css_class ("caption");
+            _peak.width_request = 160;
             _peak.add_css_class ("dim-label");
-            _peak.add_css_class ("numeric");
 
             _positive.halign = Gtk.Align.START;
             _positive.margin_start = 12;
@@ -122,17 +120,9 @@ namespace Music {
             player.state_changed.connect ((state) => {
                 var playing = state == Gst.State.PLAYING;
                 _play.icon_name = playing ? "media-playback-pause-symbolic" : "media-playback-start-symbolic";
-                if (state < Gst.State.PLAYING) {
-                    _peak_length = 0;
-                    _peak.label = "";
-                }
             });
             player.peak_parsed.connect ((peak) => {
-                var length = peak > 0 ? (int) (peak * 18) / 2 * 2 + 1 : 0;
-                if (_peak_length != length) {
-                    _peak_length = length;
-                    _peak.label = length > 0 ? string.nfill (length, '=') : "";
-                }
+                _peak.peak = peak;
             });
         }
 
