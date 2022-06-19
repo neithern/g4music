@@ -64,7 +64,7 @@ namespace Music {
             this.artist = (ar != null && ar?.length > 0) ? (!)ar : UNKOWN_ARTIST;
             if (ti != null && ti?.length > 0) this.title = (!)ti;
             if ((int) tr > 0) this.track = (int) tr;
-            parsed = true;
+            has_tags = true;
             update_keys ();
         }
 #endif
