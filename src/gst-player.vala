@@ -118,7 +118,7 @@ namespace Music {
             if (_timer != null) {
                 reset_timer ();
             }
-            peak_parsed (-1);
+            peak_parsed (0);
         }
 
         public void use_pipewire (bool use) {
@@ -224,14 +224,14 @@ namespace Music {
             }
 
             if (_show_peak) {
+                double peak = 0;
                 dynamic var sink = _audio_sink ?? _pipeline?.audio_sink;
-                if (sink != null) {
-                    double peak = 0;
+                if (sink != null && _state >= Gst.State.PAUSED) {
                     dynamic Gst.Sample? sample = ((!)sink).last_sample;
-                    if (sample != null && parse_peak_in_sample ((!)sample, out peak)) {
-                        peak_parsed (peak);
-                    }
+                    if (sample != null)
+                        parse_peak_in_sample ((!)sample, out peak);
                 }
+                peak_parsed (peak);
             }
             return true;
         }
