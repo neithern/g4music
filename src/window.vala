@@ -71,8 +71,12 @@ namespace Music {
             sort_mode = app.sort_mode;
 
             search_btn.toggled.connect (() => {
-                if (search_btn.active)
+                if (search_btn.active) {
                     search_entry.grab_focus ();
+                    if (leaflet.folded) {
+                        leaflet.navigate (Adw.NavigationDirection.BACK);
+                    }
+                }
                 update_song_filter ();
             });
             search_entry.search_changed.connect (on_search_text_changed);
