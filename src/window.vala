@@ -133,12 +133,6 @@ namespace Music {
             app.player.state_changed.connect (on_player_state_changed);
         }
 
-        public Gdk.Paintable? cover_paintable {
-            get {
-                return _cover_paintable.paintable;
-            }
-        }
-
         public bool leaflet_folded {
             set {
                 leaflet.navigate (Adw.NavigationDirection.FORWARD);
@@ -268,7 +262,7 @@ namespace Music {
             if (image != null) {
                 var pixbufs = new Gdk.Pixbuf?[2] {null, null};
                 yield run_async<void> (() => {
-                    var pixbuf = load_clamp_pixbuf_from_gst_sample ((!)image, 640);
+                    var pixbuf = load_clamp_pixbuf_from_gst_sample ((!)image, 480);
                     if (pixbuf != null)
                         pixbufs[1] = create_clamp_pixbuf ((!)pixbuf, Thumbnailer.icon_size);
                 }, true);
@@ -284,7 +278,7 @@ namespace Music {
             }
 
             if (song == app.current_song) {
-                var paintable = yield app.thumbnailer.load_directly_async (song, 640);
+                var paintable = yield app.thumbnailer.load_directly_async (song, 480);
                 update_cover_paintable (song, paintable);
             }
         }
@@ -366,11 +360,8 @@ namespace Music {
 
         private void update_cover_paintable (Song song, Gdk.Paintable? paintable) {
             var app = (Application) application;
-            if (paintable == null) {
-                paintable = app.thumbnailer.find (song.cover_uri);
-            }
-            _cover_paintable.paintable = paintable;
-            _mini_bar.cover = paintable;
+            _mini_bar.cover = app.thumbnailer.find (song.cover_uri);
+            _cover_paintable.paintable = paintable ?? _mini_bar.cover;
 
             var width = get_width ();
             var height = get_height ();

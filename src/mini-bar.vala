@@ -85,6 +85,9 @@ namespace Music {
         }
 
         public Gdk.Paintable? cover {
+            get {
+                return _paintable.paintable;
+            }
             set {
                 _paintable.paintable = value;
 
