@@ -220,7 +220,8 @@ namespace Music {
 #endif
             if (song.title.length == 0) {
                 //  title should always not empty
-                song.title = parse_name_from_path (name);
+                var end = name.last_index_of_char ('.');
+                song.title = end > 0 ? name.substring (0, end) : name;
                 song.update_keys ();
             }
         }

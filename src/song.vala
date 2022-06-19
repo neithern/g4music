@@ -199,24 +199,4 @@ namespace Music {
         }
         return text.up ();
     }
-
-    public static string parse_name_from_path (string path) {
-        var begin = path.last_index_of_char ('/');
-        var end = path.last_index_of_char ('.');
-        if (end > begin)
-            return path.slice (begin + 1, end);
-        else if (begin > 0)
-            return path.slice (begin + 1, path.length);
-        return path;
-    }
-
-    public static string parse_name_from_uri (string uri) {
-        try {
-            var u = Uri.parse (uri, UriFlags.NONE);
-            return parse_name_from_path (u.get_path ());
-        } catch (Error e) {
-            warning ("Parse %s: %s\n", uri, e.message);
-        }
-        return uri;
-    }
 }
