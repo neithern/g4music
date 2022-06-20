@@ -15,18 +15,12 @@ add_project_arguments('--enable-experimental-non-null', language: 'vala')
 libm_dep = meson.get_compiler('c').find_library('m', required: false)
 posix_dep = meson.get_compiler('vala').find_library('posix', required: false)
 
-taglib_c_dep = dependency('taglib_c', required: false)
-if taglib_c_dep.found()
-  add_project_arguments('--define=HAS_TAGLIB_C', language: 'vala')
-endif
-
 dependencies = [
   dependency('gstreamer-1.0'),
   dependency('gstreamer-tag-1.0'),
   dependency('libadwaita-1'),
   libm_dep,
   posix_dep,
-  taglib_c_dep,
 ]
 
 subdir('data')
