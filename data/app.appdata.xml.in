@@ -47,13 +47,23 @@
     </screenshots>
 
     <releases>
+        <release version="0.9" date="2022-06-20">
+            <description>
+                <ul>
+                <li>Scale album cover to fix large window.</li>
+                <li>Navigate back if start search and folded.</li>
+                <li>Draw peak to avoid resizing the window.</li>
+                <li>Request host file permisson in flatpak.</li>
+                </ul>
+            </description>
+        </release>
         <release version="0.8" date="2022-06-18">
             <description>
                 <ul>
                 <li>Show current song in Files.</li>
                 <li>Sort by track number in an album.</li>
                 <li>Sort text by prefix number.</li>
-                <li>Always follow sym-links when enumerate a foldes.</li>
+                <li>Always follow sym-links when enumerate a folder.</li>
                 <li>Add spanish translation, thanks to @Radi4Ever.</li>
                 </ul>
             </description>
