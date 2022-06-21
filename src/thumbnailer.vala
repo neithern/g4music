@@ -46,7 +46,7 @@ namespace Music {
     }
 
     //  Sorted by insert order
-    public class LruCache<V> {
+    public class LruCache<V> : Object {
         public static uint MAX_SIZE = 50 * 1024 * 1024;
         public static CompareDataFunc<string> compare_string = (a, b) => { return strcmp (a, b); };
 
@@ -97,6 +97,9 @@ namespace Music {
         private bool _remote_thumbnail = false;
 
         public bool remote_thumbnail {
+            get {
+                return _remote_thumbnail;
+            }
             set {
                 _remote_thumbnail = value;
             }

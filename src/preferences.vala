@@ -62,23 +62,13 @@ namespace Music {
             });
 
             settings?.bind ("remote-thumbnail", thumbnail_btn, "state", SettingsBindFlags.GET_NO_CHANGES);
-            thumbnail_btn.state_set.connect ((state) => {
-                app.thumbnailer.remote_thumbnail = state;
-                return false;
-            });
+            thumbnail_btn.bind_property ("state", app.thumbnailer, "remote_thumbnail", BindingFlags.DEFAULT);
 
             settings?.bind ("pipewire-sink", pipewire_btn, "state", SettingsBindFlags.GET_NO_CHANGES);
-            pipewire_btn.state_set.connect ((state) => {
-                app.player.use_pipewire (state);
-                app.player.restart ();
-                return false;
-            });
+            pipewire_btn.bind_property ("state", app.player, "pipewire_sink", BindingFlags.DEFAULT);
 
             settings?.bind ("show-peak", peak_btn, "state", SettingsBindFlags.GET_NO_CHANGES);
-            peak_btn.state_set.connect ((state) => {
-                app.player.show_peak (state);
-                return false;
-            });
+            peak_btn.bind_property ("state", app.player, "show_peak", BindingFlags.DEFAULT);
         }
 
         private static string get_display_name (File dir) {

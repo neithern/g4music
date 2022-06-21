@@ -86,6 +86,35 @@ namespace Music {
             }
         }
 
+        public bool pipewire_sink {
+            get {
+                unowned var name = _audio_sink?.get_type ()?.name () ?? "";
+                return name == "GstPipeWireSink";
+            }
+            set {
+                if (_pipeline != null) {
+                    _audio_sink = Gst.ElementFactory.make (value ? "pipewiresink" : "pulsesink", "audiosink");
+                    ((!)_audio_sink).enable_last_sample = true;
+                    ((!)_pipeline).audio_sink = _audio_sink;
+                    print (@"Enable pipewire: $(value && _audio_sink != null)\n");
+                    restart ();
+                }
+            }
+        }
+
+        public bool show_peak {
+            get {
+                return _show_peak;
+            }
+            set {
+                _show_peak = value;
+                if (_timer != null) {
+                    reset_timer ();
+                }
+                peak_parsed (0);
+            }
+        }
+
         public double volume { get; set; }
 
         public void play () {
@@ -110,23 +139,6 @@ namespace Music {
                 //  print ("Seek: %g -> %g\n", to_second (_last_seeked_pos), to_second (position));
                 _last_seeked_pos = position;
                 _pipeline?.seek_simple (Gst.Format.TIME, Gst.SeekFlags.ACCURATE | Gst.SeekFlags.FLUSH, (int64) position);
-            }
-        }
-
-        public void show_peak (bool show) {
-            _show_peak = show;
-            if (_timer != null) {
-                reset_timer ();
-            }
-            peak_parsed (0);
-        }
-
-        public void use_pipewire (bool use) {
-            if (_pipeline != null) {
-                _audio_sink = Gst.ElementFactory.make (use ? "pipewiresink" : "pulsesink", "audiosink");
-                ((!)_audio_sink).enable_last_sample = true;
-                ((!)_pipeline).audio_sink = _audio_sink;
-                print (@"Enable pipewire: $(use && _audio_sink != null)\n");
             }
         }
 

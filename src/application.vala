@@ -81,8 +81,8 @@ namespace Music {
 
             sort_mode = (SortMode) (_settings?.get_uint ("sort-mode") ?? SortMode.TITLE);
 
-            _player.show_peak (_settings?.get_boolean ("show-peak") ?? false);
-            _player.use_pipewire (_settings?.get_boolean ("pipewire-sink") ?? false);
+            _player.pipewire_sink = _settings?.get_boolean ("pipewire-sink") ?? false;
+            _player.show_peak = _settings?.get_boolean ("show-peak") ?? false;
             _player.volume = _settings?.get_double ("volume") ?? 1;
             _thumbnailer.remote_thumbnail = _settings?.get_boolean ("remote-thumbnail") ?? false;
 
