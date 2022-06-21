@@ -143,7 +143,7 @@ namespace Music {
 
         public void seek (Gst.ClockTime position) {
             var diff = (Gst.ClockTimeDiff) (position - _last_seeked_pos);
-            if (diff > 10 * Gst.MSECOND || diff < -10 * Gst.MSECOND) {
+            if (diff > 50 * Gst.MSECOND || diff < -50 * Gst.MSECOND) {
                 //  print ("Seek: %g -> %g\n", to_second (_last_seeked_pos), to_second (position));
                 _last_seeked_pos = position;
                 _pipeline?.seek_simple (Gst.Format.TIME, Gst.SeekFlags.ACCURATE | Gst.SeekFlags.FLUSH, (int64) position);
@@ -165,18 +165,18 @@ namespace Music {
                         if (old == Gst.State.READY && state == Gst.State.PAUSED) {
                             on_duration_changed ();
                         }
-                        if (_state != state) {
+                        if (old != state && _state != state) {
                             _state = state;
+                            if (state == Gst.State.PLAYING) {
+                                reset_timer ();
+                            } else {
+                                _timer?.destroy ();
+                                _timer = null;
+                            }
+                            state_changed (state);
+                            timeout_callback ();
                             //  print ("State changed: %d -> %d\n", old, state);
-                            state_changed (_state);
                         }
-                        if (state == Gst.State.PLAYING) {
-                            reset_timer ();
-                        } else {
-                            _timer?.destroy ();
-                            _timer = null;
-                        }
-                        timeout_callback ();
                     }
                     break;
 
