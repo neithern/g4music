@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-18 20:47+0800\n"
+"POT-Creation-Date: 2022-06-21 15:28+0800\n"
 "PO-Revision-Date: 2022-05-31 20:35+0800\n"
 "Last-Translator: Alen <neithern@outlook.com>\n"
 "Language-Team: Chinese (simplified)\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:330
+#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:331
 #: src/main.vala:24
 msgid "G4Music"
 msgstr "G4音乐"
@@ -33,30 +33,6 @@ msgstr "播放音乐"
 #: data/app.desktop.in:12
 msgid "music;sound;player;media;audio;playlist;"
 msgstr "音乐;声音;播放器;媒体;音频;播放列表;"
-
-#: data/app.gschema.xml:6 src/gtk/preferences.ui:15
-msgid "Prefer dark theme"
-msgstr "优先使用深色主题"
-
-#: data/app.gschema.xml:10 src/gtk/preferences.ui:31
-msgid "Load music from folder"
-msgstr "从文件夹加载音乐"
-
-#: data/app.gschema.xml:14 src/gtk/preferences.ui:42
-msgid "Load thumbnails for non-local files"
-msgstr "加载非本地文件的缩略图"
-
-#: data/app.gschema.xml:18 src/gtk/preferences.ui:58
-msgid "Use pipewire audio sink"
-msgstr "使用Pipewire音频输出"
-
-#: data/app.gschema.xml:22 src/gtk/preferences.ui:70
-msgid "Show audio peak level"
-msgstr "显示跳动的音频峰值"
-
-#: data/app.gschema.xml:27 src/gtk/window.ui:62
-msgid "Sort Mode"
-msgstr "排序方式"
 
 #: src/gtk/help-overlay.ui:11
 msgctxt "shortcut window"
@@ -107,17 +83,41 @@ msgstr "搜索"
 msgid "Appearance"
 msgstr "外观"
 
+#: src/gtk/preferences.ui:15
+msgid "Prefer dark theme"
+msgstr "优先使用深色主题"
+
 #: src/gtk/preferences.ui:28
 msgid "Music Location"
 msgstr "曲库"
+
+#: src/gtk/preferences.ui:31
+msgid "Load music from folder"
+msgstr "从文件夹加载音乐"
+
+#: src/gtk/preferences.ui:42
+msgid "Load thumbnails for non-local files"
+msgstr "加载非本地文件的缩略图"
 
 #: src/gtk/preferences.ui:55
 msgid "Playback"
 msgstr "播放"
 
-#: src/gtk/preferences.ui:59
+#: src/gtk/preferences.ui:58
+msgid "Use ReplayGain to normalize volume"
+msgstr "使用ReplayGain音量平衡"
+
+#: src/gtk/preferences.ui:69
+msgid "Use pipewire audio sink"
+msgstr "使用Pipewire音频输出"
+
+#: src/gtk/preferences.ui:70
 msgid "Experimental"
 msgstr "实验性功能"
+
+#: src/gtk/preferences.ui:81
+msgid "Show audio peak level"
+msgstr "显示跳动的音频峰值"
 
 #: src/gtk/window.ui:33
 msgid "Main Menu"
@@ -127,63 +127,67 @@ msgstr "主菜单"
 msgid "Search"
 msgstr "搜索"
 
+#: src/gtk/window.ui:62
+msgid "Sort Mode"
+msgstr "排序方式"
+
 #: src/gtk/window.ui:123
 msgid "Back"
 msgstr "返回"
 
-#: src/gtk/window.ui:199
+#: src/gtk/window.ui:201
 msgid "_Export Cover"
 msgstr "导出封面(_E)"
 
-#: src/gtk/window.ui:203
+#: src/gtk/window.ui:205
 msgid "_Show In Files"
 msgstr "定位文件(_S)"
 
-#: src/gtk/window.ui:212
+#: src/gtk/window.ui:214
 msgid "_Preferences"
 msgstr "首选项(_P)"
 
-#: src/gtk/window.ui:216
+#: src/gtk/window.ui:218
 msgid "_Keyboard Shortcuts"
 msgstr "快捷键(_K)"
 
-#: src/gtk/window.ui:220
+#: src/gtk/window.ui:222
 msgid "_About G4Music"
 msgstr "关于G4音乐(_A)"
 
-#: src/gtk/window.ui:230
+#: src/gtk/window.ui:232
 msgid "By Album"
 msgstr "按专辑"
 
-#: src/gtk/window.ui:236
+#: src/gtk/window.ui:238
 msgid "By Artist"
 msgstr "按艺术家"
 
-#: src/gtk/window.ui:242
+#: src/gtk/window.ui:244
 msgid "By Title"
 msgstr "按标题"
 
-#: src/gtk/window.ui:248
+#: src/gtk/window.ui:250
 msgid "Shuffle"
 msgstr "乱序"
 
-#: src/application.vala:334
+#: src/application.vala:335
 msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr "一个快速、流畅、轻量的，基于GTK4的音乐播放软件。"
 
-#: src/play-bar.vala:75
+#: src/play-bar.vala:85
 msgid "Repeat Song"
 msgstr "单曲循环"
 
-#: src/play-bar.vala:85
+#: src/play-bar.vala:95
 msgid "Play Previous"
 msgstr "播放上一首"
 
-#: src/play-bar.vala:91
+#: src/play-bar.vala:101
 msgid "Play/Pause"
 msgstr "播放/暂停"
 
-#: src/play-bar.vala:98
+#: src/play-bar.vala:108
 msgid "Play Next"
 msgstr "播放下一首"
 

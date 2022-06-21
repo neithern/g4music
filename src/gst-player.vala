@@ -16,6 +16,7 @@ namespace Music {
 
         private dynamic Gst.Pipeline? _pipeline = Gst.ElementFactory.make ("playbin", "player") as Gst.Pipeline;
         private dynamic Gst.Element? _audio_sink = null;
+        private dynamic Gst.Element? _replay_gain = null;
         private Gst.ClockTime _duration = Gst.CLOCK_TIME_NONE;
         private Gst.ClockTime _position = Gst.CLOCK_TIME_NONE;
         private Gst.ClockTime _last_seeked_pos = Gst.CLOCK_TIME_NONE;
@@ -94,10 +95,25 @@ namespace Music {
             set {
                 if (_pipeline != null) {
                     _audio_sink = Gst.ElementFactory.make (value ? "pipewiresink" : "pulsesink", "audiosink");
-                    ((!)_audio_sink).enable_last_sample = true;
-                    ((!)_pipeline).audio_sink = _audio_sink;
-                    print (@"Enable pipewire: $(value && _audio_sink != null)\n");
-                    restart ();
+                    if (_audio_sink != null)
+                        ((!)_audio_sink).enable_last_sample = true;
+                    update_audio_sink ();
+                    print (@"Enable Pipewire: $(value && _audio_sink != null)\n");
+                }
+            }
+        }
+
+        public bool replay_gain {
+            get {
+                return _replay_gain != null;
+            }
+            set {
+                if (_pipeline != null) {
+                    _replay_gain = value ? Gst.ElementFactory.make ("rgvolume", "gain") : null;
+                    if (_replay_gain != null)
+                        ((!)_replay_gain).album_mode = false;
+                    update_audio_sink ();
+                    print (@"Enable ReplayGain: $(value && _replay_gain != null)\n");
                 }
             }
         }
@@ -123,14 +139,6 @@ namespace Music {
 
         public void pause () {
             _pipeline?.set_state (Gst.State.PAUSED);
-        }
-
-        public void restart () {
-            var saved_state = _state;
-            if (saved_state != Gst.State.NULL) {
-                _pipeline?.set_state (Gst.State.NULL);
-                _pipeline?.set_state (saved_state);
-            }
         }
 
         public void seek (Gst.ClockTime position) {
@@ -197,11 +205,14 @@ namespace Music {
             return true;
         }
 
-        private void reset_timer () {
-            _timer?.destroy ();
-            _timer = new TimeoutSource (_show_peak ? 66 : 200);
-            _timer?.set_callback (timeout_callback);
-            _timer?.attach (MainContext.default ());
+        private void on_duration_changed () {
+            int64 duration = (int64) Gst.CLOCK_TIME_NONE;
+            if ((_pipeline?.query_duration (Gst.Format.TIME, out duration) ?? false)
+                    && _duration != duration) {
+                _duration = duration;
+                //  print ("Duration changed: %lld\n", duration);
+                duration_changed (duration);
+            }
         }
 
         private void parse_tags (Gst.Message message) {
@@ -226,6 +237,13 @@ namespace Music {
             }
         }
 
+        private void reset_timer () {
+            _timer?.destroy ();
+            _timer = new TimeoutSource (_show_peak ? 66 : 200);
+            _timer?.set_callback (timeout_callback);
+            _timer?.attach (MainContext.default ());
+        }
+
         private bool timeout_callback () {
             int64 position = (int64) Gst.CLOCK_TIME_NONE;
             if ((_pipeline?.query_position (Gst.Format.TIME, out position) ?? false)
@@ -248,13 +266,53 @@ namespace Music {
             return true;
         }
 
-        private void on_duration_changed () {
-            int64 duration = (int64) Gst.CLOCK_TIME_NONE;
-            if ((_pipeline?.query_duration (Gst.Format.TIME, out duration) ?? false)
-                    && _duration != duration) {
-                _duration = duration;
-                //  print ("Duration changed: %lld\n", duration);
-                duration_changed (duration);
+        private void update_audio_sink () {
+            var saved_pos = _position;
+            var saved_state = _state;
+            _pipeline?.set_state (Gst.State.NULL);
+
+            if (_audio_sink != null) {
+                var bin = _audio_sink?.parent as Gst.Bin;
+                bin?.remove_element ((!)_audio_sink);
+            }
+            if (_replay_gain != null) {
+                var bin = _replay_gain?.parent as Gst.Bin;
+                bin?.remove_element ((!)_replay_gain);
+            }
+
+            dynamic Gst.Bin? bin = Gst.ElementFactory.make ("bin", null) as Gst.Bin;
+            if (bin != null &&  _audio_sink != null) {
+                if (_replay_gain != null) {
+                    bin?.add_many ((!)_replay_gain, (!)_audio_sink);
+                } else {
+                    bin?.add_element ((!)_audio_sink);
+                }
+                Gst.Pad? static_pad = null;
+                if (_replay_gain != null) {
+                    _replay_gain?.link ((!)_audio_sink);
+                    static_pad = _replay_gain?.get_static_pad ("sink");
+                } else {
+                    static_pad = _audio_sink?.get_static_pad ("sink");
+                }
+                if (static_pad != null) {
+                    bin?.add_pad (new Gst.GhostPad ("sink", (!)static_pad));
+                } else {
+                    bin = null;
+                }
+            }
+
+            ((!)_pipeline).audio_sink = bin != null ? bin : _audio_sink;
+            if (saved_state != Gst.State.NULL) {
+                _pipeline?.set_state (saved_state);
+            }
+            if (saved_pos != Gst.CLOCK_TIME_NONE && saved_state >= Gst.State.PAUSED) {
+                Idle.add (() => {
+                    if (_state == saved_state) {
+                        seek (saved_pos);
+                        return false;
+                    }
+                    return _state != Gst.State.NULL;
+                });
             }
         }
 

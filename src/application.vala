@@ -81,6 +81,7 @@ namespace Music {
 
             sort_mode = (SortMode) (_settings?.get_uint ("sort-mode") ?? SortMode.TITLE);
 
+            _player.replay_gain = _settings?.get_boolean ("replay-gain") ?? false;
             _player.pipewire_sink = _settings?.get_boolean ("pipewire-sink") ?? false;
             _player.show_peak = _settings?.get_boolean ("show-peak") ?? false;
             _player.volume = _settings?.get_double ("volume") ?? 1;
