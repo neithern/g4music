@@ -280,20 +280,12 @@ namespace Music {
                 bin?.remove_element ((!)_replay_gain);
             }
 
-            dynamic Gst.Bin? bin = Gst.ElementFactory.make ("bin", null) as Gst.Bin;
-            if (bin != null &&  _audio_sink != null) {
-                if (_replay_gain != null) {
-                    bin?.add_many ((!)_replay_gain, (!)_audio_sink);
-                } else {
-                    bin?.add_element ((!)_audio_sink);
-                }
-                Gst.Pad? static_pad = null;
-                if (_replay_gain != null) {
-                    _replay_gain?.link ((!)_audio_sink);
-                    static_pad = _replay_gain?.get_static_pad ("sink");
-                } else {
-                    static_pad = _audio_sink?.get_static_pad ("sink");
-                }
+            dynamic Gst.Bin? bin = null;
+            if (_audio_sink != null && _replay_gain != null
+                    && (bin = Gst.ElementFactory.make ("bin", null) as Gst.Bin) != null) {
+                bin?.add_many ((!)_replay_gain, (!)_audio_sink);
+                _replay_gain?.link ((!)_audio_sink);
+                Gst.Pad? static_pad = _replay_gain?.get_static_pad ("sink");
                 if (static_pad != null) {
                     bin?.add_pad (new Gst.GhostPad ("sink", (!)static_pad));
                 } else {
