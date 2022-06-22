@@ -37,7 +37,10 @@ It is written in Vala, simple and clean code, with few third-party dependencies:
 
     `meson install -C build`
 
-## About this project
-I was inspired by [Amberol](https://gitlab.gnome.org/World/amberol), but it has some performance issues and missing some key features, but I am not good at Rust so can't help.
+## Change Log
+Check the [app data](./data/app.appdata.xml.in) for change log.
 
-Then I found it is very convenient to write code in Vala language: handle signal with closure, async tasks, easy to compile with C code, so I decided to write a new music player in Vala.
+## About this project
+I was inspired by [Amberol](https://gitlab.gnome.org/World/amberol), but it has some performance issues and missing some key features, but I am not good at Rust so can't help more.
+
+Then I found it is very convenient to write code in Vala language: handle signal with closure, async tasks, easy to compile with C code, so I decided to write a new music player in Vala, focusing on smooth experience and high performance, for those people who has large number of songs.
