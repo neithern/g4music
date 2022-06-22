@@ -38,7 +38,7 @@ It is written in Vala, simple and clean code, with few third-party dependencies:
     `meson install -C build`
 
 ## Change Log
-Check the [app data](./data/app.appdata.xml.in) for change log.
+Check the [release tags](https://gitlab.gnome.org/neithern/g4music/-/tags) for change log.
 
 ## About this project
 I was inspired by [Amberol](https://gitlab.gnome.org/World/amberol), but it has some performance issues and missing some key features, but I am not good at Rust so can't help more.
