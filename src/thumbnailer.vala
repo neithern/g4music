@@ -84,6 +84,11 @@ namespace Music {
             return _cache.remove (key);
         }
 
+        public void remove_all () {
+            _cache.remove_all ();
+            _size = 0;
+        }
+
         protected virtual size_t size_of_value (V value) {
             return 1;
         }

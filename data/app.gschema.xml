@@ -21,6 +21,10 @@
       <default>false</default>
       <summary>Use pipewire audio sink</summary>
     </key>
+    <key name="play-background" type="b">
+      <default>false</default>
+      <summary>Keep playing after window closed</summary>
+    </key>
     <key name="replay-gain" type="b">
       <default>false</default>
       <summary>Use ReplayGain to normalize volume</summary>

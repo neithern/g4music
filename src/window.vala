@@ -56,6 +56,8 @@ namespace Music {
             Object (application: app);
             this.icon_name = app.application_id;
 
+            this.close_request.connect (on_close_request);
+
             app.settings?.bind ("width", this, "default-width", SettingsBindFlags.DEFAULT);
             app.settings?.bind ("height", this, "default-height", SettingsBindFlags.DEFAULT);
 
@@ -211,6 +213,24 @@ namespace Music {
             }
         }
 
+        private void on_index_changed (int index, uint size) {
+            action_set_enabled (ACTION_APP + ACTION_PREV, index > 0);
+            action_set_enabled (ACTION_APP + ACTION_NEXT, index < (int) size - 1);
+            scroll_to_item (index);
+            index_title.label = size > 0 ? @"$(index+1)/$(size)" : "0";
+        }
+
+        private bool on_close_request () {
+            var app = (Application) application;
+            if (app.player.playing && (app.settings?.get_boolean ("play-background") ?? false)) {
+                app.request_background ();
+                app.thumbnailer.remove_all ();
+                this.hide ();
+                return true;
+            }
+            return false;
+        }
+
         private Adw.Animation? _scale_animation = null;
 
         private void on_player_state_changed (Gst.State state) {
@@ -244,17 +264,16 @@ namespace Music {
             update_song_filter ();
         }
 
-        private void on_index_changed (int index, uint size) {
-            action_set_enabled (ACTION_APP + ACTION_PREV, index > 0);
-            action_set_enabled (ACTION_APP + ACTION_NEXT, index < (int) size - 1);
-            scroll_to_item (index);
-            index_title.label = size > 0 ? @"$(index+1)/$(size)" : "0";
-        }
-
         private void on_song_changed (Song song) {
             update_song_info (song);
             action_set_enabled (ACTION_APP + ACTION_PLAY, true);
             print ("Play: %s\n", Uri.unescape_string (song.uri) ?? song.uri);
+        }
+
+        private bool on_song_info_link (string uri) {
+            search_entry.text = Uri.unescape_string (uri) ?? uri;
+            search_btn.active = true;
+            return true;
         }
 
         private async void on_song_tag_parsed (Song song, Gst.Sample? image) {
@@ -285,12 +304,6 @@ namespace Music {
                 var paintable = yield app.thumbnailer.load_directly_async (song, 1024);
                 update_cover_paintable (song, paintable);
             }
-        }
-
-        private bool on_song_info_link (string uri) {
-            search_entry.text = Uri.unescape_string (uri) ?? uri;
-            search_btn.active = true;
-            return true;
         }
 
         private void scroll_to_item (int index) {

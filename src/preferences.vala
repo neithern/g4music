@@ -15,6 +15,8 @@ namespace Music {
         [GtkChild]
         unowned Gtk.Switch thumbnail_btn;
         [GtkChild]
+        unowned Gtk.Switch playbkgnd_btn;
+        [GtkChild]
         unowned Gtk.Switch replaygain_btn;
         [GtkChild]
         unowned Gtk.Switch pipewire_btn;
@@ -65,6 +67,8 @@ namespace Music {
 
             settings?.bind ("remote-thumbnail", thumbnail_btn, "state", SettingsBindFlags.GET_NO_CHANGES);
             thumbnail_btn.bind_property ("state", app.thumbnailer, "remote_thumbnail", BindingFlags.DEFAULT);
+
+            settings?.bind ("play-background", playbkgnd_btn, "state", SettingsBindFlags.GET_NO_CHANGES);
 
             settings?.bind ("replay-gain", replaygain_btn, "state", SettingsBindFlags.GET_NO_CHANGES);
             replaygain_btn.bind_property ("state", app.player, "replay_gain", BindingFlags.DEFAULT);

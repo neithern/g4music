@@ -324,6 +324,13 @@ namespace Music {
             return play_item;
         }
 
+        public void request_background () {
+            _portal = _portal ?? new Portal ();
+            ((!)_portal).request_background_async.begin (_("Keep playing after window closed"), (obj, res) => {
+                ((!)_portal).request_background_async.end (res);
+            });
+        }
+
         public void show_about () {
             string[] authors = { "Nanling" };
             Gtk.show_about_dialog (active_window,

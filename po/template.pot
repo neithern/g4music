@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-21 15:28+0800\n"
+"POT-Creation-Date: 2022-06-22 12:37+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -104,19 +104,23 @@ msgid "Playback"
 msgstr ""
 
 #: src/gtk/preferences.ui:58
-msgid "Use ReplayGain to normalize volume"
+msgid "Keep playing after window closed"
 msgstr ""
 
 #: src/gtk/preferences.ui:69
+msgid "Show audio peak level"
+msgstr ""
+
+#: src/gtk/preferences.ui:80
+msgid "Use ReplayGain to normalize volume"
+msgstr ""
+
+#: src/gtk/preferences.ui:91
 msgid "Use pipewire audio sink"
 msgstr ""
 
-#: src/gtk/preferences.ui:70
+#: src/gtk/preferences.ui:92
 msgid "Experimental"
-msgstr ""
-
-#: src/gtk/preferences.ui:81
-msgid "Show audio peak level"
 msgstr ""
 
 #: src/gtk/window.ui:33

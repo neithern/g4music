@@ -55,6 +55,28 @@
             <property name="title" translatable="yes">Playback</property>
             <child>
               <object class="AdwActionRow">
+                <property name="title" translatable="yes">Keep playing after window closed</property>
+                <property name="activatable_widget">playbkgnd_btn</property>
+                <child>
+                  <object class="GtkSwitch" id="playbkgnd_btn">
+                    <property name="valign">center</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="AdwActionRow">
+                <property name="title" translatable="yes">Show audio peak level</property>
+                <property name="activatable_widget">peak_btn</property>
+                <child>
+                  <object class="GtkSwitch" id="peak_btn">
+                    <property name="valign">center</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="AdwActionRow">
                 <property name="title" translatable="yes">Use ReplayGain to normalize volume</property>
                 <property name="activatable_widget">replaygain_btn</property>
                 <child>
@@ -71,17 +93,6 @@
                 <property name="activatable_widget">pipewire_btn</property>
                 <child>
                   <object class="GtkSwitch" id="pipewire_btn">
-                    <property name="valign">center</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="AdwActionRow">
-                <property name="title" translatable="yes">Show audio peak level</property>
-                <property name="activatable_widget">peak_btn</property>
-                <child>
-                  <object class="GtkSwitch" id="peak_btn">
                     <property name="valign">center</property>
                   </object>
                 </child>
