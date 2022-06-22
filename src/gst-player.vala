@@ -1,6 +1,10 @@
 namespace Music {
 
     public class GstPlayer : Object {
+        struct Peak {
+            Gst.ClockTime time;
+            double peak;
+        }
 
         public static void init (ref weak string[]? args) {
             Gst.init (ref args);
@@ -25,6 +29,7 @@ namespace Music {
         private uint _tag_hash = 0;
         private bool _tag_parsed = false;
         private TimeoutSource? _timer = null;
+        private Queue<Peak?> _peaks = new Queue<Peak?> ();
 
         public signal void duration_changed (Gst.ClockTime duration);
         public signal void error (Error error);
@@ -81,6 +86,7 @@ namespace Music {
                 _state = Gst.State.NULL;
                 _tag_hash = 0;
                 _tag_parsed = false;
+                _peaks.clear_full (free);
                 _pipeline?.set_state (Gst.State.READY);
                 if (_pipeline != null)
                     ((!)_pipeline).uri = value;
@@ -127,7 +133,13 @@ namespace Music {
                 if (_timer != null) {
                     reset_timer ();
                 }
-                peak_parsed (0);
+                if (!value) {
+                    Timeout.add (200, () => {
+                        // to clear the showing
+                        peak_parsed (0);
+                        return false;
+                    });
+                }
             }
         }
 
@@ -253,15 +265,21 @@ namespace Music {
                 position_updated (position);
             }
 
-            if (_show_peak) {
-                double peak = 0;
-                dynamic var sink = _audio_sink ?? _pipeline?.audio_sink;
-                if (sink != null && _state >= Gst.State.PAUSED) {
-                    dynamic Gst.Sample? sample = ((!)sink).last_sample;
-                    if (sample != null)
-                        parse_peak_in_sample ((!)sample, out peak);
+            dynamic Gst.Element? sink = null;
+            if (_show_peak && (sink = _audio_sink ?? _pipeline?.audio_sink) != null) {
+                var peak = Peak ();
+                dynamic Gst.Sample? sample = ((!)sink).last_sample;
+                if (sample != null && parse_peak_in_sample ((!)sample, out peak.peak)) {
+                    peak.time = ((!)sample).get_segment ().position;
+                    _peaks.push_tail (peak);
                 }
-                peak_parsed (peak);
+                while (_peaks.length > 0) {
+                    var p = _peaks.peek_head ();
+                    if (p != null && ((!)p).time >= _position) {
+                        _peaks.pop_head ();
+                        peak_parsed (((!)p).peak);
+                    }
+                }
             }
             return true;
         }
