@@ -274,7 +274,7 @@ namespace Music {
                     _peaks.push_tail (peak);
                 }
                 while (_peaks.length > 0) {
-                    var p = _peaks.peek_head ();
+                    unowned var p = _peaks.peek_head ();
                     if (p != null && ((!)p).time >= _position) {
                         _peaks.pop_head ();
                         peak_parsed (((!)p).peak);
