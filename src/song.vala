@@ -16,9 +16,6 @@ namespace Music {
         private string _album_key = "";
         private string _artist_key = "";
         private string _title_key = "";
-        private int _album_num = int.MAX;
-        private int _artist_num = int.MAX;
-        private int _title_num = int.MAX;
         private int _order = 0;
 
         private string? _cover_uri = null;
@@ -70,24 +67,17 @@ namespace Music {
 #endif
 
         public void update_keys () {
-            _album_key = album.collate_key ();
-            _artist_key = artist.collate_key ();
-            _title_key = title.collate_key ();
-            _album_num = get_prefix_number (album);
-            _artist_num = get_prefix_number (artist);
-            _title_num = get_prefix_number (title);
+            _album_key = album.collate_key_for_filename ();
+            _artist_key = artist.collate_key_for_filename ();
+            _title_key = title.collate_key_for_filename ();
         }
 
         public static int compare_by_album (Object obj1, Object obj2) {
             var s1 = (Song) obj1;
             var s2 = (Song) obj2;
-            int ret = s1._album_num - s2._album_num;
-            if (ret != 0) return ret;
-            ret = strcmp (s1._album_key, s2._album_key);
+            int ret = strcmp (s1._album_key, s2._album_key);
             if (ret != 0) return ret;
             ret = s1.track - s2.track;
-            if (ret != 0) return ret;
-            ret = s1._title_num - s2._title_num;
             if (ret != 0) return ret;
             ret = strcmp (s1._title_key, s2._title_key);
             if (ret != 0) return ret;
@@ -97,11 +87,7 @@ namespace Music {
         public static int compare_by_artist (Object obj1, Object obj2) {
             var s1 = (Song) obj1;
             var s2 = (Song) obj2;
-            int ret = s1._artist_num - s2._artist_num;
-            if (ret != 0) return ret;
-            ret = strcmp (s1._artist_key, s2._artist_key);
-            if (ret != 0) return ret;
-            ret = s1._title_num - s2._title_num;
+            int ret = strcmp (s1._artist_key, s2._artist_key);
             if (ret != 0) return ret;
             ret = strcmp (s1._title_key, s2._title_key);
             if (ret != 0) return ret;
@@ -111,11 +97,7 @@ namespace Music {
         public static int compare_by_title (Object obj1, Object obj2) {
             var s1 = (Song) obj1;
             var s2 = (Song) obj2;
-            int ret = s1._title_num - s2._title_num;
-            if (ret != 0) return ret;
-            ret = strcmp (s1._title_key, s2._title_key);
-            if (ret != 0) return ret;
-            ret = s1._artist_num - s2._artist_num;
+            int ret = strcmp (s1._title_key, s2._title_key);
             if (ret != 0) return ret;
             ret = strcmp (s1._artist_key, s2._artist_key);
             if (ret != 0) return ret;
@@ -153,24 +135,6 @@ namespace Music {
             index = next;
         }  while (text.get_next_char (ref next, out c));
         return -1;
-    }
-
-    public static int get_prefix_number (string text) {
-        if (text.length == 0) {
-            return int.MAX;
-        }
-
-        int num = 0;
-        var next = 0;
-        var c = text.get_char (0);
-        do {
-            if (c >= '0' && c <= '9') {
-                num = num * 10 + (int) (c - '0');
-            } else {
-                break;
-            }
-        }  while (text.get_next_char (ref next, out c));
-        return num != 0 ? num : int.MAX;
     }
 
     public static string get_uri_with_end_sep (File file) {
