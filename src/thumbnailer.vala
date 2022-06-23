@@ -97,8 +97,9 @@ namespace Music {
     public class Thumbnailer : LruCache<Gdk.Paintable?> {
         public static int icon_size = 96;
 
-        private GenericSet<string> _loading = new GenericSet<string> (str_hash, str_equal);
+        private HashTable<string, string> _album_covers = new HashTable<string, string> (str_hash, str_equal);
         private CoverFinder _cover_finder = new CoverFinder ();
+        private GenericSet<string> _loading = new GenericSet<string> (str_hash, str_equal);
         private bool _remote_thumbnail = false;
 
         public bool remote_thumbnail {
@@ -135,12 +136,27 @@ namespace Music {
                 return null;
             }
 
+            var album_key = @"$(song.album)-$(song.artist)-";
             var tags = new Gst.TagList?[] { null };
             var cover_uri = new string?[] { null };
             var pixbuf = yield run_async<Gdk.Pixbuf?> (() => {
                 var tag = tags[0] = parse_gst_tags (file);
                 Gst.Sample? sample = null;
                 if (tag != null && (sample = parse_image_from_tag_list ((!)tag)) != null) {
+                    if (size == icon_size) {
+                        //  Check if there is an album cover with same artist and image size
+                        var image_size = sample?.get_buffer ()?.get_size () ?? 0;
+                        album_key += image_size.to_string ("%x");
+                        lock (_album_covers) {
+                            string key, uri;
+                            if (_album_covers.lookup_extended (album_key, out key, out uri)) {
+                                cover_uri[0] = uri;
+                                //  print ("Same album cover: %s\n", album_key);
+                                return null;
+                            }
+                            _album_covers[album_key] = song.cover_uri;
+                        }
+                    }
                     return load_clamp_pixbuf_from_gst_sample ((!)sample, size);
                 }
                 //  Try load album art cover file in the folder
@@ -163,6 +179,10 @@ namespace Music {
             if (cover_uri[0] != null) {
                 //  Update cover uri if available
                 song.cover_uri = (!)cover_uri[0];
+                if (pixbuf == null && size == icon_size) {
+                    //  Got a shared cover_uri for same album
+                    return find (song.cover_uri);
+                }
             }
             if (pixbuf != null) {
                 return Gdk.Texture.for_pixbuf ((!)pixbuf);
