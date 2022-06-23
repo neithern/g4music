@@ -251,7 +251,7 @@ namespace Music {
 
         private void reset_timer () {
             _timer?.destroy ();
-            _timer = new TimeoutSource (_show_peak ? 50 : 200);
+            _timer = new TimeoutSource (_show_peak ? 66 : 200);
             _timer?.set_callback (timeout_callback);
             _timer?.attach (MainContext.default ());
         }
