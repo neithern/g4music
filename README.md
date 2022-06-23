@@ -14,12 +14,12 @@ A fast, fluent, light weight music player written in GTK4, with a beautiful, ada
 - Low memory usage for large playlist with album covers, no thumbnail caches to store.
 - Sort by album/artist/title or shuffle, supports full-text searching.
 - Album cover is original resolution, can be exported.
-- Gaussian blurred cover as window background. 
-- Follow GNOME 42 light/dark mode.
+- Gaussian blurred cover as window background, follow GNOME 42 light/dark mode.
 - Supports MPRIS control.
 - Supports drag-drop from file manager.
+- Supports audio peaks visualizer.
+- Supports ReplayGain.
 - Supports pipewire audio sink.
-- Show dynamic audio peak when playing.
 - All these in a small package with 300KB.
 
 ## Install from Flathub
@@ -33,7 +33,7 @@ It is written in Vala, simple and clean code, with few third-party dependencies:
 2. Install vala, develop packages of gtk4, libadwaita, gstreamer.
 3. Run in the project directory:
 
-    `meson setup build`
+    `meson setup build --buildtype=release`
 
     `meson install -C build`
 

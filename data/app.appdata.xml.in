@@ -24,12 +24,12 @@
         <li>Low memory usage for large playlist with album covers, no thumbnail caches to store.</li>
         <li>Sort by album/artist/title or shuffle, supports full-text searching.</li>
         <li>Album cover is original resolution, can be exported.</li>
-        <li>Gaussian blurred cover as window background.</li>
-        <li>Follow GNOME 42 light/dark mode.</li>
+        <li>Gaussian blurred cover as window background, follow GNOME 42 light/dark mode.</li>
         <li>Supports MPRIS control.</li>
         <li>Supports drag-drop from file manager.</li>
+        <li>Supports audio peaks visualizer.</li>
+        <li>Supports ReplayGain.</li>
         <li>Supports pipewire audio sink.</li>
-        <li>Show dynamic audio peak when playing.</li>
         <li>All these in a small package with 300KB.</li>
         </ul>
     </description>
@@ -47,6 +47,17 @@
     </screenshots>
 
     <releases>
+        <release version="1.0" date="2022-06-23">
+            <description>
+                <ul>
+                <li>Support ReplayGain to normalize volume.</li>
+                <li>Option: Keep playing after window closed.</li>
+                <li>Cache tags to make next loading faster.</li>
+                <li>Share album cover with same artist.</li>
+                <li>Fix some UI issues.</li>
+                </ul>
+            </description>
+        </release>
         <release version="0.9" date="2022-06-20">
             <description>
                 <ul>
