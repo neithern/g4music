@@ -23,7 +23,6 @@ namespace Music {
         private dynamic Gst.Element? _replay_gain = null;
         private Gst.ClockTime _duration = Gst.CLOCK_TIME_NONE;
         private Gst.ClockTime _position = Gst.CLOCK_TIME_NONE;
-        private Gst.ClockTime _last_seeked_pos = Gst.CLOCK_TIME_NONE;
         private bool _show_peak = false;
         private Gst.State _state = Gst.State.NULL;
         private uint _tag_hash = 0;
@@ -52,6 +51,7 @@ namespace Music {
         }
 
         ~GstPlayer () {
+            _peaks.clear_full (free);
             _pipeline?.set_state (Gst.State.NULL);
             _timer?.destroy ();
         }
@@ -154,10 +154,10 @@ namespace Music {
         }
 
         public void seek (Gst.ClockTime position) {
-            var diff = (Gst.ClockTimeDiff) (position - _last_seeked_pos);
+            var diff = (Gst.ClockTimeDiff) (position - _position);
             if (diff > 50 * Gst.MSECOND || diff < -50 * Gst.MSECOND) {
-                //  print ("Seek: %g -> %g\n", to_second (_last_seeked_pos), to_second (position));
-                _last_seeked_pos = position;
+                //  print ("Seek: %g -> %g\n", to_second (_position), to_second (position));
+                _position = position;
                 _pipeline?.seek_simple (Gst.Format.TIME, Gst.SeekFlags.ACCURATE | Gst.SeekFlags.FLUSH, (int64) position);
             }
         }
@@ -251,7 +251,7 @@ namespace Music {
 
         private void reset_timer () {
             _timer?.destroy ();
-            _timer = new TimeoutSource (_show_peak ? 66 : 200);
+            _timer = new TimeoutSource (_show_peak ? 50 : 200);
             _timer?.set_callback (timeout_callback);
             _timer?.attach (MainContext.default ());
         }
@@ -261,7 +261,6 @@ namespace Music {
             if ((_pipeline?.query_position (Gst.Format.TIME, out position) ?? false)
                     && _position != position) {
                 _position = position;
-                _last_seeked_pos = position;
                 position_updated (position);
             }
 
