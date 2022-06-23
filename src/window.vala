@@ -128,12 +128,8 @@ namespace Music {
 
             spinner.spinning = true;
             index_title.label = _loading_text;
-            app.loading_changed.connect ((loading, size) => {
-                spinner.spinning = loading;
-                spinner.visible = loading;
-                index_title.label = loading ? _loading_text : size.to_string ();
-            });
             app.index_changed.connect (on_index_changed);
+            app.loading_changed.connect (on_loading_changed);
             app.song_changed.connect (on_song_changed);
             app.song_tag_parsed.connect (on_song_tag_parsed);
             app.player.state_changed.connect (on_player_state_changed);
@@ -213,13 +209,6 @@ namespace Music {
             }
         }
 
-        private void on_index_changed (int index, uint size) {
-            action_set_enabled (ACTION_APP + ACTION_PREV, index > 0);
-            action_set_enabled (ACTION_APP + ACTION_NEXT, index < (int) size - 1);
-            scroll_to_item (index);
-            index_title.label = size > 0 ? @"$(index+1)/$(size)" : "0";
-        }
-
         private bool on_close_request () {
             var app = (Application) application;
             if (app.player.playing && (app.settings?.get_boolean ("play-background") ?? false)) {
@@ -229,6 +218,19 @@ namespace Music {
                 return true;
             }
             return false;
+        }
+
+        private void on_index_changed (int index, uint size) {
+            action_set_enabled (ACTION_APP + ACTION_PREV, index > 0);
+            action_set_enabled (ACTION_APP + ACTION_NEXT, index < (int) size - 1);
+            scroll_to_item (index);
+            index_title.label = size > 0 ? @"$(index+1)/$(size)" : "0";
+        }
+
+        private void on_loading_changed (bool loading, uint size) {
+            spinner.spinning = loading;
+            spinner.visible = loading;
+            index_title.label = loading ? _loading_text : size.to_string ();
         }
 
         private Adw.Animation? _scale_animation = null;
