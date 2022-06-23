@@ -8,16 +8,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-18 20:47+0800\n"
+"POT-Creation-Date: 2022-06-22 12:37+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: @daudix-UFO\n"
+"Last-Translator: David Lapshin <ddaudix@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:330
+#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:331
 #: src/main.vala:24
 msgid "G4Music"
 msgstr "G4Music"
@@ -34,39 +34,15 @@ msgstr "Проигрываете музыку"
 msgid "music;sound;player;media;audio;playlist;"
 msgstr "музыка;звук;плеере;медиа;аудио;плейлист;"
 
-#: data/app.gschema.xml:6 src/gtk/preferences.ui:15
-msgid "Prefer dark theme"
-msgstr "Предпочитать темную тему"
-
-#: data/app.gschema.xml:10 src/gtk/preferences.ui:31
-msgid "Load music from folder"
-msgstr "Загружать музыку из папки"
-
-#: data/app.gschema.xml:14 src/gtk/preferences.ui:42
-msgid "Load thumbnails for non-local files"
-msgstr "Загружать миниатюры для нелокальных файлов"
-
-#: data/app.gschema.xml:18 src/gtk/preferences.ui:58
-msgid "Use pipewire audio sink"
-msgstr "Использовать приемник звука pipewire"
-
-#: data/app.gschema.xml:22 src/gtk/preferences.ui:70
-msgid "Show audio peak level"
-msgstr "Показывать пик уровня звука"
-
-#: data/app.gschema.xml:27 src/gtk/window.ui:62
-msgid "Sort Mode"
-msgstr "Режим сортировки"
-
 #: src/gtk/help-overlay.ui:11
 msgctxt "shortcut window"
 msgid "General"
-msgstr "Общее"
+msgstr "Основное"
 
 #: src/gtk/help-overlay.ui:14
 msgctxt "shortcut window"
 msgid "Show Shortcuts"
-msgstr "Показать комбинации клавиш"
+msgstr "Комбинации"
 
 #: src/gtk/help-overlay.ui:20
 msgctxt "shortcut window"
@@ -107,15 +83,43 @@ msgstr "Поиск"
 msgid "Appearance"
 msgstr "Внешний вид"
 
+#: src/gtk/preferences.ui:15
+msgid "Prefer dark theme"
+msgstr "Предпочитать темную тему"
+
 #: src/gtk/preferences.ui:28
 msgid "Music Location"
 msgstr "Расположение музыки"
+
+#: src/gtk/preferences.ui:31
+msgid "Load music from folder"
+msgstr "Загружать музыку из папки"
+
+#: src/gtk/preferences.ui:42
+msgid "Load thumbnails for non-local files"
+msgstr "Загружать миниатюры для нелокальных файлов"
 
 #: src/gtk/preferences.ui:55
 msgid "Playback"
 msgstr "Воспроизведение"
 
-#: src/gtk/preferences.ui:59
+#: src/gtk/preferences.ui:58
+msgid "Keep playing after window closed"
+msgstr "Продолжать играть после закрытия окна"
+
+#: src/gtk/preferences.ui:69
+msgid "Show audio peak level"
+msgstr "Показывать пик уровня звука"
+
+#: src/gtk/preferences.ui:80
+msgid "Use ReplayGain to normalize volume"
+msgstr "Использовать ReplayGain для нормализации громкости"
+
+#: src/gtk/preferences.ui:91
+msgid "Use pipewire audio sink"
+msgstr "Использовать приемник звука pipewire"
+
+#: src/gtk/preferences.ui:92
 msgid "Experimental"
 msgstr "Экспериментальное"
 
@@ -127,63 +131,67 @@ msgstr "Главное меню"
 msgid "Search"
 msgstr "Поиск"
 
+#: src/gtk/window.ui:62
+msgid "Sort Mode"
+msgstr "Режим сортировки"
+
 #: src/gtk/window.ui:123
 msgid "Back"
 msgstr "Назад"
 
-#: src/gtk/window.ui:199
+#: src/gtk/window.ui:201
 msgid "_Export Cover"
 msgstr "_Экспортировать обложку"
 
-#: src/gtk/window.ui:203
+#: src/gtk/window.ui:205
 msgid "_Show In Files"
 msgstr "_Показать в файлах"
 
-#: src/gtk/window.ui:212
+#: src/gtk/window.ui:214
 msgid "_Preferences"
 msgstr "_Параметры"
 
-#: src/gtk/window.ui:216
+#: src/gtk/window.ui:218
 msgid "_Keyboard Shortcuts"
 msgstr "_Комбинации клавиш"
 
-#: src/gtk/window.ui:220
+#: src/gtk/window.ui:222
 msgid "_About G4Music"
 msgstr "_О G4Music"
 
-#: src/gtk/window.ui:230
+#: src/gtk/window.ui:232
 msgid "By Album"
 msgstr "По альбому"
 
-#: src/gtk/window.ui:236
+#: src/gtk/window.ui:238
 msgid "By Artist"
 msgstr "По артисту"
 
-#: src/gtk/window.ui:242
+#: src/gtk/window.ui:244
 msgid "By Title"
 msgstr "По названию"
 
-#: src/gtk/window.ui:248
+#: src/gtk/window.ui:250
 msgid "Shuffle"
 msgstr "Перемешать"
 
-#: src/application.vala:334
+#: src/application.vala:335
 msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr "Быстрый, флуоресцентный, легкий музыкальный проигрыватель, написанный на GTK4."
 
-#: src/play-bar.vala:75
-msgid "Repeat Song"
-msgstr "Повторить песню"
-
 #: src/play-bar.vala:85
+msgid "Repeat Song"
+msgstr "Повторять песню"
+
+#: src/play-bar.vala:95
 msgid "Play Previous"
 msgstr "Играть предыдущее"
 
-#: src/play-bar.vala:91
+#: src/play-bar.vala:101
 msgid "Play/Pause"
 msgstr "Воспроизведение/Пауза"
 
-#: src/play-bar.vala:98
+#: src/play-bar.vala:108
 msgid "Play Next"
 msgstr "Играть следующее"
 
