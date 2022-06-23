@@ -16,6 +16,7 @@ sources = [
   'song.vala',
   'song-entry.vala',
   'song-store.vala',
+  'tag-cache.vala',
   'tag-parser.vala',
   'thumbnailer.vala',
   'window.vala',

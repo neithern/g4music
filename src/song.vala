@@ -11,6 +11,7 @@ namespace Music {
         public string title = "";
         public string uri = "";
         public int track = int.MAX;
+        public int64 modified_time = 0;
 
         //  for sorting
         private string _album_key = "";
@@ -20,7 +21,7 @@ namespace Music {
 
         private string? _cover_uri = null;
 
-        public string cover_uri {
+        public unowned string cover_uri {
             get {
                 return _cover_uri ?? uri;
             }
@@ -70,6 +71,38 @@ namespace Music {
             _album_key = album.collate_key_for_filename ();
             _artist_key = artist.collate_key_for_filename ();
             _title_key = title.collate_key_for_filename ();
+        }
+
+        public void serialize (DataOutputStream dos) throws IOError {
+            dos.put_byte (6);
+            dos.put_string (album);
+            dos.put_byte ('\0');
+            dos.put_string (artist);
+            dos.put_byte ('\0');
+            dos.put_string (title);
+            dos.put_byte ('\0');
+            dos.put_int32 (track);
+            dos.put_int64 (modified_time);
+            dos.put_string (uri);
+            dos.put_byte ('\0');
+        }
+
+        public void deserialize (DataInputStream dis) throws IOError {
+            var count = dis.read_byte ();
+            if (count != 6)
+                throw new IOError.INVALID_DATA (@"$count != 5");
+            album = dis.read_upto ("\0", 1, null);
+            dis.read_byte (); // == '\0'
+            artist = dis.read_upto ("\0", 1, null);
+            dis.read_byte (); // == '\0'
+            title = dis.read_upto ("\0", 1, null);
+            dis.read_byte (); // == '\0'
+            track = dis.read_int32 ();
+            modified_time = dis.read_int64 ();
+            uri = dis.read_upto ("\0", 1, null);
+            dis.read_byte (); // == '\0'
+            has_tags = true;
+            update_keys ();
         }
 
         public static int compare_by_album (Object obj1, Object obj2) {

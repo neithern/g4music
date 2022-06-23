@@ -11,6 +11,7 @@ namespace Music {
         private SortMode _sort_mode = SortMode.TITLE;
         private CompareDataFunc<Object> _compare = Song.compare_by_title;
         private ListStore _store = new ListStore (typeof (Song));
+        private TagCache _tag_cache = new TagCache ();
 
         public ListStore store {
             get {
@@ -109,16 +110,23 @@ namespace Music {
 #endif
 
         public async void add_files_async (File[] files) {
+            var load_thread = new Thread<void> ("load_thread", _tag_cache.load);
             var arr = new GenericArray<Object> (4096);
             yield run_async<void> (() => {
                 var begin_time = get_monotonic_time ();
                 foreach (var file in files) {
                     add_file (file, arr);
                 }
+                load_thread.join ();
 
                 var queue = new AsyncQueue<Song?> ();
-                foreach (var obj in arr) {
-                    queue.push ((Song) obj);
+                for (var i = 0; i < arr.length; i++) {
+                    var song = (Song) arr[i];
+                    var cached_song = _tag_cache[song.uri];
+                    if (cached_song != null && ((!)cached_song).modified_time == song.modified_time)
+                        arr[i] = (!)cached_song;
+                    else
+                        queue.push (song);
                 }
                 var num_thread = get_num_processors ();
                 var threads = new Thread<void>[num_thread];
@@ -127,6 +135,7 @@ namespace Music {
                         Song? song;
                         while ((song = queue.try_pop ()) != null) {
                             parse_song_tags ((!)song);
+                            _tag_cache.add ((!)song);
                         }
                     });
                 }
@@ -140,13 +149,17 @@ namespace Music {
                 arr.sort ((CompareFunc<Object>) _compare);
                 print ("Found %u songs in %g seconds\n", arr.length,
                         (get_monotonic_time () - begin_time) / 1e6);
+
+                if (_tag_cache.modified) {
+                    new Thread<void> ("save_thread", _tag_cache.save);
+                }
             });
             _store.splice (_store.get_n_items (), 0, arr.data);
         }
 
         private static void add_file (File file, GenericArray<Object> arr) {
             try {
-                var info = file.query_info ("standard::*", FileQueryInfoFlags.NONE);
+                var info = file.query_info ("standard::*,time::modified", FileQueryInfoFlags.NONE);
                 if (info.get_file_type () == FileType.DIRECTORY) {
                     var stack = new Queue<File> ();
                     stack.push_tail (file);
@@ -170,7 +183,7 @@ namespace Music {
             try {
                 var base_uri = get_uri_with_end_sep (dir);
                 FileInfo? info = null;
-                var enumerator = dir.enumerate_children ("standard::*", FileQueryInfoFlags.NONE);
+                var enumerator = dir.enumerate_children ("standard::*,time::modified", FileQueryInfoFlags.NONE);
                 while ((info = enumerator.next_file ()) != null) {
                     var pi = (!)info;
                     if (pi.get_is_hidden ()) {
@@ -197,6 +210,7 @@ namespace Music {
                 // build same file uri as tracker sparql
                 song.uri = base_uri + Uri.escape_string (name, null, false);
                 song.title = name;
+                song.modified_time = info.get_modification_date_time ()?.to_unix () ?? 0;
                 return song;
             }
             return null;
