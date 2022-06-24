@@ -1,0 +1,212 @@
+# Turkish translation for g4music.
+#
+# Copyright (C) 2022 g4music'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the g4music package.
+#
+# Sabri Ünal <libreajans@gmail.com>, 2022.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: g4music master\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/neithern/g4music/-/issues\n"
+"POT-Creation-Date: 2022-06-22 12:37+0800\n"
+"PO-Revision-Date: 2022-06-24 17:12+0300\n"
+"Last-Translator: Sabri Ünal <libreajans@gmail.com>\n"
+"Language-Team: Turkish <gnome-turk@gnome.org>\n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 2.4.3\n"
+"X-Project-Style: gnome\n"
+
+#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:331
+#: src/main.vala:24
+msgid "G4Music"
+msgstr "G4Music"
+
+#: data/app.desktop.in:4
+msgid "Music Player"
+msgstr "Müzik Çalar"
+
+#: data/app.desktop.in:5
+msgid "Play music"
+msgstr "Müzik çal"
+
+#: data/app.desktop.in:12
+msgid "music;sound;player;media;audio;playlist;"
+msgstr "müzik;ses;çalıcı;medya;çalma listesi;oynatma listesi;"
+
+#: src/gtk/help-overlay.ui:11
+msgctxt "shortcut window"
+msgid "General"
+msgstr "Genel"
+
+#: src/gtk/help-overlay.ui:14
+msgctxt "shortcut window"
+msgid "Show Shortcuts"
+msgstr "Kısayolları Göster"
+
+#: src/gtk/help-overlay.ui:20
+msgctxt "shortcut window"
+msgid "Quit"
+msgstr "Çık"
+
+#: src/gtk/help-overlay.ui:28
+msgctxt "shortcut window"
+msgid "Playback"
+msgstr "Çalma"
+
+#: src/gtk/help-overlay.ui:31
+msgctxt "shortcut window"
+msgid "Play/Pause"
+msgstr "Çal/Duraklat"
+
+#: src/gtk/help-overlay.ui:37
+msgctxt "shortcut window"
+msgid "Play Next"
+msgstr "Sonrakini Çal"
+
+#: src/gtk/help-overlay.ui:43
+msgctxt "shortcut window"
+msgid "Play Previous"
+msgstr "Öncekini Çal"
+
+#: src/gtk/help-overlay.ui:51
+msgctxt "shortcut window"
+msgid "Playlist"
+msgstr "Çalma Listesi"
+
+#: src/gtk/help-overlay.ui:54
+msgctxt "shortcut window"
+msgid "Search"
+msgstr "Ara"
+
+#: src/gtk/preferences.ui:12
+msgid "Appearance"
+msgstr "Görünüm"
+
+#: src/gtk/preferences.ui:15
+msgid "Prefer dark theme"
+msgstr "Koyu temayı yeğle"
+
+#: src/gtk/preferences.ui:28
+msgid "Music Location"
+msgstr "Müzik Konumu"
+
+#: src/gtk/preferences.ui:31
+msgid "Load music from folder"
+msgstr "Müziği klasörden yükle"
+
+#: src/gtk/preferences.ui:42
+msgid "Load thumbnails for non-local files"
+msgstr "Yerel olmayan dosyalar için küçük resimleri yükle"
+
+#: src/gtk/preferences.ui:55
+msgid "Playback"
+msgstr "Çalma"
+
+#: src/gtk/preferences.ui:58
+msgid "Keep playing after window closed"
+msgstr "Pencere kapatıldıktan sonra çalışmayı sürdür"
+
+#: src/gtk/preferences.ui:69
+msgid "Show audio peak level"
+msgstr "Ses tepe seviyesini göster"
+
+#: src/gtk/preferences.ui:80
+msgid "Use ReplayGain to normalize volume"
+msgstr "Sesi normalleştirmek için ReplayGain kullan"
+
+#: src/gtk/preferences.ui:91
+msgid "Use pipewire audio sink"
+msgstr "Pipewire ses havuzunu kullan"
+
+#: src/gtk/preferences.ui:92
+msgid "Experimental"
+msgstr "Deneysel"
+
+#: src/gtk/window.ui:33
+msgid "Main Menu"
+msgstr "Ana Menü"
+
+#: src/gtk/window.ui:55
+msgid "Search"
+msgstr "Ara"
+
+#: src/gtk/window.ui:62
+msgid "Sort Mode"
+msgstr "Sıralama Kipi"
+
+#: src/gtk/window.ui:123
+msgid "Back"
+msgstr "Geri"
+
+#: src/gtk/window.ui:201
+msgid "_Export Cover"
+msgstr "_Kapağı Dışa Aktar"
+
+#: src/gtk/window.ui:205
+msgid "_Show In Files"
+msgstr "_Dosyalarda Göster"
+
+#: src/gtk/window.ui:214
+msgid "_Preferences"
+msgstr "_Tercihler"
+
+#: src/gtk/window.ui:218
+msgid "_Keyboard Shortcuts"
+msgstr "_Klavye Kısayolları"
+
+#: src/gtk/window.ui:222
+msgid "_About G4Music"
+msgstr "G4Music _Hakkında"
+
+#: src/gtk/window.ui:232
+msgid "By Album"
+msgstr "Albüme göre"
+
+#: src/gtk/window.ui:238
+msgid "By Artist"
+msgstr "Sanatçıya göre"
+
+#: src/gtk/window.ui:244
+msgid "By Title"
+msgstr "Başlığa göre"
+
+#: src/gtk/window.ui:250
+msgid "Shuffle"
+msgstr "Karıştır"
+
+#: src/application.vala:335
+msgid "A fast, fluent, light weight music player written in GTK4."
+msgstr "GTK4 ile yazılmış hızlı, akıcı, hafif bir müzik çalar."
+
+#: src/play-bar.vala:85
+msgid "Repeat Song"
+msgstr "Şarkıyı Yinele"
+
+#: src/play-bar.vala:95
+msgid "Play Previous"
+msgstr "Öncekini Çal"
+
+#: src/play-bar.vala:101
+msgid "Play/Pause"
+msgstr "Çal/Duraklat"
+
+#: src/play-bar.vala:108
+msgid "Play Next"
+msgstr "Sonrakini Çal"
+
+#: src/song.vala:2
+msgid "Unknown Album"
+msgstr "Bilinmeyen Albüm"
+
+#: src/song.vala:3
+msgid "Unknown Aritst"
+msgstr "Bilinmeyen Sanatçı"
+
+#: src/window.vala:49
+msgid "Loading..."
+msgstr "Yükleniyor..."
