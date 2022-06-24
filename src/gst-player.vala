@@ -23,9 +23,10 @@ namespace Music {
         private dynamic Gst.Element? _replay_gain = null;
         private Gst.ClockTime _duration = Gst.CLOCK_TIME_NONE;
         private Gst.ClockTime _position = Gst.CLOCK_TIME_NONE;
+        private int _next_uri_requested = 0;
         private bool _show_peak = false;
         private Gst.State _state = Gst.State.NULL;
-        private uint _tag_hash = 0;
+        private int64 _tag_hash = int64.MIN;
         private bool _tag_parsed = false;
         private TimeoutSource? _timer = null;
         private Queue<Peak?> _peaks = new Queue<Peak?> ();
@@ -34,6 +35,8 @@ namespace Music {
         public signal void error (Error error);
         public signal void end_of_stream ();
         public signal void position_updated (Gst.ClockTime position);
+        public signal string? next_uri_request ();
+        public signal void next_uri_start ();
         public signal void state_changed (Gst.State state);
         public signal void tag_parsed (string? album, string? artist, string? title, Gst.Sample? image);
         public signal void peak_parsed (double peak);
@@ -43,6 +46,7 @@ namespace Music {
                 var pipeline = (!)_pipeline;
                 pipeline.async_handling = true;
                 pipeline.flags = 0x0022; // audio | native audio
+                pipeline.about_to_finish.connect (on_about_to_finish);
                 pipeline.bind_property ("volume", this, "volume", BindingFlags.SYNC_CREATE | BindingFlags.BIDIRECTIONAL);
                 pipeline.get_bus ().add_watch (Priority.DEFAULT, bus_callback);
             } else {
@@ -81,15 +85,16 @@ namespace Music {
                 return null;
             }
             set {
-                _duration = Gst.CLOCK_TIME_NONE;
-                _position = Gst.CLOCK_TIME_NONE;
-                _state = Gst.State.NULL;
-                _tag_hash = 0;
-                _tag_parsed = false;
-                _peaks.clear_full (free);
-                _pipeline?.set_state (Gst.State.READY);
-                if (_pipeline != null)
-                    ((!)_pipeline).uri = value;
+                if (_pipeline != null) lock (_pipeline) {
+                    _duration = Gst.CLOCK_TIME_NONE;
+                    _position = Gst.CLOCK_TIME_NONE;
+                    _tag_hash = int64.MIN;
+                    _tag_parsed = false;
+                    _peaks.clear_full (free);
+                    string? uri = ((!)_pipeline).uri;
+                    if (strcmp (uri, value) != 0)
+                        ((!)_pipeline).uri = value;
+                }
             }
         }
 
@@ -205,6 +210,12 @@ namespace Music {
                     end_of_stream ();
                     break;
 
+                case Gst.MessageType.STREAM_START:
+                    if (AtomicInt.compare_and_exchange (ref _next_uri_requested, 1, 0)) {
+                        next_uri_start ();
+                    }
+                    break;
+
                 case Gst.MessageType.TAG:
                     if (!_tag_parsed) {
                         parse_tags (message);
@@ -215,6 +226,14 @@ namespace Music {
                     break;
             }
             return true;
+        }
+
+        private void on_about_to_finish () {
+            var next_uri = next_uri_request ();
+            if ((next_uri?.length ?? 0) > 0) {
+                AtomicInt.set (ref _next_uri_requested, 1);
+                uri = (!)next_uri;
+            }
         }
 
         private void on_duration_changed () {
@@ -277,6 +296,8 @@ namespace Music {
                     if (p != null && ((!)p).time >= _position) {
                         _peaks.pop_head ();
                         peak_parsed (((!)p).peak);
+                    } else {
+                        break;
                     }
                 }
             }

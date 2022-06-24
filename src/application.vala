@@ -27,6 +27,7 @@ namespace Music {
         private int _current_item = -1;
         private Song? _current_song = null;
         private Gst.Sample? _cover_image = null;
+        private StringBuilder _next_uri = new StringBuilder ();
         private GstPlayer _player = new GstPlayer ();
         private Gtk.FilterListModel _song_list = new Gtk.FilterListModel (null, null);
         private SongStore _song_store = new SongStore ();
@@ -87,15 +88,10 @@ namespace Music {
             _player.volume = _settings?.get_double ("volume") ?? 1;
             _thumbnailer.remote_thumbnail = _settings?.get_boolean ("remote-thumbnail") ?? false;
 
-            _player.end_of_stream.connect (() => {
-                if (single_loop) {
-                    _player.seek (0);
-                    _player.play ();
-                } else {
-                    current_item++;
-                }
-            });
-
+            _player.end_of_stream.connect (on_player_end);
+            _player.error.connect (on_player_error);
+            _player.next_uri_request.connect (on_player_next_uri_request);
+            _player.next_uri_start.connect (on_player_next_uri_start);
             _player.tag_parsed.connect (on_tag_parsed);
 
             var mpris_id = Bus.own_name (BusType.SESSION,
@@ -151,22 +147,9 @@ namespace Music {
                 return _current_item;
             }
             set {
-                var count = _song_list.get_n_items ();
-                value = value < count ? value : 0;
                 var playing = _current_song != null;
-                var song = _song_list.get_item (value) as Song;
-                if (song != null && _current_song != song) {
-                    _current_song = song;
-                    _player.uri = ((!)song).uri;
-                    song_changed ((!)song);
-                }
-                if (_current_item != value) {
-                    var old_item = _current_item;
-                    _current_item = value;
-                    _song_list.items_changed (old_item, 0, 0);
-                    _song_list.items_changed (value, 0, 0);
-                    index_changed (value, count);
-                }
+                _player.state = Gst.State.READY;
+                switch_to_index (value);
                 _player.state = playing ? Gst.State.PLAYING : Gst.State.PAUSED;
             }
         }
@@ -174,6 +157,14 @@ namespace Music {
         public Song? current_song {
             get {
                 return _current_song;
+            }
+            set {
+                if (_current_song != value) {
+                    _current_song = value;
+                    _player.uri = value != null ? ((!)value).uri : (string?) null;
+                    if (value != null)
+                        song_changed ((!)value);
+                }
             }
         }
 
@@ -270,7 +261,7 @@ namespace Music {
             _current_item = -1;
             for (var i = 0; i < count; i++) {
                 if (_current_song == _song_list.get_item (i)) {
-                    _current_item = i;
+                    current_item = i;
                     break;
                 }
             }
@@ -399,6 +390,12 @@ namespace Music {
             }
         }
 
+        private Song? get_next_song (ref int index) {
+            var count = _song_list.get_n_items ();
+            index = index < count ? index : 0;
+            return _song_list.get_item (index) as Song;
+        }
+
         private void open_directory () {
             var uri = _current_song?.uri;
             if (uri != null) {
@@ -407,6 +404,36 @@ namespace Music {
                     ((!)_portal).open_directory_async.end (res);
                 });
             }
+        }
+
+        private void on_player_end () {
+            if (single_loop) {
+                _player.seek (0);
+                _player.play ();
+            } else {
+                current_item++;
+            }
+        }
+
+        private void on_player_error () {
+            on_player_end ();
+        }
+
+        private string? on_player_next_uri_request () {
+            //  This callback is NOT called in main UI thread
+            string? next_uri = null;
+            if (!single_loop) {
+                lock (_next_uri) {
+                    next_uri = _next_uri.str;
+                }
+            }
+            //  stream_start will be received soon later
+            return next_uri;
+        }
+
+        private void on_player_next_uri_start () {
+            //  Received after request_next_uri
+            on_player_end ();
         }
 
         private async void on_tag_parsed (string? album, string? artist, string? title, Gst.Sample? image) {
@@ -430,6 +457,24 @@ namespace Music {
                     }
                     _mpris?.send_meta_data (song, cover_uri);
                 }
+            }
+        }
+
+        private void switch_to_index (int index) {
+            current_song = get_next_song (ref index);
+
+            if (_current_item != index) {
+                var old_item = _current_item;
+                _current_item = index;
+                _song_list.items_changed (old_item, 0, 0);
+                _song_list.items_changed (index, 0, 0);
+                index_changed (index, _song_list.get_n_items ());
+            }
+
+            var next = index + 1;
+            var next_song = get_next_song (ref next);
+            lock (_next_uri) {
+                _next_uri.assign (next_song?.uri ?? "");
             }
         }
     }
