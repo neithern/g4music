@@ -111,6 +111,11 @@ namespace Music {
             }
         }
 
+        public bool has_image (Song song) {
+            unowned var paintable = find (song.cover_uri);
+            return paintable is Gdk.Texture;
+        }
+
         public async Gdk.Paintable? load_async (Song song) {
             unowned var uri = song.cover_uri;
             if (uri in _loading)
@@ -157,7 +162,7 @@ namespace Music {
                             _album_covers[album_key] = song.cover_uri;
                         }
                     }
-                    return load_clamp_pixbuf_from_gst_sample ((!)sample, size);
+                    return load_clamp_pixbuf_from_sample ((!)sample, size);
                 }
                 //  Try load album art cover file in the folder
                 try {
@@ -217,7 +222,7 @@ namespace Music {
         return pixbuf;
     }
 
-    public static Gdk.Pixbuf? load_clamp_pixbuf_from_gst_sample (Gst.Sample sample, int size) {
+    public static Gdk.Pixbuf? load_clamp_pixbuf_from_sample (Gst.Sample sample, int size) {
         var buffer = sample.get_buffer ();
         Gst.MapInfo? info = null;
         if (buffer?.map (out info, Gst.MapFlags.READ) ?? false) {

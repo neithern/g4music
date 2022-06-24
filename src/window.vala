@@ -213,7 +213,6 @@ namespace Music {
             var app = (Application) application;
             if (app.player.playing && (app.settings?.get_boolean ("play-background") ?? false)) {
                 app.request_background ();
-                app.thumbnailer.remove_all ();
                 this.hide ();
                 return true;
             }
@@ -280,31 +279,30 @@ namespace Music {
 
         private async void on_song_tag_parsed (Song song, Gst.Sample? image) {
             update_song_info (song);
-
             action_set_enabled (ACTION_APP + ACTION_EXPORT, image != null);
 
             var app = (Application) application;
+            var pixbufs = new Gdk.Pixbuf?[2] {null, null};
             if (image != null) {
-                var pixbufs = new Gdk.Pixbuf?[2] {null, null};
+                var has_cache = app.thumbnailer.has_image (song);
                 yield run_async<void> (() => {
-                    var pixbuf = load_clamp_pixbuf_from_gst_sample ((!)image, 1024);
-                    if (pixbuf != null)
-                        pixbufs[1] = create_clamp_pixbuf ((!)pixbuf, Thumbnailer.icon_size);
+                    pixbufs[0] = load_clamp_pixbuf_from_sample ((!)image, 1024);
+                    if (! has_cache && pixbufs[0] != null)
+                        pixbufs[1] = create_clamp_pixbuf ((!)pixbufs[0], Thumbnailer.icon_size);
                 }, true);
-                if (song == app.current_song && pixbufs[0] != null) {
-                    var paintable = Gdk.Texture.for_pixbuf ((!)pixbufs[0]);
-                    update_cover_paintable (song, paintable);
-                    if (pixbufs[1] != null) {
-                        app.thumbnailer.put (song.cover_uri, Gdk.Texture.for_pixbuf ((!)pixbufs[1]));
-                        app.song_list.items_changed (app.current_item, 0, 0);
-                    }
-                    return;
-                }
             }
-
             if (song == app.current_song) {
-                var paintable = yield app.thumbnailer.load_directly_async (song, 1024);
+                Gdk.Paintable? paintable = null;
+                if (pixbufs[0] != null) {
+                    paintable = Gdk.Texture.for_pixbuf ((!)pixbufs[0]);
+                } else {
+                    paintable = yield app.thumbnailer.load_directly_async (song, 1024);
+                }
                 update_cover_paintable (song, paintable);
+                if (pixbufs[1] != null) {
+                    app.thumbnailer.put (song.cover_uri, Gdk.Texture.for_pixbuf ((!)pixbufs[1]));
+                    app.song_list.items_changed (app.current_item, 0, 0);
+                }
             }
         }
 
