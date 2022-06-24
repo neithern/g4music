@@ -61,7 +61,19 @@ namespace Music {
         }
 
         private void on_state_changed (Gst.State state) {
-            send_property ("PlaybackStatus", state == Gst.State.PLAYING ? "Playing" : "Stopped");
+            string st;
+            switch (state) {
+                case Gst.State.PLAYING:
+                    st = "Playing";
+                    break;
+                case Gst.State.PAUSED:
+                    st = "Paused";
+                    break;
+                default:
+                    st = "Stopped";
+                    break;
+            }
+            send_property ("PlaybackStatus", st);
         }
 
         internal void send_meta_data (Song song, string? art_uri = null) {
