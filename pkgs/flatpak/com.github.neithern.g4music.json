@@ -12,7 +12,8 @@
         "--socket=wayland",
         "--socket=pulseaudio",
         "--filesystem=/tmp",
-        "--filesystem=host:ro",
+        "--filesystem=xdg-music:ro",
+        "--filesystem=xdg-download:ro",
         "--filesystem=xdg-run/pipewire-0:ro",
         "--filesystem=xdg-run/gvfsd",
         "--talk-name=org.gtk.vfs.*"
