@@ -102,8 +102,14 @@ namespace Music {
             cover_image.paintable = scale_paintable;
             scale_paintable.queue_draw.connect (cover_image.queue_draw);
 
-            song_album.activate_link.connect (on_song_info_link);
-            song_artist.activate_link.connect (on_song_info_link);
+            make_label_clickable (song_album).released.connect (() => {
+                search_entry.text = "album=" + song_album.label;
+                search_btn.active = true;
+            });
+            make_label_clickable (song_artist).released.connect (() => {
+                search_entry.text = "artist=" + song_artist.label;
+                search_btn.active = true;
+            });
 
             var play_bar = new PlayBar ();
             content_box.append (play_bar);
@@ -271,12 +277,6 @@ namespace Music {
             print ("Play: %s\n", Uri.unescape_string (song.uri) ?? song.uri);
         }
 
-        private bool on_song_info_link (string uri) {
-            search_entry.text = Uri.unescape_string (uri) ?? uri;
-            search_btn.active = true;
-            return true;
-        }
-
         private async void on_song_tag_parsed (Song song, Gst.Sample? image) {
             update_song_info (song);
             action_set_enabled (ACTION_APP + ACTION_EXPORT, image != null);
@@ -331,17 +331,9 @@ namespace Music {
             this.content.add_controller (drop_target);
         }
 
-        private static string simple_html_encode (string text) {
-            return text.replace ("&", "&amp;").replace ("<",  "&lt;").replace (">", "&gt;");
-        }
-
         private void update_song_info (Song song) {
-            var album_uri = Uri.escape_string (song.album);
-            var artist_uri = Uri.escape_string (song.artist);
-            var album_text = simple_html_encode (song.album);
-            var artist_text = simple_html_encode (song.artist);
-            song_album.set_markup (@"<a href=\"album=$(album_uri)\">$(album_text)</a>");
-            song_artist.set_markup (@"<a href=\"artist=$(artist_uri)\">$(artist_text)</a>");
+            song_album.label = song.album;
+            song_artist.label = song.artist;
             song_title.label = song.title;
             _mini_bar.title = song.title;
             this.title = song.artist == UNKOWN_ARTIST ? song.title : @"$(song.artist) - $(song.title)";

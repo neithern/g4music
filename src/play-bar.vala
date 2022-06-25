@@ -17,7 +17,7 @@ namespace Music {
         construct {
             orientation = Gtk.Orientation.VERTICAL;
             halign = Gtk.Align.CENTER;
-            margin_top = 9;
+            margin_top = 8;
             margin_bottom = 32;
 
             var app = (Application) GLib.Application.get_default ();
@@ -62,9 +62,7 @@ namespace Music {
             var settings = app.settings;
             _negative_progress = settings?.get_boolean ("remain-progress") ?? false;
 
-            var controller = new Gtk.GestureClick ();
-            _negative.add_controller (controller);
-            controller.released.connect (() => {
+            make_label_clickable (_negative).pressed.connect (() => {
                 _negative_progress = !_negative_progress;
                 update_negative_label ();
                 settings?.set_boolean ("remain-progress", _negative_progress);
@@ -160,5 +158,12 @@ namespace Music {
         var sb = new StringBuilder ();
         sb.printf ("%d:%02d", minutes, seconds);
         return sb.str;
+    }
+
+    public static Gtk.GestureClick make_label_clickable (Gtk.Label label) {
+        var controller = new Gtk.GestureClick ();
+        label.add_controller (controller);
+        label.set_cursor_from_name ("hand");
+        return controller;
     }
 }
