@@ -348,8 +348,10 @@ namespace Music {
             Gtk.show_about_dialog (active_window,
                                    "logo-icon-name", application_id,
                                    "program-name", _("G4Music"),
-                                   "authors", authors,
                                    "version", Config.VERSION,
+                                   "authors", authors,
+                                   /* Translators: Replace "translator-credits" with your names, one name per line */
+                                   "translator-credits", _("translator-credits"),
                                    "license-type", Gtk.License.GPL_3_0,
                                    "comments", _("A fast, fluent, light weight music player written in GTK4.")
                                   );
