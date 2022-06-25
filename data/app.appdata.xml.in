@@ -16,7 +16,7 @@
     <content_rating type="oars-1.1"/>
 
     <description>
-      	<p>A fast, fluent, light weight music player written in GTK4, with a beautiful, adaptive user interface, so named G4Music.</p>
+      	<p>A fast, fluent, light weight music player written in GTK4, with a beautiful, adaptive user interface, so named G4Music. It is also focusing on high performance, for those people who has large number of songs.</p>
         <p>Features</p>
         <ul>
         <li>Supports most music file types, samba and any other remote protocols (thanks to great GIO and GStreamer).</li>
@@ -28,7 +28,8 @@
         <li>Supports MPRIS control.</li>
         <li>Supports drag-drop from file manager.</li>
         <li>Supports audio peaks visualizer.</li>
-        <li>Supports ReplayGain.</li>
+        <li>Supports gapless playback.</li>
+        <li>Supports ReplayGain track mode.</li>
         <li>Supports pipewire audio sink.</li>
         <li>All these in a small package with 300KB.</li>
         </ul>
@@ -47,6 +48,17 @@
     </screenshots>
 
     <releases>
+        <release version="1.1" date="2022-06-25">
+            <description>
+                <ul>
+                <li>Option: Gapless playback.</li>
+                <li>Make label clickable instead of hypelinks.</li>
+                <li>Add Turkish translation, thanks to @Sabri Ünal.</li>
+                <li>Fix cover image issues.</li>
+                <li>Fix saveing tag cache issues.</li>
+                </ul>
+            </description>
+        </release>
         <release version="1.0" date="2022-06-23">
             <description>
                 <ul>
@@ -55,7 +67,7 @@
                 <li>Cache tags to make next loading faster.</li>
                 <li>Share album cover with same artist.</li>
                 <li>Fix some UI issues.</li>
-                <li>v1.0.1: Updated Russian translation..</li>
+                <li>v1.0.1: Updated Russian translation.</li>
                 </ul>
             </description>
         </release>

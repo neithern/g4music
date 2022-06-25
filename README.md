@@ -2,11 +2,10 @@
 
 Play your music in an elegant way.
 
-![Screen shot](./shots/window.png)
-![Screen shot](./shots/playbar.png)
-![Screen shot](./shots/playlist.png)
+![Window Mode](./shots/window.png)
+![Play Bar](./shots/playbar.png)![Side Bar](./shots/playlist.png)
 
-A fast, fluent, light weight music player written in GTK4, with a beautiful, adaptive user interface, so named G4Music.
+A fast, fluent, light weight music player written in GTK4, with a beautiful, adaptive user interface, so named G4Music. It is also focusing on high performance, for those people who has large number of songs.
 
 ## Features
 - Supports most music file types, samba and any other remote protocols (thanks to great GIO and GStreamer).
@@ -18,7 +17,8 @@ A fast, fluent, light weight music player written in GTK4, with a beautiful, ada
 - Supports MPRIS control.
 - Supports drag-drop from file manager.
 - Supports audio peaks visualizer.
-- Supports ReplayGain.
+- Supports gapless playback.
+- Supports ReplayGain track mode.
 - Supports pipewire audio sink.
 - All these in a small package with 300KB.
 
@@ -39,8 +39,3 @@ It is written in Vala, simple and clean code, with few third-party dependencies:
 
 ## Change Log
 Check the [release tags](https://gitlab.gnome.org/neithern/g4music/-/tags) for change log.
-
-## About this project
-I was inspired by [Amberol](https://gitlab.gnome.org/World/amberol), but it has some performance issues and missing some key features, but I am not good at Rust so can't help more.
-
-Then I found it is very convenient to write code in Vala language: handle signal with closure, async tasks, easy to compile with C code, so I decided to write a new music player in Vala, focusing on smooth experience and high performance, for those people who has large number of songs.
