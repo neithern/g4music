@@ -76,19 +76,19 @@ namespace Music {
                 set_accels_for_action (ACTION_APP + item.name, {item.key});
             }
 
+            dark_theme = _settings?.get_boolean ("dark-theme") ?? true;
+
             _song_list.model = _song_store.store;
+            _song_store.sort_mode = (SortMode) (_settings?.get_uint ("sort-mode") ?? SortMode.TITLE);
+
             _thumbnailer.tag_updated.connect (_song_store.add_to_cache);
+            _thumbnailer.remote_thumbnail = _settings?.get_boolean ("remote-thumbnail") ?? false;
 
-            dark_theme = _settings?.get_boolean ("dark-theme") ?? false;
-
-            sort_mode = (SortMode) (_settings?.get_uint ("sort-mode") ?? SortMode.TITLE);
-
-            _player.gapless = _settings?.get_boolean ("gapless-playback") ?? false;
+            _player.gapless = _settings?.get_boolean ("gapless-playback") ?? true;
             _player.replay_gain = _settings?.get_boolean ("replay-gain") ?? false;
             _player.pipewire_sink = _settings?.get_boolean ("pipewire-sink") ?? false;
             _player.show_peak = _settings?.get_boolean ("show-peak") ?? false;
             _player.volume = _settings?.get_double ("volume") ?? 1;
-            _thumbnailer.remote_thumbnail = _settings?.get_boolean ("remote-thumbnail") ?? false;
 
             _player.end_of_stream.connect (on_player_end);
             _player.error.connect (on_player_error);
