@@ -57,12 +57,22 @@ namespace Music {
             }
         }
 
+        public void add_to_cache (Song song) {
+            _tag_cache.add (song);
+        }
+
         public void clear () {
             _store.remove_all ();
         }
 
         public Song? get_song (uint position) {
             return _store.get_item (position) as Song;
+        }
+
+        public async void save_tag_cache_async () {
+            if (_tag_cache.modified) {
+                yield run_async<void> (_tag_cache.save);
+            }
         }
 
 #if HAS_TRACKER_SPARQL
@@ -132,10 +142,12 @@ namespace Music {
                 var threads = new Thread<void>[num_thread];
                 for (var i = 0; i < num_thread; i++) {
                     threads[i] = new Thread<void> (@"thread$(i)",  () => {
-                        Song? song;
-                        while ((song = queue.try_pop ()) != null) {
-                            parse_song_tags ((!)song);
-                            _tag_cache.add ((!)song);
+                        Song? s;
+                        while ((s = queue.try_pop ()) != null) {
+                            var song = (!)s;
+                            parse_song_tags (song);
+                            if (song.has_tags)
+                                _tag_cache.add (song);
                         }
                     });
                 }
@@ -151,7 +163,9 @@ namespace Music {
                         (get_monotonic_time () - begin_time) / 1e6);
 
                 if (_tag_cache.modified) {
-                    new Thread<void> ("save_thread", _tag_cache.save);
+                    save_tag_cache_async.begin ((obj, res) => {
+                        save_tag_cache_async.end (res);
+                    });
                 }
             });
             _store.splice (_store.get_n_items (), 0, arr.data);

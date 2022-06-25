@@ -63,12 +63,15 @@ namespace Music {
 
         public void save () {
             try {
-                _file.get_parent ()?.make_directory_with_parents ();
+                var parent = _file.get_parent ();
+                var exists = parent?.query_exists () ?? false;
+                if (!exists)
+                    parent?.make_directory_with_parents ();
                 var fos = _file.replace (null, false, FileCreateFlags.NONE);
                 var bos = new BufferedOutputStream (fos);
                 var dos = new DataOutputStream (bos);
-                dos.put_uint32 (_cache.length);
                 lock (_cache) {
+                    dos.put_uint32 (_cache.length);
                     _cache.for_each ((key, song) => {
                         try {
                             song.serialize (dos);

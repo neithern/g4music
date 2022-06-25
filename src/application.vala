@@ -77,6 +77,7 @@ namespace Music {
             }
 
             _song_list.model = _song_store.store;
+            _thumbnailer.tag_updated.connect (_song_store.add_to_cache);
 
             dark_theme = _settings?.get_boolean ("dark-theme") ?? false;
 
@@ -133,12 +134,16 @@ namespace Music {
         }
 
         public override void shutdown () {
-             _settings?.set_string ("played-uri", _current_song?.uri ?? "");
-             _settings?.set_double ("volume", _player.volume);
+            _settings?.set_string ("played-uri", _current_song?.uri ?? "");
+            _settings?.set_double ("volume", _player.volume);
 
-             delete_cover_tmp_file_async.begin ((obj, res) => {
+            _song_store.save_tag_cache_async.begin ((obj, res) => {
+                _song_store.save_tag_cache_async.end (res);
+            });
+
+            delete_cover_tmp_file_async.begin ((obj, res) => {
                 delete_cover_tmp_file_async.end (res);
-             });
+            });
 
             base.shutdown ();
         }

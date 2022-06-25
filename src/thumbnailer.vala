@@ -102,6 +102,8 @@ namespace Music {
         private GenericSet<string> _loading = new GenericSet<string> (str_hash, str_equal);
         private bool _remote_thumbnail = false;
 
+        public signal void tag_updated (Song song);
+
         public bool remote_thumbnail {
             get {
                 return _remote_thumbnail;
@@ -180,6 +182,9 @@ namespace Music {
             if (! song.has_tags) {
                 //  Update tags if not has
                 song.from_gst_tags (tags[0]);
+                if (song.has_tags) {
+                    tag_updated (song);
+                }
             }
             if (cover_uri[0] != null) {
                 //  Update cover uri if available
