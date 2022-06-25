@@ -82,6 +82,7 @@ namespace Music {
 
             sort_mode = (SortMode) (_settings?.get_uint ("sort-mode") ?? SortMode.TITLE);
 
+            _player.gapless = true;
             _player.replay_gain = _settings?.get_boolean ("replay-gain") ?? false;
             _player.pipewire_sink = _settings?.get_boolean ("pipewire-sink") ?? false;
             _player.show_peak = _settings?.get_boolean ("show-peak") ?? false;
@@ -148,8 +149,23 @@ namespace Music {
             }
             set {
                 var playing = _current_song != null;
-                _player.state = Gst.State.READY;
-                switch_to_index (value);
+                var song = get_next_song (ref value);
+                if (song != _current_song) {
+                    _player.state = Gst.State.READY;
+                    current_song = song;
+                }
+                if (_current_item != value) {
+                    var old_item = _current_item;
+                    _current_item = value;
+                    _song_list.items_changed (old_item, 0, 0);
+                    _song_list.items_changed (value, 0, 0);
+                    index_changed (value, _song_list.get_n_items ());
+                }
+                var next = value + 1;
+                var next_song = get_next_song (ref next);
+                lock (_next_uri) {
+                    _next_uri.assign (next_song?.uri ?? "");
+                }
                 _player.state = playing ? Gst.State.PLAYING : Gst.State.PAUSED;
             }
         }
@@ -161,7 +177,7 @@ namespace Music {
             set {
                 if (_current_song != value) {
                     _current_song = value;
-                    _player.uri = value != null ? ((!)value).uri : (string?) null;
+                    _player.uri = value?.uri;
                     if (value != null)
                         song_changed ((!)value);
                 }
@@ -415,8 +431,11 @@ namespace Music {
             }
         }
 
-        private void on_player_error () {
-            on_player_end ();
+        private void on_player_error (Error err) {
+            print ("Player error: %s\n", err.message);
+            if (!_player.gapless) {
+                on_player_end ();
+            }
         }
 
         private string? on_player_next_uri_request () {
@@ -457,24 +476,6 @@ namespace Music {
                     }
                     _mpris?.send_meta_data (song, cover_uri);
                 }
-            }
-        }
-
-        private void switch_to_index (int index) {
-            current_song = get_next_song (ref index);
-
-            if (_current_item != index) {
-                var old_item = _current_item;
-                _current_item = index;
-                _song_list.items_changed (old_item, 0, 0);
-                _song_list.items_changed (index, 0, 0);
-                index_changed (index, _song_list.get_n_items ());
-            }
-
-            var next = index + 1;
-            var next_song = get_next_song (ref next);
-            lock (_next_uri) {
-                _next_uri.assign (next_song?.uri ?? "");
             }
         }
     }

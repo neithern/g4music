@@ -23,6 +23,7 @@ namespace Music {
         private dynamic Gst.Element? _replay_gain = null;
         private Gst.ClockTime _duration = Gst.CLOCK_TIME_NONE;
         private Gst.ClockTime _position = Gst.CLOCK_TIME_NONE;
+        private ulong _about_to_finish_id = 0;
         private int _next_uri_requested = 0;
         private bool _show_peak = false;
         private Gst.State _state = Gst.State.NULL;
@@ -46,7 +47,6 @@ namespace Music {
                 var pipeline = (!)_pipeline;
                 pipeline.async_handling = true;
                 pipeline.flags = 0x0022; // audio | native audio
-                pipeline.about_to_finish.connect (on_about_to_finish);
                 pipeline.bind_property ("volume", this, "volume", BindingFlags.SYNC_CREATE | BindingFlags.BIDIRECTIONAL);
                 pipeline.get_bus ().add_watch (Priority.DEFAULT, bus_callback);
             } else {
@@ -58,6 +58,24 @@ namespace Music {
             _peaks.clear_full (free);
             _pipeline?.set_state (Gst.State.NULL);
             _timer?.destroy ();
+        }
+
+        public bool gapless {
+            get {
+                return _about_to_finish_id != 0;
+            }
+            set {
+                if (_pipeline != null) {
+                    var pipeline = (!)_pipeline;
+                    if (_about_to_finish_id != 0) {
+                        SignalHandler.disconnect (pipeline.about_to_finish, _about_to_finish_id);
+                        _about_to_finish_id = 0;
+                    }
+                    if (value) {
+                        _about_to_finish_id = pipeline.about_to_finish.connect (on_about_to_finish);
+                    }
+                }
+            }
         }
 
         public bool playing {
@@ -201,8 +219,6 @@ namespace Music {
                     Error err;
                     string debug;
                     message.parse_error (out err, out debug);
-                    _state = Gst.State.NULL;
-                    print ("Player error: %s, %s\n", err.message, debug);
                     error (err);
                     break;
 
