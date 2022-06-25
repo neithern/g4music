@@ -77,6 +77,17 @@
             </child>
             <child>
               <object class="AdwActionRow">
+                <property name="title" translatable="yes">Enable gapless playback</property>
+                <property name="activatable_widget">gapless_btn</property>
+                <child>
+                  <object class="GtkSwitch" id="gapless_btn">
+                    <property name="valign">center</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="AdwActionRow">
                 <property name="title" translatable="yes">Use ReplayGain to normalize volume</property>
                 <property name="activatable_widget">replaygain_btn</property>
                 <child>

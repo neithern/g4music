@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-22 12:37+0800\n"
+"POT-Creation-Date: 2022-06-25 10:59+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:331
+#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:345
 #: src/main.vala:24
 msgid "G4Music"
 msgstr ""
@@ -103,7 +103,7 @@ msgstr ""
 msgid "Playback"
 msgstr ""
 
-#: src/gtk/preferences.ui:58
+#: src/gtk/preferences.ui:58 src/application.vala:336
 msgid "Keep playing after window closed"
 msgstr ""
 
@@ -112,14 +112,18 @@ msgid "Show audio peak level"
 msgstr ""
 
 #: src/gtk/preferences.ui:80
-msgid "Use ReplayGain to normalize volume"
+msgid "Enable gapless playback"
 msgstr ""
 
 #: src/gtk/preferences.ui:91
+msgid "Use ReplayGain to normalize volume"
+msgstr ""
+
+#: src/gtk/preferences.ui:102
 msgid "Use pipewire audio sink"
 msgstr ""
 
-#: src/gtk/preferences.ui:92
+#: src/gtk/preferences.ui:103
 msgid "Experimental"
 msgstr ""
 
@@ -175,7 +179,7 @@ msgstr ""
 msgid "Shuffle"
 msgstr ""
 
-#: src/application.vala:335
+#: src/application.vala:349
 msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr ""
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-22 12:37+0800\n"
+"POT-Creation-Date: 2022-06-25 10:59+0800\n"
 "PO-Revision-Date: 2022-05-31 20:35+0800\n"
 "Last-Translator: Alen <neithern@outlook.com>\n"
 "Language-Team: Chinese (simplified)\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:331
+#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:345
 #: src/main.vala:24
 msgid "G4Music"
 msgstr "G4音乐"
@@ -103,7 +103,7 @@ msgstr "加载非本地文件的缩略图"
 msgid "Playback"
 msgstr "播放"
 
-#: src/gtk/preferences.ui:58
+#: src/gtk/preferences.ui:58 src/application.vala:336
 msgid "Keep playing after window closed"
 msgstr "关闭窗口后继续播放"
 
@@ -112,14 +112,18 @@ msgid "Show audio peak level"
 msgstr "显示跳动的音频峰值"
 
 #: src/gtk/preferences.ui:80
-msgid "Use ReplayGain to normalize volume"
-msgstr "使用ReplayGain音量平衡"
+msgid "Enable gapless playback"
+msgstr "启用无缝续播"
 
 #: src/gtk/preferences.ui:91
+msgid "Use ReplayGain to normalize volume"
+msgstr "启用ReplayGain音量平衡"
+
+#: src/gtk/preferences.ui:102
 msgid "Use pipewire audio sink"
 msgstr "使用Pipewire音频输出"
 
-#: src/gtk/preferences.ui:92
+#: src/gtk/preferences.ui:103
 msgid "Experimental"
 msgstr "实验性功能"
 
@@ -175,7 +179,7 @@ msgstr "按标题"
 msgid "Shuffle"
 msgstr "乱序"
 
-#: src/application.vala:335
+#: src/application.vala:349
 msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr "一个快速、流畅、轻量的，基于GTK4的音乐播放软件。"
 

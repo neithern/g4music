@@ -82,7 +82,7 @@ namespace Music {
 
             sort_mode = (SortMode) (_settings?.get_uint ("sort-mode") ?? SortMode.TITLE);
 
-            _player.gapless = true;
+            _player.gapless = _settings?.get_boolean ("gapless-playback") ?? false;
             _player.replay_gain = _settings?.get_boolean ("replay-gain") ?? false;
             _player.pipewire_sink = _settings?.get_boolean ("pipewire-sink") ?? false;
             _player.show_peak = _settings?.get_boolean ("show-peak") ?? false;

@@ -25,6 +25,10 @@
       <default>false</default>
       <summary>Keep playing after window closed</summary>
     </key>
+    <key name="gapless-playback" type="b">
+      <default>true</default>
+      <summary>Enable gapless playback</summary>
+    </key>
     <key name="replay-gain" type="b">
       <default>false</default>
       <summary>Use ReplayGain to normalize volume</summary>
