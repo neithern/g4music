@@ -209,7 +209,7 @@ msgid "Unknown Album"
 msgstr "Álbum Desconhecido"
 
 #: src/song.vala:3
-msgid "Unknown Aritst"
+msgid "Unknown Artist"
 msgstr "Artista Desconhecido"
 
 #: src/window.vala:49
