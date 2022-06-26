@@ -113,7 +113,7 @@ msgstr "Показывать пик уровня звука"
 
 #: src/gtk/preferences.ui:80
 msgid "Enable gapless playback"
-msgstr ""
+msgstr "Включить непрерывное воспроизведение"
 
 #: src/gtk/preferences.ui:91
 msgid "Use ReplayGain to normalize volume"
@@ -182,13 +182,11 @@ msgstr "Перемешать"
 #. Translators: Replace "translator-credits" with your names, one name per line
 #: src/application.vala:354
 msgid "translator-credits"
-msgstr "David Lapshin"
+msgstr "Давид Лапшин"
 
 #: src/application.vala:356
 msgid "A fast, fluent, light weight music player written in GTK4."
-msgstr ""
-"Быстрый, флуоресцентный, легкий музыкальный проигрыватель, написанный на "
-"GTK4."
+msgstr "Быстрый, флуоресцентный, легкий музыкальный проигрыватель, написанный на GTK4."
 
 #: src/play-bar.vala:83
 msgid "Repeat Song"
