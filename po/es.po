@@ -67,7 +67,7 @@ msgstr "Reproducir Siguiente"
 #: src/gtk/help-overlay.ui:43
 msgctxt "shortcut window"
 msgid "Play Previous"
-msgstr "Reproducir anterior"
+msgstr "Reproducir Anterior"
 
 #: src/gtk/help-overlay.ui:51
 msgctxt "shortcut window"
@@ -105,7 +105,7 @@ msgstr "Reproduccion"
 
 #: src/gtk/preferences.ui:58 src/application.vala:341
 msgid "Keep playing after window closed"
-msgstr ""
+msgstr "Seguir reproduciendo despues de cerrar la ventana"
 
 #: src/gtk/preferences.ui:69
 msgid "Show audio peak level"
@@ -113,15 +113,15 @@ msgstr "Mostrar pico de nivel de audio"
 
 #: src/gtk/preferences.ui:80
 msgid "Enable gapless playback"
-msgstr ""
+msgstr "Habilitar reproduccion sin pausas"
 
 #: src/gtk/preferences.ui:91
 msgid "Use ReplayGain to normalize volume"
-msgstr ""
+msgstr "Usar ReplayGain para normalizar el volumen"
 
 #: src/gtk/preferences.ui:102
 msgid "Use pipewire audio sink"
-msgstr "Usar receptor de audio pipewire"
+msgstr "Usar receptor de audio Pipewire"
 
 #: src/gtk/preferences.ui:103
 msgid "Experimental"
@@ -141,7 +141,7 @@ msgstr "Modo de Clasificacion"
 
 #: src/gtk/window.ui:123
 msgid "Back"
-msgstr ""
+msgstr "Atras"
 
 #: src/gtk/window.ui:203
 msgid "_Export Cover"
@@ -149,7 +149,7 @@ msgstr "_Guardar Caratula"
 
 #: src/gtk/window.ui:207
 msgid "_Show In Files"
-msgstr ""
+msgstr "_Mostrar En Archivos"
 
 #: src/gtk/window.ui:216
 msgid "_Preferences"
@@ -202,11 +202,11 @@ msgstr "Reproducir/Pausa"
 
 #: src/play-bar.vala:106
 msgid "Play Next"
-msgstr "Reproducir siguiente"
+msgstr "Reproducir Siguiente"
 
 #: src/song.vala:2
 msgid "Unknown Album"
-msgstr "Album desconocido"
+msgstr "Album Desconocido"
 
 #: src/song.vala:3
 msgid "Unknown Artist"
