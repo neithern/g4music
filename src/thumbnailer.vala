@@ -100,9 +100,19 @@ namespace Music {
         private HashTable<string, string> _album_covers = new HashTable<string, string> (str_hash, str_equal);
         private CoverFinder _cover_finder = new CoverFinder ();
         private GenericSet<string> _loading = new GenericSet<string> (str_hash, str_equal);
+        private Pango.Context? _pango_context = null;
         private bool _remote_thumbnail = false;
 
         public signal void tag_updated (Song song);
+
+        public Pango.Context? pango_context {
+            get {
+                return _pango_context;
+            }
+            set {
+                _pango_context = value;
+            }
+        }
 
         public bool remote_thumbnail {
             get {
@@ -132,7 +142,8 @@ namespace Music {
                 return texture;
             }
 
-            var paintable = create_song_album_text_paintable (song);
+            var text = parse_abbreviation (song.album);
+            var paintable = create_album_text_paintable (text);
             put (uri, paintable);
             return paintable;
         }
@@ -200,16 +211,14 @@ namespace Music {
             return null;
         }
 
-        protected override size_t size_of_value (Gdk.Paintable? paintable) {
-            return (paintable?.get_intrinsic_width () ?? 0) * (paintable?.get_intrinsic_height () ?? 0) * 4;
+        public Gdk.Paintable create_album_text_paintable (string text) {
+            var color = (text.length == 0 || text == UNKOWN_ALBUM) ? (int) 0xffc0bfbc : 0;
+            var paintable = create_text_paintable ((!)_pango_context, text, icon_size, icon_size, color);
+            return paintable ?? new BasePaintable ();
         }
 
-        public static Gdk.Paintable create_song_album_text_paintable (Song song) {
-            unowned var album = song.album;
-            var text = parse_abbreviation (album);
-            var color = (album.length == 0 || album == UNKOWN_ALBUM) ? (int) 0xffc0bfbc : 0;
-            var paintable = create_text_paintable (text, icon_size, icon_size, color);
-            return paintable ?? new BasePaintable ();
+        protected override size_t size_of_value (Gdk.Paintable? paintable) {
+            return (paintable?.get_intrinsic_width () ?? 0) * (paintable?.get_intrinsic_height () ?? 0) * 4;
         }
     }
 

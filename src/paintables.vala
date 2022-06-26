@@ -214,7 +214,7 @@ namespace Music {
         }
     }
 
-    public static Gdk.Paintable? create_text_paintable (string text, int width = 128, int height = 128, uint color = 0) {
+    public static Gdk.Paintable? create_text_paintable (Pango.Context context, string text, int width = 128, int height = 128, uint color = 0) {
         uint32[] text_colors = {
             0x83b6ec, // blue
             0x7ad9f1, // cyan
@@ -245,21 +245,36 @@ namespace Music {
         var snapshot = new Gtk.Snapshot ();
         snapshot.append_color (c, rect);
 
-        var ctx = snapshot.append_cairo (rect);
-        ctx.select_font_face ("Serif", Cairo.FontSlant.NORMAL, Cairo.FontWeight.BOLD);
-        ctx.set_antialias (Cairo.Antialias.BEST);
-        ctx.set_font_size (height * 0.4);
-        ctx.set_source_rgba (0, 0, 0, 0.25f);
+        var c2 = Gdk.RGBA ();
+        c2.red = c2.green = c2.blue = 0;
+        c2.alpha = 0.25f;
 
-        Cairo.TextExtents extents;
-        ctx.text_extents (text, out extents);
-        double x = (width - extents.width) * 0.5 - extents.x_bearing;
-        double y = (height - extents.height) * 0.5 - extents.y_bearing;
-        ctx.move_to (x > 0 ? x : 0, y);
-        ctx.show_text (text);
-        ctx.paint_with_alpha (0);
-        var size = Graphene.Size ().init (width, height);
-        return snapshot.free_to_paintable (size);
+        var font_size = height * 0.45;
+        var font = new Pango.FontDescription ();
+        font.set_absolute_size (font_size * Pango.SCALE);
+        font.set_family ("Serif");
+        font.set_weight (Pango.Weight.BOLD);
+
+        var layout = new Pango.Layout (context);
+        layout.set_alignment (Pango.Alignment.CENTER);
+        layout.set_font_description (font);
+        layout.set_width (width * Pango.SCALE);
+        layout.set_height (height * Pango.SCALE);
+        layout.set_single_paragraph_mode (true);
+
+        Pango.Rectangle ink_rect, logic_rect;
+        layout.set_text (text, text.length);
+        layout.get_pixel_extents (out ink_rect, out logic_rect);
+
+        var pt = Graphene.Point ();
+        pt.x = 0;
+        pt.y = (float) (height - logic_rect.height) * 0.5f;
+        snapshot.translate (pt);
+        snapshot.append_layout (layout, c2);
+        pt.y = - pt.y;
+        snapshot.translate (pt);
+
+        return snapshot.free_to_paintable (rect.size);
     }
 
     public static Gdk.Texture? create_blur_texture (Gtk.Widget widget, Gdk.Paintable paintable, int width = 128, int height = 128, double blur = 80) {

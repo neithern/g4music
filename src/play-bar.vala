@@ -42,7 +42,7 @@ namespace Music {
             overlay.add_overlay (_peak);
             append (overlay);
 
-            _peak.align = Gtk.Align.CENTER;
+            _peak.align = Pango.Alignment.CENTER;
             _peak.halign = Gtk.Align.CENTER;
             _peak.width_request = 168;
             _peak.add_css_class ("dim-label");

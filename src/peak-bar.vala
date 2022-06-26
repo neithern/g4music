@@ -1,15 +1,22 @@
 namespace Music {
 
     public class PeakBar : Gtk.Box {
-        private Gtk.Align _align = Gtk.Align.START;
+        private string _chars = "=";
+        private Pango.FontDescription _font = new Pango.FontDescription ();
         private double _value = 0;
+        private Pango.Layout _layout;
 
-        public Gtk.Align align {
+        public PeakBar () {
+            _layout = create_pango_layout (null);
+            _layout.set_font_description (_font);
+        }
+
+        public Pango.Alignment align {
             get {
-                return _align;
+                return _layout.get_alignment ();
             }
             set {
-                _align = value;
+                _layout.set_alignment (value);
                 queue_draw ();
             }
         }
@@ -24,39 +31,34 @@ namespace Music {
         public override void snapshot (Gtk.Snapshot snapshot) {
             var width = get_width ();
             var height = get_height ();
-            var rect = (!)Graphene.Rect ().init (0, 0, width, height);
-            var ctx = snapshot.append_cairo (rect);
+            _font.set_absolute_size (height * Pango.SCALE);
+            _layout.set_width (width * Pango.SCALE);
+            _layout.set_height (height * Pango.SCALE);
+
+            Pango.Rectangle ink_rect, logic_rect;
+            _layout.set_text (_chars, _chars.length);
+            _layout.get_pixel_extents (out ink_rect, out logic_rect);
+
+            var count = (int) (width * _value / logic_rect.width);
+            if (_layout.get_alignment () == Pango.Alignment.CENTER && count % 2 == 0)
+                count--;
+
+            var sb = new StringBuilder ();
+            for (var i = 0; i < count; i++)
+                sb.append (_chars);
+            unowned var text = sb.str;
+            _layout.set_text (text, text.length);
 
             var style = get_style_context ();
             var color = style.get_color ();
-            ctx.set_source_rgba (color.red, color.green, color.blue, color.alpha);
-            ctx.set_font_size (height);
 
-            Cairo.TextExtents extents;
-            ctx.text_extents ("=", out extents);
-
-            var count = (int) ((width - extents.x_bearing) * _value / (extents.width + extents.x_bearing));
-            if (_align == Gtk.Align.CENTER && count % 2 == 0)
-                count--;
-
-            var text = count > 0 ? string.nfill (count, '=') : "";
-            ctx.text_extents (text, out extents);
-            double x = 0;
-            switch (_align) {
-                case Gtk.Align.CENTER:
-                    x = (width - extents.width) * 0.5 - extents.x_bearing;
-                    break;
-                case Gtk.Align.END:
-                    x = width - extents.width;
-                    break;
-                default:
-                    x = 0;
-                    break;
-            }
-            double y = (height - extents.height) * 0.5 - extents.y_bearing;
-            ctx.move_to (x, y);
-            ctx.show_text (text);
-            ctx.paint_with_alpha (0);
+            var pt = Graphene.Point ();
+            pt.x = 0;
+            pt.y = (float) (height - logic_rect.height) * 0.5f;
+            snapshot.translate (pt);
+            snapshot.append_layout (_layout, color);
+            pt.y = - pt.y;
+            snapshot.translate (pt);
         }
     }
 }

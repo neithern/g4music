@@ -44,7 +44,7 @@ namespace Music {
 
         private CrossFadePaintable _bkgnd_paintable = new CrossFadePaintable ();
         private CrossFadePaintable _cover_paintable = new CrossFadePaintable ();
-        private Gdk.Paintable? _loading_paintable = create_text_paintable ("...");
+        private Gdk.Paintable? _loading_paintable = null;
 
         private string _loading_text = _("Loading...");
 
@@ -94,8 +94,10 @@ namespace Music {
             });
 
             _bkgnd_paintable.queue_draw.connect (this.queue_draw);
-
             _cover_paintable.queue_draw.connect (cover_image.queue_draw);
+
+            app.thumbnailer.pango_context = get_pango_context ();
+            _loading_paintable = app.thumbnailer.create_album_text_paintable ("...");
 
             var scale_paintable = new ScalePaintable (new RoundPaintable (_cover_paintable, 12));
             scale_paintable.scale = 0.8;
