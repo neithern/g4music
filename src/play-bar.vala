@@ -44,7 +44,7 @@ namespace Music {
 
             _peak.align = Gtk.Align.CENTER;
             _peak.halign = Gtk.Align.CENTER;
-            _peak.width_request = 160;
+            _peak.width_request = 168;
             _peak.add_css_class ("dim-label");
 
             _positive.halign = Gtk.Align.START;
@@ -109,39 +109,33 @@ namespace Music {
             _volume.valign = Gtk.Align.CENTER;
             player.bind_property ("volume", _volume, "value", BindingFlags.SYNC_CREATE | BindingFlags.BIDIRECTIONAL);
 
-            player.duration_changed.connect ((duration) => {
-                this.duration = GstPlayer.to_second (duration);
-            });
-            player.position_updated.connect ((position) => {
-                this.position = GstPlayer.to_second (position);
-            });
-            player.state_changed.connect ((state) => {
-                var playing = state == Gst.State.PLAYING;
-                _play.icon_name = playing ? "media-playback-pause-symbolic" : "media-playback-start-symbolic";
-            });
-            player.peak_parsed.connect ((peak) => {
-                _peak.peak = peak;
-            });
+            player.duration_changed.connect (on_duration_changed);
+            player.position_updated.connect (on_position_changed);
+            player.state_changed.connect (on_state_changed);
+            player.peak_parsed.connect (_peak.set_peak);
         }
 
-        public double duration {
-            set {
-                _duration = (int) (value + 0.5);
-                _seek.set_range (0, _duration);
-                update_negative_label ();
-            }
+        private void on_duration_changed (Gst.ClockTime duration) {
+            var value = GstPlayer.to_second (duration);
+            _duration = (int) (value + 0.5);
+            _seek.set_range (0, _duration);
+            update_negative_label ();
         }
 
-        public double position {
-            set {
-                if (_position != (int) value) {
-                    _position = (int) value;
-                    _positive.label = format_time (_position);
-                    if (_negative_progress)
-                        _negative.label = "-" + format_time (_duration - _position);
-                }
-                _seek.set_value (value);
+        private void on_position_changed (Gst.ClockTime position) {
+            var value = GstPlayer.to_second (position);
+            if (_position != (int) value) {
+                _position = (int) value;
+                _positive.label = format_time (_position);
+                if (_negative_progress)
+                    _negative.label = "-" + format_time (_duration - _position);
             }
+            _seek.set_value (value);
+        }
+
+        private void on_state_changed (Gst.State state) {
+            var playing = state == Gst.State.PLAYING;
+            _play.icon_name = playing ? "media-playback-pause-symbolic" : "media-playback-start-symbolic";
         }
 
         private void update_negative_label () {

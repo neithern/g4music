@@ -14,15 +14,10 @@ namespace Music {
             }
         }
 
-        public double peak {
-            get {
-                return _value;
-            }
-            set {
-                if (_value != value) {
-                    _value = value;
-                    queue_draw ();
-                }
+        public void set_peak (double value) {
+            if (_value != value) {
+                _value = value;
+                queue_draw ();
             }
         }
 

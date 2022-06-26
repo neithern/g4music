@@ -4,8 +4,11 @@ namespace Music {
         private Gtk.Image _cover = new Gtk.Image ();
         private Gtk.Label _title = new Gtk.Label (null);
         private PeakBar _peak = new PeakBar ();
+        private Gtk.Label _time = new Gtk.Label ("0:00");
         private Gtk.Button _play = new Gtk.Button ();
         private Gtk.Button _next = new Gtk.Button ();
+        private int _duration = 1;
+        private int _position = 0;
 
         private CrossFadePaintable _paintable = new CrossFadePaintable ();
         private Adw.Animation? _fade_animation = null;
@@ -19,23 +22,28 @@ namespace Music {
             add_controller (controller);
             activatable_widget = this;
 
-            var vbox = new Gtk.Box (Gtk.Orientation.VERTICAL, 4);
+            var vbox = new Gtk.Box (Gtk.Orientation.VERTICAL, 6);
             vbox.halign = Gtk.Align.START;
             vbox.hexpand = true;
             vbox.valign = Gtk.Align.CENTER;
             vbox.append (_title);
             vbox.append (_peak);
+            vbox.append (_time);
             add_prefix (vbox);
 
             _title.halign = Gtk.Align.START;
             _title.ellipsize = Pango.EllipsizeMode.END;
             _title.add_css_class ("caption-heading");
 
-            _peak.halign = Gtk.Align.FILL;
-            _peak.hexpand = true;
-            _peak.width_request = 160;
+            _peak.halign = Gtk.Align.START;
+            _peak.width_request = 168;
             _peak.height_request = 15;
             _peak.add_css_class ("dim-label");
+
+            _time.halign = Gtk.Align.START;
+            _time.add_css_class ("caption");
+            _time.add_css_class ("dim-label");
+            _time.add_css_class ("numeric");
 
             _cover.valign = Gtk.Align.CENTER;
             _cover.pixel_size = 40;
@@ -54,7 +62,7 @@ namespace Music {
             _play.add_css_class ("circular");
             _play.add_css_class ("flat");
             hbox.append (_play);
-            
+
             _next.valign = Gtk.Align.CENTER;
             _next.action_name = ACTION_APP + ACTION_NEXT;
             _next.icon_name = "media-skip-forward-symbolic";
@@ -65,15 +73,13 @@ namespace Music {
 
             var app = (Application) GLib.Application.get_default ();
             app.settings?.bind ("show-peak", _peak, "visible", SettingsBindFlags.DEFAULT);
+            app.settings?.bind ("show-peak", _time, "visible", SettingsBindFlags.GET | SettingsBindFlags.SET | SettingsBindFlags.INVERT_BOOLEAN);
 
             var player = app.player;
-            player.state_changed.connect ((state) => {
-                var playing = state == Gst.State.PLAYING;
-                _play.icon_name = playing ? "media-playback-pause-symbolic" : "media-playback-start-symbolic";
-            });
-            player.peak_parsed.connect ((peak) => {
-                _peak.peak = peak;
-            });
+            player.duration_changed.connect (on_duration_changed);
+            player.position_updated.connect (on_position_changed);
+            player.peak_parsed.connect (_peak.set_peak);
+            player.state_changed.connect (on_state_changed);
         }
 
         public Gdk.Paintable? cover {
@@ -108,6 +114,31 @@ namespace Music {
             color.red = color.green = color.blue = color.alpha = 0.5f;
             var rect = (!)Graphene.Rect ().init (0, 0, get_width (), 0.5f);
             snapshot.append_color (color, rect);
+        }
+
+        private void on_duration_changed (Gst.ClockTime duration) {
+            var value = GstPlayer.to_second (duration);
+            if (_duration != (int) value) {
+                _duration = (int) value;
+                update_time_label ();
+            }
+        }
+
+        private void on_position_changed (Gst.ClockTime position) {
+            var value = GstPlayer.to_second (position);
+            if (_position != (int) value) {
+                _position = (int) value;
+                update_time_label ();
+            }
+        }
+
+        private void on_state_changed (Gst.State state) {
+            var playing = state == Gst.State.PLAYING;
+            _play.icon_name = playing ? "media-playback-pause-symbolic" : "media-playback-start-symbolic";
+        }
+
+        private void update_time_label () {
+            _time.label = format_time (_position) + "/" + format_time (_duration);
         }
     }
 }
