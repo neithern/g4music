@@ -300,7 +300,9 @@ namespace Music {
                 }
                 update_cover_paintable (song, paintable);
                 if (pixbufs[1] != null) {
-                    app.thumbnailer.put (song.cover_uri, Gdk.Texture.for_pixbuf ((!)pixbufs[1]));
+                    var mini = Gdk.Texture.for_pixbuf ((!)pixbufs[1]);
+                    _mini_bar.cover = mini;
+                    app.thumbnailer.put (song.cover_uri, mini);
                     app.song_list.items_changed (app.current_item, 0, 0);
                 }
             }
