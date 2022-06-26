@@ -20,18 +20,18 @@
         <p>Features</p>
         <ul>
         <li>Supports most music file types, samba and any other remote protocols (thanks to great GIO and GStreamer).</li>
-        <li>Fast loading and parsing hundreds of music files in very few seconds.</li>
-        <li>Low memory usage for large playlist with album covers, no thumbnail caches to store.</li>
-        <li>Sort by album/artist/title or shuffle, supports full-text searching.</li>
-        <li>Album cover is original resolution, can be exported.</li>
-        <li>Gaussian blurred cover as window background, follow GNOME 42 light/dark mode.</li>
-        <li>Supports MPRIS control.</li>
-        <li>Supports drag-drop from file manager.</li>
+        <li>Fast loading and parsing thousands of music files in very few seconds.</li>
+        <li>Low memory usage for huge playlist with album covers, no thumbnail caches to store.</li>
+        <li>Sorts by album/artist/title or shuffle, supports full-text searching.</li>
+        <li>Supports embedded album art or external images as album cover, embedded can be exported.</li>
+        <li>Gaussian blurred cover as window background, follows GNOME 42 light/dark mode.</li>
+        <li>Supports drag-drop from GNOME Files, showing music in Files.</li>
         <li>Supports audio peaks visualizer.</li>
         <li>Supports gapless playback.</li>
         <li>Supports ReplayGain track mode.</li>
         <li>Supports pipewire audio sink.</li>
-        <li>All these in a small package with 300KB.</li>
+        <li>Supports MPRIS control.</li>
+        <li>Only need less than 400KB to install it.</li>
         </ul>
     </description>
 
