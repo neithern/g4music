@@ -12,7 +12,7 @@ A fast, fluent, light weight music player written in GTK4, with a beautiful, ada
 - Fast loading and parsing hundreds of music files, in very few seconds.
 - Low memory usage for large playlist with album covers, no thumbnail caches to store.
 - Sort by album/artist/title or shuffle, supports full-text searching.
-- Album cover is original resolution, can be exported.
+- Album cover is original resolution, can be exported, also recognize external images as cover.
 - Gaussian blurred cover as window background, follow GNOME 42 light/dark mode.
 - Supports MPRIS control.
 - Supports drag-drop from file manager.
