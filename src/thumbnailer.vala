@@ -53,8 +53,12 @@ namespace Music {
         private size_t _size = 0;
         private Tree<string, V> _cache = new Tree<string, V> (compare_string);
 
-        public unowned V find (string key) {
-            return _cache.lookup (key);
+        public V? find (string key) {
+            string orig_key;
+            V value;
+            if (_cache.lookup_extended (key, out orig_key, out value))
+                return value;
+            return null;
         }
 
         public void put (string key, V value) {
@@ -94,7 +98,7 @@ namespace Music {
         }
     }
 
-    public class Thumbnailer : LruCache<Gdk.Paintable?> {
+    public class Thumbnailer : LruCache<Gdk.Paintable> {
         public static int icon_size = 96;
 
         private HashTable<string, string> _album_covers = new HashTable<string, string> (str_hash, str_equal);
@@ -123,9 +127,13 @@ namespace Music {
             }
         }
 
+        public new Gdk.Paintable? find (string key) {
+            return base.find (key);
+        }
+
         public bool has_image (Song song) {
-            unowned var paintable = find (song.cover_uri);
-            return paintable is Gdk.Texture;
+            var paintable = find (song.cover_uri);
+            return paintable != null && (!)paintable is Gdk.Texture;
         }
 
         public async Gdk.Paintable? load_async (Song song) {
@@ -217,8 +225,9 @@ namespace Music {
             return paintable ?? new BasePaintable ();
         }
 
-        protected override size_t size_of_value (Gdk.Paintable? paintable) {
-            return (paintable?.get_intrinsic_width () ?? 0) * (paintable?.get_intrinsic_height () ?? 0) * 4;
+        protected override size_t size_of_value (Gdk.Paintable paintable) {
+            var pixels = paintable.get_intrinsic_width () * paintable.get_intrinsic_height ();
+            return (paintable is Gdk.Texture) ? pixels * 4 : pixels;
         }
     }
 
