@@ -101,7 +101,7 @@ namespace Music {
     }
 
     public static uint8[] new_uint8_array (uint size) throws Error {
-        if ((int) size <= 0 || size > int32.MAX)
+        if ((int) size <= 0 || size > 0xfffffff) // 28 bits
             throw new IOError.INVALID_ARGUMENT ("invalid size");
         return new uint8[size];
     }
