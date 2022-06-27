@@ -249,7 +249,14 @@ namespace Music {
             if (song.title.length == 0) {
                 //  title should always not empty
                 var end = name.last_index_of_char ('.');
-                song.title = end > 0 ? name.substring (0, end) : name;
+                name = end > 0 ? name.substring (0, end) : name;
+                var sep = name.index_of_char ('-');
+                if (sep > 0) {
+                    song.artist = name.substring (0, sep).strip ();
+                    song.title = name.substring (sep + 1).strip ();
+                } else {
+                    song.title = name;
+                }
                 song.update_keys ();
             }
         }
