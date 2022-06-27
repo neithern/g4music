@@ -106,7 +106,7 @@
               <object class="AdwLeafletPage">
                 <property name="navigatable">true</property>
                 <property name="child">
-                  <object class="GtkBox">
+                  <object class="GtkBox" id="content_box">
                     <property name="hexpand">true</property>
                     <property name="orientation">vertical</property>
                     <child>
@@ -114,7 +114,7 @@
                         <style>
                           <class name="flat"/>
                         </style>
-                         <child type="start">
+                        <child type="start">
                           <object class="GtkButton" id="back_btn">
                             <binding name="visible">
                               <lookup name="folded">leaflet</lookup>
@@ -137,8 +137,9 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkBox" id="content_box">
+                      <object class="GtkBox" id="song_box">
                         <property name="orientation">vertical</property>
+                        <property name="hexpand">true</property>
                         <property name="margin_start">32</property>
                         <property name="margin_end">32</property>
                         <property name="margin_top">16</property>
@@ -150,7 +151,7 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkBox" id="song_details">
+                          <object class="GtkBox">
                             <property name="orientation">vertical</property>
                             <property name="valign">start</property>
                             <property name="margin_top">24</property>
