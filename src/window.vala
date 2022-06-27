@@ -107,10 +107,12 @@ namespace Music {
             make_label_clickable (song_album).released.connect (() => {
                 search_entry.text = "album=" + song_album.label;
                 search_btn.active = true;
+                leaflet.navigate (Adw.NavigationDirection.BACK);
             });
             make_label_clickable (song_artist).released.connect (() => {
                 search_entry.text = "artist=" + song_artist.label;
                 search_btn.active = true;
+                leaflet.navigate (Adw.NavigationDirection.BACK);
             });
 
             var play_bar = new PlayBar ();
