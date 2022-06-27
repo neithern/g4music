@@ -399,7 +399,8 @@ namespace Music {
         private int _blur_height = 0;
 
         private bool update_blur_paintable (int width, int height, bool force = false) {
-            var paintable = _cover_paintable.paintable;
+            var app = (Application) application;
+            var paintable = app.thumbnailer.find (app.current_song?.cover_uri ?? ""); // _cover_paintable.paintable;
             if (paintable != null) {
                 if (force || _blur_width != width || _blur_height != height) {
                     _blur_width = width;
