@@ -54,7 +54,7 @@ namespace Music {
 
             var pt = Graphene.Point ();
             pt.x = 0;
-            pt.y = (float) (height - logic_rect.height) * 0.5f;
+            pt.y = - ink_rect.y + (height - ink_rect.height) * 0.5f;
             snapshot.translate (pt);
             snapshot.append_layout (_layout, color);
             pt.y = - pt.y;
