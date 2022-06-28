@@ -302,13 +302,13 @@ namespace Music {
                 } else {
                     paintable = yield app.thumbnailer.load_directly_async (song, 1024);
                 }
-                update_cover_paintable (song, paintable);
                 if (pixbufs[1] != null) {
                     var mini = Gdk.Texture.for_pixbuf ((!)pixbufs[1]);
                     _mini_bar.cover = mini;
                     app.thumbnailer.put (song.cover_uri, mini);
                     app.song_list.items_changed (app.current_item, 0, 0);
                 }
+                update_cover_paintable (song, paintable);
             }
         }
 
@@ -385,12 +385,13 @@ namespace Music {
             }
 
             var target = new Adw.CallbackAnimationTarget ((value) => {
-                _cover_paintable.fade = value;
                 _bkgnd_paintable.fade = value;
+                _cover_paintable.fade = value;
             });
             _fade_animation?.pause ();
             _fade_animation = new Adw.TimedAnimation (cover_image, 1 - _cover_paintable.fade, 0, 800, target);
             ((!)_fade_animation).done.connect (() => {
+                _bkgnd_paintable.previous = null;
                 _cover_paintable.previous = null;
                 _fade_animation = null;
             });
@@ -401,8 +402,7 @@ namespace Music {
         private int _blur_height = 0;
 
         private bool update_blur_paintable (int width, int height, bool force = false) {
-            var app = (Application) application;
-            var paintable = app.thumbnailer.find (app.current_song?.cover_uri ?? ""); // _cover_paintable.paintable;
+            var paintable = _mini_bar.cover; // _cover_paintable.paintable;
             if (paintable != null) {
                 if (force || _blur_width != width || _blur_height != height) {
                     _blur_width = width;
