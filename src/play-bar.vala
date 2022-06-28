@@ -147,10 +147,16 @@ namespace Music {
     }
 
     public static string format_time (int seconds) {
-        int minutes = seconds / 60;
-        seconds -= minutes * 60;
         var sb = new StringBuilder ();
-        sb.printf ("%d:%02d", minutes, seconds);
+        var hours = seconds / 3600;
+        var minutes = seconds / 60;
+        seconds -= minutes * 60;
+        if (hours > 0) {
+            minutes -= hours * 60;
+            sb.printf ("%d:%02d:%02d", hours, minutes, seconds);
+        } else {
+            sb.printf ("%d:%02d", minutes, seconds);
+        }
         return sb.str;
     }
 
