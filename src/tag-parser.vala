@@ -42,6 +42,10 @@ namespace Music {
                         seek_full (stream, - head.length, SeekType.CUR);
                         var tags2 = parse_flac_tags (stream);
                         tags = merge_tags (tags, tags2);
+                    } else if (Memory.cmp (head, "OggS", 4) == 0) {
+                        seek_full (stream, - head.length, SeekType.CUR);
+                        var tags2 = parse_ogg_tags (stream);
+                        tags = merge_tags (tags, tags2);
                     }
                     // No ID3v2/APE any more, quit the loop
                     break;
@@ -73,12 +77,6 @@ namespace Music {
         try {
             seek_full (stream, 0, SeekType.SET);
             var demux_name = get_demux_name_by_content (head);
-            if (demux_name == null) {
-                var uri = file.get_uri ();
-                var pos = uri.last_index_of_char ('.');
-                var ext = uri.substring (pos + 1);
-                demux_name = get_demux_name_by_extension (ext);
-            }
             if (demux_name != null) {
                 tags = parse_demux_tags (stream, (!)demux_name);
             }
@@ -290,6 +288,53 @@ namespace Music {
         return tags;
     }
 
+    public const string[] OGG_TAG_IDS = {
+        "\x03vorbis",
+        "\x81kate\0\0\0\0",
+        //  "\x81daala",
+        "\x81theora",
+        "OpusTags",
+        "OVP80\x02 ",
+    };
+
+    public static Gst.TagList? parse_ogg_tags (BufferedInputStream stream) throws Error {
+        var head = new uint8[27];
+        var mos = new MemoryOutputStream (null);
+        while (true) {
+            read_full (stream, head);
+            uint seg_count = head[26];
+            var last_page = seg_count == 0;
+            if (seg_count > 0) {
+                var segments = new_uint8_array (seg_count);
+                read_full (stream, segments);
+                uint page_size = 0;
+                for (var i = 0; i < seg_count; i++) {
+                    page_size += segments[i];
+                }
+                var buffer = new_uint8_array (page_size);
+                read_full (stream, buffer);
+                mos.write (buffer);
+                last_page = segments[seg_count - 1] != 255;
+            }
+
+            size_t size = 0;
+            if (last_page && (size = mos.get_data_size ()) > 0) {
+                var data = mos.get_data ()[0:size];
+                foreach (var id in OGG_TAG_IDS) {
+                    if (size > id.length && Memory.cmp (data, id, id.length) == 0) {
+                        return Gst.Tag.List.from_vorbiscomment (data, id.data, null);
+                    }
+                }
+                mos = new MemoryOutputStream (null);
+            }
+
+            if (seg_count == 0) {
+                break;
+            }
+        }
+        return null;
+    }
+
     public static Gst.TagList? parse_demux_tags (BufferedInputStream stream, string demux_name) throws Error {
         var str = @"giostreamsrc name=src ! $(demux_name) ! fakesink sync=false";
         dynamic Gst.Pipeline? pipeline = Gst.parse_launch (str) as Gst.Pipeline;
@@ -358,33 +403,6 @@ namespace Music {
             return "asfparse";
         }
         return null;
-    }
-
-    private static string? get_demux_name_by_extension (string ext_name) {
-        var ext = ext_name.down ();
-        switch (ext) {
-            case "aiff":
-                return "aiffparse";
-            case "flac":
-                return "flacparse";
-            case "m4a":
-            case "m4b":
-            case "mp4":
-                return "qtdemux";
-            case "ogg":
-            case "oga":
-                return "oggdemux";
-            case "opus":
-                return "opusparse";
-            case "vorbis":
-                return "vorbisparse";
-            case "wav":
-                return "wavparse";
-            case "wma":
-                return "asfparse";
-            default:
-                return null;
-        }
     }
 
     public static Gst.Sample? parse_image_from_tag_list (Gst.TagList tags) {
