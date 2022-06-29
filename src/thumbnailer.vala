@@ -77,7 +77,7 @@ namespace Music {
                 _cache.insert (key, value);
             }
             _size += size;
-            //  print (@"cache size: $(_size)\n");
+            //  print (@"Cache $(_cache.nnodes ()) items, $_size bytes\n");
         }
 
         public bool remove (string key) {
@@ -165,7 +165,7 @@ namespace Music {
 
             var album_key = @"$(song.album)-$(song.artist)-";
             var tags = new Gst.TagList?[] { null };
-            var cover_uri = new string?[] { null };
+            var cover_uri = new string[] { song.cover_uri };
             var pixbuf = yield run_async<Gdk.Pixbuf?> (() => {
                 var tag = tags[0] = parse_gst_tags (file);
                 Gst.Sample? sample = null;
@@ -179,9 +179,11 @@ namespace Music {
                             if (_album_covers.lookup_extended (album_key, out key, out uri)) {
                                 cover_uri[0] = uri;
                                 //  print ("Same album cover: %s\n", album_key);
-                                return null;
+                                //  Continue to load, because the shared cover maybe
+                                //  still be loading in another thread
+                            } else {
+                                _album_covers[album_key] = cover_uri[0];
                             }
-                            _album_covers[album_key] = song.cover_uri;
                         }
                     }
                     return load_clamp_pixbuf_from_sample ((!)sample, size);
@@ -191,7 +193,7 @@ namespace Music {
                     var cover_file = _cover_finder.find (file);
                     var stream = cover_file?.read ();
                     if (cover_file != null && stream != null) {
-                        cover_uri[0] = cover_file?.get_uri ();
+                        cover_uri[0] = (!) cover_file?.get_uri ();
                         return load_clamp_pixbuf_from_stream (new BufferedInputStream ((!)stream), size);
                     }
                 } catch (Error e) {
@@ -206,13 +208,9 @@ namespace Music {
                     tag_updated (song);
                 }
             }
-            if (cover_uri[0] != null) {
-                //  Update cover uri if available
-                song.cover_uri = (!)cover_uri[0];
-                if (pixbuf == null && size == icon_size) {
-                    //  Got a shared cover_uri for same album
-                    return find (song.cover_uri);
-                }
+            if (song.cover_uri != cover_uri[0]) {
+                //  Update cover uri if changed
+                song.cover_uri = cover_uri[0];
             }
             if (pixbuf != null) {
                 return Gdk.Texture.for_pixbuf ((!)pixbuf);
