@@ -39,12 +39,16 @@ namespace Music {
                 } else {
                     //  Parse by file container format
                     if (Memory.cmp (head, "fLaC", 4) == 0) {
-                        seek_full (stream, - head.length, SeekType.CUR);
+                        seek_full (stream, - head.length);
                         var tags2 = parse_flac_tags (stream);
                         tags = merge_tags (tags, tags2);
                     } else if (Memory.cmp (head, "OggS", 4) == 0) {
-                        seek_full (stream, - head.length, SeekType.CUR);
+                        seek_full (stream, - head.length);
                         var tags2 = parse_ogg_tags (stream);
+                        tags = merge_tags (tags, tags2);
+                    } else if (Memory.cmp (head + 4, "ftyp", 4) == 0) {
+                        seek_full (stream, - head.length);
+                        var tags2 = parse_mp4_tags (stream);
                         tags = merge_tags (tags, tags2);
                     }
                     // No ID3v2/APE any more, quit the loop
@@ -87,10 +91,8 @@ namespace Music {
     }
 
     public static bool tags_has_title_or_image (Gst.TagList? tags) {
-        string? title = null;
-        Gst.Sample? sample = null;
-        return ((tags?.peek_string_index (Gst.Tags.TITLE, 0, out title) ?? false)
-            || (tags?.get_sample (Gst.Tags.IMAGE, out sample) ?? false));
+        return (tags?.get_tag_size (Gst.Tags.TITLE) ?? 0) > 0
+            || (tags?.get_tag_size (Gst.Tags.IMAGE) ?? 0) > 0;
     }
 
     public static uint8[] new_uint8_array (uint size) throws Error {
@@ -105,7 +107,7 @@ namespace Music {
             throw new IOError.FAILED ("read_all");
     }
 
-    public static void seek_full (BufferedInputStream stream, int64 offset, SeekType type) throws Error {
+    public static void seek_full (BufferedInputStream stream, int64 offset, SeekType type = SeekType.CUR) throws Error {
         if (! stream.seek (offset, type))
             throw new IOError.FAILED ("seek");
     }
@@ -145,16 +147,16 @@ namespace Music {
         while (true) {
             try {
                 //  Try parse end tag: ID3v1 or APE
-                seek_full (stream, -128, SeekType.CUR);
+                seek_full (stream, -128);
                 read_full (stream, foot);
                 if (Memory.cmp (foot, "TAG", 3) == 0) {
                     var tags2 = Gst.Tag.List.new_from_id3v1 (foot);
                     tags = merge_tags (tags, tags2);
                     //  print ("ID3v1 parsed: %d\n", tags2.n_tags ());
-                    seek_full (stream, -128, SeekType.CUR);
+                    seek_full (stream, -128);
                 } else if (Memory.cmp (foot[128-32:], "APETAGEX", 8) == 0) {
                     var size = read_uint32_le (foot, 128 - 32 + 12) + 32;
-                    seek_full (stream, - (int) size, SeekType.CUR);
+                    seek_full (stream, - (int) size);
                     var data = new_uint8_array (size);
                     read_full (stream, data);
                     var tags2 = GstExt.ape_demux_parse_tags (data);
@@ -162,16 +164,16 @@ namespace Music {
                     tags = merge_tags (tags, tags2, Gst.TagMergeMode.REPLACE);
                     apev2_found = ! tags2.is_empty ();
                     //  print ("APEv2 parsed: %d\n", tags2.n_tags ());
-                    seek_full (stream, - (int) size, SeekType.CUR);
+                    seek_full (stream, - (int) size);
                 } else if (Memory.cmp (foot[128-9:], "LYRICS200", 9) == 0) {
                     var size = read_decimal_uint (foot[128-15:128-9]);
-                    seek_full (stream, - (int) (size + 15), SeekType.CUR);
+                    seek_full (stream, - (int) (size + 15));
                     var data = new_uint8_array (size);
                     read_full (stream, data);
                     var tags2 = parse_lyrics200_tags (data);
                     tags = merge_tags (tags, tags2, apev2_found ? Gst.TagMergeMode.KEEP : Gst.TagMergeMode.REPLACE);
                     //  print ("LYRICS200 parsed: %d\n", tags2.n_tags ());
-                    seek_full (stream, - (int) (size + 15), SeekType.CUR);
+                    seek_full (stream, - (int) (size + 15));
                 } else {
                     break;
                 }
@@ -232,7 +234,7 @@ namespace Music {
                     Gst.Tag.List.add_id3_image ((!)tags, data[pos:pos+img_len], img_type);
                     flags |= 0x02;
                 } else {
-                    seek_full (stream, size, SeekType.CUR);
+                    seek_full (stream, size);
                 }
             } catch (Error e) {
                 if (tags == null)
@@ -280,12 +282,172 @@ namespace Music {
             }
             if (tag != null) {
                 var value = Gst.Tag.freeform_string_to_utf8 ((char[]) str, ID3_TAG_ENCODINGS);
-                if (value.length > 0) {
-                    tags.add (Gst.TagMergeMode.APPEND, (!)tag, value);
+                if (value != (string)null && value.length > 0) {
+                    tags.add (Gst.TagMergeMode.REPLACE, (!)tag, value);
                 }
             }
         }
         return tags;
+    }
+
+    private static void parse_mp4_image_value (uint8[] data, string tag, Gst.TagList tags) throws Error {
+        var len = data.length;
+        if (len > 16) {
+            var type = read_uint32_be (data, 8);
+            if ((type == 0x0000000d || type == 0x0000000e)) {
+                var image_data = data[16:len];
+                Gst.Tag.ImageType image_type;
+                if (tags.get_tag_size (Gst.Tags.IMAGE) == 0)
+                    image_type = Gst.Tag.ImageType.FRONT_COVER;
+                else
+                    image_type = Gst.Tag.ImageType.NONE;
+                var sample = Gst.Tag.image_data_to_image_sample (image_data, image_type);
+                if (sample != (Gst.Sample)null) {
+                    tags.add (Gst.TagMergeMode.REPLACE, tag, sample);
+                }
+                //  print (@"Tag: $tag=$(data.length)\n");
+            }
+        } else {
+            print ("MP4: unkown number type\n");
+        }
+    }
+
+    private static void parse_mp4_number_value (uint8[] data, string tag1, string tag2, Gst.TagList tags) throws Error {
+        var len = data.length;
+        if (len >= 22) {
+            var type = read_uint32_be (data, 8);
+            if (type == 0x00000000) {
+                var n = read_uint32_be (data, 18);
+                var n1 = n >> 16;
+                var n2 = n & 0xffff;
+                if (n1 > 0) {
+                    tags.add (Gst.TagMergeMode.REPLACE, tag1, n1);
+                    //  print (@"Tag: $tag1=$n1\n");
+                }
+                if (n2 > 0) {
+                    tags.add (Gst.TagMergeMode.REPLACE, tag2, n2);
+                    //  print (@"Tag: $tag2=$n2\n");
+                }
+            }
+        } else {
+            print ("MP4: unkown number type\n");
+        }
+    }
+
+    public const string[] MP4_TAG_ENCODINGS = {
+        "GST_QT_TAG_ENCODING",
+        "GST_TAG_ENCODING",
+        (string) null
+    };
+
+    private static void parse_mp4_string_value (uint8[] data, string tag, Gst.TagList tags) throws Error {
+        var len = data.length;
+        if (len > 16) {
+            var type = read_uint32_be (data, 8);
+            if (type == 0x00000001) {
+                var str_data = data[16:len];
+                var value = Gst.Tag.freeform_string_to_utf8 ((char[]) str_data, MP4_TAG_ENCODINGS);
+                if (value != (string)null && value.length > 0) {
+                    tags.add (Gst.TagMergeMode.REPLACE, (!)tag, value);
+                    //  print (@"Tag: $tag=$value\n");
+                }
+            }
+        } else {
+            print ("MP4: unkown string type\n");
+        }
+    }
+
+    private static uint find_mp4_data_child (uint8[] buffer, uint pos, uint end, uint32 fourcc) {
+        while (pos + 8 < end) {
+            var box_size = read_uint32_be (buffer, pos);
+            var box_type = read_uint32_be (buffer, pos + 4);
+            if (box_type == fourcc) {
+                return pos;
+            }
+            pos += box_size;
+        }
+        return end;
+    }
+
+    private static void parse_mp4_ilst_box (uint8[] buffer, Gst.TagList tags) throws Error {
+        var size = buffer.length;
+        uint pos = 0;
+        while (pos + 8 < size) {
+            var box_size = read_uint32_be (buffer, pos);
+            var box_type = read_uint32_be (buffer, pos + 4);
+            var box_end = pos + box_size;
+            var data_pos = find_mp4_data_child (buffer, pos + 8, box_end, 0x64617461); // data
+            if (box_size > 16 && data_pos != box_end) {
+                var data_size = read_uint32_be (buffer, data_pos);
+                var data = buffer[data_pos : data_pos + data_size];
+                switch (box_type) {
+                    case 0xa96e616du: // _nam
+                    case 0x7469746cu: // titl
+                        parse_mp4_string_value (data, Gst.Tags.TITLE, tags);
+                        break;
+                    case 0xa9415254u: // _ART
+                    case 0x70657266u: // perf
+                        parse_mp4_string_value (data, Gst.Tags.ARTIST, tags);
+                        break;
+                    case 0xa9616c62u: // _alb
+                    case 0x616c626du: // alum
+                        parse_mp4_string_value (data, Gst.Tags.ALBUM, tags);
+                        break;
+                    case 0x74726b6eu: // trkn
+                        parse_mp4_number_value (data, Gst.Tags.TRACK_NUMBER, Gst.Tags.TRACK_COUNT, tags);
+                        break;
+                    case 0x636f7672u: // covr
+                        parse_mp4_image_value (data, Gst.Tags.IMAGE, tags);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            pos = box_end;
+        }
+    }
+
+    private static void parse_mp4_box (BufferedInputStream stream, Gst.TagList tags) throws Error {
+        var box_head = new uint8[8];
+        while (tags.is_empty ()) {
+            read_full (stream, box_head);
+            var box_size = read_uint32_be (box_head);
+            var box_type = read_uint32_be (box_head, 4);
+            if (box_size <= 8) {
+                continue;
+            } else if (box_type == 0x6d6f6f76) { // moov
+                parse_mp4_box (stream, tags);
+            } else if (box_type == 0x75647461) { // udta
+                parse_mp4_box (stream, tags);
+            } else if (box_type == 0x6d657461 && box_size > 16) { // meta
+                read_full (stream, box_head);
+                var v1 = read_uint32_be (box_head);
+                var v2 = read_uint32_be (box_head, 4);
+                if (v2 == 0x68646c72) { // hdlr
+                    seek_full (stream, -8);
+                    parse_mp4_box (stream, tags);
+                } else if (v1 == 0) {
+                    seek_full (stream, -4);
+                    parse_mp4_box (stream, tags);
+                }
+            } else if (box_type == 0x696c7374) { // ilst
+                var buffer = new_uint8_array (box_size - 8);
+                read_full (stream, buffer);
+                parse_mp4_ilst_box (buffer, tags);
+            } else {
+                seek_full (stream, box_size - 8);
+            }
+        }
+    }
+
+    public static Gst.TagList? parse_mp4_tags (BufferedInputStream stream) {
+        var tags = new Gst.TagList.empty ();
+        try {
+            parse_mp4_box (stream, tags);
+        } catch (Error e) {
+            print ("Parse MP4 Error %s\n", e.message);
+        }
+        return tags.is_empty () ? (Gst.TagList?) null : tags;
     }
 
     public const string[] OGG_TAG_IDS = {
@@ -391,12 +553,12 @@ namespace Music {
         uint8* p = head;
         if (Memory.cmp (p, "FORM", 4) == 0 && (Memory.cmp (p + 8, "AIFF", 4) == 0 || Memory.cmp (p + 8, "AIFC", 4) == 0)) {
             return "aiffparse";
-        } else if (Memory.cmp (p, "fLaC", 4) == 0) {
-            return "flacparse";
-        } else if (Memory.cmp (p + 4, "ftyp", 4) == 0) {
-            return "qtdemux";
-        } else if (Memory.cmp (p, "OggS", 4) == 0) {
-            return "oggdemux";
+        //  } else if (Memory.cmp (p, "fLaC", 4) == 0) {
+        //      return "flacparse";
+        //  } else if (Memory.cmp (p + 4, "ftyp", 4) == 0) {
+        //      return "qtdemux";
+        //  } else if (Memory.cmp (p, "OggS", 4) == 0) {
+        //      return "oggdemux";
         } else if (Memory.cmp (p, "RIFF", 4) == 0 && Memory.cmp (p + 8, "WAVE", 4) == 0) {
             return "wavparse";
         } else if (Memory.cmp (p, "\x30\x26\xB2\x75\x8E\x66\xCF\x11\xA6\xD9\x00\xAA\x00\x62\xCE\x6C", 16) == 0) {
