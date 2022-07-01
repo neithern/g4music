@@ -201,12 +201,10 @@ namespace Music {
                 return null;
                  //  run in single_thread_pool for samba to save connections
             }, false, file.has_uri_scheme ("smb"));
-            if (! song.has_tags) {
+            if (! song.has_tags && tags[0] != null) {
                 //  Update tags if not has
                 song.from_gst_tags (tags[0]);
-                if (song.has_tags) {
-                    tag_updated (song);
-                }
+                tag_updated (song);
             }
             if (song.cover_uri != cover_uri[0]) {
                 //  Update cover uri if changed

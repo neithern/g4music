@@ -138,21 +138,24 @@ namespace Music {
                     else
                         queue.push (song);
                 }
-                var num_thread = get_num_processors ();
-                var threads = new Thread<void>[num_thread];
-                for (var i = 0; i < num_thread; i++) {
-                    threads[i] = new Thread<void> (@"thread$(i)",  () => {
-                        Song? s;
-                        while ((s = queue.try_pop ()) != null) {
-                            var song = (!)s;
-                            parse_song_tags (song);
-                            if (song.has_tags)
-                                _tag_cache.add (song);
-                        }
-                    });
-                }
-                foreach (var thread in threads) {
-                    thread.join ();
+                var queue_count = queue.length ();
+                if (queue_count > 0) {
+                    var num_thread = uint.min (queue_count, get_num_processors ());
+                    var threads = new Thread<void>[num_thread];
+                    for (var i = 0; i < num_thread; i++) {
+                        threads[i] = new Thread<void> (@"thread$(i)", () => {
+                            Song? s;
+                            while ((s = queue.try_pop ()) != null) {
+                                var song = (!)s;
+                                parse_song_tags (song);
+                                if (song.has_tags)
+                                    _tag_cache.add (song);
+                            }
+                        });
+                    }
+                    foreach (var thread in threads) {
+                        thread.join ();
+                    }
                 }
 
                 if (_sort_mode == SortMode.SHUFFLE) {
@@ -161,14 +164,14 @@ namespace Music {
                 arr.sort ((CompareFunc<Object>) _compare);
                 print ("Found %u songs in %g seconds\n", arr.length,
                         (get_monotonic_time () - begin_time) / 1e6);
-
-                if (_tag_cache.modified) {
-                    save_tag_cache_async.begin ((obj, res) => {
-                        save_tag_cache_async.end (res);
-                    });
-                }
             });
             _store.splice (_store.get_n_items (), 0, arr.data);
+
+            if (_tag_cache.modified) {
+                save_tag_cache_async.begin ((obj, res) => {
+                    save_tag_cache_async.end (res);
+                });
+            }
         }
 
         private static void add_file (File file, GenericArray<Object> arr) {
@@ -234,18 +237,12 @@ namespace Music {
             var file = File.new_for_uri (song.uri);
             var name = song.title;
             song.title = "";
-#if HAS_TAGLIB_C
-            var path = file.get_path ();
-            if (path != null) { // parse local path only
-                var tf = new TagLib.File ((!)path);
-                song.from_taglib (tf);
-            }
-#else
+
             if (file.is_native ()) {
                 var tags = parse_gst_tags (file);
                 song.from_gst_tags (tags);
             }
-#endif
+
             if (song.title.length == 0) {
                 //  title should always not empty
                 var end = name.last_index_of_char ('.');

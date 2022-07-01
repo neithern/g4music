@@ -31,41 +31,21 @@ namespace Music {
         }
 
         public void from_gst_tags (Gst.TagList? tags) {
-            string? al = null, ar = null, ti = null;
+            unowned string? al = null, ar = null, ti = null;
             uint tr = 0;
             if (tags != null) {
-                tags?.get_string (Gst.Tags.ALBUM, out al);
-                tags?.get_string (Gst.Tags.ARTIST, out ar);
-                tags?.get_string (Gst.Tags.TITLE, out ti);
+                tags?.peek_string_index (Gst.Tags.ALBUM, 0, out al);
+                tags?.peek_string_index (Gst.Tags.ARTIST, 0, out ar);
+                tags?.peek_string_index (Gst.Tags.TITLE, 0, out ti);
                 tags?.get_uint (Gst.Tags.TRACK_NUMBER, out tr);
+                has_tags = true;
             }
             this.album = (al != null && al?.length > 0) ? (!)al : UNKOWN_ALBUM;
             this.artist = (ar != null && ar?.length > 0) ? (!)ar : UNKOWN_ARTIST;
             if (ti != null && ti?.length > 0) this.title = (!)ti;
             if ((int) tr > 0) this.track = (int) tr;
-            has_tags = true;
             update_keys ();
         }
-
-#if HAS_TAGLIB_C
-        public void from_taglib (TagLib.File file) {
-            string? al = null, ar = null, ti = null;
-            uint tr = 0;
-            if (file.is_valid ()) {
-                unowned var tags = file.tag;
-                al = tags.album;
-                ar = tags.artist;
-                ti = tags.title;
-                tr = tags.track;
-            }
-            this.album = (al != null && al?.length > 0) ? (!)al : UNKOWN_ALBUM;
-            this.artist = (ar != null && ar?.length > 0) ? (!)ar : UNKOWN_ARTIST;
-            if (ti != null && ti?.length > 0) this.title = (!)ti;
-            if ((int) tr > 0) this.track = (int) tr;
-            has_tags = true;
-            update_keys ();
-        }
-#endif
 
         public void update_keys () {
             _album_key = album.collate_key_for_filename ();
