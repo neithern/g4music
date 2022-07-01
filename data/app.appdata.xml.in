@@ -48,6 +48,16 @@
     </screenshots>
 
     <releases>
+        <release version="1.2" date="2022-07-01">
+            <description>
+                <ul>
+                <li>Faster parsing OGG and MP4 tags.</li>
+                <li>Faster drawing texts using pango.</li>
+                <li>Many UI optimizations.</li>
+                <li>Add Brazilian Portuguese translation, thanks to @PedroHSilva.</li>
+                </ul>
+            </description>
+        </release>
         <release version="1.1" date="2022-06-25">
             <description>
                 <ul>
@@ -109,7 +119,7 @@
                 <li>Show a spinner when loading songs.</li>
                 <li>Save and restore the window size.</li>
                 <li>Add Swedish translation, thanks to Åke Engelbrektson.</li>
-                <li>Faster parse FLAC tags.</li>
+                <li>Faster parsing FLAC tags.</li>
                 </ul>
             </description>
         </release>
