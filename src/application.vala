@@ -34,6 +34,7 @@ namespace Music {
         private Thumbnailer _thumbnailer = new Thumbnailer ();
         private Settings? _settings = new_application_settings ();
         private MprisPlayer? _mpris = null;
+        private uint _mpris_id = 0;
         private Portal? _portal = null;
 
         public signal void loading_changed (bool loading, uint size);
@@ -96,13 +97,13 @@ namespace Music {
             _player.next_uri_start.connect (on_player_next_uri_start);
             _player.tag_parsed.connect (on_tag_parsed);
 
-            var mpris_id = Bus.own_name (BusType.SESSION,
-                "org.mpris.MediaPlayer2." + application_id,
+            _mpris_id = Bus.own_name (BusType.SESSION,
+                "org.mpris.MediaPlayer2." + Config.APP_ID,
                 BusNameOwnerFlags.NONE,
                 on_bus_acquired,
                 null, null
             );
-            if (mpris_id == 0)
+            if (_mpris_id == 0)
                 warning ("Initialize MPRIS session failed\n");
         }
 
@@ -134,6 +135,11 @@ namespace Music {
         }
 
         public override void shutdown () {
+            if (_mpris_id != 0) {
+                Bus.unown_name (_mpris_id);
+                _mpris_id = 0;
+            }
+
             _settings?.set_string ("played-uri", _current_song?.uri ?? "");
             _settings?.set_double ("volume", _player.volume);
 
@@ -369,8 +375,8 @@ namespace Music {
         private void on_bus_acquired (DBusConnection connection, string name) {
             _mpris = new MprisPlayer (this, connection);
             try {
-                connection.register_object ("/org/mpris/MediaPlayer2", _mpris);
-                connection.register_object ("/org/mpris/MediaPlayer2", new MprisRoot ());
+                connection.register_object ("/org/mpris/MediaPlayer2", (!)_mpris);
+                connection.register_object ("/org/mpris/MediaPlayer2", new MprisRoot (this));
             } catch (Error e) {
                 warning ("Register MPRIS failed: %s\n", e.message);
             }
