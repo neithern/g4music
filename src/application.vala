@@ -307,15 +307,8 @@ namespace Music {
             loading_changed (true, saved_size);
 
             if (saved_size == 0 && files.length == 0) {
-#if HAS_TRACKER_SPARQL
-                if (_settings.get_boolean ("tracker-mode")) {
-                    yield _song_store.add_sparql_async ();
-                } else
-#endif
-                {
-                    files.resize (1);
-                    files[0] = get_music_folder ();
-                }
+                files.resize (1);
+                files[0] = get_music_folder ();
             }
             if (files.length > 0) {
                 yield _song_store.add_files_async (files);

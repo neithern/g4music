@@ -75,50 +75,6 @@ namespace Music {
             }
         }
 
-#if HAS_TRACKER_SPARQL
-        public const string SQL_QUERY_SONGS = """
-            SELECT 
-                nie:title(nmm:musicAlbum(?song))
-                nmm:artistName (nmm:artist (?song))
-                nie:title (?song)
-                nie:isStoredAs (?song)
-            WHERE { ?song a nmm:MusicPiece }
-        """;
-
-        public async void add_sparql_async () {
-            var arr = new GenericArray<Object> (4096);
-            yield run_async<void> (() => {
-                var begin_time = get_monotonic_time ();
-                Tracker.Sparql.Connection connection;
-                try {
-                    connection = Tracker.Sparql.Connection.bus_new ("org.freedesktop.Tracker3.Miner.Files", null);
-                    var cursor = connection.query (SQL_QUERY_SONGS);
-                    while (cursor.next ()) {
-                        var song = new Song ();
-                        song.album = cursor.get_string (0) ?? UNKOWN_ALBUM;
-                        song.artist = cursor.get_string (1) ?? UNKOWN_ARTIST;
-                        song.title = cursor.get_string (2) ?? "";
-                        song.uri = cursor.get_string (3) ?? "";
-                        if (song.title.length == 0)
-                            song.title = parse_name_from_uri (song.uri);
-                        song.ttype = TagType.SPARQL;
-                        song.update_keys ();
-                        arr.add (song);
-                    }
-                } catch (Error e) {
-                    warning ("Query error: %s\n", e.message);
-                }
-                if (_sort_mode == SortMode.SHUFFLE) {
-                    Song.shuffle_order (arr);
-                }
-                arr.sort ((CompareFunc<Object>) _compare);
-                print ("Found %u songs in %g seconds\n", arr.length,
-                    (get_monotonic_time () - begin_time) / 1e6);
-            });
-            _store.splice (_store.get_n_items (), 0, arr.data);
-        }
-#endif
-
         public async void add_files_async (File[] files) {
             var load_thread = new Thread<void> ("load_thread", _tag_cache.load);
             var arr = new GenericArray<Object> (4096);

@@ -4,12 +4,6 @@ namespace Music {
     public class PreferencesWindow : Adw.PreferencesWindow {
         [GtkChild]
         unowned Gtk.Switch dark_btn;
-#if HAS_TRACKER_SPARQL
-        [GtkChild]
-        unowned Adw.ActionRow tracker_row;
-        [GtkChild]
-        unowned Gtk.Switch tracker_btn;
-#endif
         [GtkChild]
         unowned Gtk.Button music_dir_btn;
         [GtkChild]
@@ -30,19 +24,6 @@ namespace Music {
 
             dark_btn.bind_property ("state", app, "dark_theme", BindingFlags.DEFAULT);
             settings?.bind ("dark-theme", dark_btn, "state", SettingsBindFlags.DEFAULT);
-
-#if HAS_TRACKER_SPARQL
-            settings.bind ("tracker-mode", tracker_btn, "state", SettingsBindFlags.GET_NO_CHANGES);
-            tracker_row.visible = true;
-            tracker_btn.state_set.connect ((state) => {
-                // reload later after setting apply
-                Idle.add (() => {
-                    app.reload_song_store ();
-                    return false;
-                });
-                return false;
-            });
-#endif
 
             var music_dir = app.get_music_folder ();
             music_dir_btn.label = get_display_name (music_dir);
