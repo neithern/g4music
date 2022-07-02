@@ -95,6 +95,7 @@ namespace Music {
             _player.error.connect (on_player_error);
             _player.next_uri_request.connect (on_player_next_uri_request);
             _player.next_uri_start.connect (on_player_next_uri_start);
+            _player.state_changed.connect (on_player_state_changed);
             _player.tag_parsed.connect (on_tag_parsed);
 
             _mpris_id = Bus.own_name (BusType.SESSION,
@@ -459,6 +460,17 @@ namespace Music {
         private void on_player_next_uri_start () {
             //  Received after request_next_uri
             on_player_end ();
+        }
+
+        private uint _inhibit_id = 0;
+
+        private void on_player_state_changed (Gst.State state) {
+            if (state == Gst.State.PLAYING && _inhibit_id == 0) {
+                _inhibit_id = this.inhibit (active_window, Gtk.ApplicationInhibitFlags.SUSPEND, _("Keep playing"));
+            } else if (state != Gst.State.PLAYING && _inhibit_id != 0) {
+                this.uninhibit (_inhibit_id);
+                _inhibit_id = 0;
+            }
         }
 
         private async void on_tag_parsed (string? album, string? artist, string? title, Gst.Sample? image) {
