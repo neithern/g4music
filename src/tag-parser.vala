@@ -79,9 +79,9 @@ namespace Music {
 
         //  Parse tags by Gstreamer demux/parse, it is slow
         try {
-            seek_full (stream, 0, SeekType.SET);
             var demux_name = get_demux_name_by_content (head);
             if (demux_name != null) {
+                seek_full (stream, 0, SeekType.SET);
                 tags = parse_demux_tags (stream, (!)demux_name);
             }
         } catch (Error e) {
@@ -559,6 +559,8 @@ namespace Music {
         //      return "qtdemux";
         //  } else if (Memory.cmp (p, "OggS", 4) == 0) {
         //      return "oggdemux";
+        } else if (read_uint32_be (head) == 0x1A45DFA3) { // EBML_HEADER
+            return "matroskademux";
         } else if (Memory.cmp (p, "RIFF", 4) == 0 && Memory.cmp (p + 8, "WAVE", 4) == 0) {
             return "wavparse";
         } else if (Memory.cmp (p, "\x30\x26\xB2\x75\x8E\x66\xCF\x11\xA6\xD9\x00\xAA\x00\x62\xCE\x6C", 16) == 0) {
