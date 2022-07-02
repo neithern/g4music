@@ -284,10 +284,11 @@ namespace Music {
         snapshot.pop ();
         // Render to a new texture
         var node = snapshot.free_to_node ();
-        if (node == null)
-            return null;
-        var rect = Graphene.Rect ().init (0, 0, width, height);
-        return widget.get_native ()?.get_renderer ()?.render_texture ((!)node, rect);
+        if (node is Gsk.RenderNode) {
+            var rect = Graphene.Rect ().init (0, 0, width, height);
+            return widget.get_native ()?.get_renderer ()?.render_texture ((!)node, rect);
+        }
+        return null;
     }
 
     public static void draw_gray_linear_gradient_line (Gtk.Snapshot snapshot, Graphene.Rect rect) {

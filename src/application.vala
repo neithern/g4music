@@ -403,7 +403,7 @@ namespace Music {
                 chooser.modal = true;
                 chooser.response.connect ((id) => {
                     var file = chooser.get_file ();
-                    if (id == Gtk.ResponseType.ACCEPT && file != null) {
+                    if (id == Gtk.ResponseType.ACCEPT && file is File) {
                         save_sample_to_file.begin ((!)file, sample, (obj, res) => {
                             save_sample_to_file.end (res);
                         });

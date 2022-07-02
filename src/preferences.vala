@@ -38,7 +38,7 @@ namespace Music {
                 chooser.response.connect ((id) => {
                     if (id == Gtk.ResponseType.ACCEPT) {
                         var dir = chooser.get_file ();
-                        if (dir != null && dir != music_dir) {
+                        if (dir is File && dir != music_dir) {
                             music_dir_btn.label = get_display_name ((!)dir);
                             settings?.set_string ("music-dir", ((!)dir).get_uri ());
                             app.reload_song_store ();
