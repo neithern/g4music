@@ -31,6 +31,7 @@ namespace Music {
         private bool _tag_parsed = false;
         private TimeoutSource? _timer = null;
         private Queue<Peak?> _peaks = new Queue<Peak?> ();
+        private unowned Thread<void> _main_thread = Thread<void>.self ();
 
         public signal void duration_changed (Gst.ClockTime duration);
         public signal void error (Error error);
@@ -186,6 +187,22 @@ namespace Music {
         }
 
         private bool bus_callback (Gst.Bus bus, Gst.Message message) {
+            unowned Thread<void> thread = Thread<void>.self ();
+            if (thread == _main_thread) {
+                on_bus_message (message);
+            } else {
+                message.ref ();
+                Idle.add (() => {
+                    on_bus_message (message);
+                    message.unref ();
+                    return false;
+                });
+                warning ("Bus message not in main thread: %p, %s\n", thread, message.type.get_name ());
+            }
+            return true;
+        }
+
+        private void on_bus_message (Gst.Message message) {
             switch (message.type) {
                 case Gst.MessageType.DURATION_CHANGED:
                     on_duration_changed ();
@@ -241,7 +258,6 @@ namespace Music {
                 default:
                     break;
             }
-            return true;
         }
 
         private void on_about_to_finish () {
