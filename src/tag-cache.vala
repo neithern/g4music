@@ -45,6 +45,7 @@ namespace Music {
             try {
                 var fis = _file.read ();
                 var bis = new BufferedInputStream (fis);
+                bis.buffer_size = 16384;
                 var dis = new DataInputStream (bis);
                 var count = dis.read_uint32 ();
                 lock (_cache) {
@@ -69,6 +70,7 @@ namespace Music {
                     parent?.make_directory_with_parents ();
                 var fos = _file.replace (null, false, FileCreateFlags.NONE);
                 var bos = new BufferedOutputStream (fos);
+                bos.buffer_size = 16384;
                 var dos = new DataOutputStream (bos);
                 lock (_cache) {
                     dos.put_uint32 (_cache.length);

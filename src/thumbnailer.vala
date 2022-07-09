@@ -194,7 +194,9 @@ namespace Music {
                     var stream = cover_file?.read ();
                     if (cover_file != null && stream != null) {
                         cover_uri[0] = (!) cover_file?.get_uri ();
-                        return load_clamp_pixbuf_from_stream (new BufferedInputStream ((!)stream), size);
+                        var bis = new BufferedInputStream ((!)stream);
+                        bis.buffer_size = 16384;
+                        return load_clamp_pixbuf_from_stream (bis, size);
                     }
                 } catch (Error e) {
                 }
