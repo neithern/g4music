@@ -54,8 +54,8 @@ namespace Music {
         private Tree<string, V> _cache = new Tree<string, V> (compare_string);
 
         public V? find (string key) {
-            string orig_key;
-            V value;
+            weak string orig_key;
+            weak V value;
             if (_cache.lookup_extended (key, out orig_key, out value))
                 return value;
             return null;
@@ -175,7 +175,7 @@ namespace Music {
                         var image_size = sample?.get_buffer ()?.get_size () ?? 0;
                         album_key += image_size.to_string ("%x");
                         lock (_album_covers) {
-                            string key, uri;
+                            weak string key, uri;
                             if (_album_covers.lookup_extended (album_key, out key, out uri)) {
                                 cover_uri[0] = uri;
                                 //  print ("Same album cover: %s\n", album_key);

@@ -4,7 +4,7 @@ namespace Music {
         private File _file;
         private bool _loaded = false;
         private bool _modified = false;
-        private HashTable<string, Song> _cache = new HashTable<string, Song> (str_hash, str_equal);
+        private HashTable<weak string, Song> _cache = new HashTable<weak string, Song> (str_hash, str_equal);
 
         public TagCache (string name = "tag-cache") {
             var dir = Environment.get_user_cache_dir ();
@@ -24,8 +24,8 @@ namespace Music {
         }
 
         public Song? @get (string uri) {
-            string key;
-            Song song;
+            weak string key;
+            weak Song song;
             lock (_cache) {
                 if (_cache.lookup_extended (uri, out key, out song)) {
                     return song;
