@@ -91,8 +91,12 @@ namespace Music {
     }
 
     public static bool tags_has_title_or_image (Gst.TagList? tags) {
-        return (tags?.get_tag_size (Gst.Tags.TITLE) ?? 0) > 0
-            || (tags?.get_tag_size (Gst.Tags.IMAGE) ?? 0) > 0;
+        if (tags == null)
+            return false;
+        var t = (!)tags;
+        return t.get_tag_size (Gst.Tags.ARTIST) > 0
+            || t.get_tag_size (Gst.Tags.TITLE) > 0
+            || t.get_tag_size (Gst.Tags.IMAGE) > 0;
     }
 
     public static uint8[] new_uint8_array (uint size) throws Error {
@@ -308,7 +312,7 @@ namespace Music {
                 //  print (@"Tag: $tag=$(data.length)\n");
             }
         } else {
-            print ("MP4: unkown number type\n");
+            print ("MP4: unkown image type\n");
         }
     }
 

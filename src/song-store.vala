@@ -205,7 +205,8 @@ namespace Music {
                 name = end > 0 ? name.substring (0, end) : name;
                 var sep = name.index_of_char ('-');
                 if (sep > 0) {
-                    song.artist = name.substring (0, sep).strip ();
+                    if (song.artist.length == 0 || song.artist == UNKOWN_ARTIST)
+                        song.artist = name.substring (0, sep).strip ();
                     song.title = name.substring (sep + 1).strip ();
                 } else {
                     song.title = name;
