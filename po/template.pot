@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-25 19:20+0800\n"
+"POT-Creation-Date: 2022-07-16 20:07+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -143,49 +143,52 @@ msgstr ""
 msgid "Back"
 msgstr ""
 
-#: src/gtk/window.ui:203
+#: src/gtk/window.ui:204
 msgid "_Export Cover"
 msgstr ""
 
-#: src/gtk/window.ui:207
+#: src/gtk/window.ui:208
 msgid "_Show In Files"
 msgstr ""
 
-#: src/gtk/window.ui:216
+#: src/gtk/window.ui:217
 msgid "_Preferences"
 msgstr ""
 
-#: src/gtk/window.ui:220
+#: src/gtk/window.ui:221
 msgid "_Keyboard Shortcuts"
 msgstr ""
 
-#: src/gtk/window.ui:224
+#: src/gtk/window.ui:225
 msgid "_About G4Music"
 msgstr ""
 
-#: src/gtk/window.ui:234
+#: src/gtk/window.ui:235
 msgid "By Album"
 msgstr ""
 
-#: src/gtk/window.ui:240
+#: src/gtk/window.ui:241
 msgid "By Artist"
 msgstr ""
 
-#: src/gtk/window.ui:246
+#: src/gtk/window.ui:247
 msgid "By Title"
 msgstr ""
 
-#: src/gtk/window.ui:252
+#: src/gtk/window.ui:253
 msgid "Shuffle"
 msgstr ""
 
-#. Translators: Replace "translator-credits" with your names, one name per line
 #: src/application.vala:354
 msgid "translator-credits"
 msgstr ""
 
 #: src/application.vala:356
 msgid "A fast, fluent, light weight music player written in GTK4."
+msgstr ""
+
+#: src/application.vala:469
+msgid "Keep playing"
 msgstr ""
 
 #: src/play-bar.vala:83
