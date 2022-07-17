@@ -52,7 +52,7 @@
             <description>
                 <ul>
                 <li>App inhibit suspend to keep playing.</li>
-                <li>Performance improvement and memory saveing.</li>
+                <li>Performance improvement and memory saving.</li>
                 <li>Parse tags of MKV/MKA.</li>
                 <li>Add French translation, thanks to Aurélien Hamy.</li>
                 <li>Add Dutch translation, thanks to Heimen Stoffels.</li>
