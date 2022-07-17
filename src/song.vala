@@ -150,6 +150,13 @@ namespace Music {
         return -1;
     }
 
+    public static string get_display_name (File dir) {
+        var name = dir.get_basename () ?? "";
+        if (name.length == 0 || name == "/")
+            name = dir.get_parse_name ();
+        return name;
+    }
+
     public static string get_uri_with_end_sep (File file) {
         var uri = file.get_uri ();
         if (uri[uri.length - 1] != '/')

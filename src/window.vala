@@ -30,6 +30,8 @@ namespace Music {
         [GtkChild]
         private unowned Gtk.Label song_title;
         [GtkChild]
+        private unowned Gtk.Label initial_label;
+        [GtkChild]
         private unowned Gtk.ListView list_view;
         [GtkChild]
         private unowned Gtk.Box mini_box;
@@ -97,7 +99,9 @@ namespace Music {
             _cover_paintable.queue_draw.connect (cover_image.queue_draw);
 
             app.thumbnailer.pango_context = get_pango_context ();
-            _loading_paintable = app.thumbnailer.create_album_text_paintable ("...");
+            _loading_paintable = app.thumbnailer.create_album_text_paintable ("G4", 0x8de6b1);
+            _cover_paintable.paintable = _loading_paintable;
+            _mini_bar.cover = _loading_paintable;
 
             var scale_paintable = new ScalePaintable (new RoundPaintable (_cover_paintable, 12));
             scale_paintable.scale = 0.8;
@@ -136,10 +140,16 @@ namespace Music {
                 app.current_item = (int) index;
             });
 
-            spinner.spinning = true;
-            index_title.label = _loading_text;
-            app.index_changed.connect (on_index_changed);
+            initial_label.activate_link.connect ((uri) => {
+                pick_music_folder (app, this, (dir) => {
+                    app.reload_song_store ();
+                });
+                return true;
+            });
+
+            on_loading_changed (true, 1);
             app.loading_changed.connect (on_loading_changed);
+            app.index_changed.connect (on_index_changed);
             app.song_changed.connect (on_song_changed);
             app.song_tag_parsed.connect (on_song_tag_parsed);
             app.player.state_changed.connect (on_player_state_changed);
@@ -233,13 +243,23 @@ namespace Music {
             action_set_enabled (ACTION_APP + ACTION_PREV, index > 0);
             action_set_enabled (ACTION_APP + ACTION_NEXT, index < (int) size - 1);
             scroll_to_item (index);
-            index_title.label = size > 0 ? @"$(index+1)/$(size)" : "0";
+            index_title.label = size > 0 ? @"$(index+1)/$(size)" : "";
         }
 
         private void on_loading_changed (bool loading, uint size) {
             spinner.spinning = loading;
             spinner.visible = loading;
             index_title.label = loading ? _loading_text : size.to_string ();
+
+            var app = (Application) application;
+            var empty = size == 0 && app.current_song == null;
+            if (empty) {
+                var dir_name = get_display_name (app.get_music_folder ());
+                var link = @"<a href=\"change_dir\">$dir_name</a>";
+                initial_label.set_markup (_("Drag and drop song files here,\nor change music location: ") + link);
+            }
+            initial_label.visible = empty;
+            song_title.visible = !empty;
         }
 
         private Adw.Animation? _scale_animation = null;
@@ -330,7 +350,11 @@ namespace Music {
                 var app = (Application) application;
                 app.load_songs_async.begin (files, (obj, res) => {
                     var item = app.load_songs_async.end (res);
-                    scroll_to_item (item);
+                    if (app.current_song == null) {
+                        app.current_item = item;
+                    } else {
+                        scroll_to_item (item);
+                    }
                 });
                 return true;
             });
