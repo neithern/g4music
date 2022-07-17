@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-16 20:07+0200\n"
+"POT-Creation-Date: 2022-07-17 22:07+0800\n"
 "PO-Revision-Date: 2022-05-31 20:35+0800\n"
 "Last-Translator: Nanling <neithern@outlook.com>\n"
 "Language-Team: Chinese (simplified)\n"
@@ -143,39 +143,39 @@ msgstr "排序方式"
 msgid "Back"
 msgstr "返回"
 
-#: src/gtk/window.ui:204
+#: src/gtk/window.ui:213
 msgid "_Export Cover"
 msgstr "导出封面(_E)"
 
-#: src/gtk/window.ui:208
+#: src/gtk/window.ui:217
 msgid "_Show In Files"
 msgstr "定位文件(_S)"
 
-#: src/gtk/window.ui:217
+#: src/gtk/window.ui:226
 msgid "_Preferences"
 msgstr "首选项(_P)"
 
-#: src/gtk/window.ui:221
+#: src/gtk/window.ui:230
 msgid "_Keyboard Shortcuts"
 msgstr "快捷键(_K)"
 
-#: src/gtk/window.ui:225
+#: src/gtk/window.ui:234
 msgid "_About G4Music"
 msgstr "关于G4音乐(_A)"
 
-#: src/gtk/window.ui:235
+#: src/gtk/window.ui:244
 msgid "By Album"
 msgstr "按专辑"
 
-#: src/gtk/window.ui:241
+#: src/gtk/window.ui:250
 msgid "By Artist"
 msgstr "按艺术家"
 
-#: src/gtk/window.ui:247
+#: src/gtk/window.ui:256
 msgid "By Title"
 msgstr "按标题"
 
-#: src/gtk/window.ui:253
+#: src/gtk/window.ui:262
 msgid "Shuffle"
 msgstr "乱序"
 
@@ -215,6 +215,14 @@ msgstr "未知专辑"
 msgid "Unknown Artist"
 msgstr "未知艺术家"
 
-#: src/window.vala:49
+#: src/window.vala:51
 msgid "Loading..."
 msgstr "正在加载…"
+
+#: src/window.vala:259
+msgid ""
+"Drag and drop song files here,\n"
+"or change music location: "
+msgstr ""
+"拖放音乐文件到这里，\n"
+"或者修改曲库的位置："

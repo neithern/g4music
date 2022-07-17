@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-16 20:07+0200\n"
+"POT-Creation-Date: 2022-07-17 22:07+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -143,39 +143,39 @@ msgstr ""
 msgid "Back"
 msgstr ""
 
-#: src/gtk/window.ui:204
+#: src/gtk/window.ui:213
 msgid "_Export Cover"
 msgstr ""
 
-#: src/gtk/window.ui:208
+#: src/gtk/window.ui:217
 msgid "_Show In Files"
 msgstr ""
 
-#: src/gtk/window.ui:217
+#: src/gtk/window.ui:226
 msgid "_Preferences"
 msgstr ""
 
-#: src/gtk/window.ui:221
+#: src/gtk/window.ui:230
 msgid "_Keyboard Shortcuts"
 msgstr ""
 
-#: src/gtk/window.ui:225
+#: src/gtk/window.ui:234
 msgid "_About G4Music"
 msgstr ""
 
-#: src/gtk/window.ui:235
+#: src/gtk/window.ui:244
 msgid "By Album"
 msgstr ""
 
-#: src/gtk/window.ui:241
+#: src/gtk/window.ui:250
 msgid "By Artist"
 msgstr ""
 
-#: src/gtk/window.ui:247
+#: src/gtk/window.ui:256
 msgid "By Title"
 msgstr ""
 
-#: src/gtk/window.ui:253
+#: src/gtk/window.ui:262
 msgid "Shuffle"
 msgstr ""
 
@@ -215,6 +215,12 @@ msgstr ""
 msgid "Unknown Artist"
 msgstr ""
 
-#: src/window.vala:49
+#: src/window.vala:51
 msgid "Loading..."
+msgstr ""
+
+#: src/window.vala:259
+msgid ""
+"Drag and drop song files here,\n"
+"or change music location: "
 msgstr ""
