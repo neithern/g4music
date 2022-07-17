@@ -177,7 +177,7 @@ msgstr "Por Título"
 
 #: src/gtk/window.ui:252
 msgid "Shuffle"
-msgstr "Ordem Aleatória"
+msgstr "Aleatório"
 
 #. Translators: Replace "translator-credits" with your names, one name per line
 #: src/application.vala:354
