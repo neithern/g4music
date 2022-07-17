@@ -99,9 +99,7 @@ namespace Music {
             _cover_paintable.queue_draw.connect (cover_image.queue_draw);
 
             app.thumbnailer.pango_context = get_pango_context ();
-            _loading_paintable = app.thumbnailer.create_album_text_paintable ("G4", 0x8de6b1);
-            _cover_paintable.paintable = _loading_paintable;
-            _mini_bar.cover = _loading_paintable;
+            _loading_paintable = app.thumbnailer.create_album_text_paintable ("...");
 
             var scale_paintable = new ScalePaintable (new RoundPaintable (_cover_paintable, 12));
             scale_paintable.scale = 0.8;
@@ -147,7 +145,6 @@ namespace Music {
                 return true;
             });
 
-            on_loading_changed (true, 1);
             app.loading_changed.connect (on_loading_changed);
             app.index_changed.connect (on_index_changed);
             app.song_changed.connect (on_song_changed);
@@ -252,11 +249,15 @@ namespace Music {
             index_title.label = loading ? _loading_text : size.to_string ();
 
             var app = (Application) application;
-            var empty = size == 0 && app.current_song == null;
+            var empty = !loading && size == 0 && app.current_song == null;
             if (empty) {
                 var dir_name = get_display_name (app.get_music_folder ());
                 var link = @"<a href=\"change_dir\">$dir_name</a>";
                 initial_label.set_markup (_("Drag and drop song files here,\nor change music location: ") + link);
+
+                var paintable = app.thumbnailer.create_album_text_paintable ("G4", 0x2ec27e);
+                _cover_paintable.paintable = paintable;
+                _mini_bar.cover = paintable;
             }
             initial_label.visible = empty;
             song_title.visible = !empty;
