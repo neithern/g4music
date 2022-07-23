@@ -8,6 +8,8 @@ namespace Music {
     public const string ACTION_PREV = "prev";
     public const string ACTION_NEXT = "next";
     public const string ACTION_SEARCH = "search";
+    public const string ACTION_SHOW_ALBUM = "show-album";
+    public const string ACTION_SHOW_ARTIST = "show-artist";
     public const string ACTION_SORT = "sort";
     public const string ACTION_QUIT = "quit";
 
@@ -54,6 +56,8 @@ namespace Music {
                 { ACTION_PREV, play_previous },
                 { ACTION_NEXT, play_next },
                 { ACTION_SEARCH, toggle_seach },
+                { ACTION_SHOW_ALBUM, show_album },
+                { ACTION_SHOW_ARTIST, show_artist },
                 { ACTION_QUIT, quit }
             };
             add_action_entries (action_entries, this);
@@ -111,8 +115,7 @@ namespace Music {
         public override void activate () {
             base.activate ();
 
-            Gtk.Window? awindow = active_window;
-            if (awindow != null) {
+            if (active_window is Window) {
                 active_window.present ();
             } else {
                 open ({}, "");
@@ -207,6 +210,8 @@ namespace Music {
                 return _player;
             }
         }
+
+        public Song? popover_song { get; set; }
 
         public Settings? settings {
             get {
@@ -420,13 +425,26 @@ namespace Music {
         }
 
         private void open_directory () {
-            var uri = _current_song?.uri;
+            var song = popover_song ?? _current_song;
+            var uri = song?.uri;
             if (uri != null) {
                 _portal = _portal ?? new Portal ();
                 ((!)_portal).open_directory_async.begin ((!)uri, (obj, res) => {
                     ((!)_portal).open_directory_async.end (res);
                 });
             }
+        }
+
+        private void show_album () {
+            var album = (popover_song ?? _current_song)?.album;
+            if (album != null)
+                (active_window as Window)?.start_search ("album=" + (!)album);
+        }
+
+        private void show_artist () {
+            var artist = (popover_song ?? _current_song)?.artist;
+            if (artist != null)
+                (active_window as Window)?.start_search ("artist=" + (!)artist);
         }
 
         private void on_player_end () {

@@ -107,14 +107,10 @@ namespace Music {
             scale_paintable.queue_draw.connect (cover_image.queue_draw);
 
             make_label_clickable (song_album).released.connect (() => {
-                search_entry.text = "album=" + song_album.label;
-                search_btn.active = true;
-                leaflet.navigate (Adw.NavigationDirection.BACK);
+                start_search ("album=" + song_album.label);
             });
             make_label_clickable (song_artist).released.connect (() => {
-                search_entry.text = "artist=" + song_artist.label;
-                search_btn.active = true;
-                leaflet.navigate (Adw.NavigationDirection.BACK);
+                start_search ("artist=" + song_artist.label);
             });
 
             var play_bar = new PlayBar ();
@@ -195,6 +191,12 @@ namespace Music {
                 draw_gray_linear_gradient_line (snapshot, rect);
             }
             base.snapshot (snapshot);
+        }
+
+        public void start_search (string text) {
+            search_entry.text = text;
+            search_btn.active = true;
+            leaflet.navigate (Adw.NavigationDirection.BACK);
         }
 
         private async void on_bind_item (Gtk.ListItem item) {
