@@ -104,8 +104,7 @@ namespace Music {
                             while ((s = queue.try_pop ()) != null) {
                                 var song = (!)s;
                                 parse_song_tags (song);
-                                if (song.has_tags)
-                                    _tag_cache.add (song);
+                                _tag_cache.add (song);
                             }
                         });
                     }

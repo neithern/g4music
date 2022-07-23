@@ -1,6 +1,8 @@
 namespace Music {
 
     public class TagCache {
+        private static uint32 MAGIC = 0x43474154; //  'TAGC'
+
         private File _file;
         private bool _loaded = false;
         private bool _modified = false;
@@ -47,6 +49,10 @@ namespace Music {
                 var bis = new BufferedInputStream (fis);
                 bis.buffer_size = 16384;
                 var dis = new DataInputStream (bis);
+                var magic = dis.read_uint32 ();
+                if (magic != MAGIC) {
+                    return;
+                }
                 var count = dis.read_uint32 ();
                 lock (_cache) {
                     for (var i = 0; i < count; i++) {
@@ -72,6 +78,7 @@ namespace Music {
                 var bos = new BufferedOutputStream (fos);
                 bos.buffer_size = 16384;
                 var dos = new DataOutputStream (bos);
+                dos.put_uint32 (MAGIC);
                 lock (_cache) {
                     dos.put_uint32 (_cache.length);
                     _cache.for_each ((key, song) => {
