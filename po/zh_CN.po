@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-17 22:07+0800\n"
+"POT-Creation-Date: 2022-07-23 21:16+0800\n"
 "PO-Revision-Date: 2022-05-31 20:35+0800\n"
 "Last-Translator: Nanling <neithern@outlook.com>\n"
 "Language-Team: Chinese (simplified)\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:350
+#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:355
 #: src/main.vala:24
 msgid "G4Music"
 msgstr "G4音乐"
@@ -103,7 +103,7 @@ msgstr "加载非本地文件的缩略图"
 msgid "Playback"
 msgstr "播放"
 
-#: src/gtk/preferences.ui:58 src/application.vala:341
+#: src/gtk/preferences.ui:58 src/application.vala:346
 msgid "Keep playing after window closed"
 msgstr "关闭窗口后继续播放"
 
@@ -147,7 +147,7 @@ msgstr "返回"
 msgid "_Export Cover"
 msgstr "导出封面(_E)"
 
-#: src/gtk/window.ui:217
+#: src/gtk/window.ui:217 src/song-entry.vala:95
 msgid "_Show In Files"
 msgstr "定位文件(_S)"
 
@@ -179,15 +179,15 @@ msgstr "按标题"
 msgid "Shuffle"
 msgstr "乱序"
 
-#: src/application.vala:354
+#: src/application.vala:359
 msgid "translator-credits"
 msgstr "Nanling"
 
-#: src/application.vala:356
+#: src/application.vala:361
 msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr "一个快速、流畅、轻量的，基于GTK4的音乐播放软件。"
 
-#: src/application.vala:469
+#: src/application.vala:487
 msgid "Keep playing"
 msgstr "持续播放"
 
@@ -207,19 +207,27 @@ msgstr "播放/暂停"
 msgid "Play Next"
 msgstr "播放下一首"
 
-#: src/song.vala:2
+#: src/song.vala:3
 msgid "Unknown Album"
 msgstr "未知专辑"
 
-#: src/song.vala:3
+#: src/song.vala:4
 msgid "Unknown Artist"
 msgstr "未知艺术家"
+
+#: src/song-entry.vala:93
+msgid "Show Album"
+msgstr "显示专辑"
+
+#: src/song-entry.vala:94
+msgid "Show Artist"
+msgstr "显示艺术家"
 
 #: src/window.vala:51
 msgid "Loading..."
 msgstr "正在加载…"
 
-#: src/window.vala:259
+#: src/window.vala:258
 msgid ""
 "Drag and drop song files here,\n"
 "or change music location: "

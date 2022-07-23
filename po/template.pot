@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-17 22:07+0800\n"
+"POT-Creation-Date: 2022-07-23 21:16+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:350
+#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:355
 #: src/main.vala:24
 msgid "G4Music"
 msgstr ""
@@ -103,7 +103,7 @@ msgstr ""
 msgid "Playback"
 msgstr ""
 
-#: src/gtk/preferences.ui:58 src/application.vala:341
+#: src/gtk/preferences.ui:58 src/application.vala:346
 msgid "Keep playing after window closed"
 msgstr ""
 
@@ -147,7 +147,7 @@ msgstr ""
 msgid "_Export Cover"
 msgstr ""
 
-#: src/gtk/window.ui:217
+#: src/gtk/window.ui:217 src/song-entry.vala:95
 msgid "_Show In Files"
 msgstr ""
 
@@ -179,15 +179,15 @@ msgstr ""
 msgid "Shuffle"
 msgstr ""
 
-#: src/application.vala:354
+#: src/application.vala:359
 msgid "translator-credits"
 msgstr ""
 
-#: src/application.vala:356
+#: src/application.vala:361
 msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr ""
 
-#: src/application.vala:469
+#: src/application.vala:487
 msgid "Keep playing"
 msgstr ""
 
@@ -207,19 +207,27 @@ msgstr ""
 msgid "Play Next"
 msgstr ""
 
-#: src/song.vala:2
+#: src/song.vala:3
 msgid "Unknown Album"
 msgstr ""
 
-#: src/song.vala:3
+#: src/song.vala:4
 msgid "Unknown Artist"
+msgstr ""
+
+#: src/song-entry.vala:93
+msgid "Show Album"
+msgstr ""
+
+#: src/song-entry.vala:94
+msgid "Show Artist"
 msgstr ""
 
 #: src/window.vala:51
 msgid "Loading..."
 msgstr ""
 
-#: src/window.vala:259
+#: src/window.vala:258
 msgid ""
 "Drag and drop song files here,\n"
 "or change music location: "
