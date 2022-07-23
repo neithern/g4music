@@ -1,7 +1,8 @@
 namespace Music {
+    public const string DEFAULT_MIMETYPE = "audio/mpeg";
     public const string UNKOWN_ALBUM = _("Unknown Album");
     public const string UNKOWN_ARTIST = _("Unknown Artist");
-    public const string DEFAULT_MIMETYPE = "audio/mpeg";
+    public const int UNKOWN_TRACK = int.MAX;
 
     public class Song : Object {
         public bool has_tags = false;
@@ -10,7 +11,7 @@ namespace Music {
         public string artist = "";
         public string title = "";
         public string uri = "";
-        public int track = int.MAX;
+        public int track = UNKOWN_TRACK;
         public int64 modified_time = 0;
 
         //  for sorting
@@ -30,26 +31,43 @@ namespace Music {
             }
         }
 
-        public void from_gst_tags (Gst.TagList? tags) {
+        public void from_gst_tags (Gst.TagList tags) {
             unowned string? al = null, ar = null, ti = null;
-            uint tr = 0;
-            if (tags != null) {
-                tags?.peek_string_index (Gst.Tags.ALBUM, 0, out al);
-                tags?.peek_string_index (Gst.Tags.ARTIST, 0, out ar);
-                tags?.peek_string_index (Gst.Tags.TITLE, 0, out ti);
-                tags?.get_uint (Gst.Tags.TRACK_NUMBER, out tr);
+            if (tags.peek_string_index (Gst.Tags.ALBUM, 0, out al)
+                    && al != null && al?.length > 0) {
+                album = (!)al;
+                update_album_key ();
                 has_tags = true;
             }
-            this.album = (al != null && al?.length > 0) ? (!)al : UNKOWN_ALBUM;
-            this.artist = (ar != null && ar?.length > 0) ? (!)ar : UNKOWN_ARTIST;
-            if (ti != null && ti?.length > 0) this.title = (!)ti;
-            if ((int) tr > 0) this.track = (int) tr;
-            update_keys ();
+            if (tags.peek_string_index (Gst.Tags.ARTIST, 0, out ar)
+                    && ar != null && ar?.length > 0) {
+                artist = (!)ar;
+                update_artist_key ();
+                has_tags = true;
+            }
+            if (tags.peek_string_index (Gst.Tags.TITLE, 0, out ti)
+                    && ti != null && ti?.length > 0) {
+                title = (!)ti;
+                update_title_key ();
+                has_tags = true;
+            }
+            uint tr = 0;
+            if (tags.get_uint (Gst.Tags.TRACK_NUMBER, out tr)
+                    && (int) tr > 0) {
+                track = (int) tr;
+                has_tags = true;
+            }
         }
 
-        public void update_keys () {
+        public void update_album_key () {
             _album_key = album.collate_key_for_filename ();
+        }
+
+        public void update_artist_key () {
             _artist_key = artist.collate_key_for_filename ();
+        }
+
+        public void update_title_key () {
             _title_key = title.collate_key_for_filename ();
         }
 
@@ -72,17 +90,19 @@ namespace Music {
             if (count != 6)
                 throw new IOError.INVALID_DATA (@"$count != 5");
             album = dis.read_upto ("\0", 1, null);
+            update_album_key ();
             dis.read_byte (); // == '\0'
             artist = dis.read_upto ("\0", 1, null);
+            update_artist_key ();
             dis.read_byte (); // == '\0'
             title = dis.read_upto ("\0", 1, null);
+            update_title_key ();
             dis.read_byte (); // == '\0'
             track = dis.read_int32 ();
             modified_time = dis.read_int64 ();
             uri = dis.read_upto ("\0", 1, null);
             dis.read_byte (); // == '\0'
             has_tags = true;
-            update_keys ();
         }
 
         public static int compare_by_album (Object obj1, Object obj2) {

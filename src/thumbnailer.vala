@@ -205,7 +205,7 @@ namespace Music {
             }, false, file.has_uri_scheme ("smb"));
             if (! song.has_tags && tags[0] != null) {
                 //  Update tags if not has
-                song.from_gst_tags (tags[0]);
+                song.from_gst_tags ((!)tags[0]);
                 tag_updated (song);
             }
             if (song.cover_uri != cover_uri[0]) {

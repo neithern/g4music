@@ -196,23 +196,49 @@ namespace Music {
 
             if (file.is_native ()) {
                 var tags = parse_gst_tags (file);
-                song.from_gst_tags (tags);
+                if (tags != null)
+                    song.from_gst_tags ((!)tags);
             }
 
-            if (song.title.length == 0) {
-                //  title should always not empty
+            if (song.title.length == 0 || song.artist.length == 0) {
+                //  guess tags from the file name
                 var end = name.last_index_of_char ('.');
-                name = end > 0 ? name.substring (0, end) : name;
-                var sep = name.index_of_char ('-');
-                if (sep > 0) {
-                    if (song.artist.length == 0 || song.artist == UNKOWN_ARTIST)
-                        song.artist = name.substring (0, sep).strip ();
-                    song.title = name.substring (sep + 1).strip ();
-                } else {
-                    song.title = name;
+                if (end > 0) {
+                    name = name.substring (0, end);
                 }
-                song.update_keys ();
+                //  split the file name by '-'
+                var sa = split_string (name, "-");
+                var len = sa.length;
+                if (song.title.length == 0) {
+                    song.title = len >= 1 ? sa[len - 1] : name;
+                    song.update_title_key ();
+                }
+                if (song.artist.length == 0) {
+                    song.artist = len >= 2 ? sa[len - 2] : UNKOWN_ARTIST;
+                    song.update_artist_key ();
+                }
+                if (len >= 3 && song.track == UNKOWN_TRACK) {
+                    int tr = 0;
+                    if (int.try_parse (sa[len - 3], out tr) && tr > 0)
+                        song.track = tr;
+                }
             }
+            if (song.album.length == 0) {
+                //  assume folder name as the album
+                song.album = file.get_parent ()?.get_basename () ?? UNKOWN_ALBUM;
+                song.update_album_key ();
+            }
+        }
+
+        private static GenericArray<string> split_string (string text, string delimiter) {
+            var ar = text.split ("-");
+            var sa = new GenericArray<string> (ar.length);
+            foreach (var str in ar) {
+                var s = str.strip ();
+                if (s.length > 0)
+                    sa.add (s);
+            }
+            return sa;
         }
     }
 }
