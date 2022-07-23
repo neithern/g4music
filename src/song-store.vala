@@ -206,6 +206,15 @@ namespace Music {
                 if (end > 0) {
                     name = name.substring (0, end);
                 }
+
+                int track = 0;
+                var pos = name.index_of_char ('.');
+                if (pos > 0) {
+                    // assume prefix number as track index
+                    int.try_parse (name.substring (0, pos), out track, null, 10);
+                    name = name.substring (pos + 1);
+                }
+
                 //  split the file name by '-'
                 var sa = split_string (name, "-");
                 var len = sa.length;
@@ -217,10 +226,11 @@ namespace Music {
                     song.artist = len >= 2 ? sa[len - 2] : UNKOWN_ARTIST;
                     song.update_artist_key ();
                 }
-                if (len >= 3 && song.track == UNKOWN_TRACK) {
-                    int tr = 0;
-                    if (int.try_parse (sa[len - 3], out tr) && tr > 0)
-                        song.track = tr;
+                if (song.track == UNKOWN_TRACK) {
+                    if (track == 0 && len >= 3)
+                        int.try_parse (sa[0], out track, null, 10);
+                    if (track > 0)
+                        song.track = track;
                 }
             }
             if (song.album.length == 0) {
