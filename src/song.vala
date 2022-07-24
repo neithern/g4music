@@ -5,8 +5,6 @@ namespace Music {
     public const int UNKOWN_TRACK = int.MAX;
 
     public class Song : Object {
-        public bool has_tags = false;
-
         public string album = "";
         public string artist = "";
         public string title = "";
@@ -31,32 +29,34 @@ namespace Music {
             }
         }
 
-        public void from_gst_tags (Gst.TagList tags) {
+        public bool from_gst_tags (Gst.TagList tags) {
+            var changed = false;
             unowned string? al = null, ar = null, ti = null;
             if (tags.peek_string_index (Gst.Tags.ALBUM, 0, out al)
-                    && al != null && al?.length > 0) {
+                    && al != null && al?.length > 0 && album != (!)al) {
                 album = (!)al;
                 update_album_key ();
-                has_tags = true;
+                changed = true;
             }
             if (tags.peek_string_index (Gst.Tags.ARTIST, 0, out ar)
-                    && ar != null && ar?.length > 0) {
+                    && ar != null && ar?.length > 0 && artist != (!)ar) {
                 artist = (!)ar;
                 update_artist_key ();
-                has_tags = true;
+                changed = true;
             }
             if (tags.peek_string_index (Gst.Tags.TITLE, 0, out ti)
-                    && ti != null && ti?.length > 0) {
+                    && ti != null && ti?.length > 0 && title != (!)ti) {
                 title = (!)ti;
                 update_title_key ();
-                has_tags = true;
+                changed = true;
             }
             uint tr = 0;
             if (tags.get_uint (Gst.Tags.TRACK_NUMBER, out tr)
-                    && (int) tr > 0) {
+                    && (int) tr > 0 && track != tr) {
                 track = (int) tr;
-                has_tags = true;
+                changed = true;
             }
+            return changed;
         }
 
         public void update_album_key () {
@@ -102,7 +102,6 @@ namespace Music {
             modified_time = dis.read_int64 ();
             uri = dis.read_upto ("\0", 1, null);
             dis.read_byte (); // == '\0'
-            has_tags = true;
         }
 
         public static int compare_by_album (Object obj1, Object obj2) {

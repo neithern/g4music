@@ -159,7 +159,8 @@ namespace Music {
 
         public async Gdk.Paintable? load_directly_async (Song song, int size = 0) {
             var file = File.new_for_uri (song.uri);
-            if (!_remote_thumbnail && !file.is_native ()) {
+            var is_native = file.is_native ();
+            if (!_remote_thumbnail && !is_native) {
                 return null;
             }
 
@@ -201,12 +202,12 @@ namespace Music {
                 } catch (Error e) {
                 }
                 return null;
-                 //  run in single_thread_pool for samba to save connections
+                //  Run in single_thread_pool for samba to save connections
             }, false, file.has_uri_scheme ("smb"));
-            if (! song.has_tags && tags[0] != null) {
-                //  Update tags if not has
-                song.from_gst_tags ((!)tags[0]);
-                tag_updated (song);
+            if (!is_native && tags[0] != null) {
+                //  Update for remote file, since it maybe cached but not parsed from file early
+                if (song.from_gst_tags ((!)tags[0]))
+                    tag_updated (song);
             }
             if (song.cover_uri != cover_uri[0]) {
                 //  Update cover uri if changed
