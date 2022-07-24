@@ -3,6 +3,7 @@ namespace Music {
     public class PeakBar : Gtk.Box {
         private string _chars = "=";
         private Pango.FontDescription _font = new Pango.FontDescription ();
+        private StringBuilder _sbuilder = new StringBuilder ();
         private double _value = 0;
         private Pango.Layout _layout;
 
@@ -43,10 +44,10 @@ namespace Music {
             if (_layout.get_alignment () == Pango.Alignment.CENTER && count % 2 == 0)
                 count--;
 
-            var sb = new StringBuilder ();
+            _sbuilder.erase ();
             for (var i = 0; i < count; i++)
-                sb.append (_chars);
-            unowned var text = sb.str;
+                _sbuilder.append (_chars);
+            unowned var text = _sbuilder.str;
             _layout.set_text (text, text.length);
 
             var style = get_style_context ();
