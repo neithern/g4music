@@ -66,7 +66,8 @@ namespace Music {
                 { ACTION_SORT, sort_by, "u", "0" },
                 { ACTION_SORT, sort_by, "u", "1" },
                 { ACTION_SORT, sort_by, "u", "2" },
-                { ACTION_SORT, sort_by, "u", "3" }
+                { ACTION_SORT, sort_by, "u", "3" },
+                { ACTION_SORT, sort_by, "u", "4" }
             };
             add_action_entries (sort_entries, this);
 

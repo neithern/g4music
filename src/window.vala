@@ -163,6 +163,9 @@ namespace Music {
                     case SortMode.ARTIST:
                         sort_btn.set_icon_name ("system-users-symbolic");
                         break;
+                    case SortMode.RECENT:
+                        sort_btn.set_icon_name ("document-open-recent-symbolic");
+                        break;
                     case SortMode.SHUFFLE:
                         sort_btn.set_icon_name ("media-playlist-shuffle-symbolic");
                         break;

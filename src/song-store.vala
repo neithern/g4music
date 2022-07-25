@@ -4,7 +4,8 @@ namespace Music {
         ALBUM,
         ARTIST,
         TITLE,
-        SHUFFLE
+        RECENT,
+        SHUFFLE,
     }
 
     public class SongStore : Object {
@@ -37,6 +38,9 @@ namespace Music {
                         break;
                     case SortMode.ARTIST:
                         _compare = Song.compare_by_artist;
+                        break;
+                    case SortMode.RECENT:
+                        _compare = Song.compare_by_date_ascending;
                         break;
                     case SortMode.SHUFFLE:
                         _compare = Song.compare_by_order;
