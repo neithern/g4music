@@ -142,6 +142,14 @@ namespace Music {
             return s1._order - s2._order;
         }
 
+        public static int compare_by_date_ascending (Object obj1, Object obj2) {
+            var s1 = (Song) obj1;
+            var s2 = (Song) obj2;
+            var diff = s2.modified_time - s1.modified_time;
+
+            return (int) diff.clamp (-1, 1);
+        }
+
         public static void shuffle_order (GenericArray<Object> arr) {
             for (var i = arr.length - 1; i > 0; i--) {
                 var r = Random.int_range (0, i);

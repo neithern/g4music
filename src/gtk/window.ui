@@ -258,10 +258,16 @@
         <attribute name="target" type="u">2</attribute>
       </item>
       <item>
+        <attribute name="icon-name">document-open-recent-symbolic</attribute>
+        <attribute name="label" translatable="yes">By Date</attribute>
+        <attribute name="action">app.sort</attribute>
+        <attribute name="target" type="u">3</attribute>
+      </item>
+      <item>
         <attribute name="icon">media-playlist-shuffle-symbolic</attribute>
         <attribute name="label" translatable="yes">Shuffle</attribute>
         <attribute name="action">app.sort</attribute>
-        <attribute name="target" type="u">3</attribute>
+        <attribute name="target" type="u">4</attribute>
       </item>
     </section>
   </menu>

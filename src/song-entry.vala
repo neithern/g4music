@@ -77,6 +77,13 @@ namespace Music {
                     _subtitle.label = song.title;
                     break;
 
+                case SortMode.RECENT:
+                    var date = new DateTime.from_unix_utc(song.modified_time);
+
+                    _title.label = song.title;
+                    _subtitle.label = date.to_local().format("%x - %X");
+                    break;
+
                 default:
                     _title.label = song.title;
                     _subtitle.label = song.artist;
