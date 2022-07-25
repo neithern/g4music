@@ -1,5 +1,6 @@
-# G4Music
+<img align="left" alt="Project logo" src="data/icons/hicolor/scalable/apps/app.svg" />
 
+# G4Music
 Play your music in an elegant way.
 
 ![Window Mode](./shots/window.png)
@@ -24,7 +25,7 @@ A fast, fluent, light weight music player written in GTK4, with a beautiful, ada
 
 ## Install from Flathub
 <a href="https://flathub.org/apps/details/com.github.neithern.g4music">
-<img src="https://flathub.org/assets/badges/flathub-badge-en.png" width="120"/></a>
+<img src="https://flathub.org/assets/badges/flathub-badge-en.png" width="240"/></a>
 
 ## How to build 
 It is written in Vala, simple and clean code, with few third-party dependencies:
