@@ -3,8 +3,10 @@
 # G4Music
 Play your music in an elegant way.
 
-![Window Mode](./shots/window.png)
-![Play Bar](./shots/playbar.png)![Side Bar](./shots/playlist.png)
+
+<img src="./shots/window.png" width="822"/>
+<img src="./shots/playbar.png" width="458"/>
+<img src="./shots/playlist.png" width="458"/>
 
 A fast, fluent, light weight music player written in GTK4, with a beautiful, adaptive user interface, so named G4Music. It is also focusing on high performance, for those people who has huge number of songs.
 
