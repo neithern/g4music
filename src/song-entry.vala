@@ -78,10 +78,9 @@ namespace Music {
                     break;
 
                 case SortMode.RECENT:
-                    var date = new DateTime.from_unix_utc(song.modified_time);
-
+                    var date = new DateTime.from_unix_local (song.modified_time);
                     _title.label = song.title;
-                    _subtitle.label = date.to_local().format("%x - %X");
+                    _subtitle.label = date.format ("%x %H:%M");
                     break;
 
                 default:
