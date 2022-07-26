@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-23 21:16+0800\n"
+"POT-Creation-Date: 2022-07-26 21:59+0800\n"
 "PO-Revision-Date: 2022-05-31 20:35+0800\n"
 "Last-Translator: Nanling <neithern@outlook.com>\n"
 "Language-Team: Chinese (simplified)\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:355
+#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:364
 #: src/main.vala:24
 msgid "G4Music"
 msgstr "G4音乐"
@@ -103,7 +103,7 @@ msgstr "加载非本地文件的缩略图"
 msgid "Playback"
 msgstr "播放"
 
-#: src/gtk/preferences.ui:58 src/application.vala:346
+#: src/gtk/preferences.ui:58 src/application.vala:355
 msgid "Keep playing after window closed"
 msgstr "关闭窗口后继续播放"
 
@@ -147,47 +147,55 @@ msgstr "返回"
 msgid "_Export Cover"
 msgstr "导出封面(_E)"
 
-#: src/gtk/window.ui:217 src/song-entry.vala:95
+#: src/gtk/window.ui:217 src/song-entry.vala:101
 msgid "_Show In Files"
 msgstr "定位文件(_S)"
 
 #: src/gtk/window.ui:226
+msgid "_Reload List"
+msgstr "重载列表(_R)"
+
+#: src/gtk/window.ui:232
 msgid "_Preferences"
 msgstr "首选项(_P)"
 
-#: src/gtk/window.ui:230
+#: src/gtk/window.ui:236
 msgid "_Keyboard Shortcuts"
 msgstr "快捷键(_K)"
 
-#: src/gtk/window.ui:234
+#: src/gtk/window.ui:240
 msgid "_About G4Music"
 msgstr "关于G4音乐(_A)"
 
-#: src/gtk/window.ui:244
+#: src/gtk/window.ui:250
 msgid "By Album"
 msgstr "按专辑"
 
-#: src/gtk/window.ui:250
+#: src/gtk/window.ui:256
 msgid "By Artist"
 msgstr "按艺术家"
 
-#: src/gtk/window.ui:256
+#: src/gtk/window.ui:262
 msgid "By Title"
 msgstr "按标题"
 
-#: src/gtk/window.ui:262
+#: src/gtk/window.ui:268
+msgid "By Date"
+msgstr "按日期"
+
+#: src/gtk/window.ui:274
 msgid "Shuffle"
 msgstr "乱序"
 
-#: src/application.vala:359
+#: src/application.vala:368
 msgid "translator-credits"
 msgstr "Nanling"
 
-#: src/application.vala:361
+#: src/application.vala:370
 msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr "一个快速、流畅、轻量的，基于GTK4的音乐播放软件。"
 
-#: src/application.vala:487
+#: src/application.vala:496
 msgid "Keep playing"
 msgstr "持续播放"
 
@@ -215,11 +223,11 @@ msgstr "未知专辑"
 msgid "Unknown Artist"
 msgstr "未知艺术家"
 
-#: src/song-entry.vala:93
+#: src/song-entry.vala:99
 msgid "Show Album"
 msgstr "显示专辑"
 
-#: src/song-entry.vala:94
+#: src/song-entry.vala:100
 msgid "Show Artist"
 msgstr "显示艺术家"
 
@@ -227,7 +235,7 @@ msgstr "显示艺术家"
 msgid "Loading..."
 msgstr "正在加载…"
 
-#: src/window.vala:258
+#: src/window.vala:261
 msgid ""
 "Drag and drop song files here,\n"
 "or change music location: "
