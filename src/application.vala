@@ -7,6 +7,7 @@ namespace Music {
     public const string ACTION_PLAY = "play";
     public const string ACTION_PREV = "prev";
     public const string ACTION_NEXT = "next";
+    public const string ACTION_RELOAD_LIST = "reload-list";
     public const string ACTION_SEARCH = "search";
     public const string ACTION_SHOW_ALBUM = "show-album";
     public const string ACTION_SHOW_ARTIST = "show-artist";
@@ -29,6 +30,7 @@ namespace Music {
         private int _current_item = -1;
         private Song? _current_song = null;
         private Gst.Sample? _cover_image = null;
+        private bool _loading_store = false;
         private StringBuilder _next_uri = new StringBuilder ();
         private GstPlayer _player = new GstPlayer ();
         private Gtk.FilterListModel _song_list = new Gtk.FilterListModel (null, null);
@@ -55,6 +57,7 @@ namespace Music {
                 { ACTION_PLAY, play_pause },
                 { ACTION_PREV, play_previous },
                 { ACTION_NEXT, play_next },
+                { ACTION_RELOAD_LIST, reload_song_store },
                 { ACTION_SEARCH, toggle_seach },
                 { ACTION_SHOW_ALBUM, show_album },
                 { ACTION_SHOW_ARTIST, show_artist },
@@ -265,6 +268,9 @@ namespace Music {
         }
 
         public void reload_song_store () {
+            if (_loading_store) {
+                return;
+            }
             _song_store.clear ();
             _current_item = -1;
             index_changed (-1, 0);
@@ -311,6 +317,7 @@ namespace Music {
         public async int load_songs_async (owned File[] files) {
             var saved_size = _song_store.size;
             var play_item = _current_item;
+            _loading_store = true;
             loading_changed (true, saved_size);
 
             if (saved_size == 0 && files.length == 0) {
@@ -321,6 +328,7 @@ namespace Music {
                 yield _song_store.add_files_async (files);
             }
 
+            _loading_store = false;
             loading_changed (false, _song_store.size);
             if (saved_size > 0) {
                 play_item = (int) saved_size;
