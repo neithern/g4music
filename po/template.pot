@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-26 21:59+0800\n"
+"POT-Creation-Date: 2022-07-30 11:29+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -99,31 +99,35 @@ msgstr ""
 msgid "Load thumbnails for non-local files"
 msgstr ""
 
-#: src/gtk/preferences.ui:55
+#: src/gtk/preferences.ui:43
+msgid "May cause slowdowns and excess network usage"
+msgstr ""
+
+#: src/gtk/preferences.ui:56
 msgid "Playback"
 msgstr ""
 
-#: src/gtk/preferences.ui:58 src/application.vala:355
+#: src/gtk/preferences.ui:59 src/application.vala:355
 msgid "Keep playing after window closed"
 msgstr ""
 
-#: src/gtk/preferences.ui:69
+#: src/gtk/preferences.ui:70
 msgid "Show audio peak level"
 msgstr ""
 
-#: src/gtk/preferences.ui:80
+#: src/gtk/preferences.ui:81
 msgid "Enable gapless playback"
 msgstr ""
 
-#: src/gtk/preferences.ui:91
+#: src/gtk/preferences.ui:92
 msgid "Use ReplayGain to normalize volume"
 msgstr ""
 
-#: src/gtk/preferences.ui:102
+#: src/gtk/preferences.ui:103
 msgid "Use pipewire audio sink"
 msgstr ""
 
-#: src/gtk/preferences.ui:103
+#: src/gtk/preferences.ui:104
 msgid "Experimental"
 msgstr ""
 
