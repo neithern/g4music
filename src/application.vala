@@ -167,7 +167,7 @@ namespace Music {
                 return _current_item;
             }
             set {
-                var playing = _current_song != null;
+                var playing = _player.state == Gst.State.PLAYING;
                 var song = get_next_song (ref value);
                 if (song != _current_song) {
                     _player.state = Gst.State.READY;
@@ -298,13 +298,7 @@ namespace Music {
             //  find current item
             var old_item = _current_item;
             var count = _song_list.get_n_items ();
-            _current_item = -1;
-            for (var i = 0; i < count; i++) {
-                if (_current_song == _song_list.get_item (i)) {
-                    current_item = i;
-                    break;
-                }
-            }
+            current_item = find_song_item (_current_song);
             if (old_item != _current_item) {
                 _song_list.items_changed (old_item, 0, 0);
                 _song_list.items_changed (_current_item, 0, 0);
@@ -312,6 +306,16 @@ namespace Music {
                 return true;
             }
             return false;
+        }
+
+        private int find_song_item (Song? song) {
+            var count = _song_list.get_n_items ();
+            for (var i = 0; i < count; i++) {
+                if (song == _song_list.get_item (i)) {
+                    return (int) i;
+                }
+            }
+            return -1;
         }
 
         public async int load_songs_async (owned File[] files) {
