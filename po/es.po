@@ -149,7 +149,11 @@ msgstr "_Guardar Caratula"
 
 #: src/gtk/window.ui:207
 msgid "_Show In Files"
-msgstr "_Mostrar En Archivos"
+msgstr "_Mostrar en Archivos"
+
+#: src/gtk/window.ui:226
+msgid "_Reload List"
+msgstr "_Recargar Lista"
 
 #: src/gtk/window.ui:216
 msgid "_Preferences"
@@ -174,6 +178,10 @@ msgstr "Por Artista"
 #: src/gtk/window.ui:246
 msgid "By Title"
 msgstr "Por Titulo"
+
+#: src/gtk/window.ui:268
+msgid "By Date"
+msgstr "Por Fecha"
 
 #: src/gtk/window.ui:252
 msgid "Shuffle"
@@ -215,3 +223,11 @@ msgstr "Artista Desconocido"
 #: src/window.vala:49
 msgid "Loading..."
 msgstr "Cargando..."
+
+#: src/window.vala:261
+msgid ""
+"Drag and drop song files here,\n"
+"or change music location: "
+msgstr ""
+"Arrastra y suelta las canciones aqui,\n"
+"o cambia la ubicacion de la musica"
