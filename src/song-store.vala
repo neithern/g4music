@@ -14,6 +14,8 @@ namespace Music {
         private ListStore _store = new ListStore (typeof (Song));
         private TagCache _tag_cache = new TagCache ();
 
+        public signal void parse_progress (int percent);
+
         public ListStore store {
             get {
                 return _store;
@@ -102,6 +104,8 @@ namespace Music {
                 if (queue_count > 0) {
                     var num_thread = uint.min (queue_count, get_num_processors ());
                     var threads = new Thread<void>[num_thread];
+                    int percent = -1;
+                    uint progress = 0;
                     for (var i = 0; i < num_thread; i++) {
                         threads[i] = new Thread<void> (@"thread$(i)", () => {
                             Song? s;
@@ -109,6 +113,14 @@ namespace Music {
                                 var song = (!)s;
                                 parse_song_tags (song);
                                 _tag_cache.add (song);
+                                var per = (int) AtomicUint.add (ref progress, 1) * 100 / queue_count;
+                                if (percent != per) {
+                                    percent = per;
+                                    Idle.add (() => {
+                                        parse_progress (per);
+                                        return false;
+                                    });
+                                }
                             }
                         });
                     }

@@ -209,6 +209,12 @@ namespace Music {
             }
         }
 
+        public bool is_loading_store {
+            get {
+                return _loading_store;
+            }
+        }
+
         public GstPlayer player {
             get {
                 return _player;
@@ -237,6 +243,12 @@ namespace Music {
             }
             set {
                 _song_store.sort_mode = value;
+            }
+        }
+
+        public SongStore song_store {
+            get {
+                return _song_store;
             }
         }
 

@@ -141,11 +141,18 @@ namespace Music {
                 return true;
             });
 
+            if (app.is_loading_store) {
+                //  Make a call to show start loading
+                on_loading_changed (true, 0);
+            }
             app.loading_changed.connect (on_loading_changed);
             app.index_changed.connect (on_index_changed);
             app.song_changed.connect (on_song_changed);
             app.song_tag_parsed.connect (on_song_tag_parsed);
             app.player.state_changed.connect (on_player_state_changed);
+            app.song_store.parse_progress.connect ((percent) => {
+                index_title.label = @"$_loading_text $percent%";
+            });
         }
 
         public bool leaflet_folded {
