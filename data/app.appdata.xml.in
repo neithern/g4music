@@ -48,6 +48,16 @@
     </screenshots>
 
     <releases>
+        <release version="1.5" date="2022-07-31">
+            <description>
+                <ul>
+                <li>Show loading songs progress with percent.</li>
+                <li>Add sort by recently added, thanks to Mek101.</li>
+                <li>Add German translation, thanks to Jürgen Benvenuti.</li>
+                <li>Bug fix and UI improvement.</li>
+                </ul>
+            </description>
+        </release>
         <release version="1.4" date="2022-07-23">
             <description>
                 <ul>
