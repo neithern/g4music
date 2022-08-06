@@ -82,14 +82,12 @@ namespace Music {
         }
 
         public async void add_files_async (File[] files) {
-            var load_thread = new Thread<void> ("load_thread", _tag_cache.load);
             var arr = new GenericArray<Object> (4096);
             yield run_async<void> (() => {
                 var begin_time = get_monotonic_time ();
                 foreach (var file in files) {
                     add_file (file, arr);
                 }
-                load_thread.join ();
 
                 var queue = new AsyncQueue<Song?> ();
                 for (var i = 0; i < arr.length; i++) {
