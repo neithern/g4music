@@ -21,6 +21,11 @@
                 </child>
               </object>
             </child>
+            <child>
+              <object class="AdwComboRow" id="blur_row">
+                <property name="title" translatable="yes">Background blur type</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>

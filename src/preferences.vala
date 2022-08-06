@@ -1,9 +1,16 @@
 namespace Music {
+    public enum BackgroundRenderingType {
+        ALWAYS,
+        ART_ONLY,
+        NEVER
+    }
 
     [GtkTemplate (ui = "/com/github/neithern/g4music/gtk/preferences.ui")]
     public class PreferencesWindow : Adw.PreferencesWindow {
         [GtkChild]
         unowned Gtk.Switch dark_btn;
+        [GtkChild]
+        unowned Adw.ComboRow blur_row;
         [GtkChild]
         unowned Gtk.Button music_dir_btn;
         [GtkChild]
@@ -24,6 +31,11 @@ namespace Music {
 
             dark_btn.bind_property ("state", app, "dark_theme", BindingFlags.DEFAULT);
             settings?.bind ("dark-theme", dark_btn, "state", SettingsBindFlags.DEFAULT);
+
+            blur_row.expression = new Gtk.CClosureExpression (typeof (string), null, new Gtk.Expression[0], (Callback) get_rendering_name, null, null);
+            blur_row.model = new Adw.EnumListModel (typeof (BackgroundRenderingType));
+            settings?.bind ("background-blur", blur_row, "selected", SettingsBindFlags.DEFAULT);
+            blur_row.bind_property ("selected", app.active_window, "background-blur", BindingFlags.DEFAULT);
 
             var music_dir = app.get_music_folder ();
             music_dir_btn.label = get_display_name (music_dir);
@@ -50,6 +62,19 @@ namespace Music {
 
             settings?.bind ("show-peak", peak_btn, "state", SettingsBindFlags.GET_NO_CHANGES);
             peak_btn.bind_property ("state", app.player, "show_peak", BindingFlags.DEFAULT);
+        }
+    }
+
+    public string get_rendering_name (Adw.EnumListItem item, void* user_data) {
+        switch (item.get_value ()) {
+        case BackgroundRenderingType.ALWAYS:
+            return _("Always");
+        case BackgroundRenderingType.ART_ONLY:
+            return _("Art Only");
+        case BackgroundRenderingType.NEVER:
+            return _("Never");
+        default:
+            return "";
         }
     }
 

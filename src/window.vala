@@ -44,6 +44,7 @@ namespace Music {
 
         private MiniBar _mini_bar = new MiniBar ();
 
+        private BackgroundRenderingType _bkgnd_blur = BackgroundRenderingType.ALWAYS;
         private CrossFadePaintable _bkgnd_paintable = new CrossFadePaintable ();
         private CrossFadePaintable _cover_paintable = new CrossFadePaintable ();
         private Gdk.Paintable? _loading_paintable = null;
@@ -60,8 +61,11 @@ namespace Music {
 
             this.close_request.connect (on_close_request);
 
-            app.settings?.bind ("width", this, "default-width", SettingsBindFlags.DEFAULT);
-            app.settings?.bind ("height", this, "default-height", SettingsBindFlags.DEFAULT);
+            var settings = app.settings;
+            settings?.bind ("width", this, "default-width", SettingsBindFlags.DEFAULT);
+            settings?.bind ("height", this, "default-height", SettingsBindFlags.DEFAULT);
+            settings?.bind ("background-blur", this, "background-blur", SettingsBindFlags.DEFAULT);
+            _bkgnd_blur = (BackgroundRenderingType) (settings?.get_uint ("background-blur") ?? 0);
 
             setup_drop_target ();
 
@@ -153,6 +157,13 @@ namespace Music {
             app.song_store.parse_progress.connect ((percent) => {
                 index_title.label = @"$_loading_text $percent%";
             });
+        }
+
+        public uint background_blur {
+            set {
+                _bkgnd_blur = (BackgroundRenderingType) value;
+                update_background ();
+            }
         }
 
         public bool leaflet_folded {
@@ -413,11 +424,7 @@ namespace Music {
             _mini_bar.cover = app.thumbnailer.find (song.cover_uri);
             _cover_paintable.paintable = paintable ?? _mini_bar.cover;
 
-            var width = get_width ();
-            var height = get_height ();
-            if (width > 0 && height > 0) {
-                update_blur_paintable (width, height, true);
-            }
+            update_background ();
 
             var target = new Adw.CallbackAnimationTarget ((value) => {
                 _bkgnd_paintable.fade = value;
@@ -438,7 +445,8 @@ namespace Music {
 
         private bool update_blur_paintable (int width, int height, bool force = false) {
             var paintable = _mini_bar.cover; // _cover_paintable.paintable;
-            if (paintable != null) {
+            if ((_bkgnd_blur == BackgroundRenderingType.ALWAYS && paintable != null)
+                || (_bkgnd_blur == BackgroundRenderingType.ART_ONLY && paintable is Gdk.Texture)) {
                 if (force || _blur_width != width || _blur_height != height) {
                     _blur_width = width;
                     _blur_height = height;
@@ -451,6 +459,14 @@ namespace Music {
                 return true;
             }
             return false;
+        }
+
+        private void update_background () {
+            var width = get_width ();
+            var height = get_height ();
+            if (width > 0 && height > 0) {
+                update_blur_paintable (width, height, true);
+            }
         }
     }
 }

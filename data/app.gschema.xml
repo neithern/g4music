@@ -5,6 +5,11 @@
       <default>true</default>
       <summary>Prefer dark theme</summary>
     </key>
+    <key name="background-blur" type="u">
+      <range min="0" max="2"/>
+      <default>0</default>
+      <summary>Background blur type</summary>
+    </key>
     <key name="music-dir" type="s">
       <default>''</default>
       <summary>Load music from folder</summary>
@@ -38,7 +43,7 @@
       <summary>Show audio peak level</summary>
     </key>
     <key name="sort-mode" type="u">
-      <range min="0" max="3"/>
+      <range min="0" max="4"/>
       <default>2</default>
       <summary>Sort Mode</summary>
     </key>
