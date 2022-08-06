@@ -305,18 +305,22 @@ namespace Music {
 
         public bool find_current_item () {
             if (_song_list.get_item (_current_item) == _current_song)
-                return false;
+                return true;
 
             //  find current item
-            var old_item = _current_item;
-            var count = _song_list.get_n_items ();
-            current_item = find_song_item (_current_song);
-            if (old_item != _current_item) {
-                _song_list.items_changed (old_item, 0, 0);
-                _song_list.items_changed (_current_item, 0, 0);
-                index_changed (_current_item, count);
+            var item = find_song_item (_current_song);
+            if (item != -1) {
+                current_item = item;
                 return true;
             }
+
+            //  update _current_item but don't change current song
+            var count = _song_list.get_n_items ();
+            var old_item = _current_item;
+            _current_item = item;
+            _song_list.items_changed (old_item, 0, 0);
+            _song_list.items_changed (item, 0, 0);
+            index_changed (item, count);
             return false;
         }
 
