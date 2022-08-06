@@ -294,7 +294,7 @@ namespace Music {
         private void sort_by (SimpleAction action, Variant? parameter) {
             sort_mode = (SortMode) (parameter?.get_uint32 () ?? 2);
             _settings?.set_uint ("sort-mode", sort_mode);
-            find_current_item ();
+            current_item = find_song_item (_current_song);
         }
 
         public void toggle_seach () {
@@ -303,24 +303,7 @@ namespace Music {
                 ((!)win).search_btn.active = ! ((!)win).search_btn.active;
         }
 
-        public bool find_current_item () {
-            if (_song_list.get_item (_current_item) == _current_song)
-                return false;
-
-            //  find current item
-            var old_item = _current_item;
-            var count = _song_list.get_n_items ();
-            current_item = find_song_item (_current_song);
-            if (old_item != _current_item) {
-                _song_list.items_changed (old_item, 0, 0);
-                _song_list.items_changed (_current_item, 0, 0);
-                index_changed (_current_item, count);
-                return true;
-            }
-            return false;
-        }
-
-        private int find_song_item (Song? song) {
+        public int find_song_item (Song? song) {
             var count = _song_list.get_n_items ();
             for (var i = 0; i < count; i++) {
                 if (song == _song_list.get_item (i)) {
