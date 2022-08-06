@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-30 11:29+0800\n"
-"PO-Revision-Date: 2022-08-06 02:26+0300\n"
+"PO-Revision-Date: 2022-08-06 16:14+0300\n"
 "Last-Translator: David Lapshin <ddaudix@gmail.com>\n"
 "Language-Team: \n"
 "Language: ru\n"
@@ -193,7 +193,7 @@ msgstr "Перемешать"
 
 #: src/application.vala:368
 msgid "translator-credits"
-msgstr "Давид Лапшин <ddaudix@gmail.com>"
+msgstr "Давид Лапшин <ddaudix@gmail.com>, 2022"
 
 #: src/application.vala:370
 msgid "A fast, fluent, light weight music player written in GTK4."
