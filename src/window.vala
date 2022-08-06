@@ -44,7 +44,7 @@ namespace Music {
 
         private MiniBar _mini_bar = new MiniBar ();
 
-        private BackgroundRenderingType _bkgnd_blur = BackgroundRenderingType.ALWAYS;
+        private BackgroundRenderingMode _bkgnd_blur = BackgroundRenderingMode.ALWAYS;
         private CrossFadePaintable _bkgnd_paintable = new CrossFadePaintable ();
         private CrossFadePaintable _cover_paintable = new CrossFadePaintable ();
         private Gdk.Paintable? _loading_paintable = null;
@@ -65,7 +65,7 @@ namespace Music {
             settings?.bind ("width", this, "default-width", SettingsBindFlags.DEFAULT);
             settings?.bind ("height", this, "default-height", SettingsBindFlags.DEFAULT);
             settings?.bind ("background-blur", this, "background-blur", SettingsBindFlags.DEFAULT);
-            _bkgnd_blur = (BackgroundRenderingType) (settings?.get_uint ("background-blur") ?? 0);
+            _bkgnd_blur = (BackgroundRenderingMode) (settings?.get_uint ("background-blur") ?? 0);
 
             setup_drop_target ();
 
@@ -161,7 +161,7 @@ namespace Music {
 
         public uint background_blur {
             set {
-                _bkgnd_blur = (BackgroundRenderingType) value;
+                _bkgnd_blur = (BackgroundRenderingMode) value;
                 update_background ();
             }
         }
@@ -445,8 +445,8 @@ namespace Music {
 
         private bool update_blur_paintable (int width, int height, bool force = false) {
             var paintable = _mini_bar.cover; // _cover_paintable.paintable;
-            if ((_bkgnd_blur == BackgroundRenderingType.ALWAYS && paintable != null)
-                || (_bkgnd_blur == BackgroundRenderingType.ART_ONLY && paintable is Gdk.Texture)) {
+            if ((_bkgnd_blur == BackgroundRenderingMode.ALWAYS && paintable != null)
+                || (_bkgnd_blur == BackgroundRenderingMode.ART_ONLY && paintable is Gdk.Texture)) {
                 if (force || _blur_width != width || _blur_height != height) {
                     _blur_width = width;
                     _blur_height = height;
