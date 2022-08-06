@@ -48,6 +48,17 @@
     </screenshots>
 
     <releases>
+        <release version="1.6" date="2022-08-06">
+            <description>
+                <ul>
+                <li>Option: Background blur mode.</li>
+                <li>Shortcut key for toggle sort.</li>
+                <li>Don't changing current song when searching.</li>
+                <li>Add Estonian translation, thanks to Henri.</li>
+                <li>Add Traditional Chinese translation, thanks to Julian.</li>
+                </ul>
+            </description>
+        </release>
         <release version="1.5" date="2022-07-31">
             <description>
                 <ul>
