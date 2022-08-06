@@ -55,6 +55,12 @@
                 <property name="action-name">app.search</property>
               </object>
             </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Toggle Sort</property>
+                <property name="action-name">app.toggle-sort</property>
+              </object>
+            </child>
           </object>
         </child>
       </object>

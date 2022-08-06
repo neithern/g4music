@@ -12,6 +12,7 @@ namespace Music {
     public const string ACTION_SHOW_ALBUM = "show-album";
     public const string ACTION_SHOW_ARTIST = "show-artist";
     public const string ACTION_SORT = "sort";
+    public const string ACTION_TOGGLE_SORT = "toggle-sort";
     public const string ACTION_QUIT = "quit";
 
     struct ActionShortKey {
@@ -61,6 +62,7 @@ namespace Music {
                 { ACTION_SEARCH, toggle_seach },
                 { ACTION_SHOW_ALBUM, show_album },
                 { ACTION_SHOW_ARTIST, show_artist },
+                { ACTION_TOGGLE_SORT, toggle_sort },
                 { ACTION_QUIT, quit }
             };
             add_action_entries (action_entries, this);
@@ -79,6 +81,7 @@ namespace Music {
                 { ACTION_PREV, "<primary>Left" },
                 { ACTION_NEXT, "<primary>Right" },
                 { ACTION_SEARCH, "<primary>f" },
+                { ACTION_TOGGLE_SORT, "<primary>s" },
                 { ACTION_QUIT, "<primary>q" }
             };
             foreach (var item in action_keys) {
@@ -301,6 +304,13 @@ namespace Music {
             var win = active_window as Window;
             if (win != null)
                 ((!)win).search_btn.active = ! ((!)win).search_btn.active;
+        }
+
+        private void toggle_sort () {
+            if (sort_mode >= SortMode.SHUFFLE)
+                sort_mode = SortMode.ALBUM;
+            else
+                sort_mode = (SortMode) (sort_mode + 1);
         }
 
         public bool find_current_item () {
