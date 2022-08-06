@@ -403,9 +403,8 @@ namespace Music {
             } else {
                 app.song_list.set_filter (null);
             }
-            var index = app.find_song_item (app.current_song);
-            if (index != -1) {
-                scroll_to_item (index);
+            if (!app.find_current_item ()) {
+                app.index_changed (app.current_item, app.song_list.get_n_items ());
             }
         }
 
