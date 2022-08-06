@@ -56,6 +56,7 @@
                 <li>Don't changing current song when searching.</li>
                 <li>Add Estonian translation, thanks to Henri.</li>
                 <li>Add Traditional Chinese translation, thanks to Julian.</li>
+                <li>v1.6.1: Fix wrong sort order of cached tags.</li>
                 </ul>
             </description>
         </release>
