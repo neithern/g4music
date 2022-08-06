@@ -65,7 +65,6 @@ namespace Music {
             settings?.bind ("width", this, "default-width", SettingsBindFlags.DEFAULT);
             settings?.bind ("height", this, "default-height", SettingsBindFlags.DEFAULT);
             settings?.bind ("background-blur", this, "background-blur", SettingsBindFlags.DEFAULT);
-            _bkgnd_blur = (BackgroundBlurMode) (settings?.get_uint ("background-blur") ?? 0);
 
             setup_drop_target ();
 
@@ -160,6 +159,9 @@ namespace Music {
         }
 
         public uint background_blur {
+            get {
+                return _bkgnd_blur;
+            }
             set {
                 _bkgnd_blur = (BackgroundBlurMode) value;
                 update_background ();
