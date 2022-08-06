@@ -1,0 +1,248 @@
+# Traditional Chinese translations for g4music package
+# g 套件的繁體中文翻譯.
+# Copyright (C) 2022 THE g4music'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the g package.
+# Julian <s9209122222@gmail.com>, 2022.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: g4music\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-08-03 11:37+0800\n"
+"PO-Revision-Date: 2022-08-03 11:45+0800\n"
+"Last-Translator: Julian <s9209122222@gmail.com>\n"
+"Language-Team: Chinese (Traditional)\n"
+"Language: zh_TW\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:364
+#: src/main.vala:24
+msgid "G4Music"
+msgstr "G4Music"
+
+#: data/app.desktop.in:4
+msgid "Music Player"
+msgstr "音樂播放器"
+
+#: data/app.desktop.in:5
+msgid "Play music"
+msgstr "播放音樂"
+
+#: data/app.desktop.in:12
+msgid "music;sound;player;media;audio;playlist;"
+msgstr "音樂;聲音;播放器;媒體;音訊;播放清單;"
+
+#: src/gtk/help-overlay.ui:11
+msgctxt "shortcut window"
+msgid "General"
+msgstr "一般"
+
+#: src/gtk/help-overlay.ui:14
+msgctxt "shortcut window"
+msgid "Show Shortcuts"
+msgstr "顯示快捷鍵"
+
+#: src/gtk/help-overlay.ui:20
+msgctxt "shortcut window"
+msgid "Quit"
+msgstr "退出"
+
+#: src/gtk/help-overlay.ui:28
+msgctxt "shortcut window"
+msgid "Playback"
+msgstr "播放"
+
+#: src/gtk/help-overlay.ui:31
+msgctxt "shortcut window"
+msgid "Play/Pause"
+msgstr "播放/暫停"
+
+#: src/gtk/help-overlay.ui:37
+msgctxt "shortcut window"
+msgid "Play Next"
+msgstr "播放下一首"
+
+#: src/gtk/help-overlay.ui:43
+msgctxt "shortcut window"
+msgid "Play Previous"
+msgstr "播放上一首"
+
+#: src/gtk/help-overlay.ui:51
+msgctxt "shortcut window"
+msgid "Playlist"
+msgstr "播放清單"
+
+#: src/gtk/help-overlay.ui:54
+msgctxt "shortcut window"
+msgid "Search"
+msgstr "搜尋"
+
+#: src/gtk/preferences.ui:12
+msgid "Appearance"
+msgstr "外觀"
+
+#: src/gtk/preferences.ui:15
+msgid "Prefer dark theme"
+msgstr "傾向使用暗色主題"
+
+#: src/gtk/preferences.ui:28
+msgid "Music Location"
+msgstr "音樂庫"
+
+#: src/gtk/preferences.ui:31
+msgid "Load music from folder"
+msgstr "從資料夾載入音樂"
+
+#: src/gtk/preferences.ui:42
+msgid "Load thumbnails for non-local files"
+msgstr "載入非本機文件的縮圖"
+
+#: src/gtk/preferences.ui:43
+msgid "May cause slowdowns and excess network usage"
+msgstr "可能會導致速度減慢與增加網路使用"
+
+#: src/gtk/preferences.ui:56
+msgid "Playback"
+msgstr "播放"
+
+#: src/gtk/preferences.ui:59 src/application.vala:355
+msgid "Keep playing after window closed"
+msgstr "關閉視窗後繼續播放"
+
+#: src/gtk/preferences.ui:70
+msgid "Show audio peak level"
+msgstr "顯示音訊峰值"
+
+#: src/gtk/preferences.ui:81
+msgid "Enable gapless playback"
+msgstr "啟用無縫播放"
+
+#: src/gtk/preferences.ui:92
+msgid "Use ReplayGain to normalize volume"
+msgstr "使用 ReplayGain 正規化音量"
+
+#: src/gtk/preferences.ui:103
+msgid "Use pipewire audio sink"
+msgstr "使用 Pipewire 音訊輸出"
+
+#: src/gtk/preferences.ui:104
+msgid "Experimental"
+msgstr "實驗性質功能"
+
+#: src/gtk/window.ui:33
+msgid "Main Menu"
+msgstr "主選單"
+
+#: src/gtk/window.ui:55
+msgid "Search"
+msgstr "搜尋"
+
+#: src/gtk/window.ui:62
+msgid "Sort Mode"
+msgstr "排序方式"
+
+#: src/gtk/window.ui:123
+msgid "Back"
+msgstr "返回"
+
+#: src/gtk/window.ui:213
+msgid "_Export Cover"
+msgstr "輸出封面(_E)"
+
+#: src/gtk/window.ui:217 src/song-entry.vala:101
+msgid "_Show In Files"
+msgstr "打開檔案的資料夾(_S)"
+
+#: src/gtk/window.ui:226
+msgid "_Reload List"
+msgstr "更新清單(_R)"
+
+#: src/gtk/window.ui:232
+msgid "_Preferences"
+msgstr "偏好設定(_P)"
+
+#: src/gtk/window.ui:236
+msgid "_Keyboard Shortcuts"
+msgstr "快捷鍵(_K)"
+
+#: src/gtk/window.ui:240
+msgid "_About G4Music"
+msgstr "關於 G4 音乐(_A)"
+
+#: src/gtk/window.ui:250
+msgid "By Album"
+msgstr "依專輯"
+
+#: src/gtk/window.ui:256
+msgid "By Artist"
+msgstr "依藝術家"
+
+#: src/gtk/window.ui:262
+msgid "By Title"
+msgstr "依歌名"
+
+#: src/gtk/window.ui:268
+msgid "By Date"
+msgstr "依日期"
+
+#: src/gtk/window.ui:274
+msgid "Shuffle"
+msgstr "亂序播放"
+
+#: src/application.vala:368
+msgid "translator-credits"
+msgstr "Julian"
+
+#: src/application.vala:370
+msgid "A fast, fluent, light weight music player written in GTK4."
+msgstr "一個快速、流暢、輕量，基於 GTK4 的音樂播放軟體。"
+
+#: src/application.vala:496
+msgid "Keep playing"
+msgstr "持續播放"
+
+#: src/play-bar.vala:83
+msgid "Repeat Song"
+msgstr "單曲循環"
+
+#: src/play-bar.vala:93
+msgid "Play Previous"
+msgstr "播放上一首"
+
+#: src/play-bar.vala:99
+msgid "Play/Pause"
+msgstr "播放/暫停"
+
+#: src/play-bar.vala:106
+msgid "Play Next"
+msgstr "播放下一首"
+
+#: src/song.vala:3
+msgid "Unknown Album"
+msgstr "未知專輯"
+
+#: src/song.vala:4
+msgid "Unknown Artist"
+msgstr "未知藝術家"
+
+#: src/song-entry.vala:99
+msgid "Show Album"
+msgstr "顯示專輯"
+
+#: src/song-entry.vala:100
+msgid "Show Artist"
+msgstr "顯示藝術家"
+
+#: src/window.vala:51
+msgid "Loading..."
+msgstr "正在載入…"
+
+#: src/window.vala:261
+msgid ""
+"Drag and drop song files here,\n"
+"or change music location: "
+msgstr ""
+"將音樂拖曳至這裡，\n"
+"或者修改音樂庫位置："
