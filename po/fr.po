@@ -2,22 +2,23 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # Aurélien Hamy <aunetx@yandex.com>, 2022.
+# Naqua Darazaki <n.darazaki@gmail.com>, 2022.
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-16 20:07+0200\n"
+"POT-Creation-Date: 2022-08-06 22:50+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Aurélien Hamy <aunetx@yandex.com>\n"
+"Last-Translator: Naqua Darazaki <n.darazaki@gmail.com>\n"
 "Language-Team: \n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:350
+#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:394
 #: src/main.vala:24
 msgid "G4Music"
 msgstr "G4Music"
@@ -32,7 +33,7 @@ msgstr "Lire de la musique"
 
 #: data/app.desktop.in:12
 msgid "music;sound;player;media;audio;playlist;"
-msgstr "music;sound;player;media;audio;playlist;"
+msgstr "music;musique;son;sound;player;media;média;audio;playlist;"
 
 #: src/gtk/help-overlay.ui:11
 msgctxt "shortcut window"
@@ -79,6 +80,11 @@ msgctxt "shortcut window"
 msgid "Search"
 msgstr "Recherche"
 
+#: src/gtk/help-overlay.ui:60
+msgctxt "shortcut window"
+msgid "Toggle Sort"
+msgstr "Activer/désactiver le tri"
+
 #: src/gtk/preferences.ui:12
 msgid "Appearance"
 msgstr "Apparence"
@@ -87,43 +93,51 @@ msgstr "Apparence"
 msgid "Prefer dark theme"
 msgstr "Préférer le thème sombre"
 
-#: src/gtk/preferences.ui:28
+#: src/gtk/preferences.ui:26
+msgid "Background blur mode"
+msgstr "Mode de flou du fond"
+
+#: src/gtk/preferences.ui:33
 msgid "Music Location"
 msgstr "Emplacement de la musique"
 
-#: src/gtk/preferences.ui:31
+#: src/gtk/preferences.ui:36
 msgid "Load music from folder"
 msgstr "Charger la musique depuis le dossier"
 
-#: src/gtk/preferences.ui:42
+#: src/gtk/preferences.ui:47
 msgid "Load thumbnails for non-local files"
 msgstr "Charger les aperçus des fichier externes"
 
-#: src/gtk/preferences.ui:55
+#: src/gtk/preferences.ui:48
+msgid "May cause slowdowns and excess network usage"
+msgstr "Peut causer des ralentissements et une utilisation du réseau excessive"
+
+#: src/gtk/preferences.ui:61
 msgid "Playback"
 msgstr "Lecture"
 
-#: src/gtk/preferences.ui:58 src/application.vala:341
+#: src/gtk/preferences.ui:64 src/application.vala:385
 msgid "Keep playing after window closed"
 msgstr "Continuer la lecture après la fermeture de la fenêtre"
 
-#: src/gtk/preferences.ui:69
+#: src/gtk/preferences.ui:75
 msgid "Show audio peak level"
 msgstr "Afficher les pics sonores"
 
-#: src/gtk/preferences.ui:80
+#: src/gtk/preferences.ui:86
 msgid "Enable gapless playback"
 msgstr "Activer la lecture sans interruption"
 
-#: src/gtk/preferences.ui:91
+#: src/gtk/preferences.ui:97
 msgid "Use ReplayGain to normalize volume"
 msgstr "Utiliser ReplayGain pour normaliser le volume"
 
-#: src/gtk/preferences.ui:102
+#: src/gtk/preferences.ui:108
 msgid "Use pipewire audio sink"
 msgstr "Utiliser la sortie audio pipewire"
 
-#: src/gtk/preferences.ui:103
+#: src/gtk/preferences.ui:109
 msgid "Experimental"
 msgstr "Expérimental"
 
@@ -143,51 +157,59 @@ msgstr "Mode de tri"
 msgid "Back"
 msgstr "Précédent"
 
-#: src/gtk/window.ui:204
+#: src/gtk/window.ui:213
 msgid "_Export Cover"
 msgstr "_Exporter la couverture"
 
-#: src/gtk/window.ui:208
+#: src/gtk/window.ui:217 src/song-entry.vala:101
 msgid "_Show In Files"
-msgstr ""
+msgstr "_Montrer dans Fichiers"
 
-#: src/gtk/window.ui:217
+#: src/gtk/window.ui:226
+msgid "_Reload List"
+msgstr "_Recharger la liste"
+
+#: src/gtk/window.ui:232
 msgid "_Preferences"
 msgstr "_Préférences"
 
-#: src/gtk/window.ui:221
+#: src/gtk/window.ui:236
 msgid "_Keyboard Shortcuts"
 msgstr "_Raccourcis clavier"
 
-#: src/gtk/window.ui:225
+#: src/gtk/window.ui:240
 msgid "_About G4Music"
 msgstr "_A propos de G4Music"
 
-#: src/gtk/window.ui:235
+#: src/gtk/window.ui:250
 msgid "By Album"
 msgstr "Par album"
 
-#: src/gtk/window.ui:241
+#: src/gtk/window.ui:256
 msgid "By Artist"
 msgstr "Par artiste"
 
-#: src/gtk/window.ui:247
+#: src/gtk/window.ui:262
 msgid "By Title"
 msgstr "Par titre"
 
-#: src/gtk/window.ui:253
+#: src/gtk/window.ui:268
+msgid "By Date"
+msgstr "Par date"
+
+#: src/gtk/window.ui:274
 msgid "Shuffle"
 msgstr "Mélanger"
 
-#: src/application.vala:354
+#: src/application.vala:398
 msgid "translator-credits"
-msgstr "Aurélien Hamy"
+msgstr "Aurélien Hamy & Naqua Darazaki"
 
-#: src/application.vala:356
+#: src/application.vala:400
 msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr "Un lecteur de musique GTK4 rapide, joli et léger."
 
-#: src/application.vala:469
+#: src/application.vala:526
 msgid "Keep playing"
 msgstr "Continuer à jouer"
 
@@ -207,14 +229,44 @@ msgstr "Lire/Suspendre"
 msgid "Play Next"
 msgstr "Lire la piste suivante"
 
-#: src/song.vala:2
+#: src/preferences.vala:71
+msgid "Always"
+msgstr "Toujours"
+
+#: src/preferences.vala:73
+msgid "Art Only"
+msgstr "Art uniquement"
+
+#: src/preferences.vala:75
+msgid "Never"
+msgstr "Jamais"
+
+#: src/song.vala:3
 msgid "Unknown Album"
 msgstr "Album inconnu"
 
-#: src/song.vala:3
+#: src/song.vala:4
 msgid "Unknown Artist"
 msgstr "Artiste inconnu"
 
-#: src/window.vala:49
+#: src/song-entry.vala:99
+#, fuzzy
+msgid "Show Album"
+msgstr "Album inconnu"
+
+#: src/song-entry.vala:100
+#, fuzzy
+msgid "Show Artist"
+msgstr "Artiste inconnu"
+
+#: src/window.vala:52
 msgid "Loading..."
 msgstr "Chargement..."
+
+#: src/window.vala:279
+msgid ""
+"Drag and drop song files here,\n"
+"or change music location: "
+msgstr ""
+"Glissez et déposez vos fichiers de musique ici,\n"
+"ou changez l'emplacement de la musique : "
