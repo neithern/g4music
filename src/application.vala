@@ -109,6 +109,14 @@ namespace Music {
             _player.state_changed.connect (on_player_state_changed);
             _player.tag_parsed.connect (on_tag_parsed);
 
+        }
+
+        public override void startup () {
+            base.startup ();
+
+            //  Must load tag cache after the app register, to make sort works
+            _song_store.load_tag_cache ();
+
             _mpris_id = Bus.own_name (BusType.SESSION,
                 "org.mpris.MediaPlayer2." + Config.APP_ID,
                 BusNameOwnerFlags.NONE,

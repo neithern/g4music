@@ -11,8 +11,6 @@ namespace Music {
         public TagCache (string name = "tag-cache") {
             var dir = Environment.get_user_cache_dir ();
             _file = File.new_build_filename (dir, Config.APP_ID, name);
-
-            new Thread<void> (null, load);
         }
 
         public bool loaded {
@@ -45,7 +43,7 @@ namespace Music {
             }
         }
 
-        private void load () {
+        public void load () {
             try {
                 var fis = _file.read ();
                 var bis = new BufferedInputStream (fis);
