@@ -1,5 +1,5 @@
 namespace Music {
-    public enum BackgroundRenderingType {
+    public enum BackgroundRenderingMode {
         ALWAYS,
         ART_ONLY,
         NEVER
@@ -33,7 +33,7 @@ namespace Music {
             settings?.bind ("dark-theme", dark_btn, "state", SettingsBindFlags.DEFAULT);
 
             blur_row.expression = new Gtk.CClosureExpression (typeof (string), null, new Gtk.Expression[0], (Callback) get_rendering_name, null, null);
-            blur_row.model = new Adw.EnumListModel (typeof (BackgroundRenderingType));
+            blur_row.model = new Adw.EnumListModel (typeof (BackgroundRenderingMode));
             settings?.bind ("background-blur", blur_row, "selected", SettingsBindFlags.DEFAULT);
             blur_row.bind_property ("selected", app.active_window, "background-blur", BindingFlags.DEFAULT);
 
@@ -67,11 +67,11 @@ namespace Music {
 
     public string get_rendering_name (Adw.EnumListItem item, void* user_data) {
         switch (item.get_value ()) {
-        case BackgroundRenderingType.ALWAYS:
+        case BackgroundRenderingMode.ALWAYS:
             return _("Always");
-        case BackgroundRenderingType.ART_ONLY:
+        case BackgroundRenderingMode.ART_ONLY:
             return _("Art Only");
-        case BackgroundRenderingType.NEVER:
+        case BackgroundRenderingMode.NEVER:
             return _("Never");
         default:
             return "";

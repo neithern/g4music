@@ -5,6 +5,7 @@ src/gtk/window.ui
 src/application.vala
 src/main.vala
 src/play-bar.vala
+src/preferences.vala
 src/song.vala
 src/song-entry.vala
 src/song-store.vala
