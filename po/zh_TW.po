@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-03 11:37+0800\n"
+"POT-Creation-Date: 2022-08-06 22:50+0800\n"
 "PO-Revision-Date: 2022-08-03 11:45+0800\n"
 "Last-Translator: Julian <s9209122222@gmail.com>\n"
 "Language-Team: Chinese (Traditional)\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:364
+#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:394
 #: src/main.vala:24
 msgid "G4Music"
 msgstr "G4Music"
@@ -79,6 +79,11 @@ msgctxt "shortcut window"
 msgid "Search"
 msgstr "搜尋"
 
+#: src/gtk/help-overlay.ui:60
+msgctxt "shortcut window"
+msgid "Toggle Sort"
+msgstr "切換排序"
+
 #: src/gtk/preferences.ui:12
 msgid "Appearance"
 msgstr "外觀"
@@ -87,47 +92,51 @@ msgstr "外觀"
 msgid "Prefer dark theme"
 msgstr "傾向使用暗色主題"
 
-#: src/gtk/preferences.ui:28
+#: src/gtk/preferences.ui:26
+msgid "Background blur mode"
+msgstr "背景模糊模式"
+
+#: src/gtk/preferences.ui:33
 msgid "Music Location"
 msgstr "音樂庫"
 
-#: src/gtk/preferences.ui:31
+#: src/gtk/preferences.ui:36
 msgid "Load music from folder"
 msgstr "從資料夾載入音樂"
 
-#: src/gtk/preferences.ui:42
+#: src/gtk/preferences.ui:47
 msgid "Load thumbnails for non-local files"
 msgstr "載入非本機文件的縮圖"
 
-#: src/gtk/preferences.ui:43
+#: src/gtk/preferences.ui:48
 msgid "May cause slowdowns and excess network usage"
 msgstr "可能會導致速度減慢與增加網路使用"
 
-#: src/gtk/preferences.ui:56
+#: src/gtk/preferences.ui:61
 msgid "Playback"
 msgstr "播放"
 
-#: src/gtk/preferences.ui:59 src/application.vala:355
+#: src/gtk/preferences.ui:64 src/application.vala:385
 msgid "Keep playing after window closed"
 msgstr "關閉視窗後繼續播放"
 
-#: src/gtk/preferences.ui:70
+#: src/gtk/preferences.ui:75
 msgid "Show audio peak level"
 msgstr "顯示音訊峰值"
 
-#: src/gtk/preferences.ui:81
+#: src/gtk/preferences.ui:86
 msgid "Enable gapless playback"
 msgstr "啟用無縫播放"
 
-#: src/gtk/preferences.ui:92
+#: src/gtk/preferences.ui:97
 msgid "Use ReplayGain to normalize volume"
 msgstr "使用 ReplayGain 正規化音量"
 
-#: src/gtk/preferences.ui:103
+#: src/gtk/preferences.ui:108
 msgid "Use pipewire audio sink"
 msgstr "使用 Pipewire 音訊輸出"
 
-#: src/gtk/preferences.ui:104
+#: src/gtk/preferences.ui:109
 msgid "Experimental"
 msgstr "實驗性質功能"
 
@@ -191,15 +200,15 @@ msgstr "依日期"
 msgid "Shuffle"
 msgstr "亂序播放"
 
-#: src/application.vala:368
+#: src/application.vala:398
 msgid "translator-credits"
 msgstr "Julian"
 
-#: src/application.vala:370
+#: src/application.vala:400
 msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr "一個快速、流暢、輕量，基於 GTK4 的音樂播放軟體。"
 
-#: src/application.vala:496
+#: src/application.vala:526
 msgid "Keep playing"
 msgstr "持續播放"
 
@@ -219,6 +228,18 @@ msgstr "播放/暫停"
 msgid "Play Next"
 msgstr "播放下一首"
 
+#: src/preferences.vala:71
+msgid "Always"
+msgstr "總是"
+
+#: src/preferences.vala:73
+msgid "Art Only"
+msgstr "僅封面"
+
+#: src/preferences.vala:75
+msgid "Never"
+msgstr "從不"
+
 #: src/song.vala:3
 msgid "Unknown Album"
 msgstr "未知專輯"
@@ -235,11 +256,11 @@ msgstr "顯示專輯"
 msgid "Show Artist"
 msgstr "顯示藝術家"
 
-#: src/window.vala:51
+#: src/window.vala:52
 msgid "Loading..."
 msgstr "正在載入…"
 
-#: src/window.vala:261
+#: src/window.vala:279
 msgid ""
 "Drag and drop song files here,\n"
 "or change music location: "
