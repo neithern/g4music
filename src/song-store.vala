@@ -13,7 +13,6 @@ namespace Music {
         private CompareDataFunc<Object> _compare = Song.compare_by_title;
         private ListStore _store = new ListStore (typeof (Song));
         private TagCache _tag_cache = new TagCache ();
-        private Thread<void> _tag_thread;
 
         public signal void parse_progress (int percent);
 
@@ -76,8 +75,8 @@ namespace Music {
             return _store.get_item (position) as Song;
         }
 
-        public void load_tag_cache () {
-            _tag_thread = new Thread<void> (null, _tag_cache.load);
+        public async void load_tag_cache_async () {
+            yield run_async<void> (_tag_cache.load);
         }
 
         public async void save_tag_cache_async () {
@@ -93,7 +92,6 @@ namespace Music {
                 foreach (var file in files) {
                     add_file (file, arr);
                 }
-                _tag_thread.join ();
 
                 var queue = new AsyncQueue<Song?> ();
                 for (var i = 0; i < arr.length; i++) {

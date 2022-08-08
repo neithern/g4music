@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-23 21:16+0800\n"
-"PO-Revision-Date: 2022-07-23 22:52+0200\n"
+"POT-Creation-Date: 2022-08-06 22:50+0800\n"
+"PO-Revision-Date: 2022-08-06 22:59+0200\n"
 "Last-Translator: Jürgen Benvenuti <gastornis@posteo.org>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "Language: de\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.1.1\n"
 
-#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:355
+#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:394
 #: src/main.vala:24
 msgid "G4Music"
 msgstr "G4Music"
@@ -33,7 +33,9 @@ msgstr "Musik wiedergeben"
 
 #: data/app.desktop.in:12
 msgid "music;sound;player;media;audio;playlist;"
-msgstr "music;sound;player;media;audio;playlist;Musik;Klang;Wiedergabe;Medien;Audio;Wiedergabeliste;"
+msgstr ""
+"music;sound;player;media;audio;playlist;Musik;Klang;Wiedergabe;Medien;"
+"Audio;Wiedergabeliste;"
 
 #: src/gtk/help-overlay.ui:11
 msgctxt "shortcut window"
@@ -53,7 +55,7 @@ msgstr "Beenden"
 #: src/gtk/help-overlay.ui:28
 msgctxt "shortcut window"
 msgid "Playback"
-msgstr "Wiedergeben"
+msgstr "Wiedergabe"
 
 #: src/gtk/help-overlay.ui:31
 msgctxt "shortcut window"
@@ -80,6 +82,11 @@ msgctxt "shortcut window"
 msgid "Search"
 msgstr "Suchen"
 
+#: src/gtk/help-overlay.ui:60
+msgctxt "shortcut window"
+msgid "Toggle Sort"
+msgstr "Sortiermodus umschalten"
+
 #: src/gtk/preferences.ui:12
 msgid "Appearance"
 msgstr "Erscheinungsbild"
@@ -88,43 +95,51 @@ msgstr "Erscheinungsbild"
 msgid "Prefer dark theme"
 msgstr "Dunkles Thema bevorzugen"
 
-#: src/gtk/preferences.ui:28
+#: src/gtk/preferences.ui:26
+msgid "Background blur mode"
+msgstr "Hintergrund weichzeichnen"
+
+#: src/gtk/preferences.ui:33
 msgid "Music Location"
 msgstr "Musikspeicherort"
 
-#: src/gtk/preferences.ui:31
+#: src/gtk/preferences.ui:36
 msgid "Load music from folder"
 msgstr "Musik aus Ordner laden"
 
-#: src/gtk/preferences.ui:42
+#: src/gtk/preferences.ui:47
 msgid "Load thumbnails for non-local files"
 msgstr "Vorschaubilder für nicht-lokale Dateien laden"
 
-#: src/gtk/preferences.ui:55
+#: src/gtk/preferences.ui:48
+msgid "May cause slowdowns and excess network usage"
+msgstr "Kann zu Verlangsamungen und übermäßiger Netznutzung führen"
+
+#: src/gtk/preferences.ui:61
 msgid "Playback"
 msgstr "Wiedergeben"
 
-#: src/gtk/preferences.ui:58 src/application.vala:346
+#: src/gtk/preferences.ui:64 src/application.vala:385
 msgid "Keep playing after window closed"
 msgstr "Musik weiterspielen nach dem Schließen des Fensters"
 
-#: src/gtk/preferences.ui:69
+#: src/gtk/preferences.ui:75
 msgid "Show audio peak level"
 msgstr "Audiospitzenpegel anzeigen"
 
-#: src/gtk/preferences.ui:80
+#: src/gtk/preferences.ui:86
 msgid "Enable gapless playback"
 msgstr "Lückenlose Wiedergabe aktivieren"
 
-#: src/gtk/preferences.ui:91
+#: src/gtk/preferences.ui:97
 msgid "Use ReplayGain to normalize volume"
 msgstr "ReplayGain zur Normalisierung der Lautstärke verwenden"
 
-#: src/gtk/preferences.ui:102
+#: src/gtk/preferences.ui:108
 msgid "Use pipewire audio sink"
 msgstr "Pipewire-Audio-Ausgang verwenden"
 
-#: src/gtk/preferences.ui:103
+#: src/gtk/preferences.ui:109
 msgid "Experimental"
 msgstr "Experimentell"
 
@@ -148,53 +163,63 @@ msgstr "Zurück"
 msgid "_Export Cover"
 msgstr "Albumbild _exportieren"
 
-#: src/gtk/window.ui:217 src/song-entry.vala:95
+#: src/gtk/window.ui:217 src/song-entry.vala:101
 msgid "_Show In Files"
-msgstr "_In Dateien anzeigen"
+msgstr "_In Dateiverwaltung anzeigen"
 
 #: src/gtk/window.ui:226
+msgid "_Reload List"
+msgstr "_Liste neu laden"
+
+#: src/gtk/window.ui:232
 msgid "_Preferences"
 msgstr "_Einstellungen"
 
-#: src/gtk/window.ui:230
+#: src/gtk/window.ui:236
 msgid "_Keyboard Shortcuts"
 msgstr "_Tastenkürzel"
 
-#: src/gtk/window.ui:234
+#: src/gtk/window.ui:240
 msgid "_About G4Music"
 msgstr "_Info zu G4Music"
 
-#: src/gtk/window.ui:244
+#: src/gtk/window.ui:250
 msgid "By Album"
 msgstr "Nach Album"
 
-#: src/gtk/window.ui:250
+#: src/gtk/window.ui:256
 msgid "By Artist"
 msgstr "Nach Interpret"
 
-#: src/gtk/window.ui:256
+#: src/gtk/window.ui:262
 msgid "By Title"
 msgstr "Nach Titel"
 
-#: src/gtk/window.ui:262
+#: src/gtk/window.ui:268
+msgid "By Date"
+msgstr "Nach Datum"
+
+#: src/gtk/window.ui:274
 msgid "Shuffle"
 msgstr "Durchmischen"
 
-#: src/application.vala:359
+#: src/application.vala:398
 msgid "translator-credits"
 msgstr "Jürgen Benvenuti <gastornis@posteo.org>, 2022"
 
-#: src/application.vala:361
+#: src/application.vala:400
 msgid "A fast, fluent, light weight music player written in GTK4."
-msgstr "Eine schnelle, geschmeidige, leichtgewichtige Musikwiedergabe, geschrieben in GTK4."
+msgstr ""
+"Eine schnelle, geschmeidige, leichtgewichtige Musikwiedergabe, geschrieben "
+"in GTK4."
 
-#: src/application.vala:487
+#: src/application.vala:526
 msgid "Keep playing"
 msgstr "Musik weiterspielen"
 
 #: src/play-bar.vala:83
 msgid "Repeat Song"
-msgstr "Titel wiederholen"
+msgstr "Den Titel wiederholen"
 
 #: src/play-bar.vala:93
 msgid "Play Previous"
@@ -208,6 +233,18 @@ msgstr "Wiedergabe/Pause"
 msgid "Play Next"
 msgstr "Den nächsten Titel wiedergeben"
 
+#: src/preferences.vala:71
+msgid "Always"
+msgstr "Immer"
+
+#: src/preferences.vala:73
+msgid "Art Only"
+msgstr "Nur Albumbild"
+
+#: src/preferences.vala:75
+msgid "Never"
+msgstr "Nie"
+
 #: src/song.vala:3
 msgid "Unknown Album"
 msgstr "Unbekanntes Album"
@@ -216,19 +253,19 @@ msgstr "Unbekanntes Album"
 msgid "Unknown Artist"
 msgstr "Unbekannter Interpret"
 
-#: src/song-entry.vala:93
+#: src/song-entry.vala:99
 msgid "Show Album"
 msgstr "Album anzeigen"
 
-#: src/song-entry.vala:94
+#: src/song-entry.vala:100
 msgid "Show Artist"
 msgstr "Interpret anzeigen"
 
-#: src/window.vala:51
+#: src/window.vala:52
 msgid "Loading..."
 msgstr "Wird geladen …"
 
-#: src/window.vala:258
+#: src/window.vala:279
 msgid ""
 "Drag and drop song files here,\n"
 "or change music location: "

@@ -178,7 +178,7 @@ msgstr "快捷鍵(_K)"
 
 #: src/gtk/window.ui:240
 msgid "_About G4Music"
-msgstr "關於 G4 音乐(_A)"
+msgstr "關於 G4 音樂(_A)"
 
 #: src/gtk/window.ui:250
 msgid "By Album"
