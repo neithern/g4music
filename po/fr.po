@@ -203,7 +203,7 @@ msgstr "Mélanger"
 
 #: src/application.vala:398
 msgid "translator-credits"
-msgstr "Aurélien Hamy & Naqua Darazaki"
+msgstr "Aurélien Hamy et Naqua Darazaki"
 
 #: src/application.vala:400
 msgid "A fast, fluent, light weight music player written in GTK4."
