@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music master\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-30 11:29+0800\n"
-"PO-Revision-Date: 2022-08-05 19:29+0300\n"
+"POT-Creation-Date: 2022-08-06 22:50+0800\n"
+"PO-Revision-Date: 2022-08-09 15:08+0300\n"
 "Last-Translator: Sabri Ünal <libreajans@gmail.com>\n"
 "Language-Team: Turkish <gnome-turk@gnome.org>\n"
 "Language: tr\n"
@@ -21,7 +21,7 @@ msgstr ""
 "X-Generator: Poedit 3.1.1\n"
 "X-Project-Style: gnome\n"
 
-#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:364
+#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:394
 #: src/main.vala:24
 msgid "G4Music"
 msgstr "G4Music"
@@ -83,6 +83,11 @@ msgctxt "shortcut window"
 msgid "Search"
 msgstr "Ara"
 
+#: src/gtk/help-overlay.ui:60
+msgctxt "shortcut window"
+msgid "Toggle Sort"
+msgstr "Aramayı Aç/Kapat"
+
 #: src/gtk/preferences.ui:12
 msgid "Appearance"
 msgstr "Görünüm"
@@ -91,47 +96,51 @@ msgstr "Görünüm"
 msgid "Prefer dark theme"
 msgstr "Koyu temayı yeğle"
 
-#: src/gtk/preferences.ui:28
+#: src/gtk/preferences.ui:26
+msgid "Background blur mode"
+msgstr "Arka plan bulanıklık kipi"
+
+#: src/gtk/preferences.ui:33
 msgid "Music Location"
 msgstr "Müzik Konumu"
 
-#: src/gtk/preferences.ui:31
+#: src/gtk/preferences.ui:36
 msgid "Load music from folder"
 msgstr "Müziği klasörden yükle"
 
-#: src/gtk/preferences.ui:42
+#: src/gtk/preferences.ui:47
 msgid "Load thumbnails for non-local files"
 msgstr "Yerel olmayan dosyalar için küçük resimleri yükle"
 
-#: src/gtk/preferences.ui:43
+#: src/gtk/preferences.ui:48
 msgid "May cause slowdowns and excess network usage"
-msgstr "Yavaşlığa ve aşırı ağ kullanımına neden olabilir."
+msgstr "Yavaşlığa ve aşırı ağ kullanımına neden olabilir"
 
-#: src/gtk/preferences.ui:56
+#: src/gtk/preferences.ui:61
 msgid "Playback"
 msgstr "Çalma"
 
-#: src/gtk/preferences.ui:59 src/application.vala:355
+#: src/gtk/preferences.ui:64 src/application.vala:385
 msgid "Keep playing after window closed"
 msgstr "Pencere kapatıldıktan sonra çalışmayı sürdür"
 
-#: src/gtk/preferences.ui:70
+#: src/gtk/preferences.ui:75
 msgid "Show audio peak level"
 msgstr "Ses tepe seviyesini göster"
 
-#: src/gtk/preferences.ui:81
+#: src/gtk/preferences.ui:86
 msgid "Enable gapless playback"
 msgstr "Aralıksız çalmayı etkinleştir"
 
-#: src/gtk/preferences.ui:92
+#: src/gtk/preferences.ui:97
 msgid "Use ReplayGain to normalize volume"
 msgstr "Sesi normalleştirmek için ReplayGain kullan"
 
-#: src/gtk/preferences.ui:103
+#: src/gtk/preferences.ui:108
 msgid "Use pipewire audio sink"
 msgstr "Pipewire ses havuzunu kullan"
 
-#: src/gtk/preferences.ui:104
+#: src/gtk/preferences.ui:109
 msgid "Experimental"
 msgstr "Deneysel"
 
@@ -161,7 +170,7 @@ msgstr "_Dosyalarda Göster"
 
 #: src/gtk/window.ui:226
 msgid "_Reload List"
-msgstr "Listei _Yeniden Yükle"
+msgstr "Listeyi _Yeniden Yükle"
 
 #: src/gtk/window.ui:232
 msgid "_Preferences"
@@ -195,15 +204,15 @@ msgstr "Tarihe göre"
 msgid "Shuffle"
 msgstr "Karıştır"
 
-#: src/application.vala:368
+#: src/application.vala:398
 msgid "translator-credits"
-msgstr "Sabri Ünal"
+msgstr "Sabri Ünal <libreajans@gmail.com>"
 
-#: src/application.vala:370
+#: src/application.vala:400
 msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr "GTK4 ile yazılmış hızlı, akıcı, hafif bir müzik çalar."
 
-#: src/application.vala:496
+#: src/application.vala:526
 msgid "Keep playing"
 msgstr "Oynamayı sürdür"
 
@@ -223,6 +232,18 @@ msgstr "Çal/Duraklat"
 msgid "Play Next"
 msgstr "Sonrakini Çal"
 
+#: src/preferences.vala:71
+msgid "Always"
+msgstr "Her zaman"
+
+#: src/preferences.vala:73
+msgid "Art Only"
+msgstr "Sadece Kapak"
+
+#: src/preferences.vala:75
+msgid "Never"
+msgstr "Asla"
+
 #: src/song.vala:3
 msgid "Unknown Album"
 msgstr "Bilinmeyen Albüm"
@@ -239,14 +260,14 @@ msgstr "Albümü Göster"
 msgid "Show Artist"
 msgstr "Sanatçıyı Göster"
 
-#: src/window.vala:51
+#: src/window.vala:52
 msgid "Loading..."
 msgstr "Yükleniyor..."
 
-#: src/window.vala:261
+#: src/window.vala:279
 msgid ""
 "Drag and drop song files here,\n"
 "or change music location: "
 msgstr ""
 "Şarkı dosyalarını sürükleyip buraya bırakın\n"
-"veya müzik konumunu değiştirin:"
+"veya müzik konumunu değiştirin: "
