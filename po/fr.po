@@ -1,6 +1,6 @@
 # French translation for G4Music.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
+# Copyright (C) 2022
+# This file is distributed under the same license as the G4Music package.
 # Aurélien Hamy <aunetx@yandex.com>, 2022.
 # Naqua Darazaki <n.darazaki@gmail.com>, 2022.
 #
@@ -250,14 +250,12 @@ msgid "Unknown Artist"
 msgstr "Artiste inconnu"
 
 #: src/song-entry.vala:99
-#, fuzzy
 msgid "Show Album"
-msgstr "Album inconnu"
+msgstr "Montrer l'album"
 
 #: src/song-entry.vala:100
-#, fuzzy
 msgid "Show Artist"
-msgstr "Artiste inconnu"
+msgstr "Montrer l'artiste"
 
 #: src/window.vala:52
 msgid "Loading..."
