@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-30 11:29+0800\n"
-"PO-Revision-Date: 2022-08-06 16:14+0300\n"
+"POT-Creation-Date: 2022-08-06 22:50+0800\n"
+"PO-Revision-Date: 2022-08-15 10:33+0300\n"
 "Last-Translator: David Lapshin <ddaudix@gmail.com>\n"
 "Language-Team: \n"
 "Language: ru\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.1.1\n"
 
-#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:364
+#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:394
 #: src/main.vala:24
 msgid "G4Music"
 msgstr "G4Music"
@@ -79,6 +79,11 @@ msgctxt "shortcut window"
 msgid "Search"
 msgstr "Поиск"
 
+#: src/gtk/help-overlay.ui:60
+msgctxt "shortcut window"
+msgid "Toggle Sort"
+msgstr "Переключить сортировку"
+
 #: src/gtk/preferences.ui:12
 msgid "Appearance"
 msgstr "Внешний вид"
@@ -87,47 +92,51 @@ msgstr "Внешний вид"
 msgid "Prefer dark theme"
 msgstr "Предпочитать темную тему"
 
-#: src/gtk/preferences.ui:28
+#: src/gtk/preferences.ui:26
+msgid "Background blur mode"
+msgstr "Режим размытия фона"
+
+#: src/gtk/preferences.ui:33
 msgid "Music Location"
 msgstr "Расположение музыки"
 
-#: src/gtk/preferences.ui:31
+#: src/gtk/preferences.ui:36
 msgid "Load music from folder"
 msgstr "Загружать музыку из папки"
 
-#: src/gtk/preferences.ui:42
+#: src/gtk/preferences.ui:47
 msgid "Load thumbnails for non-local files"
 msgstr "Загружать миниатюры для нелокальных файлов"
 
-#: src/gtk/preferences.ui:43
+#: src/gtk/preferences.ui:48
 msgid "May cause slowdowns and excess network usage"
 msgstr "Может вызвать замедление и чрезмерное использование сети"
 
-#: src/gtk/preferences.ui:56
+#: src/gtk/preferences.ui:61
 msgid "Playback"
 msgstr "Воспроизведение"
 
-#: src/gtk/preferences.ui:59 src/application.vala:355
+#: src/gtk/preferences.ui:64 src/application.vala:385
 msgid "Keep playing after window closed"
 msgstr "Продолжать играть после закрытия окна"
 
-#: src/gtk/preferences.ui:70
+#: src/gtk/preferences.ui:75
 msgid "Show audio peak level"
 msgstr "Показывать пик уровня звука"
 
-#: src/gtk/preferences.ui:81
+#: src/gtk/preferences.ui:86
 msgid "Enable gapless playback"
 msgstr "Включить непрерывное воспроизведение"
 
-#: src/gtk/preferences.ui:92
+#: src/gtk/preferences.ui:97
 msgid "Use ReplayGain to normalize volume"
 msgstr "Использовать ReplayGain для нормализации громкости"
 
-#: src/gtk/preferences.ui:103
+#: src/gtk/preferences.ui:108
 msgid "Use pipewire audio sink"
 msgstr "Использовать приемник звука pipewire"
 
-#: src/gtk/preferences.ui:104
+#: src/gtk/preferences.ui:109
 msgid "Experimental"
 msgstr "Экспериментальное"
 
@@ -191,17 +200,17 @@ msgstr "По дате"
 msgid "Shuffle"
 msgstr "Перемешать"
 
-#: src/application.vala:368
+#: src/application.vala:398
 msgid "translator-credits"
 msgstr "Давид Лапшин <ddaudix@gmail.com>, 2022"
 
-#: src/application.vala:370
+#: src/application.vala:400
 msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr ""
 "Быстрый, флуоресцентный, легкий музыкальный проигрыватель, написанный на "
 "GTK4."
 
-#: src/application.vala:496
+#: src/application.vala:526
 msgid "Keep playing"
 msgstr "Продолжать играть"
 
@@ -221,6 +230,18 @@ msgstr "Воспроизведение/Пауза"
 msgid "Play Next"
 msgstr "Играть следующее"
 
+#: src/preferences.vala:71
+msgid "Always"
+msgstr "Всегда"
+
+#: src/preferences.vala:73
+msgid "Art Only"
+msgstr "Только обложки"
+
+#: src/preferences.vala:75
+msgid "Never"
+msgstr "Никогда"
+
 #: src/song.vala:3
 msgid "Unknown Album"
 msgstr "Неизвестный альбом"
@@ -237,11 +258,11 @@ msgstr "Показать альбом"
 msgid "Show Artist"
 msgstr "Показать артиста"
 
-#: src/window.vala:51
+#: src/window.vala:52
 msgid "Loading..."
 msgstr "Загрузка..."
 
-#: src/window.vala:261
+#: src/window.vala:279
 msgid ""
 "Drag and drop song files here,\n"
 "or change music location: "
