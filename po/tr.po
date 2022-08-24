@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: g4music master\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-08-06 22:50+0800\n"
-"PO-Revision-Date: 2022-08-09 15:08+0300\n"
+"PO-Revision-Date: 2022-08-21 20:20+0300\n"
 "Last-Translator: Sabri Ünal <libreajans@gmail.com>\n"
 "Language-Team: Turkish <gnome-turk@gnome.org>\n"
 "Language: tr\n"
@@ -86,7 +86,7 @@ msgstr "Ara"
 #: src/gtk/help-overlay.ui:60
 msgctxt "shortcut window"
 msgid "Toggle Sort"
-msgstr "Aramayı Aç/Kapat"
+msgstr "Sıralamayı Aç/Kapat"
 
 #: src/gtk/preferences.ui:12
 msgid "Appearance"
@@ -170,7 +170,7 @@ msgstr "_Dosyalarda Göster"
 
 #: src/gtk/window.ui:226
 msgid "_Reload List"
-msgstr "Listeyi _Yeniden Yükle"
+msgstr "_Listeyi Yeniden Yükle"
 
 #: src/gtk/window.ui:232
 msgid "_Preferences"
@@ -234,7 +234,7 @@ msgstr "Sonrakini Çal"
 
 #: src/preferences.vala:71
 msgid "Always"
-msgstr "Her zaman"
+msgstr "Daima"
 
 #: src/preferences.vala:73
 msgid "Art Only"
