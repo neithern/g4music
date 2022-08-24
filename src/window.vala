@@ -135,6 +135,7 @@ namespace Music {
             list_view.model = new Gtk.NoSelection (app.song_list);
             list_view.activate.connect ((index) => {
                 app.current_item = (int) index;
+                app.player.play ();
             });
 
             initial_label.activate_link.connect ((uri) => {
