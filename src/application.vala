@@ -281,7 +281,8 @@ namespace Music {
         }
 
         public void play_next () {
-            current_item = current_item + 1;
+            current_item++;
+            _player.play ();
         }
 
         public void play_pause() {
@@ -289,7 +290,8 @@ namespace Music {
         }
 
         public void play_previous () {
-            current_item = current_item - 1;
+            current_item--;
+            _player.play ();
         }
 
         public void reload_song_store () {
