@@ -69,7 +69,7 @@ namespace Music {
                 if (_pipeline != null) {
                     var pipeline = (!)_pipeline;
                     if (_about_to_finish_id != 0) {
-                        SignalHandler.disconnect (pipeline.about_to_finish, _about_to_finish_id);
+                        SignalHandler.disconnect (pipeline, _about_to_finish_id);
                         _about_to_finish_id = 0;
                     }
                     if (value) {
