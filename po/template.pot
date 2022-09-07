@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-06 22:50+0800\n"
+"POT-Creation-Date: 2022-09-06 21:45+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:394
+#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:406
 #: src/main.vala:24
 msgid "G4Music"
 msgstr ""
@@ -116,7 +116,7 @@ msgstr ""
 msgid "Playback"
 msgstr ""
 
-#: src/gtk/preferences.ui:64 src/application.vala:385
+#: src/gtk/preferences.ui:64 src/application.vala:397
 msgid "Keep playing after window closed"
 msgstr ""
 
@@ -200,15 +200,15 @@ msgstr ""
 msgid "Shuffle"
 msgstr ""
 
-#: src/application.vala:398
+#: src/application.vala:410
 msgid "translator-credits"
 msgstr ""
 
-#: src/application.vala:400
+#: src/application.vala:412
 msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr ""
 
-#: src/application.vala:526
+#: src/application.vala:538
 msgid "Keep playing"
 msgstr ""
 
@@ -260,7 +260,7 @@ msgstr ""
 msgid "Loading..."
 msgstr ""
 
-#: src/window.vala:279
+#: src/window.vala:282
 msgid ""
 "Drag and drop song files here,\n"
 "or change music location: "
