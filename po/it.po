@@ -5,18 +5,19 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-16 20:07+0200\n"
-"PO-Revision-Date: 2022-07-17 11:35+0100\n"
+"POT-Creation-Date: 2022-09-06 21:45+0200\n"
+"PO-Revision-Date: 2022-09-06 21:57+0200\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.1.1\n"
 
-#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:350
+#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:406
 #: src/main.vala:24
 msgid "G4Music"
 msgstr "G4Music"
@@ -78,6 +79,11 @@ msgctxt "shortcut window"
 msgid "Search"
 msgstr "Cerca"
 
+#: src/gtk/help-overlay.ui:60
+msgctxt "shortcut window"
+msgid "Toggle Sort"
+msgstr "Cambia l'ordine"
+
 #: src/gtk/preferences.ui:12
 msgid "Appearance"
 msgstr "Aspetto"
@@ -86,43 +92,51 @@ msgstr "Aspetto"
 msgid "Prefer dark theme"
 msgstr "Preferisci il tema scuro"
 
-#: src/gtk/preferences.ui:28
+#: src/gtk/preferences.ui:26
+msgid "Background blur mode"
+msgstr "Applica blur allo sfondo"
+
+#: src/gtk/preferences.ui:33
 msgid "Music Location"
 msgstr "Posizione della musica"
 
-#: src/gtk/preferences.ui:31
+#: src/gtk/preferences.ui:36
 msgid "Load music from folder"
 msgstr "Carica musica dalla cartella"
 
-#: src/gtk/preferences.ui:42
+#: src/gtk/preferences.ui:47
 msgid "Load thumbnails for non-local files"
 msgstr "Carica miniature per file non locali"
 
-#: src/gtk/preferences.ui:55
+#: src/gtk/preferences.ui:48
+msgid "May cause slowdowns and excess network usage"
+msgstr "Potrebbe causare rallentamenti e un uso della rete eccessivo"
+
+#: src/gtk/preferences.ui:61
 msgid "Playback"
 msgstr "Riproduci"
 
-#: src/gtk/preferences.ui:58 src/application.vala:341
+#: src/gtk/preferences.ui:64 src/application.vala:397
 msgid "Keep playing after window closed"
 msgstr "Continua a suonare anche dopo aver chiuso la finestra"
 
-#: src/gtk/preferences.ui:69
+#: src/gtk/preferences.ui:75
 msgid "Show audio peak level"
 msgstr "Mostra il livello di picco dell'audio"
 
-#: src/gtk/preferences.ui:80
+#: src/gtk/preferences.ui:86
 msgid "Enable gapless playback"
 msgstr "Abilita la riproduzione senza interruzioni"
 
-#: src/gtk/preferences.ui:91
+#: src/gtk/preferences.ui:97
 msgid "Use ReplayGain to normalize volume"
 msgstr "Usa ReplayGain per normalizzare il volume"
 
-#: src/gtk/preferences.ui:102
+#: src/gtk/preferences.ui:108
 msgid "Use pipewire audio sink"
 msgstr "Usa pipewire audio sink"
 
-#: src/gtk/preferences.ui:103
+#: src/gtk/preferences.ui:109
 msgid "Experimental"
 msgstr "Sperimentale"
 
@@ -142,51 +156,59 @@ msgstr "Modalità di ordinamento"
 msgid "Back"
 msgstr "Indietro"
 
-#: src/gtk/window.ui:204
+#: src/gtk/window.ui:213
 msgid "_Export Cover"
 msgstr "Exporta Cover"
 
-#: src/gtk/window.ui:208
+#: src/gtk/window.ui:217 src/song-entry.vala:101
 msgid "_Show In Files"
 msgstr "_Mostra nei file"
 
-#: src/gtk/window.ui:217
+#: src/gtk/window.ui:226
+msgid "_Reload List"
+msgstr "_Ricarica la lista"
+
+#: src/gtk/window.ui:232
 msgid "_Preferences"
 msgstr "_Preferenze"
 
-#: src/gtk/window.ui:221
+#: src/gtk/window.ui:236
 msgid "_Keyboard Shortcuts"
 msgstr "_Scorciatoie da tastiera"
 
-#: src/gtk/window.ui:225
+#: src/gtk/window.ui:240
 msgid "_About G4Music"
 msgstr "_Informazioni su G4Music"
 
-#: src/gtk/window.ui:235
+#: src/gtk/window.ui:250
 msgid "By Album"
 msgstr "Per album"
 
-#: src/gtk/window.ui:241
+#: src/gtk/window.ui:256
 msgid "By Artist"
 msgstr "Per artista"
 
-#: src/gtk/window.ui:247
+#: src/gtk/window.ui:262
 msgid "By Title"
 msgstr "Per titolo"
 
-#: src/gtk/window.ui:253
+#: src/gtk/window.ui:268
+msgid "By Date"
+msgstr "Per data"
+
+#: src/gtk/window.ui:274
 msgid "Shuffle"
 msgstr "Mescola"
 
-#: src/application.vala:354
+#: src/application.vala:410
 msgid "translator-credits"
-msgstr "Albano Battistella"
+msgstr "Albano Battistella, Mek101"
 
-#: src/application.vala:356
+#: src/application.vala:412
 msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr "Un lettore musicale veloce, scorrevole e leggero scritto in GTK4."
 
-#: src/application.vala:469
+#: src/application.vala:538
 msgid "Keep playing"
 msgstr "Continuare a suonare"
 
@@ -206,14 +228,44 @@ msgstr "Riproduci/Pausa"
 msgid "Play Next"
 msgstr "Riproduci prossimo"
 
-#: src/song.vala:2
+#: src/preferences.vala:71
+msgid "Always"
+msgstr "Sempre"
+
+#: src/preferences.vala:73
+msgid "Art Only"
+msgstr "Solo alla copertina"
+
+#: src/preferences.vala:75
+msgid "Never"
+msgstr "Mai"
+
+#: src/song.vala:3
 msgid "Unknown Album"
 msgstr "Album sconosciuto"
 
-#: src/song.vala:3
+#: src/song.vala:4
 msgid "Unknown Artist"
 msgstr "Artista sconosciuto"
 
-#: src/window.vala:49
+#: src/song-entry.vala:99
+#, fuzzy
+msgid "Show Album"
+msgstr "Album sconosciuto"
+
+#: src/song-entry.vala:100
+#, fuzzy
+msgid "Show Artist"
+msgstr "Artista sconosciuto"
+
+#: src/window.vala:52
 msgid "Loading..."
 msgstr "Caricamento in corso..."
+
+#: src/window.vala:282
+msgid ""
+"Drag and drop song files here,\n"
+"or change music location: "
+msgstr ""
+"Trascina e rilascia i file delle canzoni qui,\n"
+"oppure cambia la posizione della libreria: "
