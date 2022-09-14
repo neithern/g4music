@@ -96,8 +96,8 @@ namespace Music {
             app.popover_song = song;
 
             var menu = new Menu ();
-            menu.append (_("Show Album"), "app.show-album");
-            menu.append (_("Show Artist"), "app.show-artist");
+            menu.append (_("Show Album"), ACTION_APP + ACTION_SHOW_ALBUM);
+            menu.append (_("Show Artist"), ACTION_APP + ACTION_SHOW_ARTIST);
             menu.append (_("_Show In Files"), ACTION_APP + ACTION_OPENDIR);
 
             var popover = new Gtk.PopoverMenu.from_model (menu);
