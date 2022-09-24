@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-06 21:45+0200\n"
-"PO-Revision-Date: 2022-09-06 21:57+0200\n"
+"PO-Revision-Date: 2022-09-23 23:29+0200\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
 "Language: it\n"
@@ -118,7 +118,7 @@ msgstr "Riproduci"
 
 #: src/gtk/preferences.ui:64 src/application.vala:397
 msgid "Keep playing after window closed"
-msgstr "Continua a suonare anche dopo aver chiuso la finestra"
+msgstr "Continua a riprodurre dopo aver chiuso la finestra"
 
 #: src/gtk/preferences.ui:75
 msgid "Show audio peak level"
@@ -210,7 +210,7 @@ msgstr "Un lettore musicale veloce, scorrevole e leggero scritto in GTK4."
 
 #: src/application.vala:538
 msgid "Keep playing"
-msgstr "Continuare a suonare"
+msgstr "Continuare a riprodurre"
 
 #: src/play-bar.vala:83
 msgid "Repeat Song"
@@ -249,14 +249,12 @@ msgid "Unknown Artist"
 msgstr "Artista sconosciuto"
 
 #: src/song-entry.vala:99
-#, fuzzy
 msgid "Show Album"
-msgstr "Album sconosciuto"
+msgstr "Visualizza album"
 
 #: src/song-entry.vala:100
-#, fuzzy
 msgid "Show Artist"
-msgstr "Artista sconosciuto"
+msgstr "Visualizza artista"
 
 #: src/window.vala:52
 msgid "Loading..."
