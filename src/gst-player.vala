@@ -21,6 +21,8 @@ namespace Music {
         private dynamic Gst.Pipeline? _pipeline = Gst.ElementFactory.make ("playbin", "player") as Gst.Pipeline;
         private dynamic Gst.Element? _audio_sink = null;
         private dynamic Gst.Element? _replay_gain = null;
+        private int _audio_channels = 2;
+        private int _audio_bps = 2;
         private Gst.ClockTime _duration = Gst.CLOCK_TIME_NONE;
         private Gst.ClockTime _position = Gst.CLOCK_TIME_NONE;
         private ulong _about_to_finish_id = 0;
@@ -30,6 +32,8 @@ namespace Music {
         private int64 _tag_hash = int64.MIN;
         private bool _tag_parsed = false;
         private TimeoutSource? _timer = null;
+        private unowned Gst.Caps? _last_caps = null;
+        private LevelCalculateFunc? _level_calculate = null;
         private Queue<Peak?> _peaks = new Queue<Peak?> ();
         private unowned Thread<void> _main_thread = Thread<void>.self ();
 
@@ -380,70 +384,66 @@ namespace Music {
 
         public delegate void LevelCalculateFunc (void* data, uint num, uint channels, out double NCS, out double NPS);
 
-        private static bool parse_peak_in_sample (Gst.Sample sample, out double peak) {
+        private bool parse_peak_in_sample (Gst.Sample sample, out double peak) {
             peak = 0;
 
             unowned var caps = sample.get_caps ();
-            unowned var st = caps?.get_structure (0);
-
-            int channels = 0;
-            st?.get_int ("channels", out channels);
-            if (channels == 0)
-                return false;
-
-            unowned var format = st?.get_string ("format");
-            //  print ("Sample format: %s\n", format ?? "");
-            if (format == null)
-                return false;
-
-            uint bps = 1;
-            LevelCalculateFunc process;
-            switch ((!)format) {
-                case "S8":
-                    bps = 1;
-                    process = GstExt.gst_level_calculate_gint8;
-                    break;
-                case "S16LE":
-                    bps = 2;
-                    process = GstExt.gst_level_calculate_gint16;
-                    break;
-                case "S32LE":
-                    bps = 4;
-                    process = GstExt.gst_level_calculate_gint32;
-                    break;
-                case "F32LE":
-                    bps = 4;
-                    process = GstExt.gst_level_calculate_gfloat;
-                    break;
-                case "F64LE":
-                    bps = 8;
-                    process = GstExt.gst_level_calculate_gdouble;
-                    break;
-                default:
+            if (_last_caps != caps || _level_calculate == null) {
+                unowned var st = caps?.get_structure (0);
+                st?.get_int ("channels", out _audio_channels);
+                if (_audio_channels == 0)
                     return false;
+
+                unowned var format = st?.get_string ("format") ?? "";
+                switch (format) {
+                    case "S8":
+                        _audio_bps = 1;
+                        _level_calculate = GstExt.gst_level_calculate_gint8;
+                        break;
+                    case "S16LE":
+                        _audio_bps = 2;
+                        _level_calculate = GstExt.gst_level_calculate_gint16;
+                        break;
+                    case "S32LE":
+                        _audio_bps = 4;
+                        _level_calculate = GstExt.gst_level_calculate_gint32;
+                        break;
+                    case "F32LE":
+                        _audio_bps = 4;
+                        _level_calculate = GstExt.gst_level_calculate_gfloat;
+                        break;
+                    case "F64LE":
+                        _audio_bps = 8;
+                        _level_calculate = GstExt.gst_level_calculate_gdouble;
+                        break;
+                    default:
+                        print ("Unsupported sample format: %s\n", format);
+                        return false;
+                }
+                _last_caps = caps;
             }
 
+            var channels = _audio_channels;
+            var bps = _audio_bps;
             var block_size = channels * bps;
             var buffer = sample.get_buffer ();
             var size = buffer?.get_size () ?? 0;
 
             Gst.MapInfo? map_info = null;
-            var ret = buffer?.map (out map_info, Gst.MapFlags.READ) ?? false;
-            if (!ret)
-                return false;
-
-            unowned uint8* p = ((!)map_info).data;
-            var num = (uint) (size / block_size);
-            double total_nps = 0;
-            for (var i = 0; i < channels; i++) {
-                double ncs = 0, nps = 0;
-                process (p + (bps * i), num, channels, out ncs, out nps);
-                total_nps += nps;
+            if (buffer?.map (out map_info, Gst.MapFlags.READ) ?? false) {
+                unowned uint8* p = ((!)map_info).data;
+                var num = (uint) (size / block_size);
+                double total_nps = 0;
+                for (var i = 0; i < channels; i++) {
+                    double ncs = 0, nps = 0;
+                    _level_calculate (p + (bps * i), num, channels, out ncs, out nps);
+                    total_nps += nps;
+                }
+                peak = total_nps / channels;
+                buffer?.unmap ((!)map_info);
+                return true;
             }
-            peak = total_nps / channels;
-
-            buffer?.unmap ((!)map_info);
-            return true;
+            return false;
         }
     }
 }
