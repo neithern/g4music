@@ -12,13 +12,18 @@ version = meson.project_version()
 add_project_arguments('-DGETTEXT_PACKAGE="' + app_id + '"', language: 'c')
 add_project_arguments('--enable-experimental-non-null', language: 'vala')
 
+adw_dep = dependency('libadwaita-1')
+if adw_dep.version().version_compare('>=1.2.0')
+  add_project_arguments('--define=HAS_ADW_ABOUT', language: 'vala')
+endif
+
 libm_dep = meson.get_compiler('c').find_library('m', required: false)
 posix_dep = meson.get_compiler('vala').find_library('posix', required: false)
 
 dependencies = [
   dependency('gstreamer-1.0'),
   dependency('gstreamer-tag-1.0'),
-  dependency('libadwaita-1'),
+  adw_dep,
   libm_dep,
   posix_dep,
 ]
