@@ -161,7 +161,6 @@ namespace Music {
                 _mpris_id = 0;
             }
 
-            _settings?.set_string ("played-uri", _current_song?.uri ?? "");
             _settings?.set_double ("volume", _player.volume);
 
             _song_store.save_tag_cache_async.begin ((obj, res) => {
@@ -210,8 +209,10 @@ namespace Music {
                 if (_current_song != value) {
                     _current_song = value;
                     _player.uri = value?.uri;
-                    if (value != null)
+                    if (value != null) {
                         song_changed ((!)value);
+                        _settings?.set_string ("played-uri", ((!)value).uri);
+                    }
                 }
             }
         }
