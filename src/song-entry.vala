@@ -47,7 +47,7 @@ namespace Music {
             long_press.pressed.connect (show_popover);
             var right_click = new Gtk.GestureClick ();
             right_click.button = Gdk.BUTTON_SECONDARY;
-            right_click.pressed.connect (show_popover);
+            right_click.pressed.connect ((n, x, y) => show_popover (x, y));
             add_controller (long_press);
             add_controller (right_click);
         }
@@ -90,10 +90,15 @@ namespace Music {
             }
         }
 
-        private void show_popover () {
+        private void show_popover (double x, double y) {
             var app = (Application) GLib.Application.get_default ();
             var song = _song;
             app.popover_song = song;
+
+            var rect = Gdk.Rectangle ();
+            rect.x = (int) x;
+            rect.y = (int) y;
+            rect.width = rect.height = 0;
 
             var menu = new Menu ();
             menu.append (_("Show Album"), ACTION_APP + ACTION_SHOW_ALBUM);
@@ -102,6 +107,9 @@ namespace Music {
 
             var popover = new Gtk.PopoverMenu.from_model (menu);
             popover.autohide = true;
+            popover.halign = Gtk.Align.START;
+            popover.has_arrow = false;
+            popover.pointing_to = rect;
             popover.set_parent (this);
             popover.closed.connect (() => {
                 Idle.add (() => {
