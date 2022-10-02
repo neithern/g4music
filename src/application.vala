@@ -429,7 +429,7 @@ namespace Music {
                                    "authors", authors,
                                    "translator-credits", translator_credits,
                                    "license-type", Gtk.License.GPL_3_0,
-                                   "website", website,
+                                   "website", website
                                   );
 #endif
         }
