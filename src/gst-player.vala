@@ -499,7 +499,7 @@ namespace Music {
         uint block_size = channels * sample_size;
         for (uint i = 0; i < num; i += channels) {
             int32 value = 0;
-            uint8* p = (uint8*)&value + (4 - sample_size);
+            uint8* p = (uint8*)&value + (4 - value_size);
             for (uint j = 0; j < value_size; j++) {
                 p[j] = data[j];
             }
