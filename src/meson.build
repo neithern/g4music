@@ -4,7 +4,6 @@ sources = [
   'application.vala',
   'async-task.vala',
   'gst-player.vala',
-  'gst-level.c',
   'main.vala',
   'mini-bar.vala',
   'mpris.vala',

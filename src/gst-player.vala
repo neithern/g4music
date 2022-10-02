@@ -23,6 +23,7 @@ namespace Music {
         private dynamic Gst.Element? _replay_gain = null;
         private int _audio_channels = 2;
         private int _audio_bps = 2;
+        private int _sample_bps = 2;
         private Gst.ClockTime _duration = Gst.CLOCK_TIME_NONE;
         private Gst.ClockTime _position = Gst.CLOCK_TIME_NONE;
         private ulong _about_to_finish_id = 0;
@@ -382,7 +383,7 @@ namespace Music {
             }
         }
 
-        public delegate void LevelCalculateFunc (void* data, uint num, uint channels, out double NCS, out double NPS);
+        private delegate void LevelCalculateFunc (uint8* data, uint num, uint channels, uint value_size, uint sample_size, out double nps);
 
         private bool parse_peak_in_sample (Gst.Sample sample, out double peak) {
             peak = 0;
@@ -397,24 +398,33 @@ namespace Music {
                 unowned var format = st?.get_string ("format") ?? "";
                 switch (format) {
                     case "S8":
-                        _audio_bps = 1;
-                        _level_calculate = GstExt.gst_level_calculate_gint8;
+                        _audio_bps = _sample_bps = 1;
+                        _level_calculate = level_calculate_int;
                         break;
                     case "S16LE":
-                        _audio_bps = 2;
-                        _level_calculate = GstExt.gst_level_calculate_gint16;
+                        _audio_bps = _sample_bps = 2;
+                        _level_calculate = level_calculate_int16;
+                        break;
+                    case "S24LE":
+                        _audio_bps = _sample_bps = 3;
+                        _level_calculate = level_calculate_int;
+                        break;
+                    case "S24_32LE":
+                        _audio_bps = 3;
+                        _sample_bps = 4;
+                        _level_calculate = level_calculate_int;
                         break;
                     case "S32LE":
-                        _audio_bps = 4;
-                        _level_calculate = GstExt.gst_level_calculate_gint32;
+                        _audio_bps = _sample_bps = 4;
+                        _level_calculate = level_calculate_int;
                         break;
                     case "F32LE":
-                        _audio_bps = 4;
-                        _level_calculate = GstExt.gst_level_calculate_gfloat;
+                        _audio_bps = _sample_bps = 4;
+                        _level_calculate = level_calculate_float;
                         break;
                     case "F64LE":
-                        _audio_bps = 8;
-                        _level_calculate = GstExt.gst_level_calculate_gdouble;
+                        _audio_bps = _sample_bps = 8;
+                        _level_calculate = level_calculate_double;
                         break;
                     default:
                         print ("Unsupported sample format: %s\n", format);
@@ -425,7 +435,8 @@ namespace Music {
 
             var channels = _audio_channels;
             var bps = _audio_bps;
-            var block_size = channels * bps;
+            var sample_size = _sample_bps;
+            var block_size = channels * sample_size;
             var buffer = sample.get_buffer ();
             var size = buffer?.get_size () ?? 0;
 
@@ -435,8 +446,8 @@ namespace Music {
                 var num = (uint) (size / block_size);
                 double total_nps = 0;
                 for (var i = 0; i < channels; i++) {
-                    double ncs = 0, nps = 0;
-                    _level_calculate (p + (bps * i), num, channels, out ncs, out nps);
+                    double nps = 0;
+                    _level_calculate (p + (sample_size * i), num, channels, bps, sample_size, out nps);
                     total_nps += nps;
                 }
                 peak = total_nps / channels;
@@ -446,4 +457,57 @@ namespace Music {
             return false;
         }
     }
+
+    void level_calculate_double (uint8* data, uint num, uint channels, uint value_size, uint sample_size, out double nps) {
+        double peaksquare = 0.0;
+        double* p = (double*)data;
+        for (uint i = 0; i < num; i += channels) {
+            double value = p[i];
+            double square = (double) value * value;
+            if (peaksquare < square)
+                peaksquare = square;
+        }
+        nps = peaksquare;
+    }
+
+    void level_calculate_float (uint8* data, uint num, uint channels, uint value_size, uint sample_size, out double nps) {
+        double peaksquare = 0.0;
+        float* p = (float*)data;
+        for (uint i = 0; i < num; i += channels) {
+            double value = p[i];
+            double square = (double) value * value;
+            if (peaksquare < square)
+                peaksquare = square;
+        }
+        nps = peaksquare;
+    }
+
+    void level_calculate_int16 (uint8* data, uint num, uint channels, uint value_size, uint sample_size, out double nps) {
+        int32 peaksquare = 0;
+        int16* p = (int16*)data;
+        for (uint i = 0; i < num; i += channels) {
+            int16 value = p[i];
+            int32 square = (int32) value * value;
+            if (peaksquare < square)
+                peaksquare = square;
+        }
+        nps = (double) peaksquare / (((int64) 1) << (15 * 2));
+    }
+
+    void level_calculate_int (uint8* data, uint num, uint channels, uint value_size, uint sample_size, out double nps) {
+        int64 peaksquare = 0;
+        uint block_size = channels * sample_size;
+        for (uint i = 0; i < num; i += channels) {
+            int32 value = 0;
+            uint8* p = (uint8*)&value + (4 - sample_size);
+            for (uint j = 0; j < value_size; j++) {
+                p[j] = data[j];
+            }
+            int64 square = (int64) value * value;
+            if (peaksquare < square)
+                peaksquare = square;
+            data += block_size;
+        }
+        nps = (double) peaksquare / (((int64) 1) << (31 * 2));
+    } 
 }
