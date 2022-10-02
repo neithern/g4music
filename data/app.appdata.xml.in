@@ -48,6 +48,16 @@
     </screenshots>
 
     <releases>
+        <release version="1.7" date="2022-10-02">
+            <description>
+                <ul>
+                <li>Start to play when music changed.</li>
+                <li>Optimize audio peaks visualizer.</li>
+                <li>New style of popover menu.</li>
+                <li>Update many translation, thanks to the translators.</li>
+                </ul>
+            </description>
+        </release>
         <release version="1.6" date="2022-08-06">
             <description>
                 <ul>
