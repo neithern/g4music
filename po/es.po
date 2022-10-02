@@ -64,6 +64,18 @@ msgctxt "shortcut window"
 msgid "Play Next"
 msgstr "Reproducir Siguiente"
 
+#: src/preferences.vala:71
+msgid "Always"
+msgstr "Siempre"
+
+#: src/preferences.vala:73
+msgid "Art Only"
+msgstr "Solo portada"
+
+#: src/preferences.vala:75
+msgid "Never"
+msgstr "Nunca"
+
 #: src/gtk/help-overlay.ui:43
 msgctxt "shortcut window"
 msgid "Play Previous"
@@ -87,6 +99,10 @@ msgstr "Apariencia"
 msgid "Prefer dark theme"
 msgstr "Preferir modo oscuro"
 
+#: src/gtk/preferences.ui:26
+msgid "Background blur mode"
+msgstr "Modo de blur de fondo"
+
 #: src/gtk/preferences.ui:28
 msgid "Music Location"
 msgstr "Ubicacion de la Musica"
@@ -98,6 +114,10 @@ msgstr "Cargar musica desde carpeta"
 #: src/gtk/preferences.ui:42
 msgid "Load thumbnails for non-local files"
 msgstr "Cargar miniaturas de archivos no-locales"
+
+#: src/gtk/preferences.ui:48
+msgid "May cause slowdowns and excess network usage"
+msgstr "Puede causar ralentizacion y exceso de uso de red"
 
 #: src/gtk/preferences.ui:55
 msgid "Playback"
