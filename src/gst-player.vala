@@ -34,6 +34,7 @@ namespace Music {
         private bool _tag_parsed = false;
         private TimeoutSource? _timer = null;
         private unowned Gst.Caps? _last_caps = null;
+        private double _last_peak = 0;
         private LevelCalculateFunc? _level_calculate = null;
         private Queue<Peak?> _peaks = new Queue<Peak?> ();
         private unowned Thread<void> _main_thread = Thread<void>.self ();
@@ -307,7 +308,7 @@ namespace Music {
 
         private void reset_timer () {
             _timer?.destroy ();
-            _timer = new TimeoutSource (_show_peak ? 66 : 200);
+            _timer = new TimeoutSource (_show_peak ? 50 : 200);
             _timer?.set_callback (timeout_callback);
             _timer?.attach (MainContext.default ());
         }
@@ -450,7 +451,8 @@ namespace Music {
                     _level_calculate (p + (sample_size * i), num, channels, bps, sample_size, out nps);
                     total_nps += nps;
                 }
-                peak = total_nps / channels;
+                peak = double.max (total_nps / channels, _last_peak - 0.1);
+                _last_peak = peak;
                 buffer?.unmap ((!)map_info);
                 return true;
             }
@@ -459,43 +461,40 @@ namespace Music {
     }
 
     void level_calculate_double (uint8* data, uint num, uint channels, uint value_size, uint sample_size, out double nps) {
-        double peaksquare = 0.0;
+        double peak = 0;
         double* p = (double*)data;
         for (uint i = 0; i < num; i += channels) {
-            double value = p[i];
-            double square = (double) value * value;
-            if (peaksquare < square)
-                peaksquare = square;
+            double value = p[i].abs ();
+            if (peak < value)
+                peak = value;
         }
-        nps = peaksquare;
+        nps = peak * peak;
     }
 
     void level_calculate_float (uint8* data, uint num, uint channels, uint value_size, uint sample_size, out double nps) {
-        double peaksquare = 0.0;
+        float peak = 0f;
         float* p = (float*)data;
         for (uint i = 0; i < num; i += channels) {
-            double value = p[i];
-            double square = (double) value * value;
-            if (peaksquare < square)
-                peaksquare = square;
+            float value = p[i].abs ();
+            if (peak < value)
+                peak = value;
         }
-        nps = peaksquare;
+        nps = (double) peak * peak;
     }
 
     void level_calculate_int16 (uint8* data, uint num, uint channels, uint value_size, uint sample_size, out double nps) {
-        int32 peaksquare = 0;
+        int16 peak = 0;
         int16* p = (int16*)data;
         for (uint i = 0; i < num; i += channels) {
-            int16 value = p[i];
-            int32 square = (int32) value * value;
-            if (peaksquare < square)
-                peaksquare = square;
+            int16 value = p[i].abs ();
+            if (peak < value)
+                peak = value;
         }
-        nps = (double) peaksquare / (((int64) 1) << (15 * 2));
+        nps = (double) peak * peak / (((int64) 1) << (15 * 2));
     }
 
     void level_calculate_int (uint8* data, uint num, uint channels, uint value_size, uint sample_size, out double nps) {
-        int64 peaksquare = 0;
+        int32 peak = 0;
         uint block_size = channels * sample_size;
         for (uint i = 0; i < num; i += channels) {
             int32 value = 0;
@@ -503,11 +502,11 @@ namespace Music {
             for (uint j = 0; j < value_size; j++) {
                 p[j] = data[j];
             }
-            int64 square = (int64) value * value;
-            if (peaksquare < square)
-                peaksquare = square;
             data += block_size;
+            value = value.abs ();
+            if (peak < value)
+                peak = value;
         }
-        nps = (double) peaksquare / (((int64) 1) << (31 * 2));
+        nps = (double) peak * peak / (((int64) 1) << (31 * 2));
     } 
 }
