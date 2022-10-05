@@ -5,10 +5,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-08-06 22:50+0800\n"
-"PO-Revision-Date: 2022-08-06 22:59+0200\n"
+"PO-Revision-Date: 2022-10-05 10:18+0200\n"
 "Last-Translator: Jürgen Benvenuti <gastornis@posteo.org>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "Language: de\n"
@@ -93,7 +93,7 @@ msgstr "Erscheinungsbild"
 
 #: src/gtk/preferences.ui:15
 msgid "Prefer dark theme"
-msgstr "Dunkles Thema bevorzugen"
+msgstr "Dunkles Thema verwenden"
 
 #: src/gtk/preferences.ui:26
 msgid "Background blur mode"
@@ -117,7 +117,7 @@ msgstr "Kann zu Verlangsamungen und übermäßiger Netznutzung führen"
 
 #: src/gtk/preferences.ui:61
 msgid "Playback"
-msgstr "Wiedergeben"
+msgstr "Wiedergabe"
 
 #: src/gtk/preferences.ui:64 src/application.vala:385
 msgid "Keep playing after window closed"
@@ -239,7 +239,7 @@ msgstr "Immer"
 
 #: src/preferences.vala:73
 msgid "Art Only"
-msgstr "Nur Albumbild"
+msgstr "Nur mit Albumbild"
 
 #: src/preferences.vala:75
 msgid "Never"
