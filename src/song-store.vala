@@ -176,10 +176,10 @@ namespace Music {
                     if (info.get_is_hidden ()) {
                         continue;
                     } else if (info.get_file_type () == FileType.DIRECTORY) {
-                        var child = dir.resolve_relative_path (info.get_name ());
+                        var child = dir.get_child (info.get_name ());
                         stack.push_head (child);
                     } else {
-                        var file = dir.resolve_relative_path (info.get_name ());
+                        var file = dir.get_child (info.get_name ());
                         var song = song_from_info (file, info);
                         if (song != null)
                             songs.add ((!)song);
@@ -193,10 +193,9 @@ namespace Music {
         private static Song? song_from_info (File file, FileInfo info) {
             unowned var type = info.get_content_type () ?? "";
             if (ContentType.is_mime_type (type, "audio/*") && !type.has_suffix ("url")) {
-                unowned var name = info.get_name ();
                 var song = new Song ();
                 song.uri = file.get_uri ();
-                song.title = name;
+                song.title = info.get_name ();
                 song.modified_time = info.get_modification_date_time ()?.to_unix () ?? 0;
                 return song;
             }
