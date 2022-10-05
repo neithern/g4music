@@ -214,26 +214,26 @@ namespace Music {
         }
     }
 
-    public static Gdk.Paintable? create_text_paintable (Pango.Context context, string text, int width = 128, int height = 128, uint color = 0) {
-        uint32[] text_colors = {
-            0x83b6ec, // blue
-            0x7ad9f1, // cyan
-            0xb5e98a, // lime
-            0xf8e359, // yellow
-            0xffcb62, // gold
-            0xffa95a, // orange
-            0xf78773, // raspberry
-            0x8de6b1, // green
-            0xe973ab, // magenta
-            0xcb78d4, // purple
-            0x9e91e8, // violet
-            0xe3cf9c, // beige
-            0xbe916d, // brown
-            0xc0bfbc, // gray
-        };
+    public const uint32[] BACKGROUND_COLORS = {
+        0x83b6ec, // blue
+        0x7ad9f1, // cyan
+        0xb5e98a, // lime
+        0xf8e359, // yellow
+        0xffcb62, // gold
+        0xffa95a, // orange
+        0xf78773, // raspberry
+        0x8de6b1, // green
+        0xe973ab, // magenta
+        0xcb78d4, // purple
+        0x9e91e8, // violet
+        0xe3cf9c, // beige
+        0xbe916d, // brown
+        0xc0bfbc, // gray
+    };
 
+    public static Gdk.Paintable? create_text_paintable (Pango.Context context, string text, int width = 128, int height = 128, uint color = 0) {
         if (color == 0)
-            color = text_colors[str_hash (text) % text_colors.length];
+            color = BACKGROUND_COLORS[str_hash (text) % BACKGROUND_COLORS.length];
 
         var c = Gdk.RGBA ();
         c.red = ((color >> 16) & 0xff) / 255f;
