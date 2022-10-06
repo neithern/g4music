@@ -23,6 +23,8 @@ int main (string[] args) {
     Environment.set_prgname (Config.APP_ID);
     Environment.set_application_name (_("G4Music"));
 
+    Random.set_seed ((uint32) get_monotonic_time ());
+
     Music.GstPlayer.init (ref args);
 
     var app = new Music.Application ();
