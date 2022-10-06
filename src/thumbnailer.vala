@@ -35,10 +35,8 @@ namespace Music {
                         unowned var name = info.get_name ();
                         if (name.ascii_ncasecmp ("Cover", 5) == 0
                             || name.ascii_ncasecmp ("Folder", 6) == 0
-                            || name.ascii_ncasecmp ("AlbumArt", 8) == 0
-                            || name.ascii_ncasecmp ("AlbumArt_{", 10) == 0
-                            || name.ascii_ncasecmp ("AlbumArtSmall", 13) == 0) {
-                            //  print ("Find AlbumArt: %s\n", name);
+                            || name.ascii_ncasecmp ("AlbumArt", 8) == 0) {
+                            //  print ("Find external cover: %s\n", name);
                             return dir.get_child (name);
                         }
                     }
@@ -51,7 +49,7 @@ namespace Music {
 
     //  Sorted by insert order
     public class LruCache<V> : Object {
-        public static uint MAX_SIZE = 50 * 1024 * 1024;
+        public const uint MAX_SIZE = 50 * 1024 * 1024;
         public static CompareDataFunc<string> compare_string = (a, b) => { return strcmp (a, b); };
 
         private size_t _size = 0;
@@ -103,7 +101,7 @@ namespace Music {
     }
 
     public class Thumbnailer : LruCache<Gdk.Paintable> {
-        public static int icon_size = 96;
+        public const int icon_size = 96;
 
         private HashTable<string, string> _album_covers = new HashTable<string, string> (str_hash, str_equal);
         private CoverFinder _cover_finder = new CoverFinder ();
@@ -168,42 +166,26 @@ namespace Music {
                 return null;
             }
 
-            var album_key = @"$(song.album)-$(song.artist)-";
+            var album_key_ = @"$(song.album)-$(song.artist)-";
             var tags = new Gst.TagList?[] { null };
             var cover_uri = new string[] { song.cover_uri };
             var pixbuf = yield run_async<Gdk.Pixbuf?> (() => {
                 var tag = tags[0] = parse_gst_tags (file);
                 Gst.Sample? sample = null;
                 if (tag != null && (sample = parse_image_from_tag_list ((!)tag)) != null) {
-                    if (size == icon_size) {
+                    if (size <= icon_size) {
                         //  Check if there is an album cover with same artist and image size
                         var image_size = sample?.get_buffer ()?.get_size () ?? 0;
-                        album_key += image_size.to_string ("%x");
-                        lock (_album_covers) {
-                            weak string key, uri;
-                            if (_album_covers.lookup_extended (album_key, out key, out uri)) {
-                                cover_uri[0] = uri;
-                                //  print ("Same album cover: %s\n", album_key);
-                                //  Continue to load, because the shared cover maybe
-                                //  still be loading in another thread
-                            } else {
-                                _album_covers[album_key] = cover_uri[0];
-                            }
-                        }
+                        var album_key = album_key_ + image_size.to_string ("%x");
+                        check_same_album_cover (album_key, ref cover_uri[0]);
                     }
                     return load_clamp_pixbuf_from_sample ((!)sample, size);
                 }
                 //  Try load album art cover file in the folder
-                try {
-                    var cover_file = _cover_finder.find (file);
-                    var stream = cover_file?.read ();
-                    if (cover_file != null && stream != null) {
-                        cover_uri[0] = (!) cover_file?.get_uri ();
-                        var bis = new BufferedInputStream ((!)stream);
-                        bis.buffer_size = 16384;
-                        return load_clamp_pixbuf_from_stream (bis, size);
-                    }
-                } catch (Error e) {
+                var cover_file = _cover_finder.find (file);
+                if (cover_file != null) {
+                    cover_uri[0] = (!) cover_file?.get_uri ();
+                    return load_clamp_pixbuf_from_file ((!)cover_file, size);
                 }
                 return null;
                 //  Run in single_thread_pool for samba to save connections
@@ -232,6 +214,20 @@ namespace Music {
             var pixels = paintable.get_intrinsic_width () * paintable.get_intrinsic_height ();
             return (paintable is Gdk.Texture) ? pixels * 4 : pixels;
         }
+
+        private bool check_same_album_cover (string album_key, ref string cover_uri) {
+            lock (_album_covers) {
+                weak string key, uri;
+                if (_album_covers.lookup_extended (album_key, out key, out uri)) {
+                    cover_uri = uri;
+                    //  print ("Same album cover: %s\n", album_key);
+                    return true;
+                } else {
+                    _album_covers[album_key] = cover_uri;
+                }
+            }
+            return false;
+        }
     }
 
     public static Gdk.Pixbuf create_clamp_pixbuf (Gdk.Pixbuf pixbuf, int size) {
@@ -246,6 +242,17 @@ namespace Music {
                 return (!)newbuf;
         }
         return pixbuf;
+    }
+
+    public static Gdk.Pixbuf? load_clamp_pixbuf_from_file (File file, int size) {
+        try {
+            var fis = file.read ();
+            var bis = new BufferedInputStream (fis);
+            bis.buffer_size = 16384;
+            return load_clamp_pixbuf_from_stream (bis, size);
+        } catch (Error e) {
+        }
+        return null;
     }
 
     public static Gdk.Pixbuf? load_clamp_pixbuf_from_sample (Gst.Sample sample, int size) {
