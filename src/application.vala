@@ -115,9 +115,7 @@ namespace Music {
             base.startup ();
 
             //  Must load tag cache after the app register (GLib init), to make sort works
-            _song_store.load_tag_cache_async.begin ((obj, res) => {
-                _song_store.load_tag_cache_async.end (res);
-            });
+            _song_store.load_tag_cache_async ();
 
             _mpris_id = Bus.own_name (BusType.SESSION,
                 "org.mpris.MediaPlayer2." + Config.APP_ID,
@@ -163,9 +161,7 @@ namespace Music {
 
             _settings?.set_double ("volume", _player.volume);
 
-            _song_store.save_tag_cache_async.begin ((obj, res) => {
-                _song_store.save_tag_cache_async.end (res);
-            });
+            _song_store.save_tag_cache_async ();
 
             delete_cover_tmp_file_async.begin ((obj, res) => {
                 delete_cover_tmp_file_async.end (res);

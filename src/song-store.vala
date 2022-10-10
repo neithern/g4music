@@ -75,13 +75,13 @@ namespace Music {
             return _store.get_item (position) as Song;
         }
 
-        public async void load_tag_cache_async () {
-            yield run_async<void> (_tag_cache.load);
+        public void load_tag_cache_async () {
+            run_async_no_wait (_tag_cache.load);
         }
 
-        public async void save_tag_cache_async () {
+        public void save_tag_cache_async () {
             if (_tag_cache.modified) {
-                yield run_async<void> (_tag_cache.save);
+                run_async_no_wait (_tag_cache.save);
             }
         }
 
@@ -135,9 +135,7 @@ namespace Music {
             _store.splice (_store.get_n_items (), 0, songs.data);
 
             if (_tag_cache.modified) {
-                save_tag_cache_async.begin ((obj, res) => {
-                    save_tag_cache_async.end (res);
-                });
+                save_tag_cache_async ();
             }
         }
 

@@ -4,10 +4,10 @@ namespace Music {
 
     private class Worker<V> {
         private TaskFunc<V> _task;
-        private SourceFunc _callback;
+        private SourceFunc? _callback;
         private V? _result = null;
 
-        public Worker (TaskFunc<V> task, SourceFunc callback) {
+        public Worker (TaskFunc<V> task, SourceFunc? callback = null) {
             _task = task;
             _callback = callback;
         }
@@ -20,7 +20,10 @@ namespace Music {
 
         private void run () {
             _result = _task ();
-            Idle.add ((owned) _callback);
+            if (_callback != null) {
+                Idle.add ((owned) _callback);
+                _callback = null;
+            }
         }
 
         private static Once<ThreadPool<Worker>> multi_thread_pool;
@@ -61,5 +64,17 @@ namespace Music {
         } catch (Error e) {
         }
         return worker.result;
+    }
+
+    public static void run_async_no_wait (TaskFunc<void> task, bool front = false, bool in_single_pool = false) {
+        var worker = new Worker<void> (task);
+        try {
+            unowned var pool = in_single_pool ? Worker.get_single_thread_pool () : Worker.get_multi_thread_pool ();
+            pool.add (worker);
+            if (front) {
+                pool.move_to_front (worker);
+            }
+        } catch (Error e) {
+        }
     }
 }
