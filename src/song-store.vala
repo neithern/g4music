@@ -9,6 +9,15 @@ namespace Music {
     }
 
     public class SongStore : Object {
+        private static ThreadPool<DirCache>? _save_dir_pool;
+
+        static construct {
+            try {
+                _save_dir_pool = new ThreadPool<DirCache>.with_owned_data ((cache) => cache.save (), 1, false);
+            } catch (Error e) {
+            }
+        }
+
         private SortMode _sort_mode = SortMode.TITLE;
         private CompareDataFunc<Object> _compare = Song.compare_by_title;
         private ListStore _store = new ListStore (typeof (Song));
@@ -174,8 +183,8 @@ namespace Music {
                 return;
             }
 
-            var has_sub_dir = false;
             try {
+                var has_sub_dir = false;
                 FileInfo? pi = null;
                 var enumerator = dir.enumerate_children (ATTRIBUTES, FileQueryInfoFlags.NONE);
                 while ((pi = enumerator.next_file ()) != null) {
@@ -195,11 +204,11 @@ namespace Music {
                         }
                     }
                 }
+                if (!has_sub_dir) {
+                    _save_dir_pool?.add (cache);
+                }
             } catch (Error e) {
                 warning ("Enumerate %s: %s\n", dir.get_parse_name (), e.message);
-            }
-            if (!has_sub_dir) {
-                new Thread<void> (null, () => cache.save ());
             }
         }
 

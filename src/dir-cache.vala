@@ -3,7 +3,7 @@ namespace Music {
     public class DirCache : Object {
         private static uint32 MAGIC = 0x43524944; //  'DIRC'
 
-        public class ChildInfo {
+        private class ChildInfo {
             public string name;
             public int64 time;
     
@@ -15,7 +15,7 @@ namespace Music {
 
         private File _dir;
         private File _file;
-        public GenericArray<ChildInfo> _children = new GenericArray<ChildInfo> ();
+        private GenericArray<ChildInfo> _children = new GenericArray<ChildInfo> ();
 
         public DirCache (File dir) {
             _dir = dir;
