@@ -50,9 +50,9 @@ namespace Music {
                 bis.buffer_size = 16384;
                 var dis = new DataInputStream (bis);
                 var magic = dis.read_uint32 ();
-                if (magic != MAGIC) {
-                    return;
-                }
+                if (magic != MAGIC)
+                    throw new IOError.INVALID_DATA (@"Magic:$magic");
+
                 var count = dis.read_uint32 ();
                 lock (_cache) {
                     for (var i = 0; i < count; i++) {

@@ -88,7 +88,7 @@ namespace Music {
         public void deserialize (DataInputStream dis) throws IOError {
             var count = dis.read_byte ();
             if (count != 6)
-                throw new IOError.INVALID_DATA (@"$count != 5");
+                throw new IOError.INVALID_DATA (@"$count != 6");
             album = dis.read_upto ("\0", 1, null);
             update_album_key ();
             dis.read_byte (); // == '\0'
