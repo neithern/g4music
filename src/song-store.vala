@@ -168,6 +168,13 @@ namespace Music {
         }
 
         private static void add_directory (File dir, Queue<File> stack, GenericArray<Object> songs) {
+            var cache = new DirCache (dir);
+            if (cache.check_valid ()) {
+                cache.load_as_songs (songs);
+                return;
+            }
+
+            var has_sub_dir = false;
             try {
                 FileInfo? pi = null;
                 var enumerator = dir.enumerate_children (ATTRIBUTES, FileQueryInfoFlags.NONE);
@@ -178,15 +185,21 @@ namespace Music {
                     } else if (info.get_file_type () == FileType.DIRECTORY) {
                         var child = dir.get_child (info.get_name ());
                         stack.push_head (child);
+                        has_sub_dir = true;
                     } else {
                         var file = dir.get_child (info.get_name ());
                         var song = song_from_info (file, info);
-                        if (song != null)
+                        if (song != null) {
                             songs.add ((!)song);
+                            cache.add_child ((!)song);
+                        }
                     }
                 }
             } catch (Error e) {
                 warning ("Enumerate %s: %s\n", dir.get_parse_name (), e.message);
+            }
+            if (!has_sub_dir) {
+                new Thread<void> (null, () => cache.save ());
             }
         }
 

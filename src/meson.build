@@ -3,6 +3,7 @@ sources = [
   'ape-demux.c',
   'application.vala',
   'async-task.vala',
+  'dir-cache.vala',
   'gst-player.vala',
   'main.vala',
   'mini-bar.vala',
