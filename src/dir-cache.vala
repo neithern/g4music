@@ -4,10 +4,12 @@ namespace Music {
         private static uint32 MAGIC = 0x43524944; //  'DIRC'
 
         private class ChildInfo {
+            public FileType type;
             public string name;
             public int64 time;
     
-            public ChildInfo (string name, int64 time) {
+            public ChildInfo (FileType type, string name, int64 time) {
+                this.type = type;
                 this.name = name;
                 this.time = time;
             }
@@ -35,12 +37,13 @@ namespace Music {
             return false;
         }
 
-        public void add_child (Song song) {
-            var info = new ChildInfo (song.title, song.modified_time);
-            _children.add (info);
+        public void add_child (FileInfo info) {
+            var time = info.get_modification_date_time ()?.to_unix () ?? 0;
+            var child = new ChildInfo (info.get_file_type (), info.get_name (), time);
+            _children.add (child);
         }
 
-        public void load_as_songs (GenericArray<Object> songs) {
+        public void load (Queue<File> stack, GenericArray<Object> songs) {
             try {
                 var fis = _file.read ();
                 var bis = new BufferedInputStream (fis);
@@ -50,21 +53,27 @@ namespace Music {
                 var magic = dis.read_uint32 ();
                 if (magic != MAGIC)
                     throw new IOError.INVALID_DATA (@"Magic:$magic");
-                var uri = dis.read_upto ("\0", 1, null);
+                var base_name = _dir.get_basename () ?? "";
+                var bname = dis.read_upto ("\0", 1, null);
                 dis.read_byte (); // == '\0'
-                if (uri != _dir.get_uri ())
-                    throw new IOError.INVALID_DATA (@"Uri:$uri");
+                if (bname != base_name)
+                    throw new IOError.INVALID_DATA (@"Basename:$bname!=$base_name");
 
                 var count = dis.read_int32 ();
                 for (var i = 0; i < count; i++) {
+                    var type = dis.read_byte ();
                     var name = dis.read_upto ("\0", 1, null);
                     dis.read_byte (); // == '\0'
                     var time = dis.read_int64 ();
-                    var song = new Song ();
-                    song.uri = _dir.get_child (name).get_uri ();
-                    song.title = name;
-                    song.modified_time = time;
-                    songs.add (song);
+                    if (type == FileType.DIRECTORY) {
+                        stack.push_head (_dir.get_child (name));
+                    } else {
+                        var song = new Song ();
+                        song.uri = _dir.get_child (name).get_uri ();
+                        song.title = name;
+                        song.modified_time = time;
+                        songs.add (song);
+                    }
                 }
             } catch (Error e) {
                 if (e.code != IOError.NOT_FOUND)
@@ -83,13 +92,14 @@ namespace Music {
                 bos.buffer_size = 16384;
                 var dos = new DataOutputStream (bos);
                 dos.put_uint32 (MAGIC);
-                dos.put_string (_dir.get_uri ());
+                dos.put_string (_dir.get_basename () ?? "");
                 dos.put_byte ('\0');
                 dos.put_int32 (_children.length);
-                foreach (var info in _children) {
-                    dos.put_string (info.name);
+                foreach (var child in _children) {
+                    dos.put_byte (child.type);
+                    dos.put_string (child.name);
                     dos.put_byte ('\0');
-                    dos.put_int64 (info.time);
+                    dos.put_int64 (child.time);
                 }
             } catch (Error e) {
                 print ("Save dirs error: %s\n", e.message);

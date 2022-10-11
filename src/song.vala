@@ -150,6 +150,18 @@ namespace Music {
             return (int) diff.clamp (-1, 1);
         }
 
+        public static Song? from_info (File file, FileInfo info) {
+            unowned var type = info.get_content_type () ?? "";
+            if (ContentType.is_mime_type (type, "audio/*") && !type.has_suffix ("url")) {
+                var song = new Song ();
+                song.uri = file.get_uri ();
+                song.title = info.get_name ();
+                song.modified_time = info.get_modification_date_time ()?.to_unix () ?? 0;
+                return song;
+            }
+            return null;
+        }
+
         public static void shuffle_order (GenericArray<Object> arr) {
             for (var i = arr.length - 1; i > 0; i--) {
                 var r = Random.int_range (0, i);

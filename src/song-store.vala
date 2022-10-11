@@ -167,7 +167,7 @@ namespace Music {
                         add_directory (dir, stack, songs);
                     }
                 } else {
-                    var song = song_from_info (file, info);
+                    var song = Song.from_info (file, info);
                     if (song != null)
                         songs.add ((!)song);
                 }
@@ -179,12 +179,11 @@ namespace Music {
         private static void add_directory (File dir, Queue<File> stack, GenericArray<Object> songs) {
             var cache = new DirCache (dir);
             if (cache.check_valid ()) {
-                cache.load_as_songs (songs);
+                cache.load (stack, songs);
                 return;
             }
 
             try {
-                var has_sub_dir = false;
                 FileInfo? pi = null;
                 var enumerator = dir.enumerate_children (ATTRIBUTES, FileQueryInfoFlags.NONE);
                 while ((pi = enumerator.next_file ()) != null) {
@@ -194,34 +193,20 @@ namespace Music {
                     } else if (info.get_file_type () == FileType.DIRECTORY) {
                         var child = dir.get_child (info.get_name ());
                         stack.push_head (child);
-                        has_sub_dir = true;
+                        cache.add_child (info);
                     } else {
                         var file = dir.get_child (info.get_name ());
-                        var song = song_from_info (file, info);
+                        var song = Song.from_info (file, info);
                         if (song != null) {
                             songs.add ((!)song);
-                            cache.add_child ((!)song);
+                            cache.add_child (info);
                         }
                     }
                 }
-                if (!has_sub_dir) {
-                    _save_dir_pool?.add (cache);
-                }
+                _save_dir_pool?.add (cache);
             } catch (Error e) {
                 warning ("Enumerate %s: %s\n", dir.get_parse_name (), e.message);
             }
-        }
-
-        private static Song? song_from_info (File file, FileInfo info) {
-            unowned var type = info.get_content_type () ?? "";
-            if (ContentType.is_mime_type (type, "audio/*") && !type.has_suffix ("url")) {
-                var song = new Song ();
-                song.uri = file.get_uri ();
-                song.title = info.get_name ();
-                song.modified_time = info.get_modification_date_time ()?.to_unix () ?? 0;
-                return song;
-            }
-            return null;
         }
 
         private static void parse_song_tags (Song song) {
