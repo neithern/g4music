@@ -72,36 +72,24 @@ namespace Music {
         }
 
         public void serialize (DataOutputStream dos) throws IOError {
-            dos.put_byte (6);
-            dos.put_string (album);
-            dos.put_byte ('\0');
-            dos.put_string (artist);
-            dos.put_byte ('\0');
-            dos.put_string (title);
-            dos.put_byte ('\0');
+            write_string (dos, album);
+            write_string (dos, artist);
+            write_string (dos, title);
             dos.put_int32 (track);
             dos.put_int64 (modified_time);
-            dos.put_string (uri);
-            dos.put_byte ('\0');
+            write_string (dos, uri);
         }
 
         public void deserialize (DataInputStream dis) throws IOError {
-            var count = dis.read_byte ();
-            if (count != 6)
-                throw new IOError.INVALID_DATA (@"$count != 6");
-            album = dis.read_upto ("\0", 1, null);
+            album = read_string (dis);
             update_album_key ();
-            dis.read_byte (); // == '\0'
-            artist = dis.read_upto ("\0", 1, null);
+            artist = read_string (dis);
             update_artist_key ();
-            dis.read_byte (); // == '\0'
-            title = dis.read_upto ("\0", 1, null);
+            title = read_string (dis);
             update_title_key ();
-            dis.read_byte (); // == '\0'
             track = dis.read_int32 ();
             modified_time = dis.read_int64 ();
-            uri = dis.read_upto ("\0", 1, null);
-            dis.read_byte (); // == '\0'
+            uri = read_string (dis);
         }
 
         public static int compare_by_album (Object obj1, Object obj2) {

@@ -1,7 +1,7 @@
 namespace Music {
 
     public class DirCache : Object {
-        private static uint32 MAGIC = 0x43524944; //  'DIRC'
+        private static uint32 MAGIC = 0x44495243; //  'DIRC'
 
         private class ChildInfo {
             public FileType type;
@@ -43,7 +43,7 @@ namespace Music {
             _children.add (child);
         }
 
-        public void load (Queue<File> stack, GenericArray<Object> songs) {
+        public bool load (Queue<File> stack, GenericArray<Object> songs) {
             try {
                 var fis = _file.read ();
                 var bis = new BufferedInputStream (fis);
@@ -54,16 +54,14 @@ namespace Music {
                 if (magic != MAGIC)
                     throw new IOError.INVALID_DATA (@"Magic:$magic");
                 var base_name = _dir.get_basename () ?? "";
-                var bname = dis.read_upto ("\0", 1, null);
-                dis.read_byte (); // == '\0'
+                var bname = read_string (dis);
                 if (bname != base_name)
                     throw new IOError.INVALID_DATA (@"Basename:$bname!=$base_name");
 
-                var count = dis.read_int32 ();
+                var count = read_size (dis);
                 for (var i = 0; i < count; i++) {
                     var type = dis.read_byte ();
-                    var name = dis.read_upto ("\0", 1, null);
-                    dis.read_byte (); // == '\0'
+                    var name = read_string (dis);
                     var time = dis.read_int64 ();
                     if (type == FileType.DIRECTORY) {
                         stack.push_head (_dir.get_child (name));
@@ -75,10 +73,12 @@ namespace Music {
                         songs.add (song);
                     }
                 }
+                return true;
             } catch (Error e) {
                 if (e.code != IOError.NOT_FOUND)
                     print ("Load dirs error: %s\n", e.message);
             }
+            return false;
         }
 
         public void save () {
@@ -92,13 +92,11 @@ namespace Music {
                 bos.buffer_size = 16384;
                 var dos = new DataOutputStream (bos);
                 dos.put_uint32 (MAGIC);
-                dos.put_string (_dir.get_basename () ?? "");
-                dos.put_byte ('\0');
-                dos.put_int32 (_children.length);
+                write_string (dos, _dir.get_basename () ?? "");
+                write_size (dos, _children.length);
                 foreach (var child in _children) {
                     dos.put_byte (child.type);
-                    dos.put_string (child.name);
-                    dos.put_byte ('\0');
+                    write_string (dos, child.name);
                     dos.put_int64 (child.time);
                 }
             } catch (Error e) {

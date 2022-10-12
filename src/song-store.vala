@@ -178,8 +178,7 @@ namespace Music {
 
         private static void add_directory (File dir, Queue<File> stack, GenericArray<Object> songs) {
             var cache = new DirCache (dir);
-            if (cache.check_valid ()) {
-                cache.load (stack, songs);
+            if (cache.check_valid () && cache.load (stack, songs)) {
                 return;
             }
 

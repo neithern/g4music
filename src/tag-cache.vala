@@ -1,7 +1,7 @@
 namespace Music {
 
     public class TagCache {
-        private static uint32 MAGIC = 0x43474154; //  'TAGC'
+        private static uint32 MAGIC = 0x54414743; //  'TAGC'
 
         private File _file;
         private bool _loaded = false;
@@ -51,9 +51,9 @@ namespace Music {
                 var dis = new DataInputStream (bis);
                 var magic = dis.read_uint32 ();
                 if (magic != MAGIC)
-                    throw new IOError.INVALID_DATA (@"Magic:$magic");
+                    throw new IOError.INVALID_DATA (@"Magic=$magic");
 
-                var count = dis.read_uint32 ();
+                var count = read_size (dis);
                 lock (_cache) {
                     for (var i = 0; i < count; i++) {
                         Song song = new Song ();
@@ -80,7 +80,7 @@ namespace Music {
                 var dos = new DataOutputStream (bos);
                 dos.put_uint32 (MAGIC);
                 lock (_cache) {
-                    dos.put_uint32 (_cache.length);
+                    write_size (dos, _cache.length);
                     _cache.for_each ((key, song) => {
                         try {
                             song.serialize (dos);
