@@ -1,5 +1,4 @@
 namespace Music {
-    public const string DEFAULT_MIMETYPE = "audio/mpeg";
     public const string UNKOWN_ALBUM = _("Unknown Album");
     public const string UNKOWN_ARTIST = _("Unknown Artist");
     public const int UNKOWN_TRACK = int.MAX;
@@ -20,6 +19,12 @@ namespace Music {
 
         private string? _cover_uri = null;
 
+        public Song (string uri, string title, int64 time) {
+            this.title = title;
+            this.uri = uri;
+            this.modified_time = time;
+        }
+
         public unowned string cover_uri {
             get {
                 return _cover_uri ?? uri;
@@ -35,19 +40,19 @@ namespace Music {
             if (tags.peek_string_index (Gst.Tags.ALBUM, 0, out al)
                     && al != null && al?.length > 0 && album != (!)al) {
                 album = (!)al;
-                update_album_key ();
+                _album_key = album.collate_key_for_filename ();
                 changed = true;
             }
             if (tags.peek_string_index (Gst.Tags.ARTIST, 0, out ar)
                     && ar != null && ar?.length > 0 && artist != (!)ar) {
                 artist = (!)ar;
-                update_artist_key ();
+                _artist_key = artist.collate_key_for_filename ();
                 changed = true;
             }
             if (tags.peek_string_index (Gst.Tags.TITLE, 0, out ti)
                     && ti != null && ti?.length > 0 && title != (!)ti) {
                 title = (!)ti;
-                update_title_key ();
+                _title_key = title.collate_key_for_filename ();
                 changed = true;
             }
             uint tr = 0;
@@ -59,15 +64,15 @@ namespace Music {
             return changed;
         }
 
-        public void update_album_key () {
+        public Song.deserialize (DataInputStream dis) throws IOError {
+            album = read_string (dis);
+            artist = read_string (dis);
+            title = read_string (dis);
+            track = dis.read_int32 ();
+            modified_time = dis.read_int64 ();
+            uri = read_string (dis);
             _album_key = album.collate_key_for_filename ();
-        }
-
-        public void update_artist_key () {
             _artist_key = artist.collate_key_for_filename ();
-        }
-
-        public void update_title_key () {
             _title_key = title.collate_key_for_filename ();
         }
 
@@ -80,16 +85,55 @@ namespace Music {
             write_string (dos, uri);
         }
 
-        public void deserialize (DataInputStream dis) throws IOError {
-            album = read_string (dis);
-            update_album_key ();
-            artist = read_string (dis);
-            update_artist_key ();
-            title = read_string (dis);
-            update_title_key ();
-            track = dis.read_int32 ();
-            modified_time = dis.read_int64 ();
-            uri = read_string (dis);
+        public void parse_tags () {
+            var file = File.new_for_uri (uri);
+            var name = title;
+            this.title = "";
+
+            if (file.is_native ()) {
+                var tags = parse_gst_tags (file);
+                if (tags != null)
+                    from_gst_tags ((!)tags);
+            }
+
+            if (title.length == 0 || artist.length == 0) {
+                //  guess tags from the file name
+                var end = name.last_index_of_char ('.');
+                if (end > 0) {
+                    name = name.substring (0, end);
+                }
+
+                int track_index = 0;
+                var pos = name.index_of_char ('.');
+                if (pos > 0) {
+                    // assume prefix number as track index
+                    int.try_parse (name.substring (0, pos), out track_index, null, 10);
+                    name = name.substring (pos + 1);
+                }
+
+                //  split the file name by '-'
+                var sa = split_string (name, "-");
+                var len = sa.length;
+                if (title.length == 0) {
+                    title = len >= 1 ? sa[len - 1] : name;
+                    _title_key = title.collate_key_for_filename ();
+                }
+                if (artist.length == 0) {
+                    artist = len >= 2 ? sa[len - 2] : UNKOWN_ARTIST;
+                    _artist_key = artist.collate_key_for_filename ();
+                }
+                if (track_index == UNKOWN_TRACK) {
+                    if (track_index == 0 && len >= 3)
+                        int.try_parse (sa[0], out track_index, null, 10);
+                    if (track_index > 0)
+                        this.track = track_index;
+                }
+            }
+            if (album.length == 0) {
+                //  assume folder name as the album
+                album = file.get_parent ()?.get_basename () ?? UNKOWN_ALBUM;
+                _album_key = album.collate_key_for_filename ();
+            }
         }
 
         public static int compare_by_album (Object obj1, Object obj2) {
@@ -134,18 +178,14 @@ namespace Music {
             var s1 = (Song) obj1;
             var s2 = (Song) obj2;
             var diff = s2.modified_time - s1.modified_time;
-
             return (int) diff.clamp (-1, 1);
         }
 
         public static Song? from_info (File file, FileInfo info) {
             unowned var type = info.get_content_type () ?? "";
             if (ContentType.is_mime_type (type, "audio/*") && !type.has_suffix ("url")) {
-                var song = new Song ();
-                song.uri = file.get_uri ();
-                song.title = info.get_name ();
-                song.modified_time = info.get_modification_date_time ()?.to_unix () ?? 0;
-                return song;
+                var time = info.get_modification_date_time ()?.to_unix () ?? 0;
+                return new Song (file.get_uri (), info.get_name (), time);
             }
             return null;
         }
@@ -209,5 +249,16 @@ namespace Music {
             return text.substring (0, index).up ();
         }
         return text.up ();
+    }
+
+    public static GenericArray<string> split_string (string text, string delimiter) {
+        var ar = text.split ("-");
+        var sa = new GenericArray<string> (ar.length);
+        foreach (var str in ar) {
+            var s = str.strip ();
+            if (s.length > 0)
+                sa.add (s);
+        }
+        return sa;
     }
 }

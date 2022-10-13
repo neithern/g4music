@@ -56,8 +56,7 @@ namespace Music {
                 var count = read_size (dis);
                 lock (_cache) {
                     for (var i = 0; i < count; i++) {
-                        Song song = new Song ();
-                        song.deserialize (dis);
+                        var song = new Song.deserialize (dis);
                         _cache[song.uri] = song;
                     }
                 }

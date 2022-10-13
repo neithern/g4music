@@ -40,9 +40,10 @@ namespace Music {
 
     public void write_string (DataOutputStream dos, string value) throws IOError {
         size_t size = value.length;
-        unowned uint8[] data = (uint8[])value;
         write_size (dos, size);
-        if (size > 0)
+        if (size > 0) {
+            unowned uint8[] data = (uint8[])value;
             dos.write_all (data[0:size], out size);
+        }
     }
 }

@@ -66,10 +66,7 @@ namespace Music {
                     if (type == FileType.DIRECTORY) {
                         stack.push_head (_dir.get_child (name));
                     } else {
-                        var song = new Song ();
-                        song.uri = _dir.get_child (name).get_uri ();
-                        song.title = name;
-                        song.modified_time = time;
+                        var song = new Song (_dir.get_child (name).get_uri (), name, time);
                         songs.add (song);
                     }
                 }

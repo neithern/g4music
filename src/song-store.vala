@@ -120,7 +120,7 @@ namespace Music {
                         Song? s;
                         while ((s = queue.try_pop ()) != null) {
                             var song = (!)s;
-                            parse_song_tags (song);
+                            song.parse_tags ();
                             _tag_cache.add (song);
                             var per = (int) AtomicUint.add (ref progress, 1) * 100 / queue_count;
                             if (percent != per) {
@@ -208,57 +208,6 @@ namespace Music {
             }
         }
 
-        private static void parse_song_tags (Song song) {
-            var file = File.new_for_uri (song.uri);
-            var name = song.title;
-            song.title = "";
-
-            if (file.is_native ()) {
-                var tags = parse_gst_tags (file);
-                if (tags != null)
-                    song.from_gst_tags ((!)tags);
-            }
-
-            if (song.title.length == 0 || song.artist.length == 0) {
-                //  guess tags from the file name
-                var end = name.last_index_of_char ('.');
-                if (end > 0) {
-                    name = name.substring (0, end);
-                }
-
-                int track = 0;
-                var pos = name.index_of_char ('.');
-                if (pos > 0) {
-                    // assume prefix number as track index
-                    int.try_parse (name.substring (0, pos), out track, null, 10);
-                    name = name.substring (pos + 1);
-                }
-
-                //  split the file name by '-'
-                var sa = split_string (name, "-");
-                var len = sa.length;
-                if (song.title.length == 0) {
-                    song.title = len >= 1 ? sa[len - 1] : name;
-                    song.update_title_key ();
-                }
-                if (song.artist.length == 0) {
-                    song.artist = len >= 2 ? sa[len - 2] : UNKOWN_ARTIST;
-                    song.update_artist_key ();
-                }
-                if (song.track == UNKOWN_TRACK) {
-                    if (track == 0 && len >= 3)
-                        int.try_parse (sa[0], out track, null, 10);
-                    if (track > 0)
-                        song.track = track;
-                }
-            }
-            if (song.album.length == 0) {
-                //  assume folder name as the album
-                song.album = file.get_parent ()?.get_basename () ?? UNKOWN_ALBUM;
-                song.update_album_key ();
-            }
-        }
-
         private delegate G ThreadFunc<G> (uint index);
 
         private static void run_in_threads<G> (owned ThreadFunc<G> func, uint num_tasks) {
@@ -270,17 +219,6 @@ namespace Music {
             foreach (var thread in threads) {
                 thread.join ();
             }
-        }
-
-        private static GenericArray<string> split_string (string text, string delimiter) {
-            var ar = text.split ("-");
-            var sa = new GenericArray<string> (ar.length);
-            foreach (var str in ar) {
-                var s = str.strip ();
-                if (s.length > 0)
-                    sa.add (s);
-            }
-            return sa;
         }
     }
 }
