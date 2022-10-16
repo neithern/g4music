@@ -48,6 +48,16 @@
     </screenshots>
 
     <releases>
+        <release version="1.8" date="2022-10-16">
+            <description>
+                <ul>
+                <li>Build flatpak with GNOME 43.</li>
+                <li>Cache directories for faster loading.</li>
+                <li>Show peaks more smoothly.</li>
+                <li>Update Spanish and German translation, thanks to the translators.</li>
+                </ul>
+            </description>
+        </release>
         <release version="1.7" date="2022-10-02">
             <description>
                 <ul>
