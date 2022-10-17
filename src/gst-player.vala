@@ -464,7 +464,7 @@ namespace Music {
         double peak = 0;
         double* p = (double*)data;
         for (uint i = 0; i < num; i += channels) {
-            double value = p[i].abs ();
+            double value = p[i] >= 0 ? p[i] : -p[i];
             if (peak < value)
                 peak = value;
         }
@@ -475,7 +475,7 @@ namespace Music {
         float peak = 0f;
         float* p = (float*)data;
         for (uint i = 0; i < num; i += channels) {
-            float value = p[i].abs ();
+            float value = p[i] >= 0 ? p[i] : -p[i];
             if (peak < value)
                 peak = value;
         }
@@ -486,7 +486,7 @@ namespace Music {
         int16 peak = 0;
         int16* p = (int16*)data;
         for (uint i = 0; i < num; i += channels) {
-            int16 value = p[i].abs ();
+            int16 value = p[i] >= 0 ? p[i] : -p[i];
             if (peak < value)
                 peak = value;
         }
@@ -503,7 +503,7 @@ namespace Music {
                 p[j] = data[j];
             }
             data += block_size;
-            value = value.abs ();
+            value = value >= 0 ? value : -value;
             if (peak < value)
                 peak = value;
         }
