@@ -48,14 +48,14 @@
     </screenshots>
 
     <releases>
-        <release version="1.8" date="2022-10-17">
+        <release version="1.8" date="2022-10-19">
             <description>
                 <ul>
                 <li>Build flatpak with GNOME 43.</li>
                 <li>Cache directories for faster loading.</li>
                 <li>Show peaks more smoothly.</li>
                 <li>Update Spanish and German translation, thanks to the translators.</li>
-                <li>v1.6.1: Compile with glib2-2.70.</li>
+                <li>v1.8.2: Build with vala 0.54.</li>
                 </ul>
             </description>
         </release>
