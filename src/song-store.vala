@@ -214,7 +214,9 @@ namespace Music {
             var threads = new Thread<G>[num_tasks];
             for (var i = 0; i < num_tasks; i++) {
                 var index = i;
-                threads[i] = new Thread<G> (null, () => func (index));
+                threads[i] = new Thread<G> (null, () => {
+                    return func (index);
+                });
             }
             foreach (var thread in threads) {
                 thread.join ();
