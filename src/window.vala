@@ -364,8 +364,7 @@ namespace Music {
         }
 
         private void setup_drop_target () {
-            var drop_target = new Gtk.DropTarget (Type.INVALID, Gdk.DragAction.COPY);
-            drop_target.set_gtypes ({typeof (Gdk.FileList)});
+            var drop_target = new Gtk.DropTarget (typeof (Gdk.FileList), Gdk.DragAction.COPY);
             drop_target.on_drop.connect ((value, x, y) => {
                 var file_list = ((Gdk.FileList) value).get_files ();
                 var count = file_list.length ();
