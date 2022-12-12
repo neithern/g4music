@@ -1,0 +1,270 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-09-06 21:45+0200\n"
+"PO-Revision-Date: 2022-12-10 14:38+0100\n"
+"Last-Translator: Quentin PAGÈS\n"
+"Language-Team: \n"
+"Language: oc\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Poedit 3.2.2\n"
+
+#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:406
+#: src/main.vala:24
+msgid "G4Music"
+msgstr "G4Music"
+
+#: data/app.desktop.in:4
+msgid "Music Player"
+msgstr "Lector de musica"
+
+#: data/app.desktop.in:5
+msgid "Play music"
+msgstr "Legir de fichièrs àudio"
+
+#: data/app.desktop.in:12
+msgid "music;sound;player;media;audio;playlist;"
+msgstr "musica;son;lector;mèdia;àudio;audio;lista de lectura;"
+
+#: src/gtk/help-overlay.ui:11
+msgctxt "shortcut window"
+msgid "General"
+msgstr "General"
+
+#: src/gtk/help-overlay.ui:14
+msgctxt "shortcut window"
+msgid "Show Shortcuts"
+msgstr "Afichar los acorchis"
+
+#: src/gtk/help-overlay.ui:20
+msgctxt "shortcut window"
+msgid "Quit"
+msgstr "Sortir"
+
+#: src/gtk/help-overlay.ui:28
+msgctxt "shortcut window"
+msgid "Playback"
+msgstr "Lectura"
+
+#: src/gtk/help-overlay.ui:31
+msgctxt "shortcut window"
+msgid "Play/Pause"
+msgstr "Lectura/Pausa"
+
+#: src/gtk/help-overlay.ui:37
+msgctxt "shortcut window"
+msgid "Play Next"
+msgstr "Legir la seguenta"
+
+#: src/gtk/help-overlay.ui:43
+msgctxt "shortcut window"
+msgid "Play Previous"
+msgstr "Legir la precedenta"
+
+#: src/gtk/help-overlay.ui:51
+msgctxt "shortcut window"
+msgid "Playlist"
+msgstr "Lista de lectura"
+
+#: src/gtk/help-overlay.ui:54
+msgctxt "shortcut window"
+msgid "Search"
+msgstr "Cercar"
+
+#: src/gtk/help-overlay.ui:60
+msgctxt "shortcut window"
+msgid "Toggle Sort"
+msgstr "Alternar sens de triada"
+
+#: src/gtk/preferences.ui:12
+msgid "Appearance"
+msgstr "Aparéncia"
+
+#: src/gtk/preferences.ui:15
+msgid "Prefer dark theme"
+msgstr "Preferir lo tèma escur"
+
+#: src/gtk/preferences.ui:26
+msgid "Background blur mode"
+msgstr "Mòde del rèireplan fosc"
+
+#: src/gtk/preferences.ui:33
+msgid "Music Location"
+msgstr "Emplaçament de la musica"
+
+#: src/gtk/preferences.ui:36
+msgid "Load music from folder"
+msgstr "Cargar la musica a partir del dossièr"
+
+#: src/gtk/preferences.ui:47
+msgid "Load thumbnails for non-local files"
+msgstr "Cargar las miniaturas dels fichièrs non locals"
+
+#: src/gtk/preferences.ui:48
+msgid "May cause slowdowns and excess network usage"
+msgstr "Pòt alentir e sollicitar mai la ret"
+
+#: src/gtk/preferences.ui:61
+msgid "Playback"
+msgstr "Lectura"
+
+#: src/gtk/preferences.ui:64 src/application.vala:397
+msgid "Keep playing after window closed"
+msgstr "Téner de legir un còp la fenèstra tampada"
+
+#: src/gtk/preferences.ui:75
+msgid "Show audio peak level"
+msgstr "Afichar lo nivèl àudio poncha"
+
+#: src/gtk/preferences.ui:86
+msgid "Enable gapless playback"
+msgstr "Activa la lectura sens interrupcion"
+
+#: src/gtk/preferences.ui:97
+msgid "Use ReplayGain to normalize volume"
+msgstr "Normalizar lo volum amb ReplayGain"
+
+#: src/gtk/preferences.ui:108
+msgid "Use pipewire audio sink"
+msgstr "Utilizar lo contenedor àudio de pipewire"
+
+#: src/gtk/preferences.ui:109
+msgid "Experimental"
+msgstr "Experimental"
+
+#: src/gtk/window.ui:33
+msgid "Main Menu"
+msgstr "Menú principal"
+
+#: src/gtk/window.ui:55
+msgid "Search"
+msgstr "Cercar"
+
+#: src/gtk/window.ui:62
+msgid "Sort Mode"
+msgstr "Mòde de triada"
+
+#: src/gtk/window.ui:123
+msgid "Back"
+msgstr "Tornar"
+
+#: src/gtk/window.ui:213
+msgid "_Export Cover"
+msgstr "_Exportar la pocheta"
+
+#: src/gtk/window.ui:217 src/song-entry.vala:101
+msgid "_Show In Files"
+msgstr "_Afichar los fichièrs"
+
+#: src/gtk/window.ui:226
+msgid "_Reload List"
+msgstr "_Recargar la lista"
+
+#: src/gtk/window.ui:232
+msgid "_Preferences"
+msgstr "_Preferéncias"
+
+#: src/gtk/window.ui:236
+msgid "_Keyboard Shortcuts"
+msgstr "_Acorchis de clavièr"
+
+#: src/gtk/window.ui:240
+msgid "_About G4Music"
+msgstr "_A prepaus de G4Music"
+
+#: src/gtk/window.ui:250
+msgid "By Album"
+msgstr "Per album"
+
+#: src/gtk/window.ui:256
+msgid "By Artist"
+msgstr "Per artista"
+
+#: src/gtk/window.ui:262
+msgid "By Title"
+msgstr "Per títol"
+
+#: src/gtk/window.ui:268
+msgid "By Date"
+msgstr "Per data"
+
+#: src/gtk/window.ui:274
+msgid "Shuffle"
+msgstr "Aleatòri"
+
+#: src/application.vala:410
+msgid "translator-credits"
+msgstr "Quentin PAGÈS"
+
+#: src/application.vala:412
+msgid "A fast, fluent, light weight music player written in GTK4."
+msgstr "Un lector de musica rapid e leugièr esrich en GTK4."
+
+#: src/application.vala:538
+msgid "Keep playing"
+msgstr "Contunhar de legir"
+
+#: src/play-bar.vala:83
+msgid "Repeat Song"
+msgstr "Repetir la cançon"
+
+#: src/play-bar.vala:93
+msgid "Play Previous"
+msgstr "Legir la precedenta"
+
+#: src/play-bar.vala:99
+msgid "Play/Pause"
+msgstr "Lectura/Pausa"
+
+#: src/play-bar.vala:106
+msgid "Play Next"
+msgstr "Legir la seguenta"
+
+#: src/preferences.vala:71
+msgid "Always"
+msgstr "Totjorn"
+
+#: src/preferences.vala:73
+msgid "Art Only"
+msgstr "Pocheta de l'album sonque"
+
+#: src/preferences.vala:75
+msgid "Never"
+msgstr "Pas jamai"
+
+#: src/song.vala:3
+msgid "Unknown Album"
+msgstr "Album desconegut"
+
+#: src/song.vala:4
+msgid "Unknown Artist"
+msgstr "Artista desconegut"
+
+#: src/song-entry.vala:99
+msgid "Show Album"
+msgstr "Afichar l’album"
+
+#: src/song-entry.vala:100
+msgid "Show Artist"
+msgstr "Afichar l’artista"
+
+#: src/window.vala:52
+msgid "Loading..."
+msgstr "Cargament…"
+
+#: src/window.vala:282
+msgid ""
+"Drag and drop song files here,\n"
+"or change music location: "
+msgstr ""
+"Lisatz depausatz los fichièrs musicals aicí,\n"
+"o modificatz l’emplaçament de la musica : "
