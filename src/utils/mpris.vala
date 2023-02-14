@@ -17,6 +17,25 @@ namespace G4 {
             }
         }
 
+        private HashTable<string, Variant> music2mpris_meta (Music? music, string? art_uri = null) {
+            var dict = new HashTable<string, Variant> (null, null);
+            if (music == null)
+                return dict;
+
+            var artists = new VariantBuilder (new VariantType ("as"));
+            artists.add ("s", ((!)music).artist);
+            dict.insert ("xesam:artist", artists.end());
+            dict.insert ("xesam:title", new Variant.string (((!)music).title));
+            dict.insert ("xesam:album", new Variant.string (((!)music).album));
+            if (art_uri != null)
+                dict.insert ("mpris:artUrl", new Variant.string ((!)art_uri));
+            else
+                // ensure that we don't send along the music uri
+                if (((!)music).external_cover)
+                    dict.insert ("mpris:artUrl", new Variant.string (((!)music).cover_uri));
+            return dict;
+        }
+
         public MprisPlayer (Application app, DBusConnection connection) {
             _app = app;
             _connection = connection;
@@ -76,6 +95,12 @@ namespace G4 {
             }
         }
 
+        public HashTable<string, Variant> metadata {
+            owned get {
+                return music2mpris_meta(_app.current_music);
+            }
+        }
+
         public void next () throws Error {
             _app.play_next ();
         }
@@ -113,16 +138,8 @@ namespace G4 {
             send_property ("PlaybackStatus", new Variant.string (gst2mpris_status(state)));
         }
 
-        private void send_meta_data (Music music, string? art_uri = null) {
-            var dict = new VariantDict (null);
-            var artists = new VariantBuilder (new VariantType ("as"));
-            artists.add ("s", music.artist);
-            dict.insert ("xesam:artist", "as", artists);
-            dict.insert ("xesam:title", "s", music.title);
-            if (art_uri != null) {
-                dict.insert ("mpris:artUrl", "s", (!)art_uri);
-            }
-            send_property ("Metadata", dict.end ());
+        internal void send_meta_data (Music music, string? art_uri = null) {
+            send_property ("Metadata", music2mpris_meta (music, art_uri));
         }
 
         private void send_property (string name, Variant variant) {
