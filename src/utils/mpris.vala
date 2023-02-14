@@ -6,6 +6,17 @@ namespace G4 {
         private unowned Application _app;
         private unowned DBusConnection _connection;
 
+        private string gst2mpris_status (Gst.State state) {
+            switch (state) {
+                case Gst.State.PLAYING:
+                    return "Playing";
+                case Gst.State.PAUSED:
+                    return "Paused";
+                default:
+                    return "Stopped";
+            }
+        }
+
         public MprisPlayer (Application app, DBusConnection connection) {
             _app = app;
             _connection = connection;
@@ -37,6 +48,12 @@ namespace G4 {
         public bool can_pause {
             get {
                 return _app.current_music != null;
+            }
+        }
+
+        public string playback_status {
+            owned get {
+                return gst2mpris_status(_app.player.state);
             }
         }
 
@@ -74,19 +91,7 @@ namespace G4 {
         }
 
         private void on_state_changed (Gst.State state) {
-            string st;
-            switch (state) {
-                case Gst.State.PLAYING:
-                    st = "Playing";
-                    break;
-                case Gst.State.PAUSED:
-                    st = "Paused";
-                    break;
-                default:
-                    st = "Stopped";
-                    break;
-            }
-            send_property ("PlaybackStatus", new Variant.string (st));
+            send_property ("PlaybackStatus", new Variant.string (gst2mpris_status(state)));
         }
 
         private void send_meta_data (Music music, string? art_uri = null) {
