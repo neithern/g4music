@@ -113,8 +113,8 @@ namespace Music {
                 }
                 var queue_count = queue.length ();
                 if (queue_count > 0) {
-                    int percent = -1;
-                    uint progress = 0;
+                    int percent = 0;
+                    int progress = 0;
                     var num_tasks = uint.min (queue_count, get_num_processors ());
                     run_in_threads<void> ((index) => {
                         Song? s;
@@ -122,9 +122,10 @@ namespace Music {
                             var song = (!)s;
                             song.parse_tags ();
                             _tag_cache.add (song);
-                            var per = (int) AtomicUint.add (ref progress, 1) * 100 / queue_count;
-                            if (percent != per) {
-                                percent = per;
+                            AtomicInt.inc (ref progress);
+                            var per = progress * 100 / queue_count;
+                            if (percent < per) {
+                                AtomicInt.set (ref percent, per);
                                 Idle.add (() => {
                                     parse_progress (per);
                                     return false;
