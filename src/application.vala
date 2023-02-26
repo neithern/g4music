@@ -187,11 +187,7 @@ namespace Music {
                     current_song = song;
                 }
                 if (_current_item != value) {
-                    var old_item = _current_item;
-                    _current_item = value;
-                    _song_list.items_changed (old_item, 0, 0);
-                    _song_list.items_changed (value, 0, 0);
-                    index_changed (value, _song_list.get_n_items ());
+                    update_current_item (value);
                 }
                 var next = value + 1;
                 var next_song = get_next_song (ref next);
@@ -297,15 +293,13 @@ namespace Music {
         }
 
         public void reload_song_store () {
-            if (_loading_store) {
-                return;
+            if (!_loading_store) {
+                _song_store.clear ();
+                update_current_item (-1);
+                load_songs_async.begin ({}, (obj, res) => {
+                    current_item = load_songs_async.end (res);
+                });
             }
-            _song_store.clear ();
-            _current_item = -1;
-            index_changed (-1, 0);
-            load_songs_async.begin ({}, (obj, res) => {
-                current_item = load_songs_async.end (res);
-            });
         }
 
         private void sort_by (SimpleAction action, Variant? parameter) {
@@ -338,14 +332,17 @@ namespace Music {
                 return true;
             }
 
+            update_current_item (-1);
+            return false;
+        }
+
+        private void update_current_item (int item) {
             //  update _current_item but don't change current song
-            var count = _song_list.get_n_items ();
             var old_item = _current_item;
             _current_item = item;
             _song_list.items_changed (old_item, 0, 0);
             _song_list.items_changed (item, 0, 0);
-            index_changed (item, count);
-            return false;
+            index_changed (item, _song_list.get_n_items ());
         }
 
         private int find_song_item (Song? song) {
@@ -507,7 +504,11 @@ namespace Music {
                     var next_item = popover_item > playing_item ? playing_item + 1 : playing_item;
                     store.remove (popover_item);
                     store.insert (next_item, (!)popover_song);
-                    find_current_item ();
+                    //  update current playing item without scrolling
+                    var old_item = _current_item;
+                    _current_item = find_song_item (_current_song);
+                    _song_list.items_changed (old_item, 0, 0);
+                    _song_list.items_changed (_current_item, 0, 0);
                 }
             }
         }
