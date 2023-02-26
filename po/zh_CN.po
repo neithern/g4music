@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-06 22:50+0800\n"
+"POT-Creation-Date: 2023-02-26 17:46+0800\n"
 "PO-Revision-Date: 2022-05-31 20:35+0800\n"
 "Last-Translator: Nanling <neithern@outlook.com>\n"
 "Language-Team: Chinese (simplified)\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:394
+#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:407
 #: src/main.vala:24
 msgid "G4Music"
 msgstr "G4音乐"
@@ -116,7 +116,7 @@ msgstr "可能会导致速度减慢和过多的网络使用"
 msgid "Playback"
 msgstr "播放"
 
-#: src/gtk/preferences.ui:64 src/application.vala:385
+#: src/gtk/preferences.ui:64 src/application.vala:400
 msgid "Keep playing after window closed"
 msgstr "关闭窗口后继续播放"
 
@@ -160,7 +160,7 @@ msgstr "返回"
 msgid "_Export Cover"
 msgstr "导出封面(_E)"
 
-#: src/gtk/window.ui:217 src/song-entry.vala:101
+#: src/gtk/window.ui:217 src/song-entry.vala:107
 msgid "_Show In Files"
 msgstr "定位文件(_S)"
 
@@ -200,15 +200,15 @@ msgstr "按日期"
 msgid "Shuffle"
 msgstr "乱序"
 
-#: src/application.vala:398
-msgid "translator-credits"
-msgstr "Nanling"
-
-#: src/application.vala:400
+#: src/application.vala:408
 msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr "一个快速、流畅、轻量的，基于GTK4的音乐播放软件。"
 
-#: src/application.vala:526
+#: src/application.vala:410
+msgid "translator-credits"
+msgstr "Nanling"
+
+#: src/application.vala:573
 msgid "Keep playing"
 msgstr "持续播放"
 
@@ -240,19 +240,23 @@ msgstr "仅封面"
 msgid "Never"
 msgstr "从不"
 
-#: src/song.vala:3
+#: src/song.vala:2
 msgid "Unknown Album"
 msgstr "未知专辑"
 
-#: src/song.vala:4
+#: src/song.vala:3
 msgid "Unknown Artist"
 msgstr "未知艺术家"
 
-#: src/song-entry.vala:99
+#: src/song-entry.vala:104
+msgid "Move to Next"
+msgstr "插播"
+
+#: src/song-entry.vala:105
 msgid "Show Album"
 msgstr "显示专辑"
 
-#: src/song-entry.vala:100
+#: src/song-entry.vala:106
 msgid "Show Artist"
 msgstr "显示艺术家"
 
@@ -260,7 +264,7 @@ msgstr "显示艺术家"
 msgid "Loading..."
 msgstr "正在加载…"
 
-#: src/window.vala:279
+#: src/window.vala:282
 msgid ""
 "Drag and drop song files here,\n"
 "or change music location: "

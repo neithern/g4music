@@ -3,6 +3,7 @@ namespace Music {
     public const string ACTION_ABOUT = "about";
     public const string ACTION_PREFS = "preferences";
     public const string ACTION_EXPORT = "export";
+    public const string ACTION_MOVE_TO_NEXT = "move-to-next";
     public const string ACTION_OPENDIR = "opendir";
     public const string ACTION_PLAY = "play";
     public const string ACTION_PREV = "prev";
@@ -54,6 +55,7 @@ namespace Music {
                 { ACTION_ABOUT, show_about },
                 { ACTION_PREFS, show_preferences },
                 { ACTION_EXPORT, export_cover },
+                { ACTION_MOVE_TO_NEXT, move_to_next },
                 { ACTION_OPENDIR, open_directory },
                 { ACTION_PLAY, play_pause },
                 { ACTION_PREV, play_previous },
@@ -493,6 +495,19 @@ namespace Music {
             var count = _song_list.get_n_items ();
             index = index < count ? index : 0;
             return _song_list.get_item (index) as Song;
+        }
+
+        private void move_to_next () {
+            if (popover_song != null) {
+                var playing_item = find_song_item (_current_song);
+                var popover_item = find_song_item (popover_song);
+                if (playing_item != -1 && popover_item != -1 && playing_item != popover_item) {
+                    var next_item = popover_item > playing_item ? playing_item + 1 : playing_item;
+                    _song_store.store.remove (popover_item);
+                    _song_store.store.insert (next_item, (!)popover_song);
+                    find_current_item ();
+                }
+            }
         }
 
         private void open_directory () {
