@@ -101,7 +101,7 @@ namespace Music {
             rect.width = rect.height = 0;
 
             var menu = new Menu ();
-            menu.append (_("Move to Next"), ACTION_APP + ACTION_MOVE_TO_NEXT);
+            menu.append (_("Play at Next"), ACTION_APP + ACTION_PLAY_AT_NEXT);
             menu.append (_("Show Album"), ACTION_APP + ACTION_SHOW_ALBUM);
             menu.append (_("Show Artist"), ACTION_APP + ACTION_SHOW_ARTIST);
             menu.append (_("_Show In Files"), ACTION_APP + ACTION_OPENDIR);

@@ -249,7 +249,7 @@ msgid "Unknown Artist"
 msgstr ""
 
 #: src/song-entry.vala:104
-msgid "Move to Next"
+msgid "Play at Next"
 msgstr ""
 
 #: src/song-entry.vala:105

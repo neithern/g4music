@@ -249,7 +249,7 @@ msgid "Unknown Artist"
 msgstr "未知藝術家"
 
 #: src/song-entry.vala:104
-msgid "Move to Next"
+msgid "Play at Next"
 msgstr "插播"
 
 #: src/song-entry.vala:105

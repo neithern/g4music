@@ -3,7 +3,7 @@ namespace Music {
     public const string ACTION_ABOUT = "about";
     public const string ACTION_PREFS = "preferences";
     public const string ACTION_EXPORT = "export";
-    public const string ACTION_MOVE_TO_NEXT = "move-to-next";
+    public const string ACTION_PLAY_AT_NEXT = "play-at-next";
     public const string ACTION_OPENDIR = "opendir";
     public const string ACTION_PLAY = "play";
     public const string ACTION_PREV = "prev";
@@ -55,7 +55,7 @@ namespace Music {
                 { ACTION_ABOUT, show_about },
                 { ACTION_PREFS, show_preferences },
                 { ACTION_EXPORT, export_cover },
-                { ACTION_MOVE_TO_NEXT, move_to_next },
+                { ACTION_PLAY_AT_NEXT, play_at_next },
                 { ACTION_OPENDIR, open_directory },
                 { ACTION_PLAY, play_pause },
                 { ACTION_PREV, play_previous },
@@ -493,14 +493,15 @@ namespace Music {
             return _song_list.get_item (index) as Song;
         }
 
-        private void move_to_next () {
+        private void play_at_next () {
             if (_current_song != null && popover_song != null) {
                 uint playing_item = -1;
                 uint popover_item = -1;
                 var store = _song_store.store;
                 if (store.find ((!)_current_song, out playing_item)
                         && store.find ((!)popover_song, out popover_item)
-                        && playing_item != popover_item) {
+                        && playing_item != popover_item
+                        && playing_item != popover_item - 1) {
                     var next_item = popover_item > playing_item ? playing_item + 1 : playing_item;
                     store.remove (popover_item);
                     store.insert (next_item, (!)popover_song);
