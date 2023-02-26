@@ -168,7 +168,7 @@ msgid "_Export Cover"
 msgstr "_Guardar Caratula"
 
 #: src/gtk/window.ui:207
-msgid "_Show In Files"
+msgid "_Show in Files"
 msgstr "_Mostrar en Archivos"
 
 #: src/gtk/window.ui:226

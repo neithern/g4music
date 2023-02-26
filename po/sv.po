@@ -149,7 +149,7 @@ msgid "_Export Cover"
 msgstr "_Exportera omslag"
 
 #: src/gtk/window.ui:207
-msgid "_Show In Files"
+msgid "_Show in Files"
 msgstr ""
 
 #: src/gtk/window.ui:216

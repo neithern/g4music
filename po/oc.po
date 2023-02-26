@@ -162,7 +162,7 @@ msgid "_Export Cover"
 msgstr "_Exportar la pocheta"
 
 #: src/gtk/window.ui:217 src/song-entry.vala:101
-msgid "_Show In Files"
+msgid "_Show in Files"
 msgstr "_Afichar los fichièrs"
 
 #: src/gtk/window.ui:226

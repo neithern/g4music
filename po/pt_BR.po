@@ -148,7 +148,7 @@ msgid "_Export Cover"
 msgstr "_Exportar capa"
 
 #: src/gtk/window.ui:207
-msgid "_Show In Files"
+msgid "_Show in Files"
 msgstr "_Mostrar em Arquivos"
 
 #: src/gtk/window.ui:216

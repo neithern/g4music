@@ -164,7 +164,7 @@ msgid "_Export Cover"
 msgstr "Albumbild _exportieren"
 
 #: src/gtk/window.ui:217 src/song-entry.vala:101
-msgid "_Show In Files"
+msgid "_Show in Files"
 msgstr "_In Dateiverwaltung anzeigen"
 
 #: src/gtk/window.ui:226

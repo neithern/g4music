@@ -152,7 +152,7 @@ msgid "_Export Cover"
 msgstr "Hoes _exporteren"
 
 #: src/gtk/window.ui:217 src/song-entry.vala:101
-msgid "_Show In Files"
+msgid "_Show in Files"
 msgstr "Tonen in be_standsbeheer"
 
 #: src/gtk/window.ui:226

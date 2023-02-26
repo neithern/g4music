@@ -161,7 +161,7 @@ msgid "_Export Cover"
 msgstr "輸出封面(_E)"
 
 #: src/gtk/window.ui:217 src/song-entry.vala:107
-msgid "_Show In Files"
+msgid "_Show in Files"
 msgstr "打開檔案的資料夾(_S)"
 
 #: src/gtk/window.ui:226

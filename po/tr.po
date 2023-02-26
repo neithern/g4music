@@ -165,7 +165,7 @@ msgid "_Export Cover"
 msgstr "_Kapağı Dışa Aktar"
 
 #: src/gtk/window.ui:217 src/song-entry.vala:101
-msgid "_Show In Files"
+msgid "_Show in Files"
 msgstr "_Dosyalarda Göster"
 
 #: src/gtk/window.ui:226

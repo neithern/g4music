@@ -161,7 +161,7 @@ msgid "_Export Cover"
 msgstr "Exporta Cover"
 
 #: src/gtk/window.ui:217 src/song-entry.vala:101
-msgid "_Show In Files"
+msgid "_Show in Files"
 msgstr "_Mostra nei file"
 
 #: src/gtk/window.ui:226
