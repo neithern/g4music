@@ -330,7 +330,7 @@ namespace Music {
 
         private async void on_song_tag_parsed (Song song, Gst.Sample? image) {
             update_song_info (song);
-            action_set_enabled (ACTION_APP + ACTION_EXPORT, image != null);
+            action_set_enabled (ACTION_APP + ACTION_EXPORT_COVER, image != null);
 
             var app = (Application) application;
             var pixbufs = new Gdk.Pixbuf?[2] {null, null};

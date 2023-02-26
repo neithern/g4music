@@ -104,7 +104,7 @@ namespace Music {
             menu.append (_("Play at Next"), ACTION_APP + ACTION_PLAY_AT_NEXT);
             menu.append (_("Show Album"), ACTION_APP + ACTION_SHOW_ALBUM);
             menu.append (_("Show Artist"), ACTION_APP + ACTION_SHOW_ARTIST);
-            menu.append (_("_Show in Files"), ACTION_APP + ACTION_OPENDIR);
+            menu.append (_("_Show in Files"), ACTION_APP + ACTION_SHOW_IN_FILES);
 
             var popover = new Gtk.PopoverMenu.from_model (menu);
             popover.autohide = true;

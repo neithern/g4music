@@ -211,11 +211,11 @@
     <section>
       <item>
         <attribute name="label" translatable="yes">_Export Cover</attribute>
-        <attribute name="action">app.export</attribute>
+        <attribute name="action">app.export-cover</attribute>
       </item>
       <item>
         <attribute name="label" translatable="yes">_Show in Files</attribute>
-        <attribute name="action">app.opendir</attribute>
+        <attribute name="action">app.show-in-files</attribute>
       </item>
     </section>
   </menu>

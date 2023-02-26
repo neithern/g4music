@@ -2,9 +2,8 @@ namespace Music {
     public const string ACTION_APP = "app.";
     public const string ACTION_ABOUT = "about";
     public const string ACTION_PREFS = "preferences";
-    public const string ACTION_EXPORT = "export";
+    public const string ACTION_EXPORT_COVER = "export-cover";
     public const string ACTION_PLAY_AT_NEXT = "play-at-next";
-    public const string ACTION_OPENDIR = "opendir";
     public const string ACTION_PLAY = "play";
     public const string ACTION_PREV = "prev";
     public const string ACTION_NEXT = "next";
@@ -12,6 +11,7 @@ namespace Music {
     public const string ACTION_SEARCH = "search";
     public const string ACTION_SHOW_ALBUM = "show-album";
     public const string ACTION_SHOW_ARTIST = "show-artist";
+    public const string ACTION_SHOW_IN_FILES = "show-in-files";
     public const string ACTION_SORT = "sort";
     public const string ACTION_TOGGLE_SORT = "toggle-sort";
     public const string ACTION_QUIT = "quit";
@@ -54,9 +54,8 @@ namespace Music {
             ActionEntry[] action_entries = {
                 { ACTION_ABOUT, show_about },
                 { ACTION_PREFS, show_preferences },
-                { ACTION_EXPORT, export_cover },
+                { ACTION_EXPORT_COVER, export_cover },
                 { ACTION_PLAY_AT_NEXT, play_at_next },
-                { ACTION_OPENDIR, open_directory },
                 { ACTION_PLAY, play_pause },
                 { ACTION_PREV, play_previous },
                 { ACTION_NEXT, play_next },
@@ -64,6 +63,7 @@ namespace Music {
                 { ACTION_SEARCH, toggle_seach },
                 { ACTION_SHOW_ALBUM, show_album },
                 { ACTION_SHOW_ARTIST, show_artist },
+                { ACTION_SHOW_IN_FILES, show_in_files },
                 { ACTION_TOGGLE_SORT, toggle_sort },
                 { ACTION_QUIT, quit }
             };
@@ -514,7 +514,7 @@ namespace Music {
             }
         }
 
-        private void open_directory () {
+        private void show_in_files () {
             var song = popover_song ?? _current_song;
             var uri = song?.uri;
             if (uri != null) {
