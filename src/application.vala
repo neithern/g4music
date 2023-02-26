@@ -110,7 +110,6 @@ namespace Music {
             _player.next_uri_start.connect (on_player_next_uri_start);
             _player.state_changed.connect (on_player_state_changed);
             _player.tag_parsed.connect (on_tag_parsed);
-
         }
 
         public override void startup () {
@@ -498,13 +497,16 @@ namespace Music {
         }
 
         private void move_to_next () {
-            if (popover_song != null) {
-                var playing_item = find_song_item (_current_song);
-                var popover_item = find_song_item (popover_song);
-                if (playing_item != -1 && popover_item != -1 && playing_item != popover_item) {
+            if (_current_song != null && popover_song != null) {
+                uint playing_item = -1;
+                uint popover_item = -1;
+                var store = _song_store.store;
+                if (store.find ((!)_current_song, out playing_item)
+                        && store.find ((!)popover_song, out popover_item)
+                        && playing_item != popover_item) {
                     var next_item = popover_item > playing_item ? playing_item + 1 : playing_item;
-                    _song_store.store.remove (popover_item);
-                    _song_store.store.insert (next_item, (!)popover_song);
+                    store.remove (popover_item);
+                    store.insert (next_item, (!)popover_song);
                     find_current_item ();
                 }
             }
