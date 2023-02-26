@@ -254,6 +254,7 @@ namespace Music {
             }
             set {
                 _song_store.sort_mode = value;
+                _settings?.set_uint ("sort-mode", value);
             }
         }
 
@@ -304,7 +305,6 @@ namespace Music {
 
         private void sort_by (SimpleAction action, Variant? parameter) {
             sort_mode = (SortMode) (parameter?.get_uint32 () ?? 2);
-            _settings?.set_uint ("sort-mode", sort_mode);
             find_current_item ();
         }
 
