@@ -562,14 +562,18 @@ namespace G4 {
 
         private void show_album () {
             var album = (popover_music ?? _current_music)?.album;
-            if (album != null)
+            if (album != null) {
                 (active_window as Window)?.start_search ("album=" + (!)album);
+                sort_mode = SortMode.ALBUM;
+            }
         }
 
         private void show_artist () {
             var artist = (popover_music ?? _current_music)?.artist;
-            if (artist != null)
+            if (artist != null) {
                 (active_window as Window)?.start_search ("artist=" + (!)artist);
+                sort_mode = SortMode.ALBUM;
+            }
         }
 
         private void on_player_end () {
