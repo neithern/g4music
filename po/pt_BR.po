@@ -160,8 +160,8 @@ msgid "_Keyboard Shortcuts"
 msgstr "_Atalhos de Teclado"
 
 #: src/gtk/window.ui:224
-msgid "_About G4Music"
-msgstr "_Sobre G4Music"
+msgid "_About"
+msgstr "_Sobre"
 
 #: src/gtk/window.ui:234
 msgid "By Album"

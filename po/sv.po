@@ -161,7 +161,7 @@ msgid "_Keyboard Shortcuts"
 msgstr "_Tangentbordsgenvägar"
 
 #: src/gtk/window.ui:224
-msgid "_About G4Music"
+msgid "_About"
 msgstr "_Om G4Music"
 
 #: src/gtk/window.ui:234

@@ -181,8 +181,8 @@ msgid "_Keyboard Shortcuts"
 msgstr "_Klavye Kısayolları"
 
 #: src/gtk/window.ui:240
-msgid "_About G4Music"
-msgstr "G4Music _Hakkında"
+msgid "_About"
+msgstr "_Hakkında"
 
 #: src/gtk/window.ui:250
 msgid "By Album"

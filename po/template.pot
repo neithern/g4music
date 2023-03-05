@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-26 17:46+0800\n"
+"POT-Creation-Date: 2023-03-05 13:21+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:407
+#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:403
 #: src/main.vala:24
 msgid "G4Music"
 msgstr ""
@@ -116,7 +116,7 @@ msgstr ""
 msgid "Playback"
 msgstr ""
 
-#: src/gtk/preferences.ui:64 src/application.vala:400
+#: src/gtk/preferences.ui:64 src/application.vala:396
 msgid "Keep playing after window closed"
 msgstr ""
 
@@ -177,7 +177,7 @@ msgid "_Keyboard Shortcuts"
 msgstr ""
 
 #: src/gtk/window.ui:240
-msgid "_About G4Music"
+msgid "_About"
 msgstr ""
 
 #: src/gtk/window.ui:250
@@ -200,15 +200,15 @@ msgstr ""
 msgid "Shuffle"
 msgstr ""
 
-#: src/application.vala:408
+#: src/application.vala:404
 msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr ""
 
-#: src/application.vala:410
+#: src/application.vala:406
 msgid "translator-credits"
 msgstr ""
 
-#: src/application.vala:573
+#: src/application.vala:577
 msgid "Keep playing"
 msgstr ""
 

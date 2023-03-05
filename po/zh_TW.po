@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-26 17:46+0800\n"
+"POT-Creation-Date: 2023-03-05 13:21+0800\n"
 "PO-Revision-Date: 2022-08-03 11:45+0800\n"
 "Last-Translator: Julian <s9209122222@gmail.com>\n"
 "Language-Team: Chinese (Traditional)\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:407
+#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:403
 #: src/main.vala:24
 msgid "G4Music"
 msgstr "G4Music"
@@ -116,7 +116,7 @@ msgstr "可能會導致速度減慢與增加網路使用"
 msgid "Playback"
 msgstr "播放"
 
-#: src/gtk/preferences.ui:64 src/application.vala:400
+#: src/gtk/preferences.ui:64 src/application.vala:396
 msgid "Keep playing after window closed"
 msgstr "關閉視窗後繼續播放"
 
@@ -177,8 +177,8 @@ msgid "_Keyboard Shortcuts"
 msgstr "快捷鍵(_K)"
 
 #: src/gtk/window.ui:240
-msgid "_About G4Music"
-msgstr "關於 G4 音樂(_A)"
+msgid "_About"
+msgstr "關於(_A)"
 
 #: src/gtk/window.ui:250
 msgid "By Album"
@@ -200,15 +200,15 @@ msgstr "依日期"
 msgid "Shuffle"
 msgstr "亂序播放"
 
-#: src/application.vala:408
+#: src/application.vala:404
 msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr "一個快速、流暢、輕量，基於 GTK4 的音樂播放軟體。"
 
-#: src/application.vala:410
+#: src/application.vala:406
 msgid "translator-credits"
 msgstr "Julian"
 
-#: src/application.vala:573
+#: src/application.vala:577
 msgid "Keep playing"
 msgstr "持續播放"
 

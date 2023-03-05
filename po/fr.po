@@ -178,8 +178,8 @@ msgid "_Keyboard Shortcuts"
 msgstr "_Raccourcis clavier"
 
 #: src/gtk/window.ui:240
-msgid "_About G4Music"
-msgstr "_A propos de G4Music"
+msgid "_About"
+msgstr "_A propos de"
 
 #: src/gtk/window.ui:250
 msgid "By Album"

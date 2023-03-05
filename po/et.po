@@ -169,7 +169,7 @@ msgid "_Keyboard Shortcuts"
 msgstr "_Kiirklahvid"
 
 #: src/gtk/window.ui:240
-msgid "_About G4Music"
+msgid "_About"
 msgstr "_Teave"
 
 #: src/gtk/window.ui:250
