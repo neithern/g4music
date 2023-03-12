@@ -237,7 +237,9 @@ namespace Music {
             if (paintable == null) {
                 var saved_pos = item.position;
                 var saved_song = song;
-                entry.cover.first_draw.connect(() => {
+                var handler_id = new ulong[1];
+                handler_id[0] = entry.cover.first_draw.connect(() => {
+                    entry.cover.disconnect (handler_id[0]);
                     if (! thumbnailer.has (saved_song.cover_uri)) {
                         thumbnailer.load_async.begin (saved_song, (obj, res) => {
                             var paintable2 = thumbnailer.load_async.end (res);
