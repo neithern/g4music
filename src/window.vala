@@ -235,17 +235,15 @@ namespace Music {
             var paintable = thumbnailer.find (song.cover_uri);
             entry.paintable = paintable ?? _loading_paintable;
             if (paintable == null) {
-                var saved_pos = item.position;
-                var saved_song = song;
                 var handler_id = new ulong[1];
                 handler_id[0] = entry.cover.first_draw.connect(() => {
                     entry.cover.disconnect (handler_id[0]);
-                    if (! thumbnailer.has (saved_song.cover_uri)) {
-                        thumbnailer.load_async.begin (saved_song, (obj, res) => {
+                    if (!thumbnailer.has (song.cover_uri)) {
+                        thumbnailer.load_async.begin (song, (obj, res) => {
                             var paintable2 = thumbnailer.load_async.end (res);
-                            if (paintable2 != null&& saved_pos == item.position) {
+                            if (paintable2 != null && song == (Song) item.item) {
                                 entry.paintable = paintable2;
-                                entry.update (saved_song, app.sort_mode);
+                                entry.update (song, app.sort_mode);
                             }
                         });
                     }
