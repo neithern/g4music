@@ -63,6 +63,10 @@ namespace Music {
             return null;
         }
 
+        public bool has (string key) {
+            return _cache.lookup (key) != null;
+        }
+
         public void put (string key, V value) {
             var size = size_of_value (value);
             unowned TreeNode<string, V>? first = null;

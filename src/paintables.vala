@@ -1,8 +1,10 @@
 namespace Music {
 
     public class BasePaintable : Object, Gdk.Paintable {
+        private bool _first_draw = false;
         private Gdk.Paintable? _paintable = null;
 
+        public signal void first_draw ();
         public signal void queue_draw ();
 
         public BasePaintable (Gdk.Paintable? paintable = null) {
@@ -40,10 +42,15 @@ namespace Music {
         }
 
         public void snapshot (Gdk.Snapshot shot, double width, double height) {
+            if (_first_draw) {
+                _first_draw = false;
+                first_draw ();
+            }
             on_snapshot ((!)(shot as Gtk.Snapshot), width, height);
         }
 
         protected virtual void on_change (Gdk.Paintable? previous, Gdk.Paintable? paintable) {
+            _first_draw = _paintable != paintable;
             _paintable = paintable;
         }
 

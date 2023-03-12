@@ -52,7 +52,13 @@ namespace Music {
             add_controller (right_click);
         }
 
-        public Gdk.Paintable? cover {
+        public CoverPaintable cover {
+            get {
+                return _paintable;
+            }
+        }
+
+        public Gdk.Paintable? paintable {
             set {
                 _paintable.paintable = value;
             }

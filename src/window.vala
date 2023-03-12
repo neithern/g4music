@@ -129,7 +129,7 @@ namespace Music {
             factory.bind.connect (on_bind_item);
             factory.unbind.connect ((item) => {
                 var entry = (SongEntry) item.child;
-                entry.cover = null;
+                entry.paintable = null;
             });
             list_view.factory = factory;
             list_view.model = new Gtk.NoSelection (app.song_list);
@@ -233,22 +233,21 @@ namespace Music {
 
             var thumbnailer = app.thumbnailer;
             var paintable = thumbnailer.find (song.cover_uri);
-            entry.cover = paintable ?? _loading_paintable;
+            entry.paintable = paintable ?? _loading_paintable;
             if (paintable == null) {
                 var saved_pos = item.position;
                 var saved_song = song;
-                var paintable2 = yield thumbnailer.load_async (song);
-                if (saved_pos != item.position) {
-                    // item rebinded, notify changed later to update it
-                    Idle.add (() => {
-                        app.song_list.items_changed (saved_pos, 0, 0);
-                        return false;
-                    });
-                } else if (paintable2 != null) {
-                    // maybe changed, update it
-                    entry.cover = paintable2;
-                    entry.update (saved_song, app.sort_mode);
-                }
+                entry.cover.first_draw.connect(() => {
+                    if (! thumbnailer.has (saved_song.cover_uri)) {
+                        thumbnailer.load_async.begin (saved_song, (obj, res) => {
+                            var paintable2 = thumbnailer.load_async.end (res);
+                            if (paintable2 != null&& saved_pos == item.position) {
+                                entry.paintable = paintable2;
+                                entry.update (saved_song, app.sort_mode);
+                            }
+                        });
+                    }
+                });
             }
         }
 
