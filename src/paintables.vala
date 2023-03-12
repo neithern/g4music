@@ -1,7 +1,7 @@
 namespace Music {
 
     public class BasePaintable : Object, Gdk.Paintable {
-        protected Gdk.Paintable? _paintable = null;
+        private Gdk.Paintable? _paintable = null;
 
         public signal void queue_draw ();
 
@@ -137,7 +137,7 @@ namespace Music {
         private double _fade = 0;
 
         public CrossFadePaintable (Gdk.Paintable? paintable = null) {
-            _paintable = paintable;
+            base (paintable);
         }
 
         public double fade {
@@ -184,7 +184,7 @@ namespace Music {
         private double _scale = 1;
 
         public ScalePaintable (Gdk.Paintable? paintable = null) {
-            _paintable = paintable;
+            base (paintable);
         }
 
         public double scale {
