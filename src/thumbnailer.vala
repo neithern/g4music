@@ -105,7 +105,7 @@ namespace Music {
     }
 
     public class Thumbnailer : LruCache<Gdk.Paintable> {
-        public const int icon_size = 96;
+        public const int ICON_SIZE = 96;
 
         private HashTable<string, string> _album_covers = new HashTable<string, string> (str_hash, str_equal);
         private CoverFinder _cover_finder = new CoverFinder ();
@@ -148,7 +148,7 @@ namespace Music {
                 return null;
 
             _loading.add (uri);
-            var texture = yield load_directly_async (song, icon_size);
+            var texture = yield load_directly_async (song, ICON_SIZE);
             _loading.remove (uri);
             uri = song.cover_uri; //  Update cover uri maybe changed when loading
             if (texture != null) {
@@ -161,7 +161,7 @@ namespace Music {
             return paintable;
         }
 
-        public async Gdk.Paintable? load_directly_async (Song song, int size = 0) {
+        public async Gdk.Paintable? load_directly_async (Song song, int size = ICON_SIZE) {
             var file = File.new_for_uri (song.uri);
             var is_native = file.is_native ();
             if (!_remote_thumbnail && !is_native) {
@@ -175,7 +175,7 @@ namespace Music {
                 var tag = tags[0] = parse_gst_tags (file);
                 Gst.Sample? sample = null;
                 if (tag != null && (sample = parse_image_from_tag_list ((!)tag)) != null) {
-                    if (size <= icon_size) {
+                    if (size <= ICON_SIZE) {
                         //  Check if there is an album cover with same artist and image size
                         var image_size = sample?.get_buffer ()?.get_size () ?? 0;
                         var album_key = album_key_ + image_size.to_string ("%x");
@@ -207,14 +207,14 @@ namespace Music {
             return null;
         }
 
-        public Gdk.Paintable create_album_text_paintable (Song song) {
+        public Gdk.Paintable create_album_text_paintable (Song song, int size = ICON_SIZE) {
             var color = (song.album.length == 0 || song.album == UNKOWN_ALBUM) ? (int) 0xffc0bfbc : 0;
             var text = parse_abbreviation (song.album);
-            return create_simple_text_paintable (text, color);
+            return create_simple_text_paintable (text, color, size);
         }
 
-        public Gdk.Paintable create_simple_text_paintable (string text, int color = 0) {
-            var paintable = create_text_paintable ((!)_pango_context, text, icon_size, icon_size, color);
+        public Gdk.Paintable create_simple_text_paintable (string text, int color = 0, int size = ICON_SIZE) {
+            var paintable = create_text_paintable ((!)_pango_context, text, size, size, color);
             return paintable ?? new BasePaintable ();
         }
 
