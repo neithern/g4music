@@ -156,9 +156,7 @@ namespace Music {
                 return texture;
             }
 
-            var color = (song.album.length == 0 || song.album == UNKOWN_ALBUM) ? (int) 0xffc0bfbc : 0;
-            var text = parse_abbreviation (song.album);
-            var paintable = create_album_text_paintable (text, color);
+            var paintable = create_album_text_paintable (song);
             put (uri, paintable);
             return paintable;
         }
@@ -209,7 +207,13 @@ namespace Music {
             return null;
         }
 
-        public Gdk.Paintable create_album_text_paintable (string text, int color = 0) {
+        public Gdk.Paintable create_album_text_paintable (Song song) {
+            var color = (song.album.length == 0 || song.album == UNKOWN_ALBUM) ? (int) 0xffc0bfbc : 0;
+            var text = parse_abbreviation (song.album);
+            return create_simple_text_paintable (text, color);
+        }
+
+        public Gdk.Paintable create_simple_text_paintable (string text, int color = 0) {
             var paintable = create_text_paintable ((!)_pango_context, text, icon_size, icon_size, color);
             return paintable ?? new BasePaintable ();
         }

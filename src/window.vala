@@ -102,7 +102,7 @@ namespace Music {
             _cover_paintable.queue_draw.connect (cover_image.queue_draw);
 
             app.thumbnailer.pango_context = get_pango_context ();
-            _loading_paintable = app.thumbnailer.create_album_text_paintable ("...");
+            _loading_paintable = app.thumbnailer.create_simple_text_paintable ("...");
 
             var scale_paintable = new ScalePaintable (new RoundPaintable (_cover_paintable, 12));
             scale_paintable.scale = 0.8;
@@ -280,7 +280,7 @@ namespace Music {
                 var link = @"<a href=\"change_dir\">$dir_name</a>";
                 initial_label.set_markup (_("Drag and drop song files here,\nor change music location: ") + link);
 
-                var paintable = app.thumbnailer.create_album_text_paintable ("G4", 0x2ec27e);
+                var paintable = app.thumbnailer.create_simple_text_paintable ("G4", 0x2ec27e);
                 _cover_paintable.paintable = paintable;
                 _mini_bar.cover = paintable;
             }
@@ -337,7 +337,7 @@ namespace Music {
                 var has_cache = app.thumbnailer.has_image (song);
                 yield run_async<void> (() => {
                     pixbufs[0] = load_clamp_pixbuf_from_sample ((!)image, 1024);
-                    if (! has_cache && pixbufs[0] != null)
+                    if (!has_cache && pixbufs[0] != null)
                         pixbufs[1] = create_clamp_pixbuf ((!)pixbufs[0], Thumbnailer.icon_size);
                 }, true);
             }
@@ -347,6 +347,8 @@ namespace Music {
                     paintable = Gdk.Texture.for_pixbuf ((!)pixbufs[0]);
                 } else {
                     paintable = yield app.thumbnailer.load_directly_async (song, 1024);
+                    if (paintable == null)
+                        paintable = app.thumbnailer.create_album_text_paintable (song);
                 }
                 if (pixbufs[1] != null) {
                     var mini = Gdk.Texture.for_pixbuf ((!)pixbufs[1]);
