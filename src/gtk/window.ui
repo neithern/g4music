@@ -27,10 +27,10 @@
                           <class name="flat"/>
                         </style>
                         <child type="start">
-                          <object class="GtkMenuButton">
-                            <property name="icon_name">open-menu-symbolic</property>
-                            <property name="menu_model">primary_menu</property>
-                            <property name="tooltip-text" translatable="yes">Main Menu</property>
+                          <object class="GtkToggleButton" id="search_btn">
+                            <property name="icon_name">edit-find-symbolic</property>
+                            <property name="active" bind-source="search_bar" bind-property="search_mode_enabled" bind-flags="bidirectional"/>
+                            <property name="tooltip-text" translatable="yes">Search</property>
                           </object>
                         </child>
                         <child>
@@ -49,10 +49,10 @@
                           </object>
                         </child>
                         <child type="end">
-                          <object class="GtkToggleButton" id="search_btn">
-                            <property name="icon_name">edit-find-symbolic</property>
-                            <property name="active" bind-source="search_bar" bind-property="search_mode_enabled" bind-flags="bidirectional"/>
-                            <property name="tooltip-text" translatable="yes">Search</property>
+                          <object class="GtkMenuButton">
+                            <property name="icon_name">open-menu-symbolic</property>
+                            <property name="menu_model">primary_menu</property>
+                            <property name="tooltip-text" translatable="yes">Main Menu</property>
                           </object>
                         </child>
                         <child type="end">
