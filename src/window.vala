@@ -275,9 +275,12 @@ namespace Music {
                 var dir_name = get_display_name (app.get_music_folder ());
                 var link = @"<a href=\"change_dir\">$dir_name</a>";
                 initial_label.set_markup (_("Drag and drop song files here,\nor change music location: ") + link);
-                cover_image.icon_name = app.application_id;
-                _cover_paintable.paintable = null;
-                _mini_bar.cover = null;
+
+                var theme = Gtk.IconTheme.get_for_display (this.display);
+                var paintable = theme.lookup_icon (app.application_id, null,
+                    _cover_size, 1, Gtk.TextDirection.NONE, Gtk.IconLookupFlags.FORCE_REGULAR);
+                _cover_paintable.paintable = paintable;
+                _mini_bar.cover = paintable;
             }
             initial_label.visible = empty;
             song_title.visible = !empty;
@@ -421,8 +424,6 @@ namespace Music {
             var app = (Application) application;
             _mini_bar.cover = app.thumbnailer.find (song.cover_uri);
             _cover_paintable.paintable = paintable ?? _mini_bar.cover;
-            if (cover_image.paintable != _scale_cover_paintable)
-                cover_image.paintable = _scale_cover_paintable;
 
             update_background ();
 
