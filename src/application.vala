@@ -64,19 +64,11 @@ namespace Music {
                 { ACTION_SHOW_ALBUM, show_album },
                 { ACTION_SHOW_ARTIST, show_artist },
                 { ACTION_SHOW_IN_FILES, show_in_files },
+                { ACTION_SORT, sort_by, "s", "'2'", sort_by_changed },
                 { ACTION_TOGGLE_SORT, toggle_sort },
                 { ACTION_QUIT, quit }
             };
             add_action_entries (action_entries, this);
-
-            ActionEntry[] sort_entries = {
-                { ACTION_SORT, sort_by, "u", "0" },
-                { ACTION_SORT, sort_by, "u", "1" },
-                { ACTION_SORT, sort_by, "u", "2" },
-                { ACTION_SORT, sort_by, "u", "3" },
-                { ACTION_SORT, sort_by, "u", "4" }
-            };
-            add_action_entries (sort_entries, this);
 
             ActionShortKey[] action_keys = {
                 { ACTION_PLAY, "<primary>p" },
@@ -303,8 +295,17 @@ namespace Music {
             }
         }
 
-        private void sort_by (SimpleAction action, Variant? parameter) {
-            sort_mode = (SortMode) (parameter?.get_uint32 () ?? 2);
+        private void sort_by (SimpleAction action, Variant? state) {
+            action.change_state (state);
+        }
+
+        private void sort_by_changed (SimpleAction action, Variant? state) {
+            action.set_state ((!)state);
+
+            unowned var value = state?.get_string () ?? "";
+            int mode = 2;
+            int.try_parse (value, out mode, null, 10);
+            sort_mode = (SortMode) mode;
             find_current_item ();
         }
 
