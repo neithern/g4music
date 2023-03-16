@@ -238,23 +238,24 @@ namespace Music {
         0xc0bfbc, // gray
     };
 
-    public static Gdk.Paintable? create_text_paintable (Pango.Context context, string text, int width = 128, int height = 128, uint color = 0) {
-        if (color == 0)
-            color = BACKGROUND_COLORS[str_hash (text) % BACKGROUND_COLORS.length];
+    public static Gdk.Paintable? create_text_paintable (Pango.Context context, string text, int width, int height, uint color, uint bkcolor = 0) {
+        var rect = (!)Graphene.Rect ().init (0, 0, (float) width, (float) height);
+        var snapshot = new Gtk.Snapshot ();
+
+        if (bkcolor != 0) {
+            var c = Gdk.RGBA ();
+            c.alpha = ((bkcolor >> 24) & 0xff) / 255f;
+            c.red = ((bkcolor >> 16) & 0xff) / 255f;
+            c.green = ((bkcolor >> 8) & 0xff) / 255f;
+            c.blue = (bkcolor & 0xff) / 255f;
+            snapshot.append_color (c, rect);
+        }
 
         var c = Gdk.RGBA ();
+        c.alpha = ((color >> 24) & 0xff) / 255f;
         c.red = ((color >> 16) & 0xff) / 255f;
         c.green = ((color >> 8) & 0xff) / 255f;
         c.blue = (color & 0xff) / 255f;
-        c.alpha = 1;
-
-        var rect = (!)Graphene.Rect ().init (0, 0, (float) width, (float) height);
-        var snapshot = new Gtk.Snapshot ();
-        snapshot.append_color (c, rect);
-
-        var c2 = Gdk.RGBA ();
-        c2.red = c2.green = c2.blue = 0;
-        c2.alpha = 0.25f;
 
         var font_size = height * 0.45;
         var font = new Pango.FontDescription ();
@@ -277,7 +278,7 @@ namespace Music {
         pt.x = 0;
         pt.y = - ink_rect.y + (height - ink_rect.height) * 0.5f;
         snapshot.translate (pt);
-        snapshot.append_layout (layout, c2);
+        snapshot.append_layout (layout, c);
         pt.y = - pt.y;
         snapshot.translate (pt);
 

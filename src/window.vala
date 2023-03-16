@@ -48,9 +48,10 @@ namespace Music {
         private CrossFadePaintable _bkgnd_paintable = new CrossFadePaintable ();
         private CrossFadePaintable _cover_paintable = new CrossFadePaintable ();
         private Gdk.Paintable? _loading_paintable = null;
+        private ScalePaintable _scale_cover_paintable = new ScalePaintable ();
 
-        private int _cover_color = 0x2ec27e;
         private int _cover_size = 1024;
+        private uint _logo_color = 0xff2ec27eu;
         private string _loading_text = _("Loading...");
 
         private string _search_text = "";
@@ -104,12 +105,12 @@ namespace Music {
             _cover_paintable.queue_draw.connect (cover_image.queue_draw);
 
             app.thumbnailer.pango_context = get_pango_context ();
-            _loading_paintable = app.thumbnailer.create_simple_text_paintable ("...", _cover_color);
+            _loading_paintable = app.thumbnailer.create_simple_text_paintable ("...", Thumbnailer.ICON_SIZE);
 
-            var scale_paintable = new ScalePaintable (new RoundPaintable (_cover_paintable, 12));
-            scale_paintable.scale = 0.8;
-            cover_image.paintable = scale_paintable;
-            scale_paintable.queue_draw.connect (cover_image.queue_draw);
+            _scale_cover_paintable.paintable = new RoundPaintable (_cover_paintable, 12);
+            _scale_cover_paintable.scale = 0.8;
+            _scale_cover_paintable.queue_draw.connect (cover_image.queue_draw);
+            cover_image.paintable = _scale_cover_paintable;
 
             make_label_clickable (song_album).released.connect (() => {
                 start_search ("album=" + song_album.label);
@@ -281,10 +282,9 @@ namespace Music {
                 var dir_name = get_display_name (app.get_music_folder ());
                 var link = @"<a href=\"change_dir\">$dir_name</a>";
                 initial_label.set_markup (_("Drag and drop song files here,\nor change music location: ") + link);
-
-                var paintable = app.thumbnailer.create_simple_text_paintable ("G4", _cover_color, _cover_size);
-                _cover_paintable.paintable = paintable;
-                _mini_bar.cover = paintable;
+                cover_image.icon_name = app.application_id;
+                _cover_paintable.paintable = null;
+                _mini_bar.cover = null;
             }
             initial_label.visible = empty;
             song_title.visible = !empty;
@@ -428,6 +428,8 @@ namespace Music {
             var app = (Application) application;
             _mini_bar.cover = app.thumbnailer.find (song.cover_uri);
             _cover_paintable.paintable = paintable ?? _mini_bar.cover;
+            if (cover_image.paintable != _scale_cover_paintable)
+                cover_image.paintable = _scale_cover_paintable;
 
             update_background ();
 
