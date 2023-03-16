@@ -51,7 +51,6 @@ namespace Music {
         private ScalePaintable _scale_cover_paintable = new ScalePaintable ();
 
         private int _cover_size = 1024;
-        private uint _logo_color = 0xff2ec27eu;
         private string _loading_text = _("Loading...");
 
         private string _search_text = "";
@@ -178,24 +177,18 @@ namespace Music {
             }
         }
 
+        private const string[] SORT_MODE_ICONS = {
+            "media-optical-cd-audio-symbolic",  // ALBUM
+            "system-users-symbolic",            // ARTIST
+            "folder-music-symbolic",            // TITLE
+            "document-open-recent-symbolic",    // RECENT
+            "media-playlist-shuffle-symbolic"   // SHUFFLE
+        };
+
         public SortMode sort_mode {
             set {
-                switch (value) {
-                    case SortMode.ALBUM:
-                        sort_btn.set_icon_name ("media-optical-cd-audio-symbolic");
-                        break;
-                    case SortMode.ARTIST:
-                        sort_btn.set_icon_name ("system-users-symbolic");
-                        break;
-                    case SortMode.RECENT:
-                        sort_btn.set_icon_name ("document-open-recent-symbolic");
-                        break;
-                    case SortMode.SHUFFLE:
-                        sort_btn.set_icon_name ("media-playlist-shuffle-symbolic");
-                        break;
-                    default:
-                        sort_btn.set_icon_name ("folder-music-symbolic");
-                        break;
+                if (value >= SortMode.ALBUM && value <= SortMode.SHUFFLE) {
+                    sort_btn.set_icon_name (SORT_MODE_ICONS[value]);
                 }
             }
         }
