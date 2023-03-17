@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-05 13:21+0800\n"
+"POT-Creation-Date: 2023-03-17 14:05+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:403
+#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:412
 #: src/main.vala:24
 msgid "G4Music"
 msgstr ""
@@ -116,7 +116,7 @@ msgstr ""
 msgid "Playback"
 msgstr ""
 
-#: src/gtk/preferences.ui:64 src/application.vala:396
+#: src/gtk/preferences.ui:64 src/application.vala:405
 msgid "Keep playing after window closed"
 msgstr ""
 
@@ -141,11 +141,11 @@ msgid "Experimental"
 msgstr ""
 
 #: src/gtk/window.ui:33
-msgid "Main Menu"
+msgid "Search"
 msgstr ""
 
 #: src/gtk/window.ui:55
-msgid "Search"
+msgid "Main Menu"
 msgstr ""
 
 #: src/gtk/window.ui:62
@@ -160,55 +160,59 @@ msgstr ""
 msgid "_Export Cover"
 msgstr ""
 
-#: src/gtk/window.ui:217 src/song-entry.vala:107
-msgid "_Show in Files"
+#: src/gtk/window.ui:218
+msgid "Show _Cover File"
 msgstr ""
 
-#: src/gtk/window.ui:226
-msgid "_Reload List"
+#: src/gtk/window.ui:223 src/song-entry.vala:113
+msgid "_Show Music File"
 msgstr ""
 
 #: src/gtk/window.ui:232
+msgid "_Reload List"
+msgstr ""
+
+#: src/gtk/window.ui:238
 msgid "_Preferences"
 msgstr ""
 
-#: src/gtk/window.ui:236
+#: src/gtk/window.ui:242
 msgid "_Keyboard Shortcuts"
 msgstr ""
 
-#: src/gtk/window.ui:240
+#: src/gtk/window.ui:246
 msgid "_About"
 msgstr ""
 
-#: src/gtk/window.ui:250
+#: src/gtk/window.ui:255
 msgid "By Album"
 msgstr ""
 
-#: src/gtk/window.ui:256
+#: src/gtk/window.ui:260
 msgid "By Artist"
 msgstr ""
 
-#: src/gtk/window.ui:262
+#: src/gtk/window.ui:265
 msgid "By Title"
 msgstr ""
 
-#: src/gtk/window.ui:268
+#: src/gtk/window.ui:270
 msgid "By Date"
 msgstr ""
 
-#: src/gtk/window.ui:274
+#: src/gtk/window.ui:275
 msgid "Shuffle"
 msgstr ""
 
-#: src/application.vala:404
+#: src/application.vala:413
 msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr ""
 
-#: src/application.vala:406
+#: src/application.vala:415
 msgid "translator-credits"
 msgstr ""
 
-#: src/application.vala:577
+#: src/application.vala:594
 msgid "Keep playing"
 msgstr ""
 
@@ -248,23 +252,23 @@ msgstr ""
 msgid "Unknown Artist"
 msgstr ""
 
-#: src/song-entry.vala:104
+#: src/song-entry.vala:110
 msgid "Play at Next"
 msgstr ""
 
-#: src/song-entry.vala:105
+#: src/song-entry.vala:111
 msgid "Show Album"
 msgstr ""
 
-#: src/song-entry.vala:106
+#: src/song-entry.vala:112
 msgid "Show Artist"
 msgstr ""
 
-#: src/window.vala:52
+#: src/window.vala:54
 msgid "Loading..."
 msgstr ""
 
-#: src/window.vala:282
+#: src/window.vala:277
 msgid ""
 "Drag and drop song files here,\n"
 "or change music location: "

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-05 13:21+0800\n"
+"POT-Creation-Date: 2023-03-17 14:05+0800\n"
 "PO-Revision-Date: 2022-05-31 20:35+0800\n"
 "Last-Translator: Nanling <neithern@outlook.com>\n"
 "Language-Team: Chinese (simplified)\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:403
+#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:412
 #: src/main.vala:24
 msgid "G4Music"
 msgstr "G4音乐"
@@ -116,7 +116,7 @@ msgstr "可能会导致速度减慢和过多的网络使用"
 msgid "Playback"
 msgstr "播放"
 
-#: src/gtk/preferences.ui:64 src/application.vala:396
+#: src/gtk/preferences.ui:64 src/application.vala:405
 msgid "Keep playing after window closed"
 msgstr "关闭窗口后继续播放"
 
@@ -141,12 +141,12 @@ msgid "Experimental"
 msgstr "实验性功能"
 
 #: src/gtk/window.ui:33
-msgid "Main Menu"
-msgstr "主菜单"
-
-#: src/gtk/window.ui:55
 msgid "Search"
 msgstr "搜索"
+
+#: src/gtk/window.ui:55
+msgid "Main Menu"
+msgstr "主菜单"
 
 #: src/gtk/window.ui:62
 msgid "Sort Mode"
@@ -160,55 +160,59 @@ msgstr "返回"
 msgid "_Export Cover"
 msgstr "导出封面(_E)"
 
-#: src/gtk/window.ui:217 src/song-entry.vala:107
-msgid "_Show in Files"
-msgstr "定位文件(_S)"
+#: src/gtk/window.ui:218
+msgid "Show _Cover File"
+msgstr "显示封面文件(_C)"
 
-#: src/gtk/window.ui:226
+#: src/gtk/window.ui:223 src/song-entry.vala:113
+msgid "_Show Music File"
+msgstr "显示音乐文件(_S)"
+
+#: src/gtk/window.ui:232
 msgid "_Reload List"
 msgstr "重载列表(_R)"
 
-#: src/gtk/window.ui:232
+#: src/gtk/window.ui:238
 msgid "_Preferences"
 msgstr "首选项(_P)"
 
-#: src/gtk/window.ui:236
+#: src/gtk/window.ui:242
 msgid "_Keyboard Shortcuts"
 msgstr "快捷键(_K)"
 
-#: src/gtk/window.ui:240
+#: src/gtk/window.ui:246
 msgid "_About"
 msgstr "关于(_A)"
 
-#: src/gtk/window.ui:250
+#: src/gtk/window.ui:255
 msgid "By Album"
 msgstr "按专辑"
 
-#: src/gtk/window.ui:256
+#: src/gtk/window.ui:260
 msgid "By Artist"
 msgstr "按艺术家"
 
-#: src/gtk/window.ui:262
+#: src/gtk/window.ui:265
 msgid "By Title"
 msgstr "按标题"
 
-#: src/gtk/window.ui:268
+#: src/gtk/window.ui:270
 msgid "By Date"
 msgstr "按日期"
 
-#: src/gtk/window.ui:274
+#: src/gtk/window.ui:275
 msgid "Shuffle"
 msgstr "乱序"
 
-#: src/application.vala:404
+#: src/application.vala:413
 msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr "一个快速、流畅、轻量的，基于GTK4的音乐播放软件。"
 
-#: src/application.vala:406
+#: src/application.vala:415
 msgid "translator-credits"
 msgstr "Nanling"
 
-#: src/application.vala:577
+#: src/application.vala:594
 msgid "Keep playing"
 msgstr "持续播放"
 
@@ -248,23 +252,23 @@ msgstr "未知专辑"
 msgid "Unknown Artist"
 msgstr "未知艺术家"
 
-#: src/song-entry.vala:104
+#: src/song-entry.vala:110
 msgid "Play at Next"
 msgstr "插播"
 
-#: src/song-entry.vala:105
+#: src/song-entry.vala:111
 msgid "Show Album"
 msgstr "显示专辑"
 
-#: src/song-entry.vala:106
+#: src/song-entry.vala:112
 msgid "Show Artist"
 msgstr "显示艺术家"
 
-#: src/window.vala:52
+#: src/window.vala:54
 msgid "Loading..."
 msgstr "正在加载…"
 
-#: src/window.vala:282
+#: src/window.vala:277
 msgid ""
 "Drag and drop song files here,\n"
 "or change music location: "
