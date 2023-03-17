@@ -48,6 +48,16 @@
     </screenshots>
 
     <releases>
+        <release version="1.9" date="2023-3-17">
+            <description>
+                <ul>
+                <li>Select a music file to "Play at Next".</li>
+                <li>Lazy load thumbnails to faster startup and saving memory.</li>
+                <li>UI improvement and fixing.</li>
+                <li>Add Occitan translation, thanks to Quentin PAGÈS.</li>
+                </ul>
+            </description>
+        </release>
         <release version="1.8" date="2022-10-19">
             <description>
                 <ul>
