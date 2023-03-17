@@ -164,7 +164,7 @@ msgstr "Geri"
 msgid "_Export Cover"
 msgstr "_Kapağı Dışa Aktar"
 
-#: src/gtk/window.ui:217 src/song-entry.vala:101
+#: src/gtk/window.ui:217 src/music-entry.vala:101
 msgid "_Show in Files"
 msgstr "_Dosyalarda Göster"
 
@@ -217,7 +217,7 @@ msgid "Keep playing"
 msgstr "Oynamayı sürdür"
 
 #: src/play-bar.vala:83
-msgid "Repeat Song"
+msgid "Repeat Music"
 msgstr "Şarkıyı Yinele"
 
 #: src/play-bar.vala:93
@@ -244,19 +244,19 @@ msgstr "Sadece Kapak"
 msgid "Never"
 msgstr "Asla"
 
-#: src/song.vala:3
+#: src/music.vala:3
 msgid "Unknown Album"
 msgstr "Bilinmeyen Albüm"
 
-#: src/song.vala:4
+#: src/music.vala:4
 msgid "Unknown Artist"
 msgstr "Bilinmeyen Sanatçı"
 
-#: src/song-entry.vala:99
+#: src/music-entry.vala:99
 msgid "Show Album"
 msgstr "Albümü Göster"
 
-#: src/song-entry.vala:100
+#: src/music-entry.vala:100
 msgid "Show Artist"
 msgstr "Sanatçıyı Göster"
 
@@ -266,7 +266,7 @@ msgstr "Yükleniyor..."
 
 #: src/window.vala:279
 msgid ""
-"Drag and drop song files here,\n"
+"Drag and drop music files here,\n"
 "or change music location: "
 msgstr ""
 "Şarkı dosyalarını sürükleyip buraya bırakın\n"

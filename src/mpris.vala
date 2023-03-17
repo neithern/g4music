@@ -1,4 +1,4 @@
-namespace Music {
+namespace G4 {
 
     [DBus (name = "org.mpris.MediaPlayer2.Player")]
     public class MprisPlayer : Object {
@@ -11,14 +11,14 @@ namespace Music {
             _connection = connection;
 
             app.index_changed.connect (on_index_changed);
-            app.song_changed.connect (on_song_changed);
-            app.song_tag_parsed.connect (on_song_tag_parsed);
+            app.music_changed.connect (on_music_changed);
+            app.music_tag_parsed.connect (on_music_tag_parsed);
             app.player.state_changed.connect (on_state_changed);
         }
 
         public bool can_go_next {
             get {
-                return _app.current_item < (int) _app.song_list.get_n_items () - 1;
+                return _app.current_item < (int) _app.music_list.get_n_items () - 1;
             }
         }
 
@@ -30,7 +30,7 @@ namespace Music {
 
         public bool can_play {
             get {
-                return _app.song_list.get_n_items () > 0;
+                return _app.music_list.get_n_items () > 0;
             }
         }
 
@@ -54,12 +54,12 @@ namespace Music {
             send_properties (builder);
         }
 
-        private void on_song_changed (Song song) {
-            send_meta_data (song);
+        private void on_music_changed (Music music) {
+            send_meta_data (music);
         }
 
-        private void on_song_tag_parsed (Song song, Gst.Sample? image) {
-            send_meta_data (song);
+        private void on_music_tag_parsed (Music music, Gst.Sample? image) {
+            send_meta_data (music);
         }
 
         private void on_state_changed (Gst.State state) {
@@ -78,12 +78,12 @@ namespace Music {
             send_property ("PlaybackStatus", new Variant.string (st));
         }
 
-        internal void send_meta_data (Song song, string? art_uri = null) {
+        internal void send_meta_data (Music music, string? art_uri = null) {
             var dict = new VariantDict (null);
             var artists = new VariantBuilder (new VariantType ("as"));
-            artists.add ("s", song.artist);
+            artists.add ("s", music.artist);
             dict.insert ("xesam:artist", "as", artists);
-            dict.insert ("xesam:title", "s", song.title);
+            dict.insert ("xesam:title", "s", music.title);
             if (art_uri != null) {
                 dict.insert ("mpris:artUrl", "s", (!)art_uri);
             }

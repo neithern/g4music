@@ -152,7 +152,7 @@ msgstr "Tagasi"
 msgid "_Export Cover"
 msgstr "_Ekspordi loo pilt"
 
-#: src/gtk/window.ui:217 src/song-entry.vala:101
+#: src/gtk/window.ui:217 src/music-entry.vala:101
 msgid "_Show in Files"
 msgstr "_Kuva failides"
 
@@ -205,7 +205,7 @@ msgid "Keep playing"
 msgstr "Jätka mängimist"
 
 #: src/play-bar.vala:83
-msgid "Repeat Song"
+msgid "Repeat Music"
 msgstr "Loo kordamine"
 
 #: src/play-bar.vala:93
@@ -220,19 +220,19 @@ msgstr "Esita/Peata"
 msgid "Play Next"
 msgstr "Järgmine lugu"
 
-#: src/song.vala:3
+#: src/music.vala:3
 msgid "Unknown Album"
 msgstr "Tundmatu album"
 
-#: src/song.vala:4
+#: src/music.vala:4
 msgid "Unknown Artist"
 msgstr "Tundmatu esitaja"
 
-#: src/song-entry.vala:99
+#: src/music-entry.vala:99
 msgid "Show Album"
 msgstr "Kuva album"
 
-#: src/song-entry.vala:100
+#: src/music-entry.vala:100
 msgid "Show Artist"
 msgstr "Kuva esitaja"
 
@@ -242,7 +242,7 @@ msgstr "Laadimine…"
 
 #: src/window.vala:261
 msgid ""
-"Drag and drop song files here,\n"
+"Drag and drop music files here,\n"
 "or change music location: "
 msgstr ""
 "Lohista muusikafail siia,\n"

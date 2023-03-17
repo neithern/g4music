@@ -1,4 +1,4 @@
-namespace Music {
+namespace G4 {
 
     public class TagCache {
         private static uint32 MAGIC = 0x54414743; //  'TAGC'
@@ -6,7 +6,7 @@ namespace Music {
         private File _file;
         private bool _loaded = false;
         private bool _modified = false;
-        private HashTable<weak string, Song> _cache = new HashTable<weak string, Song> (str_hash, str_equal);
+        private HashTable<weak string, Music> _cache = new HashTable<weak string, Music> (str_hash, str_equal);
 
         public TagCache (string name = "tag-cache") {
             var dir = Environment.get_user_cache_dir ();
@@ -25,20 +25,20 @@ namespace Music {
             }
         }
 
-        public Song? @get (string uri) {
+        public Music? @get (string uri) {
             weak string key;
-            weak Song song;
+            weak Music music;
             lock (_cache) {
-                if (_cache.lookup_extended (uri, out key, out song)) {
-                    return song;
+                if (_cache.lookup_extended (uri, out key, out music)) {
+                    return music;
                 }
             }
             return null;
         }
 
-        public void add (Song song) {
+        public void add (Music music) {
             lock (_cache) {
-                _cache[song.uri] = song;
+                _cache[music.uri] = music;
                 _modified = true;
             }
         }
@@ -56,8 +56,8 @@ namespace Music {
                 var count = read_size (dis);
                 lock (_cache) {
                     for (var i = 0; i < count; i++) {
-                        var song = new Song.deserialize (dis);
-                        _cache[song.uri] = song;
+                        var music = new Music.deserialize (dis);
+                        _cache[music.uri] = music;
                     }
                 }
             } catch (Error e) {
@@ -80,9 +80,9 @@ namespace Music {
                 dos.put_uint32 (MAGIC);
                 lock (_cache) {
                     write_size (dos, _cache.length);
-                    _cache.for_each ((key, song) => {
+                    _cache.for_each ((key, music) => {
                         try {
-                            song.serialize (dos);
+                            music.serialize (dos);
                         } catch (Error e) {
                         }
                     });

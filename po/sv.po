@@ -190,7 +190,7 @@ msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr "En snabb lättflytande musikspelare skriven i GTK4."
 
 #: src/play-bar.vala:83
-msgid "Repeat Song"
+msgid "Repeat Music"
 msgstr "Upprepa låt"
 
 #: src/play-bar.vala:93
@@ -205,11 +205,11 @@ msgstr "Spela/Pausa"
 msgid "Play Next"
 msgstr "Spela nästa"
 
-#: src/song.vala:2
+#: src/music.vala:2
 msgid "Unknown Album"
 msgstr "Okänt album"
 
-#: src/song.vala:3
+#: src/music.vala:3
 msgid "Unknown Artist"
 msgstr "Okänd artist"
 

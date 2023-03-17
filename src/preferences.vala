@@ -1,4 +1,4 @@
-namespace Music {
+namespace G4 {
     public enum BackgroundBlurMode {
         ALWAYS,
         ART_ONLY,
@@ -42,7 +42,7 @@ namespace Music {
             music_dir_btn.clicked.connect (() => {
                 pick_music_folder (app, this, (dir) => {
                     music_dir_btn.label = get_display_name (dir);
-                    app.reload_song_store ();
+                    app.reload_music_store ();
                 });
             });
 

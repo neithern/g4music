@@ -1,4 +1,4 @@
-namespace Music {
+namespace G4 {
 
     public class BasePaintable : Object, Gdk.Paintable {
         private bool _first_draw = false;

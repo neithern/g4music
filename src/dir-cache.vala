@@ -1,4 +1,4 @@
-namespace Music {
+namespace G4 {
 
     public class DirCache : Object {
         private static uint32 MAGIC = 0x44495243; //  'DIRC'
@@ -43,7 +43,7 @@ namespace Music {
             _children.add (child);
         }
 
-        public bool load (Queue<File> stack, GenericArray<Object> songs) {
+        public bool load (Queue<File> stack, GenericArray<Object> musics) {
             try {
                 var fis = _file.read ();
                 var bis = new BufferedInputStream (fis);
@@ -66,8 +66,8 @@ namespace Music {
                     if (type == FileType.DIRECTORY) {
                         stack.push_head (_dir.get_child (name));
                     } else {
-                        var song = new Song (_dir.get_child (name).get_uri (), name, time);
-                        songs.add (song);
+                        var music = new Music (_dir.get_child (name).get_uri (), name, time);
+                        musics.add (music);
                     }
                 }
                 return true;

@@ -1,4 +1,4 @@
-namespace Music {
+namespace G4 {
 
     public class CoverFinder : Object {
         private HashTable<string, string?> _cache = new HashTable<string, string?> (str_hash, str_equal);
@@ -113,7 +113,7 @@ namespace Music {
         private Pango.Context? _pango_context = null;
         private bool _remote_thumbnail = false;
 
-        public signal void tag_updated (Song song);
+        public signal void tag_updated (Music music);
 
         public Pango.Context? pango_context {
             get {
@@ -137,40 +137,40 @@ namespace Music {
             return base.find (key);
         }
 
-        public bool has_image (Song song) {
-            var paintable = find (song.cover_uri);
+        public bool has_image (Music music) {
+            var paintable = find (music.cover_uri);
             return paintable != null && (!)paintable is Gdk.Texture;
         }
 
-        public async Gdk.Paintable? load_async (Song song) {
-            unowned var uri = song.cover_uri;
+        public async Gdk.Paintable? load_async (Music music) {
+            unowned var uri = music.cover_uri;
             if (uri in _loading)
                 return null;
 
             _loading.add (uri);
-            var texture = yield load_directly_async (song, ICON_SIZE);
+            var texture = yield load_directly_async (music, ICON_SIZE);
             _loading.remove (uri);
-            uri = song.cover_uri; //  Update cover uri maybe changed when loading
+            uri = music.cover_uri; //  Update cover uri maybe changed when loading
             if (texture != null) {
                 put (uri, (!)texture);
                 return texture;
             }
 
-            var paintable = create_album_text_paintable (song, ICON_SIZE);
+            var paintable = create_album_text_paintable (music, ICON_SIZE);
             put (uri, paintable);
             return paintable;
         }
 
-        public async Gdk.Paintable? load_directly_async (Song song, int size = ICON_SIZE) {
-            var file = File.new_for_uri (song.uri);
+        public async Gdk.Paintable? load_directly_async (Music music, int size = ICON_SIZE) {
+            var file = File.new_for_uri (music.uri);
             var is_native = file.is_native ();
             if (!_remote_thumbnail && !is_native) {
                 return null;
             }
 
-            var album_key_ = @"$(song.album)-$(song.artist)-";
+            var album_key_ = @"$(music.album)-$(music.artist)-";
             var tags = new Gst.TagList?[] { null };
-            var cover_uri = new string[] { song.cover_uri };
+            var cover_uri = new string[] { music.cover_uri };
             var pixbuf = yield run_async<Gdk.Pixbuf?> (() => {
                 var tag = tags[0] = parse_gst_tags (file);
                 Gst.Sample? sample = null;
@@ -194,12 +194,12 @@ namespace Music {
             }, false, file.has_uri_scheme ("smb"));
             if (!is_native && tags[0] != null) {
                 //  Update for remote file, since it maybe cached but not parsed from file early
-                if (song.from_gst_tags ((!)tags[0]))
-                    tag_updated (song);
+                if (music.from_gst_tags ((!)tags[0]))
+                    tag_updated (music);
             }
-            if (song.cover_uri != cover_uri[0]) {
+            if (music.cover_uri != cover_uri[0]) {
                 //  Update cover uri if changed
-                song.cover_uri = cover_uri[0];
+                music.cover_uri = cover_uri[0];
             }
             if (pixbuf != null) {
                 return Gdk.Texture.for_pixbuf ((!)pixbuf);
@@ -207,8 +207,8 @@ namespace Music {
             return null;
         }
 
-        public Gdk.Paintable create_album_text_paintable (Song song, int size) {
-            var text = song.album;
+        public Gdk.Paintable create_album_text_paintable (Music music, int size) {
+            var text = music.album;
             var bkcolor = (text.length == 0 || text == UNKOWN_ALBUM)
                         ? 0xc0bfbc
                         : BACKGROUND_COLORS[str_hash (text) % BACKGROUND_COLORS.length];

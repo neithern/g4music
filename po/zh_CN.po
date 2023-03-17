@@ -164,7 +164,7 @@ msgstr "导出封面(_E)"
 msgid "Show _Cover File"
 msgstr "显示封面文件(_C)"
 
-#: src/gtk/window.ui:223 src/song-entry.vala:113
+#: src/gtk/window.ui:223 src/music-entry.vala:113
 msgid "_Show Music File"
 msgstr "显示音乐文件(_S)"
 
@@ -217,7 +217,7 @@ msgid "Keep playing"
 msgstr "持续播放"
 
 #: src/play-bar.vala:83
-msgid "Repeat Song"
+msgid "Repeat Music"
 msgstr "单曲循环"
 
 #: src/play-bar.vala:93
@@ -244,23 +244,23 @@ msgstr "仅封面"
 msgid "Never"
 msgstr "从不"
 
-#: src/song.vala:2
+#: src/music.vala:2
 msgid "Unknown Album"
 msgstr "未知专辑"
 
-#: src/song.vala:3
+#: src/music.vala:3
 msgid "Unknown Artist"
 msgstr "未知艺术家"
 
-#: src/song-entry.vala:110
+#: src/music-entry.vala:110
 msgid "Play at Next"
 msgstr "插播"
 
-#: src/song-entry.vala:111
+#: src/music-entry.vala:111
 msgid "Show Album"
 msgstr "显示专辑"
 
-#: src/song-entry.vala:112
+#: src/music-entry.vala:112
 msgid "Show Artist"
 msgstr "显示艺术家"
 
@@ -270,7 +270,7 @@ msgstr "正在加载…"
 
 #: src/window.vala:277
 msgid ""
-"Drag and drop song files here,\n"
+"Drag and drop music files here,\n"
 "or change music location: "
 msgstr ""
 "拖放音乐文件到这里，\n"

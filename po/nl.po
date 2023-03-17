@@ -151,7 +151,7 @@ msgstr "Terug"
 msgid "_Export Cover"
 msgstr "Hoes _exporteren"
 
-#: src/gtk/window.ui:217 src/song-entry.vala:101
+#: src/gtk/window.ui:217 src/music-entry.vala:101
 msgid "_Show in Files"
 msgstr "Tonen in be_standsbeheer"
 
@@ -204,7 +204,7 @@ msgid "Keep playing"
 msgstr "Blijven afspelen"
 
 #: src/play-bar.vala:83
-msgid "Repeat Song"
+msgid "Repeat Music"
 msgstr "Nummer herhalen"
 
 #: src/play-bar.vala:93
@@ -219,19 +219,19 @@ msgstr "Afspelen/Pauzeren"
 msgid "Play Next"
 msgstr "Volgend nummer afspelen"
 
-#: src/song.vala:3
+#: src/music.vala:3
 msgid "Unknown Album"
 msgstr "Onbekend album"
 
-#: src/song.vala:4
+#: src/music.vala:4
 msgid "Unknown Artist"
 msgstr "Onbekende artiest"
 
-#: src/song-entry.vala:99
+#: src/music-entry.vala:99
 msgid "Show Album"
 msgstr "Album tonen"
 
-#: src/song-entry.vala:100
+#: src/music-entry.vala:100
 msgid "Show Artist"
 msgstr "Artiest tonen"
 
@@ -241,7 +241,7 @@ msgstr "Bezig met laden…"
 
 #: src/window.vala:261
 msgid ""
-"Drag and drop song files here,\n"
+"Drag and drop music files here,\n"
 "or change music location: "
 msgstr ""
 "Sleep bestanden hierheen\n"

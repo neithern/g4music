@@ -1,9 +1,9 @@
-namespace Music {
+namespace G4 {
     public const string UNKOWN_ALBUM = _("Unknown Album");
     public const string UNKOWN_ARTIST = _("Unknown Artist");
     public const int UNKOWN_TRACK = int.MAX;
 
-    public class Song : Object {
+    public class Music : Object {
         public string album = "";
         public string artist = "";
         public string title = "";
@@ -19,7 +19,7 @@ namespace Music {
 
         private string? _cover_uri = null;
 
-        public Song (string uri, string title, int64 time) {
+        public Music (string uri, string title, int64 time) {
             this.title = title;
             this.uri = uri;
             this.modified_time = time;
@@ -70,7 +70,7 @@ namespace Music {
             return changed;
         }
 
-        public Song.deserialize (DataInputStream dis) throws IOError {
+        public Music.deserialize (DataInputStream dis) throws IOError {
             album = read_string (dis);
             artist = read_string (dis);
             title = read_string (dis);
@@ -143,8 +143,8 @@ namespace Music {
         }
 
         public static int compare_by_album (Object obj1, Object obj2) {
-            var s1 = (Song) obj1;
-            var s2 = (Song) obj2;
+            var s1 = (Music) obj1;
+            var s2 = (Music) obj2;
             int ret = strcmp (s1._album_key, s2._album_key);
             if (ret != 0) return ret;
             ret = s1.track - s2.track;
@@ -155,8 +155,8 @@ namespace Music {
         }
 
         public static int compare_by_artist (Object obj1, Object obj2) {
-            var s1 = (Song) obj1;
-            var s2 = (Song) obj2;
+            var s1 = (Music) obj1;
+            var s2 = (Music) obj2;
             int ret = strcmp (s1._artist_key, s2._artist_key);
             if (ret != 0) return ret;
             ret = strcmp (s1._title_key, s2._title_key);
@@ -165,8 +165,8 @@ namespace Music {
         }
 
         public static int compare_by_title (Object obj1, Object obj2) {
-            var s1 = (Song) obj1;
-            var s2 = (Song) obj2;
+            var s1 = (Music) obj1;
+            var s2 = (Music) obj2;
             int ret = strcmp (s1._title_key, s2._title_key);
             if (ret != 0) return ret;
             ret = strcmp (s1._artist_key, s2._artist_key);
@@ -175,23 +175,23 @@ namespace Music {
         }
 
         public static int compare_by_order (Object obj1, Object obj2) {
-            var s1 = (Song) obj1;
-            var s2 = (Song) obj2;
+            var s1 = (Music) obj1;
+            var s2 = (Music) obj2;
             return s1._order - s2._order;
         }
 
         public static int compare_by_date_ascending (Object obj1, Object obj2) {
-            var s1 = (Song) obj1;
-            var s2 = (Song) obj2;
+            var s1 = (Music) obj1;
+            var s2 = (Music) obj2;
             var diff = s2.modified_time - s1.modified_time;
             return (int) diff.clamp (-1, 1);
         }
 
-        public static Song? from_info (File file, FileInfo info) {
+        public static Music? from_info (File file, FileInfo info) {
             unowned var type = info.get_content_type () ?? "";
             if (ContentType.is_mime_type (type, "audio/*") && !type.has_suffix ("url")) {
                 var time = info.get_modification_date_time ()?.to_unix () ?? 0;
-                return new Song (file.get_uri (), info.get_name (), time);
+                return new Music (file.get_uri (), info.get_name (), time);
             }
             return null;
         }
@@ -202,7 +202,7 @@ namespace Music {
                 var s = arr[i];
                 arr[i] = arr[r];
                 arr[r] = s;
-                ((Song)arr[i])._order = i;
+                ((Music)arr[i])._order = i;
             }
         }
     }

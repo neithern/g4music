@@ -161,7 +161,7 @@ msgstr "Tornar"
 msgid "_Export Cover"
 msgstr "_Exportar la pocheta"
 
-#: src/gtk/window.ui:217 src/song-entry.vala:101
+#: src/gtk/window.ui:217 src/music-entry.vala:101
 msgid "_Show in Files"
 msgstr "_Afichar los fichièrs"
 
@@ -214,7 +214,7 @@ msgid "Keep playing"
 msgstr "Contunhar de legir"
 
 #: src/play-bar.vala:83
-msgid "Repeat Song"
+msgid "Repeat Music"
 msgstr "Repetir la cançon"
 
 #: src/play-bar.vala:93
@@ -241,19 +241,19 @@ msgstr "Pocheta de l'album sonque"
 msgid "Never"
 msgstr "Pas jamai"
 
-#: src/song.vala:3
+#: src/music.vala:3
 msgid "Unknown Album"
 msgstr "Album desconegut"
 
-#: src/song.vala:4
+#: src/music.vala:4
 msgid "Unknown Artist"
 msgstr "Artista desconegut"
 
-#: src/song-entry.vala:99
+#: src/music-entry.vala:99
 msgid "Show Album"
 msgstr "Afichar l’album"
 
-#: src/song-entry.vala:100
+#: src/music-entry.vala:100
 msgid "Show Artist"
 msgstr "Afichar l’artista"
 
@@ -263,7 +263,7 @@ msgstr "Cargament…"
 
 #: src/window.vala:282
 msgid ""
-"Drag and drop song files here,\n"
+"Drag and drop music files here,\n"
 "or change music location: "
 msgstr ""
 "Lisatz depausatz los fichièrs musicals aicí,\n"

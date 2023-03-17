@@ -160,7 +160,7 @@ msgstr "Indietro"
 msgid "_Export Cover"
 msgstr "Exporta Cover"
 
-#: src/gtk/window.ui:217 src/song-entry.vala:101
+#: src/gtk/window.ui:217 src/music-entry.vala:101
 msgid "_Show in Files"
 msgstr "_Mostra nei file"
 
@@ -213,7 +213,7 @@ msgid "Keep playing"
 msgstr "Continuare a riprodurre"
 
 #: src/play-bar.vala:83
-msgid "Repeat Song"
+msgid "Repeat Music"
 msgstr "Ripeti canzone"
 
 #: src/play-bar.vala:93
@@ -240,19 +240,19 @@ msgstr "Solo alla copertina"
 msgid "Never"
 msgstr "Mai"
 
-#: src/song.vala:3
+#: src/music.vala:3
 msgid "Unknown Album"
 msgstr "Album sconosciuto"
 
-#: src/song.vala:4
+#: src/music.vala:4
 msgid "Unknown Artist"
 msgstr "Artista sconosciuto"
 
-#: src/song-entry.vala:99
+#: src/music-entry.vala:99
 msgid "Show Album"
 msgstr "Visualizza album"
 
-#: src/song-entry.vala:100
+#: src/music-entry.vala:100
 msgid "Show Artist"
 msgstr "Visualizza artista"
 
@@ -262,7 +262,7 @@ msgstr "Caricamento in corso..."
 
 #: src/window.vala:282
 msgid ""
-"Drag and drop song files here,\n"
+"Drag and drop music files here,\n"
 "or change music location: "
 msgstr ""
 "Trascina e rilascia i file delle canzoni qui,\n"

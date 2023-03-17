@@ -1,4 +1,4 @@
-namespace Music {
+namespace G4 {
 
     public class PeakBar : Gtk.Box {
         private string _chars = "=";

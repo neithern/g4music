@@ -160,7 +160,7 @@ msgstr "Назад"
 msgid "_Export Cover"
 msgstr "_Экспортировать обложку"
 
-#: src/gtk/window.ui:217 src/song-entry.vala:101
+#: src/gtk/window.ui:217 src/music-entry.vala:101
 msgid "_Show in Files"
 msgstr "_Показать в файлах"
 
@@ -215,7 +215,7 @@ msgid "Keep playing"
 msgstr "Продолжать играть"
 
 #: src/play-bar.vala:83
-msgid "Repeat Song"
+msgid "Repeat Music"
 msgstr "Повторять песню"
 
 #: src/play-bar.vala:93
@@ -242,19 +242,19 @@ msgstr "Только обложки"
 msgid "Never"
 msgstr "Никогда"
 
-#: src/song.vala:3
+#: src/music.vala:3
 msgid "Unknown Album"
 msgstr "Неизвестный альбом"
 
-#: src/song.vala:4
+#: src/music.vala:4
 msgid "Unknown Artist"
 msgstr "Неизвестный артист"
 
-#: src/song-entry.vala:99
+#: src/music-entry.vala:99
 msgid "Show Album"
 msgstr "Показать альбом"
 
-#: src/song-entry.vala:100
+#: src/music-entry.vala:100
 msgid "Show Artist"
 msgstr "Показать артиста"
 
@@ -264,7 +264,7 @@ msgstr "Загрузка..."
 
 #: src/window.vala:279
 msgid ""
-"Drag and drop song files here,\n"
+"Drag and drop music files here,\n"
 "or change music location: "
 msgstr ""
 "Перетащите файлы песен сюда,\n"

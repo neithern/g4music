@@ -1,4 +1,4 @@
-namespace Music {
+namespace G4 {
 
     enum SearchType {
         ALL,
@@ -24,11 +24,11 @@ namespace Music {
         [GtkChild]
         private unowned Gtk.Image cover_image;
         [GtkChild]
-        private unowned Gtk.Label song_album;
+        private unowned Gtk.Label music_album;
         [GtkChild]
-        private unowned Gtk.Label song_artist;
+        private unowned Gtk.Label music_artist;
         [GtkChild]
-        private unowned Gtk.Label song_title;
+        private unowned Gtk.Label music_title;
         [GtkChild]
         private unowned Gtk.Label initial_label;
         [GtkChild]
@@ -86,7 +86,7 @@ namespace Music {
                         leaflet.navigate (Adw.NavigationDirection.BACK);
                     }
                 }
-                update_song_filter ();
+                update_music_filter ();
             });
             search_entry.search_changed.connect (on_search_text_changed);
 
@@ -111,11 +111,11 @@ namespace Music {
             _scale_cover_paintable.queue_draw.connect (cover_image.queue_draw);
             cover_image.paintable = _scale_cover_paintable;
 
-            make_label_clickable (song_album).released.connect (() => {
-                start_search ("album=" + song_album.label);
+            make_label_clickable (music_album).released.connect (() => {
+                start_search ("album=" + music_album.label);
             });
-            make_label_clickable (song_artist).released.connect (() => {
-                start_search ("artist=" + song_artist.label);
+            make_label_clickable (music_artist).released.connect (() => {
+                start_search ("artist=" + music_artist.label);
             });
 
             var play_bar = new PlayBar ();
@@ -126,15 +126,15 @@ namespace Music {
 
             var factory = new Gtk.SignalListItemFactory ();
             factory.setup.connect ((item) => {
-                item.child = new SongEntry ();
+                item.child = new MusicEntry ();
             });
             factory.bind.connect (on_bind_item);
             factory.unbind.connect ((item) => {
-                var entry = (SongEntry) item.child;
+                var entry = (MusicEntry) item.child;
                 entry.paintable = null;
             });
             list_view.factory = factory;
-            list_view.model = new Gtk.NoSelection (app.song_list);
+            list_view.model = new Gtk.NoSelection (app.music_list);
             list_view.activate.connect ((index) => {
                 app.current_item = (int) index;
                 app.player.play ();
@@ -142,7 +142,7 @@ namespace Music {
 
             initial_label.activate_link.connect ((uri) => {
                 pick_music_folder (app, this, (dir) => {
-                    app.reload_song_store ();
+                    app.reload_music_store ();
                 });
                 return true;
             });
@@ -153,10 +153,10 @@ namespace Music {
             }
             app.loading_changed.connect (on_loading_changed);
             app.index_changed.connect (on_index_changed);
-            app.song_changed.connect (on_song_changed);
-            app.song_tag_parsed.connect (on_song_tag_parsed);
+            app.music_changed.connect (on_music_changed);
+            app.music_tag_parsed.connect (on_music_tag_parsed);
             app.player.state_changed.connect (on_player_state_changed);
-            app.song_store.parse_progress.connect ((percent) => {
+            app.music_store.parse_progress.connect ((percent) => {
                 index_title.label = @"$_loading_text $percent%";
             });
         }
@@ -221,25 +221,25 @@ namespace Music {
 
         private async void on_bind_item (Gtk.ListItem item) {
             var app = (Application) application;
-            var entry = (SongEntry) item.child;
-            var song = (Song) item.item;
+            var entry = (MusicEntry) item.child;
+            var music = (Music) item.item;
             entry.playing = item.position == app.current_item;
-            entry.update (song, app.sort_mode);
+            entry.update (music, app.sort_mode);
             //  print ("bind: %u\n", item.position);
 
             var thumbnailer = app.thumbnailer;
-            var paintable = thumbnailer.find (song.cover_uri);
+            var paintable = thumbnailer.find (music.cover_uri);
             entry.paintable = paintable ?? _loading_paintable;
             if (paintable == null) {
                 var handler_id = new ulong[1];
                 handler_id[0] = entry.cover.first_draw.connect(() => {
                     entry.cover.disconnect (handler_id[0]);
-                    if (!thumbnailer.has (song.cover_uri)) {
-                        thumbnailer.load_async.begin (song, (obj, res) => {
+                    if (!thumbnailer.has (music.cover_uri)) {
+                        thumbnailer.load_async.begin (music, (obj, res) => {
                             var paintable2 = thumbnailer.load_async.end (res);
-                            if (paintable2 != null && song == (Song) item.item) {
+                            if (paintable2 != null && music == (Music) item.item) {
                                 entry.paintable = paintable2;
-                                entry.update (song, app.sort_mode);
+                                entry.update (music, app.sort_mode);
                             }
                         });
                     }
@@ -270,11 +270,11 @@ namespace Music {
             index_title.label = loading ? _loading_text : size.to_string ();
 
             var app = (Application) application;
-            var empty = !loading && size == 0 && app.current_song == null;
+            var empty = !loading && size == 0 && app.current_music == null;
             if (empty) {
                 var dir_name = get_display_name (app.get_music_folder ());
                 var link = @"<a href=\"change_dir\">$dir_name</a>";
-                initial_label.set_markup (_("Drag and drop song files here,\nor change music location: ") + link);
+                initial_label.set_markup (_("Drag and drop music files here,\nor change music location: ") + link);
 
                 var theme = Gtk.IconTheme.get_for_display (this.display);
                 var paintable = theme.lookup_icon (app.application_id, null,
@@ -283,7 +283,7 @@ namespace Music {
                 _mini_bar.cover = paintable;
             }
             initial_label.visible = empty;
-            song_title.visible = !empty;
+            music_title.visible = !empty;
         }
 
         private Adw.Animation? _scale_animation = null;
@@ -316,48 +316,48 @@ namespace Music {
                 _search_type = SearchType.ALL;
             }
             _search_text = text;
-            update_song_filter ();
+            update_music_filter ();
         }
 
-        private void on_song_changed (Song song) {
-            update_song_info (song);
+        private void on_music_changed (Music music) {
+            update_music_info (music);
             action_set_enabled (ACTION_APP + ACTION_PLAY, true);
-            print ("Play: %s\n", Uri.unescape_string (song.uri) ?? song.uri);
+            print ("Play: %s\n", Uri.unescape_string (music.uri) ?? music.uri);
         }
 
-        private async void on_song_tag_parsed (Song song, Gst.Sample? image) {
-            update_song_info (song);
+        private async void on_music_tag_parsed (Music music, Gst.Sample? image) {
+            update_music_info (music);
 
             var app = (Application) application;
             var pixbufs = new Gdk.Pixbuf?[2] {null, null};
             if (image != null) {
-                var has_cache = app.thumbnailer.has_image (song);
+                var has_cache = app.thumbnailer.has_image (music);
                 yield run_async<void> (() => {
                     pixbufs[0] = load_clamp_pixbuf_from_sample ((!)image, _cover_size);
                     if (!has_cache && pixbufs[0] != null)
                         pixbufs[1] = create_clamp_pixbuf ((!)pixbufs[0], Thumbnailer.ICON_SIZE);
                 }, true);
             }
-            if (song == app.current_song) {
+            if (music == app.current_music) {
                 Gdk.Paintable? paintable = null;
                 if (pixbufs[0] != null) {
                     paintable = Gdk.Texture.for_pixbuf ((!)pixbufs[0]);
                 } else {
-                    paintable = yield app.thumbnailer.load_directly_async (song, _cover_size);
+                    paintable = yield app.thumbnailer.load_directly_async (music, _cover_size);
                     if (paintable == null)
-                        paintable = app.thumbnailer.create_album_text_paintable (song, _cover_size);
+                        paintable = app.thumbnailer.create_album_text_paintable (music, _cover_size);
                 }
                 if (pixbufs[1] != null) {
                     var mini = Gdk.Texture.for_pixbuf ((!)pixbufs[1]);
                     _mini_bar.cover = mini;
-                    app.thumbnailer.put (song.cover_uri, mini);
-                    app.song_list.items_changed (app.current_item, 0, 0);
+                    app.thumbnailer.put (music.cover_uri, mini);
+                    app.music_list.items_changed (app.current_item, 0, 0);
                 }
-                update_cover_paintable (song, paintable);
+                update_cover_paintable (music, paintable);
             }
 
             action_set_enabled (ACTION_APP + ACTION_EXPORT_COVER, image != null);
-            action_set_enabled (ACTION_APP + ACTION_SHOW_COVER_FILE, image == null && song.external_cover);
+            action_set_enabled (ACTION_APP + ACTION_SHOW_COVER_FILE, image == null && music.external_cover);
         }
 
         private void scroll_to_item (int index) {
@@ -375,9 +375,9 @@ namespace Music {
                     files[index++] = file;
                 }
                 var app = (Application) application;
-                app.load_songs_async.begin (files, (obj, res) => {
-                    var item = app.load_songs_async.end (res);
-                    if (app.current_song == null) {
+                app.load_musics_async.begin (files, (obj, res) => {
+                    var item = app.load_musics_async.end (res);
+                    if (app.current_music == null) {
                         app.current_item = item;
                     } else {
                         scroll_to_item (item);
@@ -388,43 +388,43 @@ namespace Music {
             this.content.add_controller (drop_target);
         }
 
-        private void update_song_info (Song song) {
-            song_album.label = song.album;
-            song_artist.label = song.artist;
-            song_title.label = song.title;
-            _mini_bar.title = song.title;
-            this.title = song.artist == UNKOWN_ARTIST ? song.title : @"$(song.artist) - $(song.title)";
+        private void update_music_info (Music music) {
+            music_album.label = music.album;
+            music_artist.label = music.artist;
+            music_title.label = music.title;
+            _mini_bar.title = music.title;
+            this.title = music.artist == UNKOWN_ARTIST ? music.title : @"$(music.artist) - $(music.title)";
         }
 
-        private void update_song_filter () {
+        private void update_music_filter () {
             var app = (Application) application;
             if (search_btn.active && _search_text.length > 0) {
-                app.song_list.filter = new Gtk.CustomFilter ((obj) => {
-                    var song = (Song) obj;
+                app.music_list.filter = new Gtk.CustomFilter ((obj) => {
+                    var music = (Music) obj;
                     switch (_search_type) {
                         case SearchType.ALBUM:
-                            return song.album == _search_property;
+                            return music.album == _search_property;
                         case SearchType.ARTIST:
-                            return song.artist == _search_property;
+                            return music.artist == _search_property;
                         case SearchType.TITLE:
-                            return song.title == _search_property;
+                            return music.title == _search_property;
                         default:
-                            return _search_text.match_string (song.album, false)
-                                || _search_text.match_string (song.artist, false)
-                                || _search_text.match_string (song.title, false);
+                            return _search_text.match_string (music.album, false)
+                                || _search_text.match_string (music.artist, false)
+                                || _search_text.match_string (music.title, false);
                     }
                 });
             } else {
-                app.song_list.set_filter (null);
+                app.music_list.set_filter (null);
             }
             app.find_current_item ();
         }
 
         private Adw.Animation? _fade_animation = null;
 
-        private void update_cover_paintable (Song song, Gdk.Paintable? paintable) {
+        private void update_cover_paintable (Music music, Gdk.Paintable? paintable) {
             var app = (Application) application;
-            _mini_bar.cover = app.thumbnailer.find (song.cover_uri);
+            _mini_bar.cover = app.thumbnailer.find (music.cover_uri);
             _cover_paintable.paintable = paintable ?? _mini_bar.cover;
 
             update_background ();

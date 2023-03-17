@@ -1,4 +1,4 @@
-namespace Music {
+namespace G4 {
     public const string ACTION_APP = "app.";
     public const string ACTION_ABOUT = "about";
     public const string ACTION_PREFS = "preferences";
@@ -31,13 +31,13 @@ namespace Music {
 
     public class Application : Adw.Application {
         private int _current_item = -1;
-        private Song? _current_song = null;
+        private Music? _current_music = null;
         private Gst.Sample? _cover_image = null;
         private bool _loading_store = false;
         private StringBuilder _next_uri = new StringBuilder ();
         private GstPlayer _player = new GstPlayer ();
-        private Gtk.FilterListModel _song_list = new Gtk.FilterListModel (null, null);
-        private SongStore _song_store = new SongStore ();
+        private Gtk.FilterListModel _music_list = new Gtk.FilterListModel (null, null);
+        private MusicStore _music_store = new MusicStore ();
         private Thumbnailer _thumbnailer = new Thumbnailer ();
         private Settings? _settings = new_application_settings ();
         private MprisPlayer? _mpris = null;
@@ -46,8 +46,8 @@ namespace Music {
 
         public signal void loading_changed (bool loading, uint size);
         public signal void index_changed (int index, uint size);
-        public signal void song_changed (Song song);
-        public signal void song_tag_parsed (Song song, Gst.Sample? image);
+        public signal void music_changed (Music music);
+        public signal void music_tag_parsed (Music music, Gst.Sample? image);
 
         public Application () {
             Object (application_id: Config.APP_ID, flags: ApplicationFlags.HANDLES_OPEN);
@@ -60,7 +60,7 @@ namespace Music {
                 { ACTION_PLAY, play_pause },
                 { ACTION_PREV, play_previous },
                 { ACTION_NEXT, play_next },
-                { ACTION_RELOAD_LIST, reload_song_store },
+                { ACTION_RELOAD_LIST, reload_music_store },
                 { ACTION_SEARCH, toggle_seach },
                 { ACTION_SHOW_ALBUM, show_album },
                 { ACTION_SHOW_ARTIST, show_artist },
@@ -86,10 +86,10 @@ namespace Music {
 
             dark_theme = _settings?.get_boolean ("dark-theme") ?? true;
 
-            _song_list.model = _song_store.store;
-            _song_store.sort_mode = (SortMode) (_settings?.get_uint ("sort-mode") ?? SortMode.TITLE);
+            _music_list.model = _music_store.store;
+            _music_store.sort_mode = (SortMode) (_settings?.get_uint ("sort-mode") ?? SortMode.TITLE);
 
-            _thumbnailer.tag_updated.connect (_song_store.add_to_cache);
+            _thumbnailer.tag_updated.connect (_music_store.add_to_cache);
             _thumbnailer.remote_thumbnail = _settings?.get_boolean ("remote-thumbnail") ?? false;
 
             _player.gapless = _settings?.get_boolean ("gapless-playback") ?? true;
@@ -110,8 +110,8 @@ namespace Music {
             base.startup ();
 
             //  Must load tag cache after the app register (GLib init), to make sort works
-            _song_store.load_tag_cache_async.begin ((obj, res) => {
-                _song_store.load_tag_cache_async.end (res);
+            _music_store.load_tag_cache_async.begin ((obj, res) => {
+                _music_store.load_tag_cache_async.end (res);
             });
 
             _mpris_id = Bus.own_name (BusType.SESSION,
@@ -135,8 +135,8 @@ namespace Music {
         }
 
         public override void open (File[] files, string hint) {
-            load_songs_async.begin (files, (obj, res) => {
-                var play_item = load_songs_async.end (res);
+            load_musics_async.begin (files, (obj, res) => {
+                var play_item = load_musics_async.end (res);
                 Idle.add (() => {
                     current_item = play_item;
                     if (files.length > 0)
@@ -158,8 +158,8 @@ namespace Music {
 
             _settings?.set_double ("volume", _player.volume);
 
-            _song_store.save_tag_cache_async.begin ((obj, res) => {
-                _song_store.save_tag_cache_async.end (res);
+            _music_store.save_tag_cache_async.begin ((obj, res) => {
+                _music_store.save_tag_cache_async.end (res);
             });
 
             delete_cover_tmp_file_async.begin ((obj, res) => {
@@ -175,33 +175,33 @@ namespace Music {
             }
             set {
                 var playing = _player.state == Gst.State.PLAYING;
-                var song = get_next_song (ref value);
-                if (song != _current_song) {
+                var music = get_next_music (ref value);
+                if (music != _current_music) {
                     _player.state = Gst.State.READY;
-                    current_song = song;
+                    current_music = music;
                 }
                 if (_current_item != value) {
                     update_current_item (value);
                 }
                 var next = value + 1;
-                var next_song = get_next_song (ref next);
+                var next_music = get_next_music (ref next);
                 lock (_next_uri) {
-                    _next_uri.assign (next_song?.uri ?? "");
+                    _next_uri.assign (next_music?.uri ?? "");
                 }
                 _player.state = playing ? Gst.State.PLAYING : Gst.State.PAUSED;
             }
         }
 
-        public Song? current_song {
+        public Music? current_music {
             get {
-                return _current_song;
+                return _current_music;
             }
             set {
-                if (_current_song != value) {
-                    _current_song = value;
+                if (_current_music != value) {
+                    _current_music = value;
                     _player.uri = value?.uri;
                     if (value != null) {
-                        song_changed ((!)value);
+                        music_changed ((!)value);
                         _settings?.set_string ("played-uri", ((!)value).uri);
                     }
                 }
@@ -226,7 +226,7 @@ namespace Music {
             }
         }
 
-        public Song? popover_song { get; set; }
+        public Music? popover_music { get; set; }
 
         public Settings? settings {
             get {
@@ -236,25 +236,25 @@ namespace Music {
 
         public bool single_loop { get; set; }
 
-        public Gtk.FilterListModel song_list {
+        public Gtk.FilterListModel music_list {
             get {
-                return _song_list;
+                return _music_list;
             }
         }
 
         public SortMode sort_mode {
             get {
-                return _song_store.sort_mode;
+                return _music_store.sort_mode;
             }
             set {
-                _song_store.sort_mode = value;
+                _music_store.sort_mode = value;
                 _settings?.set_uint ("sort-mode", value);
             }
         }
 
-        public SongStore song_store {
+        public MusicStore music_store {
             get {
-                return _song_store;
+                return _music_store;
             }
         }
 
@@ -287,12 +287,12 @@ namespace Music {
             _player.play ();
         }
 
-        public void reload_song_store () {
+        public void reload_music_store () {
             if (!_loading_store) {
-                _song_store.clear ();
+                _music_store.clear ();
                 update_current_item (-1);
-                load_songs_async.begin ({}, (obj, res) => {
-                    current_item = load_songs_async.end (res);
+                load_musics_async.begin ({}, (obj, res) => {
+                    current_item = load_musics_async.end (res);
                 });
             }
         }
@@ -325,11 +325,11 @@ namespace Music {
         }
 
         public bool find_current_item () {
-            if (_song_list.get_item (_current_item) == _current_song)
+            if (_music_list.get_item (_current_item) == _current_music)
                 return true;
 
             //  find current item
-            var item = find_song_item (_current_song);
+            var item = find_music_item (_current_music);
             if (item != -1) {
                 current_item = item;
                 return true;
@@ -340,26 +340,26 @@ namespace Music {
         }
 
         private void update_current_item (int item) {
-            //  update _current_item but don't change current song
+            //  update _current_item but don't change current music
             var old_item = _current_item;
             _current_item = item;
-            _song_list.items_changed (old_item, 0, 0);
-            _song_list.items_changed (item, 0, 0);
-            index_changed (item, _song_list.get_n_items ());
+            _music_list.items_changed (old_item, 0, 0);
+            _music_list.items_changed (item, 0, 0);
+            index_changed (item, _music_list.get_n_items ());
         }
 
-        private int find_song_item (Song? song) {
-            var count = _song_list.get_n_items ();
+        private int find_music_item (Music? music) {
+            var count = _music_list.get_n_items ();
             for (var i = 0; i < count; i++) {
-                if (song == _song_list.get_item (i)) {
+                if (music == _music_list.get_item (i)) {
                     return (int) i;
                 }
             }
             return -1;
         }
 
-        public async int load_songs_async (owned File[] files) {
-            var saved_size = _song_store.size;
+        public async int load_musics_async (owned File[] files) {
+            var saved_size = _music_store.size;
             var play_item = _current_item;
             _loading_store = true;
             loading_changed (true, saved_size);
@@ -369,22 +369,22 @@ namespace Music {
                 files[0] = get_music_folder ();
             }
             if (files.length > 0) {
-                yield _song_store.add_files_async (files);
+                yield _music_store.add_files_async (files);
             }
 
             _loading_store = false;
-            loading_changed (false, _song_store.size);
+            loading_changed (false, _music_store.size);
             if (saved_size > 0) {
                 play_item = (int) saved_size;
-            } else if (_current_song != null && _current_song == _song_list.get_item (_current_item)) {
+            } else if (_current_music != null && _current_music == _music_list.get_item (_current_item)) {
                 play_item = _current_item;
             } else {
-                var uri = _current_song?.uri ?? _settings?.get_string ("played-uri");
+                var uri = _current_music?.uri ?? _settings?.get_string ("played-uri");
                 if (uri != null && ((!)uri).length > 0) {
-                    var count = _song_list.get_n_items ();
+                    var count = _music_list.get_n_items ();
                     for (var i = 0; i < count; i++) {
-                        var song = (Song) _song_list.get_item (i);
-                        if (((!)uri) == song.uri) {
+                        var music = (Music) _music_list.get_item (i);
+                        if (((!)uri) == music.uri) {
                             play_item = i;
                             break;
                         }
@@ -496,29 +496,29 @@ namespace Music {
             }
         }
 
-        private Song? get_next_song (ref int index) {
-            var count = _song_list.get_n_items ();
+        private Music? get_next_music (ref int index) {
+            var count = _music_list.get_n_items ();
             index = index < count ? index : 0;
-            return _song_list.get_item (index) as Song;
+            return _music_list.get_item (index) as Music;
         }
 
         private void play_at_next () {
-            if (_current_song != null && popover_song != null) {
+            if (_current_music != null && popover_music != null) {
                 uint playing_item = -1;
                 uint popover_item = -1;
-                var store = _song_store.store;
-                if (store.find ((!)_current_song, out playing_item)
-                        && store.find ((!)popover_song, out popover_item)
+                var store = _music_store.store;
+                if (store.find ((!)_current_music, out playing_item)
+                        && store.find ((!)popover_music, out popover_item)
                         && playing_item != popover_item
                         && playing_item != popover_item - 1) {
                     var next_item = popover_item > playing_item ? playing_item + 1 : playing_item;
                     store.remove (popover_item);
-                    store.insert (next_item, (!)popover_song);
+                    store.insert (next_item, (!)popover_music);
                     //  update current playing item without scrolling
                     var old_item = _current_item;
-                    _current_item = find_song_item (_current_song);
-                    _song_list.items_changed (old_item, 0, 0);
-                    _song_list.items_changed (_current_item, 0, 0);
+                    _current_item = find_music_item (_current_music);
+                    _music_list.items_changed (old_item, 0, 0);
+                    _music_list.items_changed (_current_item, 0, 0);
                 }
             }
         }
@@ -533,23 +533,23 @@ namespace Music {
         }
 
         private void show_cover_file () {
-            var song = popover_song ?? _current_song;
-            _show_uri_with_portal (song?.cover_uri);
+            var music = popover_music ?? _current_music;
+            _show_uri_with_portal (music?.cover_uri);
         }
 
         private void show_music_file () {
-            var song = popover_song ?? _current_song;
-            _show_uri_with_portal (song?.uri);
+            var music = popover_music ?? _current_music;
+            _show_uri_with_portal (music?.uri);
         }
 
         private void show_album () {
-            var album = (popover_song ?? _current_song)?.album;
+            var album = (popover_music ?? _current_music)?.album;
             if (album != null)
                 (active_window as Window)?.start_search ("album=" + (!)album);
         }
 
         private void show_artist () {
-            var artist = (popover_song ?? _current_song)?.artist;
+            var artist = (popover_music ?? _current_music)?.artist;
             if (artist != null)
                 (active_window as Window)?.start_search ("artist=" + (!)artist);
         }
@@ -600,24 +600,24 @@ namespace Music {
 
         private async void on_tag_parsed (string? album, string? artist, string? title, Gst.Sample? image) {
             _cover_image = image;
-            if (_current_song != null) {
-                var song = (!)current_song;
-                song_tag_parsed (song, image);
+            if (_current_music != null) {
+                var music = (!)current_music;
+                music_tag_parsed (music, image);
 
                 string? cover_uri = null;
                 if (image != null) {
-                    var file = File.new_build_filename (Environment.get_tmp_dir (), application_id + "_" + str_hash (song.cover_uri).to_string ("%x"));
+                    var file = File.new_build_filename (Environment.get_tmp_dir (), application_id + "_" + str_hash (music.cover_uri).to_string ("%x"));
                     yield save_sample_to_file (file, (!)image);
                     yield delete_cover_tmp_file_async ();
                     _cover_tmp_file = file;
                     cover_uri = file.get_uri ();
                 }
 
-                if (song == _current_song) {
-                    if (cover_uri == null && song.cover_uri != song.uri) {
-                        cover_uri = song.cover_uri;
+                if (music == _current_music) {
+                    if (cover_uri == null && music.cover_uri != music.uri) {
+                        cover_uri = music.cover_uri;
                     }
-                    _mpris?.send_meta_data (song, cover_uri);
+                    _mpris?.send_meta_data (music, cover_uri);
                 }
             }
         }

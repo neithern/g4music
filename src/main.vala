@@ -25,8 +25,8 @@ int main (string[] args) {
 
     Random.set_seed ((uint32) get_monotonic_time ());
 
-    Music.GstPlayer.init (ref args);
+    G4.GstPlayer.init (ref args);
 
-    var app = new Music.Application ();
+    var app = new G4.Application ();
     return app.run (args);
 }

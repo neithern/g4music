@@ -1,4 +1,4 @@
-namespace Music {
+namespace G4 {
 
     public class PlayBar : Gtk.Box {
         private Gtk.Scale _seek = new Gtk.Scale (Gtk.Orientation.HORIZONTAL, null);
@@ -80,10 +80,10 @@ namespace Music {
 
             _repeat.icon_name = "media-playlist-repeat-symbolic";
             _repeat.valign = Gtk.Align.CENTER;
-            _repeat.tooltip_text = _("Repeat Song");
+            _repeat.tooltip_text = _("Repeat Music");
             _repeat.add_css_class ("flat");
             _repeat.toggled.connect (() => {
-                _repeat.icon_name = _repeat.active ? "media-playlist-repeat-song-symbolic" : "media-playlist-repeat-symbolic";
+                _repeat.icon_name = _repeat.active ? "media-playlist-repeat-music-symbolic" : "media-playlist-repeat-symbolic";
                 app.single_loop = ! app.single_loop;
             });
 

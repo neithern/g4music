@@ -1,4 +1,4 @@
-namespace Music {
+namespace G4 {
 
     public size_t read_size (DataInputStream dis) throws IOError {
         var value = dis.read_byte ();

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk" version="4.0"/>
-  <template class="MusicWindow" parent="AdwApplicationWindow">
+  <template class="G4Window" parent="AdwApplicationWindow">
     <property name="title" translatable="yes">G4Music</property>
     <property name="resizable">true</property>
     <property name="content">
@@ -137,7 +137,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkBox" id="song_box">
+                      <object class="GtkBox" id="music_box">
                         <property name="orientation">vertical</property>
                         <property name="hexpand">true</property>
                         <property name="margin_start">32</property>
@@ -166,7 +166,7 @@
                               </object>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="song_title">
+                              <object class="GtkLabel" id="music_title">
                                 <property name="ellipsize">end</property>
                                 <style>
                                   <class name="title-4"/>
@@ -174,7 +174,7 @@
                               </object>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="song_artist">
+                              <object class="GtkLabel" id="music_artist">
                                 <property name="ellipsize">end</property>
                                 <property name="halign">center</property>
                                 <property name="margin_top">5</property>
@@ -184,7 +184,7 @@
                               </object>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="song_album">
+                              <object class="GtkLabel" id="music_album">
                                 <property name="ellipsize">end</property>
                                 <property name="halign">center</property>
                                 <property name="margin_top">4</property>

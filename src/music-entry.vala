@@ -1,15 +1,15 @@
-namespace Music {
+namespace G4 {
 
-    public class SongEntry : Gtk.Box {
+    public class MusicEntry : Gtk.Box {
 
         private Gtk.Image _cover = new Gtk.Image ();
         private Gtk.Label _title = new Gtk.Label (null);
         private Gtk.Label _subtitle = new Gtk.Label (null);
         private Gtk.Image _playing = new Gtk.Image ();
         private CoverPaintable _paintable = new CoverPaintable ();
-        private Song? _song = null;
+        private Music? _music = null;
 
-        public SongEntry () {
+        public MusicEntry () {
             margin_top = 4;
             margin_bottom = 4;
 
@@ -70,36 +70,36 @@ namespace Music {
             }
         }
 
-        public void update (Song song, SortMode sort) {
-            _song = song;
+        public void update (Music music, SortMode sort) {
+            _music = music;
             switch (sort) {
                 case SortMode.ALBUM:
-                    _title.label = song.album;
-                    _subtitle.label = (0 < song.track < int.MAX) ? @"$(song.track). $(song.title)" : song.title;
+                    _title.label = music.album;
+                    _subtitle.label = (0 < music.track < int.MAX) ? @"$(music.track). $(music.title)" : music.title;
                     break;
 
                 case SortMode.ARTIST:
-                    _title.label = song.artist;
-                    _subtitle.label = song.title;
+                    _title.label = music.artist;
+                    _subtitle.label = music.title;
                     break;
 
                 case SortMode.RECENT:
-                    var date = new DateTime.from_unix_local (song.modified_time);
-                    _title.label = song.title;
+                    var date = new DateTime.from_unix_local (music.modified_time);
+                    _title.label = music.title;
                     _subtitle.label = date.format ("%x %H:%M");
                     break;
 
                 default:
-                    _title.label = song.title;
-                    _subtitle.label = song.artist;
+                    _title.label = music.title;
+                    _subtitle.label = music.artist;
                     break;
             }
         }
 
         private void show_popover (double x, double y) {
             var app = (Application) GLib.Application.get_default ();
-            var song = _song;
-            app.popover_song = song;
+            var music = _music;
+            app.popover_music = music;
 
             var rect = Gdk.Rectangle ();
             rect.x = (int) x;
@@ -120,8 +120,8 @@ namespace Music {
             popover.set_parent (this);
             popover.closed.connect (() => {
                 Idle.add (() => {
-                    if (app.popover_song == song)
-                        app.popover_song = null;
+                    if (app.popover_music == music)
+                        app.popover_music = null;
                     return false;
                 });
             });

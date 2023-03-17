@@ -1,4 +1,4 @@
-namespace Music {
+namespace G4 {
 
     public static Gst.TagList? parse_gst_tags (File file) {
         FileInputStream? fis = null;

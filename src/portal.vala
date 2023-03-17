@@ -1,4 +1,4 @@
-namespace Music {
+namespace G4 {
 
     public class Portal {
         private static string BUS_NAME = "org.freedesktop.portal.Desktop";

@@ -1,4 +1,4 @@
-namespace Music {
+namespace G4 {
 
     public delegate V TaskFunc<V> ();
 

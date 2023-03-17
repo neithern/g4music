@@ -1,4 +1,4 @@
-namespace Music {
+namespace G4 {
 
     public class MiniBar : Adw.ActionRow {
         private Gtk.Image _cover = new Gtk.Image ();

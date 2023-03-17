@@ -163,7 +163,7 @@ msgstr "Zurück"
 msgid "_Export Cover"
 msgstr "Albumbild _exportieren"
 
-#: src/gtk/window.ui:217 src/song-entry.vala:101
+#: src/gtk/window.ui:217 src/music-entry.vala:101
 msgid "_Show in Files"
 msgstr "_In Dateiverwaltung anzeigen"
 
@@ -218,7 +218,7 @@ msgid "Keep playing"
 msgstr "Musik weiterspielen"
 
 #: src/play-bar.vala:83
-msgid "Repeat Song"
+msgid "Repeat Music"
 msgstr "Den Titel wiederholen"
 
 #: src/play-bar.vala:93
@@ -245,19 +245,19 @@ msgstr "Nur mit Albumbild"
 msgid "Never"
 msgstr "Nie"
 
-#: src/song.vala:3
+#: src/music.vala:3
 msgid "Unknown Album"
 msgstr "Unbekanntes Album"
 
-#: src/song.vala:4
+#: src/music.vala:4
 msgid "Unknown Artist"
 msgstr "Unbekannter Interpret"
 
-#: src/song-entry.vala:99
+#: src/music-entry.vala:99
 msgid "Show Album"
 msgstr "Album anzeigen"
 
-#: src/song-entry.vala:100
+#: src/music-entry.vala:100
 msgid "Show Artist"
 msgstr "Interpret anzeigen"
 
@@ -267,7 +267,7 @@ msgstr "Wird geladen …"
 
 #: src/window.vala:279
 msgid ""
-"Drag and drop song files here,\n"
+"Drag and drop music files here,\n"
 "or change music location: "
 msgstr ""
 "Musikdateien hierher ziehen und ablegen,\n"

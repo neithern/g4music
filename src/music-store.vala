@@ -1,4 +1,4 @@
-namespace Music {
+namespace G4 {
 
     public enum SortMode {
         ALBUM,
@@ -8,7 +8,7 @@ namespace Music {
         SHUFFLE,
     }
 
-    public class SongStore : Object {
+    public class MusicStore : Object {
         private static ThreadPool<DirCache>? _save_dir_pool;
 
         static construct {
@@ -19,8 +19,8 @@ namespace Music {
         }
 
         private SortMode _sort_mode = SortMode.TITLE;
-        private CompareDataFunc<Object> _compare = Song.compare_by_title;
-        private ListStore _store = new ListStore (typeof (Song));
+        private CompareDataFunc<Object> _compare = Music.compare_by_title;
+        private ListStore _store = new ListStore (typeof (Music));
         private TagCache _tag_cache = new TagCache ();
 
         public signal void parse_progress (int percent);
@@ -45,19 +45,19 @@ namespace Music {
                 _sort_mode = value;
                 switch (value) {
                     case SortMode.ALBUM:
-                        _compare = Song.compare_by_album;
+                        _compare = Music.compare_by_album;
                         break;
                     case SortMode.ARTIST:
-                        _compare = Song.compare_by_artist;
+                        _compare = Music.compare_by_artist;
                         break;
                     case SortMode.RECENT:
-                        _compare = Song.compare_by_date_ascending;
+                        _compare = Music.compare_by_date_ascending;
                         break;
                     case SortMode.SHUFFLE:
-                        _compare = Song.compare_by_order;
+                        _compare = Music.compare_by_order;
                         break;
                     default:
-                        _compare = Song.compare_by_title;
+                        _compare = Music.compare_by_title;
                         break;
                 }
                 if (_sort_mode == SortMode.SHUFFLE) {
@@ -66,22 +66,22 @@ namespace Music {
                     for (var i = 0; i < count; i++) {
                         arr.add ((!)_store.get_item (i));
                     }
-                    Song.shuffle_order (arr);
+                    Music.shuffle_order (arr);
                 }
                 _store.sort (_compare);
             }
         }
 
-        public void add_to_cache (Song song) {
-            _tag_cache.add (song);
+        public void add_to_cache (Music music) {
+            _tag_cache.add (music);
         }
 
         public void clear () {
             _store.remove_all ();
         }
 
-        public Song? get_song (uint position) {
-            return _store.get_item (position) as Song;
+        public Music? get_music (uint position) {
+            return _store.get_item (position) as Music;
         }
 
         public async void load_tag_cache_async () {
@@ -95,21 +95,21 @@ namespace Music {
         }
 
         public async void add_files_async (File[] files) {
-            var songs = new GenericArray<Object> (4096);
+            var musics = new GenericArray<Object> (4096);
             yield run_async<void> (() => {
                 var begin_time = get_monotonic_time ();
                 foreach (var file in files) {
-                    add_file (file, songs);
+                    add_file (file, musics);
                 }
 
-                var queue = new AsyncQueue<Song?> ();
-                for (var i = 0; i < songs.length; i++) {
-                    var song = (Song) songs[i];
-                    var cached_song = _tag_cache[song.uri];
-                    if (cached_song != null && ((!)cached_song).modified_time == song.modified_time)
-                        songs[i] = (!)cached_song;
+                var queue = new AsyncQueue<Music?> ();
+                for (var i = 0; i < musics.length; i++) {
+                    var music = (Music) musics[i];
+                    var cached_music = _tag_cache[music.uri];
+                    if (cached_music != null && ((!)cached_music).modified_time == music.modified_time)
+                        musics[i] = (!)cached_music;
                     else
-                        queue.push (song);
+                        queue.push (music);
                 }
                 var queue_count = queue.length ();
                 if (queue_count > 0) {
@@ -117,11 +117,11 @@ namespace Music {
                     int progress = 0;
                     var num_tasks = uint.min (queue_count, get_num_processors ());
                     run_in_threads<void> ((index) => {
-                        Song? s;
+                        Music? s;
                         while ((s = queue.try_pop ()) != null) {
-                            var song = (!)s;
-                            song.parse_tags ();
-                            _tag_cache.add (song);
+                            var music = (!)s;
+                            music.parse_tags ();
+                            _tag_cache.add (music);
                             AtomicInt.inc (ref progress);
                             var per = progress * 100 / queue_count;
                             if (percent < per) {
@@ -136,13 +136,13 @@ namespace Music {
                 }
 
                 if (_sort_mode == SortMode.SHUFFLE) {
-                    Song.shuffle_order (songs);
+                    Music.shuffle_order (musics);
                 }
-                songs.sort ((CompareFunc<Object>) _compare);
-                print ("Found %u songs in %g seconds\n", songs.length,
+                musics.sort ((CompareFunc<Object>) _compare);
+                print ("Found %u musics in %g seconds\n", musics.length,
                         (get_monotonic_time () - begin_time) / 1e6);
             });
-            _store.splice (_store.get_n_items (), 0, songs.data);
+            _store.splice (_store.get_n_items (), 0, musics.data);
 
             if (_tag_cache.modified) {
                 save_tag_cache_async.begin ((obj, res) => {
@@ -157,7 +157,7 @@ namespace Music {
                                         + FileAttribute.STANDARD_TYPE + ","
                                         + FileAttribute.TIME_MODIFIED;
 
-        private static void add_file (File file, GenericArray<Object> songs) {
+        private static void add_file (File file, GenericArray<Object> musics) {
             try {
                 var info = file.query_info (ATTRIBUTES, FileQueryInfoFlags.NONE);
                 if (info.get_file_type () == FileType.DIRECTORY) {
@@ -165,21 +165,21 @@ namespace Music {
                     stack.push_head (file);
                     while (stack.length > 0) {
                         var dir = stack.pop_head ();
-                        add_directory (dir, stack, songs);
+                        add_directory (dir, stack, musics);
                     }
                 } else {
-                    var song = Song.from_info (file, info);
-                    if (song != null)
-                        songs.add ((!)song);
+                    var music = Music.from_info (file, info);
+                    if (music != null)
+                        musics.add ((!)music);
                 }
             } catch (Error e) {
                 warning ("Query %s: %s\n", file.get_parse_name (), e.message);
             }
         }
 
-        private static void add_directory (File dir, Queue<File> stack, GenericArray<Object> songs) {
+        private static void add_directory (File dir, Queue<File> stack, GenericArray<Object> musics) {
             var cache = new DirCache (dir);
-            if (cache.check_valid () && cache.load (stack, songs)) {
+            if (cache.check_valid () && cache.load (stack, musics)) {
                 return;
             }
 
@@ -196,9 +196,9 @@ namespace Music {
                         cache.add_child (info);
                     } else {
                         var file = dir.get_child (info.get_name ());
-                        var song = Song.from_info (file, info);
-                        if (song != null) {
-                            songs.add ((!)song);
+                        var music = Music.from_info (file, info);
+                        if (music != null) {
+                            musics.add ((!)music);
                             cache.add_child (info);
                         }
                     }
