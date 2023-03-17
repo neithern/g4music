@@ -327,7 +327,6 @@ namespace Music {
 
         private async void on_song_tag_parsed (Song song, Gst.Sample? image) {
             update_song_info (song);
-            action_set_enabled (ACTION_APP + ACTION_EXPORT_COVER, image != null);
 
             var app = (Application) application;
             var pixbufs = new Gdk.Pixbuf?[2] {null, null};
@@ -356,6 +355,9 @@ namespace Music {
                 }
                 update_cover_paintable (song, paintable);
             }
+
+            action_set_enabled (ACTION_APP + ACTION_EXPORT_COVER, image != null);
+            action_set_enabled (ACTION_APP + ACTION_SHOW_COVER_FILE, image == null && song.external_cover);
         }
 
         private void scroll_to_item (int index) {

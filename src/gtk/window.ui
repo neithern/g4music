@@ -212,10 +212,16 @@
       <item>
         <attribute name="label" translatable="yes">_Export Cover</attribute>
         <attribute name="action">app.export-cover</attribute>
+        <attribute name="hidden-when">action-disabled</attribute>
       </item>
       <item>
-        <attribute name="label" translatable="yes">_Show in Files</attribute>
-        <attribute name="action">app.show-in-files</attribute>
+        <attribute name="label" translatable="yes">Show _Cover File</attribute>
+        <attribute name="action">app.show-cover-file</attribute>
+        <attribute name="hidden-when">action-disabled</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Show Music File</attribute>
+        <attribute name="action">app.show-music-file</attribute>
       </item>
     </section>
   </menu>

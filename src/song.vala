@@ -34,6 +34,12 @@ namespace Music {
             }
         }
 
+        public bool external_cover {
+            get {
+                return _cover_uri != null && !str_equal ((!)_cover_uri, uri);
+            }
+        }
+
         public bool from_gst_tags (Gst.TagList tags) {
             var changed = false;
             unowned string? al = null, ar = null, ti = null;

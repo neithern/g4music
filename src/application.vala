@@ -11,7 +11,8 @@ namespace Music {
     public const string ACTION_SEARCH = "search";
     public const string ACTION_SHOW_ALBUM = "show-album";
     public const string ACTION_SHOW_ARTIST = "show-artist";
-    public const string ACTION_SHOW_IN_FILES = "show-in-files";
+    public const string ACTION_SHOW_COVER_FILE = "show-cover-file";
+    public const string ACTION_SHOW_MUSIC_FILES = "show-music-file";
     public const string ACTION_SORT = "sort";
     public const string ACTION_TOGGLE_SORT = "toggle-sort";
     public const string ACTION_QUIT = "quit";
@@ -63,7 +64,8 @@ namespace Music {
                 { ACTION_SEARCH, toggle_seach },
                 { ACTION_SHOW_ALBUM, show_album },
                 { ACTION_SHOW_ARTIST, show_artist },
-                { ACTION_SHOW_IN_FILES, show_in_files },
+                { ACTION_SHOW_COVER_FILE, show_cover_file },
+                { ACTION_SHOW_MUSIC_FILES, show_music_file },
                 { ACTION_SORT, sort_by, "s", "'2'", sort_by_changed },
                 { ACTION_TOGGLE_SORT, toggle_sort },
                 { ACTION_QUIT, quit }
@@ -392,10 +394,16 @@ namespace Music {
             return play_item;
         }
 
+        private Portal _get_portal () {
+            if (_portal == null)
+                _portal = new Portal ();
+            return (!)_portal;
+        }
+
         public void request_background () {
-            _portal = _portal ?? new Portal ();
-            ((!)_portal).request_background_async.begin (_("Keep playing after window closed"), (obj, res) => {
-                ((!)_portal).request_background_async.end (res);
+            var portal = _get_portal ();
+            portal.request_background_async.begin (_("Keep playing after window closed"), (obj, res) => {
+                portal.request_background_async.end (res);
             });
         }
 
@@ -515,15 +523,23 @@ namespace Music {
             }
         }
 
-        private void show_in_files () {
-            var song = popover_song ?? _current_song;
-            var uri = song?.uri;
+        private void _show_uri_with_portal (string? uri) {
             if (uri != null) {
-                _portal = _portal ?? new Portal ();
-                ((!)_portal).open_directory_async.begin ((!)uri, (obj, res) => {
-                    ((!)_portal).open_directory_async.end (res);
+                var portal = _get_portal ();
+                portal.open_directory_async.begin ((!)uri, (obj, res) => {
+                    portal.open_directory_async.end (res);
                 });
             }
+        }
+
+        private void show_cover_file () {
+            var song = popover_song ?? _current_song;
+            _show_uri_with_portal (song?.cover_uri);
+        }
+
+        private void show_music_file () {
+            var song = popover_song ?? _current_song;
+            _show_uri_with_portal (song?.uri);
         }
 
         private void show_album () {
