@@ -66,7 +66,6 @@ namespace G4 {
                 { ACTION_SHOW_ARTIST, show_artist },
                 { ACTION_SHOW_COVER_FILE, show_cover_file },
                 { ACTION_SHOW_MUSIC_FILES, show_music_file },
-                { ACTION_SORT, sort_by, "s", "'2'", sort_by_changed },
                 { ACTION_TOGGLE_SORT, toggle_sort },
                 { ACTION_QUIT, quit }
             };
@@ -83,6 +82,14 @@ namespace G4 {
             foreach (var item in action_keys) {
                 set_accels_for_action (ACTION_APP + item.name, {item.key});
             }
+
+            var sort_mode = _settings?.get_uint ("sort-mode") ?? SortMode.TITLE;
+            ActionEntry[] action_sort = {
+                { ACTION_SORT, sort_by, "s", "'2'" },
+            };
+            var state = "'" + sort_mode.to_string () + "'";
+            action_sort[0].state = state;
+            add_action_entries (action_sort, this);
 
             dark_theme = _settings?.get_boolean ("dark-theme") ?? true;
 
@@ -298,10 +305,6 @@ namespace G4 {
         }
 
         private void sort_by (SimpleAction action, Variant? state) {
-            action.change_state (state);
-        }
-
-        private void sort_by_changed (SimpleAction action, Variant? state) {
             action.set_state ((!)state);
 
             unowned var value = state?.get_string () ?? "";
