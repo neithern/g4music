@@ -206,8 +206,9 @@ namespace G4 {
             snapshot.pop ();
             if (!leaflet.folded) {
                 var page = (Adw.LeafletPage) leaflet.pages.get_item (0);
-                var right = page.child.get_width ();
-                var rect = (!)Graphene.Rect ().init (right - 0.5f, 0, 0.5f, height);
+                var size = page.child.get_width ();
+                var rtl = get_direction () == Gtk.TextDirection.RTL;
+                var rect = (!)Graphene.Rect ().init (rtl ? width - size : size, 0, 0.5f, height);
                 draw_gray_linear_gradient_line (snapshot, rect);
             }
             base.snapshot (snapshot);

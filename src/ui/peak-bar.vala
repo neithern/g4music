@@ -10,6 +10,7 @@ namespace G4 {
         public PeakBar () {
             _layout = create_pango_layout (null);
             _layout.set_font_description (_font);
+            _layout.set_alignment (get_direction () == Gtk.TextDirection.RTL ? Pango.Alignment.RIGHT : Pango.Alignment.LEFT);
         }
 
         public Pango.Alignment align {
