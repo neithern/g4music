@@ -284,8 +284,7 @@ namespace G4 {
                 var theme = Gtk.IconTheme.get_for_display (this.display);
                 var paintable = theme.lookup_icon (app.application_id, null,
                     _cover_size, 1, Gtk.TextDirection.NONE, Gtk.IconLookupFlags.FORCE_REGULAR);
-                _cover_paintable.paintable = paintable;
-                _mini_bar.cover = paintable;
+                update_cover_paintables (new Music ("", "", 0), paintable);
             }
             initial_label.visible = empty;
             music_title.visible = !empty;
@@ -354,11 +353,10 @@ namespace G4 {
                 }
                 if (pixbufs[1] != null) {
                     var mini = Gdk.Texture.for_pixbuf ((!)pixbufs[1]);
-                    _mini_bar.cover = mini;
                     app.thumbnailer.put (music.cover_uri, mini);
                     app.music_list.items_changed (app.current_item, 0, 0);
                 }
-                update_cover_paintable (music, paintable);
+                update_cover_paintables (music, paintable);
             }
 
             action_set_enabled (ACTION_APP + ACTION_EXPORT_COVER, image != null);
@@ -427,11 +425,10 @@ namespace G4 {
 
         private Adw.Animation? _fade_animation = null;
 
-        private void update_cover_paintable (Music music, Gdk.Paintable? paintable) {
+        private void update_cover_paintables (Music music, Gdk.Paintable? paintable) {
             var app = (Application) application;
             _mini_bar.cover = app.thumbnailer.find (music.cover_uri);
             _cover_paintable.paintable = paintable ?? _mini_bar.cover;
-
             update_background ();
 
             var target = new Adw.CallbackAnimationTarget ((value) => {
@@ -452,7 +449,7 @@ namespace G4 {
         private int _blur_height = 0;
 
         private bool update_blur_paintable (int width, int height, bool force = false) {
-            var paintable = _mini_bar.cover; // _cover_paintable.paintable;
+            var paintable = _mini_bar.cover ?? _cover_paintable.paintable;
             if ((_bkgnd_blur == BackgroundBlurMode.ALWAYS && paintable != null)
                 || (_bkgnd_blur == BackgroundBlurMode.ART_ONLY && paintable is Gdk.Texture)) {
                 if (force || _blur_width != width || _blur_height != height) {
