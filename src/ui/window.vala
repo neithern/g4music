@@ -235,14 +235,18 @@ namespace G4 {
                 var handler_id = new ulong[1];
                 handler_id[0] = entry.cover.first_draw.connect(() => {
                     entry.cover.disconnect (handler_id[0]);
-                    if (!thumbnailer.has (music.cover_uri)) {
-                        thumbnailer.load_async.begin (music, (obj, res) => {
-                            var paintable2 = thumbnailer.load_async.end (res);
-                            if (paintable2 != null && music == (Music) item.item) {
-                                entry.paintable = paintable2;
-                                entry.update (music, app.sort_mode);
-                            }
-                        });
+                    if (music == (Music) item.item) {
+                        var paintable1 = thumbnailer.find (music.cover_uri);
+                        if (paintable1 != null) {
+                            entry.paintable = paintable1;
+                        } else {
+                            thumbnailer.load_async.begin (music, (obj, res) => {
+                                var paintable2 = thumbnailer.load_async.end (res);
+                                if (music == (Music) item.item) {
+                                    entry.paintable = paintable2;
+                                }
+                            });
+                        }
                     }
                 });
             }
@@ -474,3 +478,5 @@ namespace G4 {
         }
     }
 }
+
+
