@@ -83,7 +83,7 @@ namespace G4 {
             _repeat.tooltip_text = _("Repeat Music");
             _repeat.add_css_class ("flat");
             _repeat.toggled.connect (() => {
-                _repeat.icon_name = _repeat.active ? "media-playlist-repeat-music-symbolic" : "media-playlist-repeat-symbolic";
+                _repeat.icon_name = _repeat.active ? "media-playlist-repeat-song-symbolic" : "media-playlist-repeat-symbolic";
                 app.single_loop = ! app.single_loop;
             });
 
