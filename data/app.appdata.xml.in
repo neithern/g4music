@@ -48,6 +48,14 @@
     </screenshots>
 
     <releases>
+        <release version="1.9.2" date="2023-4-2">
+            <description>
+                <ul>
+                <li>Fix wrong icon name of repeat-song.</li>
+                <li>Fix wrong state of Switch buttons.</li>
+                </ul>
+            </description>
+        </release>
         <release version="1.9.1" date="2023-3-25">
             <description>
                 <ul>
