@@ -265,8 +265,8 @@ namespace G4 {
         private void on_index_changed (int index, uint size) {
             action_set_enabled (ACTION_APP + ACTION_PREV, index > 0);
             action_set_enabled (ACTION_APP + ACTION_NEXT, index < (int) size - 1);
-            scroll_to_item (index);
             index_title.label = size > 0 ? @"$(index+1)/$(size)" : "";
+            scroll_to_item (index);
         }
 
         private void on_loading_changed (bool loading, uint size) {
@@ -364,7 +364,14 @@ namespace G4 {
         }
 
         private void scroll_to_item (int index) {
-            list_view.activate_action ("list.scroll-to-item", "u", index);
+            list_view.activate_action_variant ("list.scroll-to-item", new Variant.uint32 (index));
+            Idle.add (() => {
+                //  scrolling may failed when building the list, so scroll again later
+                if (list_view.vadjustment.value == 0) {
+                    list_view.activate_action_variant ("list.scroll-to-item", new Variant.uint32 (index));
+                }
+                return false;
+            });
         }
 
         private void setup_drop_target () {
