@@ -75,7 +75,7 @@ namespace G4 {
                 if (_pipeline != null) {
                     var pipeline = (!)_pipeline;
                     if (_about_to_finish_id != 0) {
-                        SignalHandler.disconnect (pipeline, _about_to_finish_id);
+                        pipeline.disconnect (_about_to_finish_id);
                         _about_to_finish_id = 0;
                     }
                     if (value) {
