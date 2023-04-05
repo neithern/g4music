@@ -2,25 +2,15 @@
     // 使用 IntelliSense 了解相关属性。 
     // 悬停以查看现有属性的描述。
     // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
-    // Debug with webfreak.debug extension
+    // Debug with CoreLLDB extension
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "gdb",
+            "type": "lldb",
             "request": "launch",
-            "name": "Launch gdb",
-            "target": "${workspaceFolder}/build/src/${workspaceFolderBasename}",
-            "cwd": "${workspaceRoot}",
-            "valuesFormatting": "parseText",
-            "preLaunchTask": "Compile",
-        },
-        {
-            "type": "lldb-mi",
-            "request": "launch",
-            "name": "Launch lldb",
-            "target": "${workspaceFolder}/build/src/${workspaceFolderBasename}",
-            "cwd": "${workspaceRoot}",
-            "valuesFormatting": "parseText",
+            "name": "Launch",
+            "program": "${workspaceFolder}/build/src/${workspaceFolderBasename}",
+            "cwd": "${workspaceFolder}",
             "preLaunchTask": "Compile"
         }
     ]
