@@ -15,12 +15,12 @@ namespace G4 {
             var uri = dir.get_uri ();
             lock (_cache) {
                 var art_uri = _cache[uri];
-                if (art_uri == null || ((!)art_uri).length == 0) {
+                if (art_uri == null) {
                     var art_file = find_no_lock (dir);
-                    art_uri = art_file?.get_uri ();
-                    _cache[uri] = art_uri ?? "";
+                    art_uri = art_file?.get_uri () ?? "";
+                    _cache[uri] = art_uri;
                 }
-                return art_uri != null ? File.new_for_uri ((!)art_uri) : (File?) null;
+                return ((art_uri?.length ?? 0) > 0) ? File.new_for_uri ((!)art_uri) : (File?) null;
             }
         }
 
@@ -181,7 +181,9 @@ namespace G4 {
                         var album_key = album_key_ + image_size.to_string ("%x");
                         check_same_album_cover (album_key, ref cover_uri[0]);
                     }
-                    return load_clamp_pixbuf_from_sample ((!)sample, size);
+                    var pixbuf = load_clamp_pixbuf_from_sample ((!)sample, size);
+                    if (pixbuf != null)
+                        return pixbuf;
                 }
                 //  Try load album art cover file in the folder
                 var cover_file = _cover_finder.find (file);
