@@ -298,14 +298,4 @@ namespace G4 {
         }
         return null;
     }
-
-    public static void draw_gray_linear_gradient_line (Gtk.Snapshot snapshot, Graphene.Rect rect) {
-        var color = Gdk.RGBA ();
-        var color2 = Gdk.RGBA ();
-        color.red = color.green = color.blue = color.alpha = 0;
-        color2.red = color2.green = color2.blue = color2.alpha = 0.5f;
-        Gsk.ColorStop[] stops = { { 0, color }, { 0.5f, color2 }, { 1, color } };
-        snapshot.append_linear_gradient (rect, rect.get_top_left (),
-            rect.get_bottom_right (), stops);
-    }
 }
