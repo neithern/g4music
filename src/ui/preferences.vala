@@ -82,7 +82,7 @@ namespace G4 {
 
     public async void pick_music_folder_async (Application app, Gtk.Window? parent, FolderPicked picked) {
         var music_dir = app.get_music_folder ();
-#if HAS_FILE_DIALOG
+#if GTK_4_10
         var dialog = new Gtk.FileDialog ();
         dialog.initial_folder = music_dir;
         dialog.modal = true;

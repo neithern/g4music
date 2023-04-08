@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
   <gresource prefix="/com/github/neithern/g4music">
+    <file alias="style.css">gtk/style.css</file>
     <file>gtk/help-overlay.ui</file>
     <file>gtk/preferences.ui</file>
     <file>gtk/window.ui</file>

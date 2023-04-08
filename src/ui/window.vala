@@ -88,12 +88,8 @@ namespace G4 {
                 }
                 update_music_filter ();
             });
-            search_entry.search_changed.connect (on_search_text_changed);
-
-            var provider = new Gtk.CssProvider ();
-            provider.load_from_data ("searchbar revealer box {box-shadow: none; background-color: transparent;}".data);
-            Gtk.StyleContext.add_provider_for_display (this.display, provider, Gtk.STYLE_PROVIDER_PRIORITY_USER);
             search_bar.key_capture_widget = this.content;
+            search_entry.search_changed.connect (on_search_text_changed);
 
             mini_box.append (_mini_bar);
             _mini_bar.activated.connect (() => {
@@ -388,7 +384,7 @@ namespace G4 {
 
         private void setup_drop_target () {
             var drop_target = new Gtk.DropTarget (typeof (Gdk.FileList), Gdk.DragAction.COPY);
-#if HAS_FILE_DIALOG
+#if GTK_4_10
             drop_target.drop.connect ((value, x, y) => {
 #else
             drop_target.on_drop.connect ((value, x, y) => {

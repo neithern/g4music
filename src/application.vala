@@ -417,7 +417,7 @@ namespace G4 {
             /* Translators: Replace "translator-credits" with your names, one name per line */
             var translator_credits = _("translator-credits");
             var website = "https://gitlab.gnome.org/neithern/g4music";
-#if HAS_ADW_ABOUT
+#if ADW_1_2
             var win = new Adw.AboutWindow ();
             win.application_icon = application_id;
             win.application_name = app_name;
@@ -483,7 +483,7 @@ namespace G4 {
                 var name = active_window.title.replace ("/", "&") + "." + ext;
                 var filter = new Gtk.FileFilter ();
                 filter.add_mime_type (itype ??  "image/*");
-#if HAS_FILE_DIALOG
+#if GTK_4_10
                 var dialog = new Gtk.FileDialog ();
                 dialog.set_initial_name (name);
                 dialog.set_default_filter (filter);

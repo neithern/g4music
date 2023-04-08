@@ -51,8 +51,11 @@ namespace G4 {
             unowned var text = _sbuilder.str;
             _layout.set_text (text, text.length);
 
-            var style = get_style_context ();
-            var color = style.get_color ();
+#if GTK_4_10
+            var color = get_color ();
+#else
+            var color = get_style_context ().get_color ();
+#endif
 
             var pt = Graphene.Point ();
             pt.x = 0;

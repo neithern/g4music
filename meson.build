@@ -14,12 +14,12 @@ add_project_arguments('--enable-experimental-non-null', language: 'vala')
 
 gtk_dep = dependency('gtk4')
 if gtk_dep.version().version_compare('>=4.10.0')
-  add_project_arguments('--define=HAS_FILE_DIALOG', language: 'vala')
+  add_project_arguments('--define=GTK_4_10', language: 'vala')
 endif
 
 adw_dep = dependency('libadwaita-1')
 if adw_dep.version().version_compare('>=1.2.0')
-  add_project_arguments('--define=HAS_ADW_ABOUT', language: 'vala')
+  add_project_arguments('--define=ADW_1_2', language: 'vala')
 endif
 
 libm_dep = meson.get_compiler('c').find_library('m', required: false)
