@@ -474,7 +474,7 @@ namespace G4 {
             }
         }
 
-        private void export_cover () {
+        private async void _export_cover_async () {
             if (_cover_image != null && active_window is Window) {
                 var sample = (!)_cover_image;
                 var itype = sample.get_caps ()?.get_structure (0)?.get_name ();
@@ -483,6 +483,19 @@ namespace G4 {
                 var name = active_window.title.replace ("/", "&") + "." + ext;
                 var filter = new Gtk.FileFilter ();
                 filter.add_mime_type (itype ??  "image/*");
+#if HAS_FILE_DIALOG
+                var dialog = new Gtk.FileDialog ();
+                dialog.set_initial_name (name);
+                dialog.set_default_filter (filter);
+                dialog.modal = true;
+                try {
+                    var file = yield dialog.save (active_window, null);
+                    if (file != null) {
+                        yield save_sample_to_file_async ((!)file, sample);
+                    }
+                } catch (Error e) {
+                }
+#else
                 var chooser = new Gtk.FileChooserNative (null, active_window, Gtk.FileChooserAction.SAVE, null, null);
                 chooser.set_current_name (name);
                 chooser.set_filter (filter);
@@ -490,13 +503,16 @@ namespace G4 {
                 chooser.response.connect ((id) => {
                     var file = chooser.get_file ();
                     if (id == Gtk.ResponseType.ACCEPT && file is File) {
-                        save_sample_to_file.begin ((!)file, sample, (obj, res) => {
-                            save_sample_to_file.end (res);
-                        });
+                        save_sample_to_file_async.begin ((!)file, sample, (obj, res) => save_sample_to_file_async.end (res));
                     }
                 });
                 chooser.show ();
+#endif
             }
+        }
+
+        private void export_cover () {
+            _export_cover_async.begin ((obj, res) => _export_cover_async.end (res));
         }
 
         private Music? get_next_music (ref int index) {
@@ -610,7 +626,7 @@ namespace G4 {
                 string? cover_uri = null;
                 if (image != null) {
                     var file = File.new_build_filename (Environment.get_tmp_dir (), application_id + "_" + str_hash (music.cover_uri).to_string ("%x"));
-                    yield save_sample_to_file (file, (!)image);
+                    yield save_sample_to_file_async (file, (!)image);
                     yield delete_cover_tmp_file_async ();
                     _cover_tmp_file = file;
                     cover_uri = file.get_uri ();
@@ -626,16 +642,18 @@ namespace G4 {
         }
     }
 
-    public static async void save_sample_to_file (File file, Gst.Sample sample) {
+    public static async void save_sample_to_file_async (File file, Gst.Sample sample) {
+        var buffer = sample.get_buffer ();
+        Gst.MapInfo? info = null;
         try {
-            var buffer = sample.get_buffer ();
-            Gst.MapInfo? info = null;
             if (buffer?.map (out info, Gst.MapFlags.READ) ?? false) {
                 var stream = yield file.create_async (FileCreateFlags.NONE);
                 yield stream.write_all_async (info?.data, Priority.DEFAULT, null, null);
-                buffer?.unmap ((!)info);
             }
         } catch (Error e) {
+        } finally {
+            if (info != null)
+                buffer?.unmap ((!)info);
         }
     }
 }

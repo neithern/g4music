@@ -12,6 +12,11 @@ version = meson.project_version()
 add_project_arguments('-DGETTEXT_PACKAGE="' + app_id + '"', language: 'c')
 add_project_arguments('--enable-experimental-non-null', language: 'vala')
 
+gtk_dep = dependency('gtk4')
+if gtk_dep.version().version_compare('>=4.10.0')
+  add_project_arguments('--define=HAS_FILE_DIALOG', language: 'vala')
+endif
+
 adw_dep = dependency('libadwaita-1')
 if adw_dep.version().version_compare('>=1.2.0')
   add_project_arguments('--define=HAS_ADW_ABOUT', language: 'vala')

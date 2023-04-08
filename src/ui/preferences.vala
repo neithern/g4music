@@ -40,10 +40,10 @@ namespace G4 {
             var music_dir = app.get_music_folder ();
             music_dir_btn.label = get_display_name (music_dir);
             music_dir_btn.clicked.connect (() => {
-                pick_music_folder (app, this, (dir) => {
+                pick_music_folder_async.begin (app, this, (dir) => {
                     music_dir_btn.label = get_display_name (dir);
                     app.reload_music_store ();
-                });
+                }, (obj, res) => pick_music_folder_async.end (res));
             });
 
             settings?.bind ("remote-thumbnail", thumbnail_btn, "active", SettingsBindFlags.GET_NO_CHANGES);
@@ -80,8 +80,21 @@ namespace G4 {
 
     public delegate void FolderPicked (File dir);
 
-    public void pick_music_folder (Application app, Gtk.Window? parent, FolderPicked picked) {
+    public async void pick_music_folder_async (Application app, Gtk.Window? parent, FolderPicked picked) {
         var music_dir = app.get_music_folder ();
+#if HAS_FILE_DIALOG
+        var dialog = new Gtk.FileDialog ();
+        dialog.initial_folder = music_dir;
+        dialog.modal = true;
+        try {
+            var dir = yield dialog.select_folder (parent, null);
+            if (dir != null && dir != music_dir) {
+                app.settings?.set_string ("music-dir", ((!)dir).get_uri ());
+                picked ((!)dir);
+            }
+        } catch (Error e) {
+        }
+#else
         var chooser = new Gtk.FileChooserNative (null, parent,
                         Gtk.FileChooserAction.SELECT_FOLDER, null, null);
         try {
@@ -99,5 +112,6 @@ namespace G4 {
             }
         });
         chooser.show ();
+#endif
     }
 }

@@ -140,12 +140,7 @@ namespace G4 {
                 app.player.play ();
             });
 
-            initial_label.activate_link.connect ((uri) => {
-                pick_music_folder (app, this, (dir) => {
-                    app.reload_music_store ();
-                });
-                return true;
-            });
+            initial_label.activate_link.connect (on_music_folder_clicked);
 
             if (app.is_loading_store) {
                 //  Make a call to show start loading
@@ -298,6 +293,13 @@ namespace G4 {
             }
             initial_label.visible = empty;
             music_title.visible = !empty;
+        }
+
+        private bool on_music_folder_clicked (string uri) {
+            var app = (Application) application;
+            pick_music_folder_async.begin (app, this, (dir) => app.reload_music_store (),
+                (obj, res) => pick_music_folder_async.end (res));
+            return true;
         }
 
         private Adw.Animation? _scale_animation = null;
