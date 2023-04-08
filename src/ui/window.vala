@@ -388,7 +388,11 @@ namespace G4 {
 
         private void setup_drop_target () {
             var drop_target = new Gtk.DropTarget (typeof (Gdk.FileList), Gdk.DragAction.COPY);
+#if HAS_FILE_DIALOG
+            drop_target.drop.connect ((value, x, y) => {
+#else
             drop_target.on_drop.connect ((value, x, y) => {
+#endif
                 var file_list = ((Gdk.FileList) value).get_files ();
                 var count = file_list.length ();
                 var files = new File[count];
