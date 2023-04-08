@@ -6,7 +6,7 @@ namespace G4 {
             double peak;
         }
 
-        public static void init (ref weak string[]? args) {
+        public static void init (ref unowned string[]? args) {
             Gst.init (ref args);
         }
 

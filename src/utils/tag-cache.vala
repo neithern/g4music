@@ -6,7 +6,7 @@ namespace G4 {
         private File _file;
         private bool _loaded = false;
         private bool _modified = false;
-        private HashTable<weak string, Music> _cache = new HashTable<weak string, Music> (str_hash, str_equal);
+        private HashTable<unowned string, Music> _cache = new HashTable<unowned string, Music> (str_hash, str_equal);
 
         public TagCache (string name = "tag-cache") {
             var dir = Environment.get_user_cache_dir ();
@@ -26,8 +26,8 @@ namespace G4 {
         }
 
         public Music? @get (string uri) {
-            weak string key;
-            weak Music music;
+            unowned string key;
+            unowned Music music;
             lock (_cache) {
                 if (_cache.lookup_extended (uri, out key, out music)) {
                     return music;

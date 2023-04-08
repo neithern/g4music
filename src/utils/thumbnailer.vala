@@ -56,8 +56,8 @@ namespace G4 {
         private Tree<string, V> _cache = new Tree<string, V> (compare_string);
 
         public V? find (string key) {
-            weak string orig_key;
-            weak V value;
+            unowned string orig_key;
+            unowned V value;
             if (_cache.lookup_extended (key, out orig_key, out value))
                 return value;
             return null;
@@ -230,7 +230,7 @@ namespace G4 {
 
         private bool check_same_album_cover (string album_key, ref string cover_uri) {
             lock (_album_covers) {
-                weak string key, uri;
+                unowned string key, uri;
                 if (_album_covers.lookup_extended (album_key, out key, out uri)) {
                     cover_uri = uri;
                     //  print ("Same album cover: %s\n", album_key);

@@ -18,8 +18,8 @@ namespace G4 {
     public const string ACTION_QUIT = "quit";
 
     struct ActionShortKey {
-        public weak string name;
-        public weak string key;
+        public unowned string name;
+        public unowned string key;
     }
 
     internal Settings? new_application_settings () {
