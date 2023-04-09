@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-17 14:05+0800\n"
+"POT-Creation-Date: 2023-04-09 11:56+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:412
+#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:415
 #: src/main.vala:24
 msgid "G4Music"
 msgstr ""
@@ -116,7 +116,7 @@ msgstr ""
 msgid "Playback"
 msgstr ""
 
-#: src/gtk/preferences.ui:64 src/application.vala:405
+#: src/gtk/preferences.ui:64 src/application.vala:408
 msgid "Keep playing after window closed"
 msgstr ""
 
@@ -164,7 +164,7 @@ msgstr ""
 msgid "Show _Cover File"
 msgstr ""
 
-#: src/gtk/window.ui:223 src/music-entry.vala:113
+#: src/gtk/window.ui:223 src/ui/music-entry.vala:113
 msgid "_Show Music File"
 msgstr ""
 
@@ -204,72 +204,76 @@ msgstr ""
 msgid "Shuffle"
 msgstr ""
 
-#: src/application.vala:413
+#: src/application.vala:416
 msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr ""
 
-#: src/application.vala:415
+#: src/application.vala:418
 msgid "translator-credits"
 msgstr ""
 
-#: src/application.vala:594
+#: src/application.vala:613
 msgid "Keep playing"
 msgstr ""
 
-#: src/play-bar.vala:83
-msgid "Repeat Music"
-msgstr ""
-
-#: src/play-bar.vala:93
-msgid "Play Previous"
-msgstr ""
-
-#: src/play-bar.vala:99
-msgid "Play/Pause"
-msgstr ""
-
-#: src/play-bar.vala:106
-msgid "Play Next"
-msgstr ""
-
-#: src/preferences.vala:71
-msgid "Always"
-msgstr ""
-
-#: src/preferences.vala:73
-msgid "Art Only"
-msgstr ""
-
-#: src/preferences.vala:75
-msgid "Never"
-msgstr ""
-
-#: src/music.vala:2
-msgid "Unknown Album"
-msgstr ""
-
-#: src/music.vala:3
-msgid "Unknown Artist"
-msgstr ""
-
-#: src/music-entry.vala:110
+#: src/ui/music-entry.vala:110
 msgid "Play at Next"
 msgstr ""
 
-#: src/music-entry.vala:111
+#: src/ui/music-entry.vala:111
 msgid "Show Album"
 msgstr ""
 
-#: src/music-entry.vala:112
+#: src/ui/music-entry.vala:112
 msgid "Show Artist"
 msgstr ""
 
-#: src/window.vala:54
+#: src/ui/play-bar.vala:83
+msgid "Repeat Music"
+msgstr ""
+
+#: src/ui/play-bar.vala:93
+msgid "Play Previous"
+msgstr ""
+
+#: src/ui/play-bar.vala:99
+msgid "Play/Pause"
+msgstr ""
+
+#: src/ui/play-bar.vala:106
+msgid "Play Next"
+msgstr ""
+
+#: src/ui/preferences.vala:71
+msgid "Always"
+msgstr ""
+
+#: src/ui/preferences.vala:73
+msgid "Art Only"
+msgstr ""
+
+#: src/ui/preferences.vala:75
+msgid "Never"
+msgstr ""
+
+#: src/ui/volume-button.vala:32
+msgid "Volume: "
+msgstr ""
+
+#: src/ui/window.vala:54
 msgid "Loading..."
 msgstr ""
 
-#: src/window.vala:277
+#: src/ui/window.vala:292
 msgid ""
 "Drag and drop music files here,\n"
 "or change music location: "
+msgstr ""
+
+#: src/utils/music.vala:2
+msgid "Unknown Album"
+msgstr ""
+
+#: src/utils/music.vala:3
+msgid "Unknown Artist"
 msgstr ""

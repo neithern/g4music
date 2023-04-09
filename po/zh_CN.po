@@ -3,21 +3,24 @@
 # Copyright (C) 2022 THE g4music'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the g package.
 # Alen <neithern@outlook.com>, 2022.
+# Nanling <neithern@outlook.com>, 2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-17 14:05+0800\n"
-"PO-Revision-Date: 2022-05-31 20:35+0800\n"
+"POT-Creation-Date: 2023-04-09 11:56+0800\n"
+"PO-Revision-Date: 2023-04-09 11:56+0800\n"
 "Last-Translator: Nanling <neithern@outlook.com>\n"
-"Language-Team: Chinese (simplified)\n"
+"Language-Team: Chinese - China <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+"X-Generator: Gtranslator 42.0\n"
 
-#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:412
+#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:415
 #: src/main.vala:24
 msgid "G4Music"
 msgstr "G4音乐"
@@ -116,7 +119,7 @@ msgstr "可能会导致速度减慢和过多的网络使用"
 msgid "Playback"
 msgstr "播放"
 
-#: src/gtk/preferences.ui:64 src/application.vala:405
+#: src/gtk/preferences.ui:64 src/application.vala:408
 msgid "Keep playing after window closed"
 msgstr "关闭窗口后继续播放"
 
@@ -164,7 +167,7 @@ msgstr "导出封面(_E)"
 msgid "Show _Cover File"
 msgstr "显示封面文件(_C)"
 
-#: src/gtk/window.ui:223 src/music-entry.vala:113
+#: src/gtk/window.ui:223 src/ui/music-entry.vala:113
 msgid "_Show Music File"
 msgstr "显示音乐文件(_S)"
 
@@ -204,74 +207,78 @@ msgstr "按日期"
 msgid "Shuffle"
 msgstr "乱序"
 
-#: src/application.vala:413
+#: src/application.vala:416
 msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr "一个快速、流畅、轻量的，基于GTK4的音乐播放软件。"
 
-#: src/application.vala:415
+#: src/application.vala:418
 msgid "translator-credits"
 msgstr "Nanling"
 
-#: src/application.vala:594
+#: src/application.vala:613
 msgid "Keep playing"
 msgstr "持续播放"
 
-#: src/play-bar.vala:83
-msgid "Repeat Music"
-msgstr "单曲循环"
-
-#: src/play-bar.vala:93
-msgid "Play Previous"
-msgstr "播放上一首"
-
-#: src/play-bar.vala:99
-msgid "Play/Pause"
-msgstr "播放/暂停"
-
-#: src/play-bar.vala:106
-msgid "Play Next"
-msgstr "播放下一首"
-
-#: src/preferences.vala:71
-msgid "Always"
-msgstr "总是"
-
-#: src/preferences.vala:73
-msgid "Art Only"
-msgstr "仅封面"
-
-#: src/preferences.vala:75
-msgid "Never"
-msgstr "从不"
-
-#: src/music.vala:2
-msgid "Unknown Album"
-msgstr "未知专辑"
-
-#: src/music.vala:3
-msgid "Unknown Artist"
-msgstr "未知艺术家"
-
-#: src/music-entry.vala:110
+#: src/ui/music-entry.vala:110
 msgid "Play at Next"
 msgstr "插播"
 
-#: src/music-entry.vala:111
+#: src/ui/music-entry.vala:111
 msgid "Show Album"
 msgstr "显示专辑"
 
-#: src/music-entry.vala:112
+#: src/ui/music-entry.vala:112
 msgid "Show Artist"
 msgstr "显示艺术家"
 
-#: src/window.vala:54
+#: src/ui/play-bar.vala:83
+msgid "Repeat Music"
+msgstr "单曲循环"
+
+#: src/ui/play-bar.vala:93
+msgid "Play Previous"
+msgstr "播放上一首"
+
+#: src/ui/play-bar.vala:99
+msgid "Play/Pause"
+msgstr "播放/暂停"
+
+#: src/ui/play-bar.vala:106
+msgid "Play Next"
+msgstr "播放下一首"
+
+#: src/ui/preferences.vala:71
+msgid "Always"
+msgstr "总是"
+
+#: src/ui/preferences.vala:73
+msgid "Art Only"
+msgstr "仅封面"
+
+#: src/ui/preferences.vala:75
+msgid "Never"
+msgstr "从不"
+
+#: src/ui/volume-button.vala:32
+msgid "Volume: "
+msgstr "音量："
+
+#: src/ui/window.vala:54
 msgid "Loading..."
 msgstr "正在加载…"
 
-#: src/window.vala:277
+#: src/ui/window.vala:292
 msgid ""
 "Drag and drop music files here,\n"
 "or change music location: "
 msgstr ""
 "拖放音乐文件到这里，\n"
 "或者修改曲库的位置："
+
+#: src/utils/music.vala:2
+msgid "Unknown Album"
+msgstr "未知专辑"
+
+#: src/utils/music.vala:3
+msgid "Unknown Artist"
+msgstr "未知艺术家"

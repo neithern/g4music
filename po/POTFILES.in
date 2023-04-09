@@ -4,9 +4,10 @@ src/gtk/preferences.ui
 src/gtk/window.ui
 src/application.vala
 src/main.vala
-src/music.vala
-src/music-entry.vala
-src/music-store.vala
-src/play-bar.vala
-src/preferences.vala
-src/window.vala
+src/ui/music-entry.vala
+src/ui/play-bar.vala
+src/ui/preferences.vala
+src/ui/volume-button.vala
+src/ui/window.vala
+src/utils/music.vala
+src/utils/music-store.vala
