@@ -12,6 +12,7 @@ sources = [
   'ui/peak-bar.vala',
   'ui/play-bar.vala',
   'ui/preferences.vala',
+  'ui/volume-button.vala',
   'ui/window.vala',
   'utils/async-task.vala',
   'utils/data-io.vala',
