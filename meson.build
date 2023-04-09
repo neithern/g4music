@@ -9,11 +9,14 @@ i18n = import('i18n')
 app_id = meson.project_name()
 version = meson.project_version()
 
+c_compiler = meson.get_compiler('c')
+vala_compiler = meson.get_compiler('vala')
+
 add_project_arguments('-DGETTEXT_PACKAGE="' + app_id + '"', language: 'c')
 add_project_arguments('--enable-experimental-non-null', language: 'vala')
 
 gtk_dep = dependency('gtk4')
-if gtk_dep.version().version_compare('>=4.10.0')
+if gtk_dep.version().version_compare('>=4.10.0') and vala_compiler.version().version_compare('>=0.56.6')
   add_project_arguments('--define=GTK_4_10', language: 'vala')
 endif
 
@@ -22,8 +25,8 @@ if adw_dep.version().version_compare('>=1.2.0')
   add_project_arguments('--define=ADW_1_2', language: 'vala')
 endif
 
-libm_dep = meson.get_compiler('c').find_library('m', required: false)
-posix_dep = meson.get_compiler('vala').find_library('posix', required: false)
+libm_dep = c_compiler.find_library('m', required: false)
+posix_dep = vala_compiler.find_library('posix', required: false)
 
 dependencies = [
   dependency('gstreamer-1.0'),

@@ -1,6 +1,6 @@
 namespace G4 {
 
-    public class VolumeButton : Gtk.ScaleButton, Gtk.Accessible, Gtk.AccessibleRange, Gtk.Buildable, Gtk.ConstraintTarget, Gtk.Orientable {
+    public class VolumeButton : Gtk.ScaleButton, Gtk.Accessible, Gtk.Buildable, Gtk.ConstraintTarget, Gtk.Orientable {
 
         public static double EPSILON = 1e-10;
 
