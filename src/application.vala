@@ -122,7 +122,7 @@ namespace G4 {
             });
 
             _mpris_id = Bus.own_name (BusType.SESSION,
-                "org.mpris.MediaPlayer2." + Config.APP_ID,
+                "org.mpris.MediaPlayer2.G4Music",
                 BusNameOwnerFlags.NONE,
                 on_bus_acquired,
                 null, null

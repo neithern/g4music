@@ -6,16 +6,18 @@
     "command": "g4music",
     "finish-args": [
         "--device=dri",
-        "--share=network",
         "--share=ipc",
+        "--share=network",
         "--socket=fallback-x11",
-        "--socket=wayland",
         "--socket=pulseaudio",
-        "--filesystem=/tmp",
-        "--filesystem=xdg-music:ro",
+        "--socket=wayland",
         "--filesystem=xdg-download:ro",
-        "--filesystem=xdg-run/pipewire-0:ro",
+        "--filesystem=xdg-music:ro",
         "--filesystem=xdg-run/gvfsd",
+        "--filesystem=xdg-run/pipewire-0:ro",
+        "--filesystem=/tmp",
+        "--own-name=org.mpris.MediaPlayer2.G4Music",
+        "--talk-name=org.gnome.Shell",
         "--talk-name=org.gtk.vfs.*"
     ],
     "cleanup": [
