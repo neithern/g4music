@@ -625,7 +625,7 @@ namespace G4 {
 
                 string? cover_uri = null;
                 if (image != null) {
-                    var file = File.new_build_filename (Environment.get_tmp_dir (), application_id + "_" + str_hash (music.cover_uri).to_string ("%x"));
+                    var file = File.new_build_filename (Environment.get_user_cache_dir (), application_id, str_hash (music.cover_uri).to_string ("%x"));
                     yield save_sample_to_file_async (file, (!)image);
                     yield delete_cover_tmp_file_async ();
                     _cover_tmp_file = file;

@@ -15,7 +15,6 @@
         "--filesystem=xdg-music:ro",
         "--filesystem=xdg-run/gvfsd",
         "--filesystem=xdg-run/pipewire-0:ro",
-        "--filesystem=/tmp",
         "--own-name=org.mpris.MediaPlayer2.G4Music",
         "--talk-name=org.gnome.Shell",
         "--talk-name=org.gtk.vfs.*"
