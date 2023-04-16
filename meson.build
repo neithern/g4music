@@ -1,13 +1,14 @@
-project('com.github.neithern.g4music',
-  ['c', 'vala'],
-  version: '1.9.2'
+project(
+  'g4music', [ 'vala', 'c' ],
+  version: '1.9.2',
+  license: 'GPL3'
 )
+
+app_id = 'com.github.neithern.' + meson.project_name()
+version = meson.project_version()
 
 gnome = import('gnome')
 i18n = import('i18n')
-
-app_id = meson.project_name()
-version = meson.project_version()
 
 c_compiler = meson.get_compiler('c')
 vala_compiler = meson.get_compiler('vala')

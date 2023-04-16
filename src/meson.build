@@ -31,14 +31,17 @@ conf.set_quoted('VERSION', version)
 conf.set_quoted('LOCALEDIR', get_option('prefix') / get_option('localedir'))
 configure_file(output: 'config.h', configuration: conf)
 
-sources += gnome.compile_resources('g4music-resources',
+c_name = meson.project_name()
+res_name = c_name + '-resources'
+
+sources += gnome.compile_resources(res_name,
   'gresource.xml',
-  c_name: 'g4music'
+  c_name: c_name
 )
 
 add_project_arguments('-I' + meson.current_source_dir () + '/gst/', language: 'c')
 
-executable('g4music', sources,
+executable(c_name, sources,
   vala_args: [
     # meson.current_source_dir () + '/config.vapi',
     meson.current_source_dir () + '/gst/gst-ext.vapi',
