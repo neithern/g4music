@@ -40,7 +40,6 @@ namespace G4 {
         private MusicStore _music_store = new MusicStore ();
         private Thumbnailer _thumbnailer = new Thumbnailer ();
         private Settings? _settings = new_application_settings ();
-        private MprisPlayer? _mpris = null;
         private uint _mpris_id = 0;
         private Portal? _portal = null;
 
@@ -48,6 +47,7 @@ namespace G4 {
         public signal void index_changed (int index, uint size);
         public signal void music_changed (Music music);
         public signal void music_tag_parsed (Music music, Gst.Sample? image);
+        public signal void music_cover_uri_parsed (Music music, string? uri);
 
         public Application () {
             Object (application_id: Config.APP_ID, flags: ApplicationFlags.HANDLES_OPEN);
@@ -453,9 +453,8 @@ namespace G4 {
         }
 
         private void on_bus_acquired (DBusConnection connection, string name) {
-            _mpris = new MprisPlayer (this, connection);
             try {
-                connection.register_object ("/org/mpris/MediaPlayer2", (!)_mpris);
+                connection.register_object ("/org/mpris/MediaPlayer2", new MprisPlayer (this, connection));
                 connection.register_object ("/org/mpris/MediaPlayer2", new MprisRoot (this));
             } catch (Error e) {
                 warning ("Register MPRIS failed: %s\n", e.message);
@@ -636,7 +635,7 @@ namespace G4 {
                     if (cover_uri == null && music.cover_uri != music.uri) {
                         cover_uri = music.cover_uri;
                     }
-                    _mpris?.send_meta_data (music, cover_uri);
+                    music_cover_uri_parsed (music, cover_uri);
                 }
             }
         }

@@ -12,7 +12,7 @@ namespace G4 {
 
             app.index_changed.connect (on_index_changed);
             app.music_changed.connect (on_music_changed);
-            app.music_tag_parsed.connect (on_music_tag_parsed);
+            app.music_cover_uri_parsed.connect (on_music_cover_uri_parsed);
             app.player.state_changed.connect (on_state_changed);
         }
 
@@ -30,7 +30,13 @@ namespace G4 {
 
         public bool can_play {
             get {
-                return _app.music_list.get_n_items () > 0;
+                return _app.current_music != null;
+            }
+        }
+
+        public bool can_pause {
+            get {
+                return _app.current_music != null;
             }
         }
 
@@ -46,11 +52,16 @@ namespace G4 {
             _app.play_pause();
         }
 
+        public void pause () throws Error {
+            _app.player.pause ();
+        }
+
         private void on_index_changed (int index, uint size) {
             var builder = new VariantBuilder (new VariantType ("a{sv}"));
             builder.add ("{sv}", "CanGoNext", new Variant.boolean (index < (int) size - 1));
             builder.add ("{sv}", "CanGoPrevious", new Variant.boolean (index > 0));
-            builder.add ("{sv}", "CanPlay", new Variant.boolean (size > 0));
+            builder.add ("{sv}", "CanPlay", new Variant.boolean (_app.current_music != null));
+            builder.add ("{sv}", "CanPause", new Variant.boolean (_app.current_music != null));
             send_properties (builder);
         }
 
@@ -58,8 +69,8 @@ namespace G4 {
             send_meta_data (music);
         }
 
-        private void on_music_tag_parsed (Music music, Gst.Sample? image) {
-            send_meta_data (music);
+        private void on_music_cover_uri_parsed (Music music, string? uri) {
+            send_meta_data (music, uri);
         }
 
         private void on_state_changed (Gst.State state) {
@@ -78,7 +89,7 @@ namespace G4 {
             send_property ("PlaybackStatus", new Variant.string (st));
         }
 
-        internal void send_meta_data (Music music, string? art_uri = null) {
+        private void send_meta_data (Music music, string? art_uri = null) {
             var dict = new VariantDict (null);
             var artists = new VariantBuilder (new VariantType ("as"));
             artists.add ("s", music.artist);
