@@ -27,6 +27,12 @@ namespace G4 {
             app.player.state_changed.connect (on_state_changed);
         }
 
+        public bool can_control {
+            get {
+                return true;
+            }
+        }
+
         public bool can_go_next {
             get {
                 return _app.current_item < (int) _app.music_list.get_n_items () - 1;
@@ -54,6 +60,19 @@ namespace G4 {
         public string playback_status {
             owned get {
                 return gst2mpris_status(_app.player.state);
+            }
+        }
+
+        public bool shuffle {
+            get {
+                return _app.sort_mode == SortMode.SHUFFLE;
+            }
+            set {
+                if (value && (_app.sort_mode != SortMode.SHUFFLE)) {
+                    _app.sort_mode = SortMode.SHUFFLE;
+                } else {
+                    _app.sort_mode = SortMode.TITLE;
+                }
             }
         }
 
