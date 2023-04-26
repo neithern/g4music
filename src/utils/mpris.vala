@@ -131,6 +131,9 @@ namespace G4 {
         }
 
         private void on_music_cover_uri_parsed (Music music, string? uri) {
+            if (!music.external_cover)
+                // allow subsequent calls to metadata property to return cover
+                music.cover_uri = (!) uri;
             send_meta_data (music, uri);
         }
 
