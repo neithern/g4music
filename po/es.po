@@ -173,7 +173,7 @@ msgid "_Reload List"
 msgstr "_Recargar Lista"
 
 #: src/gtk/window.ui:238
-mmsgid "_Preferences"
+msgid "_Preferences"
 msgstr "_Preferencias"
 
 #: src/gtk/window.ui:242
