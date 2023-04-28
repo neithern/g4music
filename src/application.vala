@@ -635,10 +635,9 @@ namespace G4 {
                 yield delete_cover_tmp_file_async ();
                 string? cover_uri = null;
                 if (image != null) {
-                    var file = File.new_build_filename (Environment.get_user_cache_dir (), application_id, str_hash (music.cover_uri).to_string ("%x"));
-                    yield save_sample_to_file_async (file, (!)image);
+                    File? file = yield save_sample_to_temp_async ((!)image);
                     _cover_tmp_file = file;
-                    cover_uri = file.get_uri ();
+                    cover_uri = file?.get_uri ();
                 }
 
                 if (music == _current_music) {
@@ -649,14 +648,36 @@ namespace G4 {
                 }
             }
         }
+
+        private async File? save_sample_to_temp_async (Gst.Sample sample) {
+            File? file = null;
+            try {
+                //  try save to /tmp/, which is a tmpfs on memory
+                FileIOStream stream;
+                file = yield File.new_tmp_async (application_id + "_XXXXXX", Priority.DEFAULT, null, out stream);
+                yield save_sample_to_stream_async (stream.output_stream, sample);
+            } catch (Error e) {
+                //  then try save to ./cache
+                file = File.new_build_filename (Environment.get_user_cache_dir (), application_id, direct_hash (sample).to_string ("%x"));
+                yield save_sample_to_file_async ((!)file, sample);
+            }
+            return file;
+        }
     }
 
     public static async void save_sample_to_file_async (File file, Gst.Sample sample) {
+        try {
+            var stream = yield file.create_async (FileCreateFlags.NONE);
+            yield save_sample_to_stream_async (stream, sample);
+        } catch (Error e) {
+        }
+    }
+
+    public static async void save_sample_to_stream_async (OutputStream stream, Gst.Sample sample) {
         var buffer = sample.get_buffer ();
         Gst.MapInfo? info = null;
         try {
             if (buffer?.map (out info, Gst.MapFlags.READ) ?? false) {
-                var stream = yield file.create_async (FileCreateFlags.NONE);
                 yield stream.write_all_async (info?.data, Priority.DEFAULT, null, null);
             }
         } catch (Error e) {
