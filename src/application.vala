@@ -578,7 +578,7 @@ namespace G4 {
             var artist = (popover_music ?? _current_music)?.artist;
             if (artist != null) {
                 (active_window as Window)?.start_search ("artist=" + (!)artist);
-                sort_mode = SortMode.ALBUM;
+                sort_mode = SortMode.ARTIST;
             }
         }
 
