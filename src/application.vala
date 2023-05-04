@@ -85,7 +85,7 @@ namespace G4 {
 
             var sort_mode = _settings?.get_uint ("sort-mode") ?? SortMode.TITLE;
             ActionEntry[] action_sort = {
-                { ACTION_SORT, sort_by, "s", "'2'" },
+                { ACTION_SORT, sort_by, "s", null },
             };
             var state = "'" + sort_mode.to_string () + "'";
             action_sort[0].state = state;
@@ -260,6 +260,10 @@ namespace G4 {
                 return _music_store.sort_mode;
             }
             set {
+                var action = lookup_action (ACTION_SORT);
+                var state = new Variant.string (((uint32) value).to_string ());
+                (action as SimpleAction)?.set_state (state);
+
                 _music_store.sort_mode = value;
                 _settings?.set_uint ("sort-mode", value);
             }
@@ -311,8 +315,6 @@ namespace G4 {
         }
 
         private void sort_by (SimpleAction action, Variant? state) {
-            action.set_state ((!)state);
-
             unowned var value = state?.get_string () ?? "";
             int mode = 2;
             int.try_parse (value, out mode, null, 10);
