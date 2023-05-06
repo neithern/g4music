@@ -48,6 +48,16 @@
     </screenshots>
 
     <releases>
+        <release version="1.10" date="2023-5-6">
+            <description>
+                <ul>
+                <li>Build flatpak with GNOME 44.</li>
+                <li>MPRIS improvement.</li>
+                <li>UI improvement and fixing.</li>
+                <li>Update Spanish translation.</li>
+                </ul>
+            </description>
+        </release>
         <release version="1.9.2" date="2023-4-2">
             <description>
                 <ul>
