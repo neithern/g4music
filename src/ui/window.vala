@@ -127,6 +127,7 @@ namespace G4 {
             factory.bind.connect (on_bind_item);
             factory.unbind.connect ((item) => {
                 var entry = (MusicEntry) item.child;
+                entry.disconnect_first_draw ();
                 entry.paintable = null;
             });
             list_view.factory = factory;
@@ -220,15 +221,6 @@ namespace G4 {
             leaflet.navigate (Adw.NavigationDirection.BACK);
         }
 
-        private HashTable<unowned Object, ulong> _first_draw_handles = new HashTable<unowned Object, ulong> (null, null);
-
-        private void _remove_draw_signal_handle (Object key) {
-            var id = _first_draw_handles[key];
-            if (id != 0)
-                key.disconnect (id);
-            _first_draw_handles.remove (key);
-        }
-
         private async void on_bind_item (Gtk.ListItem item) {
             var app = (Application) application;
             var entry = (MusicEntry) item.child;
@@ -241,9 +233,8 @@ namespace G4 {
             var paintable = thumbnailer.find (music);
             entry.paintable = paintable ?? _loading_paintable;
             if (paintable == null) {
-                _remove_draw_signal_handle (entry.cover);
-                var id = entry.cover.first_draw.connect(() => {
-                    _remove_draw_signal_handle (entry.cover);
+                entry.first_draw_handler = entry.cover.first_draw.connect (() => {
+                    entry.disconnect_first_draw ();
                     if (music == (Music) item.item) {
                         var paintable1 = thumbnailer.find (music);
                         if (paintable1 != null) {
@@ -258,7 +249,6 @@ namespace G4 {
                         }
                     }
                 });
-                _first_draw_handles[entry.cover] = id;
             }
         }
 

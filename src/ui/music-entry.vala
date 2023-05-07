@@ -9,6 +9,8 @@ namespace G4 {
         private CoverPaintable _paintable = new CoverPaintable ();
         private Music? _music = null;
 
+        public ulong first_draw_handler = 0;
+
         public MusicEntry () {
             margin_top = 4;
             margin_bottom = 4;
@@ -67,6 +69,13 @@ namespace G4 {
         public bool playing {
             set {
                 _playing.visible = value;
+            }
+        }
+
+        public void disconnect_first_draw () {
+            if (first_draw_handler != 0) {
+                _paintable.disconnect (first_draw_handler);
+                first_draw_handler = 0;
             }
         }
 
