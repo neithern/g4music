@@ -412,12 +412,37 @@ namespace G4 {
             return play_item;
         }
 
+        private File? _tmp_dir = null;
+
+        public async string get_tmp_dir_async () {
+            if (_tmp_dir == null) {
+                try {
+                    var dir = File.new_build_filename (Environment.get_tmp_dir (), application_id);
+                    var info = yield dir.query_info_async (FileAttribute.STANDARD_TYPE, FileQueryInfoFlags.NONE);
+                    if (info.get_file_type () == FileType.DIRECTORY)
+                        _tmp_dir = dir;
+                    else if (yield dir.make_directory_async ())
+                        _tmp_dir = dir;
+                } catch (Error e) {
+                    var dir = File.new_build_filename (Environment.get_user_cache_dir (), application_id);
+                    try {
+                        var info = yield dir.query_info_async (FileAttribute.STANDARD_TYPE, FileQueryInfoFlags.NONE);
+                        if (info.get_file_type () != FileType.DIRECTORY)
+                            yield dir.make_directory_async ();
+                    } catch (Error e) {
+                    }
+                    _tmp_dir = dir;
+                }
+            }
+            return _tmp_dir?.get_path () ?? "/tmp";
+        }
+
         public async void parse_music_cover_async () {
             if (_current_music != null) {
                 var music = (!)_current_music;
-                var dir = Environment.get_user_cache_dir ();
+                var dir = yield get_tmp_dir_async ();
                 var name = Checksum.compute_for_string (ChecksumType.MD5, music.uri);
-                var file = File.new_build_filename (dir, application_id, name);
+                var file = File.new_build_filename (dir, name);
                 bool saved = false;
                 if (_cover_image != null) {
                     saved = yield save_sample_to_file_async (file, (!)_cover_image);
@@ -427,7 +452,7 @@ namespace G4 {
                     if (uri == null && _icon_file == null && icon?.file != null) {
                         try {
                             //  file path is not real in flatpak, can't be loaded by MPRIS, so copy it to a real dir
-                            _icon_file = File.new_build_filename (dir, application_id, "app.svg");
+                            _icon_file = File.new_build_filename (dir, "app.svg");
                             yield ((!)icon?.file).copy_async ((!)_icon_file, FileCopyFlags.OVERWRITE);
                         } catch (Error e) {
                         }
