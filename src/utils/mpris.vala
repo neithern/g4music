@@ -5,17 +5,7 @@ namespace G4 {
         [DBus (visible = false)]
         private unowned Application _app;
         private unowned DBusConnection _connection;
-
-        private string gst2mpris_status (Gst.State state) {
-            switch (state) {
-                case Gst.State.PLAYING:
-                    return "Playing";
-                case Gst.State.PAUSED:
-                    return "Paused";
-                default:
-                    return "Stopped";
-            }
-        }
+        private HashTable<string, Variant> _metadata = new HashTable<string, Variant> (str_hash, str_equal);
 
         public MprisPlayer (Application app, DBusConnection connection) {
             _app = app;
@@ -57,9 +47,15 @@ namespace G4 {
             }
         }
 
+        public HashTable<string, Variant> metadata {
+            get {
+                return _metadata;
+            }
+        }
+
         public string playback_status {
             owned get {
-                return gst2mpris_status(_app.player.state);
+                return get_mpris_status(_app.player.state);
             }
         }
 
@@ -102,27 +98,29 @@ namespace G4 {
         }
 
         private void on_music_changed (Music music) {
-            send_meta_data (music);
+            update_meta_data (music);
+            send_property ("Metadata", _metadata);
         }
 
         private void on_music_cover_uri_parsed (Music music, string? uri) {
-            send_meta_data (music, uri);
+            update_meta_data (music, uri);
+            send_property ("Metadata", _metadata);
         }
 
         private void on_state_changed (Gst.State state) {
-            send_property ("PlaybackStatus", new Variant.string (gst2mpris_status(state)));
+            send_property ("PlaybackStatus", new Variant.string (get_mpris_status(state)));
         }
 
-        private void send_meta_data (Music music, string? art_uri = null) {
-            var dict = new VariantDict (null);
+        private void update_meta_data (Music music, string? art_uri = null) {
+            _metadata.remove_all ();
+            var dict = _metadata;
             var artists = new VariantBuilder (new VariantType ("as"));
             artists.add ("s", music.artist);
-            dict.insert ("xesam:artist", "as", artists);
-            dict.insert ("xesam:title", "s", music.title);
-            if (art_uri != null) {
-                dict.insert ("mpris:artUrl", "s", (!)art_uri);
-            }
-            send_property ("Metadata", dict.end ());
+            dict.insert ("xesam:artist", artists.end());
+            dict.insert ("xesam:title", new Variant.string (((!)music).title));
+            dict.insert ("xesam:album", new Variant.string (((!)music).album));
+            if (art_uri != null)
+                dict.insert ("mpris:artUrl", new Variant.string ((!)art_uri));
         }
 
         private void send_property (string name, Variant variant) {
@@ -148,6 +146,17 @@ namespace G4 {
                 );
             } catch (Error e) {
                 warning ("Send MPRIS failed: %s\n", e.message);
+            }
+        }
+
+        private string get_mpris_status (Gst.State state) {
+            switch (state) {
+                case Gst.State.PLAYING:
+                    return "Playing";
+                case Gst.State.PAUSED:
+                    return "Paused";
+                default:
+                    return "Stopped";
             }
         }
     }
