@@ -147,7 +147,7 @@ namespace G4 {
                 music.steal_qdata<bool> (_loading_quark);
                 var paintable = pixbuf != null
                     ? Gdk.Texture.for_pixbuf ((!)pixbuf)
-                    : create_album_text_paintable (music, ICON_SIZE);
+                    : create_album_text_paintable (music);
                 put (music, paintable);
                 return paintable;
             }
@@ -199,13 +199,13 @@ namespace G4 {
             return pixbuf;
         }
 
-        public Gdk.Paintable create_album_text_paintable (Music music, int size) {
+        public Gdk.Paintable create_album_text_paintable (Music music) {
             var text = music.album;
             var bkcolor = (text.length == 0 || text == UNKOWN_ALBUM)
                         ? 0xc0bfbc
                         : BACKGROUND_COLORS[str_hash (text) % BACKGROUND_COLORS.length];
             text = parse_abbreviation (text);
-            return create_simple_text_paintable (text, size, 0xc0808080u, bkcolor | 0xff000000u);
+            return create_simple_text_paintable (text, ICON_SIZE, 0xc0808080u, bkcolor | 0xff000000u);
         }
 
         public Gdk.Paintable create_simple_text_paintable (string text, int size, uint color = 0xc0808080u, uint bkcolor = 0) {

@@ -220,6 +220,20 @@ namespace G4 {
             }
         }
 
+        private Gtk.IconPaintable? _icon = null;
+        private File? _icon_file = null;
+
+        public Gtk.IconPaintable? icon {
+            get {
+                if (_icon == null) {
+                    var theme = Gtk.IconTheme.get_for_display (active_window.display);
+                    _icon = theme.lookup_icon (application_id, null, 512,
+                        active_window.scale_factor, Gtk.TextDirection.NONE, Gtk.IconLookupFlags.FORCE_REGULAR);
+                }
+                return _icon;
+            }
+        }
+
         public bool is_loading_store {
             get {
                 return _loading_store;
@@ -401,22 +415,24 @@ namespace G4 {
         public async void parse_music_cover_async () {
             if (_current_music != null) {
                 var music = (!)_current_music;
+                var dir = Environment.get_user_cache_dir ();
                 var name = Checksum.compute_for_string (ChecksumType.MD5, music.uri);
-                var file = File.new_build_filename (Environment.get_user_cache_dir (), application_id, name);
+                var file = File.new_build_filename (dir, application_id, name);
                 bool saved = false;
                 if (_cover_image != null) {
                     saved = yield save_sample_to_file_async (file, (!)_cover_image);
-                } else if (music.cover_uri == null) {
-                    var paintable = thumbnailer.find (music) ??
-                        _thumbnailer.create_album_text_paintable (music, Thumbnailer.ICON_SIZE);
-                    var texture = paintable_to_texture ((active_window as Window)?.get_renderer (), paintable);
-                    saved = yield run_async<bool> (() => {
-                        return texture?.save_to_png ((!)file.get_path ()) ?? false;
-                    });
                 }
                 if (music == _current_music) {
                     var uri = saved ? file.get_uri () : music.cover_uri;
-                    music_cover_parsed (music, uri);
+                    if (uri == null && _icon_file == null && icon?.file != null) {
+                        try {
+                            //  file path is not real in flatpak, can't be loaded by MPRIS, so copy it to a real dir
+                            _icon_file = File.new_build_filename (dir, application_id, "app.svg");
+                            yield ((!)icon?.file).copy_async ((!)_icon_file, FileCopyFlags.OVERWRITE);
+                        } catch (Error e) {
+                        }
+                    }
+                    music_cover_parsed (music, uri ?? _icon_file?.get_uri ());
                     if (file != _cover_tmp_file) {
                         yield delete_cover_tmp_file_async ();
                         _cover_tmp_file = file;

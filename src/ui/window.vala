@@ -280,11 +280,7 @@ namespace G4 {
                 var dir_name = get_display_name (app.get_music_folder ());
                 var link = @"<a href=\"change_dir\">$dir_name</a>";
                 initial_label.set_markup (_("Drag and drop music files here,\nor change music location: ") + link);
-
-                var theme = Gtk.IconTheme.get_for_display (this.display);
-                var paintable = theme.lookup_icon (app.application_id, null,
-                    _cover_size, 1, Gtk.TextDirection.NONE, Gtk.IconLookupFlags.FORCE_REGULAR);
-                update_cover_paintables (new Music ("", "", 0), paintable);
+                update_cover_paintables (new Music ("", "", 0), app.icon);
             }
             initial_label.visible = empty;
             music_title.visible = !empty;
@@ -352,7 +348,7 @@ namespace G4 {
             if (music == app.current_music) {
                 var paintable = pixbuf != null
                     ? Gdk.Texture.for_pixbuf ((!)pixbuf)
-                    : app.thumbnailer.create_album_text_paintable (music, _cover_size);
+                    : app.thumbnailer.create_album_text_paintable (music);
                 if (pixbuf != null && app.thumbnailer.find (music) == null) {
                     pixbuf = yield run_async<Gdk.Pixbuf?> (() => {
                         return create_clamp_pixbuf ((!)pixbuf, _cover_size);
