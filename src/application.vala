@@ -417,8 +417,10 @@ namespace G4 {
                 if (music == _current_music) {
                     var uri = saved ? file.get_uri () : music.cover_uri;
                     music_cover_parsed (music, uri);
-                    yield delete_cover_tmp_file_async ();
-                    _cover_tmp_file = file;
+                    if (file != _cover_tmp_file) {
+                        yield delete_cover_tmp_file_async ();
+                        _cover_tmp_file = file;
+                    }
                 }
             }
         }
