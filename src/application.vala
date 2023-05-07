@@ -240,6 +240,12 @@ namespace G4 {
             }
         }
 
+        public string name {
+            get {
+                return _("G4Music");
+            }
+        }
+
         public GstPlayer player {
             get {
                 return _player;
@@ -474,7 +480,6 @@ namespace G4 {
 
         public void show_about () {
             string[] authors = { "Nanling" };
-            var app_name = _("G4Music");
             var comments = _("A fast, fluent, light weight music player written in GTK4.");
             /* Translators: Replace "translator-credits" with your names, one name per line */
             var translator_credits = _("translator-credits");
@@ -482,7 +487,7 @@ namespace G4 {
 #if ADW_1_2
             var win = new Adw.AboutWindow ();
             win.application_icon = application_id;
-            win.application_name = app_name;
+            win.application_name = name;
             win.version = Config.VERSION;
             win.comments = comments;
             win.license_type = Gtk.License.GPL_3_0;
@@ -495,7 +500,7 @@ namespace G4 {
 #else
             Gtk.show_about_dialog (active_window,
                                    "logo-icon-name", application_id,
-                                   "program-name", app_name,
+                                   "program-name", name,
                                    "version", Config.VERSION,
                                    "comments", comments,
                                    "authors", authors,

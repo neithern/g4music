@@ -196,7 +196,7 @@ namespace G4 {
 
         public string identity {
             get {
-                return _app.application_id;
+                return _app.name;
             }
         }
 
