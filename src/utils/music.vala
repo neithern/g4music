@@ -10,6 +10,7 @@ namespace G4 {
         public string uri = "";
         public int track = UNKOWN_TRACK;
         public int64 modified_time = 0;
+        public string? cover_uri = null;
 
         //  for sorting
         private string _album_key = "";
@@ -17,26 +18,15 @@ namespace G4 {
         private string _title_key = "";
         private int _order = 0;
 
-        private string? _cover_uri = null;
-
         public Music (string uri, string title, int64 time) {
             this.title = title;
             this.uri = uri;
             this.modified_time = time;
         }
 
-        public unowned string cover_uri {
+        public unowned string cover_key {
             get {
-                return _cover_uri ?? uri;
-            }
-            set {
-                _cover_uri = value;
-            }
-        }
-
-        public bool external_cover {
-            get {
-                return _cover_uri != null && !str_equal ((!)_cover_uri, uri);
+                return cover_uri ?? uri;
             }
         }
 

@@ -109,7 +109,7 @@ namespace G4 {
 
         private HashTable<string, string> _album_covers = new HashTable<string, string> (str_hash, str_equal);
         private CoverFinder _cover_finder = new CoverFinder ();
-        private GenericSet<string> _loading = new GenericSet<string> (str_hash, str_equal);
+        private Quark _loading_quark = Quark.from_string ("loading_quark");
         private Pango.Context? _pango_context = null;
         private bool _remote_thumbnail = false;
 
@@ -133,32 +133,24 @@ namespace G4 {
             }
         }
 
-        public new Gdk.Paintable? find (string key) {
-            return base.find (key);
+        public new Gdk.Paintable? find (Music music) {
+            return base.find (music.cover_key);
         }
 
-        public bool has_image (Music music) {
-            var paintable = find (music.cover_uri);
-            return paintable != null && (!)paintable is Gdk.Texture;
+        public new void put (Music music, Gdk.Paintable paintable) {
+            base.put (music.cover_key, paintable);
         }
 
         public async Gdk.Paintable? load_async (Music music) {
-            unowned var uri = music.cover_uri;
-            if (uri in _loading)
-                return null;
-
-            _loading.add (uri);
-            var texture = yield load_directly_async (music, ICON_SIZE);
-            _loading.remove (uri);
-            uri = music.cover_uri; //  Update cover uri maybe changed when loading
-            if (texture != null) {
-                put (uri, (!)texture);
-                return texture;
+            if (music.replace_qdata<bool, bool> (_loading_quark, false, true, null)) {
+                var paintable = yield load_directly_async (music, ICON_SIZE);
+                music.steal_qdata<bool> (_loading_quark);
+                if (paintable == null)
+                    paintable = create_album_text_paintable (music, ICON_SIZE);
+                put (music, (!)paintable);
+                return paintable;
             }
-
-            var paintable = create_album_text_paintable (music, ICON_SIZE);
-            put (uri, paintable);
-            return paintable;
+            return null;
         }
 
         public async Gdk.Paintable? load_directly_async (Music music, int size = ICON_SIZE) {
@@ -170,7 +162,7 @@ namespace G4 {
 
             var album_key_ = @"$(music.album)-$(music.artist)-";
             var tags = new Gst.TagList?[] { null };
-            var cover_uri = new string[] { music.cover_uri };
+            var cover_key = new string[] { music.cover_key };
             var pixbuf = yield run_async<Gdk.Pixbuf?> (() => {
                 var tag = tags[0] = parse_gst_tags (file);
                 Gst.Sample? sample = null;
@@ -179,7 +171,7 @@ namespace G4 {
                         //  Check if there is an album cover with same artist and image size
                         var image_size = sample?.get_buffer ()?.get_size () ?? 0;
                         var album_key = album_key_ + image_size.to_string ("%x");
-                        check_same_album_cover (album_key, ref cover_uri[0]);
+                        check_same_album_cover (album_key, ref cover_key[0]);
                     }
                     var pixbuf = load_clamp_pixbuf_from_sample ((!)sample, size);
                     if (pixbuf != null)
@@ -188,7 +180,7 @@ namespace G4 {
                 //  Try load album art cover file in the folder
                 var cover_file = _cover_finder.find (file);
                 if (cover_file != null) {
-                    cover_uri[0] = (!) cover_file?.get_uri ();
+                    cover_key[0] = (!) cover_file?.get_uri ();
                     return load_clamp_pixbuf_from_file ((!)cover_file, size);
                 }
                 return null;
@@ -199,9 +191,9 @@ namespace G4 {
                 if (music.from_gst_tags ((!)tags[0]))
                     tag_updated (music);
             }
-            if (music.cover_uri != cover_uri[0]) {
+            if (music.cover_key != cover_key[0]) {
                 //  Update cover uri if changed
-                music.cover_uri = cover_uri[0];
+                music.cover_uri = cover_key[0];
             }
             if (pixbuf != null) {
                 return Gdk.Texture.for_pixbuf ((!)pixbuf);
@@ -228,15 +220,15 @@ namespace G4 {
             return (paintable is Gdk.Texture) ? pixels * 4 : pixels;
         }
 
-        private bool check_same_album_cover (string album_key, ref string cover_uri) {
+        private bool check_same_album_cover (string album_key, ref string cover_key) {
             lock (_album_covers) {
                 unowned string key, uri;
                 if (_album_covers.lookup_extended (album_key, out key, out uri)) {
-                    cover_uri = uri;
+                    cover_key = uri;
                     //  print ("Same album cover: %s\n", album_key);
                     return true;
                 } else {
-                    _album_covers[album_key] = cover_uri;
+                    _album_covers[album_key] = cover_key;
                 }
             }
             return false;

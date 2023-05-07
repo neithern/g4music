@@ -238,14 +238,14 @@ namespace G4 {
             //  print ("bind: %u\n", item.position);
 
             var thumbnailer = app.thumbnailer;
-            var paintable = thumbnailer.find (music.cover_uri);
+            var paintable = thumbnailer.find (music);
             entry.paintable = paintable ?? _loading_paintable;
             if (paintable == null) {
                 _remove_draw_signal_handle (entry.cover);
                 var id = entry.cover.first_draw.connect(() => {
                     _remove_draw_signal_handle (entry.cover);
                     if (music == (Music) item.item) {
-                        var paintable1 = thumbnailer.find (music.cover_uri);
+                        var paintable1 = thumbnailer.find (music);
                         if (paintable1 != null) {
                             entry.paintable = paintable1;
                         } else {
@@ -350,34 +350,29 @@ namespace G4 {
             update_music_info (music);
 
             var app = (Application) application;
-            var pixbufs = new Gdk.Pixbuf?[2] {null, null};
+            Gdk.Pixbuf? pixbuf = null;
             if (image != null) {
-                var has_cache = app.thumbnailer.has_image (music);
-                yield run_async<void> (() => {
-                    pixbufs[0] = load_clamp_pixbuf_from_sample ((!)image, _cover_size);
-                    if (!has_cache && pixbufs[0] != null)
-                        pixbufs[1] = create_clamp_pixbuf ((!)pixbufs[0], Thumbnailer.ICON_SIZE);
+                pixbuf = yield run_async<Gdk.Pixbuf?> (() => {
+                    return load_clamp_pixbuf_from_sample ((!)image, _cover_size);
                 }, true);
             }
             if (music == app.current_music) {
                 Gdk.Paintable? paintable = null;
-                if (pixbufs[0] != null) {
-                    paintable = Gdk.Texture.for_pixbuf ((!)pixbufs[0]);
+                if (pixbuf != null) {
+                    paintable = Gdk.Texture.for_pixbuf ((!)pixbuf);
                 } else {
                     paintable = yield app.thumbnailer.load_directly_async (music, _cover_size);
-                    if (paintable == null)
+                    if (paintable != null) {
+                        app.music_cover_uri_parsed (music, music.cover_uri);
+                    } else {
                         paintable = app.thumbnailer.create_album_text_paintable (music, _cover_size);
-                }
-                if (pixbufs[1] != null) {
-                    var mini = Gdk.Texture.for_pixbuf ((!)pixbufs[1]);
-                    app.thumbnailer.put (music.cover_uri, mini);
-                    app.music_list.items_changed (app.current_item, 0, 0);
+                    }
                 }
                 update_cover_paintables (music, paintable);
             }
 
             action_set_enabled (ACTION_APP + ACTION_EXPORT_COVER, image != null);
-            action_set_enabled (ACTION_APP + ACTION_SHOW_COVER_FILE, image == null && music.external_cover);
+            action_set_enabled (ACTION_APP + ACTION_SHOW_COVER_FILE, image == null && music.cover_uri != null);
         }
 
         private void scroll_to_item (int index) {
@@ -455,7 +450,7 @@ namespace G4 {
 
         private void update_cover_paintables (Music music, Gdk.Paintable? paintable) {
             var app = (Application) application;
-            _mini_bar.cover = app.thumbnailer.find (music.cover_uri);
+            _mini_bar.cover = app.thumbnailer.find (music);
             _cover_paintable.paintable = paintable ?? _mini_bar.cover;
             update_background ();
 

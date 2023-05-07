@@ -215,12 +215,6 @@ namespace G4 {
             }
         }
 
-        public string? current_cover_uri {
-            get {
-                return _cover_tmp_file?.get_uri () ?? _current_music?.cover_uri;
-            }
-        }
-
         public bool dark_theme {
             set {
                 style_manager.color_scheme = value ? Adw.ColorScheme.PREFER_DARK : Adw.ColorScheme.DEFAULT;
@@ -635,7 +629,7 @@ namespace G4 {
                 music_tag_parsed (music, image);
 
                 yield delete_cover_tmp_file_async ();
-                string? cover_uri = null;
+                string? cover_uri = music.cover_uri;
                 if (image != null) {
                     var name = direct_hash (music.uri).to_string ("%x");
                     var file = File.new_build_filename (Environment.get_user_cache_dir (), application_id, name);
@@ -645,9 +639,6 @@ namespace G4 {
                 }
 
                 if (music == _current_music) {
-                    if (cover_uri == null && music.cover_uri != music.uri) {
-                        cover_uri = music.cover_uri;
-                    }
                     music_cover_uri_parsed (music, cover_uri);
                 }
             }
