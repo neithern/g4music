@@ -34,14 +34,14 @@ namespace G4 {
         private Music? _current_music = null;
         private Gst.Sample? _cover_image = null;
         private bool _loading_store = false;
-        private StringBuilder _next_uri = new StringBuilder ();
-        private GstPlayer _player = new GstPlayer ();
+        private uint _mpris_id = 0;
         private Gtk.FilterListModel _music_list = new Gtk.FilterListModel (null, null);
         private MusicStore _music_store = new MusicStore ();
+        private StringBuilder _next_uri = new StringBuilder ();
+        private GstPlayer _player = new GstPlayer ();
+        private Portal _portal = new Portal ();
         private Thumbnailer _thumbnailer = new Thumbnailer ();
         private Settings? _settings = new_application_settings ();
-        private uint _mpris_id = 0;
-        private Portal? _portal = null;
 
         public signal void loading_changed (bool loading, uint size);
         public signal void index_changed (int index, uint size);
@@ -262,6 +262,12 @@ namespace G4 {
             }
         }
 
+        public MusicStore music_store {
+            get {
+                return _music_store;
+            }
+        }
+
         public SortMode sort_mode {
             get {
                 return _music_store.sort_mode;
@@ -273,12 +279,6 @@ namespace G4 {
 
                 _music_store.sort_mode = value;
                 _settings?.set_uint ("sort-mode", value);
-            }
-        }
-
-        public MusicStore music_store {
-            get {
-                return _music_store;
             }
         }
 
@@ -441,16 +441,9 @@ namespace G4 {
             }
         }
 
-        private Portal _get_portal () {
-            if (_portal == null)
-                _portal = new Portal ();
-            return (!)_portal;
-        }
-
         public void request_background () {
-            var portal = _get_portal ();
-            portal.request_background_async.begin (_("Keep playing after window closed"), (obj, res) => {
-                portal.request_background_async.end (res);
+            _portal.request_background_async.begin (_("Keep playing after window closed"), (obj, res) => {
+                _portal.request_background_async.end (res);
             });
         }
 
@@ -587,9 +580,8 @@ namespace G4 {
 
         private void _show_uri_with_portal (string? uri) {
             if (uri != null) {
-                var portal = _get_portal ();
-                portal.open_directory_async.begin ((!)uri, (obj, res) => {
-                    portal.open_directory_async.end (res);
+                _portal.open_directory_async.begin ((!)uri, (obj, res) => {
+                    _portal.open_directory_async.end (res);
                 });
             }
         }
