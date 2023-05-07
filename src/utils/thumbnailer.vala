@@ -143,17 +143,18 @@ namespace G4 {
 
         public async Gdk.Paintable? load_async (Music music) {
             if (music.replace_qdata<bool, bool> (_loading_quark, false, true, null)) {
-                var paintable = yield load_directly_async (music, ICON_SIZE);
+                var pixbuf = yield load_directly_async (music, ICON_SIZE);
                 music.steal_qdata<bool> (_loading_quark);
-                if (paintable == null)
-                    paintable = create_album_text_paintable (music, ICON_SIZE);
-                put (music, (!)paintable);
+                var paintable = pixbuf != null
+                    ? Gdk.Texture.for_pixbuf ((!)pixbuf)
+                    : create_album_text_paintable (music, ICON_SIZE);
+                put (music, paintable);
                 return paintable;
             }
             return null;
         }
 
-        public async Gdk.Paintable? load_directly_async (Music music, int size = ICON_SIZE) {
+        public async Gdk.Pixbuf? load_directly_async (Music music, int size = ICON_SIZE) {
             var file = File.new_for_uri (music.uri);
             var is_native = file.is_native ();
             if (!_remote_thumbnail && !is_native) {
@@ -195,10 +196,7 @@ namespace G4 {
                 //  Update cover uri if changed
                 music.cover_uri = cover_key[0];
             }
-            if (pixbuf != null) {
-                return Gdk.Texture.for_pixbuf ((!)pixbuf);
-            }
-            return null;
+            return pixbuf;
         }
 
         public Gdk.Paintable create_album_text_paintable (Music music, int size) {

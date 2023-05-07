@@ -356,17 +356,25 @@ namespace G4 {
                     return load_clamp_pixbuf_from_sample ((!)image, _cover_size);
                 }, true);
             }
+            if (pixbuf == null && music == app.current_music) {
+                pixbuf = yield app.thumbnailer.load_directly_async (music, _cover_size);
+                if (pixbuf != null && music == app.current_music)
+                    app.music_cover_uri_parsed (music, music.cover_uri);
+            }
             if (music == app.current_music) {
-                Gdk.Paintable? paintable = null;
-                if (pixbuf != null) {
-                    paintable = Gdk.Texture.for_pixbuf ((!)pixbuf);
-                } else {
-                    paintable = yield app.thumbnailer.load_directly_async (music, _cover_size);
-                    if (paintable != null) {
-                        app.music_cover_uri_parsed (music, music.cover_uri);
-                    } else {
-                        paintable = app.thumbnailer.create_album_text_paintable (music, _cover_size);
-                    }
+                var paintable = pixbuf != null
+                    ? Gdk.Texture.for_pixbuf ((!)pixbuf)
+                    : app.thumbnailer.create_album_text_paintable (music, _cover_size);
+                if (pixbuf != null && app.thumbnailer.find (music) == null) {
+                    pixbuf = yield run_async<Gdk.Pixbuf?> (() => {
+                        return create_clamp_pixbuf ((!)pixbuf, _cover_size);
+                    }, true);
+                }
+                if (music == app.current_music) {
+                    var mini = pixbuf != null
+                        ? Gdk.Texture.for_pixbuf ((!)pixbuf)
+                        : (!)paintable;
+                    app.thumbnailer.put (music, mini);
                 }
                 update_cover_paintables (music, paintable);
             }
