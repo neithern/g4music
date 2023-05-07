@@ -47,7 +47,7 @@ namespace G4 {
         public signal void index_changed (int index, uint size);
         public signal void music_changed (Music music);
         public signal void music_tag_parsed (Music music, Gst.Sample? image);
-        public signal void music_cover_uri_parsed (Music music, string? uri);
+        public signal void music_cover_parsed (Music music, string? uri);
 
         public Application () {
             Object (application_id: Config.APP_ID, flags: ApplicationFlags.HANDLES_OPEN);
@@ -639,7 +639,7 @@ namespace G4 {
                 }
 
                 if (music == _current_music) {
-                    music_cover_uri_parsed (music, cover_uri);
+                    music_cover_parsed (music, cover_uri);
                 }
             }
         }

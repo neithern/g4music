@@ -6,6 +6,7 @@ namespace G4 {
         private unowned Application _app;
         private unowned DBusConnection _connection;
         private HashTable<string, Variant> _metadata = new HashTable<string, Variant> (str_hash, str_equal);
+        private uint _music_hash = 0;
 
         public MprisPlayer (Application app, DBusConnection connection) {
             _app = app;
@@ -13,7 +14,7 @@ namespace G4 {
 
             app.index_changed.connect (on_index_changed);
             app.music_changed.connect (on_music_changed);
-            app.music_cover_uri_parsed.connect (on_music_cover_uri_parsed);
+            app.music_cover_parsed.connect (on_music_cover_parsed);
             app.player.state_changed.connect (on_state_changed);
         }
 
@@ -98,29 +99,29 @@ namespace G4 {
         }
 
         private void on_music_changed (Music music) {
-            update_meta_data (music);
-            send_property ("Metadata", _metadata);
+            var artists = new VariantBuilder (new VariantType ("as"));
+            artists.add ("s", music.artist);
+            _metadata.remove_all ();
+            _metadata.insert ("xesam:artist", artists.end());
+            _metadata.insert ("xesam:title", new Variant.string (((!)music).title));
+            _metadata.insert ("xesam:album", new Variant.string (((!)music).album));
+            _music_hash = direct_hash (music);
         }
 
-        private void on_music_cover_uri_parsed (Music music, string? uri) {
-            update_meta_data (music, uri);
+        private void on_music_cover_parsed (Music music, string? uri) {
+            if (_music_hash != direct_hash (music)) {
+                on_music_changed (music);
+            }
+            if (uri != null) {
+                _metadata.insert ("mpris:artUrl", new Variant.string ((!)uri));
+            } else {
+                _metadata.remove ("mpris:artUrl");
+            }
             send_property ("Metadata", _metadata);
         }
 
         private void on_state_changed (Gst.State state) {
             send_property ("PlaybackStatus", new Variant.string (get_mpris_status(state)));
-        }
-
-        private void update_meta_data (Music music, string? art_uri = null) {
-            _metadata.remove_all ();
-            var dict = _metadata;
-            var artists = new VariantBuilder (new VariantType ("as"));
-            artists.add ("s", music.artist);
-            dict.insert ("xesam:artist", artists.end());
-            dict.insert ("xesam:title", new Variant.string (((!)music).title));
-            dict.insert ("xesam:album", new Variant.string (((!)music).album));
-            if (art_uri != null)
-                dict.insert ("mpris:artUrl", new Variant.string ((!)art_uri));
         }
 
         private void send_property (string name, Variant variant) {
