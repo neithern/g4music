@@ -152,8 +152,7 @@ namespace G4 {
                 });
             });
 
-            Gtk.Window? awindow = active_window;
-            var window = awindow ?? new Window (this);
+            var window = (active_window as Window) ?? new Window (this);
             window.present ();
         }
 
@@ -317,9 +316,9 @@ namespace G4 {
         }
 
         public void toggle_seach () {
-            var win = active_window as Window;
-            if (win != null)
-                ((!)win).search_btn.active = ! ((!)win).search_btn.active;
+            var window = active_window as Window;
+            if (window != null)
+                ((!)window).search_btn.active = ! ((!)window).search_btn.active;
         }
 
         private void toggle_sort () {
@@ -397,6 +396,31 @@ namespace G4 {
                 }
             }
             return play_item;
+        }
+
+        public async void parse_music_cover_async () {
+            if (_current_music != null) {
+                var music = (!)_current_music;
+                var name = Checksum.compute_for_string (ChecksumType.MD5, music.uri);
+                var file = File.new_build_filename (Environment.get_user_cache_dir (), application_id, name);
+                bool saved = false;
+                if (_cover_image != null) {
+                    saved = yield save_sample_to_file_async (file, (!)_cover_image);
+                } else if (music.cover_uri == null) {
+                    var paintable = thumbnailer.find (music) ??
+                        _thumbnailer.create_album_text_paintable (music, Thumbnailer.ICON_SIZE);
+                    var texture = paintable_to_texture ((active_window as Window)?.get_renderer (), paintable);
+                    saved = yield run_async<bool> (() => {
+                        return texture?.save_to_png ((!)file.get_path ()) ?? false;
+                    });
+                }
+                if (music == _current_music) {
+                    var uri = saved ? file.get_uri () : music.cover_uri;
+                    music_cover_parsed (music, uri);
+                    yield delete_cover_tmp_file_async ();
+                    _cover_tmp_file = file;
+                }
+            }
         }
 
         private Portal _get_portal () {
@@ -625,33 +649,18 @@ namespace G4 {
         private async void on_tag_parsed (string? album, string? artist, string? title, Gst.Sample? image) {
             _cover_image = image;
             if (_current_music != null) {
-                var music = (!)current_music;
-                music_tag_parsed (music, image);
-
-                yield delete_cover_tmp_file_async ();
-                string? cover_uri = music.cover_uri;
-                if (image != null) {
-                    var name = direct_hash (music.uri).to_string ("%x");
-                    var file = File.new_build_filename (Environment.get_user_cache_dir (), application_id, name);
-                    yield save_sample_to_file_async ((!)file, (!)image);
-                    _cover_tmp_file = file;
-                    cover_uri = file.get_uri ();
-                }
-
-                if (music == _current_music) {
-                    music_cover_parsed (music, cover_uri);
-                }
+                music_tag_parsed ((!)current_music, image);
             }
         }
     }
 
-    public static async void save_sample_to_file_async (File file, Gst.Sample sample) {
+    public static async bool save_sample_to_file_async (File file, Gst.Sample sample) {
         var buffer = sample.get_buffer ();
         Gst.MapInfo? info = null;
         try {
             var stream = yield file.create_async (FileCreateFlags.NONE);
             if (buffer?.map (out info, Gst.MapFlags.READ) ?? false) {
-                yield stream.write_all_async (info?.data, Priority.DEFAULT, null, null);
+                return yield stream.write_all_async (info?.data, Priority.DEFAULT, null, null);
             }
             stream.close ();
         } catch (Error e) {
@@ -659,5 +668,6 @@ namespace G4 {
             if (info != null)
                 buffer?.unmap ((!)info);
         }
+        return false;
     }
 }

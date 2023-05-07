@@ -358,8 +358,6 @@ namespace G4 {
             }
             if (pixbuf == null && music == app.current_music) {
                 pixbuf = yield app.thumbnailer.load_directly_async (music, _cover_size);
-                if (pixbuf != null && music == app.current_music)
-                    app.music_cover_parsed (music, music.cover_uri);
             }
             if (music == app.current_music) {
                 var paintable = pixbuf != null
@@ -377,10 +375,12 @@ namespace G4 {
                     app.thumbnailer.put (music, mini);
                 }
                 update_cover_paintables (music, paintable);
-            }
 
-            action_set_enabled (ACTION_APP + ACTION_EXPORT_COVER, image != null);
-            action_set_enabled (ACTION_APP + ACTION_SHOW_COVER_FILE, image == null && music.cover_uri != null);
+                action_set_enabled (ACTION_APP + ACTION_EXPORT_COVER, image != null);
+                action_set_enabled (ACTION_APP + ACTION_SHOW_COVER_FILE, image == null && music.cover_uri != null);
+
+                yield app.parse_music_cover_async ();
+            }
         }
 
         private void scroll_to_item (int index) {
