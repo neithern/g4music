@@ -421,9 +421,9 @@ namespace G4 {
         public async void parse_music_cover_async () {
             if (_current_music != null) {
                 var music = (!)_current_music;
-                var dir = Environment.get_user_cache_dir ();
+                var dir = File.new_build_filename (Environment.get_user_cache_dir (), application_id);
                 var name = Checksum.compute_for_string (ChecksumType.MD5, music.uri);
-                var file = File.new_build_filename (dir, application_id, name);
+                var file = dir.get_child (name);
                 bool saved = false;
                 if (_cover_image != null) {
                     saved = yield save_sample_to_file_async (file, (!)_cover_image);
@@ -433,7 +433,7 @@ namespace G4 {
                     if (uri == null && _icon_file == null && icon?.file != null) {
                         try {
                             //  file path is not real in flatpak, can't be loaded by MPRIS, so copy it to a real dir
-                            _icon_file = File.new_build_filename (dir, application_id, "app.svg");
+                            _icon_file = dir.get_child ("app.svg");
                             yield ((!)icon?.file).copy_async ((!)_icon_file, FileCopyFlags.OVERWRITE);
                         } catch (Error e) {
                         }
