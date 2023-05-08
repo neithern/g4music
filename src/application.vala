@@ -602,19 +602,13 @@ namespace G4 {
         }
 
         private void show_album () {
-            var album = (popover_music ?? _current_music)?.album;
-            if (album != null) {
-                (active_window as Window)?.start_search ("album=" + (!)album);
-                sort_mode = SortMode.ALBUM;
-            }
+            var album = (popover_music ?? _current_music)?.album ?? "";
+            (active_window as Window)?.start_search ("album=" + album);
         }
 
         private void show_artist () {
-            var artist = (popover_music ?? _current_music)?.artist;
-            if (artist != null) {
-                (active_window as Window)?.start_search ("artist=" + (!)artist);
-                sort_mode = SortMode.ARTIST;
-            }
+            var artist = (popover_music ?? _current_music)?.artist ?? "";
+            (active_window as Window)?.start_search ("artist=" + artist);
         }
 
         private void on_player_end () {
