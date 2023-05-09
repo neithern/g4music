@@ -149,7 +149,7 @@ namespace G4 {
             app.music_tag_parsed.connect (on_music_tag_parsed);
             app.player.state_changed.connect (on_player_state_changed);
             app.music_store.parse_progress.connect ((percent) => {
-                index_title.label = @"$_loading_text $percent%";
+                index_title.label = @"$percent%";
             });
         }
 

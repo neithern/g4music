@@ -124,8 +124,7 @@ namespace G4 {
                             _tag_cache.add (music);
                             AtomicInt.inc (ref progress);
                             var per = progress * 100 / queue_count;
-                            if (percent < per) {
-                                AtomicInt.set (ref percent, per);
+                            if (AtomicInt.compare_and_exchange (ref percent, percent, per)) {
                                 Idle.add (() => {
                                     parse_progress (per);
                                     return false;
