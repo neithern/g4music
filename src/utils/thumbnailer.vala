@@ -49,11 +49,15 @@ namespace G4 {
 
     //  Sorted by insert order
     public class LruCache<V> : Object {
-        public const uint MAX_SIZE = 50 * 1024 * 1024;
         public static CompareDataFunc<string> compare_string = (a, b) => { return strcmp (a, b); };
 
+        private size_t _max_size = 0;
         private size_t _size = 0;
         private Tree<string, V> _cache = new Tree<string, V> (compare_string);
+
+        public LruCache (size_t max_size) {
+            _max_size = max_size;
+        }
 
         public V? find (string key) {
             unowned string orig_key;
@@ -70,7 +74,7 @@ namespace G4 {
         public void put (string key, V value) {
             var size = size_of_value (value);
             unowned TreeNode<string, V>? first = null;
-            while (_size + size > MAX_SIZE && (first = _cache.node_first ()) != null) {
+            while (_size + size > _max_size && (first = _cache.node_first ()) != null) {
                 _size -= size_of_value (((!)first).value ());
                 _cache.remove (((!)first).key ());
             }
@@ -106,6 +110,7 @@ namespace G4 {
 
     public class Thumbnailer : LruCache<Gdk.Paintable> {
         public const int ICON_SIZE = 96;
+        public const size_t MAX_SIZE = 50 * 1024 * 1024;
 
         private HashTable<string, string> _album_covers = new HashTable<string, string> (str_hash, str_equal);
         private CoverFinder _cover_finder = new CoverFinder ();
@@ -114,6 +119,10 @@ namespace G4 {
         private bool _remote_thumbnail = false;
 
         public signal void tag_updated (Music music);
+
+        public Thumbnailer () {
+            base (MAX_SIZE);
+        }
 
         public Pango.Context? pango_context {
             get {
@@ -145,6 +154,12 @@ namespace G4 {
             if (music.replace_qdata<bool, bool> (_loading_quark, false, true, null)) {
                 var pixbuf = yield load_directly_async (music, ICON_SIZE);
                 music.steal_qdata<bool> (_loading_quark);
+                //  Check if already exist with changed cover_key
+                var p = find (music);
+                if (p != null) {
+                    //  print ("Already exist: %s\n", music.cover_key);
+                    return p;
+                }
                 var paintable = pixbuf != null
                     ? Gdk.Texture.for_pixbuf ((!)pixbuf)
                     : create_album_text_paintable (music);
@@ -181,7 +196,9 @@ namespace G4 {
                 //  Try load album art cover file in the folder
                 var cover_file = _cover_finder.find (file);
                 if (cover_file != null) {
+                    var album_key = cover_file?.get_path () ?? "";
                     cover_key[0] = (!) cover_file?.get_uri ();
+                    check_same_album_cover (album_key, ref cover_key[0]);
                     return load_clamp_pixbuf_from_file ((!)cover_file, size);
                 }
                 return null;
