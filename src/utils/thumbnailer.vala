@@ -178,7 +178,7 @@ namespace G4 {
 
             var album_key_ = @"$(music.album)-$(music.artist)-";
             var tags = new Gst.TagList?[] { null };
-            var cover_key = new string[] { music.cover_key };
+            var cover_key = new string[] { music.cover_key, music.album };
             var pixbuf = yield run_async<Gdk.Pixbuf?> (() => {
                 var tag = tags[0] = parse_gst_tags (file);
                 Gst.Sample? sample = null;
@@ -201,6 +201,7 @@ namespace G4 {
                     check_same_album_cover (album_key, ref cover_key[0]);
                     return load_clamp_pixbuf_from_file ((!)cover_file, size);
                 }
+                cover_key[0] = parse_abbreviation (cover_key[1]);
                 return null;
                 //  Run in single_thread_pool for samba to save connections
             }, false, file.has_uri_scheme ("smb"));
@@ -217,11 +218,10 @@ namespace G4 {
         }
 
         public Gdk.Paintable create_album_text_paintable (Music music) {
-            var text = music.album;
+            var text = parse_abbreviation (music.album);
             var bkcolor = (text.length == 0 || text == UNKOWN_ALBUM)
                         ? 0xc0bfbc
                         : BACKGROUND_COLORS[str_hash (text) % BACKGROUND_COLORS.length];
-            text = parse_abbreviation (text);
             return create_simple_text_paintable (text, ICON_SIZE, 0xc0808080u, bkcolor | 0xff000000u);
         }
 
