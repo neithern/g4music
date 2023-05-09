@@ -59,7 +59,7 @@ namespace G4 {
             _max_size = max_size;
         }
 
-        public V? find (string key) {
+        public V find (string key) {
             unowned string orig_key;
             unowned V value;
             if (_cache.lookup_extended (key, out orig_key, out value))
@@ -71,7 +71,12 @@ namespace G4 {
             return _cache.lookup (key) != null;
         }
 
-        public void put (string key, V value) {
+        public void put (string key, V value, bool replace = false) {
+            var cur = _cache.lookup (key);
+            if (cur != null && !replace) {
+                return;
+            }
+
             var size = size_of_value (value);
             unowned TreeNode<string, V>? first = null;
             while (_size + size > _max_size && (first = _cache.node_first ()) != null) {
@@ -79,7 +84,6 @@ namespace G4 {
                 _cache.remove (((!)first).key ());
             }
 
-            unowned var cur = _cache.lookup (key);
             if (cur != null) {
                 _size -= size_of_value (cur);
                 _cache.replace (key, value);
@@ -108,21 +112,19 @@ namespace G4 {
         }
     }
 
-    public class Thumbnailer : LruCache<Gdk.Paintable> {
+    public class Thumbnailer : Object {
         public const int ICON_SIZE = 96;
-        public const size_t MAX_SIZE = 50 * 1024 * 1024;
+        public const size_t MAX_COUNT = 1000;
 
         private HashTable<string, string> _album_covers = new HashTable<string, string> (str_hash, str_equal);
+        private LruCache<Gdk.Pixbuf?> _album_pixbufs = new LruCache<Gdk.Pixbuf?> (MAX_COUNT);
+        private LruCache<Gdk.Paintable?> _cover_cache = new LruCache<Gdk.Paintable?> (MAX_COUNT);
         private CoverFinder _cover_finder = new CoverFinder ();
         private Quark _loading_quark = Quark.from_string ("loading_quark");
         private Pango.Context? _pango_context = null;
         private bool _remote_thumbnail = false;
 
         public signal void tag_updated (Music music);
-
-        public Thumbnailer () {
-            base (MAX_SIZE);
-        }
 
         public Pango.Context? pango_context {
             get {
@@ -142,12 +144,12 @@ namespace G4 {
             }
         }
 
-        public new Gdk.Paintable? find (Music music) {
-            return base.find (music.cover_key);
+        public Gdk.Paintable? find (Music music) {
+            return _cover_cache.find (music.cover_key);
         }
 
-        public new void put (Music music, Gdk.Paintable paintable) {
-            base.put (music.cover_key, paintable);
+        public void put (Music music, Gdk.Paintable paintable) {
+            _cover_cache.put (music.cover_key, paintable);
         }
 
         public async Gdk.Paintable? load_async (Music music) {
@@ -180,26 +182,53 @@ namespace G4 {
             var tags = new Gst.TagList?[] { null };
             var cover_key = new string[] { music.cover_key, music.album };
             var pixbuf = yield run_async<Gdk.Pixbuf?> (() => {
+                var is_small = size <= ICON_SIZE;
                 var tag = tags[0] = parse_gst_tags (file);
                 Gst.Sample? sample = null;
                 if (tag != null && (sample = parse_image_from_tag_list ((!)tag)) != null) {
-                    if (size <= ICON_SIZE) {
-                        //  Check if there is an album cover with same artist and image size
-                        var image_size = sample?.get_buffer ()?.get_size () ?? 0;
-                        var album_key = album_key_ + image_size.to_string ("%x");
-                        check_same_album_cover (album_key, ref cover_key[0]);
+                    //  Check if there is an album cover with same artist and image size
+                    var image_size = sample?.get_buffer ()?.get_size () ?? 0;
+                    var album_key = album_key_ + image_size.to_string ("%x");
+                    if (check_same_album_cover (album_key, ref cover_key[0])
+                            && is_small) {
+                        lock (_album_pixbufs) {
+                            var pixbuf = _album_pixbufs.find (cover_key[0]);
+                            if (pixbuf != null)
+                                return pixbuf;
+                        }
                     }
                     var pixbuf = load_clamp_pixbuf_from_sample ((!)sample, size);
-                    if (pixbuf != null)
+                    if (pixbuf != null) {
+                        if (is_small) {
+                            lock (_album_pixbufs) {
+                                _album_pixbufs.put (cover_key[0], pixbuf);
+                            }
+                        }
                         return pixbuf;
+                    }
                 }
                 //  Try load album art cover file in the folder
                 var cover_file = _cover_finder.find (file);
                 if (cover_file != null) {
                     var album_key = cover_file?.get_path () ?? "";
                     cover_key[0] = (!) cover_file?.get_uri ();
-                    check_same_album_cover (album_key, ref cover_key[0]);
-                    return load_clamp_pixbuf_from_file ((!)cover_file, size);
+                    if (check_same_album_cover (album_key, ref cover_key[0])
+                            && is_small) {
+                        lock (_album_pixbufs) {
+                            var pixbuf = _album_pixbufs.find (cover_key[0]);
+                            if (pixbuf != null)
+                                return pixbuf;
+                        }
+                    }
+                    var pixbuf = load_clamp_pixbuf_from_file ((!)cover_file, size);
+                    if (pixbuf != null) {
+                        if (is_small) {
+                            lock (_album_pixbufs) {
+                                _album_pixbufs.put (cover_key[0], pixbuf);
+                            }
+                        }
+                        return pixbuf;
+                    }
                 }
                 cover_key[0] = parse_abbreviation (cover_key[1]);
                 return null;
@@ -228,11 +257,6 @@ namespace G4 {
         public Gdk.Paintable create_simple_text_paintable (string text, int size, uint color = 0xc0808080u, uint bkcolor = 0) {
             var paintable = create_text_paintable ((!)_pango_context, text, size, size, color, bkcolor);
             return paintable ?? new BasePaintable ();
-        }
-
-        protected override size_t size_of_value (Gdk.Paintable paintable) {
-            var pixels = paintable.get_intrinsic_width () * paintable.get_intrinsic_height ();
-            return (paintable is Gdk.Texture) ? pixels * 4 : pixels;
         }
 
         private bool check_same_album_cover (string album_key, ref string cover_key) {
