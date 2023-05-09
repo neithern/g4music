@@ -354,7 +354,7 @@ namespace G4 {
                         return create_clamp_pixbuf ((!)pixbuf, _cover_size);
                     }, true);
                 }
-                if (music == app.current_music) {
+                if (music == app.current_music && app.thumbnailer.find (music) == null) {
                     var mini = pixbuf != null
                         ? Gdk.Texture.for_pixbuf ((!)pixbuf)
                         : (!)paintable;
