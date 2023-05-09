@@ -241,7 +241,7 @@ namespace G4 {
             }
             if (music.cover_key != cover_key[0]) {
                 //  Update cover uri if changed
-                music.cover_uri = cover_key[0];
+                music.cover_key = cover_key[0];
             }
             return pixbuf;
         }
