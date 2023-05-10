@@ -346,26 +346,24 @@ namespace G4 {
                 pixbuf = yield app.thumbnailer.load_directly_async (music, _cover_size);
             }
             if (music == app.current_music) {
-                var paintable = pixbuf != null
-                    ? Gdk.Texture.for_pixbuf ((!)pixbuf)
-                    : app.thumbnailer.create_album_text_paintable (music);
-                if (pixbuf != null && app.thumbnailer.find (music) == null) {
-                    pixbuf = yield run_async<Gdk.Pixbuf?> (() => {
-                        return create_clamp_pixbuf ((!)pixbuf, _cover_size);
-                    }, true);
-                }
-                if (music == app.current_music && app.thumbnailer.find (music) == null) {
-                    var mini = pixbuf != null
-                        ? Gdk.Texture.for_pixbuf ((!)pixbuf)
-                        : (!)paintable;
-                    app.thumbnailer.put (music, mini);
-                }
-                update_cover_paintables (music, paintable);
-
                 action_set_enabled (ACTION_APP + ACTION_EXPORT_COVER, image != null);
                 action_set_enabled (ACTION_APP + ACTION_SHOW_COVER_FILE, image == null && music.cover_uri != null);
-
                 yield app.parse_music_cover_async ();
+
+                if (pixbuf != null && app.thumbnailer.find (music) == null) {
+                    var minbuf = yield run_async<Gdk.Pixbuf?> (() => {
+                        return create_clamp_pixbuf ((!)pixbuf, Thumbnailer.ICON_SIZE);
+                    });
+                    if (minbuf != null) {
+                        app.thumbnailer.put (music, Gdk.Texture.for_pixbuf ((!)minbuf));
+                    }
+                }
+                if (music == app.current_music) {
+                    var paintable = pixbuf != null
+                        ? Gdk.Texture.for_pixbuf ((!)pixbuf)
+                        : app.thumbnailer.create_album_text_paintable (music);
+                    update_cover_paintables (music, paintable);
+                }
             }
         }
 
@@ -444,7 +442,7 @@ namespace G4 {
 
         private void update_cover_paintables (Music music, Gdk.Paintable? paintable) {
             var app = (Application) application;
-            _mini_bar.cover = app.thumbnailer.find (music);
+            _mini_bar.cover = app.thumbnailer.find (music) ?? paintable;
             _cover_paintable.paintable = paintable ?? _mini_bar.cover;
             update_background ();
 
