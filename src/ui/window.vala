@@ -334,8 +334,7 @@ namespace G4 {
                 pixbuf = yield run_async<Gdk.Pixbuf?> (() => {
                     return load_clamp_pixbuf_from_sample ((!)image, _cover_size);
                 }, true);
-            }
-            if (pixbuf == null && music == app.current_music) {
+            } else {
                 pixbuf = yield app.thumbnailer.load_directly_async (music, _cover_size);
             }
             if (music == app.current_music) {
@@ -343,20 +342,10 @@ namespace G4 {
                 action_set_enabled (ACTION_APP + ACTION_SHOW_COVER_FILE, image == null && music.cover_uri != null);
                 yield app.parse_music_cover_async ();
 
-                if (pixbuf != null && app.thumbnailer.find (music) == null) {
-                    var minbuf = yield run_async<Gdk.Pixbuf?> (() => {
-                        return create_clamp_pixbuf ((!)pixbuf, Thumbnailer.ICON_SIZE);
-                    });
-                    if (minbuf != null) {
-                        app.thumbnailer.put (music, Gdk.Texture.for_pixbuf ((!)minbuf));
-                    }
-                }
-                if (music == app.current_music) {
-                    var paintable = pixbuf != null
-                        ? Gdk.Texture.for_pixbuf ((!)pixbuf)
-                        : app.thumbnailer.create_album_text_paintable (music);
-                    update_cover_paintables (music, paintable);
-                }
+                var paintable = pixbuf != null
+                    ? Gdk.Texture.for_pixbuf ((!)pixbuf)
+                    : app.thumbnailer.create_album_text_paintable (music);
+                update_cover_paintables (music, paintable);
             }
         }
 

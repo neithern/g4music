@@ -178,11 +178,11 @@ namespace G4 {
                 return null;
             }
 
+            var is_small = size <= ICON_SIZE;
             var album_key_ = @"$(music.album)-$(music.artist)-";
             var tags = new Gst.TagList?[] { null };
             var cover_key = new string[] { music.cover_key, music.album };
             var pixbuf = yield run_async<Gdk.Pixbuf?> (() => {
-                var is_small = size <= ICON_SIZE;
                 var tag = tags[0] = parse_gst_tags (file);
                 Gst.Sample? sample = null;
                 if (tag != null && (sample = parse_image_from_tag_list ((!)tag)) != null) {
@@ -240,8 +240,25 @@ namespace G4 {
                     tag_updated (music);
             }
             if (music.cover_key != cover_key[0]) {
-                //  Update cover uri if changed
+                //  Update cover key if changed
                 music.cover_key = cover_key[0];
+            }
+            if (pixbuf != null && !is_small && find (music) == null) {
+                Gdk.Pixbuf? minbuf = null;
+                lock (_album_pixbufs) {
+                    minbuf = _album_pixbufs.find (cover_key[0]);
+                }
+                if (minbuf == null) {
+                    minbuf = yield run_async<Gdk.Pixbuf?> (() => {
+                        return create_clamp_pixbuf ((!)pixbuf, ICON_SIZE);
+                    });
+                }
+                if (minbuf != null) {
+                    lock (_album_pixbufs) {
+                        _album_pixbufs.put (cover_key[0], minbuf);
+                    }
+                    put (music, Gdk.Texture.for_pixbuf ((!)minbuf));
+                }
             }
             return pixbuf;
         }
