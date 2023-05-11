@@ -184,51 +184,35 @@ namespace G4 {
             var cover_key = new string[] { music.cover_key, music.album };
             var pixbuf = yield run_async<Gdk.Pixbuf?> (() => {
                 var tag = tags[0] = parse_gst_tags (file);
+                File? cover_file = null;
+                Gdk.Pixbuf? pixbuf = null;
                 Gst.Sample? sample = null;
                 if (tag != null && (sample = parse_image_from_tag_list ((!)tag)) != null) {
                     //  Check if there is an album cover with same artist and image size
                     var image_size = sample?.get_buffer ()?.get_size () ?? 0;
                     var album_key = album_key_ + image_size.to_string ("%x");
-                    if (check_same_album_cover (album_key, ref cover_key[0])
-                            && is_small) {
-                        lock (_album_pixbufs) {
-                            var pixbuf = _album_pixbufs.find (cover_key[0]);
-                            if (pixbuf != null)
-                                return pixbuf;
-                        }
-                    }
-                    var pixbuf = load_clamp_pixbuf_from_sample ((!)sample, size);
-                    if (pixbuf != null) {
-                        if (is_small) {
-                            lock (_album_pixbufs) {
-                                _album_pixbufs.put (cover_key[0], pixbuf);
-                            }
-                        }
-                        return pixbuf;
-                    }
-                }
-                //  Try load album art cover file in the folder
-                var cover_file = _cover_finder.find (file);
-                if (cover_file != null) {
+                    check_same_album_cover (album_key, ref cover_key[0]);
+                    pixbuf = load_clamp_pixbuf_from_sample ((!)sample, size);
+                } else if ((cover_file = _cover_finder.find (file)) != null) {
                     var album_key = cover_file?.get_path () ?? "";
                     cover_key[0] = (!) cover_file?.get_uri ();
-                    if (check_same_album_cover (album_key, ref cover_key[0])
-                            && is_small) {
+                    check_same_album_cover (album_key, ref cover_key[0]);
+                    pixbuf = load_clamp_pixbuf_from_file ((!)cover_file, size);
+                }
+                if (pixbuf != null) {
+                    Gdk.Pixbuf? minbuf = null;
+                    lock (_album_pixbufs) {
+                        minbuf = _album_pixbufs.find (cover_key[0]);
+                    }
+                    if (minbuf == null) {
+                        minbuf = create_clamp_pixbuf ((!)pixbuf, ICON_SIZE);
+                    }
+                    if (minbuf != null) {
                         lock (_album_pixbufs) {
-                            var pixbuf = _album_pixbufs.find (cover_key[0]);
-                            if (pixbuf != null)
-                                return pixbuf;
+                            _album_pixbufs.put (cover_key[0], (!)minbuf);
                         }
                     }
-                    var pixbuf = load_clamp_pixbuf_from_file ((!)cover_file, size);
-                    if (pixbuf != null) {
-                        if (is_small) {
-                            lock (_album_pixbufs) {
-                                _album_pixbufs.put (cover_key[0], pixbuf);
-                            }
-                        }
-                        return pixbuf;
-                    }
+                    return pixbuf;
                 }
                 cover_key[0] = parse_abbreviation (cover_key[1]);
                 return null;
@@ -248,15 +232,7 @@ namespace G4 {
                 lock (_album_pixbufs) {
                     minbuf = _album_pixbufs.find (cover_key[0]);
                 }
-                if (minbuf == null) {
-                    minbuf = yield run_async<Gdk.Pixbuf?> (() => {
-                        return create_clamp_pixbuf ((!)pixbuf, ICON_SIZE);
-                    });
-                }
                 if (minbuf != null) {
-                    lock (_album_pixbufs) {
-                        _album_pixbufs.put (cover_key[0], minbuf);
-                    }
                     put (music, Gdk.Texture.for_pixbuf ((!)minbuf));
                 }
             }
