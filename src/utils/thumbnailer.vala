@@ -153,31 +153,35 @@ namespace G4 {
         }
 
         public async Gdk.Paintable? load_async (Music music, int size) {
-            if (music.replace_qdata<bool, bool> (_loading_quark, false, true, null)) {
-                var pixbuf = yield load_directly_async (music, size);
-                music.steal_qdata<bool> (_loading_quark);
-
-                var paintable0 = find (music);
-                if (size <= ICON_SIZE && paintable0 != null) {
-                    //  Check if already exist with changed cover_key
-                    //  print ("Already exist: %s\n", music.cover_key);
-                    return paintable0;
-                }
-
-                var paintable = pixbuf != null
-                    ? Gdk.Texture.for_pixbuf ((!)pixbuf)
-                    : create_album_text_paintable (music);
-                if (size <= ICON_SIZE) {
-                    put (music, paintable);
-                } else if (pixbuf != null && paintable0 == null) {
-                    var minbuf = find_pixbuf_from_cache (music.cover_key);
-                    if (minbuf != null) {
-                        put (music, Gdk.Texture.for_pixbuf ((!)minbuf));
-                    }
-                }
-                return paintable;
+            var is_small = size <= ICON_SIZE;
+            if (is_small && !music.replace_qdata<bool, bool> (_loading_quark, false, true, null)) {
+                return null;
             }
-            return null;
+
+            var pixbuf = yield load_directly_async (music, size);
+            if (is_small) {
+                music.steal_qdata<bool> (_loading_quark);
+            }
+
+            var paintable0 = find (music);
+            if (is_small && paintable0 != null) {
+                //  Check if already exist with changed cover_key
+                //  print ("Already exist: %s\n", music.cover_key);
+                return paintable0;
+            }
+
+            var paintable = pixbuf != null
+                ? Gdk.Texture.for_pixbuf ((!)pixbuf)
+                : create_album_text_paintable (music);
+            if (is_small) {
+                put (music, paintable);
+            } else if (pixbuf != null && paintable0 == null) {
+                var minbuf = find_pixbuf_from_cache (music.cover_key);
+                if (minbuf != null) {
+                    put (music, Gdk.Texture.for_pixbuf ((!)minbuf));
+                }
+            }
+            return paintable;
         }
 
         private async Gdk.Pixbuf? load_directly_async (Music music, int size) {
