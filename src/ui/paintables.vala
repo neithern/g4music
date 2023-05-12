@@ -298,17 +298,4 @@ namespace G4 {
         }
         return null;
     }
-
-    public static Gdk.Texture? paintable_to_texture (Gsk.Renderer? renderer, Gdk.Paintable paintable) {
-        var width = paintable.get_intrinsic_width ();
-        var height = paintable.get_intrinsic_height ();
-        var snapshot = new Gtk.Snapshot ();
-        paintable.snapshot (snapshot, width, height);
-        var node = snapshot.free_to_node ();
-        if (node != null) {
-            var rect = Graphene.Rect ().init (0, 0, width, height);
-            return renderer?.render_texture ((!)node, (!)rect);
-        }
-        return null;
-    }
 }
