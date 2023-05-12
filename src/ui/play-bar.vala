@@ -26,9 +26,7 @@ namespace G4 {
             _seek.set_range (0, _duration);
             _seek.halign = Gtk.Align.FILL;
             _seek.width_request = 272;
-            _seek.adjust_bounds.connect ((value) => {
-                player.seek (GstPlayer.from_second (value));
-            });
+            _seek.adjust_bounds.connect ((value) => player.seek (GstPlayer.from_second (value)));
             append (_seek);
 
             var times = new Gtk.CenterBox ();

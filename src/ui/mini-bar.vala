@@ -88,10 +88,7 @@ namespace G4 {
             }
             set {
                 _paintable.paintable = value;
-
-                var target = new Adw.CallbackAnimationTarget ((value) => {
-                    _paintable.fade = value;
-                });
+                var target = new Adw.CallbackAnimationTarget ((value) => _paintable.fade = value);
                 _fade_animation?.pause ();
                 _fade_animation = new Adw.TimedAnimation (_cover, 1 - _paintable.fade, 0, 800, target);
                 ((!)_fade_animation).done.connect (() => {

@@ -117,9 +117,7 @@ namespace G4 {
             base.startup ();
 
             //  Must load tag cache after the app register (GLib init), to make sort works
-            _music_store.load_tag_cache_async.begin ((obj, res) => {
-                _music_store.load_tag_cache_async.end (res);
-            });
+            _music_store.load_tag_cache_async.begin ((obj, res) => _music_store.load_tag_cache_async.end (res));
 
             _mpris_id = Bus.own_name (BusType.SESSION,
                 "org.mpris.MediaPlayer2.G4Music",
@@ -164,13 +162,9 @@ namespace G4 {
 
             _settings?.set_double ("volume", _player.volume);
 
-            _music_store.save_tag_cache_async.begin ((obj, res) => {
-                _music_store.save_tag_cache_async.end (res);
-            });
+            _music_store.save_tag_cache_async.begin ((obj, res) => _music_store.save_tag_cache_async.end (res));
 
-            delete_cover_tmp_file_async.begin ((obj, res) => {
-                delete_cover_tmp_file_async.end (res);
-            });
+            delete_cover_tmp_file_async.begin ((obj, res) => delete_cover_tmp_file_async.end (res));
 
             base.shutdown ();
         }
@@ -321,9 +315,7 @@ namespace G4 {
             if (!_loading_store) {
                 _music_store.clear ();
                 update_current_item (-1);
-                load_musics_async.begin ({}, (obj, res) => {
-                    current_item = load_musics_async.end (res);
-                });
+                load_musics_async.begin ({}, (obj, res) => current_item = load_musics_async.end (res));
             }
         }
 
@@ -448,9 +440,8 @@ namespace G4 {
         }
 
         public void request_background () {
-            _portal.request_background_async.begin (_("Keep playing after window closed"), (obj, res) => {
-                _portal.request_background_async.end (res);
-            });
+            _portal.request_background_async.begin (_("Keep playing after window closed"),
+                (obj, res) => _portal.request_background_async.end (res));
         }
 
         public void show_about () {
@@ -544,7 +535,8 @@ namespace G4 {
                 chooser.response.connect ((id) => {
                     var file = chooser.get_file ();
                     if (id == Gtk.ResponseType.ACCEPT && file is File) {
-                        save_sample_to_file_async.begin ((!)file, sample, (obj, res) => save_sample_to_file_async.end (res));
+                        save_sample_to_file_async.begin ((!)file, sample,
+                            (obj, res) => save_sample_to_file_async.end (res));
                     }
                 });
                 chooser.show ();
@@ -585,9 +577,8 @@ namespace G4 {
 
         private void _show_uri_with_portal (string? uri) {
             if (uri != null) {
-                _portal.open_directory_async.begin ((!)uri, (obj, res) => {
-                    _portal.open_directory_async.end (res);
-                });
+                _portal.open_directory_async.begin ((!)uri,
+                    (obj, res) => _portal.open_directory_async.end (res));
             }
         }
 

@@ -72,9 +72,7 @@ namespace G4 {
 
             leaflet.bind_property ("folded", this, "leaflet_folded", BindingFlags.DEFAULT);
             leaflet.navigate (Adw.NavigationDirection.FORWARD);
-            back_btn.clicked.connect (() => {
-            	leaflet.navigate (Adw.NavigationDirection.BACK);
-            });
+            back_btn.clicked.connect (() => leaflet.navigate (Adw.NavigationDirection.BACK));
 
             app.bind_property ("sort_mode", this, "sort_mode", BindingFlags.DEFAULT);
             sort_mode = app.sort_mode;
@@ -92,9 +90,7 @@ namespace G4 {
             search_entry.search_changed.connect (on_search_text_changed);
 
             mini_box.append (_mini_bar);
-            _mini_bar.activated.connect (() => {
-                leaflet.navigate (Adw.NavigationDirection.FORWARD);
-            });
+            _mini_bar.activated.connect (() => leaflet.navigate (Adw.NavigationDirection.FORWARD));
 
             _bkgnd_paintable.queue_draw.connect (this.queue_draw);
             _cover_paintable.queue_draw.connect (cover_image.queue_draw);
@@ -107,12 +103,10 @@ namespace G4 {
             _scale_cover_paintable.queue_draw.connect (cover_image.queue_draw);
             cover_image.paintable = _scale_cover_paintable;
 
-            make_label_clickable (music_album).released.connect (() => {
-                start_search ("album=" + music_album.label);
-            });
-            make_label_clickable (music_artist).released.connect (() => {
-                start_search ("artist=" + music_artist.label);
-            });
+            make_label_clickable (music_album).released.connect (
+                () => start_search ("album=" + music_album.label));
+            make_label_clickable (music_artist).released.connect (
+                () => start_search ("artist=" + music_artist.label));
 
             var play_bar = new PlayBar ();
             content_box.append (play_bar);
@@ -121,9 +115,7 @@ namespace G4 {
             action_set_enabled (ACTION_APP + ACTION_NEXT, false);
 
             var factory = new Gtk.SignalListItemFactory ();
-            factory.setup.connect ((item) => {
-                item.child = new MusicEntry ();
-            });
+            factory.setup.connect ((item) => item.child = new MusicEntry ());
             factory.bind.connect (on_bind_item);
             factory.unbind.connect ((item) => {
                 var entry = (MusicEntry) item.child;
@@ -148,9 +140,7 @@ namespace G4 {
             app.music_changed.connect (on_music_changed);
             app.music_tag_parsed.connect (on_music_tag_parsed);
             app.player.state_changed.connect (on_player_state_changed);
-            app.music_store.parse_progress.connect ((percent) => {
-                index_title.label = @"$percent%";
-            });
+            app.music_store.parse_progress.connect ((percent) => index_title.label = @"$percent%");
         }
 
         public uint background_blur {
@@ -291,9 +281,7 @@ namespace G4 {
         private void on_player_state_changed (Gst.State state) {
             if (state >= Gst.State.PAUSED) {
                 var scale_paintable = (!)(cover_image.paintable as ScalePaintable);
-                var target = new Adw.CallbackAnimationTarget ((value) => {
-                    scale_paintable.scale = value;
-                });
+                var target = new Adw.CallbackAnimationTarget ((value) => scale_paintable.scale = value);
                 _scale_animation?.pause ();
                 _scale_animation = new Adw.TimedAnimation (cover_image,  scale_paintable.scale,
                                             state == Gst.State.PLAYING ? 1 : 0.8, 500, target);
@@ -331,9 +319,8 @@ namespace G4 {
             var app = (Application) application;
             Gdk.Paintable? paintable = null;
             if (image != null) {
-                var pixbuf = yield run_async<Gdk.Pixbuf?> (() => {
-                    return load_clamp_pixbuf_from_sample ((!)image, _cover_size);
-                }, true);
+                var pixbuf = yield run_async<Gdk.Pixbuf?> (
+                    () => load_clamp_pixbuf_from_sample ((!)image, _cover_size), true);
                 if (pixbuf != null)
                     paintable = Gdk.Texture.for_pixbuf ((!)pixbuf);
             } else {

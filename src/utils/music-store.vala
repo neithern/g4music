@@ -144,9 +144,7 @@ namespace G4 {
             _store.splice (_store.get_n_items (), 0, musics.data);
 
             if (_tag_cache.modified) {
-                save_tag_cache_async.begin ((obj, res) => {
-                    save_tag_cache_async.end (res);
-                });
+                save_tag_cache_async.begin ((obj, res) => save_tag_cache_async.end (res));
             }
         }
 
@@ -214,9 +212,7 @@ namespace G4 {
             var threads = new Thread<G>[num_tasks];
             for (var i = 0; i < num_tasks; i++) {
                 var index = i;
-                threads[i] = new Thread<G> (null, () => {
-                    return func (index);
-                });
+                threads[index] = new Thread<G> (null, () => func (index));
             }
             foreach (var thread in threads) {
                 thread.join ();

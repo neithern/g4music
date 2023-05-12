@@ -25,23 +25,17 @@ namespace G4 {
 
         private static Once<ThreadPool<Worker>> multi_thread_pool;
         internal static unowned ThreadPool<Worker> get_multi_thread_pool () {
-            return multi_thread_pool.once(() => {
-                return new_thread_pool (get_num_processors ());
-            });
+            return multi_thread_pool.once(() => new_thread_pool (get_num_processors ()));
         }
 
         private static Once<ThreadPool<Worker>> single_thread_pool;
         internal static unowned ThreadPool<Worker> get_single_thread_pool () {
-            return single_thread_pool.once(() => {
-                return new_thread_pool (1);
-            });
+            return single_thread_pool.once(() => new_thread_pool (1));
         }
 
         private static ThreadPool<Worker> new_thread_pool (uint num_threads) {
             try {
-                return new ThreadPool<Worker>.with_owned_data ((tdata) => {
-                    tdata.run();
-                }, (int) num_threads, false);
+                return new ThreadPool<Worker>.with_owned_data ((tdata) => tdata.run(), (int) num_threads, false);
             } catch (Error e) {
                 critical ("Create %u threads pool failed: %s\n", num_threads, e.message);
                 Process.abort ();

@@ -49,7 +49,7 @@ namespace G4 {
 
     //  Sorted by insert order
     public class LruCache<V> : Object {
-        public static CompareDataFunc<string> compare_string = (a, b) => { return strcmp (a, b); };
+        public static CompareDataFunc<string> compare_string = (a, b) => strcmp (a, b);
 
         private size_t _max_size = 0;
         private size_t _size = 0;
