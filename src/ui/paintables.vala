@@ -285,10 +285,13 @@ namespace G4 {
         return snapshot.free_to_paintable (rect.size);
     }
 
-    public static Gdk.Texture? create_blur_texture (Gtk.Widget widget, Gdk.Paintable paintable, int width = 128, int height = 128, double blur = 80) {
+    public static Gdk.Texture? create_blur_texture (Gtk.Widget widget, Gdk.Paintable paintable,
+                                int width = 128, int height = 128, double blur = 80, double opacity = 0.25) {
         var snapshot = new Gtk.Snapshot ();
         snapshot.push_blur (blur);
+        snapshot.push_opacity (opacity);
         paintable.snapshot (snapshot, width, height);
+        snapshot.pop ();
         snapshot.pop ();
         // Render to a new texture
         var node = snapshot.free_to_node ();

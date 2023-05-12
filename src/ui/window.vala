@@ -183,9 +183,7 @@ namespace G4 {
         public override void snapshot (Gtk.Snapshot snapshot) {
             var width = get_width ();
             var height = get_height ();
-            snapshot.push_opacity (0.25);
             _bkgnd_paintable.snapshot (snapshot, width, height);
-            snapshot.pop ();
             if (!leaflet.folded) {
                 var page = (Adw.LeafletPage) leaflet.pages.get_item (0);
                 var size = page.child.get_width ();
