@@ -235,7 +235,7 @@ namespace G4 {
             if (paintable == null) {
                 entry.first_draw_handler = entry.cover.first_draw.connect (() => {
                     entry.disconnect_first_draw ();
-                    thumbnailer.load_async.begin (music, (obj, res) => {
+                    thumbnailer.load_async.begin (music, Thumbnailer.ICON_SIZE, (obj, res) => {
                         var paintable2 = thumbnailer.load_async.end (res);
                         if (music == (Music) item.item) {
                             entry.paintable = paintable2;
@@ -329,22 +329,23 @@ namespace G4 {
             update_music_info (music);
 
             var app = (Application) application;
-            Gdk.Pixbuf? pixbuf = null;
+            Gdk.Paintable? paintable = null;
             if (image != null) {
-                pixbuf = yield run_async<Gdk.Pixbuf?> (() => {
+                var pixbuf = yield run_async<Gdk.Pixbuf?> (() => {
                     return load_clamp_pixbuf_from_sample ((!)image, _cover_size);
                 }, true);
+                if (pixbuf != null)
+                    paintable = Gdk.Texture.for_pixbuf ((!)pixbuf);
             } else {
-                pixbuf = yield app.thumbnailer.load_directly_async (music, _cover_size);
+                paintable = yield app.thumbnailer.load_async (music, _cover_size);
             }
             if (music == app.current_music) {
                 action_set_enabled (ACTION_APP + ACTION_EXPORT_COVER, image != null);
                 action_set_enabled (ACTION_APP + ACTION_SHOW_COVER_FILE, image == null && music.cover_uri != null);
                 yield app.parse_music_cover_async ();
 
-                var paintable = pixbuf != null
-                    ? Gdk.Texture.for_pixbuf ((!)pixbuf)
-                    : app.thumbnailer.create_album_text_paintable (music);
+                if (paintable == null)
+                    paintable = app.thumbnailer.create_album_text_paintable (music);
                 update_cover_paintables (music, paintable);
             }
         }

@@ -152,33 +152,41 @@ namespace G4 {
             _cover_cache.put (music.cover_key, paintable);
         }
 
-        public async Gdk.Paintable? load_async (Music music) {
+        public async Gdk.Paintable? load_async (Music music, int size) {
             if (music.replace_qdata<bool, bool> (_loading_quark, false, true, null)) {
-                var pixbuf = yield load_directly_async (music, ICON_SIZE);
+                var pixbuf = yield load_directly_async (music, size);
                 music.steal_qdata<bool> (_loading_quark);
-                //  Check if already exist with changed cover_key
-                var p = find (music);
-                if (p != null) {
+
+                var paintable0 = find (music);
+                if (size <= ICON_SIZE && paintable0 != null) {
+                    //  Check if already exist with changed cover_key
                     //  print ("Already exist: %s\n", music.cover_key);
-                    return p;
+                    return paintable0;
                 }
+
                 var paintable = pixbuf != null
                     ? Gdk.Texture.for_pixbuf ((!)pixbuf)
                     : create_album_text_paintable (music);
-                put (music, paintable);
+                if (size <= ICON_SIZE) {
+                    put (music, paintable);
+                } else if (pixbuf != null && paintable0 == null) {
+                    var minbuf = find_pixbuf_from_cache (music.cover_key);
+                    if (minbuf != null) {
+                        put (music, Gdk.Texture.for_pixbuf ((!)minbuf));
+                    }
+                }
                 return paintable;
             }
             return null;
         }
 
-        public async Gdk.Pixbuf? load_directly_async (Music music, int size = ICON_SIZE) {
+        private async Gdk.Pixbuf? load_directly_async (Music music, int size) {
             var file = File.new_for_uri (music.uri);
             var is_native = file.is_native ();
             if (!_remote_thumbnail && !is_native) {
                 return null;
             }
 
-            var is_small = size <= ICON_SIZE;
             var album_key_ = @"$(music.album)-$(music.artist)-";
             var tags = new Gst.TagList?[] { null };
             var cover_key = new string[] { music.cover_key, music.album };
@@ -200,10 +208,7 @@ namespace G4 {
                     pixbuf = load_clamp_pixbuf_from_file ((!)cover_file, size);
                 }
                 if (pixbuf != null) {
-                    Gdk.Pixbuf? minbuf = null;
-                    lock (_album_pixbufs) {
-                        minbuf = _album_pixbufs.find (cover_key[0]);
-                    }
+                    var minbuf = size <= ICON_SIZE ? pixbuf : find_pixbuf_from_cache (cover_key[0]);
                     if (minbuf == null) {
                         minbuf = create_clamp_pixbuf ((!)pixbuf, ICON_SIZE);
                     }
@@ -218,23 +223,14 @@ namespace G4 {
                 return null;
                 //  Run in single_thread_pool for samba to save connections
             }, false, file.has_uri_scheme ("smb"));
-            if (!is_native && tags[0] != null) {
+
+            if (!is_native && tags[0] != null && music.from_gst_tags ((!)tags[0])) {
                 //  Update for remote file, since it maybe cached but not parsed from file early
-                if (music.from_gst_tags ((!)tags[0]))
-                    tag_updated (music);
+                tag_updated (music);
             }
             if (music.cover_key != cover_key[0]) {
                 //  Update cover key if changed
                 music.cover_key = cover_key[0];
-            }
-            if (pixbuf != null && !is_small && find (music) == null) {
-                Gdk.Pixbuf? minbuf = null;
-                lock (_album_pixbufs) {
-                    minbuf = _album_pixbufs.find (cover_key[0]);
-                }
-                if (minbuf != null) {
-                    put (music, Gdk.Texture.for_pixbuf ((!)minbuf));
-                }
             }
             return pixbuf;
         }
@@ -264,6 +260,12 @@ namespace G4 {
                 }
             }
             return false;
+        }
+
+        private Gdk.Pixbuf? find_pixbuf_from_cache (string cover_key) {
+            lock (_album_pixbufs) {
+                return _album_pixbufs.find (cover_key);
+            }
         }
     }
 
