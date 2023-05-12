@@ -116,7 +116,7 @@ namespace G4 {
                     int percent = 0;
                     int progress = 0;
                     var num_tasks = uint.min (queue_count, get_num_processors ());
-                    run_in_threads<void> ((index) => {
+                    run_in_threads<void> (() => {
                         Music? s;
                         while ((s = queue.try_pop ()) != null) {
                             var music = (!)s;
@@ -206,13 +206,13 @@ namespace G4 {
             }
         }
 
-        private delegate G ThreadFunc<G> (uint index);
+        private delegate G ThreadFunc<G> ();
 
         private static void run_in_threads<G> (owned ThreadFunc<G> func, uint num_tasks) {
             var threads = new Thread<G>[num_tasks];
             for (var i = 0; i < num_tasks; i++) {
                 var index = i;
-                threads[index] = new Thread<G> (null, () => func (index));
+                threads[index] = new Thread<G> (null, func);
             }
             foreach (var thread in threads) {
                 thread.join ();
