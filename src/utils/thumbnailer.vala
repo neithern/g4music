@@ -292,7 +292,7 @@ namespace G4 {
             var fis = file.read ();
             var bis = new BufferedInputStream (fis);
             bis.buffer_size = 16384;
-            return load_clamp_pixbuf_from_stream (bis, size);
+            return new Gdk.Pixbuf.from_stream_at_scale (bis, size, size, true);
         } catch (Error e) {
         }
         return null;
@@ -301,22 +301,16 @@ namespace G4 {
     public static Gdk.Pixbuf? load_clamp_pixbuf_from_sample (Gst.Sample sample, int size) {
         var buffer = sample.get_buffer ();
         Gst.MapInfo? info = null;
-        if (buffer?.map (out info, Gst.MapFlags.READ) ?? false) {
-            var bytes = new Bytes.static (info?.data);
-            var stream = new MemoryInputStream.from_bytes (bytes);
-            var pixbuf = load_clamp_pixbuf_from_stream (stream, size);
-            buffer?.unmap ((!)info);
-            return pixbuf;
-        }
-        return null;
-    }
-
-    public static Gdk.Pixbuf? load_clamp_pixbuf_from_stream (InputStream stream, int size) {
         try {
-            var pixbuf = new Gdk.Pixbuf.from_stream (stream);
-            if (pixbuf is Gdk.Pixbuf)
-                return create_clamp_pixbuf (pixbuf, size);
+            if (buffer?.map (out info, Gst.MapFlags.READ) ?? false) {
+                var bytes = new Bytes.static (info?.data);
+                var stream = new MemoryInputStream.from_bytes (bytes);
+                return new Gdk.Pixbuf.from_stream_at_scale (stream, size, size, true);
+            }
         } catch (Error e) {
+        } finally {
+            if (info != null)
+                buffer?.unmap ((!)info);
         }
         return null;
     }
