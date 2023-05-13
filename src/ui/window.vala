@@ -50,6 +50,7 @@ namespace G4 {
         private Gdk.Paintable? _loading_paintable = null;
         private ScalePaintable _scale_cover_paintable = new ScalePaintable ();
 
+        private int _blur_size = 512;
         private int _cover_size = 1024;
         private string _loading_text = _("Loading...");
 
@@ -173,11 +174,6 @@ namespace G4 {
                     sort_btn.set_icon_name (SORT_MODE_ICONS[value]);
                 }
             }
-        }
-
-        public override void size_allocate (int width, int height, int baseline) {
-            base.size_allocate (width, height, baseline);
-            update_blur_paintable (width, height);
         }
 
         public override void snapshot (Gtk.Snapshot snapshot) {
@@ -428,32 +424,14 @@ namespace G4 {
             _fade_animation?.play ();
         }
 
-        private int _blur_width = 0;
-        private int _blur_height = 0;
-
-        private bool update_blur_paintable (int width, int height, bool force = false) {
+        private void update_background () {
             var paintable = _mini_bar.cover ?? _cover_paintable.paintable;
             if ((_bkgnd_blur == BackgroundBlurMode.ALWAYS && paintable != null)
                 || (_bkgnd_blur == BackgroundBlurMode.ART_ONLY && paintable is Gdk.Texture)) {
-                if (force || _blur_width != width || _blur_height != height) {
-                    _blur_width = width;
-                    _blur_height = height;
-                    _bkgnd_paintable.paintable = create_blur_texture (this, (!)paintable, width, height);
-                    print ("Update blur: %dx%d\n", width, height);
-                    return true;
-                }
-            } else if (force) {
+                _bkgnd_paintable.paintable = create_blur_texture (this, 
+                    (!)paintable, _blur_size, _blur_size, 64);
+            } else {
                 _bkgnd_paintable.paintable = null;
-                return true;
-            }
-            return false;
-        }
-
-        private void update_background () {
-            var width = get_width ();
-            var height = get_height ();
-            if (width > 0 && height > 0) {
-                update_blur_paintable (width, height, true);
             }
         }
     }
