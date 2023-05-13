@@ -122,15 +122,22 @@ namespace G4 {
         }
 
         protected override void on_snapshot (Gtk.Snapshot snapshot, double width, double height) {
-            var image_width = base.get_intrinsic_width ();
-            var image_height = base.get_intrinsic_height ();
+            var image_width = (float) get_intrinsic_width ();
+            var image_height = (float) get_intrinsic_height ();
             if (image_width != image_height) {
+                var point = Graphene.Point ();
+                var ratio = image_width / image_height;
                 snapshot.save ();
-                var ratio = image_width / (float) image_height;
-                if (ratio > 1)
+                if (ratio > 1) {
                     snapshot.scale (ratio, 1);
-                else
+                    point.x = (float) (width - width * ratio) * 0.5f;
+                    point.y = 0;
+                } else {
                     snapshot.scale (1, 1 / ratio);
+                    point.x = 0;
+                    point.y = (float) (height - height / ratio) * 0.5f;
+                }
+                snapshot.translate (point);
                 base.on_snapshot (snapshot, width, height);
                 snapshot.restore ();
             } else {
