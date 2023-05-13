@@ -662,7 +662,6 @@ namespace G4 {
             if (buffer?.map (out info, Gst.MapFlags.READ) ?? false) {
                 return yield stream.write_all_async (info?.data, Priority.DEFAULT, null, null);
             }
-            stream.close ();
         } catch (Error e) {
         } finally {
             if (info != null)
