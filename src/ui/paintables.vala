@@ -229,40 +229,46 @@ namespace G4 {
     }
 
     public const uint32[] BACKGROUND_COLORS = {
-        0x83b6ec, // blue
-        0x7ad9f1, // cyan
-        0xb5e98a, // lime
-        0xf8e359, // yellow
-        0xffcb62, // gold
-        0xffa95a, // orange
-        0xf78773, // raspberry
-        0x8de6b1, // green
-        0xe973ab, // magenta
-        0xcb78d4, // purple
-        0x9e91e8, // violet
-        0xe3cf9c, // beige
-        0xbe916d, // brown
-        // 0xc0bfbc, // gray
+        0xffcfe1f5u, 0xff83b6ecu, 0xff337fdcu,  // blue
+        0xffcaeaf2u, 0xff7ad9f1u, 0xff0f9ac8u,  // cyan
+        0xffcef8d8u, 0xff8de6b1u, 0xff29ae74u,  // green
+        0xffe6f9d7u, 0xffb5e98au, 0xff6ab85bu,  // lime
+        0xfff9f4e1u, 0xfff8e359u, 0xffd29d09u,  // yellow
+        0xffffead1u, 0xffffcb62u, 0xffd68400u,  // gold
+        0xffffe5c5u, 0xffffa95au, 0xffed5b00u,  // orange
+        0xfff8d2ceu, 0xfff78773u, 0xffe62d42u,  // raspberry
+        0xfffac7deu, 0xffe973abu, 0xffe33b6au,  // magenta
+        0xffe7c2e8u, 0xffcb78d4u, 0xff9945b5u,  // purple
+        0xffd5d2f5u, 0xff9e91e8u, 0xff7a59cau,  // violet
+        0xfff2eadeu, 0xffe3cf9cu, 0xffb08952u,  // beige
+        0xffe5d6cau, 0xffbe916du, 0xff785336u,  // brown
+        0xffd8d7d3u, 0xffc0bfbcu, 0xff6e6d71u,  // gray
     };
 
-    public static Gdk.Paintable? create_text_paintable (Pango.Context context, string text, int width, int height, uint color, uint bkcolor = 0) {
-        var rect = (!)Graphene.Rect ().init (0, 0, (float) width, (float) height);
-        var snapshot = new Gtk.Snapshot ();
-
-        if (bkcolor != 0) {
-            var c = Gdk.RGBA ();
-            c.alpha = ((bkcolor >> 24) & 0xff) / 255f;
-            c.red = ((bkcolor >> 16) & 0xff) / 255f;
-            c.green = ((bkcolor >> 8) & 0xff) / 255f;
-            c.blue = (bkcolor & 0xff) / 255f;
-            snapshot.append_color (c, rect);
-        }
-
+    public static Gdk.RGBA color_from_uint (uint color) {
         var c = Gdk.RGBA ();
         c.alpha = ((color >> 24) & 0xff) / 255f;
         c.red = ((color >> 16) & 0xff) / 255f;
         c.green = ((color >> 8) & 0xff) / 255f;
         c.blue = (color & 0xff) / 255f;
+        return c;
+    }
+
+    public static Gdk.Paintable? create_text_paintable (Pango.Context context, string text, int width, int height, uint color_index = 0x7fffffff) {
+        var rect = (!)Graphene.Rect ().init (0, 0, (float) width, (float) height);
+        var snapshot = new Gtk.Snapshot ();
+
+        var c = Gdk.RGBA ();
+        if (color_index < BACKGROUND_COLORS.length / 3) {
+            c = color_from_uint (BACKGROUND_COLORS[color_index * 3]);
+            var c1 = color_from_uint (BACKGROUND_COLORS[color_index * 3 + 1]);
+            var c2 = color_from_uint (BACKGROUND_COLORS[color_index * 3 + 2]);
+            Gsk.ColorStop[] stops = { { 0, c1 }, { 0.5f, c2 }, { 1, c1 } };
+            snapshot.append_linear_gradient (rect, rect.get_top_left (), rect.get_bottom_right (), stops);
+        } else {
+            c.alpha = 1f;
+            c.red = c.green = c.blue = 0.5f;
+        }
 
         var font_size = height * 0.45;
         var font = new Pango.FontDescription ();

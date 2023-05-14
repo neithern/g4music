@@ -241,14 +241,15 @@ namespace G4 {
 
         public Gdk.Paintable create_album_text_paintable (Music music) {
             var text = parse_abbreviation (music.album);
-            var bkcolor = (text.length == 0 || text == UNKOWN_ALBUM)
-                        ? 0xc0bfbc
-                        : BACKGROUND_COLORS[str_hash (text) % BACKGROUND_COLORS.length];
-            return create_simple_text_paintable (text, ICON_SIZE, 0xc0808080u, bkcolor | 0xff000000u);
+            var color_count = BACKGROUND_COLORS.length / 3;
+            var color_index = (text.length == 0 || text == UNKOWN_ALBUM)
+                    ? color_count - 1
+                    : str_hash (text) % (color_count - 1);
+            return create_simple_text_paintable (text, ICON_SIZE, color_index);
         }
 
-        public Gdk.Paintable create_simple_text_paintable (string text, int size, uint color = 0xb0808080u, uint bkcolor = 0) {
-            var paintable = create_text_paintable ((!)_pango_context, text, size, size, color, bkcolor);
+        public Gdk.Paintable create_simple_text_paintable (string text, int size, uint color_index = 0x7fffffff) {
+            var paintable = create_text_paintable ((!)_pango_context, text, size, size, color_index);
             return paintable ?? new BasePaintable ();
         }
 
