@@ -247,7 +247,7 @@ namespace G4 {
             return create_simple_text_paintable (text, ICON_SIZE, 0xc0808080u, bkcolor | 0xff000000u);
         }
 
-        public Gdk.Paintable create_simple_text_paintable (string text, int size, uint color = 0xc0808080u, uint bkcolor = 0) {
+        public Gdk.Paintable create_simple_text_paintable (string text, int size, uint color = 0xb0808080u, uint bkcolor = 0) {
             var paintable = create_text_paintable ((!)_pango_context, text, size, size, color, bkcolor);
             return paintable ?? new BasePaintable ();
         }

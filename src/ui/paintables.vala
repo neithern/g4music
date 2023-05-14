@@ -242,7 +242,7 @@ namespace G4 {
         0x9e91e8, // violet
         0xe3cf9c, // beige
         0xbe916d, // brown
-        0xc0bfbc, // gray
+        // 0xc0bfbc, // gray
     };
 
     public static Gdk.Paintable? create_text_paintable (Pango.Context context, string text, int width, int height, uint color, uint bkcolor = 0) {
