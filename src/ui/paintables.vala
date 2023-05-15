@@ -255,7 +255,7 @@ namespace G4 {
     }
 
     public static Gdk.Paintable? create_text_paintable (Pango.Context context, string text, int width, int height, uint color_index = 0x7fffffff) {
-        var rect = (!)Graphene.Rect ().init (0, 0, (float) width, (float) height);
+        var rect = (!)Graphene.Rect ().init (0, 0,  width, height);
         var snapshot = new Gtk.Snapshot ();
 
         var c = Gdk.RGBA ();
@@ -298,7 +298,7 @@ namespace G4 {
         return snapshot.free_to_paintable (rect.size);
     }
 
-    public static Gdk.Texture? create_blur_texture (Gtk.Widget widget, Gdk.Paintable paintable,
+    public static Gdk.Paintable? create_blur_texture (Gtk.Widget widget, Gdk.Paintable paintable,
                                 int width = 128, int height = 128, double blur = 80, double opacity = 0.25) {
         var snapshot = new Gtk.Snapshot ();
         snapshot.push_blur (blur);
@@ -312,6 +312,7 @@ namespace G4 {
             var rect = Graphene.Rect ().init (0, 0, width, height);
             return widget.get_native ()?.get_renderer ()?.render_texture ((!)node, rect);
         }
-        return null;
+        var size = Graphene.Size ().init (width, height);
+        return snapshot.free_to_paintable (size);
     }
 }
