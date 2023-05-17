@@ -428,7 +428,7 @@ namespace G4 {
             var paintable = _mini_bar.cover ?? _cover_paintable.paintable;
             if ((_bkgnd_blur == BackgroundBlurMode.ALWAYS && paintable != null)
                 || (_bkgnd_blur == BackgroundBlurMode.ART_ONLY && paintable is Gdk.Texture)) {
-                _bkgnd_paintable.paintable = create_blur_texture (this, 
+                _bkgnd_paintable.paintable = create_blur_paintable (this,
                     (!)paintable, _blur_size, _blur_size, 64);
             } else {
                 _bkgnd_paintable.paintable = null;

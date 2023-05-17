@@ -298,7 +298,7 @@ namespace G4 {
         return snapshot.free_to_paintable (rect.size);
     }
 
-    public static Gdk.Paintable? create_blur_texture (Gtk.Widget widget, Gdk.Paintable paintable,
+    public static Gdk.Paintable? create_blur_paintable (Gtk.Widget widget, Gdk.Paintable paintable,
                                 int width = 128, int height = 128, double blur = 80, double opacity = 0.25) {
         var snapshot = new Gtk.Snapshot ();
         snapshot.push_blur (blur);
@@ -306,13 +306,13 @@ namespace G4 {
         paintable.snapshot (snapshot, width, height);
         snapshot.pop ();
         snapshot.pop ();
-        // Render to a new texture
+
+        Gdk.Paintable? result = null;
+        var rect = Graphene.Rect ().init (0, 0, width, height);
         var node = snapshot.free_to_node ();
         if (node is Gsk.RenderNode) {
-            var rect = Graphene.Rect ().init (0, 0, width, height);
-            return widget.get_native ()?.get_renderer ()?.render_texture ((!)node, rect);
+            result = widget.get_native ()?.get_renderer ()?.render_texture ((!)node, rect);
         }
-        var size = Graphene.Size ().init (width, height);
-        return snapshot.free_to_paintable (size);
+        return result ?? snapshot.free_to_paintable (rect?.size);
     }
 }
