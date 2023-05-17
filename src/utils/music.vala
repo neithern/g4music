@@ -246,9 +246,12 @@ namespace G4 {
         foreach (var s in text.split (" ")) {
             var index = find_first_letter (s);
             if (index >= 0) {
-                sb.append (s.get_char (index).to_string ());
-                if (sb.str.char_count () >= 2)
-                    break;
+                var c = s.get_char (index);
+                if (c.isalpha () || c.iswide_cjk ()) {
+                    sb.append (c.to_string ());
+                    if (sb.str.char_count () >= 2)
+                        break;
+                }
             }
         }
 

@@ -270,7 +270,7 @@ namespace G4 {
             c.red = c.green = c.blue = 0.5f;
         }
 
-        var font_size = height * 0.45;
+        var font_size = height * 0.4;
         var font = new Pango.FontDescription ();
         font.set_absolute_size (font_size * Pango.SCALE);
         font.set_family ("Serif");
