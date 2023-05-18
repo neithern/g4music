@@ -48,6 +48,15 @@
     </screenshots>
 
     <releases>
+        <release version="1.12" date="2023-5-18">
+            <description>
+                <ul>
+                <li>Save memory and CPU usage.</li>
+                <li>New style for no-cover images.</li>
+                <li>UI improvement and fixing.</li>
+                </ul>
+            </description>
+        </release>
         <release version="1.11" date="2023-5-8">
             <description>
                 <ul>
