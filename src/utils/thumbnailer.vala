@@ -242,7 +242,7 @@ namespace G4 {
         public Gdk.Paintable create_album_text_paintable (Music music) {
             var text = music.cover_key;
             var color_count = BACKGROUND_COLORS.length / 3;
-            var color_index = (text.length == 0 || text == UNKOWN_ALBUM)
+            var color_index = (text.length == 0 || text == UNKNOWN_ALBUM)
                     ? color_count - 1
                     : str_hash (text) % (color_count - 1);
             return create_simple_text_paintable (text, ICON_SIZE, color_index);

@@ -312,7 +312,7 @@ namespace G4 {
                 //  print (@"Tag: $tag=$(data.length)\n");
             }
         } else {
-            print ("MP4: unkown image type\n");
+            print ("MP4: unknown image type\n");
         }
     }
 
@@ -334,7 +334,7 @@ namespace G4 {
                 }
             }
         } else {
-            print ("MP4: unkown number type\n");
+            print ("MP4: unknown number type\n");
         }
     }
 
@@ -357,7 +357,7 @@ namespace G4 {
                 }
             }
         } else {
-            print ("MP4: unkown string type\n");
+            print ("MP4: unknown string type\n");
         }
     }
 
