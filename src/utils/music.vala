@@ -1,14 +1,14 @@
 namespace G4 {
-    public const string UNKOWN_ALBUM = _("Unknown Album");
-    public const string UNKOWN_ARTIST = _("Unknown Artist");
-    public const int UNKOWN_TRACK = int.MAX;
+    public const string UNKNOWN_ALBUM = _("Unknown Album");
+    public const string UNKNOWN_ARTIST = _("Unknown Artist");
+    public const int UNKNOWN_TRACK = int.MAX;
 
     public class Music : Object {
         public string album = "";
         public string artist = "";
         public string title = "";
         public string uri = "";
-        public int track = UNKOWN_TRACK;
+        public int track = UNKNOWN_TRACK;
         public int64 modified_time = 0;
 
         //  for sorting
@@ -129,10 +129,10 @@ namespace G4 {
                     _title_key = title.collate_key_for_filename ();
                 }
                 if (artist.length == 0) {
-                    artist = len >= 2 ? sa[len - 2] : UNKOWN_ARTIST;
+                    artist = len >= 2 ? sa[len - 2] : UNKNOWN_ARTIST;
                     _artist_key = artist.collate_key_for_filename ();
                 }
-                if (track_index == UNKOWN_TRACK) {
+                if (track_index == UNKNOWN_TRACK) {
                     if (track_index == 0 && len >= 3)
                         int.try_parse (sa[0], out track_index, null, 10);
                     if (track_index > 0)
@@ -141,7 +141,7 @@ namespace G4 {
             }
             if (album.length == 0) {
                 //  assume folder name as the album
-                album = file.get_parent ()?.get_basename () ?? UNKOWN_ALBUM;
+                album = file.get_parent ()?.get_basename () ?? UNKNOWN_ALBUM;
                 _album_key = album.collate_key_for_filename ();
             }
         }

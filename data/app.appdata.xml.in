@@ -183,7 +183,7 @@
                 <li>Make label clickable instead of hypelinks.</li>
                 <li>Add Turkish translation, thanks to @Sabri Ünal.</li>
                 <li>Fix cover image issues.</li>
-                <li>Fix saveing tag cache issues.</li>
+                <li>Fix saving tag cache issues.</li>
                 </ul>
             </description>
         </release>
@@ -205,7 +205,7 @@
                 <li>Scale album cover to fix large window.</li>
                 <li>Navigate back if start search and folded.</li>
                 <li>Draw peak to avoid resizing the window.</li>
-                <li>Request host file permisson in flatpak.</li>
+                <li>Request host file permission in flatpak.</li>
                 </ul>
             </description>
         </release>
@@ -273,7 +273,7 @@
             <description>
                 <ul>
                 <li>Add volume button.</li>
-                <li>Repeat singl song mode.</li>
+                <li>Repeat single song mode.</li>
                 <li>Supports pipewire for flatpak.</li>
                 <li>Supports parsing GIO file tags for flatpak.</li>
                 <li>Press any key to search, ESC to quit search.</li>

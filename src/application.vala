@@ -61,7 +61,7 @@ namespace G4 {
                 { ACTION_PREV, play_previous },
                 { ACTION_NEXT, play_next },
                 { ACTION_RELOAD_LIST, reload_music_store },
-                { ACTION_SEARCH, toggle_seach },
+                { ACTION_SEARCH, toggle_search },
                 { ACTION_SHOW_ALBUM, show_album },
                 { ACTION_SHOW_ARTIST, show_artist },
                 { ACTION_SHOW_COVER_FILE, show_cover_file },
@@ -327,7 +327,7 @@ namespace G4 {
             find_current_item ();
         }
 
-        public void toggle_seach () {
+        public void toggle_search () {
             var window = active_window as Window;
             if (window != null)
                 ((!)window).search_btn.active = ! ((!)window).search_btn.active;
