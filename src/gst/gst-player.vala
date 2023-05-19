@@ -131,6 +131,8 @@ namespace G4 {
             set {
                 if (_pipeline != null) {
                     _audio_sink = Gst.ElementFactory.make (value ? "pipewiresink" : "pulsesink", "audiosink");
+                    if (_audio_sink == null)
+                        _audio_sink = Gst.ElementFactory.make ("osxaudiosink", "audiosink");
                     if (_audio_sink != null)
                         ((!)_audio_sink).enable_last_sample = true;
                     update_audio_sink ();
@@ -332,8 +334,8 @@ namespace G4 {
                 while (_peaks.length > 0) {
                     unowned var p = _peaks.peek_head ();
                     if (p != null && ((!)p).time >= _position) {
-                        _peaks.pop_head ();
                         peak_parsed (((!)p).peak);
+                        _peaks.pop_head ();
                     } else {
                         break;
                     }
