@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-09 11:56+0800\n"
-"PO-Revision-Date: 2023-04-09 11:58+0800\n"
+"POT-Creation-Date: 2023-05-20 10:08+0800\n"
+"PO-Revision-Date: 2023-05-20 10:11+0800\n"
 "Last-Translator: Nanling <neithern@outlook.com>\n"
 "Language-Team: Chinese - China <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0\n"
 "X-Generator: Gtranslator 42.0\n"
 
-#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:415
+#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:239
 #: src/main.vala:24
 msgid "G4Music"
 msgstr "G4音樂"
@@ -99,47 +99,51 @@ msgstr "傾向使用暗色主題"
 msgid "Background blur mode"
 msgstr "背景模糊模式"
 
-#: src/gtk/preferences.ui:33
+#: src/gtk/preferences.ui:31
+msgid "Compact playlist view"
+msgstr "緊湊播放列表"
+
+#: src/gtk/preferences.ui:44
 msgid "Music Location"
 msgstr "音樂庫"
 
-#: src/gtk/preferences.ui:36
+#: src/gtk/preferences.ui:47
 msgid "Load music from folder"
 msgstr "從資料夾載入音樂"
 
-#: src/gtk/preferences.ui:47
+#: src/gtk/preferences.ui:58
 msgid "Load thumbnails for non-local files"
 msgstr "載入非本機文件的縮圖"
 
-#: src/gtk/preferences.ui:48
+#: src/gtk/preferences.ui:59
 msgid "May cause slowdowns and excess network usage"
 msgstr "可能會導致速度減慢與增加網路使用"
 
-#: src/gtk/preferences.ui:61
+#: src/gtk/preferences.ui:72
 msgid "Playback"
 msgstr "播放"
 
-#: src/gtk/preferences.ui:64 src/application.vala:408
+#: src/gtk/preferences.ui:75 src/application.vala:443
 msgid "Keep playing after window closed"
 msgstr "關閉視窗後繼續播放"
 
-#: src/gtk/preferences.ui:75
+#: src/gtk/preferences.ui:86
 msgid "Show audio peak level"
 msgstr "顯示音訊峰值"
 
-#: src/gtk/preferences.ui:86
+#: src/gtk/preferences.ui:97
 msgid "Enable gapless playback"
 msgstr "啟用無縫播放"
 
-#: src/gtk/preferences.ui:97
+#: src/gtk/preferences.ui:108
 msgid "Use ReplayGain to normalize volume"
 msgstr "使用 ReplayGain 正規化音量"
 
-#: src/gtk/preferences.ui:108
+#: src/gtk/preferences.ui:119
 msgid "Use pipewire audio sink"
 msgstr "使用 Pipewire 音訊輸出"
 
-#: src/gtk/preferences.ui:109
+#: src/gtk/preferences.ui:120
 msgid "Experimental"
 msgstr "實驗性質功能"
 
@@ -167,7 +171,7 @@ msgstr "輸出封面(_E)"
 msgid "Show _Cover File"
 msgstr "顯示封面檔案(_C)"
 
-#: src/gtk/window.ui:223 src/ui/music-entry.vala:113
+#: src/gtk/window.ui:223 src/ui/music-entry.vala:122
 msgid "_Show Music File"
 msgstr "顯示音樂檔案(_S)"
 
@@ -207,55 +211,55 @@ msgstr "依日期"
 msgid "Shuffle"
 msgstr "亂序播放"
 
-#: src/application.vala:416
+#: src/application.vala:449
 msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr "一個快速、流暢、輕量，基於 GTK4 的音樂播放軟體。"
 
-#: src/application.vala:418
+#: src/application.vala:451
 msgid "translator-credits"
 msgstr "Julian"
 
-#: src/application.vala:613
+#: src/application.vala:642
 msgid "Keep playing"
 msgstr "持續播放"
 
-#: src/ui/music-entry.vala:110
+#: src/ui/music-entry.vala:119
 msgid "Play at Next"
 msgstr "插播"
 
-#: src/ui/music-entry.vala:111
+#: src/ui/music-entry.vala:120
 msgid "Show Album"
 msgstr "顯示專輯"
 
-#: src/ui/music-entry.vala:112
+#: src/ui/music-entry.vala:121
 msgid "Show Artist"
 msgstr "顯示藝術家"
 
-#: src/ui/play-bar.vala:83
+#: src/ui/play-bar.vala:81
 msgid "Repeat Music"
 msgstr "單曲循環"
 
-#: src/ui/play-bar.vala:93
+#: src/ui/play-bar.vala:91
 msgid "Play Previous"
 msgstr "播放上一首"
 
-#: src/ui/play-bar.vala:99
+#: src/ui/play-bar.vala:97
 msgid "Play/Pause"
 msgstr "播放/暫停"
 
-#: src/ui/play-bar.vala:106
+#: src/ui/play-bar.vala:104
 msgid "Play Next"
 msgstr "播放下一首"
 
-#: src/ui/preferences.vala:71
+#: src/ui/preferences.vala:76
 msgid "Always"
 msgstr "總是"
 
-#: src/ui/preferences.vala:73
+#: src/ui/preferences.vala:78
 msgid "Art Only"
 msgstr "僅封面"
 
-#: src/ui/preferences.vala:75
+#: src/ui/preferences.vala:80
 msgid "Never"
 msgstr "從不"
 
@@ -263,11 +267,11 @@ msgstr "從不"
 msgid "Volume: "
 msgstr "音量："
 
-#: src/ui/window.vala:54
+#: src/ui/window.vala:56
 msgid "Loading..."
 msgstr "正在載入…"
 
-#: src/ui/window.vala:292
+#: src/ui/window.vala:276
 msgid ""
 "Drag and drop music files here,\n"
 "or change music location: "
