@@ -39,7 +39,6 @@ namespace G4 {
             settings?.bind ("background-blur", blur_row, "selected", SettingsBindFlags.DEFAULT);
             blur_row.bind_property ("selected", app.active_window, "background-blur", BindingFlags.DEFAULT);
 
-            compact_btn.bind_property ("active", app, "compact-playlist", BindingFlags.DEFAULT);
             settings?.bind ("compact-playlist", compact_btn, "active", SettingsBindFlags.DEFAULT);
 
             var music_dir = app.get_music_folder ();
