@@ -50,6 +50,7 @@ namespace G4 {
         private Gdk.Paintable? _loading_paintable = null;
         private ScalePaintable _scale_cover_paintable = new ScalePaintable ();
 
+        private bool _compact_playlist = false;
         private int _blur_size = 512;
         private int _cover_size = 1024;
         private string _loading_text = _("Loading...");
@@ -68,6 +69,7 @@ namespace G4 {
             settings?.bind ("width", this, "default-width", SettingsBindFlags.DEFAULT);
             settings?.bind ("height", this, "default-height", SettingsBindFlags.DEFAULT);
             settings?.bind ("background-blur", this, "background-blur", SettingsBindFlags.DEFAULT);
+            settings?.bind ("compact-playlist", this, "compact-playlist", SettingsBindFlags.DEFAULT);
 
             setup_drop_target ();
 
@@ -115,15 +117,6 @@ namespace G4 {
             action_set_enabled (ACTION_APP + ACTION_PLAY, false);
             action_set_enabled (ACTION_APP + ACTION_NEXT, false);
 
-            var factory = new Gtk.SignalListItemFactory ();
-            factory.setup.connect ((item) => item.child = new MusicEntry ());
-            factory.bind.connect (on_bind_item);
-            factory.unbind.connect ((item) => {
-                var entry = (MusicEntry) item.child;
-                entry.disconnect_first_draw ();
-                entry.paintable = null;
-            });
-            list_view.factory = factory;
             list_view.model = new Gtk.NoSelection (app.music_list);
             list_view.activate.connect ((index) => {
                 app.current_item = (int) index;
@@ -151,6 +144,16 @@ namespace G4 {
             set {
                 _bkgnd_blur = (BackgroundBlurMode) value;
                 update_background ();
+            }
+        }
+
+        public bool compact_playlist {
+            get {
+                return _compact_playlist;
+            }
+            set {
+                _compact_playlist = value;
+                list_view.factory = create_list_factory ();
             }
         }
 
@@ -199,6 +202,14 @@ namespace G4 {
             base.snapshot (snapshot);
         }
 
+        private Gtk.ListItemFactory create_list_factory () {
+            var factory = new Gtk.SignalListItemFactory ();
+            factory.setup.connect ((item) => item.child = new MusicEntry (_compact_playlist));
+            factory.bind.connect (on_bind_item);
+            factory.unbind.connect (on_unbind_item);
+            return factory;
+        }
+
         public void start_search (string text) {
             search_entry.text = text;
             search_btn.active = true;
@@ -227,6 +238,12 @@ namespace G4 {
                     });
                 });
             }
+        }
+
+        private void on_unbind_item (Gtk.ListItem item) {
+            var entry = (MusicEntry) item.child;
+            entry.disconnect_first_draw ();
+            entry.paintable = null;
         }
 
         private bool on_close_request () {

@@ -10,6 +10,10 @@
       <default>0</default>
       <summary>Background blur mode</summary>
     </key>
+    <key name="compact-playlist" type="b">
+      <default>false</default>
+      <summary>Compact playlist view</summary>
+    </key>
     <key name="music-dir" type="s">
       <default>''</default>
       <summary>Load music from folder</summary>

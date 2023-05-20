@@ -26,6 +26,17 @@
                 <property name="title" translatable="yes">Background blur mode</property>
               </object>
             </child>
+            <child>
+              <object class="AdwActionRow" id="compact_list">
+                <property name="title" translatable="yes">Compact playlist view</property>
+                <property name="activatable_widget">compact_btn</property>
+                <child>
+                  <object class="GtkSwitch" id="compact_btn">
+                    <property name="valign">center</property>
+                  </object>
+                </child>
+              </object>
+            </child>
           </object>
         </child>
         <child>

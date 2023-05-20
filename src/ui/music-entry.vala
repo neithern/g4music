@@ -11,16 +11,16 @@ namespace G4 {
 
         public ulong first_draw_handler = 0;
 
-        public MusicEntry () {
-            margin_top = 4;
-            margin_bottom = 4;
+        public MusicEntry (bool compat = true) {
+            margin_top = compat ? 2 : 4;
+            margin_bottom = compat ? 2 : 4;
 
-            _cover.pixel_size = 48;
+            _cover.pixel_size = compat ? 32 : 48;
             _cover.paintable = new RoundPaintable (_paintable, 5);
             _paintable.queue_draw.connect (_cover.queue_draw);
             append (_cover);
 
-            var vbox = new Gtk.Box (Gtk.Orientation.VERTICAL, 8);
+            var vbox = new Gtk.Box (Gtk.Orientation.VERTICAL, compat ? 4 : 8);
             vbox.hexpand = true;
             vbox.margin_start = 16;
             vbox.margin_end = 4;
@@ -29,7 +29,7 @@ namespace G4 {
             append (vbox);
 
             _title.halign = Gtk.Align.START;
-            _title.margin_top = 4;
+            _title.margin_top = compat ? 2 : 4;
             _title.ellipsize = Pango.EllipsizeMode.END;
             _title.add_css_class ("caption-heading");
 
