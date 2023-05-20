@@ -20,7 +20,7 @@ namespace G4 {
             _paintable.queue_draw.connect (_cover.queue_draw);
             append (_cover);
 
-            var vbox = new Gtk.Box (Gtk.Orientation.VERTICAL, compat ? 4 : 8);
+            var vbox = new Gtk.Box (Gtk.Orientation.VERTICAL, compat ? 2 : 6);
             vbox.hexpand = true;
             vbox.margin_start = 16;
             vbox.margin_end = 4;
@@ -29,14 +29,14 @@ namespace G4 {
             append (vbox);
 
             _title.halign = Gtk.Align.START;
-            _title.margin_top = compat ? 2 : 4;
+            _title.margin_top = compat ? 0 : 2;
             _title.ellipsize = Pango.EllipsizeMode.END;
-            _title.add_css_class ("caption-heading");
+            _title.add_css_class ("title-leading");
 
             _subtitle.halign = Gtk.Align.START;
             _subtitle.valign = Gtk.Align.CENTER;
             _subtitle.ellipsize = Pango.EllipsizeMode.END;
-            _subtitle.add_css_class ("caption");
+            _subtitle.add_css_class ("title-secondly");
             _subtitle.add_css_class ("dim-label");
 
             _playing.valign = Gtk.Align.CENTER;

@@ -47,13 +47,11 @@ namespace G4 {
 
             _positive.halign = Gtk.Align.START;
             _positive.margin_start = 12;
-            _positive.add_css_class ("caption");
             _positive.add_css_class ("dim-label");
             _positive.add_css_class ("numeric");
 
             _negative.halign = Gtk.Align.END;
             _negative.margin_end = 12;
-            _negative.add_css_class ("caption");
             _negative.add_css_class ("dim-label");
             _negative.add_css_class ("numeric");
 

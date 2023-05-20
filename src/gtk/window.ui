@@ -39,7 +39,7 @@
                         <child>
                           <object class="GtkLabel" id="index_title">
                             <style>
-                              <class name="caption-heading"/>
+                              <class name="title-leading"/>
                             </style>
                           </object>
                         </child>
@@ -169,7 +169,7 @@
                               <object class="GtkLabel" id="music_title">
                                 <property name="ellipsize">end</property>
                                 <style>
-                                  <class name="title-4"/>
+                                  <class name="title-large"/>
                                 </style>
                               </object>
                             </child>
@@ -177,7 +177,7 @@
                               <object class="GtkLabel" id="music_artist">
                                 <property name="ellipsize">end</property>
                                 <property name="halign">center</property>
-                                <property name="margin_top">5</property>
+                                <property name="margin_top">4</property>
                                 <style>
                                   <class name="dim-label"/>
                                 </style>

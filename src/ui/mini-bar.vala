@@ -33,7 +33,7 @@ namespace G4 {
 
             _title.halign = Gtk.Align.START;
             _title.ellipsize = Pango.EllipsizeMode.END;
-            _title.add_css_class ("caption-heading");
+            _title.add_css_class ("title-leading");
 
             _peak.halign = Gtk.Align.START;
             _peak.width_request = 168;
@@ -41,7 +41,7 @@ namespace G4 {
             _peak.add_css_class ("dim-label");
 
             _time.halign = Gtk.Align.START;
-            _time.add_css_class ("caption");
+            _time.add_css_class ("title-secondly");
             _time.add_css_class ("dim-label");
             _time.add_css_class ("numeric");
 
