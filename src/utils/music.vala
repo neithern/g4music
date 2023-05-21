@@ -24,6 +24,9 @@ namespace G4 {
             this.modified_time = time;
         }
 
+        public Music.empty () {
+        }
+
         public unowned string cover_key {
             get {
                 return _cover_key ?? uri;

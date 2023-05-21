@@ -93,10 +93,12 @@ namespace G4 {
             search_entry.search_changed.connect (on_search_text_changed);
 
             mini_box.append (_mini_bar);
+            _mini_bar.cover = app.icon;
             _mini_bar.activated.connect (() => leaflet.navigate (Adw.NavigationDirection.FORWARD));
 
             _bkgnd_paintable.queue_draw.connect (this.queue_draw);
             _cover_paintable.queue_draw.connect (cover_image.queue_draw);
+            _cover_paintable.paintable = app.icon;
 
             app.thumbnailer.pango_context = get_pango_context ();
             _loading_paintable = app.thumbnailer.create_simple_text_paintable ("...", Thumbnailer.ICON_SIZE);
@@ -274,7 +276,7 @@ namespace G4 {
                 var dir_name = get_display_name (app.get_music_folder ());
                 var link = @"<a href=\"change_dir\">$dir_name</a>";
                 initial_label.set_markup (_("Drag and drop music files here,\nor change music location: ") + link);
-                update_cover_paintables (new Music ("", "", 0), app.icon);
+                update_cover_paintables (new Music.empty (), app.icon);
             }
             initial_label.visible = empty;
             music_title.visible = !empty;
