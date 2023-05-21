@@ -22,6 +22,7 @@ int main (string[] args) {
 
     Environment.set_prgname (Config.APP_ID);
     Environment.set_application_name (_("G4Music"));
+    fix_gst_tag_encoding ();
 
     Random.set_seed ((uint32) get_monotonic_time ());
 
@@ -29,4 +30,26 @@ int main (string[] args) {
 
     var app = new G4.Application ();
     return app.run (args);
+}
+
+void fix_gst_tag_encoding () {
+    unowned var encoding = Environment.get_variable ("GST_TAG_ENCODING");
+    unowned var lang = Environment.get_variable ("LANG");
+    if (encoding == null && lang != null) {
+        string[] lang_encodings = {
+            "ja", "Shift_JIS",
+            "ko", "EUC-KR",
+            "zh_CN", "GB18030",
+            "zh_HK", "BIG5HKSCS",
+            "zh_SG", "GB2312",
+            "zh_TW", "BIG5",
+        };
+        for (var i = 0; i < lang_encodings.length; i += 2) {
+            if (((!)lang).has_prefix (lang_encodings[i])) {
+                Environment.set_variable ("GST_TAG_ENCODING", lang_encodings[i + 1], true);
+                print ("Fix tag encoding: %s\n", lang_encodings[i + 1]);
+                break;
+            }
+        }
+    }
 }
