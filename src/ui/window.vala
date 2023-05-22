@@ -62,6 +62,7 @@ namespace G4 {
         public Window (Application app) {
             Object (application: app);
             this.icon_name = app.application_id;
+            this.title = app.name;
 
             this.close_request.connect (on_close_request);
 
@@ -125,6 +126,7 @@ namespace G4 {
                 app.player.play ();
             });
 
+            music_title.label = app.name;
             initial_label.activate_link.connect (on_music_folder_clicked);
 
             if (app.is_loading_store) {

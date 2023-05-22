@@ -2,7 +2,6 @@
 <interface>
   <requires lib="gtk" version="4.0"/>
   <template class="G4Window" parent="AdwApplicationWindow">
-    <property name="title" translatable="yes">G4Music</property>
     <property name="resizable">true</property>
     <property name="content">
       <object class="GtkWindowHandle">
