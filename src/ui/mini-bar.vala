@@ -37,11 +37,10 @@ namespace G4 {
 
             _peak.halign = Gtk.Align.START;
             _peak.width_request = 168;
-            _peak.height_request = 15;
+            _peak.height_request = 16;
             _peak.add_css_class ("dim-label");
 
             _time.halign = Gtk.Align.START;
-            _time.add_css_class ("title-secondly");
             _time.add_css_class ("dim-label");
             _time.add_css_class ("numeric");
 

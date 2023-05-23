@@ -36,8 +36,10 @@ namespace G4 {
             _subtitle.halign = Gtk.Align.START;
             _subtitle.valign = Gtk.Align.CENTER;
             _subtitle.ellipsize = Pango.EllipsizeMode.END;
-            _subtitle.add_css_class ("title-secondly");
             _subtitle.add_css_class ("dim-label");
+            var font_size = _subtitle.get_pango_context ().get_font_description ().get_size ();
+            if (font_size >= 13 * Pango.SCALE)
+                _subtitle.add_css_class ("title-secondly");
 
             _playing.valign = Gtk.Align.CENTER;
             _playing.icon_name = "media-playback-start-symbolic";
