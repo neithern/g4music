@@ -214,20 +214,16 @@ namespace G4 {
         }
     }
 
-    public static int find_first_letter (string text) {
+    public static unichar find_first_letter (string text) {
         var index = 0;
         var next = 0;
-        var c = text.get_char (0);
-        do {
-            if ((c >= '0' && c <= '9')
-                    || (c >= 'a' && c <= 'z')
-                    || (c >= 'A' && c <= 'Z')
-                    || c >= 0xff) {
-                return index;
-            }
+        unichar c = 0;
+        while (text.get_next_char (ref next, out c)) {
+            if (c.isalpha () || c.iswide_cjk ())
+                return c;
             index = next;
-        }  while (text.get_next_char (ref next, out c));
-        return -1;
+        }
+        return 0;
     }
 
     public static string get_display_name (File dir) {
@@ -247,14 +243,11 @@ namespace G4 {
     public static string parse_abbreviation (string text) {
         var sb = new StringBuilder ();
         foreach (var s in text.split (" ")) {
-            var index = find_first_letter (s);
-            if (index >= 0) {
-                var c = s.get_char (index);
-                if (c.isalpha () || c.iswide_cjk ()) {
-                    sb.append (c.to_string ());
-                    if (sb.str.char_count () >= 2)
-                        break;
-                }
+            var c = find_first_letter (s);
+            if (c > 0) {
+                sb.append_unichar (c);
+                if (sb.str.char_count () >= 2)
+                    break;
             }
         }
 
