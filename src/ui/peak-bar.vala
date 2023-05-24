@@ -41,12 +41,14 @@ namespace G4 {
             _layout.set_text (_chars, _chars.length);
             _layout.get_pixel_extents (out ink_rect, out logic_rect);
 
-            var count = (int) (width * _value / logic_rect.width);
-            if (_layout.get_alignment () == Pango.Alignment.CENTER && count % 2 == 0)
+            var center = _layout.get_alignment () == Pango.Alignment.CENTER;
+            var dcount = width * _value / logic_rect.width;
+            var count = (int) (dcount + 0.5);
+            if (center && count % 2 == 0)
                 count--;
 
-            _sbuilder.erase ();
-            for (var i = 0; i < count; i++)
+            _sbuilder.truncate ();
+            for (var i = 0; i < int.max (count, 1); i++)
                 _sbuilder.append (_chars);
             unowned var text = _sbuilder.str;
             _layout.set_text (text, text.length);
@@ -56,6 +58,8 @@ namespace G4 {
 #else
             var color = get_style_context ().get_color ();
 #endif
+            if (count <= 1)
+                color.alpha = (float) double.min (dcount, 1);
 
             var pt = Graphene.Point ();
             pt.x = 0;
