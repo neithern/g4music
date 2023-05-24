@@ -41,6 +41,9 @@ namespace G4 {
         }
 
         public override void snapshot (Gtk.Snapshot snapshot) {
+            if (_character.length == 0)
+                return;
+
             var width = get_width ();
             var height = get_height ();
             _font.set_absolute_size (height * Pango.SCALE);
