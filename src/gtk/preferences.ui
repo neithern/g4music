@@ -83,22 +83,22 @@
         <child>
           <object class="AdwPreferencesGroup">
             <child>
-              <object class="AdwActionRow">
-                <property name="title" translatable="yes">Keep playing after window closed</property>
-                <property name="activatable_widget">playbkgnd_btn</property>
+              <object class="AdwExpanderRow" id="peak_row">
+              	<property name="show_enable_switch">true</property>
+                <property name="title" translatable="yes">Show audio peak level</property>
                 <child>
-                  <object class="GtkSwitch" id="playbkgnd_btn">
-                    <property name="valign">center</property>
+                  <object class="AdwEntryRow" id="peak_entry">
+                    <property name="title" translatable="yes">Character</property>
                   </object>
                 </child>
               </object>
             </child>
             <child>
               <object class="AdwActionRow">
-                <property name="title" translatable="yes">Show audio peak level</property>
-                <property name="activatable_widget">peak_btn</property>
+                <property name="title" translatable="yes">Keep playing after window closed</property>
+                <property name="activatable_widget">playbkgnd_btn</property>
                 <child>
-                  <object class="GtkSwitch" id="peak_btn">
+                  <object class="GtkSwitch" id="playbkgnd_btn">
                     <property name="valign">center</property>
                   </object>
                 </child>

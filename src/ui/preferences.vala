@@ -26,7 +26,9 @@ namespace G4 {
         [GtkChild]
         unowned Gtk.Switch pipewire_btn;
         [GtkChild]
-        unowned Gtk.Switch peak_btn;
+        unowned Adw.ExpanderRow peak_row;
+        [GtkChild]
+        unowned Adw.EntryRow peak_entry;
 
         public PreferencesWindow (Application app) {
             var settings = app.settings;
@@ -64,8 +66,10 @@ namespace G4 {
             settings?.bind ("pipewire-sink", pipewire_btn, "active", SettingsBindFlags.GET_NO_CHANGES);
             pipewire_btn.bind_property ("active", app.player, "pipewire_sink", BindingFlags.DEFAULT);
 
-            settings?.bind ("show-peak", peak_btn, "active", SettingsBindFlags.GET_NO_CHANGES);
-            peak_btn.bind_property ("active", app.player, "show_peak", BindingFlags.DEFAULT);
+            settings?.bind ("show-peak", peak_row, "enable_expansion", SettingsBindFlags.GET_NO_CHANGES);
+            peak_row.bind_property ("enable_expansion", app.player, "show_peak", BindingFlags.DEFAULT);
+            peak_entry.max_width_chars = 2;
+            settings?.bind ("peak-character", peak_entry, "text", SettingsBindFlags.GET_NO_CHANGES);
         }
     }
 

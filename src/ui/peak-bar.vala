@@ -1,7 +1,7 @@
 namespace G4 {
 
     public class PeakBar : Gtk.Box {
-        private string _chars = "=";
+        private string _character = "=";
         private Pango.FontDescription _font = new Pango.FontDescription ();
         private StringBuilder _sbuilder = new StringBuilder ();
         private double _value = 0;
@@ -23,6 +23,16 @@ namespace G4 {
             }
         }
 
+        public string character {
+            get {
+                return _character;
+            }
+            set {
+                _character = value;
+                queue_draw ();
+            }
+        }
+
         public void set_peak (double value) {
             if (_value != value) {
                 _value = value;
@@ -38,7 +48,7 @@ namespace G4 {
             _layout.set_height (height * Pango.SCALE);
 
             Pango.Rectangle ink_rect, logic_rect;
-            _layout.set_text (_chars, _chars.length);
+            _layout.set_text (_character, _character.length);
             _layout.get_pixel_extents (out ink_rect, out logic_rect);
 
             var center = _layout.get_alignment () == Pango.Alignment.CENTER;
@@ -49,7 +59,7 @@ namespace G4 {
 
             _sbuilder.truncate ();
             for (var i = 0; i < int.max (count, 1); i++)
-                _sbuilder.append (_chars);
+                _sbuilder.append (_character);
             unowned var text = _sbuilder.str;
             _layout.set_text (text, text.length);
 

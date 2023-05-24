@@ -42,6 +42,10 @@
       <default>false</default>
       <summary>Use ReplayGain to normalize volume</summary>
     </key>
+    <key name="peak-character" type="s">
+      <default>'='</default>
+      <summary>Peak character</summary>
+    </key>
     <key name="show-peak" type="b">
       <default>true</default>
       <summary>Show audio peak level</summary>
