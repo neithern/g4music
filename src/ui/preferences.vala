@@ -28,7 +28,7 @@ namespace G4 {
         [GtkChild]
         unowned Adw.ExpanderRow peak_row;
         [GtkChild]
-        unowned Adw.EntryRow peak_entry;
+        unowned Gtk.Entry peak_entry;
 
         public PreferencesWindow (Application app) {
             var settings = app.settings;

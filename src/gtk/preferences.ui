@@ -87,8 +87,15 @@
               	<property name="show_enable_switch">true</property>
                 <property name="title" translatable="yes">Show audio peak level</property>
                 <child>
-                  <object class="AdwEntryRow" id="peak_entry">
-                    <property name="title" translatable="yes">Character</property>
+                  <object class="AdwActionRow" id="peak_act_row">
+                    <property name="title" translatable="yes">Display characters</property>
+                    <child>
+                      <object class="GtkEntry" id="peak_entry">
+                        <property name="margin-top">4</property>
+                        <property name="margin-bottom">4</property>
+                        <property name="max-length">4</property>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>
