@@ -1,17 +1,15 @@
 namespace G4 {
 
     public class PeakBar : Gtk.Box {
-        private unichar[] _chars = new unichar[2] { '=', 0 };
+        private unichar[] _chars = { '=', 0 };
+        private int[] _char_widths = { 10 };
         private int _char_count = 1;
-        private int _char_width = 1;
         private Pango.Layout _layout;
         private StringBuilder _sbuilder = new StringBuilder ();
         private double _value = 0;
 
         public PeakBar () {
-            var font = Pango.FontDescription.from_string ("monospace");
             _layout = create_pango_layout (null);
-            _layout.set_font_description (font);
             _layout.set_alignment (get_direction () == Gtk.TextDirection.RTL ? Pango.Alignment.RIGHT : Pango.Alignment.LEFT);
         }
 
@@ -36,15 +34,18 @@ namespace G4 {
                 var next = 0;
                 unichar c = 0;
                 while (value.get_next_char (ref next, out c)) {
-                    if (!c.ismark ())
-                        _chars[_char_count++] = c;
+                    if (!c.ismark ()) {
+                        Pango.Rectangle ink_rect, logic_rect;
+                        var text = c.to_string ();
+                        _layout.set_text (text, text.length);
+                        _layout.get_pixel_extents (out ink_rect, out logic_rect);
+                        _chars[_char_count] = c;
+                        _char_widths[_char_count] = logic_rect.width;
+                        _char_count++;
+                    }
                 }
                 _chars[_char_count] = 0;
-                var text = ((string32) _chars).to_string () ?? "";
-                _layout.set_text (text, text.length);
-                Pango.Rectangle ink_rect, logic_rect;
-                _layout.get_pixel_extents (out ink_rect, out logic_rect);
-                _char_width = logic_rect.width;
+                _char_widths[_char_count] = 0;
                 queue_draw ();
             }
         }
@@ -59,28 +60,51 @@ namespace G4 {
         public override void snapshot (Gtk.Snapshot snapshot) {
             var width = get_width ();
             var height = get_height ();
+            var center = _layout.get_alignment () == Pango.Alignment.CENTER;
             _layout.set_width (-1);
             _layout.set_height (height * Pango.SCALE);
 
-            var center = _layout.get_alignment () == Pango.Alignment.CENTER;
-            var dcount = _value * width / int.max (_char_width, 1);
-            var count = (int) (dcount + 0.5) * _char_count;
-            if (center && _char_count == 1)
-                count = count / 2 * 2 + 1;
-
+            var char_count = 0;
             _sbuilder.truncate ();
-            if (count <= _char_count) {
-                for (var i = 0; i < _char_count; i++)
-                    _sbuilder.append_unichar (_chars[i]);
-            } else if (_char_count > 0) {
-                var half_count = count / 2;
-                var char1 = _chars[_char_count >= 3 ? 1 : 0];
-                var char2 = _chars[_char_count >= 3 ? _char_count - 2 : _char_count - 1];
+            if (_char_count > 0) {
+                var last = _char_count - 1;
                 _sbuilder.append_unichar (_chars[0]);
-                for (var i = 1; i < count - 1; i++)
-                    _sbuilder.append_unichar (i < half_count ? char1 : char2);
-                _sbuilder.append_unichar (_chars[_char_count - 1]);
+                char_count++;
+                var dx = _char_widths[0];
+                if (_char_count >= 2) {
+                    dx += _char_widths[last];
+                    char_count++;
+                }
+                var char1 = _chars[_char_count >= 3 ? 1 : 0];
+                var cx1 = _char_widths[_char_count >= 3 ? 1 : 0];
+                var char2 = _chars[_char_count >= 3 ? _char_count - 2 : _char_count - 1];
+                var cx2 = _char_widths[_char_count >= 3 ? _char_count - 2 : _char_count - 1];
+                if (char1 == char2) {
+                    var count = (int) ((_value * width - dx) / cx1 + 0.5);
+                    if (center && (count + _char_count) % 2 == 0)
+                        count--;
+                    for (var i = 0; i < count; i++) {
+                        _sbuilder.append_unichar (char1);
+                        char_count++;
+                    }
+                } else {
+                    var count = (int) ((_value * width - dx) / (cx1 + cx2) + 0.5);
+                    if (center && (count + _char_count) % 2 == 0)
+                        count--;
+                    for (var i = 0; i < count; i++) {
+                        _sbuilder.append_unichar (char1);
+                        char_count++;
+                    }
+                    for (var j = 0; j < count; j++) {
+                        _sbuilder.append_unichar (char2);
+                        char_count++;
+                    }
+                }
+                if (_char_count >= 2) {
+                    _sbuilder.append_unichar (_chars[last]);
+                }
             }
+
             unowned var text = _sbuilder.str;
             _layout.set_text (text, text.length);
 
@@ -89,8 +113,8 @@ namespace G4 {
 #else
             var color = get_style_context ().get_color ();
 #endif
-            if (dcount < _char_count && _char_count > 0)
-                color.alpha = (float) (dcount / _char_count);
+            if (char_count < _char_count && _char_count > 0)
+                color.alpha = (float) char_count / _char_count;
 
             Pango.Rectangle ink_rect, logic_rect;
             _layout.get_pixel_extents (out ink_rect, out logic_rect);
