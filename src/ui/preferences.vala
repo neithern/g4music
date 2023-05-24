@@ -68,8 +68,7 @@ namespace G4 {
 
             settings?.bind ("show-peak", peak_row, "enable_expansion", SettingsBindFlags.GET_NO_CHANGES);
             peak_row.bind_property ("enable_expansion", app.player, "show_peak", BindingFlags.DEFAULT);
-            peak_entry.max_width_chars = 2;
-            settings?.bind ("peak-character", peak_entry, "text", SettingsBindFlags.GET_NO_CHANGES);
+            settings?.bind ("peak-characters", peak_entry, "text", SettingsBindFlags.GET_NO_CHANGES);
         }
     }
 
