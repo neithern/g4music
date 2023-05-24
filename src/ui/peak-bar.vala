@@ -2,17 +2,16 @@ namespace G4 {
 
     public class PeakBar : Gtk.Box {
         private unichar[] _chars = new unichar[2] { '=', 0 };
-        private long _char_count = 1;
-        private Pango.FontDescription _font = new Pango.FontDescription ();
-        private Pango.Rectangle _ink_rect;
-        private Pango.Rectangle _logic_rect;
+        private int _char_count = 1;
+        private int _char_width = 1;
+        private Pango.Layout _layout;
         private StringBuilder _sbuilder = new StringBuilder ();
         private double _value = 0;
-        private Pango.Layout _layout;
 
         public PeakBar () {
+            var font = Pango.FontDescription.from_string ("monospace");
             _layout = create_pango_layout (null);
-            _layout.set_font_description (_font);
+            _layout.set_font_description (font);
             _layout.set_alignment (get_direction () == Gtk.TextDirection.RTL ? Pango.Alignment.RIGHT : Pango.Alignment.LEFT);
         }
 
@@ -43,7 +42,9 @@ namespace G4 {
                 _chars[_char_count] = 0;
                 var text = ((string32) _chars).to_string () ?? "";
                 _layout.set_text (text, text.length);
-                _layout.get_pixel_extents (out _ink_rect, out _logic_rect);
+                Pango.Rectangle ink_rect, logic_rect;
+                _layout.get_pixel_extents (out ink_rect, out logic_rect);
+                _char_width = logic_rect.width;
                 queue_draw ();
             }
         }
@@ -58,15 +59,14 @@ namespace G4 {
         public override void snapshot (Gtk.Snapshot snapshot) {
             var width = get_width ();
             var height = get_height ();
-            _font.set_absolute_size (height * Pango.SCALE);
-            _layout.set_width (width * Pango.SCALE);
+            _layout.set_width (-1);
             _layout.set_height (height * Pango.SCALE);
 
             var center = _layout.get_alignment () == Pango.Alignment.CENTER;
-            var dcount = width * _value / int.max (_logic_rect.width, 1);
-            var count = (long) (dcount + 0.5);
-            if (center && _char_count > 0 && _char_count <= 2)
-                count = count / _char_count * _char_count;
+            var dcount = _value * width / int.max (_char_width, 1);
+            var count = (int) (dcount + 0.5) * _char_count;
+            if (center && _char_count == 1)
+                count = count / 2 * 2 + 1;
 
             _sbuilder.truncate ();
             if (count <= _char_count) {
@@ -89,14 +89,17 @@ namespace G4 {
 #else
             var color = get_style_context ().get_color ();
 #endif
-            if (count <= _char_count)
-                color.alpha = (float) double.min (dcount, 1);
+            if (dcount < _char_count && _char_count > 0)
+                color.alpha = (float) (dcount / _char_count);
 
+            Pango.Rectangle ink_rect, logic_rect;
+            _layout.get_pixel_extents (out ink_rect, out logic_rect);
             var pt = Graphene.Point ();
-            pt.x = 0;
-            pt.y = - _ink_rect.y + (height - _ink_rect.height) * 0.5f;
+            pt.x = center ? - ink_rect.x + (width - ink_rect.width) * 0.5f : 0;
+            pt.y = - ink_rect.y + (height - ink_rect.height) * 0.5f;
             snapshot.translate (pt);
             snapshot.append_layout (_layout, color);
+            pt.x = - pt.x;
             pt.y = - pt.y;
             snapshot.translate (pt);
         }
