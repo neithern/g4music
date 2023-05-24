@@ -41,9 +41,6 @@ namespace G4 {
         }
 
         public override void snapshot (Gtk.Snapshot snapshot) {
-            if (_character.length == 0)
-                return;
-
             var width = get_width ();
             var height = get_height ();
             _font.set_absolute_size (height * Pango.SCALE);
@@ -55,7 +52,7 @@ namespace G4 {
             _layout.get_pixel_extents (out ink_rect, out logic_rect);
 
             var center = _layout.get_alignment () == Pango.Alignment.CENTER;
-            var dcount = width * _value / logic_rect.width;
+            var dcount = width * _value / int.max (logic_rect.width, 1);
             var count = (int) (dcount + 0.5);
             if (center && count % 2 == 0)
                 count--;
