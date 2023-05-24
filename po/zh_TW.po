@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-20 10:08+0800\n"
-"PO-Revision-Date: 2023-05-20 10:11+0800\n"
+"POT-Creation-Date: 2023-05-24 15:38+0800\n"
+"PO-Revision-Date: 2023-05-24 15:39+0800\n"
 "Last-Translator: Nanling <neithern@outlook.com>\n"
 "Language-Team: Chinese - China <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
@@ -20,8 +20,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0\n"
 "X-Generator: Gtranslator 42.0\n"
 
-#: data/app.desktop.in:3 src/gtk/window.ui:5 src/application.vala:239
-#: src/main.vala:24
+#: data/app.desktop.in:3 src/application.vala:239 src/main.vala:24
 msgid "G4Music"
 msgstr "G4音樂"
 
@@ -91,123 +90,127 @@ msgstr "切換排序"
 msgid "Appearance"
 msgstr "外觀"
 
-#: src/gtk/preferences.ui:15
+#: src/gtk/preferences.ui:17
 msgid "Prefer dark theme"
 msgstr "傾向使用暗色主題"
 
-#: src/gtk/preferences.ui:26
+#: src/gtk/preferences.ui:28
 msgid "Background blur mode"
 msgstr "背景模糊模式"
 
-#: src/gtk/preferences.ui:31
+#: src/gtk/preferences.ui:33
 msgid "Compact playlist view"
 msgstr "緊湊播放列表"
 
-#: src/gtk/preferences.ui:44
+#: src/gtk/preferences.ui:49
 msgid "Music Location"
 msgstr "音樂庫"
 
-#: src/gtk/preferences.ui:47
+#: src/gtk/preferences.ui:54
 msgid "Load music from folder"
 msgstr "從資料夾載入音樂"
 
-#: src/gtk/preferences.ui:58
+#: src/gtk/preferences.ui:65
 msgid "Load thumbnails for non-local files"
 msgstr "載入非本機文件的縮圖"
 
-#: src/gtk/preferences.ui:59
+#: src/gtk/preferences.ui:66
 msgid "May cause slowdowns and excess network usage"
 msgstr "可能會導致速度減慢與增加網路使用"
 
-#: src/gtk/preferences.ui:72
+#: src/gtk/preferences.ui:82
 msgid "Playback"
 msgstr "播放"
 
-#: src/gtk/preferences.ui:75 src/application.vala:443
-msgid "Keep playing after window closed"
-msgstr "關閉視窗後繼續播放"
-
-#: src/gtk/preferences.ui:86
+#: src/gtk/preferences.ui:88
 msgid "Show audio peak level"
 msgstr "顯示音訊峰值"
 
-#: src/gtk/preferences.ui:97
+#: src/gtk/preferences.ui:91
+msgid "Character"
+msgstr "字符"
+
+#: src/gtk/preferences.ui:98 src/application.vala:443
+msgid "Keep playing after window closed"
+msgstr "關閉視窗後繼續播放"
+
+#: src/gtk/preferences.ui:109
 msgid "Enable gapless playback"
 msgstr "啟用無縫播放"
 
-#: src/gtk/preferences.ui:108
+#: src/gtk/preferences.ui:120
 msgid "Use ReplayGain to normalize volume"
 msgstr "使用 ReplayGain 正規化音量"
 
-#: src/gtk/preferences.ui:119
+#: src/gtk/preferences.ui:131
 msgid "Use pipewire audio sink"
 msgstr "使用 Pipewire 音訊輸出"
 
-#: src/gtk/preferences.ui:120
+#: src/gtk/preferences.ui:132
 msgid "Experimental"
 msgstr "實驗性質功能"
 
-#: src/gtk/window.ui:33
+#: src/gtk/window.ui:32
 msgid "Search"
 msgstr "搜尋"
 
-#: src/gtk/window.ui:55
+#: src/gtk/window.ui:54
 msgid "Main Menu"
 msgstr "主選單"
 
-#: src/gtk/window.ui:62
+#: src/gtk/window.ui:61
 msgid "Sort Mode"
 msgstr "排序方式"
 
-#: src/gtk/window.ui:123
+#: src/gtk/window.ui:122
 msgid "Back"
 msgstr "返回"
 
-#: src/gtk/window.ui:213
+#: src/gtk/window.ui:212
 msgid "_Export Cover"
 msgstr "輸出封面(_E)"
 
-#: src/gtk/window.ui:218
+#: src/gtk/window.ui:217
 msgid "Show _Cover File"
 msgstr "顯示封面檔案(_C)"
 
-#: src/gtk/window.ui:223 src/ui/music-entry.vala:122
+#: src/gtk/window.ui:222 src/ui/music-entry.vala:124
 msgid "_Show Music File"
 msgstr "顯示音樂檔案(_S)"
 
-#: src/gtk/window.ui:232
+#: src/gtk/window.ui:231
 msgid "_Reload List"
 msgstr "更新清單(_R)"
 
-#: src/gtk/window.ui:238
+#: src/gtk/window.ui:237
 msgid "_Preferences"
 msgstr "偏好設定(_P)"
 
-#: src/gtk/window.ui:242
+#: src/gtk/window.ui:241
 msgid "_Keyboard Shortcuts"
 msgstr "快捷鍵(_K)"
 
-#: src/gtk/window.ui:246
+#: src/gtk/window.ui:245
 msgid "_About"
 msgstr "關於(_A)"
 
-#: src/gtk/window.ui:255
+#: src/gtk/window.ui:254
 msgid "By Album"
 msgstr "依專輯"
 
-#: src/gtk/window.ui:260
+#: src/gtk/window.ui:259
 msgid "By Artist"
 msgstr "依藝術家"
 
-#: src/gtk/window.ui:265
+#: src/gtk/window.ui:264
 msgid "By Title"
 msgstr "依歌名"
 
-#: src/gtk/window.ui:270
+#: src/gtk/window.ui:269
 msgid "By Date"
 msgstr "依日期"
 
-#: src/gtk/window.ui:275
+#: src/gtk/window.ui:274
 msgid "Shuffle"
 msgstr "亂序播放"
 
@@ -223,43 +226,43 @@ msgstr "Julian"
 msgid "Keep playing"
 msgstr "持續播放"
 
-#: src/ui/music-entry.vala:119
+#: src/ui/music-entry.vala:121
 msgid "Play at Next"
 msgstr "插播"
 
-#: src/ui/music-entry.vala:120
+#: src/ui/music-entry.vala:122
 msgid "Show Album"
 msgstr "顯示專輯"
 
-#: src/ui/music-entry.vala:121
+#: src/ui/music-entry.vala:123
 msgid "Show Artist"
 msgstr "顯示藝術家"
 
-#: src/ui/play-bar.vala:81
+#: src/ui/play-bar.vala:80
 msgid "Repeat Music"
 msgstr "單曲循環"
 
-#: src/ui/play-bar.vala:91
+#: src/ui/play-bar.vala:90
 msgid "Play Previous"
 msgstr "播放上一首"
 
-#: src/ui/play-bar.vala:97
+#: src/ui/play-bar.vala:96
 msgid "Play/Pause"
 msgstr "播放/暫停"
 
-#: src/ui/play-bar.vala:104
+#: src/ui/play-bar.vala:103
 msgid "Play Next"
 msgstr "播放下一首"
 
-#: src/ui/preferences.vala:76
+#: src/ui/preferences.vala:79
 msgid "Always"
 msgstr "總是"
 
-#: src/ui/preferences.vala:78
+#: src/ui/preferences.vala:81
 msgid "Art Only"
 msgstr "僅封面"
 
-#: src/ui/preferences.vala:80
+#: src/ui/preferences.vala:83
 msgid "Never"
 msgstr "從不"
 
@@ -271,7 +274,7 @@ msgstr "音量："
 msgid "Loading..."
 msgstr "正在載入…"
 
-#: src/ui/window.vala:276
+#: src/ui/window.vala:280
 msgid ""
 "Drag and drop music files here,\n"
 "or change music location: "
