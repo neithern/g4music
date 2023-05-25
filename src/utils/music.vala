@@ -242,16 +242,18 @@ namespace G4 {
 
     public static string parse_abbreviation (string text) {
         var sb = new StringBuilder ();
+        var char_count = 0;
         foreach (var s in text.split (" ")) {
             var c = find_first_letter (s);
             if (c > 0) {
                 sb.append_unichar (c);
-                if (sb.str.char_count () >= 2)
+                char_count++;
+                if (char_count >= 2)
                     break;
             }
         }
 
-        if (sb.str.char_count () >= 2) {
+        if (char_count >= 2) {
             return sb.str.up ();
         } else if (text.char_count () > 2) {
             var index = text.index_of_nth_char (2);

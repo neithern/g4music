@@ -110,9 +110,6 @@ namespace G4 {
                 }
             }
 
-            unowned var text = _sbuilder.str;
-            _layout.set_text (text, text.length);
-
 #if GTK_4_10
             var color = get_color ();
 #else
@@ -121,6 +118,7 @@ namespace G4 {
             var opacity = char_width > value_width ? value_width / char_width : 1;
 
             Pango.Rectangle ink_rect, logic_rect;
+            _layout.set_text (_sbuilder.str, (int) _sbuilder.len);
             _layout.get_pixel_extents (out ink_rect, out logic_rect);
             var pt = Graphene.Point ();
             pt.x = center ? - ink_rect.x + (width - ink_rect.width) * 0.5f : 0;
