@@ -48,6 +48,16 @@
     </screenshots>
 
     <releases>
+        <release version="1.13" date="2023-5-25">
+            <description>
+                <ul>
+                <li>Option: compact playlist view.</li>
+                <li>Option: custom characters for audio peaks.</li>
+                <li>Optimize playlist text size.</li>
+                <li>Optimize for macOS.</li>
+                </ul>
+            </description>
+        </release>
         <release version="1.12" date="2023-5-18">
             <description>
                 <ul>
