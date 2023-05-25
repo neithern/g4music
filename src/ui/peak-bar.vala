@@ -61,43 +61,48 @@ namespace G4 {
             var width = get_width ();
             var height = get_height ();
             var center = _layout.get_alignment () == Pango.Alignment.CENTER;
+            var value_width = _value * width;
             _layout.set_width (-1);
             _layout.set_height (height * Pango.SCALE);
 
             var char_count = 0;
+            var char_width = 0;
             _sbuilder.truncate ();
             if (_char_count > 0) {
                 var last = _char_count - 1;
                 _sbuilder.append_unichar (_chars[0]);
                 char_count++;
-                var dx = _char_widths[0];
+                char_width += _char_widths[0];
                 if (_char_count >= 2) {
-                    dx += _char_widths[last];
                     char_count++;
+                    char_width += _char_widths[last];
                 }
                 var char1 = _chars[_char_count >= 3 ? 1 : 0];
                 var cx1 = _char_widths[_char_count >= 3 ? 1 : 0];
                 var char2 = _chars[_char_count >= 3 ? _char_count - 2 : _char_count - 1];
                 var cx2 = _char_widths[_char_count >= 3 ? _char_count - 2 : _char_count - 1];
                 if (char1 == char2) {
-                    var count = (int) ((_value * width - dx) / cx1 + 0.5);
+                    var count = (int) ((value_width - char_width) / cx1 + 0.5);
                     if (center && (count + _char_count) % 2 == 0)
                         count--;
                     for (var i = 0; i < count; i++) {
                         _sbuilder.append_unichar (char1);
                         char_count++;
+                        char_width += cx1;
                     }
                 } else {
-                    var count = (int) ((_value * width - dx) / (cx1 + cx2) + 0.5);
+                    var count = (int) ((value_width - char_width) / (cx1 + cx2) + 0.5);
                     if (center && (count + _char_count) % 2 == 0)
                         count--;
                     for (var i = 0; i < count; i++) {
                         _sbuilder.append_unichar (char1);
                         char_count++;
+                        char_width += cx1;
                     }
                     for (var j = 0; j < count; j++) {
                         _sbuilder.append_unichar (char2);
                         char_count++;
+                        char_width += cx2;
                     }
                 }
                 if (_char_count >= 2) {
@@ -113,8 +118,7 @@ namespace G4 {
 #else
             var color = get_style_context ().get_color ();
 #endif
-            if (char_count < _char_count && _char_count > 0)
-                color.alpha = (float) char_count / _char_count;
+            var opacity = char_width > value_width ? value_width / char_width : 1;
 
             Pango.Rectangle ink_rect, logic_rect;
             _layout.get_pixel_extents (out ink_rect, out logic_rect);
@@ -122,7 +126,11 @@ namespace G4 {
             pt.x = center ? - ink_rect.x + (width - ink_rect.width) * 0.5f : 0;
             pt.y = - ink_rect.y + (height - ink_rect.height) * 0.5f;
             snapshot.translate (pt);
+            if (opacity < 1)
+                snapshot.push_opacity (opacity);
             snapshot.append_layout (_layout, color);
+            if (opacity < 1)
+                snapshot.pop ();
             pt.x = - pt.x;
             pt.y = - pt.y;
             snapshot.translate (pt);
