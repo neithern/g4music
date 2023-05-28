@@ -6,7 +6,7 @@ namespace G4 {
         private Gtk.Label _title = new Gtk.Label (null);
         private Gtk.Label _subtitle = new Gtk.Label (null);
         private Gtk.Image _playing = new Gtk.Image ();
-        private CoverPaintable _paintable = new CoverPaintable ();
+        private BasePaintable _paintable = new BasePaintable ();
         private Music? _music = null;
 
         public ulong first_draw_handler = 0;
@@ -56,7 +56,7 @@ namespace G4 {
             add_controller (right_click);
         }
 
-        public CoverPaintable cover {
+        public BasePaintable cover {
             get {
                 return _paintable;
             }
