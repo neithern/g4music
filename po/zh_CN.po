@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-25 01:06+0800\n"
+"POT-Creation-Date: 2023-05-29 05:20+0800\n"
 "PO-Revision-Date: 2023-05-25 01:08+0800\n"
 "Last-Translator: Nanling <neithern@outlook.com>\n"
 "Language-Team: Chinese - China <i18n-zh@googlegroups.com>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0\n"
 "X-Generator: Gtranslator 42.0\n"
 
-#: data/app.desktop.in:3 src/application.vala:239 src/main.vala:24
+#: data/app.desktop.in:3 src/application.vala:241 src/main.vala:24
 msgid "G4Music"
 msgstr "G4音乐"
 
@@ -111,42 +111,46 @@ msgid "Load music from folder"
 msgstr "从文件夹加载音乐"
 
 #: src/gtk/preferences.ui:65
+msgid "Monitor local file changes"
+msgstr "监控本地文件变化"
+
+#: src/gtk/preferences.ui:76
 msgid "Load thumbnails for non-local files"
 msgstr "加载非本地文件的缩略图"
 
-#: src/gtk/preferences.ui:66
+#: src/gtk/preferences.ui:77
 msgid "May cause slowdowns and excess network usage"
 msgstr "可能会导致速度减慢和过多的网络使用"
 
-#: src/gtk/preferences.ui:82
+#: src/gtk/preferences.ui:93
 msgid "Playback"
 msgstr "播放"
 
-#: src/gtk/preferences.ui:88
+#: src/gtk/preferences.ui:99
 msgid "Show audio peak level"
 msgstr "显示跳动的音频峰值"
 
-#: src/gtk/preferences.ui:91
+#: src/gtk/preferences.ui:102
 msgid "Display characters"
 msgstr "显示的字符"
 
-#: src/gtk/preferences.ui:105 src/application.vala:443
+#: src/gtk/preferences.ui:116 src/application.vala:439
 msgid "Keep playing after window closed"
 msgstr "关闭窗口后继续播放"
 
-#: src/gtk/preferences.ui:116
+#: src/gtk/preferences.ui:127
 msgid "Enable gapless playback"
 msgstr "启用无缝续播"
 
-#: src/gtk/preferences.ui:127
+#: src/gtk/preferences.ui:138
 msgid "Use ReplayGain to normalize volume"
 msgstr "启用ReplayGain音量平衡"
 
-#: src/gtk/preferences.ui:138
+#: src/gtk/preferences.ui:149
 msgid "Use pipewire audio sink"
 msgstr "使用Pipewire音频输出"
 
-#: src/gtk/preferences.ui:139
+#: src/gtk/preferences.ui:150
 msgid "Experimental"
 msgstr "实验性功能"
 
@@ -214,15 +218,15 @@ msgstr "按日期"
 msgid "Shuffle"
 msgstr "乱序"
 
-#: src/application.vala:449
+#: src/application.vala:445
 msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr "一个快速、流畅、轻量的，基于GTK4的音乐播放软件。"
 
-#: src/application.vala:451
+#: src/application.vala:447
 msgid "translator-credits"
 msgstr "Nanling"
 
-#: src/application.vala:642
+#: src/application.vala:648
 msgid "Keep playing"
 msgstr "持续播放"
 
@@ -254,15 +258,15 @@ msgstr "播放/暂停"
 msgid "Play Next"
 msgstr "播放下一首"
 
-#: src/ui/preferences.vala:78
+#: src/ui/preferences.vala:83
 msgid "Always"
 msgstr "总是"
 
-#: src/ui/preferences.vala:80
+#: src/ui/preferences.vala:85
 msgid "Art Only"
 msgstr "仅封面"
 
-#: src/ui/preferences.vala:82
+#: src/ui/preferences.vala:87
 msgid "Never"
 msgstr "从不"
 
@@ -274,7 +278,7 @@ msgstr "音量："
 msgid "Loading..."
 msgstr "正在加载…"
 
-#: src/ui/window.vala:280
+#: src/ui/window.vala:283
 msgid ""
 "Drag and drop music files here,\n"
 "or change music location: "
