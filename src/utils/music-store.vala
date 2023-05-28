@@ -76,12 +76,12 @@ namespace G4 {
             _tag_cache.add (music);
         }
 
-        public void clear () {
-            _store.remove_all ();
+        public Music? find_cache (string uri) {
+            return _tag_cache[uri];
         }
 
-        public Music? get_music (uint position) {
-            return _store.get_item (position) as Music;
+        public void clear () {
+            _store.remove_all ();
         }
 
         public async void load_tag_cache_async () {

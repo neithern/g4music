@@ -374,6 +374,11 @@ namespace G4 {
             return -1;
         }
 
+        private int find_music_item_by_uri (string uri) {
+            var music = _music_store.find_cache (uri);
+            return find_music_item (music);
+        }
+
         public async int load_musics_async (owned File[] files) {
             var saved_size = _music_store.size;
             var play_item = _current_item;
@@ -396,15 +401,8 @@ namespace G4 {
                 play_item = _current_item;
             } else {
                 var uri = _current_music?.uri ?? _settings?.get_string ("played-uri");
-                if (uri != null && ((!)uri).length > 0) {
-                    var count = _music_list.get_n_items ();
-                    for (var i = 0; i < count; i++) {
-                        var music = (Music) _music_list.get_item (i);
-                        if (((!)uri) == music.uri) {
-                            play_item = i;
-                            break;
-                        }
-                    }
+                if (uri != null) {
+                    play_item = find_music_item_by_uri ((!)uri);
                 }
             }
             return play_item;
