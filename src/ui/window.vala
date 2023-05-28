@@ -274,7 +274,7 @@ namespace G4 {
             action_set_enabled (ACTION_APP + ACTION_RELOAD_LIST, !loading);
             spinner.spinning = loading;
             spinner.visible = loading;
-            index_title.label = loading ? _loading_text : (index != -1 ? @"$(index+1)/$(size)" : size.to_string ());
+            index_title.label = loading ? _loading_text : @"$(index+1)/$(size)";
 
             var empty = !loading && size == 0 && app.current_music == null;
             if (empty) {

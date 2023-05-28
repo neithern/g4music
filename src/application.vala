@@ -490,7 +490,7 @@ namespace G4 {
         }
 
         private void on_music_removed (Music music) {
-            if (_current_music != null && _current_music != _music_list.get_item (_current_item)) {
+            if (_current_music != null) {
                 var item = find_music_item (_current_music);
                 if (_current_music == music)
                     play_next ();
