@@ -93,6 +93,7 @@ namespace G4 {
             dark_theme = _settings?.get_boolean ("dark-theme") ?? true;
 
             _music_list.model = _music_store.store;
+            _music_store.monitor_changes = _settings?.get_boolean ("monitor-changes") ?? false;
             _music_store.sort_mode = (SortMode) (_settings?.get_uint ("sort-mode") ?? SortMode.TITLE);
             _music_store.loading_changed.connect ((loading) => _loading_store = loading);
             _music_store.music_removed.connect (on_music_removed);

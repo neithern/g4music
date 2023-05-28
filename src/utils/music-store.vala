@@ -18,6 +18,7 @@ namespace G4 {
             }
         }
 
+        private bool _monitor_changes = false;
         private SortMode _sort_mode = SortMode.TITLE;
         private CompareDataFunc<Object> _compare = Music.compare_by_title;
         private ListStore _store = new ListStore (typeof (Music));
@@ -26,6 +27,15 @@ namespace G4 {
         public signal void loading_changed (bool loading);
         public signal void music_removed (Music music);
         public signal void parse_progress (int percent);
+
+        public bool monitor_changes {
+            get {
+                return _monitor_changes;
+            }
+            set {
+                _monitor_changes = value;
+            }
+        }
 
         public ListStore store {
             get {
@@ -185,7 +195,7 @@ namespace G4 {
                 if (_monitors.lookup_extended (uri, out orig_key, out monitor)) {
                     monitor.cancel ();
                 }
-                try {
+                if (_monitor_changes) try {
                     monitor = dir.monitor (FileMonitorFlags.WATCH_MOVES, null);
                     monitor.changed.connect (_monitor_func);
                     _monitors[uri] = monitor;
