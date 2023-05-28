@@ -43,7 +43,6 @@ namespace G4 {
         private Thumbnailer _thumbnailer = new Thumbnailer ();
         private Settings? _settings = new_application_settings ();
 
-        public signal void loading_changed (bool loading, uint size);
         public signal void index_changed (int index, uint size);
         public signal void music_changed (Music music);
         public signal void music_tag_parsed (Music music, Gst.Sample? image);
@@ -95,6 +94,8 @@ namespace G4 {
 
             _music_list.model = _music_store.store;
             _music_store.sort_mode = (SortMode) (_settings?.get_uint ("sort-mode") ?? SortMode.TITLE);
+            _music_store.loading_changed.connect ((loading) => _loading_store = loading);
+            _music_store.music_removed.connect (on_music_removed);
 
             _thumbnailer.tag_updated.connect (_music_store.add_to_cache);
             _thumbnailer.remote_thumbnail = _settings?.get_boolean ("remote-thumbnail") ?? false;
@@ -382,8 +383,6 @@ namespace G4 {
         public async int load_musics_async (owned File[] files) {
             var saved_size = _music_store.size;
             var play_item = _current_item;
-            _loading_store = true;
-            loading_changed (true, saved_size);
 
             if (saved_size == 0 && files.length == 0) {
                 files.resize (1);
@@ -393,8 +392,6 @@ namespace G4 {
                 yield _music_store.add_files_async (files);
             }
 
-            _loading_store = false;
-            loading_changed (false, _music_store.size);
             if (saved_size > 0) {
                 play_item = (int) saved_size;
             } else if (_current_music != null && _current_music == _music_list.get_item (_current_item)) {
@@ -489,6 +486,16 @@ namespace G4 {
                 connection.register_object ("/org/mpris/MediaPlayer2", new MprisRoot (this));
             } catch (Error e) {
                 warning ("Register MPRIS failed: %s\n", e.message);
+            }
+        }
+
+        private void on_music_removed (Music music) {
+            if (_current_music != null && _current_music != _music_list.get_item (_current_item)) {
+                var item = find_music_item (_current_music);
+                if (_current_music == music)
+                    play_next ();
+                else
+                    update_current_item (item);
             }
         }
 

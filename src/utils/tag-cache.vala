@@ -43,6 +43,13 @@ namespace G4 {
             }
         }
 
+        public void remove (string uri) {
+            lock (_cache) {
+                _cache.remove (uri);
+                _modified = true;
+            }
+        }
+
         public void load () {
             try {
                 var fis = _file.read ();

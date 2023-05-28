@@ -131,13 +131,13 @@ namespace G4 {
 
             if (app.is_loading_store) {
                 //  Make a call to show start loading
-                on_loading_changed (true, 0);
+                on_loading_changed (true);
             }
-            app.loading_changed.connect (on_loading_changed);
             app.index_changed.connect (on_index_changed);
             app.music_changed.connect (on_music_changed);
             app.music_tag_parsed.connect (on_music_tag_parsed);
             app.player.state_changed.connect (on_player_state_changed);
+            app.music_store.loading_changed.connect (on_loading_changed);
             app.music_store.parse_progress.connect ((percent) => index_title.label = @"$percent%");
         }
 
@@ -267,12 +267,15 @@ namespace G4 {
             scroll_to_item (index);
         }
 
-        private void on_loading_changed (bool loading, uint size) {
+        private void on_loading_changed (bool loading) {
+            var app = (Application) application;
+            var index = app.current_item;
+            var size = app.music_list.get_n_items ();
+            action_set_enabled (ACTION_APP + ACTION_RELOAD_LIST, !loading);
             spinner.spinning = loading;
             spinner.visible = loading;
-            index_title.label = loading ? _loading_text : size.to_string ();
+            index_title.label = loading ? _loading_text : (index != -1 ? @"$(index+1)/$(size)" : size.to_string ());
 
-            var app = (Application) application;
             var empty = !loading && size == 0 && app.current_music == null;
             if (empty) {
                 var dir_name = get_display_name (app.get_music_folder ());
