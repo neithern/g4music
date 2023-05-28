@@ -237,7 +237,7 @@ namespace G4 {
                                         + FileAttribute.STANDARD_TYPE + ","
                                         + FileAttribute.TIME_MODIFIED;
 
-        private void add_file (File file, GenericArray<File> dirs, GenericArray<Object> musics) {
+        private static void add_file (File file, GenericArray<File> dirs, GenericArray<Object> musics) {
             try {
                 var info = file.query_info (ATTRIBUTES, FileQueryInfoFlags.NONE);
                 if (info.get_file_type () == FileType.DIRECTORY) {
@@ -258,7 +258,7 @@ namespace G4 {
             }
         }
 
-        private void add_directory (File dir, Queue<File> stack, GenericArray<Object> musics) {
+        private static void add_directory (File dir, Queue<File> stack, GenericArray<Object> musics) {
             var cache = new DirCache (dir);
             if (cache.check_valid () && cache.load (stack, musics)) {
                 return;
