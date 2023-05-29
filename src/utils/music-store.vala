@@ -25,7 +25,6 @@ namespace G4 {
         private TagCache _tag_cache = new TagCache ();
 
         public signal void loading_changed (bool loading);
-        public signal void music_removed (Music music);
         public signal void parse_progress (int percent);
 
         public bool monitor_changes {
@@ -104,7 +103,6 @@ namespace G4 {
                 for (var pos = (int) _store.get_n_items () - 1; pos >= 0; pos--) {
                     if (_store.get_item (pos) == music) {
                         _store.remove (pos);
-                        music_removed ((!)music);
                     }
                 }
                 _tag_cache.remove (uri);
@@ -116,7 +114,6 @@ namespace G4 {
                     if (u?.has_prefix (prefix) ?? false) {
                         _store.remove (pos);
                         _tag_cache.remove ((!)u);
-                        music_removed ((!)music);
                     }
                 }
             }

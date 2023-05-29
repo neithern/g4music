@@ -95,10 +95,10 @@ namespace G4 {
             _settings?.bind ("music-dir", this, "music-folder", SettingsBindFlags.DEFAULT);
 
             _music_list.model = _music_store.store;
+            _music_list.items_changed.connect (on_music_items_changed);
             _settings?.bind ("sort-mode", this, "sort-mode", SettingsBindFlags.DEFAULT);
             _settings?.bind ("monitor-changes", _music_store, "monitor-changes", SettingsBindFlags.DEFAULT);            _music_store.monitor_changes = _settings?.get_boolean ("monitor-changes") ?? false;
             _music_store.loading_changed.connect ((loading) => _loading_store = loading);
-            _music_store.music_removed.connect (on_music_removed);
 
             _thumbnailer.tag_updated.connect (_music_store.add_to_cache);
             _settings?.bind ("remote-thumbnail", _thumbnailer, "remote-thumbnail", SettingsBindFlags.DEFAULT);
@@ -501,13 +501,9 @@ namespace G4 {
             }
         }
 
-        private void on_music_removed (Music music) {
-            if (_current_music != null) {
-                var item = find_music_item (_current_music);
-                if (_current_music == music)
-                    play_next ();
-                else
-                    update_current_item (item);
+        private void on_music_items_changed (uint position, uint removed, uint added) {
+            if (added == 0 && removed > 0 && _current_item >= (int) position) {
+                current_item = (int) position;
             }
         }
 
