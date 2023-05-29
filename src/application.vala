@@ -258,6 +258,18 @@ namespace G4 {
             }
         }
 
+        public Gtk.FilterListModel music_list {
+            get {
+                return _music_list;
+            }
+        }
+
+        public MusicStore music_store {
+            get {
+                return _music_store;
+            }
+        }
+
         public string name {
             get {
                 return _("G4Music");
@@ -279,18 +291,6 @@ namespace G4 {
         }
 
         public bool single_loop { get; set; }
-
-        public Gtk.FilterListModel music_list {
-            get {
-                return _music_list;
-            }
-        }
-
-        public MusicStore music_store {
-            get {
-                return _music_store;
-            }
-        }
 
         public uint sort_mode {
             get {
