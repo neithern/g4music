@@ -43,12 +43,10 @@ namespace G4 {
 
             settings?.bind ("compact-playlist", compact_btn, "active", SettingsBindFlags.DEFAULT);
 
-            var music_dir = app.get_music_folder ();
-            music_dir_btn.label = get_display_name (music_dir);
+            music_dir_btn.label = get_display_name (app.music_folder);
             music_dir_btn.clicked.connect (() => {
                 pick_music_folder_async.begin (app, this, (dir) => {
-                    music_dir_btn.label = get_display_name (dir);
-                    app.reload_music_store ();
+                    music_dir_btn.label = get_display_name (app.music_folder);
                 }, (obj, res) => pick_music_folder_async.end (res));
             });
 
@@ -85,15 +83,15 @@ namespace G4 {
     public delegate void FolderPicked (File dir);
 
     public async void pick_music_folder_async (Application app, Gtk.Window? parent, FolderPicked picked) {
-        var music_dir = app.get_music_folder ();
+        var music_dir = File.new_for_uri (app.music_folder);
 #if GTK_4_10
         var dialog = new Gtk.FileDialog ();
-        dialog.initial_folder = music_dir;
+        dialog.initial_file = music_dir;
         dialog.modal = true;
         try {
             var dir = yield dialog.select_folder (parent, null);
             if (dir != null && dir != music_dir) {
-                app.settings?.set_string ("music-dir", ((!)dir).get_uri ());
+                app.music_folder = ((!)dir).get_uri ();
                 picked ((!)dir);
             }
         } catch (Error e) {
@@ -110,7 +108,7 @@ namespace G4 {
             if (id == Gtk.ResponseType.ACCEPT) {
                 var dir = chooser.get_file ();
                 if (dir is File && dir != music_dir) {
-                    app.settings?.set_string ("music-dir", ((!)dir).get_uri ());
+                    app.music_folder = ((!)dir).get_uri ();
                     picked ((!)dir);
                 }
             }

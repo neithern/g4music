@@ -226,10 +226,11 @@ namespace G4 {
         return 0;
     }
 
-    public static string get_display_name (File dir) {
-        var name = dir.get_basename () ?? "";
+    public static string get_display_name (string uri) {
+        var file = File.new_for_uri (uri);
+        var name = file.get_basename () ?? "";
         if (name.length == 0 || name == "/")
-            name = dir.get_parse_name ();
+            name = file.get_parse_name ();
         return name;
     }
 

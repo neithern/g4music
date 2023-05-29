@@ -34,6 +34,7 @@ namespace G4 {
         private Music? _current_music = null;
         private Gst.Sample? _cover_image = null;
         private bool _loading_store = false;
+        private string _music_folder = "";
         private uint _mpris_id = 0;
         private Gtk.FilterListModel _music_list = new Gtk.FilterListModel (null, null);
         private MusicStore _music_store = new MusicStore ();
@@ -91,6 +92,7 @@ namespace G4 {
             add_action_entries (action_sort, this);
 
             _settings?.bind ("dark-theme", this, "dark-theme", SettingsBindFlags.DEFAULT);
+            _settings?.bind ("music-dir", this, "music-folder", SettingsBindFlags.DEFAULT);
 
             _music_list.model = _music_store.store;
             _settings?.bind ("sort-mode", this, "sort-mode", SettingsBindFlags.DEFAULT);
@@ -240,6 +242,22 @@ namespace G4 {
             }
         }
 
+        public string music_folder {
+            get {
+                if (_music_folder.length == 0) {
+                    var path = Environment.get_user_special_dir (UserDirectory.MUSIC);
+                    _music_folder = File.new_build_filename (path).get_uri ();
+                }
+                return _music_folder;
+            }
+            set {
+                _music_folder = value;
+                if (active_window is Window) {
+                    reload_music_store ();
+                }
+            }
+        }
+
         public string name {
             get {
                 return _("G4Music");
@@ -290,15 +308,6 @@ namespace G4 {
             get {
                 return _thumbnailer;
             }
-        }
-
-        public File get_music_folder () {
-            var music_uri = _settings?.get_string ("music-dir") ?? "";
-            if (music_uri.length > 0) {
-                return File.new_for_uri (music_uri);
-            }
-            var music_path = Environment.get_user_special_dir (UserDirectory.MUSIC);
-            return File.new_for_path (music_path);
         }
 
         public void play_next () {
@@ -389,7 +398,7 @@ namespace G4 {
 
             if (saved_size == 0 && files.length == 0) {
                 files.resize (1);
-                files[0] = get_music_folder ();
+                files[0] = File.new_for_uri (music_folder);
             }
             if (files.length > 0) {
                 yield _music_store.add_files_async (files);

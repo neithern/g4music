@@ -277,10 +277,8 @@ namespace G4 {
 
             var empty = !loading && size == 0 && app.current_music == null;
             if (empty) {
-                var dir_name = get_display_name (app.get_music_folder ());
-                var link = @"<a href=\"change_dir\">$dir_name</a>";
-                initial_label.set_markup (_("Drag and drop music files here,\nor change music location: ") + link);
                 update_cover_paintables (new Music.empty (), app.icon);
+                update_initial_label (app.music_folder);
             }
             initial_label.visible = empty;
             music_title.visible = !empty;
@@ -288,7 +286,8 @@ namespace G4 {
 
         private bool on_music_folder_clicked (string uri) {
             var app = (Application) application;
-            pick_music_folder_async.begin (app, this, (dir) => app.reload_music_store (),
+            pick_music_folder_async.begin (app, this,
+                (dir) => update_initial_label (dir.get_uri ()),
                 (obj, res) => pick_music_folder_async.end (res));
             return true;
         }
@@ -456,6 +455,12 @@ namespace G4 {
             } else {
                 _bkgnd_paintable.paintable = null;
             }
+        }
+
+        private void update_initial_label (string uri) {
+            var dir_name = get_display_name (uri);
+            var link = @"<a href=\"change_dir\">$dir_name</a>";
+            initial_label.set_markup (_("Drag and drop music files here,\nor change music location: ") + link);
         }
     }
 }
