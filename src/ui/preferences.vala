@@ -16,6 +16,8 @@ namespace G4 {
         [GtkChild]
         unowned Gtk.Button music_dir_btn;
         [GtkChild]
+        unowned Gtk.Switch monitor_btn;
+        [GtkChild]
         unowned Gtk.Switch thumbnail_btn;
         [GtkChild]
         unowned Gtk.Switch playbkgnd_btn;
@@ -49,6 +51,8 @@ namespace G4 {
                     app.reload_music_store ();
                 }, (obj, res) => pick_music_folder_async.end (res));
             });
+
+            settings?.bind ("monitor-changes", monitor_btn, "active", SettingsBindFlags.DEFAULT);
 
             settings?.bind ("remote-thumbnail", thumbnail_btn, "active", SettingsBindFlags.GET_NO_CHANGES);
 
