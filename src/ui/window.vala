@@ -74,12 +74,11 @@ namespace G4 {
 
             setup_drop_target ();
 
-            leaflet.bind_property ("folded", this, "leaflet_folded", BindingFlags.DEFAULT);
+            leaflet.bind_property ("folded", this, "leaflet-folded");
             leaflet.navigate (Adw.NavigationDirection.FORWARD);
             back_btn.clicked.connect (() => leaflet.navigate (Adw.NavigationDirection.BACK));
 
-            app.bind_property ("sort_mode", this, "sort_mode", BindingFlags.DEFAULT);
-            sort_mode = app.sort_mode;
+            app.bind_property ("sort-mode", this, "sort-mode", BindingFlags.SYNC_CREATE);
 
             search_btn.toggled.connect (() => {
                 if (search_btn.active) {
@@ -175,7 +174,7 @@ namespace G4 {
             "media-playlist-shuffle-symbolic"   // SHUFFLE
         };
 
-        public SortMode sort_mode {
+        public uint sort_mode {
             set {
                 if (value >= SortMode.ALBUM && value <= SortMode.SHUFFLE) {
                     sort_btn.set_icon_name (SORT_MODE_ICONS[value]);

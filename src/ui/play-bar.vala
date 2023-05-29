@@ -10,9 +10,9 @@ namespace G4 {
         private Gtk.Button _play = new Gtk.Button ();
         private Gtk.Button _next = new Gtk.Button ();
         private VolumeButton _volume = new VolumeButton ();
-        private bool _negative_progress = false;
         private int _duration = 1;
         private int _position = 0;
+        private bool _remain_progress = false;
 
         construct {
             orientation = Gtk.Orientation.VERTICAL;
@@ -57,13 +57,9 @@ namespace G4 {
 
             var settings = app.settings;
             settings?.bind ("peak-characters", _peak, "characters", SettingsBindFlags.DEFAULT);
-            _negative_progress = settings?.get_boolean ("remain-progress") ?? false;
+            settings?.bind ("remain-progress", this, "remain-progress", SettingsBindFlags.DEFAULT);
 
-            make_label_clickable (_negative).pressed.connect (() => {
-                _negative_progress = !_negative_progress;
-                update_negative_label ();
-                settings?.set_boolean ("remain-progress", _negative_progress);
-            });
+            make_label_clickable (_negative).pressed.connect (() => remain_progress = !remain_progress);
 
             var buttons = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 16);
             buttons.halign = Gtk.Align.CENTER;
@@ -112,6 +108,16 @@ namespace G4 {
             player.peak_parsed.connect (_peak.set_peak);
         }
 
+        public bool remain_progress {
+            get {
+                return _remain_progress;
+            }
+            set {
+                _remain_progress = value;
+                update_negative_label ();
+            }
+        }
+
         private void on_duration_changed (Gst.ClockTime duration) {
             var value = GstPlayer.to_second (duration);
             _duration = (int) (value + 0.5);
@@ -124,7 +130,7 @@ namespace G4 {
             if (_position != (int) value) {
                 _position = (int) value;
                 _positive.label = format_time (_position);
-                if (_negative_progress)
+                if (_remain_progress)
                     _negative.label = "-" + format_time (_duration - _position);
             }
             _seek.set_value (value);
@@ -136,7 +142,7 @@ namespace G4 {
         }
 
         private void update_negative_label () {
-            if (_negative_progress)
+            if (_remain_progress)
                 _negative.label = "-" + format_time (_duration - _position);
             else
                 _negative.label = format_time (_duration);

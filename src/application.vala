@@ -91,19 +91,19 @@ namespace G4 {
             action_sort[0].state = state;
             add_action_entries (action_sort, this);
 
-            dark_theme = _settings?.get_boolean ("dark-theme") ?? true;
+            _settings?.bind ("dark-theme", this, "dark-theme", SettingsBindFlags.DEFAULT);
 
             _music_list.model = _music_store.store;
-            _music_store.sort_mode = (SortMode) (_settings?.get_uint ("sort-mode") ?? SortMode.TITLE);
+            _settings?.bind ("sort-mode", this, "sort-mode", SettingsBindFlags.DEFAULT);
 
             _thumbnailer.tag_updated.connect (_music_store.add_to_cache);
-            _thumbnailer.remote_thumbnail = _settings?.get_boolean ("remote-thumbnail") ?? false;
+            _settings?.bind ("remote-thumbnail", _thumbnailer, "remote-thumbnail", SettingsBindFlags.DEFAULT);
 
-            _player.gapless = _settings?.get_boolean ("gapless-playback") ?? true;
-            _player.replay_gain = _settings?.get_boolean ("replay-gain") ?? false;
-            _player.pipewire_sink = _settings?.get_boolean ("pipewire-sink") ?? false;
-            _player.show_peak = _settings?.get_boolean ("show-peak") ?? false;
-            _player.volume = _settings?.get_double ("volume") ?? 1;
+            _settings?.bind ("gapless-playback", _player, "gapless", SettingsBindFlags.DEFAULT);
+            _settings?.bind ("replay-gain", _player, "replay-gain", SettingsBindFlags.DEFAULT);
+            _settings?.bind ("pipewire-sink", _player, "pipewire-sink", SettingsBindFlags.DEFAULT);
+            _settings?.bind ("show-peak", _player, "show-peak", SettingsBindFlags.DEFAULT);
+            _settings?.bind ("volume", _player, "volume", SettingsBindFlags.DEFAULT);
 
             _player.end_of_stream.connect (on_player_end);
             _player.error.connect (on_player_error);
@@ -209,6 +209,10 @@ namespace G4 {
         }
 
         public bool dark_theme {
+            get {
+                var scheme = style_manager.color_scheme;
+                return scheme == Adw.ColorScheme.FORCE_DARK || scheme ==  Adw.ColorScheme.PREFER_DARK;
+            }
             set {
                 style_manager.color_scheme = value ? Adw.ColorScheme.PREFER_DARK : Adw.ColorScheme.DEFAULT;
             }
@@ -268,17 +272,15 @@ namespace G4 {
             }
         }
 
-        public SortMode sort_mode {
+        public uint sort_mode {
             get {
                 return _music_store.sort_mode;
             }
             set {
                 var action = lookup_action (ACTION_SORT);
-                var state = new Variant.string (((uint32) value).to_string ());
+                var state = new Variant.string (value.to_string ());
                 (action as SimpleAction)?.set_state (state);
-
-                _music_store.sort_mode = value;
-                _settings?.set_uint ("sort-mode", value);
+                _music_store.sort_mode = (SortMode) value;
             }
         }
 
