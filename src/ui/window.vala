@@ -333,9 +333,10 @@ namespace G4 {
             update_music_info (music);
 
             var app = (Application) application;
+            Gdk.Pixbuf? pixbuf = null;
             Gdk.Paintable? paintable = null;
             if (image != null) {
-                var pixbuf = yield run_async<Gdk.Pixbuf?> (
+                pixbuf = yield run_async<Gdk.Pixbuf?> (
                     () => load_clamp_pixbuf_from_sample ((!)image, _cover_size), true);
                 if (pixbuf != null)
                     paintable = Gdk.Texture.for_pixbuf ((!)pixbuf);
@@ -345,11 +346,24 @@ namespace G4 {
             if (music == app.current_music) {
                 action_set_enabled (ACTION_APP + ACTION_EXPORT_COVER, image != null);
                 action_set_enabled (ACTION_APP + ACTION_SHOW_COVER_FILE, image == null && music.cover_uri != null);
-                yield app.parse_music_cover_async ();
 
-                if (paintable == null)
-                    paintable = app.thumbnailer.create_album_text_paintable (music);
-                update_cover_paintables (music, paintable);
+                //  Remote thumbnail may not loaded
+                if (pixbuf != null && !(app.thumbnailer.find (music) is Gdk.Texture)) {
+                    pixbuf = yield run_async<Gdk.Pixbuf?> (
+                        () => create_clamp_pixbuf ((!)pixbuf, Thumbnailer.ICON_SIZE)
+                    );
+                    if (pixbuf != null && music == app.current_music) {
+                        app.thumbnailer.put (music, Gdk.Texture.for_pixbuf ((!)pixbuf), true);
+                        app.music_list.items_changed (app.current_item, 0, 0);
+                    }
+                }
+
+                if (music == app.current_music) {
+                    if (paintable == null)
+                        paintable = app.thumbnailer.create_album_text_paintable (music);
+                    update_cover_paintables (music, paintable);
+                    yield app.parse_music_cover_async ();
+                }
             }
         }
 

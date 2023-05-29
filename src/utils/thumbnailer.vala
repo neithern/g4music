@@ -148,8 +148,8 @@ namespace G4 {
             return _cover_cache.find (music.cover_key);
         }
 
-        public void put (Music music, Gdk.Paintable paintable) {
-            _cover_cache.put (music.cover_key, paintable);
+        public void put (Music music, Gdk.Paintable paintable, bool replace = false) {
+            _cover_cache.put (music.cover_key, paintable, replace);
         }
 
         public async Gdk.Paintable? load_async (Music music, int size) {
@@ -240,7 +240,7 @@ namespace G4 {
         }
 
         public Gdk.Paintable create_album_text_paintable (Music music) {
-            var text = music.cover_key;
+            var text = parse_abbreviation (music.album);
             var color_count = BACKGROUND_COLORS.length / 3;
             var color_index = (text.length == 0 || text == UNKNOWN_ALBUM)
                     ? color_count - 1
