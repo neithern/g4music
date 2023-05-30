@@ -194,6 +194,14 @@ namespace G4 {
             return (int) diff.clamp (-1, 1);
         }
 
+        public static bool equal (Music m1, Music m2) {
+            return str_equal (m1.uri, m2.uri);
+        }
+
+        public static uint hash (Music music) {
+            return str_hash (music.uri);
+        }
+
         public static Music? from_info (File file, FileInfo info) {
             unowned var type = info.get_content_type () ?? "";
             if (ContentType.is_mime_type (type, "audio/*") && !type.has_suffix ("url")) {

@@ -22,6 +22,7 @@ namespace G4 {
         private SortMode _sort_mode = SortMode.TITLE;
         private CompareDataFunc<Object> _compare = Music.compare_by_title;
         private ListStore _store = new ListStore (typeof (Music));
+        private GenericSet<Music> _music_set = new GenericSet<Music> (Music.hash, Music.equal);
         private TagCache _tag_cache = new TagCache ();
 
         public signal void loading_changed (bool loading);
@@ -92,9 +93,14 @@ namespace G4 {
         }
 
         public void clear () {
-            _monitors.foreach ((uri, monitor) => monitor.cancel ());
-            _monitors.remove_all ();
+            lock (_monitors) {
+                _monitors.foreach ((uri, monitor) => monitor.cancel ());
+                _monitors.remove_all ();
+            }
             _store.remove_all ();
+            lock (_music_set) {
+                _music_set.remove_all ();
+            }
         }
 
         public void remove (string uri) {
@@ -105,15 +111,18 @@ namespace G4 {
                         _store.remove (pos);
                     }
                 }
-                _tag_cache.remove (uri);
+                lock (_music_set) {
+                    _music_set.remove ((!)music);
+                }
             } else {
                 var prefix = uri + "/";
                 for (var pos = (int) _store.get_n_items () - 1; pos >= 0; pos--) {
-                    music = (Music?) _store.get_item (pos);
-                    var u = music?.uri;
-                    if (u?.has_prefix (prefix) ?? false) {
+                    var mus = (Music) _store.get_item (pos);
+                    if (mus.uri.has_prefix (prefix)) {
                         _store.remove (pos);
-                        _tag_cache.remove ((!)u);
+                        lock (_music_set) {
+                            _music_set.remove (mus);
+                        }
                     }
                 }
             }
@@ -129,7 +138,7 @@ namespace G4 {
             }
         }
 
-        public async void add_files_async (File[] files, bool ignore_exists = false) {
+        public async void add_files_async (owned File[] files, bool ignore_exists = false) {
             var dirs = new GenericArray<File> (128);
             var musics = new GenericArray<Object> (4096);
             loading_changed (true);
@@ -142,15 +151,15 @@ namespace G4 {
                 var queue = new AsyncQueue<Music?> ();
                 for (var i = musics.length - 1; i >= 0; i--) {
                     var music = (Music) musics[i];
-                    var cached_music = _tag_cache[music.uri];
-                    if (cached_music != null) {
-                        if (ignore_exists)
+                    if (ignore_exists) lock (_music_set) {
+                        if (_music_set.contains (music))
                             musics.remove_index_fast (i);
-                        else if (((!)cached_music).modified_time == music.modified_time)
-                            musics[i] = (!)cached_music;
-                    } else {
-                        queue.push (music);
                     }
+                    var cached_music = _tag_cache[music.uri];
+                    if (cached_music != null && ((!)cached_music).modified_time == music.modified_time)
+                        musics[i] = (!)cached_music;
+                    else
+                        queue.push (music);
                 }
                 var queue_count = queue.length ();
                 if (queue_count > 0) {
@@ -185,51 +194,68 @@ namespace G4 {
             _store.splice (_store.get_n_items (), 0, musics.data);
             loading_changed (false);
 
+            _monitor_dirs_async.begin (dirs, (obj, res) => _monitor_dirs_async.end (res));
+            _update_music_set_async.begin (musics, (obj, res) => _update_music_set_async.end (res));
             if (_tag_cache.modified) {
                 save_tag_cache_async.begin ((obj, res) => save_tag_cache_async.end (res));
-            }
-
-            foreach (var dir in dirs) {
-                var uri = dir.get_uri ();
-                unowned string orig_key;
-                FileMonitor monitor;
-                if (_monitors.lookup_extended (uri, out orig_key, out monitor)) {
-                    monitor.cancel ();
-                }
-                if (_monitor_changes) try {
-                    monitor = dir.monitor (FileMonitorFlags.WATCH_MOVES, null);
-                    monitor.changed.connect (_monitor_func);
-                    _monitors[uri] = monitor;
-                } catch (Error e) {
-                    print ("Monitor dir error: %s\n", e.message);
-                }
             }
         }
 
         private HashTable<string, FileMonitor> _monitors = new HashTable<string, FileMonitor> (str_hash, str_equal);
 
-        private async void _monitor_func (File file, File? other_file, FileMonitorEvent event_type) {
-            var uri = file.get_uri ();
-            switch (event_type) {
+        private async void _monitor_dirs_async (GenericArray<File> dirs) {
+            yield run_async<void> (() => {
+                foreach (var dir in dirs) {
+                    var uri = dir.get_uri ();
+                    unowned string orig_key;
+                    FileMonitor monitor;
+                    lock (_monitors) {
+                        if (_monitors.lookup_extended (uri, out orig_key, out monitor)) {
+                            monitor.cancel ();
+                        }
+                        if (_monitor_changes) try {
+                            monitor = dir.monitor (FileMonitorFlags.WATCH_MOVES, null);
+                            monitor.changed.connect (_monitor_func);
+                            _monitors[uri] = monitor;
+                        } catch (Error e) {
+                            print ("Monitor dir error: %s\n", e.message);
+                        }
+                    }
+                }
+            });
+        }
+
+        private void _monitor_func (File file, File? other_file, FileMonitorEvent event) {
+            switch (event) {
                 case FileMonitorEvent.ATTRIBUTE_CHANGED:
                 case FileMonitorEvent.MOVED_IN:
-                    yield add_files_async ({file}, true);
+                    add_files_async.begin ({file}, true, (obj, res) => add_files_async.end (res));
                     break;
 
                 case FileMonitorEvent.DELETED:
                 case FileMonitorEvent.MOVED_OUT:
-                    remove (uri);
+                    remove (file.get_uri ());
                     break;
 
                 case FileMonitorEvent.RENAMED:
-                    remove (uri);
+                    remove (file.get_uri ());
                     if (other_file != null)
-                        yield add_files_async ({(!)other_file}, true);
+                        add_files_async.begin ({(!)other_file}, true, (obj, res) => add_files_async.end (res));
                     break;
 
                 default:
                     break;
             }
+        }
+
+        private async void _update_music_set_async (GenericArray<Object> musics) {
+            yield run_async<void> (() => {
+                foreach (var obj in musics) {
+                    lock (_music_set) {
+                        _music_set.add (((Music)obj));
+                    }
+                }
+            });
         }
 
         private const string ATTRIBUTES = FileAttribute.STANDARD_CONTENT_TYPE + ","
