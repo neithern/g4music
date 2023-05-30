@@ -8,6 +8,29 @@ namespace G4 {
         SHUFFLE,
     }
 
+    public class Progress : Object {
+        private int _percent = 0;
+        private int _progress = 0;
+        private int _total = 1;
+
+        public signal void percent_changed (int percent);
+
+        public Progress (int total) {
+            _total = total;
+        }
+
+        public void step () {
+            AtomicInt.inc (ref _progress);
+            var per = _progress * 100 / _total;
+            if (AtomicInt.compare_and_exchange (ref _percent, _percent, per)) {
+                Idle.add (() => {
+                    percent_changed (per);
+                    return false;
+                });
+            }
+        }
+    }
+
     public class MusicStore : Object {
         private static ThreadPool<DirCache>? _save_dir_pool;
 
@@ -163,23 +186,15 @@ namespace G4 {
                 }
                 var queue_count = queue.length ();
                 if (queue_count > 0) {
-                    int percent = 0;
-                    int progress = 0;
+                    var progress = new Progress (queue_count);
+                    progress.percent_changed.connect ((percent) => parse_progress (percent));
                     var num_tasks = uint.min (queue_count, get_num_processors ());
                     run_in_threads<void> (() => {
-                        Music? s;
-                        while ((s = queue.try_pop ()) != null) {
-                            var music = (!)s;
-                            music.parse_tags ();
-                            _tag_cache.add (music);
-                            AtomicInt.inc (ref progress);
-                            var per = progress * 100 / queue_count;
-                            if (AtomicInt.compare_and_exchange (ref percent, percent, per)) {
-                                Idle.add (() => {
-                                    parse_progress (per);
-                                    return false;
-                                });
-                            }
+                        Music? music;
+                        while ((music = queue.try_pop ()) != null) {
+                            music?.parse_tags ();
+                            _tag_cache.add ((!)music);
+                            progress.step ();
                         }
                     }, num_tasks);
                 }
