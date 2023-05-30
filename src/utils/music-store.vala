@@ -128,13 +128,13 @@ namespace G4 {
             }
         }
 
-        public async void load_tag_cache_async () {
-            yield run_async<void> (_tag_cache.load);
+        public void load_tag_cache () {
+            run_void_async.begin (_tag_cache.load, (obj, res) => run_void_async.end (res));
         }
 
-        public async void save_tag_cache_async () {
+        public void save_tag_cache () {
             if (_tag_cache.modified) {
-                yield run_async<void> (_tag_cache.save);
+                run_void_async.begin (_tag_cache.save, (obj, res) => run_void_async.end (res));
             }
         }
 
@@ -142,7 +142,7 @@ namespace G4 {
             var dirs = new GenericArray<File> (128);
             var musics = new GenericArray<Object> (4096);
             loading_changed (true);
-            yield run_async<void> (() => {
+            yield run_void_async (() => {
                 var begin_time = get_monotonic_time ();
                 foreach (var file in files) {
                     add_file (file, dirs, musics);
@@ -194,35 +194,38 @@ namespace G4 {
             _store.splice (_store.get_n_items (), 0, musics.data);
             loading_changed (false);
 
-            _monitor_dirs_async.begin (dirs, (obj, res) => _monitor_dirs_async.end (res));
-            _update_music_set_async.begin (musics, (obj, res) => _update_music_set_async.end (res));
-            if (_tag_cache.modified) {
-                save_tag_cache_async.begin ((obj, res) => save_tag_cache_async.end (res));
-            }
+            run_void_async.begin (() => {
+                foreach (var obj in musics) {
+                    lock (_music_set) {
+                        _music_set.add (((Music)obj));
+                    }
+                }
+                _monitor_dirs (dirs);
+            }, (obj, res) => run_void_async.end (res));
+
+            save_tag_cache ();
         }
 
         private HashTable<string, FileMonitor> _monitors = new HashTable<string, FileMonitor> (str_hash, str_equal);
 
-        private async void _monitor_dirs_async (GenericArray<File> dirs) {
-            yield run_async<void> (() => {
-                foreach (var dir in dirs) {
-                    var uri = dir.get_uri ();
-                    unowned string orig_key;
-                    FileMonitor monitor;
-                    lock (_monitors) {
-                        if (_monitors.lookup_extended (uri, out orig_key, out monitor)) {
-                            monitor.cancel ();
-                        }
-                        if (_monitor_changes) try {
-                            monitor = dir.monitor (FileMonitorFlags.WATCH_MOVES, null);
-                            monitor.changed.connect (_monitor_func);
-                            _monitors[uri] = monitor;
-                        } catch (Error e) {
-                            print ("Monitor dir error: %s\n", e.message);
-                        }
+        private void _monitor_dirs (GenericArray<File> dirs) {
+            foreach (var dir in dirs) {
+                var uri = dir.get_uri ();
+                unowned string orig_key;
+                FileMonitor monitor;
+                lock (_monitors) {
+                    if (_monitors.lookup_extended (uri, out orig_key, out monitor)) {
+                        monitor.cancel ();
+                    }
+                    if (_monitor_changes) try {
+                        monitor = dir.monitor (FileMonitorFlags.WATCH_MOVES, null);
+                        monitor.changed.connect (_monitor_func);
+                        _monitors[uri] = monitor;
+                    } catch (Error e) {
+                        print ("Monitor dir error: %s\n", e.message);
                     }
                 }
-            });
+            }
         }
 
         private void _monitor_func (File file, File? other_file, FileMonitorEvent event) {
@@ -246,16 +249,6 @@ namespace G4 {
                 default:
                     break;
             }
-        }
-
-        private async void _update_music_set_async (GenericArray<Object> musics) {
-            yield run_async<void> (() => {
-                foreach (var obj in musics) {
-                    lock (_music_set) {
-                        _music_set.add (((Music)obj));
-                    }
-                }
-            });
         }
 
         private const string ATTRIBUTES = FileAttribute.STANDARD_CONTENT_TYPE + ","

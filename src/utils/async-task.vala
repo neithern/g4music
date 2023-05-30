@@ -56,4 +56,8 @@ namespace G4 {
         }
         return worker.result;
     }
+
+    public static async void run_void_async (TaskFunc<void> task) {
+        yield run_async<void> (task);
+    }
 }

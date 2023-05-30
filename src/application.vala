@@ -121,7 +121,7 @@ namespace G4 {
             base.startup ();
 
             //  Must load tag cache after the app register (GLib init), to make sort works
-            _music_store.load_tag_cache_async.begin ((obj, res) => _music_store.load_tag_cache_async.end (res));
+            _music_store.load_tag_cache ();
 
             _mpris_id = Bus.own_name (BusType.SESSION,
                 "org.mpris.MediaPlayer2.G4Music",
@@ -166,7 +166,7 @@ namespace G4 {
 
             _settings?.set_double ("volume", _player.volume);
 
-            _music_store.save_tag_cache_async.begin ((obj, res) => _music_store.save_tag_cache_async.end (res));
+            _music_store.save_tag_cache ();
 
             delete_cover_tmp_file_async.begin ((obj, res) => delete_cover_tmp_file_async.end (res));
 
