@@ -23,10 +23,7 @@ namespace G4 {
             AtomicInt.inc (ref _progress);
             var per = _progress * 100 / _total;
             if (AtomicInt.compare_and_exchange (ref _percent, _percent, per)) {
-                Idle.add (() => {
-                    percent_changed (per);
-                    return false;
-                });
+                run_idle_once (() => percent_changed (per));
             }
         }
     }

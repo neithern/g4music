@@ -146,11 +146,10 @@ namespace G4 {
         public override void open (File[] files, string hint) {
             load_musics_async.begin (files, (obj, res) => {
                 var play_item = load_musics_async.end (res);
-                Idle.add (() => {
+                run_idle_once (() => {
                     current_item = play_item;
                     if (files.length > 0)
                         _player.play ();
-                    return false;
                 });
             });
 

@@ -1,6 +1,7 @@
 namespace G4 {
 
     public delegate V TaskFunc<V> ();
+    public delegate void VoidFunc ();
 
     private class Worker<V> {
         private TaskFunc<V> _task;
@@ -57,7 +58,14 @@ namespace G4 {
         return worker.result;
     }
 
-    public static async void run_void_async (TaskFunc<void> task) {
+    public static void run_idle_once (owned VoidFunc func) {
+        Idle.add (() => {
+            func ();
+            return false;
+        });
+    }
+
+    public static async void run_void_async (VoidFunc task) {
         yield run_async<void> (task);
     }
 }

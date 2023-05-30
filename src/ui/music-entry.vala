@@ -130,10 +130,9 @@ namespace G4 {
             popover.pointing_to = rect;
             popover.set_parent (this);
             popover.closed.connect (() => {
-                Idle.add (() => {
+                run_idle_once (() => {
                     if (app.popover_music == music)
                         app.popover_music = null;
-                    return false;
                 });
             });
             popover.popup ();

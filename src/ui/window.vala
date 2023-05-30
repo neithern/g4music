@@ -368,11 +368,8 @@ namespace G4 {
         }
 
         private void scroll_to_item (int index) {
-            Idle.add (() => {
-                //  It is more safe to run in idle, because it may be called in some callback
-                list_view.activate_action_variant ("list.scroll-to-item", new Variant.uint32 (index));
-                return false;
-            });
+            //  It is more safe to run in idle, because it may be called in some callback
+            run_idle_once (() => list_view.activate_action_variant ("list.scroll-to-item", new Variant.uint32 (index)));
         }
 
         private void setup_drop_target () {
