@@ -368,12 +368,9 @@ namespace G4 {
         }
 
         private void scroll_to_item (int index) {
-            list_view.activate_action_variant ("list.scroll-to-item", new Variant.uint32 (index));
             Idle.add (() => {
-                //  scrolling may failed when building the list, so scroll again later
-                if (list_view.vadjustment.value == 0) {
-                    list_view.activate_action_variant ("list.scroll-to-item", new Variant.uint32 (index));
-                }
+                //  It is more safe to run in idle, because it may be called in some callback
+                list_view.activate_action_variant ("list.scroll-to-item", new Variant.uint32 (index));
                 return false;
             });
         }
