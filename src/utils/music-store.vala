@@ -129,7 +129,7 @@ namespace G4 {
             }
         }
 
-        public async void add_files_async (File[] files) {
+        public async void add_files_async (File[] files, bool ignore_exists = false) {
             var dirs = new GenericArray<File> (128);
             var musics = new GenericArray<Object> (4096);
             loading_changed (true);
@@ -140,13 +140,17 @@ namespace G4 {
                 }
 
                 var queue = new AsyncQueue<Music?> ();
-                for (var i = 0; i < musics.length; i++) {
+                for (var i = musics.length - 1; i >= 0; i--) {
                     var music = (Music) musics[i];
                     var cached_music = _tag_cache[music.uri];
-                    if (cached_music != null && ((!)cached_music).modified_time == music.modified_time)
-                        musics[i] = (!)cached_music;
-                    else
+                    if (cached_music != null) {
+                        if (ignore_exists)
+                            musics.remove_index_fast (i);
+                        else if (((!)cached_music).modified_time == music.modified_time)
+                            musics[i] = (!)cached_music;
+                    } else {
                         queue.push (music);
+                    }
                 }
                 var queue_count = queue.length ();
                 if (queue_count > 0) {
@@ -209,7 +213,7 @@ namespace G4 {
             switch (event_type) {
                 case FileMonitorEvent.ATTRIBUTE_CHANGED:
                 case FileMonitorEvent.MOVED_IN:
-                    yield add_files_async ({file});
+                    yield add_files_async ({file}, true);
                     break;
 
                 case FileMonitorEvent.DELETED:
@@ -220,7 +224,7 @@ namespace G4 {
                 case FileMonitorEvent.RENAMED:
                     remove (uri);
                     if (other_file != null)
-                        yield add_files_async ({(!)other_file});
+                        yield add_files_async ({(!)other_file}, true);
                     break;
 
                 default:
