@@ -212,7 +212,10 @@ namespace G4 {
                         _music_set.add (((Music)obj));
                     }
                 }
-                _monitor_dirs (dirs);
+                foreach (var dir in dirs) {
+                    if (dir.is_native ())
+                        _monitor_dir (dir);
+                }
             }, (obj, res) => run_void_async.end (res));
 
             save_tag_cache ();
@@ -220,22 +223,20 @@ namespace G4 {
 
         private HashTable<string, FileMonitor> _monitors = new HashTable<string, FileMonitor> (str_hash, str_equal);
 
-        private void _monitor_dirs (GenericArray<File> dirs) {
-            foreach (var dir in dirs) {
-                var uri = dir.get_uri ();
-                unowned string orig_key;
-                FileMonitor monitor;
-                lock (_monitors) {
-                    if (_monitors.lookup_extended (uri, out orig_key, out monitor)) {
-                        monitor.cancel ();
-                    }
-                    if (_monitor_changes) try {
-                        monitor = dir.monitor (FileMonitorFlags.WATCH_MOVES, null);
-                        monitor.changed.connect (_monitor_func);
-                        _monitors[uri] = monitor;
-                    } catch (Error e) {
-                        print ("Monitor dir error: %s\n", e.message);
-                    }
+        private void _monitor_dir (File dir) {
+            var uri = dir.get_uri ();
+            unowned string orig_key;
+            FileMonitor monitor;
+            lock (_monitors) {
+                if (_monitors.lookup_extended (uri, out orig_key, out monitor)) {
+                    monitor.cancel ();
+                }
+                if (_monitor_changes) try {
+                    monitor = dir.monitor (FileMonitorFlags.WATCH_MOVES, null);
+                    monitor.changed.connect (_monitor_func);
+                    _monitors[uri] = monitor;
+                } catch (Error e) {
+                    print ("Monitor dir error: %s\n", e.message);
                 }
             }
         }
