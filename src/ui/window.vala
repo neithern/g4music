@@ -20,9 +20,9 @@ namespace G4 {
         [GtkChild]
         private unowned Gtk.Button back_btn;
         [GtkChild]
-        private unowned Gtk.Box content_box;
+        private unowned Gtk.Box music_box;
         [GtkChild]
-        private unowned Gtk.Image cover_image;
+        private unowned Gtk.Image music_cover;
         [GtkChild]
         private unowned Gtk.Label music_album;
         [GtkChild]
@@ -97,7 +97,7 @@ namespace G4 {
             _mini_bar.activated.connect (() => leaflet.navigate (Adw.NavigationDirection.FORWARD));
 
             _bkgnd_paintable.queue_draw.connect (this.queue_draw);
-            _cover_paintable.queue_draw.connect (cover_image.queue_draw);
+            _cover_paintable.queue_draw.connect (music_cover.queue_draw);
             _cover_paintable.paintable = app.icon;
 
             app.thumbnailer.pango_context = get_pango_context ();
@@ -105,16 +105,19 @@ namespace G4 {
 
             _scale_cover_paintable.paintable = new RoundPaintable (_cover_paintable, 12);
             _scale_cover_paintable.scale = 0.8;
-            _scale_cover_paintable.queue_draw.connect (cover_image.queue_draw);
-            cover_image.paintable = _scale_cover_paintable;
+            _scale_cover_paintable.queue_draw.connect (music_cover.queue_draw);
+            music_cover.paintable = _scale_cover_paintable;
 
+            music_album.tooltip_text = _("Show Album");
+            music_artist.tooltip_text = _("Show Artist");
+            make_right_clickable (music_box, show_popover_menu);
             make_label_clickable (music_album).released.connect (
                 () => start_search ("album=" + music_album.label));
             make_label_clickable (music_artist).released.connect (
                 () => start_search ("artist=" + music_artist.label));
 
             var play_bar = new PlayBar ();
-            content_box.append (play_bar);
+            music_box.append (play_bar);
             action_set_enabled (ACTION_APP + ACTION_PREV, false);
             action_set_enabled (ACTION_APP + ACTION_PLAY, false);
             action_set_enabled (ACTION_APP + ACTION_NEXT, false);
@@ -296,10 +299,10 @@ namespace G4 {
 
         private void on_player_state_changed (Gst.State state) {
             if (state >= Gst.State.PAUSED) {
-                var scale_paintable = (!)(cover_image.paintable as ScalePaintable);
+                var scale_paintable = (!)(music_cover.paintable as ScalePaintable);
                 var target = new Adw.CallbackAnimationTarget ((value) => scale_paintable.scale = value);
                 _scale_animation?.pause ();
-                _scale_animation = new Adw.TimedAnimation (cover_image,  scale_paintable.scale,
+                _scale_animation = new Adw.TimedAnimation (music_cover,  scale_paintable.scale,
                                             state == Gst.State.PLAYING ? 1 : 0.8, 500, target);
                 _scale_animation?.play ();
             }
@@ -344,9 +347,6 @@ namespace G4 {
                 paintable = yield app.thumbnailer.load_async (music, _cover_size);
             }
             if (music == app.current_music) {
-                action_set_enabled (ACTION_APP + ACTION_EXPORT_COVER, image != null);
-                action_set_enabled (ACTION_APP + ACTION_SHOW_COVER_FILE, image == null && music.cover_uri != null);
-
                 //  Remote thumbnail may not loaded
                 if (pixbuf != null && !(app.thumbnailer.find (music) is Gdk.Texture)) {
                     pixbuf = yield run_async<Gdk.Pixbuf?> (
@@ -400,6 +400,17 @@ namespace G4 {
             this.content.add_controller (drop_target);
         }
 
+        private void show_popover_menu (double x, double y) {
+            var app = (Application) application;
+            var music = app.current_music;
+            if (music != null) {
+                var popover = create_music_popover_menu ((!)music, x, y, 
+                                                false, app.current_cover != null);
+                popover.set_parent (music_box);
+                popover.popup ();
+            }
+        }
+
         private void update_music_info (Music music) {
             music_album.label = music.album;
             music_artist.label = music.artist;
@@ -445,7 +456,7 @@ namespace G4 {
                 _cover_paintable.fade = value;
             });
             _fade_animation?.pause ();
-            _fade_animation = new Adw.TimedAnimation (cover_image, 1 - _cover_paintable.fade, 0, 800, target);
+            _fade_animation = new Adw.TimedAnimation (music_cover, 1 - _cover_paintable.fade, 0, 800, target);
             ((!)_fade_animation).done.connect (() => {
                 _bkgnd_paintable.previous = null;
                 _cover_paintable.previous = null;

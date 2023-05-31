@@ -47,13 +47,7 @@ namespace G4 {
             _playing.add_css_class ("dim-label");
             append (_playing);
 
-            var long_press = new Gtk.GestureLongPress ();
-            long_press.pressed.connect (show_popover);
-            var right_click = new Gtk.GestureClick ();
-            right_click.button = Gdk.BUTTON_SECONDARY;
-            right_click.pressed.connect ((n, x, y) => show_popover (x, y));
-            add_controller (long_press);
-            add_controller (right_click);
+            make_right_clickable (this, show_popover);
         }
 
         public BasePaintable cover {
@@ -111,35 +105,54 @@ namespace G4 {
             var app = (Application) GLib.Application.get_default ();
             var music = _music;
             app.popover_music = music;
-
-            var rect = Gdk.Rectangle ();
-            rect.x = (int) x;
-            rect.y = (int) y;
-            rect.width = rect.height = 0;
-
-            var menu = new Menu ();
-            menu.append (_("Play at Next"), ACTION_APP + ACTION_PLAY_AT_NEXT);
-            menu.append (_("Show Album"), ACTION_APP + ACTION_SHOW_ALBUM);
-            menu.append (_("Show Artist"), ACTION_APP + ACTION_SHOW_ARTIST);
-            if (music?.cover_uri != null)
-                menu.append (_("Show _Cover File"), ACTION_APP + ACTION_SHOW_COVER_FILE);
-            else
-                menu.append (_("_Export Cover"), ACTION_APP + ACTION_EXPORT_COVER);
-            menu.append (_("_Show Music File"), ACTION_APP + ACTION_SHOW_MUSIC_FILES);
-
-            var popover = new Gtk.PopoverMenu.from_model (menu);
-            popover.autohide = true;
-            popover.halign = Gtk.Align.START;
-            popover.has_arrow = false;
-            popover.pointing_to = rect;
-            popover.set_parent (this);
-            popover.closed.connect (() => {
-                run_idle_once (() => {
-                    if (app.popover_music == music)
-                        app.popover_music = null;
+            if (_music != null) {
+                var popover = create_music_popover_menu ((!)_music, x, y, music != app.current_music);
+                popover.set_parent (this);
+                popover.closed.connect (() => {
+                    run_idle_once (() => {
+                        if (app.popover_music == music)
+                            app.popover_music = null;
+                    });
                 });
-            });
-            popover.popup ();
+                popover.popup ();
+            }
         }
+    }
+
+    public Gtk.PopoverMenu create_music_popover_menu (Music music, double x, double y, bool play_at_next = true, bool has_cover = true) {
+        var menu = new Menu ();
+        if (play_at_next)
+            menu.append (_("Play at Next"), ACTION_APP + ACTION_PLAY_AT_NEXT);
+        menu.append (_("Show Album"), ACTION_APP + ACTION_SHOW_ALBUM);
+        menu.append (_("Show Artist"), ACTION_APP + ACTION_SHOW_ARTIST);
+        menu.append (_("_Show Music File"), ACTION_APP + ACTION_SHOW_MUSIC_FILES);
+        if (music.cover_uri != null)
+            menu.append (_("Show _Cover File"), ACTION_APP + ACTION_SHOW_COVER_FILE);
+        else if (has_cover)
+            menu.append (_("_Export Cover"), ACTION_APP + ACTION_EXPORT_COVER);
+
+        var rect = Gdk.Rectangle ();
+        rect.x = (int)x;
+        rect.y = (int)y;
+        rect.width = rect.height = 0;
+
+        var popover = new Gtk.PopoverMenu.from_model (menu);
+        popover.autohide = true;
+        popover.halign = Gtk.Align.START;
+        popover.has_arrow = false;
+        popover.pointing_to = rect;
+        return popover;
+    }
+
+    public delegate void Pressed (double x, double y);
+
+    public void make_right_clickable (Gtk.Widget widget, Pressed pressed) {
+        var long_press = new Gtk.GestureLongPress ();
+        long_press.pressed.connect ((x, y) => pressed (x, y));
+        var right_click = new Gtk.GestureClick ();
+        right_click.button = Gdk.BUTTON_SECONDARY;
+        right_click.pressed.connect ((n, x, y) => pressed (x, y));
+        widget.add_controller (long_press);
+        widget.add_controller (right_click);
     }
 }

@@ -172,6 +172,12 @@ namespace G4 {
             base.shutdown ();
         }
 
+        public unowned Gst.Sample? current_cover {
+            get {
+                return _cover_image;
+            }
+        }
+
         public int current_item {
             get {
                 return _current_item;

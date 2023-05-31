@@ -105,7 +105,7 @@
               <object class="AdwLeafletPage">
                 <property name="navigatable">true</property>
                 <property name="child">
-                  <object class="GtkBox" id="content_box">
+                  <object class="GtkBox">
                     <property name="hexpand">true</property>
                     <property name="orientation">vertical</property>
                     <child>
@@ -127,12 +127,6 @@
                             <property name="visible">false</property>
                           </object>
                         </child>
-                        <child type="end">
-                          <object class="GtkMenuButton">
-                            <property name="icon_name">view-more-symbolic</property>
-                            <property name="menu_model">content_menu</property>
-                          </object>
-                        </child>
                       </object>
                     </child>
                     <child>
@@ -143,7 +137,7 @@
                         <property name="margin_end">32</property>
                         <property name="margin_top">16</property>
                         <child>
-                          <object class="GtkImage" id="cover_image">
+                          <object class="GtkImage" id="music_cover">
                             <property name="hexpand">true</property>
                             <property name="vexpand">true</property>
                             <property name="pixel_size">240</property>
@@ -205,25 +199,6 @@
       </object>
     </property>
   </template>
-
-  <menu id="content_menu">
-    <section>
-      <item>
-        <attribute name="label" translatable="yes">_Export Cover</attribute>
-        <attribute name="action">app.export-cover</attribute>
-        <attribute name="hidden-when">action-disabled</attribute>
-      </item>
-      <item>
-        <attribute name="label" translatable="yes">Show _Cover File</attribute>
-        <attribute name="action">app.show-cover-file</attribute>
-        <attribute name="hidden-when">action-disabled</attribute>
-      </item>
-      <item>
-        <attribute name="label" translatable="yes">_Show Music File</attribute>
-        <attribute name="action">app.show-music-file</attribute>
-      </item>
-    </section>
-  </menu>
 
   <menu id="primary_menu">
     <section>
