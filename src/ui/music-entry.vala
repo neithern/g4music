@@ -121,6 +121,10 @@ namespace G4 {
             menu.append (_("Play at Next"), ACTION_APP + ACTION_PLAY_AT_NEXT);
             menu.append (_("Show Album"), ACTION_APP + ACTION_SHOW_ALBUM);
             menu.append (_("Show Artist"), ACTION_APP + ACTION_SHOW_ARTIST);
+            if (music?.cover_uri != null)
+                menu.append (_("Show _Cover File"), ACTION_APP + ACTION_SHOW_COVER_FILE);
+            else
+                menu.append (_("_Export Cover"), ACTION_APP + ACTION_EXPORT_COVER);
             menu.append (_("_Show Music File"), ACTION_APP + ACTION_SHOW_MUSIC_FILES);
 
             var popover = new Gtk.PopoverMenu.from_model (menu);

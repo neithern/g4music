@@ -405,7 +405,7 @@ namespace G4 {
             music_artist.label = music.artist;
             music_title.label = music.title;
             _mini_bar.title = music.title;
-            this.title = music.artist == UNKNOWN_ARTIST ? music.title : @"$(music.artist) - $(music.title)";
+            this.title = music.get_artist_and_title ();
         }
 
         private void update_music_filter () {

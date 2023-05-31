@@ -47,6 +47,10 @@ namespace G4 {
             }
         }
 
+        public string get_artist_and_title () {
+            return artist == UNKNOWN_ARTIST ? title : @"$artist - $title";
+        }
+
         public bool from_gst_tags (Gst.TagList tags) {
             var changed = false;
             unowned string? al = null, ar = null, ti = null;

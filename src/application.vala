@@ -521,12 +521,20 @@ namespace G4 {
         }
 
         private async void _export_cover_async () {
-            if (_cover_image != null && active_window is Window) {
-                var sample = (!)_cover_image;
-                var itype = sample.get_caps ()?.get_structure (0)?.get_name ();
+            var music = _popover_music ?? _current_music;
+            Gst.Sample? sample = _cover_image;
+            if (_popover_music != null && _popover_music != _current_music) {
+                var file = File.new_for_uri (_popover_music?.uri ?? "");
+                sample = yield run_async<Gst.Sample?> (() => {
+                    var tags = parse_gst_tags (file);
+                    return tags != null ? parse_image_from_tag_list ((!)tags) : null;
+                });
+            }
+            if (music != null && sample != null && active_window is Window) {
+                var itype = sample?.get_caps ()?.get_structure (0)?.get_name ();
                 var pos = itype?.index_of_char ('/') ?? -1;
                 var ext = itype?.substring (pos + 1) ?? "";
-                var name = active_window.title.replace ("/", "&") + "." + ext;
+                var name = ((!)music).get_artist_and_title ().replace ("/", "&") + "." + ext;
                 var filter = new Gtk.FileFilter ();
                 filter.add_mime_type (itype ??  "image/*");
 #if GTK_4_10
@@ -537,7 +545,7 @@ namespace G4 {
                 try {
                     var file = yield dialog.save (active_window, null);
                     if (file != null) {
-                        yield save_sample_to_file_async ((!)file, sample);
+                        yield save_sample_to_file_async ((!)file, (!)sample);
                     }
                 } catch (Error e) {
                 }
@@ -549,7 +557,7 @@ namespace G4 {
                 chooser.response.connect ((id) => {
                     var file = chooser.get_file ();
                     if (id == Gtk.ResponseType.ACCEPT && file is File) {
-                        save_sample_to_file_async.begin ((!)file, sample,
+                        save_sample_to_file_async.begin ((!)file, (!)sample,
                             (obj, res) => save_sample_to_file_async.end (res));
                     }
                 });
@@ -569,17 +577,17 @@ namespace G4 {
         }
 
         private void play_at_next () {
-            if (_current_music != null && popover_music != null) {
+            if (_current_music != null && _popover_music != null) {
                 uint playing_item = -1;
                 uint popover_item = -1;
                 var store = _music_store.store;
                 if (store.find ((!)_current_music, out playing_item)
-                        && store.find ((!)popover_music, out popover_item)
+                        && store.find ((!)_popover_music, out popover_item)
                         && playing_item != popover_item
                         && playing_item != popover_item - 1) {
                     var next_item = popover_item > playing_item ? playing_item + 1 : playing_item;
                     store.remove (popover_item);
-                    store.insert (next_item, (!)popover_music);
+                    store.insert (next_item, (!)_popover_music);
                     //  update current playing item without scrolling
                     var old_item = _current_item;
                     _current_item = find_music_item (_current_music);
@@ -597,22 +605,22 @@ namespace G4 {
         }
 
         private void show_cover_file () {
-            var music = popover_music ?? _current_music;
+            var music = _popover_music ?? _current_music;
             _show_uri_with_portal (music?.cover_uri);
         }
 
         private void show_music_file () {
-            var music = popover_music ?? _current_music;
+            var music = _popover_music ?? _current_music;
             _show_uri_with_portal (music?.uri);
         }
 
         private void show_album () {
-            var album = (popover_music ?? _current_music)?.album ?? "";
+            var album = (_popover_music ?? _current_music)?.album ?? "";
             (active_window as Window)?.start_search ("album=" + album);
         }
 
         private void show_artist () {
-            var artist = (popover_music ?? _current_music)?.artist ?? "";
+            var artist = (_popover_music ?? _current_music)?.artist ?? "";
             (active_window as Window)?.start_search ("artist=" + artist);
         }
 
