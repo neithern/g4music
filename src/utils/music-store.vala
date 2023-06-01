@@ -167,6 +167,8 @@ namespace G4 {
                 foreach (var file in files) {
                     add_file (file, dirs, musics);
                 }
+                print ("Find %u files in %d folders in %g ms\n", musics.length, dirs.length,
+                    (get_monotonic_time () - begin_time) / 1e3);
 
                 var queue = new AsyncQueue<Music?> ();
                 for (var i = musics.length - 1; i >= 0; i--) {
@@ -200,8 +202,8 @@ namespace G4 {
                     Music.shuffle_order (musics);
                 }
                 musics.sort ((CompareFunc<Object>) _compare);
-                print ("Found %u musics in %g seconds\n", musics.length,
-                        (get_monotonic_time () - begin_time) / 1e6);
+                print ("Load %u musics in %g ms\n", musics.length,
+                        (get_monotonic_time () - begin_time) / 1e3);
             });
             _store.splice (_store.get_n_items (), 0, musics.data);
             loading_changed (false);
