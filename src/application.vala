@@ -45,7 +45,7 @@ namespace G4 {
         private Settings? _settings = new_application_settings ();
 
         public signal void index_changed (int index, uint size);
-        public signal void music_changed (Music music);
+        public signal void music_changed (Music? music);
         public signal void music_tag_parsed (Music music, Gst.Sample? image);
         public signal void music_cover_parsed (Music music, string? uri);
 
@@ -209,10 +209,8 @@ namespace G4 {
                 if (_current_music != value) {
                     _current_music = value;
                     _player.uri = value?.uri;
-                    if (value != null) {
-                        music_changed ((!)value);
-                        _settings?.set_string ("played-uri", ((!)value).uri);
-                    }
+                    music_changed (value);
+                    _settings?.set_string ("played-uri", value?.uri ?? "");
                 }
             }
         }

@@ -6,7 +6,7 @@ namespace G4 {
         private unowned Application _app;
         private unowned DBusConnection _connection;
         private HashTable<string, Variant> _metadata = new HashTable<string, Variant> (str_hash, str_equal);
-        private uint _music_hash = 0;
+        private int64 _music_hash = int64.MIN;
 
         public MprisPlayer (Application app, DBusConnection connection) {
             _app = app;
@@ -98,14 +98,18 @@ namespace G4 {
             send_properties (builder);
         }
 
-        private void on_music_changed (Music music) {
-            var artists = new VariantBuilder (new VariantType ("as"));
-            artists.add ("s", music.artist);
+        private void on_music_changed (Music? music) {
             _metadata.remove_all ();
-            _metadata.insert ("xesam:artist", artists.end());
-            _metadata.insert ("xesam:title", new Variant.string (((!)music).title));
-            _metadata.insert ("xesam:album", new Variant.string (((!)music).album));
-            _music_hash = direct_hash (music);
+            if (music != null) {
+                var artists = new VariantBuilder (new VariantType ("as"));
+                artists.add ("s", music?.artist ?? "");
+                _metadata.insert ("xesam:artist", artists.end());
+                _metadata.insert ("xesam:title", new Variant.string (music?.title ?? ""));
+                _metadata.insert ("xesam:album", new Variant.string (music?.album ?? ""));
+                _music_hash = direct_hash (music);
+            } else {
+                _music_hash = int64.MIN;
+            }
         }
 
         private void on_music_cover_parsed (Music music, string? uri) {

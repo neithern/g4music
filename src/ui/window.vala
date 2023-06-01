@@ -138,9 +138,9 @@ namespace G4 {
             app.index_changed.connect (on_index_changed);
             app.music_changed.connect (on_music_changed);
             app.music_tag_parsed.connect (on_music_tag_parsed);
-            app.player.state_changed.connect (on_player_state_changed);
             app.music_store.loading_changed.connect (on_loading_changed);
             app.music_store.parse_progress.connect ((percent) => index_title.label = @"$percent%");
+            app.player.state_changed.connect (on_player_state_changed);
         }
 
         public uint background_blur {
@@ -277,14 +277,12 @@ namespace G4 {
             spinner.spinning = loading;
             spinner.visible = loading;
             index_title.label = loading ? _loading_text : @"$(index+1)/$(size)";
+            update_music_info (app.current_music);
+        }
 
-            var empty = !loading && size == 0 && app.current_music == null;
-            if (empty) {
-                update_cover_paintables (new Music.empty (), app.icon);
-                update_initial_label (app.music_folder);
-            }
-            initial_label.visible = empty;
-            music_title.visible = !empty;
+        private void on_music_changed (Music? music) {
+            update_music_info (music);
+            action_set_enabled (ACTION_APP + ACTION_PLAY, music != null);
         }
 
         private bool on_music_folder_clicked (string uri) {
@@ -293,43 +291,6 @@ namespace G4 {
                 (dir) => update_initial_label (dir.get_uri ()),
                 (obj, res) => pick_music_folder_async.end (res));
             return true;
-        }
-
-        private Adw.Animation? _scale_animation = null;
-
-        private void on_player_state_changed (Gst.State state) {
-            if (state >= Gst.State.PAUSED) {
-                var scale_paintable = (!)(music_cover.paintable as ScalePaintable);
-                var target = new Adw.CallbackAnimationTarget ((value) => scale_paintable.scale = value);
-                _scale_animation?.pause ();
-                _scale_animation = new Adw.TimedAnimation (music_cover,  scale_paintable.scale,
-                                            state == Gst.State.PLAYING ? 1 : 0.8, 500, target);
-                _scale_animation?.play ();
-            }
-        }
-
-        private void on_search_text_changed () {
-            string text = search_entry.text;
-            if (text.ascii_ncasecmp ("album=", 6) == 0) {
-                _search_property = text.substring (6);
-                _search_type = SearchType.ALBUM;
-            } else if (text.ascii_ncasecmp ("artist=", 7) == 0) {
-                _search_property = text.substring (7);
-                _search_type = SearchType.ARTIST;
-            } else if (text.ascii_ncasecmp ("title=", 6) == 0) {
-                _search_property = text.substring (6);
-                _search_type = SearchType.TITLE;
-            } else {
-                _search_type = SearchType.ALL;
-            }
-            _search_text = text;
-            update_music_filter ();
-        }
-
-        private void on_music_changed (Music music) {
-            update_music_info (music);
-            action_set_enabled (ACTION_APP + ACTION_PLAY, true);
-            print ("Play: %s\n", Uri.unescape_string (music.uri) ?? music.uri);
         }
 
         private async void on_music_tag_parsed (Music music, Gst.Sample? image) {
@@ -364,6 +325,37 @@ namespace G4 {
                     update_cover_paintables (music, paintable);
                     yield app.parse_music_cover_async ();
                 }
+            }
+        }
+
+        private void on_search_text_changed () {
+            string text = search_entry.text;
+            if (text.ascii_ncasecmp ("album=", 6) == 0) {
+                _search_property = text.substring (6);
+                _search_type = SearchType.ALBUM;
+            } else if (text.ascii_ncasecmp ("artist=", 7) == 0) {
+                _search_property = text.substring (7);
+                _search_type = SearchType.ARTIST;
+            } else if (text.ascii_ncasecmp ("title=", 6) == 0) {
+                _search_property = text.substring (6);
+                _search_type = SearchType.TITLE;
+            } else {
+                _search_type = SearchType.ALL;
+            }
+            _search_text = text;
+            update_music_filter ();
+        }
+
+        private Adw.Animation? _scale_animation = null;
+
+        private void on_player_state_changed (Gst.State state) {
+            if (state >= Gst.State.PAUSED) {
+                var scale_paintable = (!)(music_cover.paintable as ScalePaintable);
+                var target = new Adw.CallbackAnimationTarget ((value) => scale_paintable.scale = value);
+                _scale_animation?.pause ();
+                _scale_animation = new Adw.TimedAnimation (music_cover,  scale_paintable.scale,
+                                            state == Gst.State.PLAYING ? 1 : 0.8, 500, target);
+                _scale_animation?.play ();
             }
         }
 
@@ -411,12 +403,24 @@ namespace G4 {
             }
         }
 
-        private void update_music_info (Music music) {
-            music_album.label = music.album;
-            music_artist.label = music.artist;
-            music_title.label = music.title;
-            _mini_bar.title = music.title;
-            this.title = music.get_artist_and_title ();
+        private void update_music_info (Music? music) {
+            var app = (Application) application;
+            var size = app.music_list.get_n_items ();
+            var empty = !app.is_loading_store && size == 0 && music == null;
+            if (empty) {
+                update_cover_paintables (new Music.empty (), app.icon);
+                update_initial_label (app.music_folder);
+            }
+            initial_label.visible = empty;
+
+            music_album.visible = !empty;
+            music_artist.visible = !empty;
+            music_title.visible = !empty;
+            music_album.label = music?.album ?? "";
+            music_artist.label = music?.artist ?? "";
+            music_title.label = music?.title ?? "";
+            _mini_bar.title = music?.title ?? "";
+            this.title = music?.get_artist_and_title () ?? app.name;
         }
 
         private void update_music_filter () {
