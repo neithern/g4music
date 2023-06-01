@@ -80,15 +80,7 @@ namespace G4 {
 
             app.bind_property ("sort-mode", this, "sort-mode", BindingFlags.SYNC_CREATE);
 
-            search_btn.toggled.connect (() => {
-                if (search_btn.active) {
-                    search_entry.grab_focus ();
-                    if (leaflet.folded) {
-                        leaflet.navigate (Adw.NavigationDirection.BACK);
-                    }
-                }
-                update_music_filter ();
-            });
+            search_btn.toggled.connect (on_search_btn_toggled);
             search_bar.key_capture_widget = this.content;
             search_entry.search_changed.connect (on_search_text_changed);
 
@@ -123,14 +115,9 @@ namespace G4 {
             action_set_enabled (ACTION_APP + ACTION_NEXT, false);
 
             list_view.model = new Gtk.NoSelection (app.music_list);
-            list_view.activate.connect ((index) => {
-                app.current_item = (int) index;
-                app.player.play ();
-            });
+            list_view.activate.connect ((index) => app.current_item = (int) index);
 
-            music_title.label = app.name;
             initial_label.activate_link.connect (on_music_folder_clicked);
-
             if (app.is_loading_store) {
                 //  Make a call to show start loading
                 on_loading_changed (true);
@@ -326,6 +313,16 @@ namespace G4 {
                     yield app.parse_music_cover_async ();
                 }
             }
+        }
+
+        private void on_search_btn_toggled () {
+            if (search_btn.active) {
+                search_entry.grab_focus ();
+                if (leaflet.folded) {
+                    leaflet.navigate (Adw.NavigationDirection.BACK);
+                }
+            }
+            update_music_filter ();
         }
 
         private void on_search_text_changed () {
