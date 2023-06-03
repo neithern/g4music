@@ -45,10 +45,9 @@ namespace G4 {
 
         public bool load (Queue<File> stack, GenericArray<Object> musics) {
             try {
-                var fis = _file.read ();
-                var bis = new BufferedInputStream (fis);
-                bis.buffer_size = 16384;
-                var dis = new DataInputStream (bis);
+                var mapped = new MappedFile (_file.get_path () ?? "", false);
+                var mis = new MemoryInputStream.from_bytes (mapped.get_bytes ());
+                var dis = new DataInputStream (mis);
 
                 var magic = dis.read_uint32 ();
                 if (magic != MAGIC)
@@ -72,7 +71,7 @@ namespace G4 {
                 }
                 return true;
             } catch (Error e) {
-                if (e.code != IOError.NOT_FOUND)
+                if (e.code != FileError.NOENT)
                     print ("Load dirs error: %s\n", e.message);
             }
             return false;
