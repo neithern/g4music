@@ -15,7 +15,7 @@ namespace G4 {
         private string _album_key = "";
         private string _artist_key = "";
         private string _title_key = "";
-        public string? _cover_key = null;
+        private string? _cover_key = null;
         private int _order = 0;
 
         public Music (string uri, string title, int64 time) {
