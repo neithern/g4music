@@ -81,25 +81,25 @@ namespace G4 {
             return changed;
         }
 
-        public Music.deserialize (DataInputStream dis) throws IOError {
-            album = read_string (dis);
-            artist = read_string (dis);
-            title = read_string (dis);
-            track = dis.read_int32 ();
-            modified_time = dis.read_int64 ();
-            uri = read_string (dis);
+        public Music.deserialize (DataInputBytes dis) throws IOError {
+            album = dis.read_string ();
+            artist = dis.read_string ();
+            title = dis.read_string ();
+            track = (int) dis.read_uint32 ();
+            modified_time = (int64) dis.read_uint64 ();
+            uri = dis.read_string ();
             _album_key = album.collate_key_for_filename ();
             _artist_key = artist.collate_key_for_filename ();
             _title_key = title.collate_key_for_filename ();
         }
 
-        public void serialize (DataOutputStream dos) throws IOError {
-            write_string (dos, album);
-            write_string (dos, artist);
-            write_string (dos, title);
-            dos.put_int32 (track);
-            dos.put_int64 (modified_time);
-            write_string (dos, uri);
+        public void serialize (DataOutputBytes dos) throws IOError {
+            dos.write_string (album);
+            dos.write_string (artist);
+            dos.write_string (title);
+            dos.write_uint32 (track);
+            dos.write_uint64 (modified_time);
+            dos.write_string (uri);
         }
 
         public void parse_tags () {

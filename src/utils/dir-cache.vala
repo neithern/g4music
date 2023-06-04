@@ -46,22 +46,21 @@ namespace G4 {
         public bool load (Queue<File> stack, GenericArray<Object> musics) {
             try {
                 var mapped = new MappedFile (_file.get_path () ?? "", false);
-                var mis = new MemoryInputStream.from_bytes (mapped.get_bytes ());
-                var dis = new DataInputStream (mis);
+                var dis = new DataInputBytes (mapped.get_bytes ());
 
                 var magic = dis.read_uint32 ();
                 if (magic != MAGIC)
                     throw new IOError.INVALID_DATA (@"Magic:$magic");
                 var base_name = _dir.get_basename () ?? "";
-                var bname = read_string (dis);
+                var bname = dis.read_string ();
                 if (bname != base_name)
                     throw new IOError.INVALID_DATA (@"Basename:$bname!=$base_name");
 
-                var count = read_size (dis);
+                var count = dis.read_size ();
                 for (var i = 0; i < count; i++) {
                     var type = dis.read_byte ();
-                    var name = read_string (dis);
-                    var time = dis.read_int64 ();
+                    var name = dis.read_string ();
+                    var time = (int64) dis.read_uint64 ();
                     if (type == FileType.DIRECTORY) {
                         stack.push_head (_dir.get_child (name));
                     } else {
@@ -84,17 +83,16 @@ namespace G4 {
                 if (!exists)
                     parent?.make_directory_with_parents ();
                 var fos = _file.replace (null, false, FileCreateFlags.NONE);
-                var bos = new BufferedOutputStream (fos);
-                bos.buffer_size = 16384;
-                var dos = new DataOutputStream (bos);
-                dos.put_uint32 (MAGIC);
-                write_string (dos, _dir.get_basename () ?? "");
-                write_size (dos, _children.length);
+                var dos = new DataOutputBytes ();
+                dos.write_uint32 (MAGIC);
+                dos.write_string (_dir.get_basename () ?? "");
+                dos.write_size (_children.length);
                 foreach (var child in _children) {
-                    dos.put_byte (child.type);
-                    write_string (dos, child.name);
-                    dos.put_int64 (child.time);
+                    dos.write_byte (child.type);
+                    dos.write_string (child.name);
+                    dos.write_uint64 (child.time);
                 }
+                dos.write_to (fos);
             } catch (Error e) {
                 print ("Save dirs error: %s\n", e.message);
             }

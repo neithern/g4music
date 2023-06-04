@@ -4,3 +4,9 @@ namespace Config {
     public const string VERSION;
     public const string LOCALEDIR;
 }
+
+[CCode (cprefix = "")]
+namespace GLib {
+    [CCode (cname = "g_strndup")]
+    public string strndup (char* str, size_t n);
+}

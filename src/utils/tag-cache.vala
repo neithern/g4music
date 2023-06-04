@@ -53,13 +53,12 @@ namespace G4 {
         public void load () {
             try {
                 var mapped = new MappedFile (_file.get_path () ?? "", false);
-                var mis = new MemoryInputStream.from_bytes (mapped.get_bytes ());
-                var dis = new DataInputStream (mis);
+                var dis = new DataInputBytes (mapped.get_bytes ());
                 var magic = dis.read_uint32 ();
                 if (magic != MAGIC)
                     throw new IOError.INVALID_DATA (@"Magic=$magic");
 
-                var count = read_size (dis);
+                var count = dis.read_size ();
                 lock (_cache) {
                     for (var i = 0; i < count; i++) {
                         var music = new Music.deserialize (dis);
@@ -80,12 +79,10 @@ namespace G4 {
                 if (!exists)
                     parent?.make_directory_with_parents ();
                 var fos = _file.replace (null, false, FileCreateFlags.NONE);
-                var bos = new BufferedOutputStream (fos);
-                bos.buffer_size = 16384;
-                var dos = new DataOutputStream (bos);
-                dos.put_uint32 (MAGIC);
+                var dos = new DataOutputBytes ();
+                dos.write_uint32 (MAGIC);
                 lock (_cache) {
-                    write_size (dos, _cache.length);
+                    dos.write_size (_cache.length);
                     _cache.for_each ((key, music) => {
                         try {
                             music.serialize (dos);
@@ -93,7 +90,7 @@ namespace G4 {
                         }
                     });
                 }
-                _modified = false;
+                _modified = !dos.write_to (fos);
             } catch (Error e) {
                 print ("Save tags error: %s\n", e.message);
             }
