@@ -54,7 +54,7 @@ namespace G4 {
 
         public string read_string () throws IOError {
             var size = (int) read_size ();
-            if (size < 0 || size > 0xfffffff || _pos + size > _length) { // 28 bits
+            if (size < 0 || _pos + size < 0 || _pos + size > _length) {
                 throw new IOError.INVALID_ARGUMENT (@"Size:$_pos+$size>$_length");
             } else if (size > 0) {
                 var value = strndup ((char*) _data + _pos, size);
