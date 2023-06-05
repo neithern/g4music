@@ -105,11 +105,15 @@ namespace G4 {
         }
 
         public void add_to_cache (Music music) {
-            _tag_cache.add (music);
+            lock (_tag_cache) {
+                _tag_cache.add (music);
+            }
         }
 
         public Music? find_cache (string uri) {
-            return _tag_cache[uri];
+            lock (_tag_cache) {
+                return _tag_cache[uri];
+            }
         }
 
         public void clear () {
@@ -167,10 +171,11 @@ namespace G4 {
                 foreach (var file in files) {
                     add_file (file, dirs, musics);
                 }
-                print ("Find %u files in %d folders in %g ms\n", musics.length, dirs.length,
-                    (get_monotonic_time () - begin_time) / 1e3);
+                print ("Find %u files in %d folders in %lld ms\n", musics.length, dirs.length,
+                    (get_monotonic_time () - begin_time + 500) / 1000);
 
                 var queue = new AsyncQueue<Music?> ();
+                _tag_cache.wait_loading ();
                 for (var i = musics.length - 1; i >= 0; i--) {
                     var music = (Music) musics[i];
                     if (ignore_exists) lock (_music_set) {
@@ -192,7 +197,7 @@ namespace G4 {
                         Music? music;
                         while ((music = queue.try_pop ()) != null) {
                             music?.parse_tags ();
-                            _tag_cache.add ((!)music);
+                            add_to_cache ((!)music);
                             progress.step ();
                         }
                     }, num_tasks);
@@ -202,8 +207,8 @@ namespace G4 {
                     Music.shuffle_order (musics);
                 }
                 musics.sort ((CompareFunc<Object>) _compare);
-                print ("Load %u musics in %g ms\n", musics.length,
-                        (get_monotonic_time () - begin_time) / 1e3);
+                print ("Load %u musics in %lld ms\n", musics.length,
+                        (get_monotonic_time () - begin_time + 500) / 1000);
             });
             _store.splice (_store.get_n_items (), 0, musics.data);
             loading_changed (false);
