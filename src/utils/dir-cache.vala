@@ -1,15 +1,5 @@
 namespace G4 {
 
-    public class DirInfo {
-        public File dir;
-        public int64 time;
-
-        public DirInfo (File file, FileInfo? info = null) {
-            dir = file;
-            time = info?.get_modification_date_time ()?.to_unix () ?? 0;
-        }
-    }
-
     public class DirCache : Object {
         private static uint32 MAGIC = 0x44495243; //  'DIRC'
 
@@ -30,12 +20,18 @@ namespace G4 {
         private int64 _time;
         private GenericArray<ChildInfo> _children = new GenericArray<ChildInfo> (128);
 
-        public DirCache (File dir, int64 time = 0) {
+        public DirCache (File dir, FileInfo? info = null) {
             _dir = dir;
-            _time = time;
             var cache_dir = Environment.get_user_cache_dir ();
             var name = Checksum.compute_for_string (ChecksumType.MD5, dir.get_uri ());
             _file = File.new_build_filename (cache_dir, Config.APP_ID, "dir-cache", name);
+            _time = info?.get_modification_date_time ()?.to_unix () ?? 0;
+        }
+
+        public File dir {
+            get {
+                return _dir;
+            }
         }
 
         public bool check_valid () {
@@ -57,7 +53,7 @@ namespace G4 {
             _children.add (child);
         }
 
-        public bool load (Queue<DirInfo> stack, GenericArray<Object> musics) {
+        public bool load (Queue<DirCache> stack, GenericArray<Object> musics) {
             try {
                 var mapped = new MappedFile (_file.get_path () ?? "", false);
                 var dis = new DataInputBytes (mapped.get_bytes ());
@@ -77,7 +73,7 @@ namespace G4 {
                     var time = (int64) dis.read_uint64 ();
                     var child = _dir.get_child (name);
                     if (type == FileType.DIRECTORY) {
-                        stack.push_head (new DirInfo (child));
+                        stack.push_head (new DirCache (child));
                     } else {
                         musics.add (new Music (child.get_uri (), name, time));
                     }
