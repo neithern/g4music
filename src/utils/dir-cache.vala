@@ -1,5 +1,15 @@
 namespace G4 {
 
+    public class DirInfo {
+        public File dir;
+        public int64 time;
+
+        public DirInfo (File file, int64 mtime = 0) {
+            dir = file;
+            time = mtime;
+        }
+    }
+
     public class DirCache : Object {
         private static uint32 MAGIC = 0x44495243; //  'DIRC'
 
@@ -26,12 +36,14 @@ namespace G4 {
             _file = File.new_build_filename (cache_dir, Config.APP_ID, "dir-cache", name);
         }
 
-        public bool check_valid () {
+        public bool check_valid (int64 cached_mtime = 0) {
             try {
-                var dt = _dir.query_info (FileAttribute.TIME_MODIFIED, FileQueryInfoFlags.NONE).get_modification_date_time ();
-                var dt2 = _file.query_info (FileAttribute.TIME_MODIFIED, FileQueryInfoFlags.NONE).get_modification_date_time ();
-                if (dt != null && dt2 != null)
-                    return ((!)dt).compare ((!)dt2) <= 0;
+                var info = _dir.query_info (FileAttribute.TIME_MODIFIED, FileQueryInfoFlags.NONE);
+                if (cached_mtime == 0) {
+                    var info2 = _file.query_info (FileAttribute.TIME_MODIFIED, FileQueryInfoFlags.NONE);
+                    cached_mtime = info2.get_modification_date_time ()?.to_unix () ?? 0;
+                }
+                return cached_mtime >= (info.get_modification_date_time ()?.to_unix () ?? 0);
             } catch (Error e) {
             }
             return false;
@@ -43,7 +55,7 @@ namespace G4 {
             _children.add (child);
         }
 
-        public bool load (Queue<File> stack, GenericArray<Object> musics) {
+        public bool load (Queue<DirInfo> stack, GenericArray<Object> musics) {
             try {
                 var mapped = new MappedFile (_file.get_path () ?? "", false);
                 var dis = new DataInputBytes (mapped.get_bytes ());
@@ -54,18 +66,18 @@ namespace G4 {
                 var base_name = _dir.get_basename () ?? "";
                 var bname = dis.read_string ();
                 if (bname != base_name)
-                    throw new IOError.INVALID_DATA (@"Basename:$bname!=$base_name");
+                    throw new IOError.INVALID_DATA (@"Name:$bname!=$base_name");
 
                 var count = dis.read_size ();
                 for (var i = 0; i < count; i++) {
                     var type = dis.read_byte ();
                     var name = dis.read_string ();
                     var time = (int64) dis.read_uint64 ();
+                    var child = _dir.get_child (name);
                     if (type == FileType.DIRECTORY) {
-                        stack.push_head (_dir.get_child (name));
+                        stack.push_head (new DirInfo (child, time));
                     } else {
-                        var music = new Music (_dir.get_child (name).get_uri (), name, time);
-                        musics.add (music);
+                        musics.add (new Music (child.get_uri (), name, time));
                     }
                 }
                 return true;

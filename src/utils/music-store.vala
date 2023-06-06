@@ -281,12 +281,12 @@ namespace G4 {
             try {
                 var info = file.query_info (ATTRIBUTES, FileQueryInfoFlags.NONE);
                 if (info.get_file_type () == FileType.DIRECTORY) {
-                    var stack = new Queue<File> ();
-                    stack.push_head (file);
+                    var stack = new Queue<DirInfo> ();
+                    stack.push_head (new DirInfo (file));
                     while (stack.length > 0) {
-                        var dir = stack.pop_head ();
-                        dirs.add (dir);
-                        add_directory (dir, stack, musics);
+                        var di = stack.pop_head ();
+                        dirs.add (di.dir);
+                        add_directory (di, stack, musics);
                     }
                 } else {
                     var music = Music.from_info (file, info);
@@ -298,9 +298,10 @@ namespace G4 {
             }
         }
 
-        private static void add_directory (File dir, Queue<File> stack, GenericArray<Object> musics) {
+        private static void add_directory (DirInfo di, Queue<DirInfo> stack, GenericArray<Object> musics) {
+            var dir = di.dir;
             var cache = new DirCache (dir);
-            if (cache.check_valid () && cache.load (stack, musics)) {
+            if (cache.check_valid (di.time) && cache.load (stack, musics)) {
                 return;
             }
 
@@ -313,7 +314,7 @@ namespace G4 {
                         continue;
                     } else if (info.get_file_type () == FileType.DIRECTORY) {
                         var child = dir.get_child (info.get_name ());
-                        stack.push_head (child);
+                        stack.push_head (new DirInfo (child));
                         cache.add_child (info);
                     } else {
                         var file = dir.get_child (info.get_name ());
