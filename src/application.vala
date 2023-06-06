@@ -144,6 +144,9 @@ namespace G4 {
         }
 
         public override void open (File[] files, string hint) {
+            var window = (active_window as Window) ?? new Window (this);
+            window.present ();
+
             load_musics_async.begin (files, (obj, res) => {
                 var play_item = load_musics_async.end (res);
                 run_idle_once (() => {
@@ -152,9 +155,6 @@ namespace G4 {
                         _player.play ();
                 });
             });
-
-            var window = (active_window as Window) ?? new Window (this);
-            window.present ();
         }
 
         public override void shutdown () {

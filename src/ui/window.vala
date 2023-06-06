@@ -118,10 +118,7 @@ namespace G4 {
             list_view.activate.connect ((index) => app.current_item = (int) index);
 
             initial_label.activate_link.connect (on_music_folder_clicked);
-            if (app.is_loading_store) {
-                //  Make a call to show start loading
-                on_loading_changed (true);
-            }
+
             app.index_changed.connect (on_index_changed);
             app.music_changed.connect (on_music_changed);
             app.music_tag_parsed.connect (on_music_tag_parsed);
