@@ -4,9 +4,9 @@ namespace G4 {
         public File dir;
         public int64 time;
 
-        public DirInfo (File file, int64 mtime = 0) {
+        public DirInfo (File file, FileInfo? info = null) {
             dir = file;
-            time = mtime;
+            time = info?.get_modification_date_time ()?.to_unix () ?? 0;
         }
     }
 
@@ -27,23 +27,25 @@ namespace G4 {
 
         private File _dir;
         private File _file;
-        private GenericArray<ChildInfo> _children = new GenericArray<ChildInfo> ();
+        private int64 _time;
+        private GenericArray<ChildInfo> _children = new GenericArray<ChildInfo> (128);
 
-        public DirCache (File dir) {
+        public DirCache (File dir, int64 time = 0) {
             _dir = dir;
+            _time = time;
             var cache_dir = Environment.get_user_cache_dir ();
             var name = Checksum.compute_for_string (ChecksumType.MD5, dir.get_uri ());
             _file = File.new_build_filename (cache_dir, Config.APP_ID, "dir-cache", name);
         }
 
-        public bool check_valid (int64 cached_mtime = 0) {
+        public bool check_valid () {
             try {
-                var info = _dir.query_info (FileAttribute.TIME_MODIFIED, FileQueryInfoFlags.NONE);
-                if (cached_mtime == 0) {
-                    var info2 = _file.query_info (FileAttribute.TIME_MODIFIED, FileQueryInfoFlags.NONE);
-                    cached_mtime = info2.get_modification_date_time ()?.to_unix () ?? 0;
+                if (_time == 0) {
+                    var info = _dir.query_info (FileAttribute.TIME_MODIFIED, FileQueryInfoFlags.NONE);
+                    _time = info.get_modification_date_time ()?.to_unix () ?? 0;
                 }
-                return cached_mtime >= (info.get_modification_date_time ()?.to_unix () ?? 0);
+                var info = _file.query_info (FileAttribute.TIME_MODIFIED, FileQueryInfoFlags.NONE);
+                return _time <= (info.get_modification_date_time ()?.to_unix () ?? 0);
             } catch (Error e) {
             }
             return false;
@@ -75,7 +77,7 @@ namespace G4 {
                     var time = (int64) dis.read_uint64 ();
                     var child = _dir.get_child (name);
                     if (type == FileType.DIRECTORY) {
-                        stack.push_head (new DirInfo (child, time));
+                        stack.push_head (new DirInfo (child));
                     } else {
                         musics.add (new Music (child.get_uri (), name, time));
                     }
