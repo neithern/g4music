@@ -183,10 +183,8 @@ namespace G4 {
                 return _current_item;
             }
             set {
-                var playing = _player.state == Gst.State.PLAYING;
                 var music = get_next_music (ref value);
                 if (music != _current_music) {
-                    _player.state = Gst.State.READY;
                     current_music = music;
                 }
                 if (_current_item != value) {
@@ -197,7 +195,6 @@ namespace G4 {
                 lock (_next_uri) {
                     _next_uri.assign (next_music?.uri ?? "");
                 }
-                _player.state = playing ? Gst.State.PLAYING : Gst.State.PAUSED;
             }
         }
 
@@ -206,12 +203,16 @@ namespace G4 {
                 return _current_music;
             }
             set {
+                var playing = _player.state == Gst.State.PLAYING;
                 if (_current_music != value) {
                     _current_music = value;
-                    _player.uri = value?.uri;
+                    _player.state = Gst.State.READY;
+                    var uri = _player.uri = value?.uri;
                     music_changed (value);
-                    _settings?.set_string ("played-uri", value?.uri ?? "");
+                    if (uri != null)
+                        _settings?.set_string ("played-uri", (!)uri);
                 }
+                _player.state = playing ? Gst.State.PLAYING : Gst.State.PAUSED;
             }
         }
 
@@ -505,7 +506,7 @@ namespace G4 {
         }
 
         private void on_music_items_changed (uint position, uint removed, uint added) {
-            if (added == 0 && removed > 0 && _current_item >= (int) position) {
+            if (removed > 0 && _current_item >= (int) position) {
                 current_item = (int) position;
             } else if (added > 0 || removed > 0) {
                 index_changed (_current_item, _music_list.get_n_items ());
