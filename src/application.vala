@@ -97,7 +97,8 @@ namespace G4 {
             _music_list.model = _music_store.store;
             _music_list.items_changed.connect (on_music_items_changed);
             _settings?.bind ("sort-mode", this, "sort-mode", SettingsBindFlags.DEFAULT);
-            _settings?.bind ("monitor-changes", _music_store, "monitor-changes", SettingsBindFlags.DEFAULT);            _music_store.monitor_changes = _settings?.get_boolean ("monitor-changes") ?? false;
+            _settings?.bind ("monitor-changes", _music_store, "monitor-changes", SettingsBindFlags.DEFAULT);
+            _music_store.monitor_changes = _settings?.get_boolean ("monitor-changes") ?? false;
             _music_store.loading_changed.connect ((loading) => _loading_store = loading);
 
             _thumbnailer.tag_updated.connect (_music_store.add_to_cache);
