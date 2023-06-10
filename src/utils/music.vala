@@ -199,7 +199,7 @@ namespace G4 {
         }
 
         public static bool equal (Music m1, Music m2) {
-            return str_equal (m1.uri, m2.uri);
+            return m1 == m2 || str_equal (m1.uri, m2.uri);
         }
 
         public static uint hash (Music music) {

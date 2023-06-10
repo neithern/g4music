@@ -671,7 +671,7 @@ namespace G4 {
         private async void on_tag_parsed (string? album, string? artist, string? title, Gst.Sample? image) {
             _cover_image = image;
             if (_current_music != null) {
-                music_tag_parsed ((!)current_music, image);
+                music_tag_parsed ((!)_current_music, image);
             }
         }
     }
