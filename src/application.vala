@@ -342,7 +342,6 @@ namespace G4 {
             int mode = 2;
             int.try_parse (value, out mode, null, 10);
             sort_mode = (SortMode) mode;
-            find_current_item ();
         }
 
         public void toggle_search () {
@@ -358,19 +357,11 @@ namespace G4 {
                 sort_mode = (SortMode) (sort_mode + 1);
         }
 
-        public bool find_current_item () {
-            if (_music_list.get_item (_current_item) == _current_music)
-                return true;
-
-            //  find current item
-            var item = find_music_item (_current_music);
-            if (item != -1) {
-                current_item = item;
-                return true;
+        public void find_current_item () {
+            if (_music_list.get_item (_current_item) != _current_music) {
+                var item = find_music_item (_current_music);
+                update_current_item (item);
             }
-
-            update_current_item (-1);
-            return false;
         }
 
         private void update_current_item (int item) {
@@ -507,13 +498,8 @@ namespace G4 {
         }
 
         private void on_music_items_changed (uint position, uint removed, uint added) {
-            if (removed == added) {
-                //  Nothing to do
-            } else if (removed > 0 && _current_item >= (int) position) {
-                current_item = (int) position;
-            } else if (added > 0 || removed > 0) {
-                index_changed (_current_item, _music_list.get_n_items ());
-            }
+            if (removed != 0 || added != 0)
+                run_idle_once (find_current_item);
         }
 
         private File? _cover_tmp_file = null;

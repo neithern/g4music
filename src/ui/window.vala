@@ -354,8 +354,7 @@ namespace G4 {
         }
 
         private void scroll_to_item (int index) {
-            //  It is more safe to run in idle, because it may be called in some callback
-            run_idle_once (() => list_view.activate_action_variant ("list.scroll-to-item", new Variant.uint32 (index)));
+            list_view.activate_action_variant ("list.scroll-to-item", new Variant.uint32 (index));
         }
 
         private void setup_drop_target () {
@@ -438,7 +437,6 @@ namespace G4 {
             } else {
                 app.music_list.set_filter (null);
             }
-            app.find_current_item ();
         }
 
         private Adw.Animation? _fade_animation = null;
