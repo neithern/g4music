@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-29 05:20+0800\n"
-"PO-Revision-Date: 2023-05-25 01:08+0800\n"
+"POT-Creation-Date: 2023-06-10 20:56+0800\n"
+"PO-Revision-Date: 2023-06-10 20:58+0800\n"
 "Last-Translator: Nanling <neithern@outlook.com>\n"
 "Language-Team: Chinese - China <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0\n"
 "X-Generator: Gtranslator 42.0\n"
 
-#: data/app.desktop.in:3 src/application.vala:241 src/main.vala:24
+#: data/app.desktop.in:3 src/application.vala:280 src/main.vala:24
 msgid "G4Music"
 msgstr "G4音樂"
 
@@ -33,8 +33,8 @@ msgid "Play music"
 msgstr "播放音樂"
 
 #: data/app.desktop.in:12
-msgid "music;sound;player;media;audio;playlist;"
-msgstr "音樂;聲音;播放器;媒體;音訊;播放清單;"
+msgid "music;sound;player;media;audio;"
+msgstr "music;sound;player;media;audio;音樂;聲音;播放器;媒體;音訊;"
 
 #: src/gtk/help-overlay.ui:11
 msgctxt "shortcut window"
@@ -134,7 +134,7 @@ msgstr "顯示音訊峰值"
 msgid "Display characters"
 msgstr "顯示的字元"
 
-#: src/gtk/preferences.ui:116 src/application.vala:439
+#: src/gtk/preferences.ui:116 src/application.vala:448
 msgid "Keep playing after window closed"
 msgstr "關閉視窗後繼續播放"
 
@@ -170,103 +170,103 @@ msgstr "排序方式"
 msgid "Back"
 msgstr "返回"
 
-#: src/gtk/window.ui:212
-msgid "_Export Cover"
-msgstr "輸出封面(_E)"
-
-#: src/gtk/window.ui:217
-msgid "Show _Cover File"
-msgstr "顯示封面檔案(_C)"
-
-#: src/gtk/window.ui:222 src/ui/music-entry.vala:124
-msgid "_Show Music File"
-msgstr "顯示音樂檔案(_S)"
-
-#: src/gtk/window.ui:231
+#: src/gtk/window.ui:206
 msgid "_Reload List"
 msgstr "更新清單(_R)"
 
-#: src/gtk/window.ui:237
+#: src/gtk/window.ui:212
 msgid "_Preferences"
 msgstr "偏好設定(_P)"
 
-#: src/gtk/window.ui:241
+#: src/gtk/window.ui:216
 msgid "_Keyboard Shortcuts"
 msgstr "快捷鍵(_K)"
 
-#: src/gtk/window.ui:245
+#: src/gtk/window.ui:220
 msgid "_About"
 msgstr "關於(_A)"
 
-#: src/gtk/window.ui:254
+#: src/gtk/window.ui:229
 msgid "By Album"
 msgstr "依專輯"
 
-#: src/gtk/window.ui:259
+#: src/gtk/window.ui:234
 msgid "By Artist"
 msgstr "依藝術家"
 
-#: src/gtk/window.ui:264
+#: src/gtk/window.ui:239
 msgid "By Title"
 msgstr "依歌名"
 
-#: src/gtk/window.ui:269
+#: src/gtk/window.ui:244
 msgid "By Date"
 msgstr "依日期"
 
-#: src/gtk/window.ui:274
+#: src/gtk/window.ui:249
 msgid "Shuffle"
 msgstr "亂序播放"
 
-#: src/application.vala:445
+#: src/application.vala:454
 msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr "一個快速、流暢、輕量，基於 GTK4 的音樂播放軟體。"
 
-#: src/application.vala:447
+#: src/application.vala:456
 msgid "translator-credits"
 msgstr "Julian"
 
-#: src/application.vala:648
+#: src/application.vala:664
 msgid "Keep playing"
 msgstr "持續播放"
 
-#: src/ui/music-entry.vala:121
+#: src/ui/music-entry.vala:125
 msgid "Play at Next"
 msgstr "插播"
 
-#: src/ui/music-entry.vala:122
-msgid "Show Album"
-msgstr "顯示專輯"
+#: src/ui/music-entry.vala:126 src/ui/window.vala:103
+msgid "Search Album"
+msgstr "搜尋專輯"
 
-#: src/ui/music-entry.vala:123
-msgid "Show Artist"
-msgstr "顯示藝術家"
+#: src/ui/music-entry.vala:127 src/ui/window.vala:104
+msgid "Search Artist"
+msgstr "搜尋藝術家"
 
-#: src/ui/play-bar.vala:80
+#: src/ui/music-entry.vala:128
+msgid "_Show Music File"
+msgstr "顯示音樂檔案(_S)"
+
+#: src/ui/music-entry.vala:130
+msgid "Show _Cover File"
+msgstr "顯示封面檔案(_C)"
+
+#: src/ui/music-entry.vala:132
+msgid "_Export Cover"
+msgstr "輸出封面(_E)"
+
+#: src/ui/play-bar.vala:76
 msgid "Repeat Music"
 msgstr "單曲循環"
 
-#: src/ui/play-bar.vala:90
+#: src/ui/play-bar.vala:86
 msgid "Play Previous"
 msgstr "播放上一首"
 
-#: src/ui/play-bar.vala:96
+#: src/ui/play-bar.vala:92
 msgid "Play/Pause"
 msgstr "播放/暫停"
 
-#: src/ui/play-bar.vala:103
+#: src/ui/play-bar.vala:99
 msgid "Play Next"
 msgstr "播放下一首"
 
-#: src/ui/preferences.vala:83
+#: src/ui/preferences.vala:73
 msgid "Always"
 msgstr "總是"
 
-#: src/ui/preferences.vala:85
+#: src/ui/preferences.vala:75
 msgid "Art Only"
 msgstr "僅封面"
 
-#: src/ui/preferences.vala:87
+#: src/ui/preferences.vala:77
 msgid "Never"
 msgstr "從不"
 
@@ -278,7 +278,7 @@ msgstr "音量："
 msgid "Loading..."
 msgstr "正在載入…"
 
-#: src/ui/window.vala:283
+#: src/ui/window.vala:481
 msgid ""
 "Drag and drop music files here,\n"
 "or change music location: "
