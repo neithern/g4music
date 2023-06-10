@@ -123,8 +123,8 @@ namespace G4 {
         var menu = new Menu ();
         if (play_at_next)
             menu.append (_("Play at Next"), ACTION_APP + ACTION_PLAY_AT_NEXT);
-        menu.append (_("Show Album"), ACTION_APP + ACTION_SHOW_ALBUM);
-        menu.append (_("Show Artist"), ACTION_APP + ACTION_SHOW_ARTIST);
+        menu.append (_("Search Album"), ACTION_APP + ACTION_SEARCH_ALBUM);
+        menu.append (_("Search Artist"), ACTION_APP + ACTION_SEARCH_ARTIST);
         menu.append (_("_Show Music File"), ACTION_APP + ACTION_SHOW_MUSIC_FILES);
         if (music.cover_uri != null)
             menu.append (_("Show _Cover File"), ACTION_APP + ACTION_SHOW_COVER_FILE);

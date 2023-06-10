@@ -9,8 +9,8 @@ namespace G4 {
     public const string ACTION_NEXT = "next";
     public const string ACTION_RELOAD_LIST = "reload-list";
     public const string ACTION_SEARCH = "search";
-    public const string ACTION_SHOW_ALBUM = "show-album";
-    public const string ACTION_SHOW_ARTIST = "show-artist";
+    public const string ACTION_SEARCH_ALBUM = "search-album";
+    public const string ACTION_SEARCH_ARTIST = "search-artist";
     public const string ACTION_SHOW_COVER_FILE = "show-cover-file";
     public const string ACTION_SHOW_MUSIC_FILES = "show-music-file";
     public const string ACTION_SORT = "sort";
@@ -62,8 +62,8 @@ namespace G4 {
                 { ACTION_NEXT, play_next },
                 { ACTION_RELOAD_LIST, reload_music_store },
                 { ACTION_SEARCH, toggle_search },
-                { ACTION_SHOW_ALBUM, show_album },
-                { ACTION_SHOW_ARTIST, show_artist },
+                { ACTION_SEARCH_ALBUM, search_album },
+                { ACTION_SEARCH_ARTIST, search_artist },
                 { ACTION_SHOW_COVER_FILE, show_cover_file },
                 { ACTION_SHOW_MUSIC_FILES, show_music_file },
                 { ACTION_TOGGLE_SORT, toggle_sort },
@@ -614,14 +614,14 @@ namespace G4 {
             _show_uri_with_portal (music?.uri);
         }
 
-        private void show_album () {
+        private void search_album () {
             var album = (_popover_music ?? _current_music)?.album ?? "";
-            (active_window as Window)?.start_search ("album=" + album);
+            (active_window as Window)?.start_search ("album:" + album);
         }
 
-        private void show_artist () {
+        private void search_artist () {
             var artist = (_popover_music ?? _current_music)?.artist ?? "";
-            (active_window as Window)?.start_search ("artist=" + artist);
+            (active_window as Window)?.start_search ("artist:" + artist);
         }
 
         private void on_player_end () {

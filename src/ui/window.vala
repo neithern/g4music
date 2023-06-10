@@ -100,13 +100,13 @@ namespace G4 {
             _scale_cover_paintable.queue_draw.connect (music_cover.queue_draw);
             music_cover.paintable = _scale_cover_paintable;
 
-            music_album.tooltip_text = _("Show Album");
-            music_artist.tooltip_text = _("Show Artist");
+            music_album.tooltip_text = _("Search Album");
+            music_artist.tooltip_text = _("Search Artist");
             make_right_clickable (music_box, show_popover_menu);
             make_label_clickable (music_album).released.connect (
-                () => start_search ("album=" + music_album.label));
+                () => start_search ("album:" + music_album.label));
             make_label_clickable (music_artist).released.connect (
-                () => start_search ("artist=" + music_artist.label));
+                () => start_search ("artist:" + music_artist.label));
 
             var play_bar = new PlayBar ();
             music_box.append (play_bar);
@@ -202,6 +202,7 @@ namespace G4 {
 
         public void start_search (string text) {
             search_entry.text = text;
+            search_entry.select_region (text.index_of_char (':') + 1, -1);
             search_btn.active = true;
             leaflet.navigate (Adw.NavigationDirection.BACK);
         }
@@ -322,15 +323,31 @@ namespace G4 {
             update_music_filter ();
         }
 
+        private bool on_search_match (Object obj) {
+            var music = (Music) obj;
+            switch (_search_type) {
+                case SearchType.ALBUM:
+                    return _search_property.match_string (music.album, true);
+                case SearchType.ARTIST:
+                    return _search_property.match_string (music.artist, true);
+                case SearchType.TITLE:
+                    return _search_property.match_string (music.title, true);
+                default:
+                    return _search_text.match_string (music.album, true)
+                        || _search_text.match_string (music.artist, true)
+                        || _search_text.match_string (music.title, true);
+            }
+        }
+
         private void on_search_text_changed () {
             string text = search_entry.text;
-            if (text.ascii_ncasecmp ("album=", 6) == 0) {
+            if (text.ascii_ncasecmp ("album:", 6) == 0) {
                 _search_property = text.substring (6);
                 _search_type = SearchType.ALBUM;
-            } else if (text.ascii_ncasecmp ("artist=", 7) == 0) {
+            } else if (text.ascii_ncasecmp ("artist:", 7) == 0) {
                 _search_property = text.substring (7);
                 _search_type = SearchType.ARTIST;
-            } else if (text.ascii_ncasecmp ("title=", 6) == 0) {
+            } else if (text.ascii_ncasecmp ("title:", 6) == 0) {
                 _search_property = text.substring (6);
                 _search_type = SearchType.TITLE;
             } else {
@@ -418,22 +435,8 @@ namespace G4 {
 
         private void update_music_filter () {
             var app = (Application) application;
-            if (search_btn.active && _search_text.length > 0) {
-                app.music_list.filter = new Gtk.CustomFilter ((obj) => {
-                    var music = (Music) obj;
-                    switch (_search_type) {
-                        case SearchType.ALBUM:
-                            return music.album == _search_property;
-                        case SearchType.ARTIST:
-                            return music.artist == _search_property;
-                        case SearchType.TITLE:
-                            return music.title == _search_property;
-                        default:
-                            return _search_text.match_string (music.album, false)
-                                || _search_text.match_string (music.artist, false)
-                                || _search_text.match_string (music.title, false);
-                    }
-                });
+            if (search_btn.active) {
+                app.music_list.set_filter (new Gtk.CustomFilter (on_search_match));
             } else {
                 app.music_list.set_filter (null);
             }
