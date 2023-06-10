@@ -507,7 +507,9 @@ namespace G4 {
         }
 
         private void on_music_items_changed (uint position, uint removed, uint added) {
-            if (removed > 0 && _current_item >= (int) position) {
+            if (removed == added) {
+                //  Nothing to do
+            } else if (removed > 0 && _current_item >= (int) position) {
                 current_item = (int) position;
             } else if (added > 0 || removed > 0) {
                 index_changed (_current_item, _music_list.get_n_items ());
