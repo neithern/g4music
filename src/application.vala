@@ -189,7 +189,7 @@ namespace G4 {
                     current_music = music;
                 }
                 if (_current_item != value) {
-                    update_current_item (value);
+                    change_current_item (value);
                 }
                 var next = value + 1;
                 var next_music = get_next_music (ref next);
@@ -332,7 +332,7 @@ namespace G4 {
         public void reload_music_store () {
             if (!_loading_store) {
                 _music_store.clear ();
-                update_current_item (-1);
+                change_current_item (-1);
                 load_musics_async.begin ({}, (obj, res) => current_item = load_musics_async.end (res));
             }
         }
@@ -357,14 +357,16 @@ namespace G4 {
                 sort_mode = (SortMode) (sort_mode + 1);
         }
 
-        public void find_current_item () {
+        public bool update_current_item () {
             if (_music_list.get_item (_current_item) != _current_music) {
                 var item = find_music_item (_current_music);
-                update_current_item (item);
+                change_current_item (item);
+                return true;
             }
+            return false;
         }
 
-        private void update_current_item (int item) {
+        private void change_current_item (int item) {
             //  update _current_item but don't change current music
             var old_item = _current_item;
             _current_item = item;
@@ -498,8 +500,12 @@ namespace G4 {
         }
 
         private void on_music_items_changed (uint position, uint removed, uint added) {
-            if (removed != 0 || added != 0)
-                run_idle_once (find_current_item);
+            if (removed != 0 || added != 0) {
+                run_idle_once (() => {
+                    if (!update_current_item ())
+                        index_changed (_current_item, _music_list.get_n_items ());
+                });
+            }
         }
 
         private File? _cover_tmp_file = null;
