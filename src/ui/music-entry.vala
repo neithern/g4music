@@ -103,10 +103,11 @@ namespace G4 {
 
         private void show_popover (double x, double y) {
             var app = (Application) GLib.Application.get_default ();
-            var music = _music;
-            app.popover_music = music;
+            app.popover_music = _music;
             if (_music != null) {
-                var popover = create_music_popover_menu ((!)_music, x, y, music != app.current_music);
+                var music = (!)_music;
+                var has_cover = app.thumbnailer.find (music) is Gdk.Texture;
+                var popover = create_music_popover_menu (music, x, y, music != app.current_music, has_cover);
                 popover.set_parent (this);
                 popover.closed.connect (() => {
                     run_idle_once (() => {
