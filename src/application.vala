@@ -201,12 +201,16 @@ namespace G4 {
             set {
                 var playing = _player.state == Gst.State.PLAYING;
                 if (_current_music != value) {
+                    var uri_cur = _current_music?.uri;
+                    var uri_new = value?.uri;
+                    if (strcmp (uri_cur, uri_new) != 0) {
+                        _player.state = Gst.State.READY;
+                        _player.uri = uri_new;
+                    }
+                    if (uri_new != null)
+                        _settings?.set_string ("played-uri", (!)uri_new);
                     _current_music = value;
-                    _player.state = Gst.State.READY;
-                    var uri = _player.uri = value?.uri;
                     music_changed (value);
-                    if (uri != null)
-                        _settings?.set_string ("played-uri", (!)uri);
                 }
                 _player.state = playing ? Gst.State.PLAYING : Gst.State.PAUSED;
             }
@@ -379,11 +383,10 @@ namespace G4 {
         private int find_music_item (Music? music) {
             var count = _music_list.get_n_items ();
             for (var i = 0; i < count; i++) {
-                if (music == _music_list.get_item (i)) {
+                if (music == _music_list.get_item (i))
                     return (int) i;
-                }
             }
-            return -1;
+            return music != null ? _find_music_item_by_uri (((!)music).uri) : -1;
         }
 
         private int find_music_item_by_uri (string uri) {
@@ -393,9 +396,13 @@ namespace G4 {
                 if (item != -1)
                     return item;
             }
+            return _find_music_item_by_uri (uri);
+        }
+
+        private int _find_music_item_by_uri (string uri) {
             var count = _music_list.get_n_items ();
             for (var i = 0; i < count; i++) {
-                music = _music_list.get_item (i) as Music;
+                var music = _music_list.get_item (i) as Music;
                 if (strcmp (uri, music?.uri) == 0)
                     return (int) i;
             }

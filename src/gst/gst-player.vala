@@ -116,9 +116,7 @@ namespace G4 {
                     _tag_hash = int64.MIN;
                     _tag_parsed = false;
                     _peaks.clear_full (free);
-                    string? uri = ((!)_pipeline).uri;
-                    if (strcmp (uri, value) != 0)
-                        ((!)_pipeline).uri = value;
+                    ((!)_pipeline).uri = value;
                 }
             }
         }
