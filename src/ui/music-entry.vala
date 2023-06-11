@@ -22,6 +22,7 @@ namespace G4 {
 
             var vbox = new Gtk.Box (Gtk.Orientation.VERTICAL, compact ? 2 : 6);
             vbox.hexpand = true;
+            vbox.valign = Gtk.Align.CENTER;
             vbox.margin_start = 12;
             vbox.margin_end = 4;
             vbox.append (_title);
@@ -29,7 +30,6 @@ namespace G4 {
             append (vbox);
 
             _title.halign = Gtk.Align.START;
-            _title.margin_top = compact ? 0 : 2;
             _title.ellipsize = Pango.EllipsizeMode.END;
             _title.add_css_class ("title-leading");
 
@@ -46,6 +46,11 @@ namespace G4 {
             _playing.pixel_size = 12;
             _playing.add_css_class ("dim-label");
             append (_playing);
+
+            var height = margin_top + margin_bottom + vbox.spacing * 3
+                                + (double) font_size / Pango.SCALE * 2;
+            if (height < 42)
+                height_request = 42;
 
             make_right_clickable (this, show_popover);
         }
