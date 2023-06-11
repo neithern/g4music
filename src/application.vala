@@ -191,11 +191,6 @@ namespace G4 {
                 if (_current_item != value) {
                     change_current_item (value);
                 }
-                var next = value + 1;
-                var next_music = get_next_music (ref next);
-                lock (_next_uri) {
-                    _next_uri.assign (next_music?.uri ?? "");
-                }
             }
         }
 
@@ -373,6 +368,12 @@ namespace G4 {
             _music_list.items_changed (old_item, 0, 0);
             _music_list.items_changed (item, 0, 0);
             index_changed (item, _music_list.get_n_items ());
+
+            var next = item + 1;
+            var next_music = get_next_music (ref next);
+            lock (_next_uri) {
+                _next_uri.assign (next_music?.uri ?? "");
+            }
         }
 
         private int find_music_item (Music? music) {
