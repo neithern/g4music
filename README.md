@@ -1,7 +1,7 @@
 <img align="left" alt="Project logo" src="data/icons/hicolor/scalable/apps/app.svg" />
 
 # G4Music
-Play your music in an elegant way.
+Play your music elegantly.
 
 
 <img src="./shots/window.png" width="822"/>
@@ -12,7 +12,7 @@ A fast, fluent, light weight music player written in GTK4, with a beautiful, ada
 
 ## Features
 - Supports most music file types, samba and any other remote protocols (thanks to great GIO and GStreamer).
-- Fast loading and parsing thousands of music files in very few seconds.
+- Fast loading and parsing thousands of music files in very few seconds, monitor local changes.
 - Low memory usage for huge playlist with album covers, no thumbnail caches to store.
 - Sorts by album/artist/title or shuffle, supports full-text searching.
 - Supports embedded album art or external images as album cover, embedded can be exported.

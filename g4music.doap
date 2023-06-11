@@ -5,7 +5,7 @@
          xmlns="http://usefulinc.com/ns/doap#">
 
   <name xml:lang="en">G4Music</name>
-  <shortdesc xml:lang="en">Play your music in an elegant way</shortdesc>
+  <shortdesc xml:lang="en">Play your music elegantly</shortdesc>
   <description xml:lang="en">A fast, fluent, light weight music player written in GTK4, with a beautiful, adaptive user interface.</description>
   <category rdf:resource="http://api.gnome.org/doap-extensions#apps" />
   <homepage rdf:resource="https://gitlab.gnome.org/neithern/g4music" />

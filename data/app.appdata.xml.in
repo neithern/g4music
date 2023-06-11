@@ -4,7 +4,7 @@
     <name>G4Music</name>
     <metadata_license>CC0-1.0</metadata_license>
     <project_license>GPL-3.0-or-later</project_license>
-    <summary>Play your music in an elegant way.</summary>
+    <summary>Play your music elegantly</summary>
 
     <developer_name>Nanling</developer_name>
     <update_contact>neithern@outlook.com</update_contact>
@@ -20,7 +20,7 @@
         <p>Features</p>
         <ul>
         <li>Supports most music file types, samba and any other remote protocols (thanks to great GIO and GStreamer).</li>
-        <li>Fast loading and parsing thousands of music files in very few seconds.</li>
+        <li>Fast loading and parsing thousands of music files in very few seconds, monitor local changes.</li>
         <li>Low memory usage for huge playlist with album covers, no thumbnail caches to store.</li>
         <li>Sorts by album/artist/title or shuffle, supports full-text searching.</li>
         <li>Supports embedded album art or external images as album cover, embedded can be exported.</li>
@@ -48,6 +48,19 @@
     </screenshots>
 
     <releases>
+        <release version="2.0" date="2023-6-11">
+            <description>
+                <ul>
+                <li>Option: Monitor local file changes.</li>
+                <li>Right click or long press to show popover menu.</li>
+                <li>Scroll playlist smoothly.</li>
+                <li>Many UI improvements.</li>
+                <li>Optimize searching by album/artist/title.</li>
+                <li>Optimize loading files and cache.</li>
+                <li>Update German translation.</li>
+                </ul>
+            </description>
+        </release>
         <release version="1.13" date="2023-5-25">
             <description>
                 <ul>
