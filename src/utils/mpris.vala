@@ -85,6 +85,10 @@ namespace G4 {
             _app.play_pause();
         }
 
+        public void play () throws Error {
+            _app.player.play ();
+        }
+
         public void pause () throws Error {
             _app.player.pause ();
         }
