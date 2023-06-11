@@ -90,8 +90,10 @@ namespace G4 {
         }
 
         protected override void on_snapshot (Gtk.Snapshot snapshot, double width, double height) {
-            var rect = (!)Graphene.Rect ().init (0, 0, (float) width, (float) height);
-            var rounded = (!)Gsk.RoundedRect ().init_from_rect (rect, _radius);
+            var rect = Graphene.Rect ();
+            var rounded = Gsk.RoundedRect ();
+            rect.init (0, 0, (float) width, (float) height);
+            rounded.init_from_rect (rect, _radius);
 
             if (_radius > 0) {
                 snapshot.push_rounded_clip (rounded);
@@ -213,9 +215,8 @@ namespace G4 {
 
         protected override void on_snapshot (Gtk.Snapshot snapshot, double width, double height) {
             if (_scale != 1) {
-                var point = (!)Graphene.Point ().init (
-                                (float) (width * (1 - _scale) * 0.5),
-                                (float) (height * (1 - _scale) * 0.5));
+                var point = Graphene.Point ();
+                point.init ((float) (width * (1 - _scale) * 0.5), (float) (height * (1 - _scale) * 0.5));
                 snapshot.save ();
                 snapshot.translate (point);
                 snapshot.scale ((float) _scale, (float) _scale);
@@ -255,8 +256,9 @@ namespace G4 {
     }
 
     public static Gdk.Paintable? create_text_paintable (Pango.Context context, string text, int width, int height, uint color_index = 0x7fffffff) {
-        var rect = (!)Graphene.Rect ().init (0, 0,  width, height);
         var snapshot = new Gtk.Snapshot ();
+        var rect = Graphene.Rect ();
+        rect.init (0, 0,  width, height);
 
         var c = Gdk.RGBA ();
         if (color_index < BACKGROUND_COLORS.length / 3) {
@@ -308,11 +310,12 @@ namespace G4 {
         snapshot.pop ();
 
         Gdk.Paintable? result = null;
-        var rect = Graphene.Rect ().init (0, 0, width, height);
+        var rect = Graphene.Rect ();
+        rect.init (0, 0, width, height);
         var node = snapshot.free_to_node ();
         if (node is Gsk.RenderNode) {
             result = widget.get_native ()?.get_renderer ()?.render_texture ((!)node, rect);
         }
-        return result ?? snapshot.free_to_paintable (rect?.size);
+        return result ?? snapshot.free_to_paintable (rect.size);
     }
 }

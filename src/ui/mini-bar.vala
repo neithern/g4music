@@ -110,7 +110,8 @@ namespace G4 {
             base.snapshot (snapshot);
             var color = Gdk.RGBA ();
             color.red = color.green = color.blue = color.alpha = 0.5f;
-            var rect = (!)Graphene.Rect ().init (0, 0, get_width (), 0.5f);
+            var rect = Graphene.Rect ();
+            rect.init (0, 0, get_width (), 0.5f);
             snapshot.append_color (color, rect);
         }
 

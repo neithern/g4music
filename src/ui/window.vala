@@ -177,14 +177,15 @@ namespace G4 {
                 var page = (Adw.LeafletPage) leaflet.pages.get_item (0);
                 var size = page.child.get_width ();
                 var rtl = get_direction () == Gtk.TextDirection.RTL;
-                var rect = (!)Graphene.Rect ().init (rtl ? width - size : size, 0, 0.5f, height);
+                var rect = Graphene.Rect ();
+                rect.init (rtl ? width - size : size, 0, 0.5f, height);
                 var color = Gdk.RGBA ();
+                color.red = color.green = color.blue = color.alpha = 0;
 #if GTK_4_10
                 var color2 = get_color ();
 #else
                 var color2 = get_style_context ().get_color ();
 #endif
-                color.red = color.green = color.blue = color.alpha = 0;
                 color2.alpha = 0.25f;
                 Gsk.ColorStop[] stops = { { 0, color }, { 0.5f, color2 }, { 1, color } };
                 snapshot.append_linear_gradient (rect, rect.get_top_left (), rect.get_bottom_right (), stops);
