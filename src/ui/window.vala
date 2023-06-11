@@ -32,6 +32,8 @@ namespace G4 {
         [GtkChild]
         private unowned Gtk.Label initial_label;
         [GtkChild]
+        private unowned Gtk.ScrolledWindow scroll_view;
+        [GtkChild]
         private unowned Gtk.ListView list_view;
         [GtkChild]
         private unowned Gtk.Box mini_box;
@@ -53,6 +55,7 @@ namespace G4 {
         private bool _compact_playlist = false;
         private int _blur_size = 512;
         private int _cover_size = 1024;
+        private double _item_height = 0;
         private string _loading_text = _("Loading...");
 
         private string _search_text = "";
@@ -113,6 +116,8 @@ namespace G4 {
             action_set_enabled (ACTION_APP + ACTION_PREV, false);
             action_set_enabled (ACTION_APP + ACTION_PLAY, false);
             action_set_enabled (ACTION_APP + ACTION_NEXT, false);
+
+            scroll_view.vadjustment.changed.connect (on_scrollview_vadjustment_changed);
 
             list_view.model = new Gtk.NoSelection (app.music_list);
             list_view.activate.connect ((index) => app.current_item = (int) index);
@@ -314,6 +319,15 @@ namespace G4 {
             }
         }
 
+        private void on_scrollview_vadjustment_changed () {
+            var app = (Application) application;
+            var adj = scroll_view.vadjustment;
+            var total = adj.upper - adj.lower;
+            var size = app.music_list.get_n_items ();
+            if (size > 0 && total > list_view.get_height ())
+                _item_height = total / size;
+        }
+
         private void on_search_btn_toggled () {
             if (search_btn.active) {
                 search_entry.grab_focus ();
@@ -371,8 +385,30 @@ namespace G4 {
             }
         }
 
+        private Adw.Animation? _scroll_animation = null;
+
         private void scroll_to_item (int index) {
-            list_view.activate_action_variant ("list.scroll-to-item", new Variant.uint32 (index));
+            if (_item_height > 0) {
+                var adj = scroll_view.vadjustment;
+                var from = adj.value;
+                var list_height = list_view.get_height ();
+                var max_to = double.max ((index + 1) * _item_height - list_height, 0);
+                var min_to = double.max (index * _item_height, 0);
+                var scroll_to =  from < max_to ? max_to : (from > min_to ? min_to : from);
+                var diff = (scroll_to - from).abs ();
+                if (diff > list_height) {
+                    _scroll_animation?.pause ();
+                    adj.value = min_to;
+                } else if (diff > 0) {
+                    //  Scroll smoothly
+                    var target = new Adw.CallbackAnimationTarget (adj.set_value);
+                    _scroll_animation?.pause ();
+                    _scroll_animation = new Adw.TimedAnimation (scroll_view, from, scroll_to, 500, target);
+                    _scroll_animation?.play ();
+                } 
+            } else {
+                list_view.activate_action_variant ("list.scroll-to-item", new Variant.uint32 (index));
+            }
         }
 
         private void setup_drop_target () {
