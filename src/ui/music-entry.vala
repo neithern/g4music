@@ -12,8 +12,9 @@ namespace G4 {
         public ulong first_draw_handler = 0;
 
         public MusicEntry (bool compact = true) {
-            margin_top = compact ? 2 : 4;
-            margin_bottom = compact ? 2 : 4;
+            var margin = compact ? 2 : 4;
+            margin_top = margin;
+            margin_bottom = margin;
 
             _cover.pixel_size = compact ? 36 : 48;
             _cover.paintable = new RoundPaintable (_paintable, 5);
@@ -37,8 +38,8 @@ namespace G4 {
             _subtitle.valign = Gtk.Align.CENTER;
             _subtitle.ellipsize = Pango.EllipsizeMode.END;
             _subtitle.add_css_class ("dim-label");
-            var font_size = _subtitle.get_pango_context ().get_font_description ().get_size ();
-            if (font_size >= 13 * Pango.SCALE)
+            var font_size = _subtitle.get_pango_context ().get_font_description ().get_size () / Pango.SCALE;
+            if (font_size >= 13)
                 _subtitle.add_css_class ("title-secondly");
 
             _playing.valign = Gtk.Align.CENTER;
@@ -47,10 +48,11 @@ namespace G4 {
             _playing.add_css_class ("dim-label");
             append (_playing);
 
-            var height = margin_top + margin_bottom + vbox.spacing * 3
-                                + (double) font_size / Pango.SCALE * 2;
-            if (height < 42)
-                height_request = 42;
+            //  Make enough space for text
+            var height = margin * 2 + vbox.spacing + (int) (font_size * 2.65) - (margin - 2);
+            var padding = (margin + 1) * 2;
+            var item_height = (height + padding + 3) / 4 * 4;
+            height_request = item_height - padding;
 
             make_right_clickable (this, show_popover);
         }
