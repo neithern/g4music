@@ -388,7 +388,18 @@ namespace G4 {
 
         private int find_music_item_by_uri (string uri) {
             var music = _music_store.find_cache (uri);
-            return find_music_item (music);
+            if (music != null) {
+                var item = find_music_item (music);
+                if (item != -1)
+                    return item;
+            }
+            var count = _music_list.get_n_items ();
+            for (var i = 0; i < count; i++) {
+                music = _music_list.get_item (i) as Music;
+                if (strcmp (uri, music?.uri) == 0)
+                    return (int) i;
+            }
+            return -1;
         }
 
         public async int load_musics_async (owned File[] files) {

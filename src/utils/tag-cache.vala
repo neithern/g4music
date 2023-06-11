@@ -35,6 +35,11 @@ namespace G4 {
             _modified = true;
         }
 
+        public void remove (Music music) {
+            if (_cache.remove (music.uri))
+                _modified = true;
+        }
+
         public void load () {
             _loading = true;
             try {

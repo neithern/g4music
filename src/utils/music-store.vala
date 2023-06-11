@@ -135,6 +135,7 @@ namespace G4 {
                         _store.remove (pos);
                     }
                 }
+                _tag_cache.remove ((!)music);
                 lock (_music_set) {
                     _music_set.remove ((!)music);
                 }
@@ -142,8 +143,9 @@ namespace G4 {
                 var prefix = uri + "/";
                 for (var pos = (int) _store.get_n_items () - 1; pos >= 0; pos--) {
                     var mus = (Music) _store.get_item (pos);
-                    if (mus.uri.has_prefix (prefix)) {
+                    if (mus.uri == uri || mus.uri.has_prefix (prefix)) {
                         _store.remove (pos);
+                        _tag_cache.remove (mus);
                         lock (_music_set) {
                             _music_set.remove (mus);
                         }
@@ -248,11 +250,19 @@ namespace G4 {
             }
         }
 
+        private void _monitor_add_file (File file) {
+            add_files_async.begin ({file}, true, (obj, res) => add_files_async.end (res));
+        }
+
         private void _monitor_func (File file, File? other_file, FileMonitorEvent event) {
             switch (event) {
-                case FileMonitorEvent.ATTRIBUTE_CHANGED:
+                case FileMonitorEvent.CHANGES_DONE_HINT:
+                    remove (file.get_uri ());
+                    _monitor_add_file (file);
+                    break;
+
                 case FileMonitorEvent.MOVED_IN:
-                    add_files_async.begin ({file}, true, (obj, res) => add_files_async.end (res));
+                    _monitor_add_file (file);
                     break;
 
                 case FileMonitorEvent.DELETED:
@@ -263,7 +273,7 @@ namespace G4 {
                 case FileMonitorEvent.RENAMED:
                     remove (file.get_uri ());
                     if (other_file != null)
-                        add_files_async.begin ({(!)other_file}, true, (obj, res) => add_files_async.end (res));
+                        _monitor_add_file ((!)other_file);
                     break;
 
                 default:
