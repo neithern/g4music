@@ -29,13 +29,16 @@ namespace G4 {
     }
 
     public class MusicStore : Object {
-        private static ThreadPool<DirCache>? _save_dir_pool;
+        private static Once<ThreadPool<DirCache>?> _save_dir_pool;
 
-        static construct {
-            try {
-                _save_dir_pool = new ThreadPool<DirCache>.with_owned_data ((cache) => cache.save (), 1, false);
-            } catch (Error e) {
-            }
+        static unowned ThreadPool<DirCache>? get_save_dir_pool () {
+            return _save_dir_pool.once(() => {
+                try {
+                    return new ThreadPool<DirCache>.with_owned_data ((cache) => cache.save (), 1, false);
+                } catch (Error e) {
+                }
+                return null;
+            });
         }
 
         private bool _monitor_changes = false;
@@ -322,7 +325,7 @@ namespace G4 {
                         }
                     }
                 }
-                _save_dir_pool?.add (cache);
+                get_save_dir_pool ()?.add (cache);
             } catch (Error e) {
                 warning ("Enumerate %s: %s\n", dir.get_parse_name (), e.message);
             }
