@@ -10,6 +10,7 @@ namespace G4 {
         public string uri = "";
         public int track = UNKNOWN_TRACK;
         public int64 modified_time = 0;
+        public bool showing = true;
 
         //  for sorting
         private string _album_key = "";
@@ -196,14 +197,6 @@ namespace G4 {
             var s2 = (Music) obj2;
             var diff = s2.modified_time - s1.modified_time;
             return (int) diff.clamp (-1, 1);
-        }
-
-        public static bool equal (Music m1, Music m2) {
-            return m1 == m2 || str_equal (m1.uri, m2.uri);
-        }
-
-        public static uint hash (Music music) {
-            return str_hash (music.uri);
         }
 
         public static Music? from_info (File file, FileInfo info) {

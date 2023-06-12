@@ -40,6 +40,10 @@ namespace G4 {
                 _modified = true;
         }
 
+        public void reset_showing (bool showing) {
+            _cache.foreach ((key, music) => music.showing = showing);
+        }
+
         public void load () {
             _loading = true;
             try {

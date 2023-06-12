@@ -42,7 +42,6 @@ namespace G4 {
         private SortMode _sort_mode = SortMode.TITLE;
         private CompareDataFunc<Object> _compare = Music.compare_by_title;
         private ListStore _store = new ListStore (typeof (Music));
-        private GenericSet<Music> _music_set = new GenericSet<Music> (Music.hash, Music.equal);
         private TagCache _tag_cache = new TagCache ();
 
         public signal void loading_changed (bool loading);
@@ -122,9 +121,7 @@ namespace G4 {
                 _monitors.remove_all ();
             }
             _store.remove_all ();
-            lock (_music_set) {
-                _music_set.remove_all ();
-            }
+            _tag_cache.reset_showing (false);
         }
 
         public void remove (string uri) {
@@ -136,9 +133,6 @@ namespace G4 {
                     }
                 }
                 _tag_cache.remove ((!)music);
-                lock (_music_set) {
-                    _music_set.remove ((!)music);
-                }
             } else {
                 var prefix = uri + "/";
                 for (var pos = (int) _store.get_n_items () - 1; pos >= 0; pos--) {
@@ -146,9 +140,6 @@ namespace G4 {
                     if (mus.uri == uri || mus.uri.has_prefix (prefix)) {
                         _store.remove (pos);
                         _tag_cache.remove (mus);
-                        lock (_music_set) {
-                            _music_set.remove (mus);
-                        }
                     }
                 }
             }
@@ -178,17 +169,20 @@ namespace G4 {
 
                 var queue = new AsyncQueue<Music?> ();
                 _tag_cache.wait_loading ();
-                for (var i = musics.length - 1; i >= 0; i--) {
-                    var music = (Music) musics[i];
-                    if (ignore_exists) lock (_music_set) {
-                        if (_music_set.contains (music))
+                lock (_tag_cache) {
+                    for (var i = musics.length - 1; i >= 0; i--) {
+                        var music = (Music) musics[i];
+                        var cached_music = _tag_cache[music.uri];
+                        if (ignore_exists && cached_music != null && ((!)cached_music).showing) {
                             musics.remove_index_fast (i);
+                        } else if (cached_music != null && ((!)cached_music).modified_time == music.modified_time) {
+                            ((!)cached_music).showing = true;
+                            musics[i] = (!)cached_music;
+                        } else {
+                            _tag_cache.add (music);
+                            queue.push (music);
+                        }
                     }
-                    var cached_music = _tag_cache[music.uri];
-                    if (cached_music != null && ((!)cached_music).modified_time == music.modified_time)
-                        musics[i] = (!)cached_music;
-                    else
-                        queue.push (music);
                 }
                 var queue_count = queue.length ();
                 if (queue_count > 0) {
@@ -199,7 +193,6 @@ namespace G4 {
                         Music? music;
                         while ((music = queue.try_pop ()) != null) {
                             music?.parse_tags ();
-                            add_to_cache ((!)music);
                             progress.step ();
                         }
                     }, num_tasks);
@@ -216,11 +209,6 @@ namespace G4 {
             loading_changed (false);
 
             run_void_async.begin (() => {
-                foreach (var obj in musics) {
-                    lock (_music_set) {
-                        _music_set.add (((Music)obj));
-                    }
-                }
                 foreach (var dir in dirs) {
                     if (dir.is_native ())
                         _monitor_dir (dir);
