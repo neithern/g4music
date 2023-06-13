@@ -238,7 +238,7 @@ namespace G4 {
                             }
                             state_changed (state);
                             timeout_callback ();
-                            print ("State changed: %d -> %d\n", old, state);
+                            print (@"State changed: $old -> $state\n");
                         }
                     }
                     break;
