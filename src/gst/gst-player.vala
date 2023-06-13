@@ -222,6 +222,11 @@ namespace G4 {
                         message.parse_state_changed (out old, out state, out pending);
                         if (old == Gst.State.READY && state == Gst.State.PAUSED) {
                             on_duration_changed ();
+                            if (!_tag_parsed) {
+                                //  Emit a fake if no tag parsed
+                                _tag_parsed = true;
+                                tag_parsed (null, null, null, null);
+                            }
                         }
                         if (old != state && _state != state) {
                             _state = state;
@@ -233,7 +238,7 @@ namespace G4 {
                             }
                             state_changed (state);
                             timeout_callback ();
-                            //  print ("State changed: %d -> %d\n", old, state);
+                            print ("State changed: %d -> %d\n", old, state);
                         }
                     }
                     break;
@@ -301,7 +306,7 @@ namespace G4 {
                         | (image?.get_buffer ()?.get_size () ?? 0);
             if (_tag_hash != hash) {
                 _tag_hash = hash;
-                // notify only when changed
+                //  Emit only when changed
                 tag_parsed (album, artist, title, image);
             }
         }
