@@ -201,7 +201,7 @@ namespace G4 {
             set {
                 var playing = _player.state == Gst.State.PLAYING;
                 if (_current_music != value) {
-                    var uri_cur = _current_music?.uri;
+                    var uri_cur = _player.uri;
                     var uri_new = value?.uri;
                     if (strcmp (uri_cur, uri_new) != 0) {
                         _player.state = Gst.State.READY;

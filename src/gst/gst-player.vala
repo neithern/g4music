@@ -105,9 +105,7 @@ namespace G4 {
 
         public string? uri {
             get {
-                if (_pipeline != null)
-                    return ((!)_pipeline).uri;
-                return null;
+                return (string?) _pipeline?.uri;
             }
             set {
                 if (_pipeline != null) lock (_pipeline) {
@@ -116,7 +114,9 @@ namespace G4 {
                     _tag_hash = int64.MIN;
                     _tag_parsed = false;
                     _peaks.clear_full (free);
-                    ((!)_pipeline).uri = value;
+                    var cur = (string?) _pipeline?.uri;
+                    if (strcmp (cur, value) != 0)
+                        ((!)_pipeline).uri = value;
                 }
             }
         }
