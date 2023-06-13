@@ -51,6 +51,7 @@ namespace G4 {
         }
 
         public void set_peak (double value) {
+            if (value > 1) value = 1;
             if (_value != value) {
                 _value = value;
                 queue_draw ();
