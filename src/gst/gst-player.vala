@@ -6,16 +6,31 @@ namespace G4 {
             double peak;
         }
 
+        public static GenericArray<Gst.ElementFactory> audio_sinks;
+
         public static void init (ref unowned string[]? args) {
             Gst.init (ref args);
-        }
 
-        public static double to_second (Gst.ClockTime time) {
-            return (double) time / Gst.SECOND;
+            audio_sinks = new GenericArray<Gst.ElementFactory> (8);
+            var caps = new Gst.Caps.simple ("audio/x-raw", "format", Type.STRING, "S16LE", null);
+            var list = Gst.ElementFactory.list_get_elements (Gst.ElementFactoryType.AUDIOVIDEO_SINKS, Gst.Rank.NONE);
+            list = Gst.ElementFactory.list_filter (list, caps, Gst.PadDirection.SINK, false);
+            list.foreach ((factory) => {
+                var plugin = factory.get_plugin_name () ?? "";
+                var rank = factory.get_rank ();
+                if (rank > 0 || plugin == "pipewire") {
+                    print (@"Audio sink: $(factory.name), $(factory.get_rank ())\n");
+                    audio_sinks.add (factory);
+                }
+            });
         }
 
         public static Gst.ClockTime from_second (double time) {
             return (Gst.ClockTime) (time * Gst.SECOND);
+        }
+
+        public static double to_second (Gst.ClockTime time) {
+            return (double) time / Gst.SECOND;
         }
 
         private dynamic Gst.Pipeline? _pipeline = Gst.ElementFactory.make ("playbin", "player") as Gst.Pipeline;
