@@ -52,7 +52,7 @@ namespace G4 {
         private size_t _max_size = 0;
         private size_t _size = 0;
         private HashTable<string, V> _cache = new HashTable<string, V> (str_hash, str_equal);
-        private Queue<unowned string> _queue = new Queue<unowned string> ();
+        private Queue<string> _queue = new Queue<string> ();
 
         public LruCache (size_t max_size) {
             _max_size = max_size;
@@ -75,7 +75,6 @@ namespace G4 {
                 V stolen_value;
                 if (_cache.steal_extended (_queue.pop_head (), out stolen_key, out stolen_value)) {
                     _size -= size_of_value (stolen_value);
-                    //  print (@"Remove head: $stolen_key\n");
                 }
             }
 
@@ -90,7 +89,7 @@ namespace G4 {
             V stolen_value;
             if (_cache.steal_extended (key, out stolen_key, out stolen_value)) {
                 unowned var link = _queue.find_custom (key, strcmp);
-                if (link != (List<unowned string>) null)
+                if (link != (List<string>) null)
                     _queue.unlink (link);
                 _size -= size_of_value (stolen_value);
                 return true;
@@ -203,22 +202,18 @@ namespace G4 {
                     check_same_album_cover (album_key, ref cover_key[0]);
                     pixbuf = load_clamp_pixbuf_from_sample ((!)sample, size);
                 } else if ((cover_file = _cover_finder.find (file)) != null) {
-                    var album_key = cover_file?.get_path () ?? "";
+                    var album_key = (!) cover_file?.get_path ();
                     cover_key[0] = (!) cover_file?.get_uri ();
                     check_same_album_cover (album_key, ref cover_key[0]);
                     pixbuf = load_clamp_pixbuf_from_file ((!)cover_file, size);
                 }
                 if (pixbuf != null) {
-                    var minbuf = size <= ICON_SIZE ? pixbuf : find_pixbuf_from_cache (cover_key[0]);
+                    var minbuf = find_pixbuf_from_cache (cover_key[0]);
                     if (minbuf == null) {
                         minbuf = create_clamp_pixbuf ((!)pixbuf, ICON_SIZE);
+                        put_pixbuf_to_cache (cover_key[0], (!)minbuf);
                     }
-                    if (minbuf != null) {
-                        lock (_album_pixbufs) {
-                            _album_pixbufs.put (cover_key[0], (!)minbuf);
-                        }
-                    }
-                    return pixbuf;
+                    return size <= ICON_SIZE ? minbuf : pixbuf;
                 }
                 cover_key[0] = parse_abbreviation (cover_key[1]);
                 return null;
@@ -265,6 +260,12 @@ namespace G4 {
         private Gdk.Pixbuf? find_pixbuf_from_cache (string cover_key) {
             lock (_album_pixbufs) {
                 return _album_pixbufs.find (cover_key);
+            }
+        }
+
+        private void put_pixbuf_to_cache (string cover_key, Gdk.Pixbuf pixbuf) {
+            lock (_album_pixbufs) {
+                _album_pixbufs.put (cover_key, pixbuf);
             }
         }
     }
