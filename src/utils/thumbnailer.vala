@@ -59,34 +59,39 @@ namespace G4 {
         }
 
         public V find (string key) {
-            unowned string orig_key;
-            unowned V value;
-            if (_cache.lookup_extended (key, out orig_key, out value))
-                return value;
-            return null;
+            return _cache[key];
         }
 
         public void put (string key, V value, bool replace = false) {
             if (replace) {
                 remove (key);
+            } else if (_cache.contains (key)) {
+                return;
             }
 
             var size = size_of_value (value);
             while (_size + size > _max_size && _queue.length > 0) {
-                remove (_queue.pop_head ());
+                string stolen_key;
+                V stolen_value;
+                if (_cache.steal_extended (_queue.pop_head (), out stolen_key, out stolen_value)) {
+                    _size -= size_of_value (stolen_value);
+                    //  print (@"Remove head: $stolen_key\n");
+                }
             }
 
             _cache[key] = value;
             _queue.push_tail (key);
             _size += size;
-            //  print (@"Cache $(_cache.length) items, $_size bytes\n");
+            //  print (@"Cache $(_cache.length)/$(_queue.length) items, $_size bytes\n");
         }
 
         public bool remove (string key) {
             string stolen_key;
             V stolen_value;
             if (_cache.steal_extended (key, out stolen_key, out stolen_value)) {
-                _queue.remove (stolen_key);
+                unowned var link = _queue.find_custom (key, strcmp);
+                if (link != (List<unowned string>) null)
+                    _queue.unlink (link);
                 _size -= size_of_value (stolen_value);
                 return true;
             }
@@ -245,18 +250,16 @@ namespace G4 {
             return paintable ?? new BasePaintable ();
         }
 
-        private bool check_same_album_cover (string album_key, ref string cover_key) {
+        private void check_same_album_cover (string album_key, ref string cover_key) {
+            unowned string key, uri;
             lock (_album_covers) {
-                unowned string key, uri;
                 if (_album_covers.lookup_extended (album_key, out key, out uri)) {
                     cover_key = uri;
                     //  print ("Same album cover: %s\n", album_key);
-                    return true;
                 } else {
                     _album_covers[album_key] = cover_key;
                 }
             }
-            return false;
         }
 
         private Gdk.Pixbuf? find_pixbuf_from_cache (string cover_key) {
