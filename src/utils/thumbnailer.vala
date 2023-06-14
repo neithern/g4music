@@ -49,11 +49,10 @@ namespace G4 {
 
     //  Sorted by insert order
     public class LruCache<V> : Object {
-        public static CompareDataFunc<string> compare_string = (a, b) => strcmp (a, b);
-
         private size_t _max_size = 0;
         private size_t _size = 0;
-        private Tree<string, V> _cache = new Tree<string, V> (compare_string);
+        private HashTable<string, V> _cache = new HashTable<string, V> (str_hash, str_equal);
+        private Queue<unowned string> _queue = new Queue<unowned string> ();
 
         public LruCache (size_t max_size) {
             _max_size = max_size;
@@ -67,43 +66,36 @@ namespace G4 {
             return null;
         }
 
-        public bool has (string key) {
-            return _cache.lookup (key) != null;
-        }
-
         public void put (string key, V value, bool replace = false) {
-            var cur = _cache.lookup (key);
-            if (cur != null && !replace) {
-                return;
+            if (replace) {
+                remove (key);
             }
 
             var size = size_of_value (value);
-            unowned TreeNode<string, V>? first = null;
-            while (_size + size > _max_size && (first = _cache.node_first ()) != null) {
-                _size -= size_of_value (((!)first).value ());
-                _cache.remove (((!)first).key ());
+            while (_size + size > _max_size && _queue.length > 0) {
+                remove (_queue.pop_head ());
             }
 
-            if (cur != null) {
-                _size -= size_of_value (cur);
-                _cache.replace (key, value);
-            } else {
-                _cache.insert (key, value);
-            }
+            _cache[key] = value;
+            _queue.push_tail (key);
             _size += size;
-            //  print (@"Cache $(_cache.nnodes ()) items, $_size bytes\n");
+            //  print (@"Cache $(_cache.length) items, $_size bytes\n");
         }
 
         public bool remove (string key) {
-            unowned var value = _cache.lookup (key);
-            if (value != null) {
-                _size -= size_of_value (value);
+            string stolen_key;
+            V stolen_value;
+            if (_cache.steal_extended (key, out stolen_key, out stolen_value)) {
+                _queue.remove (stolen_key);
+                _size -= size_of_value (stolen_value);
+                return true;
             }
-            return _cache.remove (key);
+            return false;
         }
 
         public void remove_all () {
             _cache.remove_all ();
+            _queue.clear ();
             _size = 0;
         }
 
