@@ -138,7 +138,7 @@ namespace G4 {
 
         public string audio_sink {
             get {
-                return _audio_sink_name;
+                return _audio_sink_name.length > 0 ? _audio_sink_name : default_sink_name;
             }
             set {
                 if (_pipeline != null) {
@@ -150,7 +150,7 @@ namespace G4 {
                         ((!)_audio_sink).enable_last_sample = true;
                     }
                     update_audio_sink ();
-                    print (@"Audio sink $(sink != null ? ":" : "!=") $(sink_name)\n");
+                    print (@"Audio sink$(sink != null ? ":" : "!=") $(sink_name)\n");
                 }
             }
         }
