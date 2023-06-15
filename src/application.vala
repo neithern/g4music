@@ -106,7 +106,7 @@ namespace G4 {
 
             _settings?.bind ("gapless-playback", _player, "gapless", SettingsBindFlags.DEFAULT);
             _settings?.bind ("replay-gain", _player, "replay-gain", SettingsBindFlags.DEFAULT);
-            _settings?.bind ("pipewire-sink", _player, "pipewire-sink", SettingsBindFlags.DEFAULT);
+            _settings?.bind ("audio-sink", _player, "audio-sink", SettingsBindFlags.DEFAULT);
             _settings?.bind ("show-peak", _player, "show-peak", SettingsBindFlags.DEFAULT);
             _settings?.bind ("volume", _player, "volume", SettingsBindFlags.DEFAULT);
 

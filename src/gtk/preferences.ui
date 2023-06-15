@@ -145,15 +145,8 @@
               </object>
             </child>
             <child>
-              <object class="AdwActionRow">
-                <property name="title" translatable="yes">Use pipewire audio sink</property>
-                <property name="subtitle" translatable="yes">Experimental</property>
-                <property name="activatable_widget">pipewire_btn</property>
-                <child>
-                  <object class="GtkSwitch" id="pipewire_btn">
-                    <property name="valign">center</property>
-                  </object>
-                </child>
+              <object class="AdwComboRow" id="audiosink_row">
+                <property name="title" translatable="yes">Prefer audio sink</property>
               </object>
             </child>
           </object>

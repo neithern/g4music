@@ -7,6 +7,7 @@ namespace G4 {
         }
 
         public static GenericArray<Gst.ElementFactory> audio_sinks;
+        public static string default_sink_name = "pulsesink";
 
         public static void init (ref unowned string[]? args) {
             Gst.init (ref args);
@@ -16,13 +17,11 @@ namespace G4 {
             var list = Gst.ElementFactory.list_get_elements (Gst.ElementFactoryType.AUDIOVIDEO_SINKS, Gst.Rank.NONE);
             list = Gst.ElementFactory.list_filter (list, caps, Gst.PadDirection.SINK, false);
             list.foreach ((factory) => {
-                var plugin = factory.get_plugin_name () ?? "";
-                var rank = factory.get_rank ();
-                if (rank > 0 || plugin == "pipewire") {
-                    print (@"Audio sink: $(factory.name), $(factory.get_rank ())\n");
+                if (factory.get_rank () >= Gst.Rank.MARGINAL || factory.name == "pipewiresink")
                     audio_sinks.add (factory);
-                }
             });
+            if (audio_sinks.length > 0)
+                default_sink_name = audio_sinks[0].name;
         }
 
         public static Gst.ClockTime from_second (double time) {
@@ -39,6 +38,7 @@ namespace G4 {
         private int _audio_channels = 2;
         private int _audio_bps = 2;
         private int _sample_bps = 2;
+        private string _audio_sink_name = "";
         private Gst.ClockTime _duration = Gst.CLOCK_TIME_NONE;
         private Gst.ClockTime _position = Gst.CLOCK_TIME_NONE;
         private ulong _about_to_finish_id = 0;
@@ -136,20 +136,21 @@ namespace G4 {
             }
         }
 
-        public bool pipewire_sink {
+        public string audio_sink {
             get {
-                unowned var name = _audio_sink?.get_type ()?.name () ?? "";
-                return name == "GstPipeWireSink";
+                return _audio_sink_name;
             }
             set {
                 if (_pipeline != null) {
-                    _audio_sink = Gst.ElementFactory.make (value ? "pipewiresink" : "pulsesink", "audiosink");
-                    if (_audio_sink == null)
-                        _audio_sink = Gst.ElementFactory.make ("osxaudiosink", "audiosink");
-                    if (_audio_sink != null)
+                    var sink_name = value.length > 0 ? value : default_sink_name;
+                    var sink = Gst.ElementFactory.make (sink_name, "audiosink");
+                    if (sink != null) {
+                        _audio_sink = sink;
+                        _audio_sink_name = value;
                         ((!)_audio_sink).enable_last_sample = true;
+                    }
                     update_audio_sink ();
-                    print (@"Enable Pipewire: $(value && _audio_sink != null)\n");
+                    print (@"Audio sink $(sink != null ? ":" : "!=") $(sink_name)\n");
                 }
             }
         }

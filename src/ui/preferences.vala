@@ -26,7 +26,7 @@ namespace G4 {
         [GtkChild]
         unowned Gtk.Switch replaygain_btn;
         [GtkChild]
-        unowned Gtk.Switch pipewire_btn;
+        unowned Adw.ComboRow audiosink_row;
         [GtkChild]
         unowned Adw.ExpanderRow peak_row;
         [GtkChild]
@@ -60,11 +60,43 @@ namespace G4 {
 
             settings?.bind ("gapless-playback", gapless_btn, "active", SettingsBindFlags.GET_NO_CHANGES);
 
-            settings?.bind ("pipewire-sink", pipewire_btn, "active", SettingsBindFlags.GET_NO_CHANGES);
-
             settings?.bind ("show-peak", peak_row, "enable_expansion", SettingsBindFlags.GET_NO_CHANGES);
             settings?.bind ("peak-characters", peak_entry, "text", SettingsBindFlags.GET_NO_CHANGES);
+
+            var audio_sinks = GstPlayer.audio_sinks;
+            var sink_names = new string[audio_sinks.length];
+            for (var i = 0; i < audio_sinks.length; i++)
+                sink_names[i] = get_audio_sink_name (audio_sinks[i]);
+            audiosink_row.model = new Gtk.StringList (sink_names);
+            this.bind_property ("audio_sink", audiosink_row, "selected", BindingFlags.SYNC_CREATE | BindingFlags.BIDIRECTIONAL);
         }
+
+        public uint audio_sink {
+            get {
+                var app = (Application) GLib.Application.get_default ();
+                var sink_name = app.player.audio_sink;
+                for (int i = 0; i < GstPlayer.audio_sinks.length; i++) {
+                    if (sink_name == GstPlayer.audio_sinks[i].name)
+                        return i;
+                }
+                return -1;
+            }
+            set {
+                if (value < GstPlayer.audio_sinks.length) {
+                    var app = (Application) GLib.Application.get_default ();
+                    app.player.audio_sink = GstPlayer.audio_sinks[value].name;
+                }
+            }
+        }
+    }
+
+    public string get_audio_sink_name (Gst.ElementFactory factory) {
+        var name = factory.get_metadata ("long-name") ?? factory.name;
+        name = name.replace ("Audio sink", "")
+                    .replace ("Audio Sink", "")
+                    .replace ("sink", "")
+                    .replace ("(", "").replace (")", "");
+        return name.strip ();
     }
 
     public string get_blur_mode_name (Adw.EnumListItem item, void* user_data) {

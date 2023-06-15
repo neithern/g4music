@@ -30,9 +30,9 @@
       <default>false</default>
       <summary>Show remain progress</summary>
     </key>
-    <key name="pipewire-sink" type="b">
-      <default>false</default>
-      <summary>Use pipewire audio sink</summary>
+    <key name="audio-sink" type="s">
+      <default>''</default>
+      <summary>Prefer audio sink</summary>
     </key>
     <key name="play-background" type="b">
       <default>false</default>
