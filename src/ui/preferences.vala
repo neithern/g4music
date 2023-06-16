@@ -32,6 +32,8 @@ namespace G4 {
         [GtkChild]
         unowned Gtk.Entry peak_entry;
 
+        private GenericArray<Gst.ElementFactory> _audio_sinks = new GenericArray<Gst.ElementFactory> (8);
+
         public PreferencesWindow (Application app) {
             var settings = app.settings;
 
@@ -63,10 +65,10 @@ namespace G4 {
             settings?.bind ("show-peak", peak_row, "enable_expansion", SettingsBindFlags.GET_NO_CHANGES);
             settings?.bind ("peak-characters", peak_entry, "text", SettingsBindFlags.GET_NO_CHANGES);
 
-            var audio_sinks = GstPlayer.audio_sinks;
-            var sink_names = new string[audio_sinks.length];
-            for (var i = 0; i < audio_sinks.length; i++)
-                sink_names[i] = get_audio_sink_name (audio_sinks[i]);
+            GstPlayer.get_audio_sinks (_audio_sinks);
+            var sink_names = new string[_audio_sinks.length];
+            for (var i = 0; i < _audio_sinks.length; i++)
+                sink_names[i] = get_audio_sink_name (_audio_sinks[i]);
             audiosink_row.model = new Gtk.StringList (sink_names);
             this.bind_property ("audio_sink", audiosink_row, "selected", BindingFlags.SYNC_CREATE | BindingFlags.BIDIRECTIONAL);
         }
@@ -75,16 +77,16 @@ namespace G4 {
             get {
                 var app = (Application) GLib.Application.get_default ();
                 var sink_name = app.player.audio_sink;
-                for (int i = 0; i < GstPlayer.audio_sinks.length; i++) {
-                    if (sink_name == GstPlayer.audio_sinks[i].name)
+                for (int i = 0; i < _audio_sinks.length; i++) {
+                    if (sink_name == _audio_sinks[i].name)
                         return i;
                 }
-                return -1;
+                return _audio_sinks.length > 0 ? 0 : -1;
             }
             set {
-                if (value < GstPlayer.audio_sinks.length) {
+                if (value < _audio_sinks.length) {
                     var app = (Application) GLib.Application.get_default ();
-                    app.player.audio_sink = GstPlayer.audio_sinks[value].name;
+                    app.player.audio_sink = _audio_sinks[value].name;
                 }
             }
         }

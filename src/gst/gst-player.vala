@@ -6,22 +6,8 @@ namespace G4 {
             double peak;
         }
 
-        public static GenericArray<Gst.ElementFactory> audio_sinks;
-        public static string default_sink_name = "pulsesink";
-
         public static void init (ref unowned string[]? args) {
             Gst.init (ref args);
-
-            audio_sinks = new GenericArray<Gst.ElementFactory> (8);
-            var caps = new Gst.Caps.simple ("audio/x-raw", "format", Type.STRING, "S16LE", null);
-            var list = Gst.ElementFactory.list_get_elements (Gst.ElementFactoryType.AUDIOVIDEO_SINKS, Gst.Rank.NONE);
-            list = Gst.ElementFactory.list_filter (list, caps, Gst.PadDirection.SINK, false);
-            list.foreach ((factory) => {
-                if (factory.get_rank () >= Gst.Rank.MARGINAL || factory.name == "pipewiresink")
-                    audio_sinks.add (factory);
-            });
-            if (audio_sinks.length > 0)
-                default_sink_name = audio_sinks[0].name;
         }
 
         public static Gst.ClockTime from_second (double time) {
@@ -30,6 +16,16 @@ namespace G4 {
 
         public static double to_second (Gst.ClockTime time) {
             return (double) time / Gst.SECOND;
+        }
+
+        public static void get_audio_sinks (GenericArray<Gst.ElementFactory> sinks) {
+            var caps = new Gst.Caps.simple ("audio/x-raw", "format", Type.STRING, "S16LE", null);
+            var list = Gst.ElementFactory.list_get_elements (Gst.ElementFactoryType.AUDIOVIDEO_SINKS, Gst.Rank.NONE);
+            list = Gst.ElementFactory.list_filter (list, caps, Gst.PadDirection.SINK, false);
+            list.foreach ((factory) => {
+                if (factory.get_rank () >= Gst.Rank.MARGINAL || factory.name == "pipewiresink")
+                    sinks.add (factory);
+            });
         }
 
         private dynamic Gst.Pipeline? _pipeline = Gst.ElementFactory.make ("playbin", "player") as Gst.Pipeline;
@@ -138,11 +134,17 @@ namespace G4 {
 
         public string audio_sink {
             get {
-                return _audio_sink_name.length > 0 ? _audio_sink_name : default_sink_name;
+                return _audio_sink_name;
             }
             set {
                 if (_pipeline != null) {
-                    var sink_name = value.length > 0 ? value : default_sink_name;
+                    var sink_name = value;
+                    if (sink_name.length == 0) {
+                        var sinks = new GenericArray<Gst.ElementFactory> (8);
+                        get_audio_sinks (sinks);
+                        if (sinks.length > 0)
+                            sink_name = sinks[0].name;
+                    }
                     var sink = Gst.ElementFactory.make (sink_name, "audiosink");
                     if (sink != null) {
                         _audio_sink = sink;
