@@ -48,6 +48,16 @@
     </screenshots>
 
     <releases>
+        <release version="2.0" date="2023-6-18">
+            <description>
+                <ul>
+                <li>App startup acceleration.</li>
+                <li>Option: Prefer audio sink.</li>
+                <li>Replay-gain supports album mode.</li>
+                <li>Show same album cover in app and MPRIS.</li>
+                </ul>
+            </description>
+        </release>
         <release version="2.0" date="2023-6-11">
             <description>
                 <ul>
