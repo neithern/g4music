@@ -3,10 +3,8 @@ namespace G4 {
     public class TagCache {
         private static uint32 MAGIC = 0x54414743; //  'TAGC'
 
-        private Cond _cond = Cond ();
-        private Mutex _mutex = Mutex ();
+        private Event _event = new Event ();
         private File _file;
-        private bool _loading = false;
         private bool _modified = false;
         private HashTable<unowned string, Music> _cache = new HashTable<unowned string, Music> (str_hash, str_equal);
 
@@ -45,7 +43,7 @@ namespace G4 {
         }
 
         public void load () {
-            _loading = true;
+            _event.reset ();
             try {
                 var mapped = new MappedFile (_file.get_path () ?? "", false);
                 var dis = new DataInputBytes (mapped.get_bytes ());
@@ -62,14 +60,11 @@ namespace G4 {
                 if (e.code != FileError.NOENT)
                     print ("Load tags error: %s\n", e.message);
             }
-            _mutex.lock ();
-            _loading = false;
-            _cond.broadcast ();
-            _mutex.unlock ();
+            _event.notify ();
         }
 
         public void save () {
-            _loading = true;
+            _event.reset ();
             try {
                 var parent = _file.get_parent ();
                 var exists = parent?.query_exists () ?? false;
@@ -89,17 +84,11 @@ namespace G4 {
             } catch (Error e) {
                 print ("Save tags error: %s\n", e.message);
             }
-            _mutex.lock ();
-            _loading = false;
-            _cond.broadcast ();
-            _mutex.unlock ();
+            _event.notify ();
         }
 
         public void wait_loading () {
-            _mutex.lock ();
-            while (_loading)
-                _cond.wait (_mutex);
-            _mutex.unlock ();
+            _event.wait ();
         }
     }
 }

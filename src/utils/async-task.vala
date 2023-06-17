@@ -1,5 +1,31 @@
 namespace G4 {
 
+    public class Event {
+        private Cond _cond = Cond ();
+        private Mutex _mutex = Mutex ();
+        private bool _notified = false;
+
+        public void notify () {
+            _mutex.lock ();
+            _notified = true;
+            _cond.broadcast ();
+            _mutex.unlock ();
+        }
+
+        public void reset () {
+            _mutex.lock ();
+            _notified = false;
+            _mutex.unlock ();
+        }
+
+        public void wait () {
+            _mutex.lock ();
+            while (!_notified)
+                _cond.wait (_mutex);
+            _mutex.unlock ();
+        }
+    }
+
     public delegate V TaskFunc<V> ();
     public delegate void VoidFunc ();
 
