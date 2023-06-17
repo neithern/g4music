@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-15 23:58+0800\n"
-"PO-Revision-Date: 2023-06-16 00:02+0800\n"
+"POT-Creation-Date: 2023-06-17 15:36+0800\n"
+"PO-Revision-Date: 2023-06-17 15:40+0800\n"
 "Last-Translator: Nanling <neithern@outlook.com>\n"
 "Language-Team: Chinese - China <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
@@ -146,7 +146,7 @@ msgstr "啟用無縫播放"
 msgid "Normalize volume with ReplayGain"
 msgstr "使用 ReplayGain 正規化音量"
 
-#: src/gtk/preferences.ui:149
+#: src/gtk/preferences.ui:143
 msgid "Prefer audio sink"
 msgstr "首選音訊輸出"
 
@@ -254,17 +254,25 @@ msgstr "播放/暫停"
 msgid "Play Next"
 msgstr "播放下一首"
 
-#: src/ui/preferences.vala:105
+#: src/ui/preferences.vala:42 src/ui/preferences.vala:60
+msgid "Never"
+msgstr "從不"
+
+#: src/ui/preferences.vala:42
 msgid "Always"
 msgstr "總是"
 
-#: src/ui/preferences.vala:107
+#: src/ui/preferences.vala:42
 msgid "Art Only"
 msgstr "僅封面"
 
-#: src/ui/preferences.vala:109
-msgid "Never"
-msgstr "從不"
+#: src/ui/preferences.vala:60
+msgid "Track"
+msgstr "曲目"
+
+#: src/ui/preferences.vala:60
+msgid "Album"
+msgstr "專輯"
 
 #: src/ui/volume-button.vala:32
 msgid "Volume: "
