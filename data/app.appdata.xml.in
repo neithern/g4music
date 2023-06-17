@@ -48,7 +48,7 @@
     </screenshots>
 
     <releases>
-        <release version="2.0" date="2023-6-18">
+        <release version="2.1" date="2023-6-18">
             <description>
                 <ul>
                 <li>App startup acceleration.</li>
