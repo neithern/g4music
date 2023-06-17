@@ -22,13 +22,6 @@ namespace G4 {
         public unowned string key;
     }
 
-    internal Settings? new_application_settings () {
-        var source = SettingsSchemaSource.get_default ()?.lookup (Config.APP_ID, false);
-        if (source != null)
-            return new Settings.full ((!)source, null, null); 
-        return null; //  new Settings (Config.APP_ID);
-    }
-
     public class Application : Adw.Application {
         private int _current_item = -1;
         private Music? _current_music = null;
@@ -42,7 +35,7 @@ namespace G4 {
         private GstPlayer _player = new GstPlayer ();
         private Portal _portal = new Portal ();
         private Thumbnailer _thumbnailer = new Thumbnailer ();
-        private Settings? _settings = new_application_settings ();
+        private Settings? _settings = null;
 
         public signal void index_changed (int index, uint size);
         public signal void music_changed (Music? music);
@@ -66,6 +59,7 @@ namespace G4 {
                 { ACTION_SEARCH_ARTIST, search_artist },
                 { ACTION_SHOW_COVER_FILE, show_cover_file },
                 { ACTION_SHOW_MUSIC_FILES, show_music_file },
+                { ACTION_SORT, sort_by, "s", "'2'" },
                 { ACTION_TOGGLE_SORT, toggle_sort },
                 { ACTION_QUIT, quit }
             };
@@ -83,32 +77,12 @@ namespace G4 {
                 set_accels_for_action (ACTION_APP + item.name, {item.key});
             }
 
-            var sort_mode = _settings?.get_uint ("sort-mode") ?? SortMode.TITLE;
-            ActionEntry[] action_sort = {
-                { ACTION_SORT, sort_by, "s", null },
-            };
-            var state = "'" + sort_mode.to_string () + "'";
-            action_sort[0].state = state;
-            add_action_entries (action_sort, this);
-
-            _settings?.bind ("dark-theme", this, "dark-theme", SettingsBindFlags.DEFAULT);
-            _settings?.bind ("music-dir", this, "music-folder", SettingsBindFlags.DEFAULT);
-
             _music_list.model = _music_store.store;
             _music_list.items_changed.connect (on_music_items_changed);
-            _settings?.bind ("sort-mode", this, "sort-mode", SettingsBindFlags.DEFAULT);
-            _settings?.bind ("monitor-changes", _music_store, "monitor-changes", SettingsBindFlags.DEFAULT);
             _music_store.monitor_changes = _settings?.get_boolean ("monitor-changes") ?? false;
             _music_store.loading_changed.connect ((loading) => _loading_store = loading);
 
             _thumbnailer.tag_updated.connect (_music_store.add_to_cache);
-            _settings?.bind ("remote-thumbnail", _thumbnailer, "remote-thumbnail", SettingsBindFlags.DEFAULT);
-
-            _settings?.bind ("gapless-playback", _player, "gapless", SettingsBindFlags.DEFAULT);
-            _settings?.bind ("replay-gain", _player, "replay-gain", SettingsBindFlags.DEFAULT);
-            _settings?.bind ("audio-sink", _player, "audio-sink", SettingsBindFlags.DEFAULT);
-            _settings?.bind ("show-peak", _player, "show-peak", SettingsBindFlags.DEFAULT);
-            _settings?.bind ("volume", _player, "volume", SettingsBindFlags.DEFAULT);
 
             _player.end_of_stream.connect (on_player_end);
             _player.error.connect (on_player_error);
@@ -123,6 +97,21 @@ namespace G4 {
 
             //  Must load tag cache after the app register (GLib init), to make sort works
             _music_store.load_tag_cache ();
+
+            var source = SettingsSchemaSource.get_default ()?.lookup (Config.APP_ID, false);
+            if (source != null)
+                _settings = new Settings.full ((!)source, null, null); 
+
+            _settings?.bind ("dark-theme", this, "dark-theme", SettingsBindFlags.DEFAULT);
+            _settings?.bind ("music-dir", this, "music-folder", SettingsBindFlags.DEFAULT);
+            _settings?.bind ("sort-mode", this, "sort-mode", SettingsBindFlags.DEFAULT);
+            _settings?.bind ("monitor-changes", _music_store, "monitor-changes", SettingsBindFlags.DEFAULT);
+            _settings?.bind ("remote-thumbnail", _thumbnailer, "remote-thumbnail", SettingsBindFlags.DEFAULT);
+            _settings?.bind ("gapless-playback", _player, "gapless", SettingsBindFlags.DEFAULT);
+            _settings?.bind ("replay-gain", _player, "replay-gain", SettingsBindFlags.DEFAULT);
+            _settings?.bind ("audio-sink", _player, "audio-sink", SettingsBindFlags.DEFAULT);
+            _settings?.bind ("show-peak", _player, "show-peak", SettingsBindFlags.DEFAULT);
+            _settings?.bind ("volume", _player, "volume", SettingsBindFlags.DEFAULT);
 
             _mpris_id = Bus.own_name (BusType.SESSION,
                 "org.mpris.MediaPlayer2.G4Music",
@@ -159,17 +148,13 @@ namespace G4 {
         }
 
         public override void shutdown () {
+            _music_store.save_tag_cache ();
+            delete_cover_tmp_file_async.begin ((obj, res) => delete_cover_tmp_file_async.end (res));
+
             if (_mpris_id != 0) {
                 Bus.unown_name (_mpris_id);
                 _mpris_id = 0;
             }
-
-            _settings?.set_double ("volume", _player.volume);
-
-            _music_store.save_tag_cache ();
-
-            delete_cover_tmp_file_async.begin ((obj, res) => delete_cover_tmp_file_async.end (res));
-
             base.shutdown ();
         }
 
