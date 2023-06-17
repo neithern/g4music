@@ -46,7 +46,7 @@ namespace G4 {
 
         private MiniBar _mini_bar = new MiniBar ();
 
-        private BackgroundBlurMode _bkgnd_blur = BackgroundBlurMode.ALWAYS;
+        private BlurMode _bkgnd_blur = BlurMode.ALWAYS;
         private CrossFadePaintable _bkgnd_paintable = new CrossFadePaintable ();
         private CrossFadePaintable _cover_paintable = new CrossFadePaintable ();
         private Gdk.Paintable? _loading_paintable = null;
@@ -72,7 +72,7 @@ namespace G4 {
             var settings = app.settings;
             settings?.bind ("width", this, "default-width", SettingsBindFlags.DEFAULT);
             settings?.bind ("height", this, "default-height", SettingsBindFlags.DEFAULT);
-            settings?.bind ("background-blur", this, "background-blur", SettingsBindFlags.DEFAULT);
+            settings?.bind ("blur-mode", this, "blur-mode", SettingsBindFlags.DEFAULT);
             settings?.bind ("compact-playlist", this, "compact-playlist", SettingsBindFlags.DEFAULT);
 
             setup_drop_target ();
@@ -132,12 +132,12 @@ namespace G4 {
             app.player.state_changed.connect (on_player_state_changed);
         }
 
-        public uint background_blur {
+        public uint blur_mode {
             get {
                 return _bkgnd_blur;
             }
             set {
-                _bkgnd_blur = (BackgroundBlurMode) value;
+                _bkgnd_blur = (BlurMode) value;
                 update_background ();
             }
         }
@@ -503,8 +503,8 @@ namespace G4 {
 
         private void update_background () {
             var paintable = _mini_bar.cover ?? _cover_paintable.paintable;
-            if ((_bkgnd_blur == BackgroundBlurMode.ALWAYS && paintable != null)
-                || (_bkgnd_blur == BackgroundBlurMode.ART_ONLY && paintable is Gdk.Texture)) {
+            if ((_bkgnd_blur == BlurMode.ALWAYS && paintable != null)
+                || (_bkgnd_blur == BlurMode.ART_ONLY && paintable is Gdk.Texture)) {
                 _bkgnd_paintable.paintable = create_blur_paintable (this,
                     (!)paintable, _blur_size, _blur_size, 64);
             } else {

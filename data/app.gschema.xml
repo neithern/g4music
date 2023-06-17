@@ -5,9 +5,9 @@
       <default>true</default>
       <summary>Prefer dark theme</summary>
     </key>
-    <key name="background-blur" type="u">
+    <key name="blur-mode" type="u">
       <range min="0" max="2"/>
-      <default>0</default>
+      <default>1</default>
       <summary>Background blur mode</summary>
     </key>
     <key name="compact-playlist" type="b">
@@ -43,6 +43,7 @@
       <summary>Enable gapless playback</summary>
     </key>
     <key name="replay-gain" type="u">
+      <range min="0" max="2"/>
       <default>0</default>
       <summary>Normalize volume with ReplayGain</summary>
     </key>

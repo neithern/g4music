@@ -1,8 +1,8 @@
 namespace G4 {
-    public enum BackgroundBlurMode {
+    public enum BlurMode {
+        NEVER,
         ALWAYS,
-        ART_ONLY,
-        NEVER
+        ART_ONLY
     }
 
     [GtkTemplate (ui = "/com/github/neithern/g4music/gtk/preferences.ui")]
@@ -39,8 +39,8 @@ namespace G4 {
 
             settings?.bind ("dark-theme", dark_btn, "active", SettingsBindFlags.DEFAULT);
 
-            blur_row.model = new Gtk.StringList ({_("Always"), _("Art Only"), _("Never")});
-            settings?.bind ("background-blur", blur_row, "selected", SettingsBindFlags.DEFAULT);
+            blur_row.model = new Gtk.StringList ({_("Never"), _("Always"), _("Art Only")});
+            settings?.bind ("blur-mode", blur_row, "selected", SettingsBindFlags.DEFAULT);
 
             settings?.bind ("compact-playlist", compact_btn, "active", SettingsBindFlags.DEFAULT);
 
