@@ -217,7 +217,6 @@ namespace G4 {
         }
 
         private Gtk.IconPaintable? _icon = null;
-        private File? _icon_file = null;
 
         public Gtk.IconPaintable? icon {
             get {
@@ -433,18 +432,13 @@ namespace G4 {
                 bool saved = false;
                 if (_cover_image != null) {
                     saved = yield save_sample_to_file_async (file, (!)_cover_image);
+                } else if (music.cover_uri == null) {
+                    var svg = _thumbnailer.create_album_text_svg (music);
+                    saved = yield save_text_to_file_async (file, svg);
                 }
                 if (music == _current_music) {
                     var uri = saved ? file.get_uri () : music.cover_uri;
-                    if (uri == null && _icon_file == null && icon?.file != null) {
-                        try {
-                            //  file path is not real in flatpak, can't be loaded by MPRIS, so copy it to a real dir
-                            _icon_file = dir.get_child ("app.svg");
-                            yield ((!)icon?.file).copy_async ((!)_icon_file, FileCopyFlags.OVERWRITE);
-                        } catch (Error e) {
-                        }
-                    }
-                    music_cover_parsed (music, uri ?? _icon_file?.get_uri ());
+                    music_cover_parsed (music, uri);
                     if (file != _cover_tmp_file) {
                         yield delete_cover_tmp_file_async ();
                         _cover_tmp_file = file;
@@ -689,11 +683,11 @@ namespace G4 {
         }
     }
 
-    public static async bool save_sample_to_file_async (File file, Gst.Sample sample) {
+    public async bool save_sample_to_file_async (File file, Gst.Sample sample) {
         var buffer = sample.get_buffer ();
         Gst.MapInfo? info = null;
         try {
-            var stream = yield file.create_async (FileCreateFlags.NONE);
+            var stream = yield file.create_async (FileCreateFlags.REPLACE_DESTINATION);
             if (buffer?.map (out info, Gst.MapFlags.READ) ?? false) {
                 return yield stream.write_all_async (info?.data, Priority.DEFAULT, null, null);
             }
@@ -701,6 +695,17 @@ namespace G4 {
         } finally {
             if (info != null)
                 buffer?.unmap ((!)info);
+        }
+        return false;
+    }
+
+    public async bool save_text_to_file_async (File file, string text) {
+        try {
+            var stream = yield file.create_async (FileCreateFlags.REPLACE_DESTINATION);
+            unowned uint8[] data = (uint8[])text;
+            var size = text.length;
+            return yield stream.write_all_async (data[0:size], Priority.DEFAULT, null, null);
+        } catch (Error e) {
         }
         return false;
     }

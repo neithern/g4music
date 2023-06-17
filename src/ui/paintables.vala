@@ -246,7 +246,7 @@ namespace G4 {
         0xffd8d7d3u, 0xffc0bfbcu, 0xff6e6d71u,  // gray
     };
 
-    public static Gdk.RGBA color_from_uint (uint color) {
+    public Gdk.RGBA color_from_uint (uint color) {
         var c = Gdk.RGBA ();
         c.alpha = ((color >> 24) & 0xff) / 255f;
         c.red = ((color >> 16) & 0xff) / 255f;
@@ -255,7 +255,7 @@ namespace G4 {
         return c;
     }
 
-    public static Gdk.Paintable? create_text_paintable (Pango.Context context, string text, int width, int height, uint color_index = 0x7fffffff) {
+    public Gdk.Paintable? create_text_paintable (Pango.Context context, string text, int width, int height, uint color_index = 0x7fffffff) {
         var snapshot = new Gtk.Snapshot ();
         var rect = Graphene.Rect ();
         rect.init (0, 0,  width, height);
@@ -296,11 +296,59 @@ namespace G4 {
         snapshot.append_layout (layout, c);
         pt.y = - pt.y;
         snapshot.translate (pt);
-
         return snapshot.free_to_paintable (rect.size);
     }
 
-    public static Gdk.Paintable? create_blur_paintable (Gtk.Widget widget, Gdk.Paintable paintable,
+    public unowned string TEXT_SVG_FORMAT = """
+<svg width="128" height="128" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient id="background" x1="0" x2="1" y1="0" y2="1">
+            <stop offset="0%" stop-color="#%06x"/>
+            <stop offset="50%" stop-color="#%06x"/>
+            <stop offset="100%" stop-color="#%06x"/>
+        </linearGradient>
+    </defs>
+    <rect rx="13.3" ry="13.3" width="128" height="128" fill="url(#background)"/>
+    <text x="%g" y="%g" fill="#%06x" font-family="Serif" font-size="51.2" font-weight="bold">%s</text>
+</svg>
+    """;
+
+    public string create_text_svg (Pango.Context context, string text, uint color_index = 0x7fffffff) {
+        var rect = Graphene.Rect ();
+        var width = 128, height = 128;
+        rect.init (0, 0,  width, height);
+
+        uint c = 0, c1 = 0, c2 = 0;
+        if (color_index < BACKGROUND_COLORS.length / 3) {
+            c = BACKGROUND_COLORS[color_index * 3] & 0x00ffffffu;
+            c1 = BACKGROUND_COLORS[color_index * 3 + 1] & 0x00ffffffu;
+            c2 = BACKGROUND_COLORS[color_index * 3 + 2] & 0x00ffffffu;
+        } else {
+            c = 0x7f7f7f;
+        }
+
+        var font_size = height * 0.4;
+        var font = new Pango.FontDescription ();
+        font.set_absolute_size (font_size * Pango.SCALE);
+        font.set_family ("Serif");
+        font.set_weight (Pango.Weight.BOLD);
+
+        var layout = new Pango.Layout (context);
+        layout.set_font_description (font);
+        layout.set_width (width * Pango.SCALE);
+        layout.set_height (height * Pango.SCALE);
+        layout.set_single_paragraph_mode (true);
+
+        Pango.Rectangle ink_rect, logic_rect;
+        layout.set_text (text, text.length);
+        layout.get_pixel_extents (out ink_rect, out logic_rect);
+
+        var x = - ink_rect.x + (width - logic_rect.width) * 0.5f;
+        var y = - ink_rect.y + (height + logic_rect.height) * 0.5f;
+        return TEXT_SVG_FORMAT.printf (c1, c2, c1, x, y, c, text);
+    }
+
+    public Gdk.Paintable? create_blur_paintable (Gtk.Widget widget, Gdk.Paintable paintable,
                                 int width = 128, int height = 128, double blur = 80, double opacity = 0.25) {
         var snapshot = new Gtk.Snapshot ();
         snapshot.push_blur (blur);
@@ -309,9 +357,9 @@ namespace G4 {
         snapshot.pop ();
         snapshot.pop ();
 
-        Gdk.Paintable? result = null;
         var rect = Graphene.Rect ();
         rect.init (0, 0, width, height);
+        Gdk.Paintable? result = null;
         var node = snapshot.free_to_node ();
         if (node is Gsk.RenderNode) {
             result = widget.get_native ()?.get_renderer ()?.render_texture ((!)node, rect);
