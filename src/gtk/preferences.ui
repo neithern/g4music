@@ -134,14 +134,8 @@
               </object>
             </child>
             <child>
-              <object class="AdwActionRow">
+              <object class="AdwComboRow" id="replaygain_row">
                 <property name="title" translatable="yes">Normalize volume with ReplayGain</property>
-                <property name="activatable_widget">replaygain_btn</property>
-                <child>
-                  <object class="GtkSwitch" id="replaygain_btn">
-                    <property name="valign">center</property>
-                  </object>
-                </child>
               </object>
             </child>
             <child>

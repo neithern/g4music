@@ -24,7 +24,7 @@ namespace G4 {
         [GtkChild]
         unowned Gtk.Switch gapless_btn;
         [GtkChild]
-        unowned Gtk.Switch replaygain_btn;
+        unowned Adw.ComboRow replaygain_row;
         [GtkChild]
         unowned Adw.ComboRow audiosink_row;
         [GtkChild]
@@ -53,16 +53,17 @@ namespace G4 {
 
             settings?.bind ("monitor-changes", monitor_btn, "active", SettingsBindFlags.DEFAULT);
 
-            settings?.bind ("remote-thumbnail", thumbnail_btn, "active", SettingsBindFlags.GET_NO_CHANGES);
+            settings?.bind ("remote-thumbnail", thumbnail_btn, "active", SettingsBindFlags.DEFAULT);
 
-            settings?.bind ("play-background", playbkgnd_btn, "active", SettingsBindFlags.GET_NO_CHANGES);
+            settings?.bind ("play-background", playbkgnd_btn, "active", SettingsBindFlags.DEFAULT);
 
-            settings?.bind ("replay-gain", replaygain_btn, "active", SettingsBindFlags.GET_NO_CHANGES);
+            replaygain_row.model = new Gtk.StringList ({_("Never"), _("Track"), _("Album")});
+            settings?.bind ("replay-gain", replaygain_row, "selected", SettingsBindFlags.DEFAULT);
 
-            settings?.bind ("gapless-playback", gapless_btn, "active", SettingsBindFlags.GET_NO_CHANGES);
+            settings?.bind ("gapless-playback", gapless_btn, "active", SettingsBindFlags.DEFAULT);
 
-            settings?.bind ("show-peak", peak_row, "enable_expansion", SettingsBindFlags.GET_NO_CHANGES);
-            settings?.bind ("peak-characters", peak_entry, "text", SettingsBindFlags.GET_NO_CHANGES);
+            settings?.bind ("show-peak", peak_row, "enable_expansion", SettingsBindFlags.DEFAULT);
+            settings?.bind ("peak-characters", peak_entry, "text", SettingsBindFlags.DEFAULT);
 
             GstPlayer.get_audio_sinks (_audio_sinks);
             var sink_names = new string[_audio_sinks.length];

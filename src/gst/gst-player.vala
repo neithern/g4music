@@ -157,17 +157,19 @@ namespace G4 {
             }
         }
 
-        public bool replay_gain {
+        public uint replay_gain {
             get {
-                return _replay_gain != null;
+                if (_replay_gain != null)
+                    return ((!)_replay_gain).album_mode ? 2 : 1;
+                return 0;
             }
             set {
                 if (_pipeline != null) {
-                    _replay_gain = value ? Gst.ElementFactory.make ("rgvolume", "gain") : null;
+                    _replay_gain = value != 0 ? Gst.ElementFactory.make ("rgvolume", "gain") : null;
                     if (_replay_gain != null)
-                        ((!)_replay_gain).album_mode = false;
+                        ((!)_replay_gain).album_mode = value == 2;
                     update_audio_sink ();
-                    print (@"Enable ReplayGain: $(value && _replay_gain != null)\n");
+                    print (@"Enable ReplayGain: $(value != 0 && _replay_gain != null)\n");
                 }
             }
         }

@@ -42,8 +42,8 @@
       <default>true</default>
       <summary>Enable gapless playback</summary>
     </key>
-    <key name="replay-gain" type="b">
-      <default>false</default>
+    <key name="replay-gain" type="u">
+      <default>0</default>
       <summary>Normalize volume with ReplayGain</summary>
     </key>
     <key name="peak-characters" type="s">
