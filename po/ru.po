@@ -129,7 +129,7 @@ msgid "Enable gapless playback"
 msgstr "Включить непрерывное воспроизведение"
 
 #: src/gtk/preferences.ui:97
-msgid "Use ReplayGain to normalize volume"
+msgid "Normalize volume with ReplayGain"
 msgstr "Использовать ReplayGain для нормализации громкости"
 
 #: src/gtk/preferences.ui:108

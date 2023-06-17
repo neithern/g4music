@@ -135,7 +135,7 @@
             </child>
             <child>
               <object class="AdwActionRow">
-                <property name="title" translatable="yes">Use ReplayGain to normalize volume</property>
+                <property name="title" translatable="yes">Normalize volume with ReplayGain</property>
                 <property name="activatable_widget">replaygain_btn</property>
                 <child>
                   <object class="GtkSwitch" id="replaygain_btn">

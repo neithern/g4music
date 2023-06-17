@@ -121,7 +121,7 @@ msgid "Enable gapless playback"
 msgstr "Ilma auguta järjest esitamine"
 
 #: src/gtk/preferences.ui:92
-msgid "Use ReplayGain to normalize volume"
+msgid "Normalize volume with ReplayGain"
 msgstr "ReplayGain'i helitugevuse normaliseerimise kasutamine"
 
 #: src/gtk/preferences.ui:103

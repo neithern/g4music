@@ -44,7 +44,7 @@
     </key>
     <key name="replay-gain" type="b">
       <default>false</default>
-      <summary>Use ReplayGain to normalize volume</summary>
+      <summary>Normalize volume with ReplayGain</summary>
     </key>
     <key name="peak-characters" type="s">
       <default>'='</default>
