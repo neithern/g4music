@@ -36,7 +36,6 @@ namespace G4 {
         private Portal _portal = new Portal ();
         private Thumbnailer _thumbnailer = new Thumbnailer ();
         private Settings? _settings = null;
-        private Event _shown_event = new Event ();
 
         public signal void index_changed (int index, uint size);
         public signal void music_changed (Music? music);
@@ -135,12 +134,8 @@ namespace G4 {
         }
 
         public override void open (File[] files, string hint) {
-            var window = (active_window as Window);
-            if (window == null) {
-                window = new Window (this);
-                ((!)window).first_draw.connect (_shown_event.notify);
-            }
-            window?.present ();
+            var window = (active_window as Window) ?? new Window (this);
+            window.present ();
 
             load_musics_async.begin (files, (obj, res) => {
                 var play_item = load_musics_async.end (res);
@@ -491,10 +486,6 @@ namespace G4 {
             win.transient_for = active_window;
             win.modal = true;
             win.present ();
-        }
-
-        public void wait_until_window_shown () {
-            _shown_event.wait ();
         }
 
         private void on_bus_acquired (DBusConnection connection, string name) {

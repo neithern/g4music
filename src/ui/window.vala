@@ -62,8 +62,6 @@ namespace G4 {
         private string _search_property = "";
         private SearchType _search_type = SearchType.ALL;
 
-        public signal void first_draw ();
-
         public Window (Application app) {
             Object (application: app);
             this.icon_name = app.application_id;
@@ -102,7 +100,6 @@ namespace G4 {
 
             _scale_cover_paintable.paintable = new RoundPaintable (_cover_paintable, 12);
             _scale_cover_paintable.scale = 0.8;
-            _scale_cover_paintable.first_draw.connect (() => first_draw ());
             _scale_cover_paintable.queue_draw.connect (music_cover.queue_draw);
             music_cover.paintable = _scale_cover_paintable;
 
