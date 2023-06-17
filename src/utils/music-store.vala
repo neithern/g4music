@@ -207,6 +207,9 @@ namespace G4 {
                 musics.sort ((CompareFunc<Object>) _compare);
                 print ("Load %u musics in %lld ms\n", musics.length,
                         (get_monotonic_time () - begin_time + 500) / 1000);
+
+                //  Wait until the app's window shown, update the store too early cause the window show slowly
+                ((Application)GLib.Application.get_default ()).wait_until_window_shown ();
             });
             _store.splice (_store.get_n_items (), 0, musics.data);
             loading_changed (false);
