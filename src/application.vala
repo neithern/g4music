@@ -138,12 +138,9 @@ namespace G4 {
             window.present ();
 
             load_musics_async.begin (files, (obj, res) => {
-                var play_item = load_musics_async.end (res);
-                run_idle_once (() => {
-                    current_item = play_item;
-                    if (files.length > 0)
-                        _player.play ();
-                });
+                current_item = load_musics_async.end (res);
+                if (files.length > 0)
+                    _player.play ();
             });
         }
 
