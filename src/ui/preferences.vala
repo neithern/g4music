@@ -39,8 +39,7 @@ namespace G4 {
 
             settings?.bind ("dark-theme", dark_btn, "active", SettingsBindFlags.DEFAULT);
 
-            blur_row.expression = new Gtk.CClosureExpression (typeof (string), null, new Gtk.Expression[0], (Callback) get_blur_mode_name, null, null);
-            blur_row.model = new Adw.EnumListModel (typeof (BackgroundBlurMode));
+            blur_row.model = new Gtk.StringList ({_("Always"), _("Art Only"), _("Never")});
             settings?.bind ("background-blur", blur_row, "selected", SettingsBindFlags.DEFAULT);
 
             settings?.bind ("compact-playlist", compact_btn, "active", SettingsBindFlags.DEFAULT);
@@ -99,19 +98,6 @@ namespace G4 {
                     .replace ("sink", "")
                     .replace ("(", "").replace (")", "");
         return name.strip ();
-    }
-
-    public string get_blur_mode_name (Adw.EnumListItem item, void* user_data) {
-        switch (item.get_value ()) {
-        case BackgroundBlurMode.ALWAYS:
-            return _("Always");
-        case BackgroundBlurMode.ART_ONLY:
-            return _("Art Only");
-        case BackgroundBlurMode.NEVER:
-            return _("Never");
-        default:
-            return "";
-        }
     }
 
     public delegate void FolderPicked (File dir);
