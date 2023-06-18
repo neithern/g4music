@@ -66,9 +66,11 @@ namespace G4 {
             add_action_entries (action_entries, this);
 
             ActionShortKey[] action_keys = {
+                { ACTION_PREFS, "<primary>comma" },
                 { ACTION_PLAY, "<primary>p" },
                 { ACTION_PREV, "<primary>Left" },
                 { ACTION_NEXT, "<primary>Right" },
+                { ACTION_RELOAD_LIST, "<primary>r" },
                 { ACTION_SEARCH, "<primary>f" },
                 { ACTION_TOGGLE_SORT, "<primary>s" },
                 { ACTION_QUIT, "<primary>q" }
