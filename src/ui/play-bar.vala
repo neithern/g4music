@@ -56,8 +56,8 @@ namespace G4 {
             _negative.add_css_class ("numeric");
 
             var settings = app.settings;
-            settings?.bind ("peak-characters", _peak, "characters", SettingsBindFlags.DEFAULT);
-            settings?.bind ("remain-progress", this, "remain-progress", SettingsBindFlags.DEFAULT);
+            settings.bind ("peak-characters", _peak, "characters", SettingsBindFlags.DEFAULT);
+            settings.bind ("remain-progress", this, "remain-progress", SettingsBindFlags.DEFAULT);
 
             make_label_clickable (_negative).pressed.connect (() => remain_progress = !remain_progress);
 

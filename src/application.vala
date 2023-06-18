@@ -35,7 +35,7 @@ namespace G4 {
         private GstPlayer _player = new GstPlayer ();
         private Portal _portal = new Portal ();
         private Thumbnailer _thumbnailer = new Thumbnailer ();
-        private Settings? _settings = null;
+        private Settings _settings;
 
         public signal void index_changed (int index, uint size);
         public signal void music_changed (Music? music);
@@ -81,7 +81,6 @@ namespace G4 {
 
             _music_list.model = _music_store.store;
             _music_list.items_changed.connect (on_music_items_changed);
-            _music_store.monitor_changes = _settings?.get_boolean ("monitor-changes") ?? false;
             _music_store.loading_changed.connect ((loading) => _loading_store = loading);
 
             _thumbnailer.tag_updated.connect (_music_store.add_to_cache);
@@ -100,20 +99,17 @@ namespace G4 {
             //  Must load tag cache after the app register (GLib init), to make sort works
             _music_store.load_tag_cache ();
 
-            var source = SettingsSchemaSource.get_default ()?.lookup (Config.APP_ID, false);
-            if (source != null)
-                _settings = new Settings.full ((!)source, null, null); 
-
-            _settings?.bind ("dark-theme", this, "dark-theme", SettingsBindFlags.DEFAULT);
-            _settings?.bind ("music-dir", this, "music-folder", SettingsBindFlags.DEFAULT);
-            _settings?.bind ("sort-mode", this, "sort-mode", SettingsBindFlags.DEFAULT);
-            _settings?.bind ("monitor-changes", _music_store, "monitor-changes", SettingsBindFlags.DEFAULT);
-            _settings?.bind ("remote-thumbnail", _thumbnailer, "remote-thumbnail", SettingsBindFlags.DEFAULT);
-            _settings?.bind ("gapless-playback", _player, "gapless", SettingsBindFlags.DEFAULT);
-            _settings?.bind ("replay-gain", _player, "replay-gain", SettingsBindFlags.DEFAULT);
-            _settings?.bind ("audio-sink", _player, "audio-sink", SettingsBindFlags.DEFAULT);
-            _settings?.bind ("show-peak", _player, "show-peak", SettingsBindFlags.DEFAULT);
-            _settings?.bind ("volume", _player, "volume", SettingsBindFlags.DEFAULT);
+            var settings = _settings = new Settings (application_id); 
+            settings.bind ("dark-theme", this, "dark-theme", SettingsBindFlags.DEFAULT);
+            settings.bind ("music-dir", this, "music-folder", SettingsBindFlags.DEFAULT);
+            settings.bind ("sort-mode", this, "sort-mode", SettingsBindFlags.DEFAULT);
+            settings.bind ("monitor-changes", _music_store, "monitor-changes", SettingsBindFlags.DEFAULT);
+            settings.bind ("remote-thumbnail", _thumbnailer, "remote-thumbnail", SettingsBindFlags.DEFAULT);
+            settings.bind ("gapless-playback", _player, "gapless", SettingsBindFlags.DEFAULT);
+            settings.bind ("replay-gain", _player, "replay-gain", SettingsBindFlags.DEFAULT);
+            settings.bind ("audio-sink", _player, "audio-sink", SettingsBindFlags.DEFAULT);
+            settings.bind ("show-peak", _player, "show-peak", SettingsBindFlags.DEFAULT);
+            settings.bind ("volume", _player, "volume", SettingsBindFlags.DEFAULT);
 
             _mpris_id = Bus.own_name (BusType.SESSION,
                 "org.mpris.MediaPlayer2.G4Music",
@@ -192,7 +188,7 @@ namespace G4 {
                         _player.uri = uri_new;
                     }
                     if (uri_new != null)
-                        _settings?.set_string ("played-uri", (!)uri_new);
+                        _settings.set_string ("played-uri", (!)uri_new);
                     _current_music = value;
                     music_changed (value);
                 }
@@ -271,7 +267,7 @@ namespace G4 {
 
         public Music? popover_music { get; set; }
 
-        public Settings? settings {
+        public Settings settings {
             get {
                 return _settings;
             }
@@ -409,8 +405,8 @@ namespace G4 {
             } else if (_current_music != null && _current_music == _music_list.get_item (_current_item)) {
                 play_item = _current_item;
             } else {
-                var uri = _current_music?.uri ?? _settings?.get_string ("played-uri");
-                if (uri != null) {
+                var uri = _current_music?.uri ?? _settings.get_string ("played-uri");
+                if (uri.length > 0) {
                     play_item = find_music_item_by_uri ((!)uri);
                 }
             }

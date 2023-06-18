@@ -70,10 +70,10 @@ namespace G4 {
             this.close_request.connect (on_close_request);
 
             var settings = app.settings;
-            settings?.bind ("width", this, "default-width", SettingsBindFlags.DEFAULT);
-            settings?.bind ("height", this, "default-height", SettingsBindFlags.DEFAULT);
-            settings?.bind ("blur-mode", this, "blur-mode", SettingsBindFlags.DEFAULT);
-            settings?.bind ("compact-playlist", this, "compact-playlist", SettingsBindFlags.DEFAULT);
+            settings.bind ("width", this, "default-width", SettingsBindFlags.DEFAULT);
+            settings.bind ("height", this, "default-height", SettingsBindFlags.DEFAULT);
+            settings.bind ("blur-mode", this, "blur-mode", SettingsBindFlags.DEFAULT);
+            settings.bind ("compact-playlist", this, "compact-playlist", SettingsBindFlags.DEFAULT);
 
             setup_drop_target ();
 
@@ -253,7 +253,7 @@ namespace G4 {
 
         private bool on_close_request () {
             var app = (Application) application;
-            if (app.player.playing && (app.settings?.get_boolean ("play-background") ?? false)) {
+            if (app.player.playing && app.settings.get_boolean ("play-background")) {
                 app.request_background ();
                 this.hide ();
                 return true;

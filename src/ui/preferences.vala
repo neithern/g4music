@@ -37,12 +37,12 @@ namespace G4 {
         public PreferencesWindow (Application app) {
             var settings = app.settings;
 
-            settings?.bind ("dark-theme", dark_btn, "active", SettingsBindFlags.DEFAULT);
+            settings.bind ("dark-theme", dark_btn, "active", SettingsBindFlags.DEFAULT);
 
             blur_row.model = new Gtk.StringList ({_("Never"), _("Always"), _("Art Only")});
-            settings?.bind ("blur-mode", blur_row, "selected", SettingsBindFlags.DEFAULT);
+            settings.bind ("blur-mode", blur_row, "selected", SettingsBindFlags.DEFAULT);
 
-            settings?.bind ("compact-playlist", compact_btn, "active", SettingsBindFlags.DEFAULT);
+            settings.bind ("compact-playlist", compact_btn, "active", SettingsBindFlags.DEFAULT);
 
             music_dir_btn.label = get_display_name (app.music_folder);
             music_dir_btn.clicked.connect (() => {
@@ -51,19 +51,19 @@ namespace G4 {
                 }, (obj, res) => pick_music_folder_async.end (res));
             });
 
-            settings?.bind ("monitor-changes", monitor_btn, "active", SettingsBindFlags.DEFAULT);
+            settings.bind ("monitor-changes", monitor_btn, "active", SettingsBindFlags.DEFAULT);
 
-            settings?.bind ("remote-thumbnail", thumbnail_btn, "active", SettingsBindFlags.DEFAULT);
+            settings.bind ("remote-thumbnail", thumbnail_btn, "active", SettingsBindFlags.DEFAULT);
 
-            settings?.bind ("play-background", playbkgnd_btn, "active", SettingsBindFlags.DEFAULT);
+            settings.bind ("play-background", playbkgnd_btn, "active", SettingsBindFlags.DEFAULT);
 
             replaygain_row.model = new Gtk.StringList ({_("Never"), _("Track"), _("Album")});
-            settings?.bind ("replay-gain", replaygain_row, "selected", SettingsBindFlags.DEFAULT);
+            settings.bind ("replay-gain", replaygain_row, "selected", SettingsBindFlags.DEFAULT);
 
-            settings?.bind ("gapless-playback", gapless_btn, "active", SettingsBindFlags.DEFAULT);
+            settings.bind ("gapless-playback", gapless_btn, "active", SettingsBindFlags.DEFAULT);
 
-            settings?.bind ("show-peak", peak_row, "enable_expansion", SettingsBindFlags.DEFAULT);
-            settings?.bind ("peak-characters", peak_entry, "text", SettingsBindFlags.DEFAULT);
+            settings.bind ("show-peak", peak_row, "enable_expansion", SettingsBindFlags.DEFAULT);
+            settings.bind ("peak-characters", peak_entry, "text", SettingsBindFlags.DEFAULT);
 
             GstPlayer.get_audio_sinks (_audio_sinks);
             var sink_names = new string[_audio_sinks.length];

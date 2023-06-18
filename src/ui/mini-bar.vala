@@ -72,9 +72,9 @@ namespace G4 {
 
             var app = (Application) GLib.Application.get_default ();
             var settings = app.settings;
-            settings?.bind ("show-peak", _peak, "visible", SettingsBindFlags.DEFAULT);
-            settings?.bind ("show-peak", _time, "visible", SettingsBindFlags.GET | SettingsBindFlags.SET | SettingsBindFlags.INVERT_BOOLEAN);
-            settings?.bind ("peak-characters", _peak, "characters", SettingsBindFlags.DEFAULT);
+            settings.bind ("show-peak", _peak, "visible", SettingsBindFlags.DEFAULT);
+            settings.bind ("show-peak", _time, "visible", SettingsBindFlags.GET | SettingsBindFlags.SET | SettingsBindFlags.INVERT_BOOLEAN);
+            settings.bind ("peak-characters", _peak, "characters", SettingsBindFlags.DEFAULT);
 
             var player = app.player;
             player.duration_changed.connect (on_duration_changed);
