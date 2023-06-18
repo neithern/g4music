@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-06-17 15:36+0800\n"
-"PO-Revision-Date: 2023-06-17 15:39+0800\n"
+"PO-Revision-Date: 2023-06-18 09:34+0800\n"
 "Last-Translator: Nanling <neithern@outlook.com>\n"
 "Language-Team: Chinese - China <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
@@ -144,7 +144,7 @@ msgstr "启用无缝续播"
 
 #: src/gtk/preferences.ui:138
 msgid "Normalize volume with ReplayGain"
-msgstr "启用音量平衡"
+msgstr "自动音量平衡"
 
 #: src/gtk/preferences.ui:143
 msgid "Prefer audio sink"
