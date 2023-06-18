@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-17 15:36+0800\n"
-"PO-Revision-Date: 2023-06-17 15:40+0800\n"
+"POT-Creation-Date: 2023-06-18 22:31+0800\n"
+"PO-Revision-Date: 2023-06-18 22:34+0800\n"
 "Last-Translator: Nanling <neithern@outlook.com>\n"
 "Language-Team: Chinese - China <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0\n"
 "X-Generator: Gtranslator 42.0\n"
 
-#: data/app.desktop.in:3 src/application.vala:279 src/main.vala:24
+#: data/app.desktop.in:3 src/application.vala:262 src/main.vala:24
 msgid "G4Music"
 msgstr "G4音樂"
 
@@ -48,43 +48,53 @@ msgstr "顯示快捷鍵"
 
 #: src/gtk/help-overlay.ui:20
 msgctxt "shortcut window"
+msgid "Preferences"
+msgstr "偏好設定"
+
+#: src/gtk/help-overlay.ui:26
+msgctxt "shortcut window"
 msgid "Quit"
 msgstr "退出"
 
-#: src/gtk/help-overlay.ui:28
+#: src/gtk/help-overlay.ui:34
 msgctxt "shortcut window"
 msgid "Playback"
 msgstr "播放"
 
-#: src/gtk/help-overlay.ui:31
+#: src/gtk/help-overlay.ui:37
 msgctxt "shortcut window"
 msgid "Play/Pause"
 msgstr "播放/暫停"
 
-#: src/gtk/help-overlay.ui:37
+#: src/gtk/help-overlay.ui:43
 msgctxt "shortcut window"
 msgid "Play Next"
 msgstr "播放下一首"
 
-#: src/gtk/help-overlay.ui:43
+#: src/gtk/help-overlay.ui:49
 msgctxt "shortcut window"
 msgid "Play Previous"
 msgstr "播放上一首"
 
-#: src/gtk/help-overlay.ui:51
+#: src/gtk/help-overlay.ui:57
 msgctxt "shortcut window"
 msgid "Playlist"
 msgstr "播放清單"
 
-#: src/gtk/help-overlay.ui:54
+#: src/gtk/help-overlay.ui:60
 msgctxt "shortcut window"
 msgid "Search"
 msgstr "搜尋"
 
-#: src/gtk/help-overlay.ui:60
+#: src/gtk/help-overlay.ui:66
 msgctxt "shortcut window"
 msgid "Toggle Sort"
 msgstr "切換排序"
+
+#: src/gtk/help-overlay.ui:72
+msgctxt "shortcut window"
+msgid "Reload List"
+msgstr "更新清單"
 
 #: src/gtk/preferences.ui:12
 msgid "Appearance"
@@ -134,7 +144,7 @@ msgstr "顯示音訊峰值"
 msgid "Display characters"
 msgstr "顯示的字元"
 
-#: src/gtk/preferences.ui:116 src/application.vala:467
+#: src/gtk/preferences.ui:116 src/application.vala:448
 msgid "Keep playing after window closed"
 msgstr "關閉視窗後繼續播放"
 
@@ -202,15 +212,15 @@ msgstr "依日期"
 msgid "Shuffle"
 msgstr "亂序播放"
 
-#: src/application.vala:473
+#: src/application.vala:454
 msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr "一個快速、流暢、輕量，基於 GTK4 的音樂播放軟體。"
 
-#: src/application.vala:475
+#: src/application.vala:456
 msgid "translator-credits"
 msgstr "Julian"
 
-#: src/application.vala:683
+#: src/application.vala:669
 msgid "Keep playing"
 msgstr "持續播放"
 
@@ -282,7 +292,7 @@ msgstr "音量："
 msgid "Loading..."
 msgstr "正在載入…"
 
-#: src/ui/window.vala:518
+#: src/ui/window.vala:526
 msgid ""
 "Drag and drop music files here,\n"
 "or change music location: "
