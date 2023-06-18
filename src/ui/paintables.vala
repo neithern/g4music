@@ -230,20 +230,20 @@ namespace G4 {
     }
 
     public const uint32[] BACKGROUND_COLORS = {
-        0xffcfe1f5u, 0xff83b6ecu, 0xff337fdcu,  // blue
-        0xffcaeaf2u, 0xff7ad9f1u, 0xff0f9ac8u,  // cyan
-        0xffcef8d8u, 0xff8de6b1u, 0xff29ae74u,  // green
-        0xffe6f9d7u, 0xffb5e98au, 0xff6ab85bu,  // lime
-        0xfff9f4e1u, 0xfff8e359u, 0xffd29d09u,  // yellow
-        0xffffead1u, 0xffffcb62u, 0xffd68400u,  // gold
-        0xffffe5c5u, 0xffffa95au, 0xffed5b00u,  // orange
-        0xfff8d2ceu, 0xfff78773u, 0xffe62d42u,  // raspberry
-        0xfffac7deu, 0xffe973abu, 0xffe33b6au,  // magenta
-        0xffe7c2e8u, 0xffcb78d4u, 0xff9945b5u,  // purple
-        0xffd5d2f5u, 0xff9e91e8u, 0xff7a59cau,  // violet
-        0xfff2eadeu, 0xffe3cf9cu, 0xffb08952u,  // beige
-        0xffe5d6cau, 0xffbe916du, 0xff785336u,  // brown
-        0xffd8d7d3u, 0xffc0bfbcu, 0xff6e6d71u,  // gray
+        0xff83b6ecu, 0xff337fdcu,  // blue
+        0xff7ad9f1u, 0xff0f9ac8u,  // cyan
+        0xff8de6b1u, 0xff29ae74u,  // green
+        0xffb5e98au, 0xff6ab85bu,  // lime
+        0xfff8e359u, 0xffd29d09u,  // yellow
+        0xffffcb62u, 0xffd68400u,  // gold
+        0xffffa95au, 0xffed5b00u,  // orange
+        0xfff78773u, 0xffe62d42u,  // raspberry
+        0xffe973abu, 0xffe33b6au,  // magenta
+        0xffcb78d4u, 0xff9945b5u,  // purple
+        0xff9e91e8u, 0xff7a59cau,  // violet
+        0xffe3cf9cu, 0xffb08952u,  // beige
+        0xffbe916du, 0xff785336u,  // brown
+        0xffc0bfbcu, 0xff6e6d71u,  // gray
     };
 
     public Gdk.RGBA color_from_uint (uint color) {
@@ -261,14 +261,14 @@ namespace G4 {
         rect.init (0, 0,  width, height);
 
         var c = Gdk.RGBA ();
-        if (color_index < BACKGROUND_COLORS.length / 3) {
-            c = color_from_uint (BACKGROUND_COLORS[color_index * 3]);
-            var c1 = color_from_uint (BACKGROUND_COLORS[color_index * 3 + 1]);
-            var c2 = color_from_uint (BACKGROUND_COLORS[color_index * 3 + 2]);
+        c.alpha = 1f;
+        if (color_index < BACKGROUND_COLORS.length / 2) {
+            c.red = c.green = c.blue = 0.9f;
+            var c1 = color_from_uint (BACKGROUND_COLORS[color_index * 2]);
+            var c2 = color_from_uint (BACKGROUND_COLORS[color_index * 2 + 1]);
             Gsk.ColorStop[] stops = { { 0, c1 }, { 0.5f, c2 }, { 1, c1 } };
             snapshot.append_linear_gradient (rect, rect.get_top_left (), rect.get_bottom_right (), stops);
         } else {
-            c.alpha = 1f;
             c.red = c.green = c.blue = 0.5f;
         }
 
@@ -309,7 +309,7 @@ namespace G4 {
         </linearGradient>
     </defs>
     <rect rx="13.3" ry="13.3" width="128" height="128" fill="url(#background)"/>
-    <text x="%g" y="%g" fill="#%06x" font-family="Serif" font-size="51.2" font-weight="bold">%s</text>
+    <text x="%g" y="%g" fill="#e6e6e6" font-family="Serif" font-size="51.2" font-weight="bold">%s</text>
 </svg>
     """;
 
@@ -318,13 +318,10 @@ namespace G4 {
         var width = 128, height = 128;
         rect.init (0, 0,  width, height);
 
-        uint c = 0, c1 = 0, c2 = 0;
-        if (color_index < BACKGROUND_COLORS.length / 3) {
-            c = BACKGROUND_COLORS[color_index * 3] & 0x00ffffffu;
-            c1 = BACKGROUND_COLORS[color_index * 3 + 1] & 0x00ffffffu;
-            c2 = BACKGROUND_COLORS[color_index * 3 + 2] & 0x00ffffffu;
-        } else {
-            c = 0x7f7f7f;
+        uint c1 = 0, c2 = 0;
+        if (color_index < BACKGROUND_COLORS.length / 2) {
+            c1 = BACKGROUND_COLORS[color_index * 2] & 0x00ffffffu;
+            c2 = BACKGROUND_COLORS[color_index * 2 + 1] & 0x00ffffffu;
         }
 
         var font_size = height * 0.4;
@@ -345,7 +342,7 @@ namespace G4 {
 
         var x = - ink_rect.x + (width - logic_rect.width) * 0.5f;
         var y = - ink_rect.y + (height + logic_rect.height) * 0.5f;
-        return TEXT_SVG_FORMAT.printf (c1, c2, c1, x, y, c, text);
+        return TEXT_SVG_FORMAT.printf (c1, c2, c1, x, y, text);
     }
 
     public Gdk.Paintable? create_blur_paintable (Gtk.Widget widget, Gdk.Paintable paintable,

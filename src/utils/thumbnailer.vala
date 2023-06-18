@@ -233,7 +233,7 @@ namespace G4 {
 
         public Gdk.Paintable create_album_text_paintable (Music music) {
             var text = parse_abbreviation (music.album);
-            var color_count = BACKGROUND_COLORS.length / 3;
+            var color_count = BACKGROUND_COLORS.length / 2;
             var color_index = (text.length == 0 || text == UNKNOWN_ALBUM)
                     ? color_count - 1
                     : str_hash (text) % (color_count - 1);
@@ -242,7 +242,7 @@ namespace G4 {
 
         public string create_album_text_svg (Music music) {
             var text = parse_abbreviation (music.album);
-            var color_count = BACKGROUND_COLORS.length / 3;
+            var color_count = BACKGROUND_COLORS.length / 2;
             var color_index = (text.length == 0 || text == UNKNOWN_ALBUM)
                     ? color_count - 1
                     : str_hash (text) % (color_count - 1);
