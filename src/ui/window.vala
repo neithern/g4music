@@ -388,7 +388,7 @@ namespace G4 {
                 var target = new Adw.CallbackAnimationTarget ((value) => scale_paintable.scale = value);
                 _scale_animation?.pause ();
                 _scale_animation = new Adw.TimedAnimation (music_cover,  scale_paintable.scale,
-                                            state == Gst.State.PLAYING ? 1 : 0.8, 500, target);
+                                            state == Gst.State.PLAYING ? 1 : 0.85, 500, target);
                 _scale_animation?.play ();
             }
         }
