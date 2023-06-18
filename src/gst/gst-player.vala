@@ -1,5 +1,11 @@
 namespace G4 {
 
+    enum TagState {
+        NONE,
+        PARTIAL,
+        PARSED
+    }
+
     public class GstPlayer : Object {
         struct Peak {
             Gst.ClockTime time;
@@ -42,7 +48,7 @@ namespace G4 {
         private bool _show_peak = false;
         private Gst.State _state = Gst.State.NULL;
         private int64 _tag_hash = int64.MIN;
-        private bool _tag_parsed = false;
+        private TagState _tag_state = TagState.NONE;
         private TimeoutSource? _timer = null;
         private unowned Gst.Caps? _last_caps = null;
         private double _last_peak = 0;
@@ -123,7 +129,7 @@ namespace G4 {
                     _duration = Gst.CLOCK_TIME_NONE;
                     _position = Gst.CLOCK_TIME_NONE;
                     _tag_hash = int64.MIN;
-                    _tag_parsed = false;
+                    _tag_state = TagState.NONE;
                     _peaks.clear_full (free);
                     var cur = (string?) _pipeline?.uri;
                     if (strcmp (cur, value) != 0)
@@ -242,9 +248,9 @@ namespace G4 {
                         message.parse_state_changed (out old, out state, out pending);
                         if (old == Gst.State.READY && state == Gst.State.PAUSED) {
                             on_duration_changed ();
-                            if (!_tag_parsed) {
+                            if (_tag_state == TagState.NONE) {
                                 //  Emit a fake if no tag parsed
-                                _tag_parsed = true;
+                                _tag_state = TagState.PARSED;
                                 tag_parsed (null, null, null, null);
                             }
                         }
@@ -281,7 +287,7 @@ namespace G4 {
                     break;
 
                 case Gst.MessageType.TAG:
-                    if (!_tag_parsed) {
+                    if (_tag_state != TagState.PARSED) {
                         parse_tags (message);
                     }
                     break;
@@ -314,13 +320,13 @@ namespace G4 {
             message.parse_tag (out tags);
 
             string? album = null, artist = null, title = null;
-            var ret = tags.get_string (Gst.Tags.ALBUM, out album);
-            ret |= tags.get_string (Gst.Tags.ARTIST, out artist);
-            ret |= tags.get_string (Gst.Tags.TITLE, out title);
+            var valid = tags.get_string (Gst.Tags.ALBUM, out album);
+            valid |= tags.get_string (Gst.Tags.ARTIST, out artist);
+            valid |= tags.get_string (Gst.Tags.TITLE, out title);
 
             Gst.Sample? image = parse_image_from_tag_list (tags);
-            ret |= image != null;
-            _tag_parsed = ret;
+            valid |= image != null;
+            _tag_state = valid ? TagState.PARSED : TagState.PARTIAL;
 
             var hash = str_hash (album ?? "") | str_hash (artist ?? "") | str_hash (title ?? "")
                         | (image?.get_buffer ()?.get_size () ?? 0);

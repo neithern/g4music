@@ -419,19 +419,22 @@ namespace G4 {
             if (_current_music != null) {
                 var music = (!)_current_music;
                 var dir = File.new_build_filename (Environment.get_user_cache_dir (), application_id);
-                var name = Checksum.compute_for_string (ChecksumType.MD5, music.uri);
+                var name = Checksum.compute_for_string (ChecksumType.MD5, music.cover_key);
                 var file = dir.get_child (name);
-                bool saved = false;
-                if (_cover_image != null) {
-                    saved = yield save_sample_to_file_async (file, (!)_cover_image);
-                } else if (music.cover_uri == null) {
-                    var svg = _thumbnailer.create_album_text_svg (music);
-                    saved = yield save_text_to_file_async (file, svg);
+                var file_uri = file.get_uri ();
+                bool saved = strcmp (file_uri, _cover_tmp_file?.get_uri ()) == 0;
+                if (!saved) {
+                    if (_cover_image != null) {
+                        saved = yield save_sample_to_file_async (file, (!)_cover_image);
+                    } else if (music.cover_uri == null) {
+                        var svg = _thumbnailer.create_album_text_svg (music);
+                        saved = yield save_text_to_file_async (file, svg);
+                    }
                 }
                 if (music == _current_music) {
-                    var uri = saved ? file.get_uri () : music.cover_uri;
+                    var uri = saved ? file_uri : music.cover_uri;
                     music_cover_parsed (music, uri);
-                    if (file != _cover_tmp_file) {
+                    if (strcmp (file_uri, _cover_tmp_file?.get_uri ()) != 0) {
                         yield delete_cover_tmp_file_async ();
                         _cover_tmp_file = file;
                     }
