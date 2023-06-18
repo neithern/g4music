@@ -497,9 +497,14 @@ namespace G4 {
             }
         }
 
+        private uint _pending_mic_handler = 0;
+
         private void on_music_items_changed (uint position, uint removed, uint added) {
             if (removed != 0 || added != 0) {
-                run_idle_once (() => {
+                if (_pending_mic_handler != 0)
+                    Source.remove (_pending_mic_handler);
+                _pending_mic_handler = run_idle_once (() => {
+                    _pending_mic_handler = 0;
                     if (!update_current_item ())
                         index_changed (_current_item, _music_list.get_n_items ());
                 });

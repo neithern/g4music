@@ -70,7 +70,7 @@ namespace G4 {
         }
     }
 
-    public static async V run_async<V> (TaskFunc<V> task, bool front = false, bool in_single_pool = false) {
+    public async V run_async<V> (TaskFunc<V> task, bool front = false, bool in_single_pool = false) {
         var worker = new Worker<V> (task, run_async<V>.callback);
         try {
             unowned var pool = in_single_pool ? Worker.get_single_thread_pool () : Worker.get_multi_thread_pool ();
@@ -84,14 +84,14 @@ namespace G4 {
         return worker.result;
     }
 
-    public static void run_idle_once (owned VoidFunc func) {
-        Idle.add (() => {
+    public uint run_idle_once (owned VoidFunc func) {
+        return Idle.add (() => {
             func ();
             return false;
         });
     }
 
-    public static async void run_void_async (VoidFunc task) {
+    public async void run_void_async (VoidFunc task) {
         yield run_async<void> (task);
     }
 }
