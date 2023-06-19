@@ -120,6 +120,14 @@ namespace G4 {
             scroll_view.vadjustment.changed.connect (on_scrollview_vadjustment_changed);
 
             list_view.activate.connect ((index) => app.current_item = (int) index);
+            Idle.add (() => {
+                // Delay set model after the window shown to avoid slowing down it showing
+                if (get_height () > 0 && list_view.get_model () == null) {
+                    list_view.model = new Gtk.NoSelection (app.music_list);
+                    run_idle_once (() => scroll_to_item (app.current_item), Priority.HIGH);
+                }
+                return list_view.get_model () == null;
+            }, Priority.LOW);
 
             initial_label.activate_link.connect (on_music_folder_clicked);
 
@@ -193,15 +201,6 @@ namespace G4 {
                 color2.alpha = 0.25f;
                 Gsk.ColorStop[] stops = { { 0, color }, { 0.5f, color2 }, { 1, color } };
                 snapshot.append_linear_gradient (rect, rect.get_top_left (), rect.get_bottom_right (), stops);
-            }
-
-            if (list_view.get_model () == null) {
-                // Delay set model after the window shown to avoid slowing down it showing
-                run_idle_once (() => {
-                    var app = (Application) application;
-                    list_view.model = new Gtk.NoSelection (app.music_list);
-                    run_idle_once (() => scroll_to_item (app.current_item));
-                });
             }
             base.snapshot (snapshot);
         }
