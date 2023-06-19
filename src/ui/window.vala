@@ -1,10 +1,10 @@
 namespace G4 {
 
-    enum SearchType {
-        ALL,
-        ALBUM,
-        ARTIST,
-        TITLE
+    namespace SearchType {
+        public const uint ALL = 0;
+        public const uint ALBUM = 1;
+        public const uint ARTIST = 2;
+        public const uint TITLE = 3;
     }
 
     [GtkTemplate (ui = "/com/github/neithern/g4music/gtk/window.ui")]
@@ -46,7 +46,7 @@ namespace G4 {
 
         private MiniBar _mini_bar = new MiniBar ();
 
-        private BlurMode _bkgnd_blur = BlurMode.ALWAYS;
+        private uint _bkgnd_blur = BlurMode.ALWAYS;
         private CrossFadePaintable _bkgnd_paintable = new CrossFadePaintable ();
         private CrossFadePaintable _cover_paintable = new CrossFadePaintable ();
         private Gdk.Paintable? _loading_paintable = null;
@@ -60,7 +60,7 @@ namespace G4 {
 
         private string _search_text = "";
         private string _search_property = "";
-        private SearchType _search_type = SearchType.ALL;
+        private uint _search_type = SearchType.ALL;
 
         public Window (Application app) {
             Object (application: app);
@@ -136,7 +136,7 @@ namespace G4 {
                 return _bkgnd_blur;
             }
             set {
-                _bkgnd_blur = (BlurMode) value;
+                _bkgnd_blur = value;
                 update_background ();
             }
         }

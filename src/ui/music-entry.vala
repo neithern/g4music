@@ -82,7 +82,7 @@ namespace G4 {
             }
         }
 
-        public void update (Music music, SortMode sort) {
+        public void update (Music music, uint sort) {
             _music = music;
             switch (sort) {
                 case SortMode.ALBUM:

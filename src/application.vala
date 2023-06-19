@@ -283,7 +283,7 @@ namespace G4 {
                 var action = lookup_action (ACTION_SORT);
                 var state = new Variant.string (value.to_string ());
                 (action as SimpleAction)?.set_state (state);
-                _music_store.sort_mode = (SortMode) value;
+                _music_store.sort_mode = value;
             }
         }
 
@@ -319,7 +319,7 @@ namespace G4 {
             unowned var value = state?.get_string () ?? "";
             int mode = 2;
             int.try_parse (value, out mode, null, 10);
-            sort_mode = (SortMode) mode;
+            sort_mode = mode;
         }
 
         public void toggle_search () {
@@ -332,7 +332,7 @@ namespace G4 {
             if (sort_mode >= SortMode.SHUFFLE)
                 sort_mode = SortMode.ALBUM;
             else
-                sort_mode = (SortMode) (sort_mode + 1);
+                sort_mode = sort_mode + 1;
         }
 
         public bool update_current_item () {

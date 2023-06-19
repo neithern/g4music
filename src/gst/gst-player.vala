@@ -1,9 +1,9 @@
 namespace G4 {
 
-    enum TagState {
-        NONE,
-        PARTIAL,
-        PARSED
+    namespace TagState {
+        public const uint NONE = 0;
+        public const uint PARTIAL = 1;
+        public const uint PARSED = 2;
     }
 
     public class GstPlayer : Object {
@@ -48,7 +48,7 @@ namespace G4 {
         private bool _show_peak = false;
         private Gst.State _state = Gst.State.NULL;
         private int64 _tag_hash = int64.MIN;
-        private TagState _tag_state = TagState.NONE;
+        private uint _tag_state = TagState.NONE;
         private TimeoutSource? _timer = null;
         private unowned Gst.Caps? _last_caps = null;
         private double _last_peak = 0;

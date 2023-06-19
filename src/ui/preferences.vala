@@ -1,8 +1,8 @@
 namespace G4 {
-    public enum BlurMode {
-        NEVER,
-        ALWAYS,
-        ART_ONLY
+    namespace BlurMode {
+        public const uint NEVER = 0;
+        public const uint ALWAYS = 1;
+        public const uint ART_ONLY = 2;
     }
 
     [GtkTemplate (ui = "/com/github/neithern/g4music/gtk/preferences.ui")]

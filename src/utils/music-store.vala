@@ -1,11 +1,11 @@
 namespace G4 {
 
-    public enum SortMode {
-        ALBUM,
-        ARTIST,
-        TITLE,
-        RECENT,
-        SHUFFLE,
+    namespace SortMode {
+        public const uint ALBUM = 0;
+        public const uint ARTIST = 1;
+        public const uint TITLE = 2;
+        public const uint RECENT = 3;
+        public const uint SHUFFLE = 4;
     }
 
     public class Progress : Object {
@@ -42,7 +42,7 @@ namespace G4 {
         }
 
         private bool _monitor_changes = false;
-        private SortMode _sort_mode = SortMode.TITLE;
+        private uint _sort_mode = SortMode.TITLE;
         private CompareDataFunc<Object> _compare = Music.compare_by_title;
         private ListStore _store = new ListStore (typeof (Music));
         private TagCache _tag_cache = new TagCache ();
@@ -71,7 +71,7 @@ namespace G4 {
             }
         }
 
-        public SortMode sort_mode {
+        public uint sort_mode {
             get {
                 return _sort_mode;
             }
