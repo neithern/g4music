@@ -413,9 +413,13 @@ namespace G4 {
                     _scroll_animation = new Adw.TimedAnimation (scroll_view, from, scroll_to, 500, target);
                     _scroll_animation?.play ();
                 } 
-            } else {
-                //  Don't scroll if items not size_allocated, to ensure items visible in GNOME 42
-                //  list_view.activate_action_variant ("list.scroll-to-item", new Variant.uint32 (index));
+            } else if ((list_view.get_model ()?.get_n_items () ?? 0) > 0) {
+#if GTK_4_10
+                list_view.activate_action_variant ("list.scroll-to-item", new Variant.uint32 (index));
+#else
+                //  Delay scroll if items not size_allocated, to ensure items visible in GNOME 42
+                run_idle_once (() => scroll_to_item (index));
+#endif
             }
         }
 
