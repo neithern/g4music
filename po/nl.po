@@ -236,7 +236,7 @@ msgid "Show Artist"
 msgstr "Artiest tonen"
 
 #: src/window.vala:51
-msgid "Loading…"
+msgid "Loading..."
 msgstr "Bezig met laden…"
 
 #: src/window.vala:261

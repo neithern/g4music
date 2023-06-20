@@ -56,7 +56,7 @@ namespace G4 {
         private int _blur_size = 512;
         private int _cover_size = 1024;
         private double _item_height = 0;
-        private string _loading_text = _("Loading…");
+        private string _loading_text = _("Loading...");
 
         private string _search_text = "";
         private string _search_property = "";
@@ -96,7 +96,7 @@ namespace G4 {
             _cover_paintable.paintable = app.icon;
 
             app.thumbnailer.pango_context = get_pango_context ();
-            _loading_paintable = app.thumbnailer.create_simple_text_paintable ("…", Thumbnailer.ICON_SIZE);
+            _loading_paintable = app.thumbnailer.create_simple_text_paintable ("...", Thumbnailer.ICON_SIZE);
 
             _scale_cover_paintable.paintable = new RoundPaintable (_cover_paintable, 12);
             _scale_cover_paintable.scale = 0.8;

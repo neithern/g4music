@@ -237,7 +237,7 @@ msgid "Show Artist"
 msgstr "Kuva esitaja"
 
 #: src/window.vala:51
-msgid "Loading…"
+msgid "Loading..."
 msgstr "Laadimine…"
 
 #: src/window.vala:261

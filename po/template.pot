@@ -286,7 +286,7 @@ msgid "Volume: "
 msgstr ""
 
 #: src/ui/window.vala:59
-msgid "Loading…"
+msgid "Loading..."
 msgstr ""
 
 #: src/ui/window.vala:526

@@ -261,8 +261,8 @@ msgid "Show Artist"
 msgstr "Sanatçıyı Göster"
 
 #: src/window.vala:52
-msgid "Loading…"
-msgstr "Yükleniyor…"
+msgid "Loading..."
+msgstr "Yükleniyor..."
 
 #: src/window.vala:279
 msgid ""
