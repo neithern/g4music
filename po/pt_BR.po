@@ -213,5 +213,5 @@ msgid "Unknown Artist"
 msgstr "Artista Desconhecido"
 
 #: src/window.vala:49
-msgid "Loading..."
-msgstr "Carregando..."
+msgid "Loading…"
+msgstr "Carregando…"

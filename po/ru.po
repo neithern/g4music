@@ -259,8 +259,8 @@ msgid "Show Artist"
 msgstr "Показать артиста"
 
 #: src/window.vala:52
-msgid "Loading..."
-msgstr "Загрузка..."
+msgid "Loading…"
+msgstr "Загрузка…"
 
 #: src/window.vala:279
 msgid ""

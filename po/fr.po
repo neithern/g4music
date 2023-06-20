@@ -258,8 +258,8 @@ msgid "Show Artist"
 msgstr "Montrer l'artiste"
 
 #: src/window.vala:52
-msgid "Loading..."
-msgstr "Chargement..."
+msgid "Loading…"
+msgstr "Chargement…"
 
 #: src/window.vala:279
 msgid ""
