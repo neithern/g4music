@@ -13,7 +13,7 @@ i18n = import('i18n')
 c_compiler = meson.get_compiler('c')
 vala_compiler = meson.get_compiler('vala')
 
-add_project_arguments('-DGETTEXT_PACKAGE="' + app_id + '"', language: 'c')
+add_project_arguments('-DGETTEXT_PACKAGE="' + meson.project_name() + '"', language: 'c')
 add_project_arguments('--enable-experimental-non-null', language: 'vala')
 
 gtk_dep = dependency('gtk4')
