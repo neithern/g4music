@@ -56,7 +56,7 @@ namespace G4 {
         private int _blur_size = 512;
         private int _cover_size = 1024;
         private double _item_height = 0;
-        private string _loading_text = _("Loading...");
+        private string _loading_text = _("Loading…");
 
         private string _search_text = "";
         private string _search_property = "";

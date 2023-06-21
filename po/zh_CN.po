@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-18 22:31+0800\n"
+"POT-Creation-Date: 2023-06-21 08:10+0800\n"
 "PO-Revision-Date: 2023-06-18 22:33+0800\n"
 "Last-Translator: Nanling <neithern@outlook.com>\n"
 "Language-Team: Chinese - China <i18n-zh@googlegroups.com>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0\n"
 "X-Generator: Gtranslator 42.0\n"
 
-#: data/app.desktop.in:3 src/application.vala:262 src/main.vala:24
+#: data/app.desktop.in:3 src/application.vala:258 src/main.vala:24
 msgid "G4Music"
 msgstr "G4音乐"
 
@@ -144,7 +144,7 @@ msgstr "显示跳动的音频峰值"
 msgid "Display characters"
 msgstr "显示的字符"
 
-#: src/gtk/preferences.ui:116 src/application.vala:448
+#: src/gtk/preferences.ui:116 src/application.vala:444
 msgid "Keep playing after window closed"
 msgstr "关闭窗口后继续播放"
 
@@ -212,15 +212,15 @@ msgstr "按日期"
 msgid "Shuffle"
 msgstr "乱序"
 
-#: src/application.vala:454
+#: src/application.vala:450
 msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr "一个快速、流畅、轻量的，基于GTK4的音乐播放软件。"
 
-#: src/application.vala:456
+#: src/application.vala:452
 msgid "translator-credits"
 msgstr "Nanling"
 
-#: src/application.vala:669
+#: src/application.vala:665
 msgid "Keep playing"
 msgstr "持续播放"
 
@@ -289,10 +289,10 @@ msgid "Volume: "
 msgstr "音量："
 
 #: src/ui/window.vala:59
-msgid "Loading..."
+msgid "Loading…"
 msgstr "正在加载…"
 
-#: src/ui/window.vala:526
+#: src/ui/window.vala:530
 msgid ""
 "Drag and drop music files here,\n"
 "or change music location: "
