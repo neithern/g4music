@@ -213,6 +213,10 @@ namespace G4 {
             return factory;
         }
 
+        private uint get_music_count () {
+            return list_view.get_model ()?.get_n_items () ?? 0;
+        }
+
         public void start_search (string text) {
             search_entry.text = text;
             search_entry.select_region (text.index_of_char (':') + 1, -1);
@@ -270,7 +274,7 @@ namespace G4 {
         private void on_loading_changed (bool loading) {
             var app = (Application) application;
             var index = app.current_item;
-            var size = app.music_list.get_n_items ();
+            var size = get_music_count ();
             action_set_enabled (ACTION_APP + ACTION_RELOAD_LIST, !loading);
             spinner.spinning = loading;
             spinner.visible = loading;
@@ -327,10 +331,9 @@ namespace G4 {
         }
 
         private void on_scrollview_vadjustment_changed () {
-            var app = (Application) application;
             var adj = scroll_view.vadjustment;
             var total = adj.upper - adj.lower;
-            var size = app.music_list.get_n_items ();
+            var size = get_music_count ();
             if (size > 0 && total > list_view.get_height ())
                 _item_height = total / size;
         }
@@ -395,10 +398,10 @@ namespace G4 {
         private Adw.Animation? _scroll_animation = null;
 
         private void scroll_to_item (int index) {
-            if (_item_height > 0) {
-                var adj = scroll_view.vadjustment;
+            var adj = scroll_view.vadjustment;
+            var list_height = list_view.get_height ();
+            if (_item_height > 0 && adj.upper - adj.lower > list_height) {
                 var from = adj.value;
-                var list_height = list_view.get_height ();
                 var max_to = double.max ((index + 1) * _item_height - list_height, 0);
                 var min_to = double.max (index * _item_height, 0);
                 var scroll_to =  from < max_to ? max_to : (from > min_to ? min_to : from);
@@ -413,7 +416,7 @@ namespace G4 {
                     _scroll_animation = new Adw.TimedAnimation (scroll_view, from, scroll_to, 500, target);
                     _scroll_animation?.play ();
                 } 
-            } else if ((list_view.get_model ()?.get_n_items () ?? 0) > 0) {
+            } else if (get_music_count () > 0) {
 #if GTK_4_10
                 list_view.activate_action_variant ("list.scroll-to-item", new Variant.uint32 (index));
 #else
@@ -464,7 +467,7 @@ namespace G4 {
 
         private void update_music_info (Music? music) {
             var app = (Application) application;
-            var size = app.music_list.get_n_items ();
+            var size = get_music_count ();
             var empty = !app.is_loading_store && size == 0 && music == null;
             if (empty) {
                 update_cover_paintables (new Music.empty (), app.icon);
