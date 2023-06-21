@@ -16,9 +16,9 @@
  */
 
 int main (string[] args) {
-    Intl.bindtextdomain (Config.APP_ID, Config.LOCALEDIR);
-    Intl.bind_textdomain_codeset (Config.APP_ID, "UTF-8");
-    Intl.textdomain (Config.APP_ID);
+    Intl.bindtextdomain (Config.CODE_NAME, Config.LOCALEDIR);
+    Intl.bind_textdomain_codeset (Config.CODE_NAME, "UTF-8");
+    Intl.textdomain (Config.CODE_NAME);
 
     Environment.set_prgname (Config.APP_ID);
     Environment.set_application_name (_("G4Music"));

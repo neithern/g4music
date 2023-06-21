@@ -27,6 +27,7 @@ sources = [
 
 conf = configuration_data()
 conf.set_quoted('APP_ID', app_id)
+conf.set_quoted('CODE_NAME', meson.project_name())
 conf.set_quoted('VERSION', version)
 conf.set_quoted('LOCALEDIR', get_option('prefix') / get_option('localedir'))
 configure_file(output: 'config.h', configuration: conf)
