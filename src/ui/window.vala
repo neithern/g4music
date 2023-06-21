@@ -55,8 +55,9 @@ namespace G4 {
         private bool _compact_playlist = false;
         private int _blur_size = 512;
         private int _cover_size = 1024;
-        private double _item_height = 0;
         private string _loading_text = _("Loading…");
+        private double _row_height = 0;
+        private double _scroll_range = 0;
 
         private string _search_text = "";
         private string _search_property = "";
@@ -332,10 +333,12 @@ namespace G4 {
 
         private void on_scrollview_vadjustment_changed () {
             var adj = scroll_view.vadjustment;
-            var total = adj.upper - adj.lower;
+            var range = adj.upper - adj.lower;
             var size = get_music_count ();
-            if (size > 0 && total > list_view.get_height ())
-                _item_height = total / size;
+            if (size > 0 && _scroll_range != range && range > list_view.get_height ()) {
+                _row_height = range / size;
+                _scroll_range = range;
+            }
         }
 
         private void on_search_btn_toggled () {
@@ -400,10 +403,10 @@ namespace G4 {
         private void scroll_to_item (int index) {
             var adj = scroll_view.vadjustment;
             var list_height = list_view.get_height ();
-            if (_item_height > 0 && adj.upper - adj.lower > list_height) {
+            if (_row_height > 0 && adj.upper - adj.lower > list_height) {
                 var from = adj.value;
-                var max_to = double.max ((index + 1) * _item_height - list_height, 0);
-                var min_to = double.max (index * _item_height, 0);
+                var max_to = double.max ((index + 1) * _row_height - list_height, 0);
+                var min_to = double.max (index * _row_height, 0);
                 var scroll_to =  from < max_to ? max_to : (from > min_to ? min_to : from);
                 var diff = (scroll_to - from).abs ();
                 if (diff > list_height) {
