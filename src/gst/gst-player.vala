@@ -182,9 +182,9 @@ namespace G4 {
         public double peak {
             get {
                 double value = _last_peak;
-                if (!parse_peak_from_last_sample (out value)) {
-                    value = _last_peak >= 0.01 ? _last_peak - 0.01 : 0;
-                }
+                if (!parse_peak_from_last_sample (out value))
+                    value = _last_peak;
+                value = double.max (value, _last_peak >= 0.033 ? _last_peak - 0.033 : 0);
                 _last_peak = value;
                 return value;
             }
