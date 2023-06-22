@@ -162,6 +162,7 @@
                             <child>
                               <object class="GtkLabel" id="music_title">
                                 <property name="ellipsize">end</property>
+                                <property name="halign">center</property>
                                 <style>
                                   <class name="title-large"/>
                                 </style>
