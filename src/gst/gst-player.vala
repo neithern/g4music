@@ -45,15 +45,15 @@ namespace G4 {
         private Gst.ClockTime _position = Gst.CLOCK_TIME_NONE;
         private ulong _about_to_finish_id = 0;
         private int _next_uri_requested = 0;
-        private bool _show_peak = false;
         private Gst.State _state = Gst.State.NULL;
         private int64 _tag_hash = int64.MIN;
         private uint _tag_state = TagState.NONE;
         private TimeoutSource? _timer = null;
-        private unowned Gst.Caps? _last_caps = null;
         private double _last_peak = 0;
-        private LevelCalculateFunc? _level_calculate = null;
         private Queue<Peak?> _peaks = new Queue<Peak?> ();
+        private unowned Gst.Caps? _last_caps = null;
+        private unowned Gst.Sample? _last_sample = null;
+        private LevelCalculateFunc? _level_calculate = null;
         private unowned Thread<void> _main_thread = Thread<void>.self ();
 
         public signal void duration_changed (Gst.ClockTime duration);
@@ -64,7 +64,6 @@ namespace G4 {
         public signal void next_uri_start ();
         public signal void state_changed (Gst.State state);
         public signal void tag_parsed (string? album, string? artist, string? title, Gst.Sample? image);
-        public signal void peak_parsed (double peak);
 
         public GstPlayer () {
             if (_pipeline != null) {
@@ -180,22 +179,14 @@ namespace G4 {
             }
         }
 
-        public bool show_peak {
+        public double peak {
             get {
-                return _show_peak;
-            }
-            set {
-                _show_peak = value;
-                if (_timer != null) {
-                    reset_timer ();
+                double value = _last_peak;
+                if (!parse_peak_from_last_sample (out value)) {
+                    value = _last_peak >= 0.01 ? _last_peak - 0.01 : 0;
                 }
-                if (!value) {
-                    Timeout.add (200, () => {
-                        // to clear the showing
-                        peak_parsed (0);
-                        return false;
-                    });
-                }
+                _last_peak = value;
+                return value;
             }
         }
 
@@ -315,6 +306,32 @@ namespace G4 {
             }
         }
 
+        private bool parse_peak_from_last_sample (out double peak_value) {
+            bool parsed = false;
+            peak_value = 0;
+            dynamic Gst.Element? sink = _audio_sink ?? _pipeline?.audio_sink;
+            if (sink != null) {
+                var peak = Peak ();
+                dynamic Gst.Sample? sample = ((!)sink).last_sample;
+                if (_last_sample != sample && sample != null && parse_peak_in_sample ((!)sample, out peak.peak)) {
+                    peak.time = ((!)sample).get_segment ().position;
+                    _peaks.push_tail (peak);
+                    _last_sample = sample;
+                    parsed = true;
+                }
+                while (_peaks.length > 0) {
+                    unowned var p = _peaks.peek_head ();
+                    if (p != null && ((!)p).time >= _position) {
+                        peak_value = ((!)p).peak;
+                        _peaks.pop_head ();
+                    } else {
+                        break;
+                    }
+                }
+            }
+            return parsed;
+        }
+
         private void parse_tags (Gst.Message message) {
             Gst.TagList tags;
             message.parse_tag (out tags);
@@ -339,7 +356,7 @@ namespace G4 {
 
         private void reset_timer () {
             _timer?.destroy ();
-            _timer = new TimeoutSource (_show_peak ? 50 : 200);
+            _timer = new TimeoutSource (200);
             _timer?.set_callback (timeout_callback);
             _timer?.attach (MainContext.default ());
         }
@@ -350,25 +367,6 @@ namespace G4 {
                     && _position != position) {
                 _position = position;
                 position_updated (position);
-            }
-
-            dynamic Gst.Element? sink = null;
-            if (_show_peak && (sink = _audio_sink ?? _pipeline?.audio_sink) != null) {
-                var peak = Peak ();
-                dynamic Gst.Sample? sample = ((!)sink).last_sample;
-                if (sample != null && parse_peak_in_sample ((!)sample, out peak.peak)) {
-                    peak.time = ((!)sample).get_segment ().position;
-                    _peaks.push_tail (peak);
-                }
-                while (_peaks.length > 0) {
-                    unowned var p = _peaks.peek_head ();
-                    if (p != null && ((!)p).time >= _position) {
-                        peak_parsed (((!)p).peak);
-                        _peaks.pop_head ();
-                    } else {
-                        break;
-                    }
-                }
             }
             return true;
         }
@@ -482,8 +480,7 @@ namespace G4 {
                     _level_calculate (p + (sample_size * i), num, channels, bps, sample_size, out nps);
                     total_nps += nps;
                 }
-                peak = double.max (total_nps / channels, _last_peak - 0.1);
-                _last_peak = peak;
+                peak = double.min (total_nps / channels, 1);
                 buffer?.unmap ((!)map_info);
                 return true;
             }

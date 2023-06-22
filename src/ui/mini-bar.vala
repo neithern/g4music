@@ -71,16 +71,15 @@ namespace G4 {
             hbox.append (_next);
 
             var app = (Application) GLib.Application.get_default ();
+            var player = app.player;
+            player.duration_changed.connect (on_duration_changed);
+            player.position_updated.connect (on_position_changed);
+            player.state_changed.connect (on_state_changed);
+
             var settings = app.settings;
             settings.bind ("show-peak", _peak, "visible", SettingsBindFlags.DEFAULT);
             settings.bind ("show-peak", _time, "visible", SettingsBindFlags.GET | SettingsBindFlags.SET | SettingsBindFlags.INVERT_BOOLEAN);
             settings.bind ("peak-characters", _peak, "characters", SettingsBindFlags.DEFAULT);
-
-            var player = app.player;
-            player.duration_changed.connect (on_duration_changed);
-            player.position_updated.connect (on_position_changed);
-            player.peak_parsed.connect (_peak.set_peak);
-            player.state_changed.connect (on_state_changed);
         }
 
         public Gdk.Paintable? cover {

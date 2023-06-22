@@ -53,10 +53,6 @@ namespace G4 {
             _negative.add_css_class ("dim-label");
             _negative.add_css_class ("numeric");
 
-            var settings = app.settings;
-            settings.bind ("peak-characters", _peak, "characters", SettingsBindFlags.DEFAULT);
-            settings.bind ("remain-progress", this, "remain-progress", SettingsBindFlags.DEFAULT);
-
             make_label_clickable (_negative).pressed.connect (() => remain_progress = !remain_progress);
 
             var buttons = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 16);
@@ -103,7 +99,12 @@ namespace G4 {
             player.duration_changed.connect (on_duration_changed);
             player.position_updated.connect (on_position_changed);
             player.state_changed.connect (on_state_changed);
-            player.peak_parsed.connect (_peak.set_peak);
+
+            var settings = app.settings;
+            settings.bind ("show-peak", _peak, "visible", SettingsBindFlags.DEFAULT);
+            settings.bind ("peak-characters", _peak, "characters", SettingsBindFlags.DEFAULT);
+            settings.bind ("remain-progress", this, "remain-progress", SettingsBindFlags.DEFAULT);
+
         }
 
         public bool remain_progress {
