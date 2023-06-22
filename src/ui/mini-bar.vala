@@ -46,7 +46,7 @@ namespace G4 {
 
             _cover.valign = Gtk.Align.CENTER;
             _cover.pixel_size = 40;
-            _cover.paintable = new RoundPaintable (_paintable, 3);
+            _cover.paintable = new RoundPaintable (_paintable);
             _paintable.queue_draw.connect (_cover.queue_draw);
             add_prefix (_cover);
 

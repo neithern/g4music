@@ -94,7 +94,7 @@ namespace G4 {
             app.thumbnailer.pango_context = get_pango_context ();
             _loading_paintable = app.thumbnailer.create_simple_text_paintable ("...", Thumbnailer.ICON_SIZE);
 
-            _matrix_cover_paintable.paintable = new RoundPaintable (_cover_paintable, _rotate_cover ? -1 : 12);
+            _matrix_cover_paintable.paintable = new RoundPaintable (_cover_paintable);
             _matrix_cover_paintable.scale = 0.8;
             _matrix_cover_paintable.queue_draw.connect (music_cover.queue_draw);
             music_cover.paintable = _matrix_cover_paintable;
@@ -179,7 +179,7 @@ namespace G4 {
             set {
                 var app = (Application) application;
                 var paintable = _matrix_cover_paintable.paintable as RoundPaintable;
-                ((!)paintable).radius = value ? -1 : 12;
+                ((!)paintable).ratio = value ? 0.5 : 0.05;
                 _rotate_cover = value;
                 _matrix_cover_paintable.rotation = 0;
                 on_player_state_changed (app.player.state);

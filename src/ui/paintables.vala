@@ -60,31 +60,19 @@ namespace G4 {
     }
 
     public class RoundPaintable : BasePaintable {
-        private float _radius = 0;
-        private float _shadow = 0;
+        private double _ratio = 0;
 
-        public RoundPaintable (Gdk.Paintable? paintable = null, float radius = 0, float shadow = 0) {
+        public RoundPaintable (Gdk.Paintable? paintable = null, double ratio = 0.1) {
             base (paintable);
-            _radius = radius;
-            _shadow = shadow;
+            _ratio = ratio;
         }
 
-        public float radius {
+        public double ratio {
             get {
-                return _radius;
+                return _ratio;
             }
             set {
-                _radius = value;
-                queue_draw ();
-            }
-        }
-
-        public float shadow {
-            get {
-                return _shadow;
-            }
-            set {
-                _shadow = value;
+                _ratio = value;
                 queue_draw ();
             }
         }
@@ -94,22 +82,15 @@ namespace G4 {
             var rounded = Gsk.RoundedRect ();
             rect.init (0, 0, (float) width, (float) height);
 
-            var radius = _radius < 0 ? (float) double.min (width, height) * 0.5f : _radius;
-            rounded.init_from_rect (rect, radius);
+            var radius = double.min (width, height) * _ratio;
+            rounded.init_from_rect (rect, (float) radius);
 
-            if (radius != 0) {
+            if (radius > 0) {
                 snapshot.push_rounded_clip (rounded);
             }
             base.on_snapshot (snapshot, width, height);
-            if (radius != 0) {
+            if (radius > 0) {
                 snapshot.pop ();
-            }
-
-            if (_shadow > 0) {
-                var color = Gdk.RGBA ();
-                color.red = color.green = color.blue = 0.2f;
-                color.alpha = 0.2f;
-                snapshot.append_outset_shadow (rounded, color, _shadow, _shadow, _shadow * 0.5f, radius);
             }
         }
     }
@@ -322,7 +303,7 @@ namespace G4 {
             <stop offset="100%" stop-color="#%06x"/>
         </linearGradient>
     </defs>
-    <rect rx="13.3" ry="13.3" width="128" height="128" fill="url(#background)"/>
+    <rect rx="12.8" ry="12.8" width="128" height="128" fill="url(#background)"/>
     <text x="%g" y="%g" fill="#e6e6e6" font-family="Serif" font-size="51.2" font-weight="bold">%s</text>
 </svg>
     """;

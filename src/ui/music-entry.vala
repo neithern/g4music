@@ -17,7 +17,7 @@ namespace G4 {
             margin_bottom = margin;
 
             _cover.pixel_size = compact ? 36 : 48;
-            _cover.paintable = new RoundPaintable (_paintable, 5);
+            _cover.paintable = new RoundPaintable (_paintable);
             _paintable.queue_draw.connect (_cover.queue_draw);
             append (_cover);
 
