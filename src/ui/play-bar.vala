@@ -17,8 +17,6 @@ namespace G4 {
         construct {
             orientation = Gtk.Orientation.VERTICAL;
             halign = Gtk.Align.CENTER;
-            margin_top = 8;
-            margin_bottom = 32;
 
             var app = (Application) GLib.Application.get_default ();
             var player = app.player;
