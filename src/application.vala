@@ -11,6 +11,7 @@ namespace G4 {
     public const string ACTION_SEARCH = "search";
     public const string ACTION_SEARCH_ALBUM = "search-album";
     public const string ACTION_SEARCH_ARTIST = "search-artist";
+    public const string ACTION_SEARCH_TITLE = "search-title";
     public const string ACTION_SHOW_COVER_FILE = "show-cover-file";
     public const string ACTION_SHOW_MUSIC_FILES = "show-music-file";
     public const string ACTION_SORT = "sort";
@@ -57,6 +58,7 @@ namespace G4 {
                 { ACTION_SEARCH, toggle_search },
                 { ACTION_SEARCH_ALBUM, search_album },
                 { ACTION_SEARCH_ARTIST, search_artist },
+                { ACTION_SEARCH_TITLE, search_title },
                 { ACTION_SHOW_COVER_FILE, show_cover_file },
                 { ACTION_SHOW_MUSIC_FILES, show_music_file },
                 { ACTION_SORT, sort_by, "s", "'2'" },
@@ -623,6 +625,11 @@ namespace G4 {
         private void search_artist () {
             var artist = (_popover_music ?? _current_music)?.artist ?? "";
             (active_window as Window)?.start_search ("artist:" + artist);
+        }
+
+        private void search_title () {
+            var title = (_popover_music ?? _current_music)?.title ?? "";
+            (active_window as Window)?.start_search ("title:" + title);
         }
 
         private void on_player_end () {

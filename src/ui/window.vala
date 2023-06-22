@@ -101,11 +101,14 @@ namespace G4 {
 
             music_album.tooltip_text = _("Search Album");
             music_artist.tooltip_text = _("Search Artist");
-            make_right_clickable (music_box, show_popover_menu);
+            music_title.tooltip_text = _("Search Title");
             make_label_clickable (music_album).released.connect (
                 () => start_search ("album:" + music_album.label));
             make_label_clickable (music_artist).released.connect (
                 () => start_search ("artist:" + music_artist.label));
+            make_label_clickable (music_title).released.connect (
+                () => start_search ("title:" + music_title.label));
+            make_right_clickable (music_box, show_popover_menu);
 
             var play_bar = new PlayBar ();
             music_box.append (play_bar);
