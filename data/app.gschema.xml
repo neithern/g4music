@@ -47,6 +47,10 @@
       <default>0</default>
       <summary>Normalize volume with ReplayGain</summary>
     </key>
+    <key name="rotate-cover" type="b">
+      <default>true</default>
+      <summary>Rotate album cover</summary>
+    </key>
     <key name="peak-characters" type="s">
       <default>'='</default>
       <summary>Peak characters</summary>

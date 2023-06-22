@@ -112,6 +112,17 @@
               </object>
             </child>
             <child>
+              <object class="AdwActionRow" id="rotate_cover">
+                <property name="title" translatable="yes">Rotate album cover</property>
+                <property name="activatable_widget">rotate_btn</property>
+                <child>
+                  <object class="GtkSwitch" id="rotate_btn">
+                    <property name="valign">center</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
               <object class="AdwActionRow">
                 <property name="title" translatable="yes">Keep playing after window closed</property>
                 <property name="activatable_widget">playbkgnd_btn</property>

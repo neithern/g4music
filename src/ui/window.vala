@@ -56,6 +56,7 @@ namespace G4 {
         private int _blur_size = 512;
         private int _cover_size = 1024;
         private string _loading_text = _("Loading…");
+        private bool _rotate_cover = true;
         private double _row_height = 0;
         private double _scroll_range = 0;
 
@@ -69,12 +70,6 @@ namespace G4 {
             this.title = app.name;
 
             this.close_request.connect (on_close_request);
-
-            var settings = app.settings;
-            settings.bind ("width", this, "default-width", SettingsBindFlags.DEFAULT);
-            settings.bind ("height", this, "default-height", SettingsBindFlags.DEFAULT);
-            settings.bind ("blur-mode", this, "blur-mode", SettingsBindFlags.DEFAULT);
-            settings.bind ("compact-playlist", this, "compact-playlist", SettingsBindFlags.DEFAULT);
 
             setup_drop_target ();
 
@@ -99,7 +94,7 @@ namespace G4 {
             app.thumbnailer.pango_context = get_pango_context ();
             _loading_paintable = app.thumbnailer.create_simple_text_paintable ("...", Thumbnailer.ICON_SIZE);
 
-            _matrix_cover_paintable.paintable = new RoundPaintable (_cover_paintable, -1);
+            _matrix_cover_paintable.paintable = new RoundPaintable (_cover_paintable, _rotate_cover ? -1 : 12);
             _matrix_cover_paintable.scale = 0.8;
             _matrix_cover_paintable.queue_draw.connect (music_cover.queue_draw);
             music_cover.paintable = _matrix_cover_paintable;
@@ -138,6 +133,13 @@ namespace G4 {
             app.music_store.loading_changed.connect (on_loading_changed);
             app.music_store.parse_progress.connect ((percent) => index_title.label = @"$percent%");
             app.player.state_changed.connect (on_player_state_changed);
+
+            var settings = app.settings;
+            settings.bind ("width", this, "default-width", SettingsBindFlags.DEFAULT);
+            settings.bind ("height", this, "default-height", SettingsBindFlags.DEFAULT);
+            settings.bind ("blur-mode", this, "blur-mode", SettingsBindFlags.DEFAULT);
+            settings.bind ("compact-playlist", this, "compact-playlist", SettingsBindFlags.DEFAULT);
+            settings.bind ("rotate-cover", this, "rotate-cover", SettingsBindFlags.DEFAULT);
         }
 
         public uint blur_mode {
@@ -146,7 +148,8 @@ namespace G4 {
             }
             set {
                 _bkgnd_blur = value;
-                update_background ();
+                if (get_width () > 0)
+                    update_background ();
             }
         }
 
@@ -163,6 +166,20 @@ namespace G4 {
         public bool leaflet_folded {
             set {
                 leaflet.navigate (Adw.NavigationDirection.FORWARD);
+            }
+        }
+
+        public bool rotate_cover {
+            get {
+                return _rotate_cover;
+            }
+            set {
+                var app = (Application) application;
+                var paintable = _matrix_cover_paintable.paintable as RoundPaintable;
+                ((!)paintable).radius = value ? -1 : 12;
+                _rotate_cover = value;
+                _matrix_cover_paintable.rotation = 0;
+                on_player_state_changed (app.player.state);
             }
         }
 
@@ -398,10 +415,10 @@ namespace G4 {
                 _scale_animation?.play ();
             }
 
-            if (state != Gst.State.PLAYING && _tick_handler != 0) {
+            if ((!_rotate_cover || state != Gst.State.PLAYING) && _tick_handler != 0) {
                 remove_tick_callback (_tick_handler);
                 _tick_handler = 0;
-            } else if (state == Gst.State.PLAYING && _tick_handler == 0) {
+            } else if (_rotate_cover && state == Gst.State.PLAYING && _tick_handler == 0) {
                 _tick_last_time = get_monotonic_time ();
                 _tick_handler = add_tick_callback (on_tick_callback);
             }
@@ -491,6 +508,7 @@ namespace G4 {
             var size = get_music_count ();
             var empty = !app.is_loading_store && size == 0 && music == null;
             if (empty) {
+                _matrix_cover_paintable.rotation = 0;
                 update_cover_paintables (new Music.empty (), app.icon);
                 update_initial_label (app.music_folder);
             }
