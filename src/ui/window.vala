@@ -50,7 +50,7 @@ namespace G4 {
         private CrossFadePaintable _bkgnd_paintable = new CrossFadePaintable ();
         private CrossFadePaintable _cover_paintable = new CrossFadePaintable ();
         private Gdk.Paintable? _loading_paintable = null;
-        private ScalePaintable _scale_cover_paintable = new ScalePaintable ();
+        private MatrixPaintable _matrix_cover_paintable = new MatrixPaintable ();
 
         private bool _compact_playlist = false;
         private int _blur_size = 512;
@@ -99,10 +99,10 @@ namespace G4 {
             app.thumbnailer.pango_context = get_pango_context ();
             _loading_paintable = app.thumbnailer.create_simple_text_paintable ("...", Thumbnailer.ICON_SIZE);
 
-            _scale_cover_paintable.paintable = new RoundPaintable (_cover_paintable, 12);
-            _scale_cover_paintable.scale = 0.8;
-            _scale_cover_paintable.queue_draw.connect (music_cover.queue_draw);
-            music_cover.paintable = _scale_cover_paintable;
+            _matrix_cover_paintable.paintable = new RoundPaintable (_cover_paintable, -1);
+            _matrix_cover_paintable.scale = 0.8;
+            _matrix_cover_paintable.queue_draw.connect (music_cover.queue_draw);
+            music_cover.paintable = _matrix_cover_paintable;
 
             music_album.tooltip_text = _("Search Album");
             music_artist.tooltip_text = _("Search Artist");
@@ -386,16 +386,34 @@ namespace G4 {
         }
 
         private Adw.Animation? _scale_animation = null;
+        private uint _tick_handler = 0;
+        private int64 _tick_last_time = 0;
 
         private void on_player_state_changed (Gst.State state) {
             if (state >= Gst.State.PAUSED) {
-                var scale_paintable = (!)(music_cover.paintable as ScalePaintable);
-                var target = new Adw.CallbackAnimationTarget ((value) => scale_paintable.scale = value);
+                var target = new Adw.CallbackAnimationTarget ((value) => _matrix_cover_paintable.scale = value);
                 _scale_animation?.pause ();
-                _scale_animation = new Adw.TimedAnimation (music_cover,  scale_paintable.scale,
+                _scale_animation = new Adw.TimedAnimation (music_cover,  _matrix_cover_paintable.scale,
                                             state == Gst.State.PLAYING ? 1 : 0.85, 500, target);
                 _scale_animation?.play ();
             }
+
+            if (state != Gst.State.PLAYING && _tick_handler != 0) {
+                remove_tick_callback (_tick_handler);
+                _tick_handler = 0;
+            } else if (state == Gst.State.PLAYING && _tick_handler == 0) {
+                _tick_last_time = get_monotonic_time ();
+                _tick_handler = add_tick_callback (on_tick_callback);
+            }
+        }
+
+        private bool on_tick_callback (Gtk.Widget widget, Gdk.FrameClock clock) {
+            var now = get_monotonic_time ();
+            var elapsed = (now - _tick_last_time) / 1e6;
+            var angle = elapsed * 360 / 20; // 20 seconds per lap
+            _matrix_cover_paintable.rotation += angle;
+            _tick_last_time = now;
+            return true;
         }
 
         private Adw.Animation? _scroll_animation = null;

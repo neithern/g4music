@@ -93,15 +93,15 @@ namespace G4 {
             var rect = Graphene.Rect ();
             var rounded = Gsk.RoundedRect ();
             rect.init (0, 0, (float) width, (float) height);
-            rounded.init_from_rect (rect, _radius);
 
-            if (_radius > 0) {
+            var radius = _radius < 0 ? (float) double.min (width, height) * 0.5f : _radius;
+            rounded.init_from_rect (rect, radius);
+
+            if (radius != 0) {
                 snapshot.push_rounded_clip (rounded);
             }
-
             base.on_snapshot (snapshot, width, height);
-
-            if (_radius > 0) {
+            if (radius != 0) {
                 snapshot.pop ();
             }
 
@@ -109,7 +109,7 @@ namespace G4 {
                 var color = Gdk.RGBA ();
                 color.red = color.green = color.blue = 0.2f;
                 color.alpha = 0.2f;
-                snapshot.append_outset_shadow (rounded, color, _shadow, _shadow, _shadow * 0.5f, _radius);
+                snapshot.append_outset_shadow (rounded, color, _shadow, _shadow, _shadow * 0.5f, radius);
             }
         }
     }
@@ -196,11 +196,22 @@ namespace G4 {
         }
     }
 
-    public class ScalePaintable : BasePaintable {
+    public class MatrixPaintable : BasePaintable {
+        private double _rotation = 0;
         private double _scale = 1;
 
-        public ScalePaintable (Gdk.Paintable? paintable = null) {
+        public MatrixPaintable (Gdk.Paintable? paintable = null) {
             base (paintable);
+        }
+
+        public double rotation {
+            get {
+                return _rotation;
+            }
+            set {
+                _rotation = value;
+                queue_draw ();
+            }
         }
 
         public double scale {
@@ -214,18 +225,21 @@ namespace G4 {
         }
 
         protected override void on_snapshot (Gtk.Snapshot snapshot, double width, double height) {
-            if (_scale != 1) {
-                var point = Graphene.Point ();
-                point.init ((float) (width * (1 - _scale) * 0.5), (float) (height * (1 - _scale) * 0.5));
-                snapshot.save ();
-                snapshot.translate (point);
-                snapshot.scale ((float) _scale, (float) _scale);
+            if (_rotation != 0 || _scale != 1) {
+                var matrix = Graphene.Matrix ();
+                matrix.init_identity ();
+                var point = Graphene.Point3D ();
+                point.init ((float) (-width * 0.5), (float) (-height * 0.5), 0);
+                matrix.translate (point);
+                if (_rotation != 0)
+                    matrix.rotate_z ((float) _rotation);
+                if (_scale != 1)
+                    matrix.scale ((float) _scale, (float) _scale, 1);
+                point.init ((float) (width * 0.5), (float) (height * 0.5), 0);
+                matrix.translate (point);
+                snapshot.transform_matrix (matrix);
             }
             base.on_snapshot (snapshot, width, height);
-            if (_scale != 1) {
-                snapshot.restore ();
-            }
-            //  print ("scale: %g\n", _scale);
         }
     }
 
@@ -364,3 +378,4 @@ namespace G4 {
         return result ?? snapshot.free_to_paintable (rect.size);
     }
 }
+
