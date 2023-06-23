@@ -95,40 +95,6 @@ namespace G4 {
         }
     }
 
-    public class CoverPaintable : BasePaintable {
-        public CoverPaintable (Gdk.Paintable? paintable = null) {
-            base (paintable);
-        }
-
-        public override double get_intrinsic_aspect_ratio () {
-            return 1;
-        }
-
-        protected override void on_snapshot (Gtk.Snapshot snapshot, double width, double height) {
-            var image_width = (float) get_intrinsic_width ();
-            var image_height = (float) get_intrinsic_height ();
-            if (image_width != image_height) {
-                var point = Graphene.Point ();
-                var ratio = image_width / image_height;
-                snapshot.save ();
-                if (ratio > 1) {
-                    snapshot.scale (ratio, 1);
-                    point.x = (float) (width - width * ratio) * 0.5f;
-                    point.y = 0;
-                } else {
-                    snapshot.scale (1, 1 / ratio);
-                    point.x = 0;
-                    point.y = (float) (height - height / ratio) * 0.5f;
-                }
-                snapshot.translate (point);
-                base.on_snapshot (snapshot, width, height);
-                snapshot.restore ();
-            } else {
-                base.on_snapshot (snapshot, width, height);
-            }
-        }
-    }
-
     public class CrossFadePaintable : BasePaintable {
         private Gdk.Paintable? _previous = null;
         private double _fade = 0;
@@ -163,10 +129,34 @@ namespace G4 {
         }
 
         protected override void on_snapshot (Gtk.Snapshot snapshot, double width, double height) {
-            if (_fade > 0) {
+            if (_fade > 0 && _previous != null) {
+                var width2 = width;
+                var height2 = height;
+                var prev = (!)_previous;
+                var ratio2 = prev.get_intrinsic_aspect_ratio ();
+                var point = Graphene.Point ();
+                point.init (0, 0);
+                var different = ratio2 != get_intrinsic_aspect_ratio ();
+                if (different) {
+                    if (ratio2 < 1) {
+                        width2 = height2 * ratio2;
+                        point.x = (float) (width - width2) * 0.5f;
+                    } else {
+                        height2 = width2 / ratio2;
+                        point.y = (float) (height - height2) * 0.5f;
+                    }
+                    snapshot.translate (point);
+                }
                 snapshot.push_opacity (_fade);
-                _previous?.snapshot (snapshot, width, height);
                 snapshot.pop ();
+                prev.snapshot (snapshot, width2, height2);
+                if (different) {
+                    point.x = - point.x;
+                    point.y = - point.y;
+                    snapshot.translate (point);
+                }
+            }
+            if (_fade > 0) {
                 snapshot.push_opacity (1 - _fade);
             }
             base.on_snapshot (snapshot, width, height);
