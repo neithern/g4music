@@ -31,7 +31,7 @@
         <li>Supports ReplayGain track mode.</li>
         <li>Supports pipewire audio sink.</li>
         <li>Supports MPRIS control.</li>
-        <li>Only need less than 400KB to install it.</li>
+        <li>Less than 500KB to install.</li>
         </ul>
     </description>
 
@@ -48,6 +48,18 @@
     </screenshots>
 
     <releases>
+        <release version="2.2" date="2023-6-23">
+            <description>
+                <ul>
+                <li>Option: rotate cover when playing.</li>
+                <li>Click music title to search.</li>
+                <li>Revert to single page of preferences.</li>
+                <li>Add 2 shortcut keys.</li>
+                <li>UI improvement and fixing.</li>
+                <li>Update German translation.</li>
+                </ul>
+            </description>
+        </release>
         <release version="2.1" date="2023-6-18">
             <description>
                 <ul>
