@@ -148,8 +148,8 @@ namespace G4 {
                     snapshot.translate (point);
                 }
                 snapshot.push_opacity (_fade);
-                snapshot.pop ();
                 prev.snapshot (snapshot, width2, height2);
+                snapshot.pop ();
                 if (different) {
                     point.x = - point.x;
                     point.y = - point.y;
