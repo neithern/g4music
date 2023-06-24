@@ -479,11 +479,13 @@ namespace G4 {
 #endif
         }
 
+        private PreferencesWindow? _pref_window = null;
+
         public void show_preferences () {
-            var win = new PreferencesWindow (this);
+            var win = _pref_window ?? new PreferencesWindow (this);
+            _pref_window = win;
             win.destroy_with_parent = true;
-            win.transient_for = active_window;
-            win.modal = true;
+            win.modal = false;
             win.present ();
         }
 
