@@ -158,14 +158,14 @@ namespace G4 {
             }
         }
 
-        public async void add_files_async (owned File[] files, bool ignore_exists = false) {
+        public async void add_files_async (owned File[] files, bool ignore_exists = false, bool include_playlist = true) {
             var dirs = new GenericArray<File> (128);
             var musics = new GenericArray<Object> (4096);
             loading_changed (true);
             yield run_void_async (() => {
                 var begin_time = get_monotonic_time ();
                 foreach (var file in files) {
-                    add_file (file, dirs, musics);
+                    add_file (file, dirs, musics, include_playlist);
                 }
                 print ("Find %u files in %d folders in %lld ms\n", musics.length, dirs.length,
                     (get_monotonic_time () - begin_time + 500) / 1000);
@@ -242,7 +242,7 @@ namespace G4 {
         }
 
         private void _monitor_add_file (File file) {
-            add_files_async.begin ({file}, true, (obj, res) => add_files_async.end (res));
+            add_files_async.begin ({file}, true, false, (obj, res) => add_files_async.end (res));
         }
 
         private void _monitor_func (File file, File? other_file, FileMonitorEvent event) {
@@ -278,7 +278,7 @@ namespace G4 {
                                         + FileAttribute.STANDARD_TYPE + ","
                                         + FileAttribute.TIME_MODIFIED;
 
-        private static void add_file (File file, GenericArray<File> dirs, GenericArray<Object> musics) {
+        private static void add_file (File file, GenericArray<File> dirs, GenericArray<Object> musics, bool include_playlist) {
             try {
                 var info = file.query_info (ATTRIBUTES, FileQueryInfoFlags.NONE);
                 if (info.get_file_type () == FileType.DIRECTORY) {
@@ -290,9 +290,20 @@ namespace G4 {
                         add_directory (cache, stack, musics);
                     }
                 } else {
-                    var music = Music.from_info (file, info);
-                    if (music != null)
-                        musics.add ((!)music);
+                    uint playlist_type = 0;
+                    var type = info.get_content_type ();
+                    if (include_playlist && type != null
+                            && (playlist_type = get_playlist_type ((!)type)) != PlayListType.NONE) {
+                        var uris = new GenericArray<string> (128);
+                        load_playlist_file (file, playlist_type, uris);
+                        foreach (var uri in uris) {
+                            add_file (File.new_for_uri (uri), dirs, musics, false);
+                        }
+                    } else {
+                        var music = Music.from_info (file, info);
+                        if (music != null)
+                            musics.add ((!)music);
+                    }
                 }
             } catch (Error e) {
                 warning ("Query %s: %s\n", file.get_parse_name (), e.message);

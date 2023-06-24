@@ -20,6 +20,7 @@ sources = [
   'utils/mpris.vala',
   'utils/music.vala',
   'utils/music-store.vala',
+  'utils/playlist-file.vala',
   'utils/portal.vala',
   'utils/tag-cache.vala',
   'utils/thumbnailer.vala',

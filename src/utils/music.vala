@@ -201,7 +201,9 @@ namespace G4 {
 
         public static Music? from_info (File file, FileInfo info) {
             unowned var type = info.get_content_type () ?? "";
-            if (ContentType.is_mime_type (type, "audio/*") && !type.has_suffix ("url")) {
+            if (ContentType.is_mime_type (type, "audio/*")
+                    && !type.has_suffix ("pls")
+                    && !type.has_suffix ("url")) {
                 var time = info.get_modification_date_time ()?.to_unix () ?? 0;
                 return new Music (file.get_uri (), info.get_name (), time);
             }
