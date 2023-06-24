@@ -486,6 +486,10 @@ namespace G4 {
             _pref_window = win;
             win.destroy_with_parent = true;
             win.modal = false;
+            win.close_request.connect (() => {
+                _pref_window = null;
+                return false;
+            });
             win.present ();
         }
 
