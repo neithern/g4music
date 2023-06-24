@@ -240,13 +240,15 @@ namespace G4 {
         }
 
         public void start_search (string text) {
+#if GTK_4_10
             var delay = search_entry.search_delay;
             search_entry.search_delay = 0;
+            run_idle_once (() => search_entry.search_delay = delay);
+#endif
             search_entry.text = text;
             search_entry.select_region (text.index_of_char (':') + 1, -1);
             search_btn.active = true;
             leaflet.navigate (Adw.NavigationDirection.BACK);
-            run_idle_once (() => search_entry.search_delay = delay);
         }
 
         private async void on_bind_item (Gtk.ListItem item) {
