@@ -80,7 +80,7 @@ namespace G4 {
         protected override void on_snapshot (Gtk.Snapshot snapshot, double width, double height) {
             var rect = Graphene.Rect ();
             var rounded = Gsk.RoundedRect ();
-            var size = (float) double.max (width, height);
+            var size = (float) double.min (width, height);
             if (_ratio >= 0.5) // Force clip to circle
                 rect.init ((float) (width - size) * 0.5f, (float) (height - size) * 0.5f, size, size);
             else
