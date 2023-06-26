@@ -20,6 +20,8 @@ namespace G4 {
         [GtkChild]
         private unowned Gtk.Button back_btn;
         [GtkChild]
+        private unowned Gtk.Box list_box;
+        [GtkChild]
         private unowned Gtk.Box music_box;
         [GtkChild]
         private unowned Gtk.Image music_cover;
@@ -201,6 +203,14 @@ namespace G4 {
                     sort_btn.set_icon_name (SORT_MODE_ICONS[value]);
                 }
             }
+        }
+
+        public override void size_allocate (int width, int height, int baseline) {
+            list_box.width_request = int.max (width * 3 / 8, 320);
+            var margin = int.max ((width - list_box.width_request - music_cover.pixel_size) / 4, 32);
+            music_box.margin_start = margin;
+            music_box.margin_end = margin;
+            base.size_allocate (width, height, baseline);
         }
 
         public override void snapshot (Gtk.Snapshot snapshot) {
@@ -582,4 +592,3 @@ namespace G4 {
         }
     }
 }
-

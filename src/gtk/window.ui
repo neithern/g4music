@@ -13,7 +13,7 @@
               <object class="AdwLeafletPage">
                 <property name="navigatable">true</property>
                 <property name="child">
-                  <object class="GtkBox">
+                  <object class="GtkBox" id="list_box">
                     <property name="orientation">vertical</property>
                     <property name="hexpand">false</property>
                     <property name="width_request">320</property>
