@@ -221,8 +221,9 @@ namespace G4 {
                 var page = (Adw.LeafletPage) leaflet.pages.get_item (0);
                 var size = page.child.get_width ();
                 var rtl = get_direction () == Gtk.TextDirection.RTL;
+                var line_width = scale_factor >= 2 ? 0.5f : 1;
                 var rect = Graphene.Rect ();
-                rect.init (rtl ? width - size : size, 0, 0.5f, height);
+                rect.init (rtl ? width - size : size, 0, line_width, height);
                 var color = Gdk.RGBA ();
                 color.red = color.green = color.blue = color.alpha = 0;
 #if GTK_4_10
