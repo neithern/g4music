@@ -93,10 +93,7 @@ namespace G4 {
             if (radius > 0) {
                 if (circle && width != height) {
                     float scale = (float) double.max (width, height) / size;
-                    var matrix = Graphene.Matrix ();
-                    matrix.init_identity ();
-                    compute_matrix (ref matrix, width, height, 0, scale);
-                    snapshot.transform_matrix (matrix);
+                    compute_matrix (snapshot, width, height, 0, scale);
                 }
                 snapshot.push_rounded_clip (rounded);
             }
@@ -209,26 +206,23 @@ namespace G4 {
 
         protected override void on_snapshot (Gtk.Snapshot snapshot, double width, double height) {
             if (_rotation != 0 || _scale != 1) {
-                var matrix = Graphene.Matrix ();
-                matrix.init_identity ();
-                compute_matrix (ref matrix, width, height, _rotation, _scale);
-                snapshot.transform_matrix (matrix);
+                compute_matrix (snapshot, width, height, _rotation, _scale);
             }
             base.on_snapshot (snapshot, width, height);
         }
     }
 
-    public void compute_matrix (ref Graphene.Matrix matrix, double width, double height,
+    public void compute_matrix (Gtk.Snapshot snapshot, double width, double height,
                                 double rotation = 0, double scale = 1) {
-        var point = Graphene.Point3D ();
-        point.init ((float) (-width * 0.5), (float) (-height * 0.5), 0);
-        matrix.translate (point);
+        var point = Graphene.Point ();
+        point.init ((float) (width * 0.5), (float) (height * 0.5));
+        snapshot.translate (point);
         if (rotation != 0)
-            matrix.rotate_z ((float) rotation);
+            snapshot.rotate ((float) rotation);
         if (scale != 1)
-            matrix.scale ((float) scale, (float) scale, 1);
-        point.init ((float) (width * 0.5), (float) (height * 0.5), 0);
-        matrix.translate (point);
+            snapshot.scale ((float) scale, (float) scale);
+        point.init ((float) (-width * 0.5), (float) (-height * 0.5));
+        snapshot.translate (point);
     }
 
     public const uint32[] BACKGROUND_COLORS = {
