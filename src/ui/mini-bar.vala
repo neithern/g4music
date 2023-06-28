@@ -16,6 +16,7 @@ namespace G4 {
         construct {
             halign = Gtk.Align.FILL;
             hexpand = true;
+            height_request = 60;
 
             var controller = new Gtk.GestureClick ();
             controller.released.connect (this.activate);
@@ -30,25 +31,27 @@ namespace G4 {
             vbox.append (_peak);
             vbox.append (_time);
             add_prefix (vbox);
+            add_prefix (_cover);
+
+            _cover.valign = Gtk.Align.CENTER;
+            _cover.margin_start = 2;
+            _cover.margin_end = 6;
+            _cover.pixel_size = 40;
+            _cover.paintable = new RoundPaintable (_paintable);
+            _paintable.queue_draw.connect (_cover.queue_draw);
 
             _title.halign = Gtk.Align.START;
             _title.ellipsize = Pango.EllipsizeMode.END;
             _title.add_css_class ("title-leading");
 
-            _peak.halign = Gtk.Align.START;
-            _peak.width_request = 168;
-            _peak.height_request = 16;
-            _peak.add_css_class ("dim-label");
-
             _time.halign = Gtk.Align.START;
             _time.add_css_class ("dim-label");
             _time.add_css_class ("numeric");
 
-            _cover.valign = Gtk.Align.CENTER;
-            _cover.pixel_size = 40;
-            _cover.paintable = new RoundPaintable (_paintable);
-            _paintable.queue_draw.connect (_cover.queue_draw);
-            add_prefix (_cover);
+            _peak.halign = Gtk.Align.START;
+            _peak.width_request = 168;
+            _peak.height_request = 16;
+            _peak.add_css_class ("dim-label");
 
             var hbox = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 4);
             hbox.valign = Gtk.Align.CENTER;

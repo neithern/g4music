@@ -38,8 +38,6 @@ namespace G4 {
         [GtkChild]
         private unowned Gtk.ListView list_view;
         [GtkChild]
-        private unowned Gtk.Box mini_box;
-        [GtkChild]
         public unowned Gtk.ToggleButton search_btn;
         [GtkChild]
         private unowned Gtk.SearchBar search_bar;
@@ -76,7 +74,8 @@ namespace G4 {
 
             setup_drop_target ();
 
-            leaflet.bind_property ("folded", this, "leaflet-folded");
+            leaflet.bind_property ("folded", this, "leaflet-folded", BindingFlags.SYNC_CREATE);
+            leaflet.bind_property ("folded", _mini_bar, "visible", BindingFlags.SYNC_CREATE);
             leaflet.navigate (Adw.NavigationDirection.FORWARD);
             back_btn.clicked.connect (() => leaflet.navigate (Adw.NavigationDirection.BACK));
 
@@ -86,7 +85,7 @@ namespace G4 {
             search_bar.key_capture_widget = this.content;
             search_entry.search_changed.connect (on_search_text_changed);
 
-            mini_box.append (_mini_bar);
+            list_box.append (_mini_bar);
             _mini_bar.cover = app.icon;
             _mini_bar.activated.connect (() => leaflet.navigate (Adw.NavigationDirection.FORWARD));
 

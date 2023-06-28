@@ -87,16 +87,6 @@
                         </child>
                       </object>
                     </child>
-                    <child>
-                      <object class="GtkBox" id="mini_box">
-                        <property name="orientation">horizontal</property>
-                        <property name="hexpand">true</property>
-                        <property name="height-request">60</property>
-                        <binding name="visible">
-                          <lookup name="folded">leaflet</lookup>
-                        </binding>
-                      </object>
-                    </child>
                   </object>
                 </property>
               </object>
