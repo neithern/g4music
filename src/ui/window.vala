@@ -99,7 +99,6 @@ namespace G4 {
 
             _round_cover_paintable.paintable = _cover_paintable;
             _matrix_cover_paintable.paintable = _round_cover_paintable;
-            _matrix_cover_paintable.scale = 0.8;
             _matrix_cover_paintable.queue_draw.connect (music_cover.queue_draw);
             music_cover.paintable = _matrix_cover_paintable;
 
@@ -430,8 +429,8 @@ namespace G4 {
             if (state >= Gst.State.PAUSED) {
                 var target = new Adw.CallbackAnimationTarget ((value) => _matrix_cover_paintable.scale = value);
                 _scale_animation?.pause ();
-                _scale_animation = new Adw.TimedAnimation (music_cover,  _matrix_cover_paintable.scale,
-                                            state == Gst.State.PLAYING ? 1 : 0.85, 500, target);
+                _scale_animation = new Adw.TimedAnimation (music_cover, _matrix_cover_paintable.scale,
+                                        _rotate_cover || state == Gst.State.PLAYING ? 1 : 0.85, 500, target);
                 _scale_animation?.play ();
             }
 
