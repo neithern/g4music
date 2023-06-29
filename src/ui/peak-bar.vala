@@ -2,8 +2,9 @@ namespace G4 {
 
     public class PeakBar : Gtk.Widget {
         private unichar[] _chars = { '=', 0 };
-        private int[] _char_widths = { 10 };
         private int _char_count = 1;
+        private int[] _char_widths = { 10 };
+        private int _char_height = 0;
         private Pango.Layout _layout;
         private StringBuilder _sbuilder = new StringBuilder ();
         private double _value = 0;
@@ -31,6 +32,7 @@ namespace G4 {
                 var count = value.char_count ();
                 _chars = new unichar[count + 1];
                 _char_count = 0;
+                _char_height = 0;
                 var next = 0;
                 unichar c = 0;
                 while (value.get_next_char (ref next, out c)) {
@@ -41,11 +43,14 @@ namespace G4 {
                         _layout.get_pixel_extents (out ink_rect, out logic_rect);
                         _chars[_char_count] = c;
                         _char_widths[_char_count] = logic_rect.width;
+                        if (_char_height < logic_rect.height)
+                            _char_height = logic_rect.height;
                         _char_count++;
                     }
                 }
                 _chars[_char_count] = 0;
                 _char_widths[_char_count] = 0;
+                queue_resize ();
                 queue_draw ();
             }
         }
@@ -57,6 +62,14 @@ namespace G4 {
             set {
                 _value = value;
                 queue_draw ();
+            }
+        }
+
+        public override void measure (Gtk.Orientation orientation, int for_size, out int minimum, out int natural, out int minimum_baseline, out int natural_baseline) {
+            if (orientation == Gtk.Orientation.VERTICAL) {
+                minimum = natural = minimum_baseline = natural_baseline = _char_height;
+            } else {
+                minimum = natural = minimum_baseline = natural_baseline = for_size;
             }
         }
 

@@ -50,7 +50,6 @@ namespace G4 {
 
             _peak.halign = Gtk.Align.START;
             _peak.width_request = 168;
-            _peak.height_request = 16;
             _peak.add_css_class ("dim-label");
 
             var hbox = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 4);
