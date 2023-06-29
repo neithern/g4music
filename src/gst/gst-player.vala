@@ -45,7 +45,7 @@ namespace G4 {
         private double _last_peak = 0;
         private Queue<Peak?> _peaks = new Queue<Peak?> ();
         private unowned Gst.Caps? _last_caps = null;
-        private unowned Gst.Sample? _last_sample = null;
+        private unowned Gst.ClockTime _last_sample_time = Gst.CLOCK_TIME_NONE;
         private LevelCalculateFunc? _level_calculate = null;
         private unowned Thread<void> _main_thread = Thread<void>.self ();
 
@@ -120,6 +120,7 @@ namespace G4 {
                 if (_pipeline != null) lock (_pipeline) {
                     _duration = Gst.CLOCK_TIME_NONE;
                     _position = Gst.CLOCK_TIME_NONE;
+                    _last_sample_time = Gst.CLOCK_TIME_NONE;
                     _tag_list = null;
                     _peaks.clear_full (free);
                     var cur = (string?) _pipeline?.uri;
@@ -174,8 +175,7 @@ namespace G4 {
         public double peak {
             get {
                 double value = _last_peak;
-                if (!parse_peak_from_last_sample (out value))
-                    value = _last_peak;
+                parse_peak_from_last_sample (ref value);
                 value = double.max (value, _last_peak >= 0.033 ? _last_peak - 0.033 : 0);
                 _last_peak = value;
                 return value;
@@ -293,18 +293,17 @@ namespace G4 {
             }
         }
 
-        private bool parse_peak_from_last_sample (out double peak_value) {
+        private bool parse_peak_from_last_sample (ref double peak_value) {
             bool parsed = false;
-            peak_value = 0;
             dynamic Gst.Element? sink = _audio_sink ?? _pipeline?.audio_sink;
             if (sink != null) {
-                var peak = Peak ();
                 dynamic Gst.Sample? sample = ((!)sink).last_sample;
-                if (_last_sample != sample && sample != null
+                var peak = Peak ();
+                peak.time = sample?.get_segment ()?.position ?? int64.MIN;
+                if (sample != null && _last_sample_time != peak.time
                         && parse_peak_in_sample ((!)sample, out peak.peak)) {
-                    peak.time = ((!)sample).get_segment ().position;
                     _peaks.push_tail (peak);
-                    _last_sample = sample;
+                    _last_sample_time = peak.time;
                     parsed = true;
                 }
                 while (_peaks.length > 0) {
