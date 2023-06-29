@@ -1,22 +1,16 @@
 namespace G4 {
 
-    public class PeakBar : Gtk.Box {
+    public class PeakBar : Gtk.Widget {
         private unichar[] _chars = { '=', 0 };
         private int[] _char_widths = { 10 };
         private int _char_count = 1;
         private Pango.Layout _layout;
-        private GstPlayer _player;
         private StringBuilder _sbuilder = new StringBuilder ();
         private double _value = 0;
-        private uint _tick_handler = 0;
 
         construct {
             _layout = create_pango_layout (null);
             _layout.set_alignment (get_direction () == Gtk.TextDirection.RTL ? Pango.Alignment.RIGHT : Pango.Alignment.LEFT);
-
-            var app = (Application) GLib.Application.get_default ();
-            _player = app.player;
-            _player.state_changed.connect (on_state_changed);
         }
 
         public Pango.Alignment align {
@@ -52,6 +46,16 @@ namespace G4 {
                 }
                 _chars[_char_count] = 0;
                 _char_widths[_char_count] = 0;
+                queue_draw ();
+            }
+        }
+
+        public double peak {
+            get {
+                return _value;
+            }
+            set {
+                _value = value;
                 queue_draw ();
             }
         }
@@ -131,21 +135,6 @@ namespace G4 {
             pt.x = - pt.x;
             pt.y = - pt.y;
             snapshot.translate (pt);
-        }
-
-        private void on_state_changed (Gst.State state) {
-            if (state != Gst.State.PLAYING && _tick_handler != 0) {
-                remove_tick_callback (_tick_handler);
-                _tick_handler = 0;
-            } else if (state == Gst.State.PLAYING && _tick_handler == 0) {
-                _tick_handler = add_tick_callback (on_tick_callback);
-            }
-        }
-
-        private bool on_tick_callback (Gtk.Widget widget, Gdk.FrameClock clock) { 
-            _value = _player.peak;
-            queue_draw ();
-            return true;
         }
     }
 }

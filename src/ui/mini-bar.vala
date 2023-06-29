@@ -102,6 +102,12 @@ namespace G4 {
             }
         }
 
+        public double peak {
+            set {
+                _peak.peak = value;
+            }
+        }
+
         public new string title {
             set {
                 _title.label = value;

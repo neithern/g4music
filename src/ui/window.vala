@@ -45,6 +45,7 @@ namespace G4 {
         private unowned Gtk.SearchEntry search_entry;
 
         private MiniBar _mini_bar = new MiniBar ();
+        private PlayBar _play_bar = new PlayBar ();
 
         private uint _bkgnd_blur = BlurMode.ALWAYS;
         private CrossFadePaintable _bkgnd_paintable = new CrossFadePaintable ();
@@ -58,6 +59,7 @@ namespace G4 {
         private int _cover_size = 1024;
         private string _loading_text = _("Loading…");
         private bool _rotate_cover = true;
+        private bool _show_peak = true;
         private double _row_height = 0;
         private double _scroll_range = 0;
 
@@ -112,8 +114,7 @@ namespace G4 {
                 () => start_search ("title:" + music_title.label));
             make_right_clickable (music_box, show_popover_menu);
 
-            var play_bar = new PlayBar ();
-            music_box.append (play_bar);
+            music_box.append (_play_bar);
             action_set_enabled (ACTION_APP + ACTION_PREV, false);
             action_set_enabled (ACTION_APP + ACTION_PLAY, false);
             action_set_enabled (ACTION_APP + ACTION_NEXT, false);
@@ -145,6 +146,7 @@ namespace G4 {
             settings.bind ("blur-mode", this, "blur-mode", SettingsBindFlags.DEFAULT);
             settings.bind ("compact-playlist", this, "compact-playlist", SettingsBindFlags.DEFAULT);
             settings.bind ("rotate-cover", this, "rotate-cover", SettingsBindFlags.DEFAULT);
+            settings.bind ("show-peak", this, "show-peak", SettingsBindFlags.DEFAULT);
         }
 
         public uint blur_mode {
@@ -183,6 +185,17 @@ namespace G4 {
                 _rotate_cover = value;
                 _round_cover_paintable.ratio = value ? 0.5 : 0.05;
                 _matrix_cover_paintable.rotation = 0;
+                on_player_state_changed (app.player.state);
+            }
+        }
+
+        public bool show_peak {
+            get {
+                return _show_peak;
+            }
+            set {
+                var app = (Application) application;
+                _show_peak = value;
                 on_player_state_changed (app.player.state);
             }
         }
@@ -425,29 +438,39 @@ namespace G4 {
         private int64 _tick_last_time = 0;
 
         private void on_player_state_changed (Gst.State state) {
+            var playing = state == Gst.State.PLAYING;
             if (state >= Gst.State.PAUSED) {
                 var target = new Adw.CallbackAnimationTarget ((value) => _matrix_cover_paintable.scale = value);
                 _scale_animation?.pause ();
                 _scale_animation = new Adw.TimedAnimation (music_cover, _matrix_cover_paintable.scale,
-                                        _rotate_cover || state == Gst.State.PLAYING ? 1 : 0.85, 500, target);
+                                        _rotate_cover || playing ? 1 : 0.85, 500, target);
                 _scale_animation?.play ();
             }
 
-            if ((!_rotate_cover || state != Gst.State.PLAYING) && _tick_handler != 0) {
-                remove_tick_callback (_tick_handler);
-                _tick_handler = 0;
-            } else if (_rotate_cover && state == Gst.State.PLAYING && _tick_handler == 0) {
+            var need_tick = _rotate_cover || _show_peak;
+            if (need_tick && playing && _tick_handler == 0) {
                 _tick_last_time = get_monotonic_time ();
                 _tick_handler = add_tick_callback (on_tick_callback);
+            } else if ((!need_tick || !playing) && _tick_handler != 0) {
+                remove_tick_callback (_tick_handler);
+                _tick_handler = 0;
             }
         }
 
         private bool on_tick_callback (Gtk.Widget widget, Gdk.FrameClock clock) {
-            var now = get_monotonic_time ();
-            var elapsed = (now - _tick_last_time) / 1e6;
-            var angle = elapsed * 360 / 20; // 20 seconds per lap
-            _matrix_cover_paintable.rotation += angle;
-            _tick_last_time = now;
+            if (_rotate_cover) {
+                var now = get_monotonic_time ();
+                var elapsed = (now - _tick_last_time) / 1e6;
+                var angle = elapsed * 360 / 20; // 20 seconds per lap
+                _matrix_cover_paintable.rotation += angle;
+                _tick_last_time = now;
+            }
+            if (_show_peak) {
+                var app = (Application) application;
+                var peak = app.player.peak;
+                _mini_bar.peak = peak;
+                _play_bar.peak = peak;
+            }
             return true;
         }
 

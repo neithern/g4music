@@ -104,7 +104,12 @@ namespace G4 {
             settings.bind ("show-peak", _peak, "visible", SettingsBindFlags.DEFAULT);
             settings.bind ("peak-characters", _peak, "characters", SettingsBindFlags.DEFAULT);
             settings.bind ("remain-progress", this, "remain-progress", SettingsBindFlags.DEFAULT);
+        }
 
+        public double peak {
+            set {
+                _peak.peak = value;
+            }
         }
 
         public bool remain_progress {
