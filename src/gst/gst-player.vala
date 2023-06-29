@@ -313,16 +313,17 @@ namespace G4 {
             if (sink != null) {
                 var peak = Peak ();
                 dynamic Gst.Sample? sample = ((!)sink).last_sample;
-                if (_last_sample != sample && sample != null && parse_peak_in_sample ((!)sample, out peak.peak)) {
+                if (_last_sample != sample && sample != null
+                        && parse_peak_in_sample ((!)sample, out peak.peak)) {
                     peak.time = ((!)sample).get_segment ().position;
                     _peaks.push_tail (peak);
                     _last_sample = sample;
                     parsed = true;
                 }
                 while (_peaks.length > 0) {
-                    unowned var p = _peaks.peek_head ();
-                    if (p != null && ((!)p).time >= _position) {
-                        peak_value = ((!)p).peak;
+                    unowned var p = (!)_peaks.peek_head ();
+                    if (p.time >= _position) {
+                        peak_value = p.peak;
                         _peaks.pop_head ();
                     } else {
                         break;
@@ -346,7 +347,7 @@ namespace G4 {
             _tag_state = valid ? TagState.PARSED : TagState.PARTIAL;
 
             var hash = str_hash (album ?? "") | str_hash (artist ?? "") | str_hash (title ?? "")
-                        | (image?.get_buffer ()?.get_size () ?? 0);
+                        | direct_hash (image);
             if (_tag_hash != hash) {
                 _tag_hash = hash;
                 //  Emit only when changed
