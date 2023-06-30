@@ -48,6 +48,16 @@
     </screenshots>
 
     <releases>
+        <release version="2.3" date="2023-7-1">
+            <description>
+                <ul>
+                <li>Support .m3u/.pls playlist from command line.</li>
+                <li>Modeless preferences window.</li>
+                <li>UI improvement and fixing.</li>
+                <li>Update Spanish translation.</li>
+                </ul>
+            </description>
+        </release>
         <release version="2.2" date="2023-6-23">
             <description>
                 <ul>
