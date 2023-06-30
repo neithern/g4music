@@ -291,6 +291,7 @@ namespace G4 {
                 } else {
                     uint playlist_type = 0;
                     unowned var ctype = info.get_content_type () ?? "";
+                    unowned var name = info.get_name ();
                     if (include_playlist && (playlist_type = get_playlist_type (ctype)) != PlayListType.NONE) {
                         var uris = new GenericArray<string> (128);
                         load_playlist_file (file, playlist_type, uris);
@@ -298,10 +299,13 @@ namespace G4 {
                             add_file (File.new_for_uri (uri), dirs, musics, false);
                         }
                     } else if (is_music_type (ctype)) {
-                        unowned var name = info.get_name ();
                         var time = info.get_modification_date_time ()?.to_unix () ?? 0;
                         var music = new Music (file.get_uri (), name, time);
                         musics.add (music);
+                    } else if (is_cover_file (ctype, name)) {
+                        var parent = file.get_parent ();
+                        if (parent != null)
+                            _cover_cache.put ((!)parent, name);
                     }
                 }
             } catch (Error e) {
