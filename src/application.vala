@@ -85,6 +85,7 @@ namespace G4 {
             _music_list.items_changed.connect (on_music_items_changed);
             _music_store.loading_changed.connect ((loading) => _loading_store = loading);
 
+            _thumbnailer.cover_finder = _music_store.cover_cache;
             _thumbnailer.tag_updated.connect (_music_store.add_to_cache);
 
             _player.end_of_stream.connect (on_player_end);

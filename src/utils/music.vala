@@ -199,17 +199,6 @@ namespace G4 {
             return (int) diff.clamp (-1, 1);
         }
 
-        public static Music? from_info (File file, FileInfo info) {
-            unowned var type = info.get_content_type () ?? "";
-            if (ContentType.is_mime_type (type, "audio/*")
-                    && !type.has_suffix ("pls")
-                    && !type.has_suffix ("url")) {
-                var time = info.get_modification_date_time ()?.to_unix () ?? 0;
-                return new Music (file.get_uri (), info.get_name (), time);
-            }
-            return null;
-        }
-
         public static void shuffle_order (GenericArray<Object> arr) {
             for (var i = arr.length - 1; i > 0; i--) {
                 var r = Random.int_range (0, i);
@@ -221,7 +210,13 @@ namespace G4 {
         }
     }
 
-    public static unichar find_first_letter (string text) {
+    public bool is_music_type (string content_type) {
+        return ContentType.is_mime_type (content_type, "audio/*")
+                && !content_type.has_suffix ("pls")
+                && !content_type.has_suffix ("url");
+    }
+
+    public unichar find_first_letter (string text) {
         var index = 0;
         var next = 0;
         unichar c = 0;
@@ -233,7 +228,7 @@ namespace G4 {
         return 0;
     }
 
-    public static string get_display_name (string uri) {
+    public string get_display_name (string uri) {
         var file = File.new_for_uri (uri);
         var name = file.get_basename () ?? "";
         if (name.length == 0 || name == "/")
@@ -241,14 +236,14 @@ namespace G4 {
         return name;
     }
 
-    public static string get_uri_with_end_sep (File file) {
+    public string get_uri_with_end_sep (File file) {
         var uri = file.get_uri ();
         if (uri[uri.length - 1] != '/')
             uri += "/";
         return uri;
     }
 
-    public static string parse_abbreviation (string text) {
+    public string parse_abbreviation (string text) {
         var sb = new StringBuilder ();
         var char_count = 0;
         foreach (var s in text.split (" ")) {
@@ -270,7 +265,7 @@ namespace G4 {
         return text.up ();
     }
 
-    public static GenericArray<string> split_string (string text, string delimiter) {
+    public GenericArray<string> split_string (string text, string delimiter) {
         var ar = text.split ("-");
         var sa = new GenericArray<string> (ar.length);
         foreach (var str in ar) {

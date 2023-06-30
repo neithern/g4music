@@ -41,23 +41,22 @@ namespace G4 {
             });
         }
 
-        private bool _monitor_changes = false;
         private uint _sort_mode = SortMode.TITLE;
         private CompareDataFunc<Object> _compare = Music.compare_by_title;
+        private CoverCache _cover_cache = new CoverCache ();
         private ListStore _store = new ListStore (typeof (Music));
         private TagCache _tag_cache = new TagCache ();
 
         public signal void loading_changed (bool loading);
         public signal void parse_progress (int percent);
 
-        public bool monitor_changes {
+        public CoverCache cover_cache {
             get {
-                return _monitor_changes;
-            }
-            set {
-                _monitor_changes = value;
+                return _cover_cache;
             }
         }
+
+        public bool monitor_changes { get; set; }
 
         public ListStore store {
             get {
@@ -278,7 +277,7 @@ namespace G4 {
                                         + FileAttribute.STANDARD_TYPE + ","
                                         + FileAttribute.TIME_MODIFIED;
 
-        private static void add_file (File file, GenericArray<File> dirs, GenericArray<Object> musics, bool include_playlist) {
+        private void add_file (File file, GenericArray<File> dirs, GenericArray<Object> musics, bool include_playlist) {
             try {
                 var info = file.query_info (ATTRIBUTES, FileQueryInfoFlags.NONE);
                 if (info.get_file_type () == FileType.DIRECTORY) {
@@ -291,18 +290,18 @@ namespace G4 {
                     }
                 } else {
                     uint playlist_type = 0;
-                    var type = info.get_content_type ();
-                    if (include_playlist && type != null
-                            && (playlist_type = get_playlist_type ((!)type)) != PlayListType.NONE) {
+                    unowned var ctype = info.get_content_type () ?? "";
+                    if (include_playlist && (playlist_type = get_playlist_type (ctype)) != PlayListType.NONE) {
                         var uris = new GenericArray<string> (128);
                         load_playlist_file (file, playlist_type, uris);
                         foreach (var uri in uris) {
                             add_file (File.new_for_uri (uri), dirs, musics, false);
                         }
-                    } else {
-                        var music = Music.from_info (file, info);
-                        if (music != null)
-                            musics.add ((!)music);
+                    } else if (is_music_type (ctype)) {
+                        unowned var name = info.get_name ();
+                        var time = info.get_modification_date_time ()?.to_unix () ?? 0;
+                        var music = new Music (file.get_uri (), name, time);
+                        musics.add (music);
                     }
                 }
             } catch (Error e) {
@@ -310,12 +309,15 @@ namespace G4 {
             }
         }
 
-        private static void add_directory (DirCache cache, Queue<DirCache> stack, GenericArray<Object> musics) {
-            if (cache.check_valid () && cache.load (stack, musics)) {
+        private void add_directory (DirCache cache, Queue<DirCache> stack, GenericArray<Object> musics) {
+            var dir = cache.dir;
+            string? cover_name = null;
+            if (cache.check_valid () && cache.load (stack, musics, out cover_name)) {
+                if (cover_name != null)
+                    _cover_cache.put (dir, (!)cover_name);
                 return;
             }
 
-            var dir = cache.dir;
             try {
                 FileInfo? pi = null;
                 var enumerator = dir.enumerate_children (ATTRIBUTES, FileQueryInfoFlags.NONE);
@@ -328,14 +330,21 @@ namespace G4 {
                         stack.push_head (new DirCache (child, info));
                         cache.add_child (info);
                     } else {
-                        var file = dir.get_child (info.get_name ());
-                        var music = Music.from_info (file, info);
-                        if (music != null) {
-                            musics.add ((!)music);
+                        unowned var ctype = info.get_content_type () ?? "";
+                        unowned var name = info.get_name ();
+                        if (is_music_type (ctype)) {
+                            var time = info.get_modification_date_time ()?.to_unix () ?? 0;
+                            var file = dir.get_child (name);
+                            var music = new Music (file.get_uri (), name, time);
+                            musics.add (music);
+                            cache.add_child (info);
+                        } else if (is_cover_file (ctype, name)) {
+                            cover_name = name;
                             cache.add_child (info);
                         }
                     }
                 }
+                _cover_cache.put (dir, cover_name ?? "");
                 get_save_dir_pool ()?.add (cache);
             } catch (Error e) {
                 warning ("Enumerate %s: %s\n", dir.get_parse_name (), e.message);

@@ -15,6 +15,7 @@ sources = [
   'ui/volume-button.vala',
   'ui/window.vala',
   'utils/async-task.vala',
+  'utils/cover-cache.vala',
   'utils/data-io.vala',
   'utils/dir-cache.vala',
   'utils/mpris.vala',

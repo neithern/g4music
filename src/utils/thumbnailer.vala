@@ -1,52 +1,5 @@
 namespace G4 {
 
-    public class CoverFinder : Object {
-        private HashTable<string, string?> _cache = new HashTable<string, string?> (str_hash, str_equal);
-
-        private const string ATTRIBUTES = FileAttribute.STANDARD_CONTENT_TYPE + ","
-                                        + FileAttribute.STANDARD_NAME;
-
-        public File? find (File file) {
-            var parent = file.get_parent ();
-            if (parent == null)
-                return null;
-
-            var dir = (!)parent;
-            var uri = dir.get_uri ();
-            lock (_cache) {
-                var art_uri = _cache[uri];
-                if (art_uri == null) {
-                    var art_file = find_no_lock (dir);
-                    art_uri = art_file?.get_uri () ?? "";
-                    _cache[uri] = art_uri;
-                }
-                return ((art_uri?.length ?? 0) > 0) ? File.new_for_uri ((!)art_uri) : (File?) null;
-            }
-        }
-
-        private static File? find_no_lock (File dir) {
-            try {
-                FileInfo? pi = null;
-                var enumerator = dir.enumerate_children (ATTRIBUTES, FileQueryInfoFlags.NONE);
-                while ((pi = enumerator.next_file ()) != null) {
-                    var info = (!)pi;
-                    unowned var type = info.get_content_type () ?? "";
-                    if (ContentType.is_mime_type (type, "image/*")) {
-                        unowned var name = info.get_name ();
-                        if (name.ascii_ncasecmp ("Cover", 5) == 0
-                            || name.ascii_ncasecmp ("Folder", 6) == 0
-                            || name.ascii_ncasecmp ("AlbumArt", 8) == 0) {
-                            //  print ("Find external cover: %s\n", name);
-                            return dir.get_child (name);
-                        }
-                    }
-                }
-            } catch (Error e) {
-            }
-            return null;
-        }
-    }
-
     //  Sorted by insert order
     public class LruCache<V> : Object {
         private size_t _max_size = 0;
@@ -115,30 +68,15 @@ namespace G4 {
         private HashTable<string, string> _album_covers = new HashTable<string, string> (str_hash, str_equal);
         private LruCache<Gdk.Pixbuf?> _album_pixbufs = new LruCache<Gdk.Pixbuf?> (MAX_COUNT);
         private LruCache<Gdk.Paintable?> _cover_cache = new LruCache<Gdk.Paintable?> (MAX_COUNT);
-        private CoverFinder _cover_finder = new CoverFinder ();
         private Quark _loading_quark = Quark.from_string ("loading_quark");
-        private Pango.Context? _pango_context = null;
-        private bool _remote_thumbnail = false;
 
         public signal void tag_updated (Music music);
 
-        public Pango.Context? pango_context {
-            get {
-                return _pango_context;
-            }
-            set {
-                _pango_context = value;
-            }
-        }
+        public CoverCache? cover_finder { get; set; }
 
-        public bool remote_thumbnail {
-            get {
-                return _remote_thumbnail;
-            }
-            set {
-                _remote_thumbnail = value;
-            }
-        }
+        public Pango.Context? pango_context { get; set; }
+
+        public bool remote_thumbnail { get; set; }
 
         public Gdk.Paintable? find (Music music) {
             return _cover_cache.find (music.cover_key);
@@ -201,7 +139,7 @@ namespace G4 {
                     var album_key = album_key_ + image_size.to_string ("%x");
                     check_same_album_cover (album_key, ref cover_key[0]);
                     pixbuf = load_clamp_pixbuf_from_sample ((!)sample, size);
-                } else if ((cover_file = _cover_finder.find (file)) != null) {
+                } else if ((cover_file = _cover_finder?.find (file.get_parent ())) != null) {
                     var album_key = (!) cover_file?.get_path ();
                     cover_key[0] = (!) cover_file?.get_uri ();
                     check_same_album_cover (album_key, ref cover_key[0]);

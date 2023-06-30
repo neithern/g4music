@@ -4,11 +4,15 @@ namespace G4 {
         private static uint32 MAGIC = 0x44495243; //  'DIRC'
 
         private class ChildInfo {
-            public FileType type;
+            public const uint8 DIRECTORY = FileType.DIRECTORY;
+            public const uint8 MUSIC = FileType.REGULAR;
+            public const uint8 COVER = FileType.UNKNOWN;
+
+            public uint8 type;
             public string name;
             public int64 time;
     
-            public ChildInfo (FileType type, string name, int64 time) {
+            public ChildInfo (uint8 type, string name, int64 time) {
                 this.type = type;
                 this.name = name;
                 this.time = time;
@@ -49,11 +53,18 @@ namespace G4 {
 
         public void add_child (FileInfo info) {
             var time = info.get_modification_date_time ()?.to_unix () ?? 0;
-            var child = new ChildInfo (info.get_file_type (), info.get_name (), time);
+            var type = (uint8) info.get_file_type ();
+            if (type == FileType.REGULAR) {
+                unowned var ctype = info.get_content_type () ?? "";
+                if (ContentType.is_mime_type (ctype, "image/*"))
+                    type = ChildInfo.COVER;
+            }
+            var child = new ChildInfo (type, info.get_name (), time);
             _children.add (child);
         }
 
-        public bool load (Queue<DirCache> stack, GenericArray<Object> musics) {
+        public bool load (Queue<DirCache> stack, GenericArray<Object> musics, out string? cover_name) {
+            cover_name = null;
             try {
                 var mapped = new MappedFile (_file.get_path () ?? "", false);
                 var dis = new DataInputBytes (mapped.get_bytes ());
@@ -72,10 +83,12 @@ namespace G4 {
                     var name = dis.read_string ();
                     var time = (int64) dis.read_uint64 ();
                     var child = _dir.get_child (name);
-                    if (type == FileType.DIRECTORY) {
-                        stack.push_head (new DirCache (child));
-                    } else {
+                    if (type == ChildInfo.MUSIC) {
                         musics.add (new Music (child.get_uri (), name, time));
+                    } else if (type == ChildInfo.DIRECTORY) {
+                        stack.push_head (new DirCache (child));
+                    } else if (type == ChildInfo.COVER) {
+                        cover_name = name;
                     }
                 }
                 return true;
