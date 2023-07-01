@@ -12,16 +12,17 @@ namespace G4 {
         public ulong first_draw_handler = 0;
 
         public MusicEntry (bool compact = true) {
-            var margin = compact ? 2 : 4;
-            margin_top = margin;
-            margin_bottom = margin;
-
-            _cover.pixel_size = compact ? 36 : 48;
+            var cover_margin =  5;
+            var cover_size = compact ? 36 : 48;
+            _cover.margin_top = cover_margin;
+            _cover.margin_bottom = cover_margin;
+            _cover.pixel_size = cover_size;
             _cover.paintable = new RoundPaintable (_paintable);
             _paintable.queue_draw.connect (_cover.queue_draw);
             append (_cover);
 
-            var vbox = new Gtk.Box (Gtk.Orientation.VERTICAL, compact ? 2 : 6);
+            var spacing = compact ? 2 : 6;
+            var vbox = new Gtk.Box (Gtk.Orientation.VERTICAL, spacing);
             vbox.hexpand = true;
             vbox.valign = Gtk.Align.CENTER;
             vbox.margin_start = 12;
@@ -49,10 +50,10 @@ namespace G4 {
             append (_playing);
 
             //  Make enough space for text
-            var height = margin * 2 + vbox.spacing + (int) (font_size * 2.65) - (margin - 2);
-            var padding = (margin + 1) * 2;
+            var height = (int) (font_size * 2.65) + spacing;
+            var padding = 2;
             var item_height = (height + padding + 3) / 4 * 4;
-            height_request = item_height - padding;
+            height_request = int.max (item_height - padding, cover_size + cover_margin * 2);
 
             make_right_clickable (this, show_popover);
         }
