@@ -325,9 +325,7 @@ namespace G4 {
         }
 
         public void toggle_search () {
-            var window = active_window as Window;
-            if (window != null)
-                ((!)window).search_btn.active = ! ((!)window).search_btn.active;
+            (active_window as Window)?.toggle_search ();
         }
 
         private void toggle_sort () {

@@ -3,7 +3,6 @@ namespace G4 {
     public class MiniBar : Adw.ActionRow {
         private Gtk.Image _cover = new Gtk.Image ();
         private Gtk.Label _title = new Gtk.Label (null);
-        private PeakBar _peak = new PeakBar ();
         private Gtk.Label _time = new Gtk.Label ("0:00");
         private Gtk.Button _play = new Gtk.Button ();
         private Gtk.Button _next = new Gtk.Button ();
@@ -28,7 +27,6 @@ namespace G4 {
             vbox.hexpand = true;
             vbox.valign = Gtk.Align.CENTER;
             vbox.append (_title);
-            vbox.append (_peak);
             vbox.append (_time);
             add_prefix (vbox);
             add_prefix (_cover);
@@ -47,10 +45,6 @@ namespace G4 {
             _time.halign = Gtk.Align.START;
             _time.add_css_class ("dim-label");
             _time.add_css_class ("numeric");
-
-            _peak.halign = Gtk.Align.START;
-            _peak.width_request = 168;
-            _peak.add_css_class ("dim-label");
 
             var hbox = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 4);
             hbox.valign = Gtk.Align.CENTER;
@@ -77,11 +71,6 @@ namespace G4 {
             player.duration_changed.connect (on_duration_changed);
             player.position_updated.connect (on_position_changed);
             player.state_changed.connect (on_state_changed);
-
-            var settings = app.settings;
-            settings.bind ("show-peak", _peak, "visible", SettingsBindFlags.DEFAULT);
-            settings.bind ("show-peak", _time, "visible", SettingsBindFlags.GET | SettingsBindFlags.SET | SettingsBindFlags.INVERT_BOOLEAN);
-            settings.bind ("peak-characters", _peak, "characters", SettingsBindFlags.DEFAULT);
         }
 
         public Gdk.Paintable? cover {
@@ -101,12 +90,6 @@ namespace G4 {
             }
         }
 
-        public double peak {
-            set {
-                _peak.peak = value;
-            }
-        }
-
         public new string title {
             set {
                 _title.label = value;
@@ -117,8 +100,9 @@ namespace G4 {
             base.snapshot (snapshot);
             var color = Gdk.RGBA ();
             color.red = color.green = color.blue = color.alpha = 0.5f;
+            var line_width = scale_factor >= 2 ? 0.5f : 1;
             var rect = Graphene.Rect ();
-            rect.init (0, 0, get_width (), 0.5f);
+            rect.init (0, 0, get_width (), line_width);
             snapshot.append_color (color, rect);
         }
 

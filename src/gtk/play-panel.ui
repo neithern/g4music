@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <template class="G4PlayPanel" parent="GtkBox">
+    <property name="hexpand">true</property>
+    <property name="orientation">vertical</property>
+    <property name="margin_bottom">32</property>
+    <child>
+      <object class="GtkHeaderBar" id="header_bar">
+        <style>
+          <class name="flat"/>
+        </style>
+        <child type="start">
+          <object class="GtkButton" id="back_btn">
+            <property name="icon-name">go-previous-symbolic</property>
+            <property name="tooltip-text" translatable="yes">Back</property>
+          </object>
+        </child>
+        <child type="title">
+          <object class="GtkLabel">
+            <property name="visible">false</property>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkBox" id="music_box">
+        <property name="orientation">vertical</property>
+        <property name="hexpand">true</property>
+        <property name="margin_start">32</property>
+        <property name="margin_end">32</property>
+        <property name="margin_top">8</property>
+        <child>
+          <object class="GtkImage" id="music_cover">
+            <property name="hexpand">true</property>
+            <property name="vexpand">true</property>
+            <property name="pixel_size">240</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="orientation">vertical</property>
+            <property name="valign">end</property>
+            <property name="margin_top">39</property>
+            <property name="height_request">80</property>
+            <child>
+              <object class="GtkLabel" id="initial_label">
+                <property name="halign">center</property>
+                <property name="hexpand">false</property>
+                <property name="lines">3</property>
+                <property name="single_line_mode">false</property>
+                <property name="width_request">272</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="music_title">
+                <property name="ellipsize">end</property>
+                <property name="halign">center</property>
+                <style>
+                  <class name="title-large"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="music_artist">
+                <property name="ellipsize">end</property>
+                <property name="halign">center</property>
+                <property name="margin_top">4</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="music_album">
+                <property name="ellipsize">end</property>
+                <property name="halign">center</property>
+                <property name="margin_top">4</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>

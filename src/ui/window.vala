@@ -1,152 +1,49 @@
 namespace G4 {
 
-    namespace SearchType {
-        public const uint ALL = 0;
-        public const uint ALBUM = 1;
-        public const uint ARTIST = 2;
-        public const uint TITLE = 3;
-    }
-
-    [GtkTemplate (ui = "/com/github/neithern/g4music/gtk/window.ui")]
     public class Window : Adw.ApplicationWindow {
-        [GtkChild]
-        private unowned Adw.Leaflet leaflet;
-        [GtkChild]
-        private unowned Gtk.Spinner spinner;
-        [GtkChild]
-        private unowned Gtk.Label index_title;
-        [GtkChild]
-        private unowned Gtk.MenuButton sort_btn;
-        [GtkChild]
-        private unowned Gtk.Button back_btn;
-        [GtkChild]
-        private unowned Gtk.Box list_box;
-        [GtkChild]
-        private unowned Gtk.Box music_box;
-        [GtkChild]
-        private unowned Gtk.Image music_cover;
-        [GtkChild]
-        private unowned Gtk.Label music_album;
-        [GtkChild]
-        private unowned Gtk.Label music_artist;
-        [GtkChild]
-        private unowned Gtk.Label music_title;
-        [GtkChild]
-        private unowned Gtk.Label initial_label;
-        [GtkChild]
-        private unowned Gtk.ScrolledWindow scroll_view;
-        [GtkChild]
-        private unowned Gtk.ListView list_view;
-        [GtkChild]
-        public unowned Gtk.ToggleButton search_btn;
-        [GtkChild]
-        private unowned Gtk.SearchBar search_bar;
-        [GtkChild]
-        private unowned Gtk.SearchEntry search_entry;
-
+        private Adw.Leaflet _leaflet = new Adw.Leaflet ();
         private MiniBar _mini_bar = new MiniBar ();
-        private PlayBar _play_bar = new PlayBar ();
+        private PlayPanel _play_panel;
+        private StorePanel _store_panel;
 
+        private int _blur_size = 512;
         private uint _bkgnd_blur = BlurMode.ALWAYS;
         private CrossFadePaintable _bkgnd_paintable = new CrossFadePaintable ();
-        private CrossFadePaintable _cover_paintable = new CrossFadePaintable ();
-        private Gdk.Paintable? _loading_paintable = null;
-        private MatrixPaintable _matrix_cover_paintable = new MatrixPaintable ();
-        private RoundPaintable _round_cover_paintable = new RoundPaintable ();
-
-        private bool _compact_playlist = false;
-        private int _blur_size = 512;
-        private int _cover_size = 1024;
-        private string _loading_text = _("Loading…");
-        private bool _rotate_cover = true;
-        private bool _show_peak = true;
-        private double _row_height = 0;
-        private double _scroll_range = 0;
-
-        private string _search_text = "";
-        private string _search_property = "";
-        private uint _search_type = SearchType.ALL;
+        private Gdk.Paintable? _cover_paintable = null;
 
         public Window (Application app) {
-            Object (application: app);
+            this.application = app;
             this.icon_name = app.application_id;
             this.title = app.name;
-
             this.close_request.connect (on_close_request);
 
-            setup_drop_target ();
-
-            leaflet.bind_property ("folded", this, "leaflet-folded", BindingFlags.SYNC_CREATE);
-            leaflet.bind_property ("folded", _mini_bar, "visible", BindingFlags.SYNC_CREATE);
-            leaflet.navigate (Adw.NavigationDirection.FORWARD);
-            back_btn.clicked.connect (() => leaflet.navigate (Adw.NavigationDirection.BACK));
-
-            app.bind_property ("sort-mode", this, "sort-mode", BindingFlags.SYNC_CREATE);
-
-            search_btn.toggled.connect (on_search_btn_toggled);
-            search_bar.key_capture_widget = this.content;
-            search_entry.search_changed.connect (on_search_text_changed);
-
-            list_box.append (_mini_bar);
-            _mini_bar.cover = app.icon;
-            _mini_bar.activated.connect (() => leaflet.navigate (Adw.NavigationDirection.FORWARD));
+            var handle = new Gtk.WindowHandle ();
+            handle.child = _leaflet;
+            this.content = handle;
 
             _bkgnd_paintable.queue_draw.connect (this.queue_draw);
-            _cover_paintable.queue_draw.connect (music_cover.queue_draw);
-            _cover_paintable.paintable = app.icon;
 
-            app.thumbnailer.pango_context = get_pango_context ();
-            _loading_paintable = app.thumbnailer.create_simple_text_paintable ("...", Thumbnailer.ICON_SIZE);
+            _mini_bar.cover = app.icon;
+            _mini_bar.activated.connect (() => _leaflet.navigate (Adw.NavigationDirection.FORWARD));
 
-            _round_cover_paintable.paintable = _cover_paintable;
-            _matrix_cover_paintable.paintable = _round_cover_paintable;
-            _matrix_cover_paintable.queue_draw.connect (music_cover.queue_draw);
-            music_cover.paintable = _matrix_cover_paintable;
+            _store_panel = new StorePanel (app, this, _leaflet);
+            _store_panel.append (_mini_bar);
 
-            music_album.tooltip_text = _("Search Album");
-            music_artist.tooltip_text = _("Search Artist");
-            music_title.tooltip_text = _("Search Title");
-            make_label_clickable (music_album).released.connect (
-                () => start_search ("album:" + music_album.label));
-            make_label_clickable (music_artist).released.connect (
-                () => start_search ("artist:" + music_artist.label));
-            make_label_clickable (music_title).released.connect (
-                () => start_search ("title:" + music_title.label));
-            make_right_clickable (music_box, show_popover_menu);
+            _play_panel = new PlayPanel (app, this, _leaflet);
+            _play_panel.cover_changed.connect (on_cover_changed);
 
-            music_box.append (_play_bar);
-            action_set_enabled (ACTION_APP + ACTION_PREV, false);
-            action_set_enabled (ACTION_APP + ACTION_PLAY, false);
-            action_set_enabled (ACTION_APP + ACTION_NEXT, false);
+            _leaflet.append (_store_panel);
+            _leaflet.append (_play_panel);
+            _leaflet.bind_property ("folded", this, "leaflet-folded", BindingFlags.SYNC_CREATE);
+            _leaflet.bind_property ("folded", _mini_bar, "visible", BindingFlags.SYNC_CREATE);
+            _leaflet.navigate (Adw.NavigationDirection.FORWARD);
 
-            scroll_view.vadjustment.changed.connect (on_scrollview_vadjustment_changed);
-
-            list_view.activate.connect ((index) => app.current_item = (int) index);
-            Idle.add (() => {
-                // Delay set model after the window shown to avoid slowing down it showing
-                if (get_height () > 0 && list_view.get_model () == null) {
-                    list_view.model = new Gtk.NoSelection (app.music_list);
-                    run_idle_once (() => scroll_to_item (app.current_item), Priority.HIGH);
-                }
-                return list_view.get_model () == null;
-            }, Priority.LOW);
-
-            initial_label.activate_link.connect (on_music_folder_clicked);
-
-            app.index_changed.connect (on_index_changed);
-            app.music_changed.connect (on_music_changed);
-            app.music_tag_parsed.connect (on_music_tag_parsed);
-            app.music_store.loading_changed.connect (on_loading_changed);
-            app.music_store.parse_progress.connect ((percent) => index_title.label = @"$percent%");
-            app.player.state_changed.connect (on_player_state_changed);
+            setup_drop_target ();
 
             var settings = app.settings;
             settings.bind ("width", this, "default-width", SettingsBindFlags.DEFAULT);
             settings.bind ("height", this, "default-height", SettingsBindFlags.DEFAULT);
             settings.bind ("blur-mode", this, "blur-mode", SettingsBindFlags.DEFAULT);
-            settings.bind ("compact-playlist", this, "compact-playlist", SettingsBindFlags.DEFAULT);
-            settings.bind ("rotate-cover", this, "rotate-cover", SettingsBindFlags.DEFAULT);
-            settings.bind ("show-peak", this, "show-peak", SettingsBindFlags.DEFAULT);
         }
 
         public uint blur_mode {
@@ -160,67 +57,17 @@ namespace G4 {
             }
         }
 
-        public bool compact_playlist {
-            get {
-                return _compact_playlist;
-            }
-            set {
-                _compact_playlist = value;
-                list_view.factory = create_list_factory ();
-            }
-        }
-
         public bool leaflet_folded {
             set {
-                leaflet.navigate (Adw.NavigationDirection.FORWARD);
-            }
-        }
-
-        public bool rotate_cover {
-            get {
-                return _rotate_cover;
-            }
-            set {
-                var app = (Application) application;
-                _rotate_cover = value;
-                _round_cover_paintable.ratio = value ? 0.5 : 0.05;
-                _matrix_cover_paintable.rotation = 0;
-                on_player_state_changed (app.player.state);
-            }
-        }
-
-        public bool show_peak {
-            get {
-                return _show_peak;
-            }
-            set {
-                var app = (Application) application;
-                _show_peak = value;
-                on_player_state_changed (app.player.state);
-            }
-        }
-
-        private const string[] SORT_MODE_ICONS = {
-            "media-optical-cd-audio-symbolic",  // ALBUM
-            "system-users-symbolic",            // ARTIST
-            "folder-music-symbolic",            // TITLE
-            "document-open-recent-symbolic",    // RECENT
-            "media-playlist-shuffle-symbolic"   // SHUFFLE
-        };
-
-        public uint sort_mode {
-            set {
-                if (value >= SortMode.ALBUM && value <= SortMode.SHUFFLE) {
-                    sort_btn.set_icon_name (SORT_MODE_ICONS[value]);
-                }
+                _leaflet.navigate (Adw.NavigationDirection.FORWARD);
             }
         }
 
         public override void size_allocate (int width, int height, int baseline) {
-            list_box.width_request = int.max (width * 3 / 8, 320);
-            var margin = int.max ((width - list_box.width_request - music_cover.pixel_size) / 4, 32);
-            music_box.margin_start = margin;
-            music_box.margin_end = margin;
+            _store_panel.width_request = int.max (width * 3 / 8, 320);
+            var margin = int.max ((width - _store_panel.width_request - _play_panel.music_cover.pixel_size) / 4, 32);
+            _play_panel.music_box.margin_start = margin;
+            _play_panel.music_box.margin_end = margin;
             base.size_allocate (width, height, baseline);
         }
 
@@ -228,8 +75,8 @@ namespace G4 {
             var width = get_width ();
             var height = get_height ();
             _bkgnd_paintable.snapshot (snapshot, width, height);
-            if (!leaflet.folded) {
-                var page = (Adw.LeafletPage) leaflet.pages.get_item (0);
+            if (!_leaflet.folded) {
+                var page = (Adw.LeafletPage) _leaflet.pages.get_item (0);
                 var size = page.child.get_width ();
                 var rtl = get_direction () == Gtk.TextDirection.RTL;
                 var line_width = scale_factor >= 2 ? 0.5f : 1;
@@ -249,58 +96,17 @@ namespace G4 {
             base.snapshot (snapshot);
         }
 
-        private Gtk.ListItemFactory create_list_factory () {
-            var factory = new Gtk.SignalListItemFactory ();
-            factory.setup.connect ((item) => item.child = new MusicEntry (_compact_playlist));
-            factory.bind.connect (on_bind_item);
-            factory.unbind.connect (on_unbind_item);
-            return factory;
-        }
-
-        private uint get_music_count () {
-            return list_view.get_model ()?.get_n_items () ?? 0;
-        }
-
         public void start_search (string text) {
-#if GTK_4_10
-            var delay = search_entry.search_delay;
-            search_entry.search_delay = 0;
-            run_idle_once (() => search_entry.search_delay = delay);
-#endif
-            search_entry.text = text;
-            search_entry.select_region (text.index_of_char (':') + 1, -1);
-            search_btn.active = true;
-            leaflet.navigate (Adw.NavigationDirection.BACK);
+            _store_panel.start_search (text);
+            _leaflet.navigate (Adw.NavigationDirection.BACK);
         }
 
-        private async void on_bind_item (Gtk.ListItem item) {
-            var app = (Application) application;
-            var entry = (MusicEntry) item.child;
-            var music = (Music) item.item;
-            entry.playing = item.position == app.current_item;
-            entry.update (music, app.sort_mode);
-            //  print ("bind: %u\n", item.position);
-
-            var thumbnailer = app.thumbnailer;
-            var paintable = thumbnailer.find (music);
-            entry.paintable = paintable ?? _loading_paintable;
-            if (paintable == null) {
-                entry.first_draw_handler = entry.cover.first_draw.connect (() => {
-                    entry.disconnect_first_draw ();
-                    thumbnailer.load_async.begin (music, Thumbnailer.ICON_SIZE, (obj, res) => {
-                        var paintable2 = thumbnailer.load_async.end (res);
-                        if (music == (Music) item.item) {
-                            entry.paintable = paintable2;
-                        }
-                    });
-                });
+        public void toggle_search () {
+            var search_btn = _store_panel.search_btn;
+            search_btn.active = ! search_btn.active;
+            if (search_btn.active && _leaflet.folded) {
+                _leaflet.navigate (Adw.NavigationDirection.BACK);
             }
-        }
-
-        private void on_unbind_item (Gtk.ListItem item) {
-            var entry = (MusicEntry) item.child;
-            entry.disconnect_first_draw ();
-            entry.paintable = null;
         }
 
         private bool on_close_request () {
@@ -313,196 +119,27 @@ namespace G4 {
             return false;
         }
 
-        private void on_index_changed (int index, uint size) {
-            action_set_enabled (ACTION_APP + ACTION_PREV, index > 0);
-            action_set_enabled (ACTION_APP + ACTION_NEXT, index < (int) size - 1);
-            index_title.label = size > 0 ? @"$(index+1)/$(size)" : "";
-            scroll_to_item (index);
-        }
+        private Adw.Animation? _fade_animation = null;
 
-        private void on_loading_changed (bool loading) {
+        private void on_cover_changed (Music music, CrossFadePaintable cover) {
             var app = (Application) application;
-            var index = app.current_item;
-            var size = get_music_count ();
-            action_set_enabled (ACTION_APP + ACTION_RELOAD_LIST, !loading);
-            spinner.spinning = loading;
-            spinner.visible = loading;
-            index_title.label = loading ? _loading_text : @"$(index+1)/$(size)";
-            update_music_info (app.current_music);
-        }
+            _cover_paintable = cover.paintable;
+            _mini_bar.cover = app.thumbnailer.find (music) ?? _cover_paintable;    
+            _mini_bar.title = music.title;
+            update_background ();
 
-        private void on_music_changed (Music? music) {
-            update_music_info (music);
-            action_set_enabled (ACTION_APP + ACTION_PLAY, music != null);
-        }
-
-        private bool on_music_folder_clicked (string uri) {
-            var app = (Application) application;
-            pick_music_folder_async.begin (app, this,
-                (dir) => update_initial_label (dir.get_uri ()),
-                (obj, res) => pick_music_folder_async.end (res));
-            return true;
-        }
-
-        private async void on_music_tag_parsed (Music music, Gst.Sample? image) {
-            update_music_info (music);
-
-            var app = (Application) application;
-            Gdk.Pixbuf? pixbuf = null;
-            Gdk.Paintable? paintable = null;
-            if (image != null) {
-                pixbuf = yield run_async<Gdk.Pixbuf?> (
-                    () => load_clamp_pixbuf_from_sample ((!)image, _cover_size), true);
-                if (pixbuf != null)
-                    paintable = Gdk.Texture.for_pixbuf ((!)pixbuf);
-            } else {
-                paintable = yield app.thumbnailer.load_async (music, _cover_size);
-            }
-            if (music == app.current_music) {
-                //  Remote thumbnail may not loaded
-                if (pixbuf != null && !(app.thumbnailer.find (music) is Gdk.Texture)) {
-                    pixbuf = yield run_async<Gdk.Pixbuf?> (
-                        () => create_clamp_pixbuf ((!)pixbuf, Thumbnailer.ICON_SIZE)
-                    );
-                    if (pixbuf != null && music == app.current_music) {
-                        app.thumbnailer.put (music, Gdk.Texture.for_pixbuf ((!)pixbuf), true);
-                        app.music_list.items_changed (app.current_item, 0, 0);
-                    }
-                }
-
-                if (music == app.current_music) {
-                    if (paintable == null)
-                        paintable = app.thumbnailer.create_album_text_paintable (music);
-                    update_cover_paintables (music, paintable);
-                    yield app.parse_music_cover_async ();
-                }
-            }
-        }
-
-        private void on_scrollview_vadjustment_changed () {
-            var adj = scroll_view.vadjustment;
-            var range = adj.upper - adj.lower;
-            var size = get_music_count ();
-            if (size > 0 && _scroll_range != range && range > list_view.get_height ()) {
-                _row_height = range / size;
-                _scroll_range = range;
-            }
-        }
-
-        private void on_search_btn_toggled () {
-            if (search_btn.active) {
-                search_entry.grab_focus ();
-                if (leaflet.folded) {
-                    leaflet.navigate (Adw.NavigationDirection.BACK);
-                }
-            }
-            update_music_filter ();
-        }
-
-        private bool on_search_match (Object obj) {
-            var music = (Music) obj;
-            switch (_search_type) {
-                case SearchType.ALBUM:
-                    return _search_property.match_string (music.album, true);
-                case SearchType.ARTIST:
-                    return _search_property.match_string (music.artist, true);
-                case SearchType.TITLE:
-                    return _search_property.match_string (music.title, true);
-                default:
-                    return _search_text.match_string (music.album, true)
-                        || _search_text.match_string (music.artist, true)
-                        || _search_text.match_string (music.title, true);
-            }
-        }
-
-        private void on_search_text_changed () {
-            string text = search_entry.text;
-            if (text.ascii_ncasecmp ("album:", 6) == 0) {
-                _search_property = text.substring (6);
-                _search_type = SearchType.ALBUM;
-            } else if (text.ascii_ncasecmp ("artist:", 7) == 0) {
-                _search_property = text.substring (7);
-                _search_type = SearchType.ARTIST;
-            } else if (text.ascii_ncasecmp ("title:", 6) == 0) {
-                _search_property = text.substring (6);
-                _search_type = SearchType.TITLE;
-            } else {
-                _search_type = SearchType.ALL;
-            }
-            _search_text = text;
-            update_music_filter ();
-        }
-
-        private Adw.Animation? _scale_animation = null;
-        private uint _tick_handler = 0;
-        private int64 _tick_last_time = 0;
-
-        private void on_player_state_changed (Gst.State state) {
-            var playing = state == Gst.State.PLAYING;
-            if (state >= Gst.State.PAUSED) {
-                var target = new Adw.CallbackAnimationTarget ((value) => _matrix_cover_paintable.scale = value);
-                _scale_animation?.pause ();
-                _scale_animation = new Adw.TimedAnimation (music_cover, _matrix_cover_paintable.scale,
-                                        _rotate_cover || playing ? 1 : 0.85, 500, target);
-                _scale_animation?.play ();
-            }
-
-            var need_tick = _rotate_cover || _show_peak;
-            if (need_tick && playing && _tick_handler == 0) {
-                _tick_last_time = get_monotonic_time ();
-                _tick_handler = add_tick_callback (on_tick_callback);
-            } else if ((!need_tick || !playing) && _tick_handler != 0) {
-                remove_tick_callback (_tick_handler);
-                _tick_handler = 0;
-            }
-        }
-
-        private bool on_tick_callback (Gtk.Widget widget, Gdk.FrameClock clock) {
-            if (_rotate_cover) {
-                var now = get_monotonic_time ();
-                var elapsed = (now - _tick_last_time) / 1e6;
-                var angle = elapsed * 360 / 20; // 20 seconds per lap
-                _matrix_cover_paintable.rotation += angle;
-                _tick_last_time = now;
-            }
-            if (_show_peak) {
-                var app = (Application) application;
-                var peak = app.player.peak;
-                _mini_bar.peak = peak;
-                _play_bar.peak = peak;
-            }
-            return true;
-        }
-
-        private Adw.Animation? _scroll_animation = null;
-
-        private void scroll_to_item (int index) {
-            var adj = scroll_view.vadjustment;
-            var list_height = list_view.get_height ();
-            if (_row_height > 0 && adj.upper - adj.lower > list_height) {
-                var from = adj.value;
-                var max_to = double.max ((index + 1) * _row_height - list_height, 0);
-                var min_to = double.max (index * _row_height, 0);
-                var scroll_to =  from < max_to ? max_to : (from > min_to ? min_to : from);
-                var diff = (scroll_to - from).abs ();
-                if (diff > list_height) {
-                    _scroll_animation?.pause ();
-                    adj.value = min_to;
-                } else if (diff > 0) {
-                    //  Scroll smoothly
-                    var target = new Adw.CallbackAnimationTarget (adj.set_value);
-                    _scroll_animation?.pause ();
-                    _scroll_animation = new Adw.TimedAnimation (scroll_view, from, scroll_to, 500, target);
-                    _scroll_animation?.play ();
-                } 
-            } else if (get_music_count () > 0) {
-#if GTK_4_10
-                list_view.activate_action_variant ("list.scroll-to-item", new Variant.uint32 (index));
-#else
-                //  Delay scroll if items not size_allocated, to ensure items visible in GNOME 42
-                run_idle_once (() => scroll_to_item (index));
-#endif
-            }
+            var target = new Adw.CallbackAnimationTarget ((value) => {
+                _bkgnd_paintable.fade = value;
+                cover.fade = value;
+            });
+            _fade_animation?.pause ();
+            _fade_animation = new Adw.TimedAnimation (this, 1 - cover.fade, 0, 800, target);
+            ((!)_fade_animation).done.connect (() => {
+                _bkgnd_paintable.previous = null;
+                cover.previous = null;
+                _fade_animation = null;
+            });
+            _fade_animation?.play ();
         }
 
         private void setup_drop_target () {
@@ -525,7 +162,7 @@ namespace G4 {
                     if (app.current_music == null) {
                         app.current_item = item;
                     } else {
-                        scroll_to_item (item);
+                        _store_panel.scroll_to_item (item);
                     }
                 });
                 return true;
@@ -533,84 +170,15 @@ namespace G4 {
             this.content.add_controller (drop_target);
         }
 
-        private void show_popover_menu (double x, double y) {
-            var app = (Application) application;
-            var music = app.current_music;
-            if (music != null) {
-                var popover = create_music_popover_menu ((!)music, x, y, 
-                                                false, app.current_cover != null);
-                popover.set_parent (music_box);
-                popover.popup ();
-            }
-        }
-
-        private void update_music_info (Music? music) {
-            var app = (Application) application;
-            var size = get_music_count ();
-            var empty = !app.is_loading_store && size == 0 && music == null;
-            if (empty) {
-                _matrix_cover_paintable.rotation = 0;
-                update_cover_paintables (new Music.empty (), app.icon);
-                update_initial_label (app.music_folder);
-            }
-            initial_label.visible = empty;
-
-            music_album.visible = !empty;
-            music_artist.visible = !empty;
-            music_title.visible = !empty;
-            music_album.label = music?.album ?? "";
-            music_artist.label = music?.artist ?? "";
-            music_title.label = music?.title ?? "";
-            _mini_bar.title = music?.title ?? "";
-            this.title = music?.get_artist_and_title () ?? app.name;
-        }
-
-        private void update_music_filter () {
-            var app = (Application) application;
-            if (search_btn.active) {
-                app.music_list.set_filter (new Gtk.CustomFilter (on_search_match));
-            } else {
-                app.music_list.set_filter (null);
-            }
-        }
-
-        private Adw.Animation? _fade_animation = null;
-
-        private void update_cover_paintables (Music music, Gdk.Paintable? paintable) {
-            var app = (Application) application;
-            _mini_bar.cover = app.thumbnailer.find (music) ?? paintable;
-            _cover_paintable.paintable = paintable ?? _mini_bar.cover;
-            update_background ();
-
-            var target = new Adw.CallbackAnimationTarget ((value) => {
-                _bkgnd_paintable.fade = value;
-                _cover_paintable.fade = value;
-            });
-            _fade_animation?.pause ();
-            _fade_animation = new Adw.TimedAnimation (music_cover, 1 - _cover_paintable.fade, 0, 800, target);
-            ((!)_fade_animation).done.connect (() => {
-                _bkgnd_paintable.previous = null;
-                _cover_paintable.previous = null;
-                _fade_animation = null;
-            });
-            _fade_animation?.play ();
-        }
-
         private void update_background () {
-            var paintable = _mini_bar.cover ?? _cover_paintable.paintable;
+            var paintable = _cover_paintable;
             if ((_bkgnd_blur == BlurMode.ALWAYS && paintable != null)
                 || (_bkgnd_blur == BlurMode.ART_ONLY && paintable is Gdk.Texture)) {
                 _bkgnd_paintable.paintable = create_blur_paintable (this,
-                    (!)paintable, _blur_size, _blur_size, 64);
+                    (!)paintable, _blur_size, _blur_size, _blur_size / 4);
             } else {
                 _bkgnd_paintable.paintable = null;
             }
-        }
-
-        private void update_initial_label (string uri) {
-            var dir_name = get_display_name (uri);
-            var link = @"<a href=\"change_dir\">$dir_name</a>";
-            initial_label.set_markup (_("Drag and drop music files here,\nor change music location: ") + link);
         }
     }
 }
