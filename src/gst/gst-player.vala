@@ -35,13 +35,14 @@ namespace G4 {
         private int _audio_bps = 2;
         private int _sample_bps = 2;
         private string _audio_sink_name = "";
+        private string? _current_uri = null;
         private Gst.ClockTime _duration = Gst.CLOCK_TIME_NONE;
         private Gst.ClockTime _position = Gst.CLOCK_TIME_NONE;
         private ulong _about_to_finish_id = 0;
         private int _next_uri_requested = 0;
         private Gst.State _state = Gst.State.NULL;
-        private Gst.TagList? _tag_list = null;
-        private TimeoutSource? _timer = null;
+        private bool _tag_parsed = false;
+        private uint _timer_handle = 0;
         private double _last_peak = 0;
         private Queue<Peak?> _peaks = new Queue<Peak?> ();
         private unowned Gst.Caps? _last_caps = null;
@@ -56,7 +57,7 @@ namespace G4 {
         public signal string? next_uri_request ();
         public signal void next_uri_start ();
         public signal void state_changed (Gst.State state);
-        public signal void tag_parsed (string? album, string? artist, string? title, Gst.Sample? image);
+        public signal void tag_parsed (string? uri, Gst.TagList? tags);
 
         public GstPlayer () {
             if (_pipeline != null) {
@@ -73,7 +74,10 @@ namespace G4 {
         ~GstPlayer () {
             _peaks.clear_full (free);
             _pipeline?.set_state (Gst.State.NULL);
-            _timer?.destroy ();
+            if (_timer_handle != 0) {
+                Source.remove (_timer_handle);
+                _timer_handle = 0;
+            }
         }
 
         public bool gapless {
@@ -114,18 +118,18 @@ namespace G4 {
 
         public string? uri {
             get {
-                return (string?) _pipeline?.uri;
+                return _current_uri;
             }
             set {
                 if (_pipeline != null) lock (_pipeline) {
                     _duration = Gst.CLOCK_TIME_NONE;
                     _position = Gst.CLOCK_TIME_NONE;
                     _last_sample_time = Gst.CLOCK_TIME_NONE;
-                    _tag_list = null;
-                    _peaks.clear_full (free);
-                    var cur = (string?) _pipeline?.uri;
-                    if (strcmp (cur, value) != 0)
+                    _tag_parsed = false;
+                    if (strcmp (_current_uri, value) != 0) {
+                        _current_uri = value;
                         ((!)_pipeline).uri = value;
+                    }
                 }
             }
         }
@@ -220,7 +224,10 @@ namespace G4 {
         private void on_bus_message (Gst.Message message) {
             switch (message.type) {
                 case Gst.MessageType.DURATION_CHANGED:
-                    on_duration_changed ();
+                    if (!parse_duration (message.src as Gst.Element)) {
+                        //  Hack: try again when parsed failed for MOD files
+                        Idle.add (() => !parse_duration (_pipeline), Priority.LOW);
+                    }
                     break;
 
                 case Gst.MessageType.STATE_CHANGED:
@@ -229,20 +236,21 @@ namespace G4 {
                         Gst.State state = Gst.State.NULL;
                         Gst.State pending = Gst.State.NULL;
                         message.parse_state_changed (out old, out state, out pending);
-                        if (old == Gst.State.READY && state == Gst.State.PAUSED) {
-                            on_duration_changed ();
-                            parse_tag_list ();
+                        if (old == Gst.State.READY && state == Gst.State.PAUSED && !_tag_parsed) {
+                            //  Hack: force emit if no tag parsed for MOD files
+                            _tag_parsed = true;
+                            tag_parsed (_current_uri, null);
                         }
                         if (old != state && _state != state) {
                             _state = state;
-                            if (state == Gst.State.PLAYING) {
-                                reset_timer ();
-                            } else {
-                                _timer?.destroy ();
-                                _timer = null;
+                            if (_timer_handle != 0 && state != Gst.State.PLAYING) {
+                                Source.remove (_timer_handle);
+                                _timer_handle = 0;
+                            } else if (_timer_handle == 0 && state == Gst.State.PLAYING) {
+                                _timer_handle = Timeout.add (200, parse_position);
                             }
                             state_changed (state);
-                            timeout_callback ();
+                            parse_position ();
                             //  print (@"State changed: $old -> $state\n");
                         }
                     }
@@ -266,8 +274,10 @@ namespace G4 {
                     break;
 
                 case Gst.MessageType.TAG:
-                    _tag_list = null;
-                    message.parse_tag (out _tag_list);
+                    Gst.TagList? tags = null;
+                    message.parse_tag (out tags);
+                    _tag_parsed = true;
+                    tag_parsed (_current_uri, tags);
                     break;
 
                 default:
@@ -277,20 +287,31 @@ namespace G4 {
 
         private void on_about_to_finish () {
             var next_uri = next_uri_request ();
-            if ((next_uri?.length ?? 0) > 0) {
+            if (next_uri != null && ((!)next_uri).length > 0) {
                 AtomicInt.set (ref _next_uri_requested, 1);
                 uri = (!)next_uri;
             }
         }
 
-        private void on_duration_changed () {
+        private bool parse_duration (Gst.Element? element) {
             int64 duration = (int64) Gst.CLOCK_TIME_NONE;
-            if ((_pipeline?.query_duration (Gst.Format.TIME, out duration) ?? false)
+            if ((element?.query_duration (Gst.Format.TIME, out duration) ?? false)
                     && _duration != duration) {
                 _duration = duration;
                 //  print ("Duration changed: %lld\n", duration);
                 duration_changed (duration);
             }
+            return duration != (int64) Gst.CLOCK_TIME_NONE;
+        }
+
+        private bool parse_position () {
+            int64 position = (int64) Gst.CLOCK_TIME_NONE;
+            if ((_pipeline?.query_position (Gst.Format.TIME, out position) ?? false)
+                    && _position != position) {
+                _position = position;
+                position_updated (position);
+            }
+            return true;
         }
 
         private bool parse_peak_from_last_sample (ref double peak_value) {
@@ -317,36 +338,6 @@ namespace G4 {
                 }
             }
             return parsed;
-        }
-
-        private void parse_tag_list () {
-            string? album = null, artist = null, title = null;
-            Gst.Sample? image = null;
-            if (_tag_list != null) {
-                var tags = (!)_tag_list;
-                tags.get_string (Gst.Tags.ALBUM, out album);
-                tags.get_string (Gst.Tags.ARTIST, out artist);
-                tags.get_string (Gst.Tags.TITLE, out title);
-                image = parse_image_from_tag_list (tags);
-            }
-            tag_parsed (album, artist, title, image);
-        }
-
-        private void reset_timer () {
-            _timer?.destroy ();
-            _timer = new TimeoutSource (200);
-            _timer?.set_callback (timeout_callback);
-            _timer?.attach (MainContext.default ());
-        }
-
-        private bool timeout_callback () {
-            int64 position = (int64) Gst.CLOCK_TIME_NONE;
-            if ((_pipeline?.query_position (Gst.Format.TIME, out position) ?? false)
-                    && _position != position) {
-                _position = position;
-                position_updated (position);
-            }
-            return true;
         }
 
         private void update_audio_sink () {
@@ -514,5 +505,5 @@ namespace G4 {
                 peak = value;
         }
         nps = (double) peak * peak / (((int64) 1) << (31 * 2));
-    } 
+    }
 }

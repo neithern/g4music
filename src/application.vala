@@ -26,7 +26,9 @@ namespace G4 {
     public class Application : Adw.Application {
         private int _current_item = -1;
         private Music? _current_music = null;
-        private Gst.Sample? _cover_image = null;
+        private string _current_uri = "";
+        private Gst.Sample? _current_cover = null;
+        private bool _current_tag_parsed = false;
         private bool _loading_store = false;
         private string _music_folder = "";
         private uint _mpris_id = 0;
@@ -157,7 +159,7 @@ namespace G4 {
 
         public unowned Gst.Sample? current_cover {
             get {
-                return _cover_image;
+                return _current_cover;
             }
         }
 
@@ -166,13 +168,8 @@ namespace G4 {
                 return _current_item;
             }
             set {
-                var music = get_next_music (ref value);
-                if (music != _current_music) {
-                    current_music = music;
-                }
-                if (_current_item != value) {
-                    change_current_item (value);
-                }
+                current_music = get_next_music (ref value);
+                change_current_item (value);
             }
         }
 
@@ -181,20 +178,20 @@ namespace G4 {
                 return _current_music;
             }
             set {
-                var playing = _player.state == Gst.State.PLAYING;
                 if (_current_music != value) {
-                    var uri_cur = _player.uri;
-                    var uri_new = value?.uri;
-                    if (strcmp (uri_cur, uri_new) != 0) {
-                        _player.state = Gst.State.READY;
-                        _player.uri = uri_new;
-                    }
-                    if (uri_new != null)
-                        _settings.set_string ("played-uri", (!)uri_new);
                     _current_music = value;
+                    _current_cover = null;
+                    _current_tag_parsed = false;
                     music_changed (value);
                 }
-                _player.state = playing ? Gst.State.PLAYING : Gst.State.PAUSED;
+                var uri = value?.uri ?? "";
+                if (strcmp (_current_uri, uri) != 0) {
+                    var playing = _player.state == Gst.State.PLAYING;
+                    _player.state = Gst.State.READY;
+                    _player.uri = _current_uri = uri;
+                    _player.state = playing ? Gst.State.PLAYING : Gst.State.PAUSED;
+                    _settings.set_string ("played-uri", uri);
+                }
             }
         }
 
@@ -416,25 +413,25 @@ namespace G4 {
         public async void parse_music_cover_async () {
             if (_current_music != null) {
                 var music = (!)_current_music;
-                var dir = File.new_build_filename (Environment.get_user_cache_dir (), application_id);
-                var name = Checksum.compute_for_string (ChecksumType.MD5, music.cover_key);
-                var file = dir.get_child (name);
-                var file_uri = file.get_uri ();
-                bool saved = strcmp (file_uri, _cover_tmp_file?.get_uri ()) == 0;
-                if (!saved) {
-                    if (_cover_image != null) {
-                        saved = yield save_sample_to_file_async (file, (!)_cover_image);
-                    } else if (music.cover_uri == null) {
+                if (music.cover_uri != null) {
+                    music_cover_parsed (music, music.cover_uri);
+                } else {
+                    var dir = File.new_build_filename (Environment.get_user_cache_dir (), application_id);
+                    var name = Checksum.compute_for_string (ChecksumType.MD5, music.cover_key);
+                    var file = dir.get_child (name);
+                    var file_uri = file.get_uri ();
+                    if (_current_cover != null) {
+                        yield save_sample_to_file_async (file, (!)_current_cover);
+                    } else {
                         var svg = _thumbnailer.create_album_text_svg (music);
-                        saved = yield save_text_to_file_async (file, svg);
+                        yield save_text_to_file_async (file, svg);
                     }
-                }
-                if (music == _current_music) {
-                    var uri = saved ? file_uri : music.cover_uri;
-                    music_cover_parsed (music, uri);
-                    if (strcmp (file_uri, _cover_tmp_file?.get_uri ()) != 0) {
-                        yield delete_cover_tmp_file_async ();
-                        _cover_tmp_file = file;
+                    if (music == _current_music) {
+                        music_cover_parsed (music, file_uri);
+                        if (strcmp (file_uri, _cover_tmp_file?.get_uri ()) != 0) {
+                            yield delete_cover_tmp_file_async ();
+                            _cover_tmp_file = file;
+                        }
                     }
                 }
             }
@@ -529,7 +526,7 @@ namespace G4 {
 
         private async void _export_cover_async () {
             var music = _popover_music ?? _current_music;
-            Gst.Sample? sample = _cover_image;
+            Gst.Sample? sample = _current_cover;
             if (_popover_music != null && _popover_music != _current_music) {
                 var file = File.new_for_uri (_popover_music?.uri ?? "");
                 sample = yield run_async<Gst.Sample?> (() => {
@@ -637,7 +634,7 @@ namespace G4 {
         }
 
         private void on_player_end () {
-            if (single_loop) {
+            if (_single_loop) {
                 _player.seek (0);
                 _player.play ();
             } else {
@@ -653,19 +650,17 @@ namespace G4 {
         }
 
         private string? on_player_next_uri_request () {
-            //  This callback is NOT called in main UI thread
-            string? next_uri = null;
-            if (!single_loop) {
-                lock (_next_uri) {
-                    next_uri = _next_uri.str;
-                }
+            //  This is NOT called in main UI thread
+            lock (_next_uri) {
+                if (!_single_loop)
+                    _current_uri = _next_uri.str;
+                //  next_uri_start will be received soon later
+                return _current_uri;
             }
-            //  stream_start will be received soon later
-            return next_uri;
         }
 
         private void on_player_next_uri_start () {
-            //  Received after request_next_uri
+            //  Received after next_uri_request
             on_player_end ();
         }
 
@@ -680,10 +675,12 @@ namespace G4 {
             }
         }
 
-        private async void on_tag_parsed (string? album, string? artist, string? title, Gst.Sample? image) {
-            _cover_image = image;
-            if (_current_music != null) {
-                music_tag_parsed ((!)_current_music, image);
+        private async void on_tag_parsed (string? uri, Gst.TagList? tags) {
+            if (_current_music != null && strcmp (_current_music?.uri, uri) == 0
+                    && !_current_tag_parsed) {
+                _current_cover = tags != null ? parse_image_from_tag_list ((!)tags) : null;
+                _current_tag_parsed = true;
+                music_tag_parsed ((!)_current_music, _current_cover);
             }
         }
     }
@@ -692,7 +689,7 @@ namespace G4 {
         var buffer = sample.get_buffer ();
         Gst.MapInfo? info = null;
         try {
-            var stream = yield file.create_async (FileCreateFlags.REPLACE_DESTINATION);
+            var stream = yield file.replace_async (null, false, FileCreateFlags.NONE);
             if (buffer?.map (out info, Gst.MapFlags.READ) ?? false) {
                 return yield stream.write_all_async (info?.data, Priority.DEFAULT, null, null);
             }
@@ -706,7 +703,7 @@ namespace G4 {
 
     public async bool save_text_to_file_async (File file, string text) {
         try {
-            var stream = yield file.create_async (FileCreateFlags.REPLACE_DESTINATION);
+            var stream = yield file.replace_async (null, false, FileCreateFlags.NONE);
             unowned uint8[] data = (uint8[])text;
             var size = text.length;
             return yield stream.write_all_async (data[0:size], Priority.DEFAULT, null, null);
