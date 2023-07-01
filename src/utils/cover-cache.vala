@@ -12,27 +12,27 @@ namespace G4 {
 
             var dir = (!)parent;
             var uri = dir.get_uri ();
+            string? child = null;
             lock (_cache) {
-                var cover_uri = _cache[uri];
-                if (cover_uri == null) {
-                    var cover_file = find_no_lock (dir);
-                    cover_uri = cover_file?.get_uri () ?? "";
-                    _cache[uri] = cover_uri;
+                child = _cache[uri];
+                if (child == null) {
+                    child = find_no_lock (dir);
+                    _cache[uri] = child ?? "";
                 }
-                return ((!)cover_uri).length > 0 ? File.new_for_uri ((!)cover_uri) : (File?) null;
             }
+            if (child == null || ((!)child).length == 0)
+                return (File?) null;
+            return dir.get_child ((!)child);
         }
 
         public void put (File dir, string child) {
             var uri = dir.get_uri ();
-            var cover_file = dir.get_child ((!)child);
-            var cover_uri = cover_file.get_uri ();
             lock (_cache) {
-                _cache[uri] = cover_uri;
+                _cache[uri] = child;
             }
         }
 
-        private static File? find_no_lock (File dir) {
+        private static string? find_no_lock (File dir) {
             try {
                 FileInfo? pi = null;
                 var enumerator = dir.enumerate_children (ATTRIBUTES, FileQueryInfoFlags.NONE);
@@ -42,7 +42,7 @@ namespace G4 {
                     unowned var name = info.get_name ();
                     if (is_cover_file (ctype, name)) {
                         //  print ("Find external cover: %s\n", name);
-                        return dir.get_child (name);
+                        return name;
                     }
                 }
             } catch (Error e) {
