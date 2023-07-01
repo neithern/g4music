@@ -224,10 +224,7 @@ namespace G4 {
         private void on_bus_message (Gst.Message message) {
             switch (message.type) {
                 case Gst.MessageType.DURATION_CHANGED:
-                    if (!parse_duration (message.src as Gst.Element)) {
-                        //  Hack: try again when parsed failed for MOD files
-                        Idle.add (() => !parse_duration (_pipeline), Priority.LOW);
-                    }
+                    parse_duration ();
                     break;
 
                 case Gst.MessageType.STATE_CHANGED:
@@ -236,10 +233,13 @@ namespace G4 {
                         Gst.State state = Gst.State.NULL;
                         Gst.State pending = Gst.State.NULL;
                         message.parse_state_changed (out old, out state, out pending);
-                        if (old == Gst.State.READY && state == Gst.State.PAUSED && !_tag_parsed) {
-                            //  Hack: force emit if no tag parsed for MOD files
-                            _tag_parsed = true;
-                            tag_parsed (_current_uri, null);
+                        if (old == Gst.State.READY && state == Gst.State.PAUSED) {
+                            parse_duration ();
+                            if (!_tag_parsed) {
+                                //  Hack: force emit if no tag parsed for MOD files
+                                _tag_parsed = true;
+                                tag_parsed (_current_uri, null);
+                            }
                         }
                         if (old != state && _state != state) {
                             _state = state;
@@ -270,6 +270,8 @@ namespace G4 {
                 case Gst.MessageType.STREAM_START:
                     if (AtomicInt.compare_and_exchange (ref _next_uri_requested, 1, 0)) {
                         next_uri_start ();
+                        parse_duration ();
+                        parse_position ();
                     }
                     break;
 
@@ -293,9 +295,9 @@ namespace G4 {
             }
         }
 
-        private bool parse_duration (Gst.Element? element) {
+        private bool parse_duration () {
             int64 duration = (int64) Gst.CLOCK_TIME_NONE;
-            if ((element?.query_duration (Gst.Format.TIME, out duration) ?? false)
+            if ((_pipeline?.query_duration (Gst.Format.TIME, out duration) ?? false)
                     && _duration != duration) {
                 _duration = duration;
                 //  print ("Duration changed: %lld\n", duration);
