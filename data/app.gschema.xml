@@ -2,7 +2,7 @@
 <schemalist gettext-domain="g4music">
   <schema id="@app_id@" path="/com/github/neithern/g4music/">
     <key name="dark-theme" type="b">
-      <default>true</default>
+      <default>false</default>
       <summary>Prefer dark theme</summary>
     </key>
     <key name="blur-mode" type="u">
