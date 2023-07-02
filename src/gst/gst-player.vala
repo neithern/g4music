@@ -72,7 +72,7 @@ namespace G4 {
         }
 
         ~GstPlayer () {
-            _peaks.clear_full (free);
+            _peaks.clear ();
             _pipeline?.set_state (Gst.State.NULL);
             if (_timer_handle != 0) {
                 Source.remove (_timer_handle);
@@ -269,6 +269,7 @@ namespace G4 {
 
                 case Gst.MessageType.STREAM_START:
                     if (AtomicInt.compare_and_exchange (ref _next_uri_requested, 1, 0)) {
+                        _peaks.clear ();
                         next_uri_start ();
                         parse_duration ();
                         parse_position ();
