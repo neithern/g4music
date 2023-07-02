@@ -70,10 +70,14 @@ namespace G4 {
     }
 
     public string parse_relative_uri (string uri, File? parent = null) {
-        if (uri.contains ("://"))
-            return uri;
-        else if (uri.length > 0 && uri[0] == '/')
+        if (uri.length > 0 && uri[0] == '/') {
             return File.new_for_path (uri).get_uri ();
+        }
+        try {
+            if (Uri.is_valid (uri, UriFlags.NONE))
+                return uri;
+        } catch (Error e) {
+        }
         return parent?.resolve_relative_path (uri)?.get_uri () ?? uri;
     }
 }
