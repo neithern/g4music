@@ -127,7 +127,7 @@ namespace G4 {
 
             var album_key_ = @"$(music.album)-$(music.artist)-";
             var tags = new Gst.TagList?[] { null };
-            var cover_key = new string[] { music.cover_key, music.album };
+            var args = new string[] { music.cover_key, music.cover_uri ?? "", music.album };
             var pixbuf = yield run_async<Gdk.Pixbuf?> (() => {
                 var tag = tags[0] = parse_gst_tags (file);
                 File? cover_file = null;
@@ -137,23 +137,23 @@ namespace G4 {
                     //  Check if there is an album cover with same artist and image size
                     var image_size = sample?.get_buffer ()?.get_size () ?? 0;
                     var album_key = album_key_ + image_size.to_string ("%x");
-                    check_same_album_cover (album_key, ref cover_key[0]);
+                    check_same_album_cover (album_key, ref args[0]);
                     pixbuf = load_clamp_pixbuf_from_sample ((!)sample, size);
                 } else if ((cover_file = _cover_finder?.find (file.get_parent ())) != null) {
                     var album_key = (!) cover_file?.get_path ();
-                    cover_key[0] = (!) cover_file?.get_uri ();
-                    check_same_album_cover (album_key, ref cover_key[0]);
+                    args[0] = args[1] = (!) cover_file?.get_uri ();
+                    check_same_album_cover (album_key, ref args[0]);
                     pixbuf = load_clamp_pixbuf_from_file ((!)cover_file, size);
                 }
                 if (pixbuf != null) {
-                    var minbuf = find_pixbuf_from_cache (cover_key[0]);
+                    var minbuf = find_pixbuf_from_cache (args[0]);
                     if (minbuf == null) {
                         minbuf = create_clamp_pixbuf ((!)pixbuf, ICON_SIZE);
-                        put_pixbuf_to_cache (cover_key[0], (!)minbuf);
+                        put_pixbuf_to_cache (args[0], (!)minbuf);
                     }
                     return size <= ICON_SIZE ? minbuf : pixbuf;
                 }
-                cover_key[0] = parse_abbreviation (cover_key[1]);
+                args[0] = parse_abbreviation (args[2]);
                 return null;
                 //  Run in single_thread_pool for samba to save connections
             }, false, file.has_uri_scheme ("smb"));
@@ -162,10 +162,10 @@ namespace G4 {
                 //  Update for remote file, since it maybe cached but not parsed from file early
                 tag_updated (music);
             }
-            if (music.cover_key != cover_key[0]) {
-                //  Update cover key if changed
-                music.cover_key = cover_key[0];
-            }
+            if (music.cover_key != args[0])
+                music.cover_key = args[0];
+            if (args[1].length > 0)
+                music.cover_uri = args[1];
             return pixbuf;
         }
 

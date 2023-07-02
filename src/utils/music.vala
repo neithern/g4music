@@ -10,6 +10,9 @@ namespace G4 {
         public string uri = "";
         public int track = UNKNOWN_TRACK;
         public int64 modified_time = 0;
+
+        //  for runtime
+        public string? cover_uri = null;
         public bool showing = true;
 
         //  for sorting
@@ -34,17 +37,6 @@ namespace G4 {
             }
             set {
                 _cover_key = value;
-            }
-        }
-
-        public unowned string? cover_uri {
-            get {
-                try {
-                    if (_cover_key != null && Uri.is_valid ((!)_cover_key, UriFlags.NONE))
-                        return _cover_key;
-                } catch (Error e) {
-                }
-                return null;
             }
         }
 
