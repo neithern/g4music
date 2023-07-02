@@ -142,32 +142,50 @@ namespace G4 {
             _fade_animation?.play ();
         }
 
-        private void setup_drop_target () {
-            var drop_target = new Gtk.DropTarget (typeof (Gdk.FileList), Gdk.DragAction.COPY);
-#if GTK_4_10
-            drop_target.drop.connect ((value, x, y) => {
-#else
-            drop_target.on_drop.connect ((value, x, y) => {
-#endif
-                var file_list = ((Gdk.FileList) value).get_files ();
-                var count = file_list.length ();
-                var files = new File[count];
+        private bool on_file_dropped (Value value, double x, double y) {
+            File[] files = {};
+            var type = value.type ();
+            if (type == Type.STRING) {
+                var text = value.get_string ();
+                var list = text.split_set ("\n");
+                files = new File[list.length];
                 var index = 0;
-                foreach (var file in file_list) {
+                foreach (var path in list) {
+                    files[index++] = File.new_for_path (path);
+                }
+            } else if (type == typeof (Gdk.FileList)) {
+                var list = ((Gdk.FileList) value).get_files ();
+                files = new File[list.length ()];
+                var index = 0;
+                foreach (var file in list) {
                     files[index++] = file;
                 }
-                var app = (Application) application;
-                app.load_musics_async.begin (files, (obj, res) => {
-                    var item = app.load_musics_async.end (res);
-                    if (app.current_music == null) {
-                        app.current_item = item;
-                    } else {
-                        _store_panel.scroll_to_item (item);
-                    }
-                });
-                return true;
+            } else {
+                print ("Uknown type: %s\n", value.type_name ());
+                return false;
+            }
+
+            var app = (Application) application;
+            app.load_musics_async.begin (files, (obj, res) => {
+                var item = app.load_musics_async.end (res);
+                if (app.current_music == null) {
+                    app.current_item = item;
+                } else {
+                    _store_panel.scroll_to_item (item);
+                }
             });
-            this.content.add_controller (drop_target);
+            return true;
+        }
+
+        private void setup_drop_target () {
+            var target = new Gtk.DropTarget (Type.STRING, Gdk.DragAction.COPY);
+            target.set_gtypes ({ Type.STRING, typeof (Gdk.FileList) });
+#if GTK_4_10
+            target.drop.connect (on_file_dropped);
+#else
+            target.on_drop.connect (on_file_dropped);
+#endif
+            this.content.add_controller (target);
         }
 
         private void update_background () {
