@@ -178,8 +178,13 @@ namespace G4 {
         }
 
         private void setup_drop_target () {
-            var target = new Gtk.DropTarget (Type.STRING, Gdk.DragAction.COPY);
+            //  Hack: when drag a folder from nautilus,
+            //  the value is claimed as GdkFileList in accept(),
+            //  but the value can't be convert as GdkFileList in drop(),
+            //  so use STRING type to get the file/folder path.
+            var target = new Gtk.DropTarget (Type.INVALID, Gdk.DragAction.COPY);
             target.set_gtypes ({ Type.STRING, typeof (Gdk.FileList) });
+            target.accept.connect ((drop) => drop.formats.contain_gtype (typeof (Gdk.FileList)));
 #if GTK_4_10
             target.drop.connect (on_file_dropped);
 #else
