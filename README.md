@@ -26,7 +26,7 @@ A fast, fluent, light weight music player written in GTK4, with a beautiful, ada
 - Only need less than 500KB to install.
 
 ## Install from Flathub
-<a href="https://flathub.org/apps/details/com.github.neithern.g4music">
+<a href="https://flathub.org/apps/com.github.neithern.g4music">
 <img src="https://flathub.org/assets/badges/flathub-badge-en.png" width="240"/></a>
 
 ## How to build 
