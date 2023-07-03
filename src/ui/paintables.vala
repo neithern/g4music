@@ -90,9 +90,12 @@ namespace G4 {
             var radius = (float) (_ratio * size);
             rounded.init_from_rect (rect, radius);
 
+            var saved = false;
             if (radius > 0) {
                 if (circle && width != height) {
                     float scale = (float) double.max (width, height) / size;
+                    saved = true;
+                    snapshot.save ();
                     compute_matrix (snapshot, width, height, 0, scale);
                 }
                 snapshot.push_rounded_clip (rounded);
@@ -100,6 +103,9 @@ namespace G4 {
             base.on_snapshot (snapshot, width, height);
             if (radius > 0) {
                 snapshot.pop ();
+            }
+            if (saved) {
+                snapshot.restore ();
             }
         }
     }
@@ -147,7 +153,7 @@ namespace G4 {
                 point.init (0, 0);
                 var different = ratio2 != get_intrinsic_aspect_ratio ();
                 if (different) {
-                    if (ratio2 < 1) {
+                    if (ratio2 > 1) {
                         width2 = height2 * ratio2;
                         point.x = (float) (width - width2) * 0.5f;
                     } else {
@@ -205,10 +211,15 @@ namespace G4 {
         }
 
         protected override void on_snapshot (Gtk.Snapshot snapshot, double width, double height) {
-            if (_rotation != 0 || _scale != 1) {
+            var saved = _rotation != 0 || _scale != 1;
+            if (saved) {
+                snapshot.save ();
                 compute_matrix (snapshot, width, height, _rotation, _scale);
             }
             base.on_snapshot (snapshot, width, height);
+            if (saved) {
+                snapshot.restore ();
+            }
         }
     }
 
