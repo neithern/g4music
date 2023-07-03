@@ -1,0 +1,314 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the g4music package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: g4music\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-07-04 05:38+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: data/app.desktop.in:3 src/application.vala:257 src/main.vala:24
+msgid "G4Music"
+msgstr ""
+
+#: data/app.desktop.in:4
+msgid "Music Player"
+msgstr ""
+
+#: data/app.desktop.in:5
+msgid "Play music"
+msgstr ""
+
+#: data/app.desktop.in:12
+msgid "music;sound;player;media;audio;playlist;"
+msgstr ""
+
+#: src/gtk/help-overlay.ui:11
+msgctxt "shortcut window"
+msgid "General"
+msgstr ""
+
+#: src/gtk/help-overlay.ui:14
+msgctxt "shortcut window"
+msgid "Show Shortcuts"
+msgstr ""
+
+#: src/gtk/help-overlay.ui:20
+msgctxt "shortcut window"
+msgid "Preferences"
+msgstr ""
+
+#: src/gtk/help-overlay.ui:26
+msgctxt "shortcut window"
+msgid "Quit"
+msgstr ""
+
+#: src/gtk/help-overlay.ui:34
+msgctxt "shortcut window"
+msgid "Playback"
+msgstr ""
+
+#: src/gtk/help-overlay.ui:37
+msgctxt "shortcut window"
+msgid "Play/Pause"
+msgstr ""
+
+#: src/gtk/help-overlay.ui:43
+msgctxt "shortcut window"
+msgid "Play Next"
+msgstr ""
+
+#: src/gtk/help-overlay.ui:49
+msgctxt "shortcut window"
+msgid "Play Previous"
+msgstr ""
+
+#: src/gtk/help-overlay.ui:57
+msgctxt "shortcut window"
+msgid "Playlist"
+msgstr ""
+
+#: src/gtk/help-overlay.ui:60
+msgctxt "shortcut window"
+msgid "Search"
+msgstr ""
+
+#: src/gtk/help-overlay.ui:66
+msgctxt "shortcut window"
+msgid "Toggle Sort"
+msgstr ""
+
+#: src/gtk/help-overlay.ui:72
+msgctxt "shortcut window"
+msgid "Reload List"
+msgstr ""
+
+#: src/gtk/play-panel.ui:16
+msgid "Back"
+msgstr ""
+
+#: src/gtk/preferences.ui:10
+msgid "General"
+msgstr ""
+
+#: src/gtk/preferences.ui:13
+msgid "Prefer dark theme"
+msgstr ""
+
+#: src/gtk/preferences.ui:24
+msgid "Background blur mode"
+msgstr ""
+
+#: src/gtk/preferences.ui:29
+msgid "Compact playlist view"
+msgstr ""
+
+#: src/gtk/preferences.ui:40 src/application.vala:441
+msgid "Keep playing after window closed"
+msgstr ""
+
+#: src/gtk/preferences.ui:53
+msgid "Music Location"
+msgstr ""
+
+#: src/gtk/preferences.ui:56
+msgid "Load music from folder"
+msgstr ""
+
+#: src/gtk/preferences.ui:67
+msgid "Monitor local file changes"
+msgstr ""
+
+#: src/gtk/preferences.ui:78
+msgid "Load thumbnails for non-local files"
+msgstr ""
+
+#: src/gtk/preferences.ui:79
+msgid "May cause slowdowns and excess network usage"
+msgstr ""
+
+#: src/gtk/preferences.ui:92
+msgid "Playback"
+msgstr ""
+
+#: src/gtk/preferences.ui:96
+msgid "Show audio peak level"
+msgstr ""
+
+#: src/gtk/preferences.ui:99
+msgid "Display characters"
+msgstr ""
+
+#: src/gtk/preferences.ui:113
+msgid "Rotate album cover"
+msgstr ""
+
+#: src/gtk/preferences.ui:124
+msgid "Enable gapless playback"
+msgstr ""
+
+#: src/gtk/preferences.ui:135
+msgid "Normalize volume with ReplayGain"
+msgstr ""
+
+#: src/gtk/preferences.ui:140
+msgid "Prefer audio sink"
+msgstr ""
+
+#: src/gtk/store-panel.ui:17
+msgid "Search"
+msgstr ""
+
+#: src/gtk/store-panel.ui:39
+msgid "Main Menu"
+msgstr ""
+
+#: src/gtk/store-panel.ui:46
+msgid "Sort Mode"
+msgstr ""
+
+#: src/gtk/store-panel.ui:80
+msgid "_Reload List"
+msgstr ""
+
+#: src/gtk/store-panel.ui:86
+msgid "_Preferences"
+msgstr ""
+
+#: src/gtk/store-panel.ui:90
+msgid "_Keyboard Shortcuts"
+msgstr ""
+
+#: src/gtk/store-panel.ui:94
+msgid "_About"
+msgstr ""
+
+#: src/gtk/store-panel.ui:103
+msgid "By Album"
+msgstr ""
+
+#: src/gtk/store-panel.ui:108
+msgid "By Artist"
+msgstr ""
+
+#: src/gtk/store-panel.ui:113
+msgid "By Title"
+msgstr ""
+
+#: src/gtk/store-panel.ui:118
+msgid "By Date"
+msgstr ""
+
+#: src/gtk/store-panel.ui:123
+msgid "Shuffle"
+msgstr ""
+
+#: src/application.vala:447
+msgid "A fast, fluent, light weight music player written in GTK4."
+msgstr ""
+
+#. Translators: Replace "translator-credits" with your names, one name per line
+#: src/application.vala:449
+msgid "translator-credits"
+msgstr ""
+
+#: src/application.vala:671
+msgid "Keep playing"
+msgstr ""
+
+#: src/ui/music-entry.vala:134
+msgid "Play at Next"
+msgstr ""
+
+#: src/ui/music-entry.vala:135 src/ui/play-panel.vala:51
+msgid "Search Title"
+msgstr ""
+
+#: src/ui/music-entry.vala:136 src/ui/play-panel.vala:49
+msgid "Search Album"
+msgstr ""
+
+#: src/ui/music-entry.vala:137 src/ui/play-panel.vala:50
+msgid "Search Artist"
+msgstr ""
+
+#: src/ui/music-entry.vala:138
+msgid "_Show Music File"
+msgstr ""
+
+#: src/ui/music-entry.vala:140
+msgid "Show _Cover File"
+msgstr ""
+
+#: src/ui/music-entry.vala:142
+msgid "_Export Cover"
+msgstr ""
+
+#: src/ui/play-bar.vala:70
+msgid "Repeat Music"
+msgstr ""
+
+#: src/ui/play-bar.vala:80
+msgid "Play Previous"
+msgstr ""
+
+#. media-playback-pause-symbolic
+#: src/ui/play-bar.vala:86
+msgid "Play/Pause"
+msgstr ""
+
+#: src/ui/play-bar.vala:93
+msgid "Play Next"
+msgstr ""
+
+#: src/ui/play-panel.vala:225
+msgid ""
+"Drag and drop music files here,\n"
+"or change music location: "
+msgstr ""
+
+#: src/ui/preferences.vala:44 src/ui/preferences.vala:64
+msgid "Never"
+msgstr ""
+
+#: src/ui/preferences.vala:44
+msgid "Always"
+msgstr ""
+
+#: src/ui/preferences.vala:44
+msgid "Art Only"
+msgstr ""
+
+#: src/ui/preferences.vala:64
+msgid "Track"
+msgstr ""
+
+#: src/ui/preferences.vala:64
+msgid "Album"
+msgstr ""
+
+#: src/ui/store-panel.vala:34
+msgid "Loading…"
+msgstr ""
+
+#: src/ui/volume-button.vala:32
+msgid "Volume: "
+msgstr ""
+
+#: src/utils/music.vala:2
+msgid "Unknown Album"
+msgstr ""
+
+#: src/utils/music.vala:3
+msgid "Unknown Artist"
+msgstr ""

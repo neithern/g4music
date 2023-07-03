@@ -1,12 +1,15 @@
 data/app.desktop.in
 src/gtk/help-overlay.ui
+src/gtk/play-panel.ui
 src/gtk/preferences.ui
-src/gtk/window.ui
+src/gtk/store-panel.ui
 src/application.vala
 src/main.vala
 src/ui/music-entry.vala
 src/ui/play-bar.vala
+src/ui/play-panel.vala
 src/ui/preferences.vala
+src/ui/store-panel.vala
 src/ui/volume-button.vala
 src/ui/window.vala
 src/utils/music.vala
