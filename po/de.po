@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-04 05:38+0800\n"
-"PO-Revision-Date: 2023-07-04 08:16+0200\n"
+"PO-Revision-Date: 2023-07-04 18:31+0200\n"
 "Last-Translator: Jürgen Benvenuti <gastornis@posteo.org>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "Language: de\n"
@@ -154,7 +154,7 @@ msgstr "Zeichen anzeigen"
 
 #: src/gtk/preferences.ui:113
 msgid "Rotate album cover"
-msgstr "Rundes Albumbild"
+msgstr "Sich drehendes Albumbild"
 
 #: src/gtk/preferences.ui:124
 msgid "Enable gapless playback"
