@@ -14,6 +14,8 @@ namespace G4 {
         private int _position = 0;
         private bool _remain_progress = false;
 
+        public signal void position_seeked (double position);
+
         construct {
             orientation = Gtk.Orientation.VERTICAL;
             halign = Gtk.Align.CENTER;
@@ -24,7 +26,10 @@ namespace G4 {
             _seek.set_range (0, _duration);
             _seek.halign = Gtk.Align.FILL;
             _seek.width_request = 272;
-            _seek.adjust_bounds.connect ((value) => player.seek (GstPlayer.from_second (value)));
+            _seek.adjust_bounds.connect ((value) => {
+                player.seek (GstPlayer.from_second (value));
+                position_seeked (value);
+            });
             append (_seek);
 
             var times = new Gtk.CenterBox ();

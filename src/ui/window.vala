@@ -121,11 +121,11 @@ namespace G4 {
 
         private Adw.Animation? _fade_animation = null;
 
-        private void on_cover_changed (Music music, CrossFadePaintable cover) {
+        private void on_cover_changed (Music? music, CrossFadePaintable cover) {
             var app = (Application) application;
             _cover_paintable = cover.paintable;
-            _mini_bar.cover = app.thumbnailer.find (music) ?? _cover_paintable;    
-            _mini_bar.title = music.title;
+            _mini_bar.cover = music != null ? (app.thumbnailer.find ((!)music)  ?? _cover_paintable) : app.icon;
+            _mini_bar.title = music?.title ?? app.name;
             update_background ();
 
             var target = new Adw.CallbackAnimationTarget ((value) => {

@@ -21,30 +21,32 @@ namespace G4 {
 
         private Application _app;
         private int _cover_size = 1024;
-        private CrossFadePaintable _cover_paintable = new CrossFadePaintable ();
-        private MatrixPaintable _matrix_cover_paintable = new MatrixPaintable ();
-        private RoundPaintable _round_cover_paintable = new RoundPaintable ();
+        private CrossFadePaintable _crossfade_paintable = new CrossFadePaintable ();
+        private MatrixPaintable _matrix_paintable = new MatrixPaintable ();
+        private RoundPaintable _round_paintable = new RoundPaintable ();
         private bool _rotate_cover = true;
         private bool _show_peak = true;
+        private int _seconds_per_lap = 20;
 
-        public signal void cover_changed (Music music, CrossFadePaintable cover);
+        public signal void cover_changed (Music? music, CrossFadePaintable cover);
 
         public PlayPanel (Application app, Window win, Adw.Leaflet leaflet) {
             _app = app;
 
             append (_play_bar);
+            _play_bar.position_seeked.connect ((pos) => _matrix_paintable.rotation = pos * _seconds_per_lap);
 
             leaflet.bind_property ("folded", back_btn, "visible", BindingFlags.SYNC_CREATE);
             back_btn.clicked.connect (() => leaflet.navigate (Adw.NavigationDirection.BACK));
 
             initial_label.activate_link.connect (on_music_folder_clicked);
 
-            _cover_paintable.paintable = _app.icon;
-            _cover_paintable.queue_draw.connect (music_cover.queue_draw);
-            _round_cover_paintable.paintable = _cover_paintable;
-            _matrix_cover_paintable.paintable = _round_cover_paintable;
-            _matrix_cover_paintable.queue_draw.connect (music_cover.queue_draw);
-            music_cover.paintable = _matrix_cover_paintable;
+            _matrix_paintable.paintable = app.icon;
+            _crossfade_paintable.paintable = _matrix_paintable;
+            _round_paintable.paintable = _crossfade_paintable;
+            _crossfade_paintable.queue_draw.connect (music_cover.queue_draw);
+            _round_paintable.queue_draw.connect (music_cover.queue_draw);
+            music_cover.paintable = _round_paintable;
 
             music_album.tooltip_text = _("Search Album");
             music_artist.tooltip_text = _("Search Artist");
@@ -77,8 +79,8 @@ namespace G4 {
             }
             set {
                 _rotate_cover = value;
-                _round_cover_paintable.ratio = value ? 0.5 : 0.05;
-                _matrix_cover_paintable.rotation = 0;
+                _round_paintable.ratio = _rotate_cover ? 0.5 : 0.05;
+                _matrix_paintable.rotation = 0;
                 on_player_state_changed (_app.player.state);
             }
         }
@@ -93,7 +95,7 @@ namespace G4 {
             }
         }
 
-        private void on_loading_changed () {
+        private void on_loading_changed (bool loading) {
             update_music_info (_app.current_music);
         }
 
@@ -151,9 +153,9 @@ namespace G4 {
         private void on_player_state_changed (Gst.State state) {
             var playing = state == Gst.State.PLAYING;
             if (state >= Gst.State.PAUSED) {
-                var target = new Adw.CallbackAnimationTarget ((value) => _matrix_cover_paintable.scale = value);
+                var target = new Adw.CallbackAnimationTarget ((value) => _matrix_paintable.scale = value);
                 _scale_animation?.pause ();
-                _scale_animation = new Adw.TimedAnimation (music_cover, _matrix_cover_paintable.scale,
+                _scale_animation = new Adw.TimedAnimation (music_cover, _matrix_paintable.scale,
                                         _rotate_cover || playing ? 1 : 0.85, 500, target);
                 _scale_animation?.play ();
             }
@@ -172,8 +174,8 @@ namespace G4 {
             if (_rotate_cover) {
                 var now = get_monotonic_time ();
                 var elapsed = (now - _tick_last_time) / 1e6;
-                var angle = elapsed * 360 / 20; // 20 seconds per lap
-                _matrix_cover_paintable.rotation += angle;
+                var angle = elapsed * 360 / _seconds_per_lap;
+                _matrix_paintable.rotation += angle;
                 _tick_last_time = now;
             }
             if (_show_peak) {
@@ -196,7 +198,6 @@ namespace G4 {
         private void update_music_info (Music? music) {
             var empty = music == null && !_app.is_loading_store && _app.music_store.size == 0;
             if (empty) {
-                _matrix_cover_paintable.rotation = 0;
                 update_cover_paintables (new Music.empty (), _app.icon);
                 update_initial_label (_app.music_folder);
             }
@@ -214,9 +215,11 @@ namespace G4 {
                 ((!)win).title = music?.get_artist_and_title () ?? _app.name;
         }
 
-        private void update_cover_paintables (Music music, Gdk.Paintable? paintable) {
-            _cover_paintable.paintable = paintable;
-            cover_changed (music, _cover_paintable);
+        private void update_cover_paintables (Music? music, Gdk.Paintable? paintable) {
+            _matrix_paintable = new MatrixPaintable (paintable);
+            _matrix_paintable.queue_draw.connect (music_cover.queue_draw);
+            _crossfade_paintable.paintable = _matrix_paintable;
+            cover_changed (music, _crossfade_paintable);
         }
 
         private void update_initial_label (string uri) {
