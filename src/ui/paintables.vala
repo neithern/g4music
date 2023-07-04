@@ -150,16 +150,18 @@ namespace G4 {
                 var prev = (!)_previous;
                 var ratio2 = prev.get_intrinsic_aspect_ratio ();
                 var point = Graphene.Point ();
-                point.init (0, 0);
                 var different = ratio2 != get_intrinsic_aspect_ratio ();
                 if (different) {
+                    var max_side = double.max (width, height);
                     if (ratio2 < 1) {
+                        height2 = max_side;
                         width2 = height2 * ratio2;
-                        point.x = (float) (width - width2) * 0.5f;
                     } else {
+                        width2 = max_side;
                         height2 = width2 / ratio2;
-                        point.y = (float) (height - height2) * 0.5f;
                     }
+                    point.x = (float) (width - width2) * 0.5f;
+                    point.y = (float) (height - height2) * 0.5f;
                     snapshot.translate (point);
                 }
                 snapshot.push_opacity (_fade);
