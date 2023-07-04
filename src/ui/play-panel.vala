@@ -58,10 +58,6 @@ namespace G4 {
                 () => win.start_search ("title:" + music_title.label));
             make_right_clickable (music_box, show_popover_menu);
 
-            action_set_enabled (ACTION_APP + ACTION_PREV, false);
-            action_set_enabled (ACTION_APP + ACTION_PLAY, false);
-            action_set_enabled (ACTION_APP + ACTION_NEXT, false);
-
             app.music_changed.connect (on_music_changed);
             app.music_store.loading_changed.connect (on_loading_changed);
             app.music_tag_parsed.connect (on_music_tag_parsed);
@@ -100,7 +96,7 @@ namespace G4 {
 
         private void on_music_changed (Music? music) {
             update_music_info (music);
-            action_set_enabled (ACTION_APP + ACTION_PLAY, music != null);
+            root.action_set_enabled (ACTION_APP + ACTION_PLAY, music != null);
         }
 
         private bool on_music_folder_clicked (string uri) {
@@ -197,7 +193,7 @@ namespace G4 {
         private void update_music_info (Music? music) {
             var empty = music == null && !_app.is_loading_store && _app.music_store.size == 0;
             if (empty) {
-                update_cover_paintables (new Music.empty (), _app.icon);
+                update_cover_paintables (null, _app.icon);
                 update_initial_label (_app.music_folder);
             }
             initial_label.visible = empty;

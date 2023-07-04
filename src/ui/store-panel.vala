@@ -187,8 +187,8 @@ namespace G4 {
         }
 
         private void on_index_changed (int index, uint size) {
-            action_set_enabled (ACTION_APP + ACTION_PREV, index > 0);
-            action_set_enabled (ACTION_APP + ACTION_NEXT, index < (int) size - 1);
+            root.action_set_enabled (ACTION_APP + ACTION_PREV, index > 0);
+            root.action_set_enabled (ACTION_APP + ACTION_NEXT, index < (int) size - 1);
             index_title.label = size > 0 ? @"$(index+1)/$(size)" : "";
             scroll_to_item (index);
         }
@@ -196,7 +196,7 @@ namespace G4 {
         private void on_loading_changed (bool loading) {
             var index = _app.current_item;
             var size = get_music_count ();
-            action_set_enabled (ACTION_APP + ACTION_RELOAD_LIST, !loading);
+            root.action_set_enabled (ACTION_APP + ACTION_RELOAD_LIST, !loading);
             spinner.spinning = loading;
             spinner.visible = loading;
             index_title.label = loading ? _loading_text : @"$(index+1)/$(size)";
