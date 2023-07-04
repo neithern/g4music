@@ -41,12 +41,11 @@ namespace G4 {
 
             initial_label.activate_link.connect (on_music_folder_clicked);
 
-            _matrix_paintable.paintable = app.icon;
+            _round_paintable.paintable = app.icon;
+            _matrix_paintable.paintable = _round_paintable;
             _crossfade_paintable.paintable = _matrix_paintable;
-            _round_paintable.paintable = _crossfade_paintable;
             _crossfade_paintable.queue_draw.connect (music_cover.queue_draw);
-            _round_paintable.queue_draw.connect (music_cover.queue_draw);
-            music_cover.paintable = _round_paintable;
+            music_cover.paintable = _crossfade_paintable;
 
             music_album.tooltip_text = _("Search Album");
             music_artist.tooltip_text = _("Search Artist");
@@ -216,7 +215,10 @@ namespace G4 {
         }
 
         private void update_cover_paintables (Music? music, Gdk.Paintable? paintable) {
-            _matrix_paintable = new MatrixPaintable (paintable);
+            _round_paintable = new RoundPaintable (paintable);
+            _round_paintable.ratio = _rotate_cover ? 0.5 : 0.05;
+            _round_paintable.queue_draw.connect (music_cover.queue_draw);
+            _matrix_paintable = new MatrixPaintable (_round_paintable);
             _matrix_paintable.queue_draw.connect (music_cover.queue_draw);
             _crossfade_paintable.paintable = _matrix_paintable;
             cover_changed (music, _crossfade_paintable);

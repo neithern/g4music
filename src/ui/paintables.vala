@@ -153,7 +153,7 @@ namespace G4 {
                 point.init (0, 0);
                 var different = ratio2 != get_intrinsic_aspect_ratio ();
                 if (different) {
-                    if (ratio2 > 1) {
+                    if (ratio2 < 1) {
                         width2 = height2 * ratio2;
                         point.x = (float) (width - width2) * 0.5f;
                     } else {
@@ -232,7 +232,7 @@ namespace G4 {
             snapshot.rotate ((float) rotation);
         if (scale != 1)
             snapshot.scale ((float) scale, (float) scale);
-        point.init ((float) (-width * 0.5), (float) (-height * 0.5));
+        point.init (- point.x, - point.y);
         snapshot.translate (point);
     }
 
