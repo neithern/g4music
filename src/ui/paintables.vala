@@ -355,10 +355,10 @@ namespace G4 {
     }
 
     public Gdk.Paintable? create_blur_paintable (Gtk.Widget widget, Gdk.Paintable paintable,
-                                int width = 100, int height = 100, double blur = 80, double opacity = 0.3) {
+                                int width, int height, double blur = 80, double opacity = 0.25) {
         var snapshot = new Gtk.Snapshot ();
-        snapshot.push_blur (blur);
         snapshot.push_opacity (opacity);
+        snapshot.push_blur (blur);
         paintable.snapshot (snapshot, width, height);
         snapshot.pop ();
         snapshot.pop ();

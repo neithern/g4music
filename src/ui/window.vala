@@ -198,7 +198,7 @@ namespace G4 {
             if ((_bkgnd_blur == BlurMode.ALWAYS && paintable != null)
                 || (_bkgnd_blur == BlurMode.ART_ONLY && paintable is Gdk.Texture)) {
                 _bkgnd_paintable.paintable = create_blur_paintable (this,
-                    (!)paintable, _blur_size, _blur_size, _blur_size / 4);
+                    (!)paintable, _blur_size, _blur_size, 80, 0.25);
             } else {
                 _bkgnd_paintable.paintable = null;
             }
