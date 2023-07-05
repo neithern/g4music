@@ -23,7 +23,6 @@ namespace G4 {
 
             _bkgnd_paintable.queue_draw.connect (this.queue_draw);
 
-            _mini_bar.cover = app.icon;
             _mini_bar.activated.connect (() => _leaflet.navigate (Adw.NavigationDirection.FORWARD));
 
             _store_panel = new StorePanel (app, this, _leaflet);

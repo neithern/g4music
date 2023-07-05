@@ -41,7 +41,6 @@ namespace G4 {
 
             initial_label.activate_link.connect (on_music_folder_clicked);
 
-            _round_paintable.paintable = app.icon;
             _matrix_paintable.paintable = _round_paintable;
             _crossfade_paintable.paintable = _matrix_paintable;
             _crossfade_paintable.queue_draw.connect (music_cover.queue_draw);
@@ -91,7 +90,13 @@ namespace G4 {
         }
 
         private void on_loading_changed (bool loading) {
-            update_music_info (_app.current_music);
+            Idle.add (() => {
+                // Delay update info after the window shown to avoid slowing down it showing
+                if (root.get_height () > 0) {
+                    update_music_info (_app.current_music);
+                }
+                return root.get_height () == 0;
+            }, Priority.LOW);
         }
 
         private void on_music_changed (Music? music) {
