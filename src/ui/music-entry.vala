@@ -96,6 +96,11 @@ namespace G4 {
                     _subtitle.label = music.title;
                     break;
 
+                case SortMode.ARTIST_ALBUM:
+                    _title.label = @"$(music.artist): $(music.album)";
+                    _subtitle.label = (0 < music.track < int.MAX) ? @"$(music.track). $(music.title)" : music.title;
+                    break;
+
                 case SortMode.RECENT:
                     var date = new DateTime.from_unix_local (music.modified_time);
                     _title.label = music.title;

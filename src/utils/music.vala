@@ -146,9 +146,7 @@ namespace G4 {
             }
         }
 
-        public static int compare_by_album (Object obj1, Object obj2) {
-            var s1 = (Music) obj1;
-            var s2 = (Music) obj2;
+        public static int compare_by_album (Music s1, Music s2) {
             int ret = strcmp (s1._album_key, s2._album_key);
             if (ret != 0) return ret;
             ret = s1.track - s2.track;
@@ -158,9 +156,7 @@ namespace G4 {
             return strcmp (s1.uri, s2.uri);
         }
 
-        public static int compare_by_artist (Object obj1, Object obj2) {
-            var s1 = (Music) obj1;
-            var s2 = (Music) obj2;
+        public static int compare_by_artist (Music s1, Music s2) {
             int ret = strcmp (s1._artist_key, s2._artist_key);
             if (ret != 0) return ret;
             ret = strcmp (s1._title_key, s2._title_key);
@@ -168,9 +164,13 @@ namespace G4 {
             return strcmp (s1.uri, s2.uri);
         }
 
-        public static int compare_by_title (Object obj1, Object obj2) {
-            var s1 = (Music) obj1;
-            var s2 = (Music) obj2;
+        public static int compare_by_artist_album (Music s1, Music s2) {
+            int ret = strcmp (s1._artist_key, s2._artist_key);
+            if (ret != 0) return ret;
+            return compare_by_album (s1, s2);
+        }
+
+        public static int compare_by_title (Music s1, Music s2) {
             int ret = strcmp (s1._title_key, s2._title_key);
             if (ret != 0) return ret;
             ret = strcmp (s1._artist_key, s2._artist_key);
@@ -178,15 +178,11 @@ namespace G4 {
             return strcmp (s1.uri, s2.uri);
         }
 
-        public static int compare_by_order (Object obj1, Object obj2) {
-            var s1 = (Music) obj1;
-            var s2 = (Music) obj2;
+        public static int compare_by_order (Music s1, Music s2) {
             return s1._order - s2._order;
         }
 
-        public static int compare_by_date_ascending (Object obj1, Object obj2) {
-            var s1 = (Music) obj1;
-            var s2 = (Music) obj2;
+        public static int compare_by_date_ascending (Music s1, Music s2) {
             var diff = s2.modified_time - s1.modified_time;
             return (int) diff.clamp (-1, 1);
         }

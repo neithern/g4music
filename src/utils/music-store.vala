@@ -6,6 +6,8 @@ namespace G4 {
         public const uint TITLE = 2;
         public const uint RECENT = 3;
         public const uint SHUFFLE = 4;
+        public const uint ARTIST_ALBUM = 5;
+        public const uint MAX = 5;
     }
 
     public class Progress : Object {
@@ -42,7 +44,7 @@ namespace G4 {
         }
 
         private uint _sort_mode = SortMode.TITLE;
-        private CompareDataFunc<Object> _compare = Music.compare_by_title;
+        private CompareFunc<Music> _compare = Music.compare_by_title;
         private CoverCache _cover_cache = new CoverCache ();
         private ListStore _store = new ListStore (typeof (Music));
         private TagCache _tag_cache = new TagCache ();
@@ -83,6 +85,9 @@ namespace G4 {
                     case SortMode.ARTIST:
                         _compare = Music.compare_by_artist;
                         break;
+                    case SortMode.ARTIST_ALBUM:
+                        _compare = Music.compare_by_artist_album;
+                        break;
                     case SortMode.RECENT:
                         _compare = Music.compare_by_date_ascending;
                         break;
@@ -101,7 +106,7 @@ namespace G4 {
                     }
                     Music.shuffle_order (arr);
                 }
-                _store.sort (_compare);
+                _store.sort ((CompareDataFunc) _compare);
             }
         }
 
@@ -203,7 +208,7 @@ namespace G4 {
                 if (_sort_mode == SortMode.SHUFFLE) {
                     Music.shuffle_order (musics);
                 }
-                musics.sort ((CompareFunc<Object>) _compare);
+                musics.sort (_compare);
                 print ("Load %u musics in %lld ms\n", musics.length,
                         (get_monotonic_time () - begin_time + 500) / 1000);
             });

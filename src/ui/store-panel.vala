@@ -85,10 +85,11 @@ namespace G4 {
 
         private const string[] SORT_MODE_ICONS = {
             "media-optical-cd-audio-symbolic",  // ALBUM
-            "avatar-default-symbolic",          // ARTIST
+            "system-users-symbolic",            // ARTIST
             "folder-music-symbolic",            // TITLE
             "document-open-recent-symbolic",    // RECENT
-            "media-playlist-shuffle-symbolic"   // SHUFFLE
+            "media-playlist-shuffle-symbolic",  // SHUFFLE
+            "avatar-default-symbolic",          // ARTIST_ALBUM
         };
 
         public uint sort_mode {
@@ -97,8 +98,9 @@ namespace G4 {
             }
             set {
                 _sort_mode = value;
-                if (value >= SortMode.ALBUM && value <= SortMode.SHUFFLE) {
+                if (value >= SortMode.ALBUM && value <= SortMode.MAX) {
                     sort_btn.set_icon_name (SORT_MODE_ICONS[value]);
+                    list_view.factory = create_list_factory ();
                 }
             }
         }

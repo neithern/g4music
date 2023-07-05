@@ -326,7 +326,7 @@ namespace G4 {
         }
 
         private void toggle_sort () {
-            if (sort_mode >= SortMode.SHUFFLE)
+            if (sort_mode >= SortMode.MAX)
                 sort_mode = SortMode.ALBUM;
             else
                 sort_mode = sort_mode + 1;

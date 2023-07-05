@@ -110,6 +110,11 @@
         <attribute name="target">1</attribute>
       </item>
       <item>
+        <attribute name="label" translatable="yes">By Artist:Album</attribute>
+        <attribute name="action">app.sort</attribute>
+        <attribute name="target">5</attribute>
+      </item>
+      <item>
         <attribute name="label" translatable="yes">By Title</attribute>
         <attribute name="action">app.sort</attribute>
         <attribute name="target">2</attribute>
