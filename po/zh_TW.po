@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-04 05:38+0800\n"
-"PO-Revision-Date: 2023-07-04 05:41+0800\n"
+"POT-Creation-Date: 2023-07-05 23:37+0800\n"
+"PO-Revision-Date: 2023-07-05 23:38+0800\n"
 "Last-Translator: Nanling <neithern@outlook.com>\n"
 "Language-Team: Chinese - China <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0\n"
-"X-Generator: Gtranslator 42.0\n"
+"X-Generator: Gtranslator 45.alpha0\n"
 
 #: data/app.desktop.in:3 src/application.vala:257 src/main.vala:24
 msgid "G4Music"
@@ -206,14 +206,18 @@ msgid "By Artist"
 msgstr "依藝術家"
 
 #: src/gtk/store-panel.ui:113
+msgid "By Artist:Album"
+msgstr "依藝術家:專輯"
+
+#: src/gtk/store-panel.ui:118
 msgid "By Title"
 msgstr "依歌名"
 
-#: src/gtk/store-panel.ui:118
+#: src/gtk/store-panel.ui:123
 msgid "By Date"
 msgstr "依日期"
 
-#: src/gtk/store-panel.ui:123
+#: src/gtk/store-panel.ui:128
 msgid "Shuffle"
 msgstr "亂序播放"
 
@@ -232,52 +236,52 @@ msgstr ""
 msgid "Keep playing"
 msgstr "持續播放"
 
-#: src/ui/music-entry.vala:134
+#: src/ui/music-entry.vala:139
 msgid "Play at Next"
 msgstr "插播"
 
-#: src/ui/music-entry.vala:135 src/ui/play-panel.vala:51
+#: src/ui/music-entry.vala:140 src/ui/play-panel.vala:51
 msgid "Search Title"
 msgstr "搜尋歌名"
 
-#: src/ui/music-entry.vala:136 src/ui/play-panel.vala:49
+#: src/ui/music-entry.vala:141 src/ui/play-panel.vala:49
 msgid "Search Album"
 msgstr "搜尋專輯"
 
-#: src/ui/music-entry.vala:137 src/ui/play-panel.vala:50
+#: src/ui/music-entry.vala:142 src/ui/play-panel.vala:50
 msgid "Search Artist"
 msgstr "搜尋藝術家"
 
-#: src/ui/music-entry.vala:138
+#: src/ui/music-entry.vala:143
 msgid "_Show Music File"
 msgstr "顯示音樂檔案(_S)"
 
-#: src/ui/music-entry.vala:140
+#: src/ui/music-entry.vala:145
 msgid "Show _Cover File"
 msgstr "顯示封面檔案(_C)"
 
-#: src/ui/music-entry.vala:142
+#: src/ui/music-entry.vala:147
 msgid "_Export Cover"
 msgstr "輸出封面(_E)"
 
-#: src/ui/play-bar.vala:70
+#: src/ui/play-bar.vala:75
 msgid "Repeat Music"
 msgstr "單曲迴圈"
 
-#: src/ui/play-bar.vala:80
+#: src/ui/play-bar.vala:85
 msgid "Play Previous"
 msgstr "播放上一首"
 
 #. media-playback-pause-symbolic
-#: src/ui/play-bar.vala:86
+#: src/ui/play-bar.vala:91
 msgid "Play/Pause"
 msgstr "播放/暫停"
 
-#: src/ui/play-bar.vala:93
+#: src/ui/play-bar.vala:98
 msgid "Play Next"
 msgstr "播放下一首"
 
-#: src/ui/play-panel.vala:225
+#: src/ui/play-panel.vala:232
 msgid ""
 "Drag and drop music files here,\n"
 "or change music location: "

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-04 05:38+0800\n"
+"POT-Creation-Date: 2023-07-05 23:37+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -202,14 +202,18 @@ msgid "By Artist"
 msgstr ""
 
 #: src/gtk/store-panel.ui:113
-msgid "By Title"
+msgid "By Artist:Album"
 msgstr ""
 
 #: src/gtk/store-panel.ui:118
-msgid "By Date"
+msgid "By Title"
 msgstr ""
 
 #: src/gtk/store-panel.ui:123
+msgid "By Date"
+msgstr ""
+
+#: src/gtk/store-panel.ui:128
 msgid "Shuffle"
 msgstr ""
 
@@ -226,52 +230,52 @@ msgstr ""
 msgid "Keep playing"
 msgstr ""
 
-#: src/ui/music-entry.vala:134
+#: src/ui/music-entry.vala:139
 msgid "Play at Next"
 msgstr ""
 
-#: src/ui/music-entry.vala:135 src/ui/play-panel.vala:51
+#: src/ui/music-entry.vala:140 src/ui/play-panel.vala:51
 msgid "Search Title"
 msgstr ""
 
-#: src/ui/music-entry.vala:136 src/ui/play-panel.vala:49
+#: src/ui/music-entry.vala:141 src/ui/play-panel.vala:49
 msgid "Search Album"
 msgstr ""
 
-#: src/ui/music-entry.vala:137 src/ui/play-panel.vala:50
+#: src/ui/music-entry.vala:142 src/ui/play-panel.vala:50
 msgid "Search Artist"
 msgstr ""
 
-#: src/ui/music-entry.vala:138
+#: src/ui/music-entry.vala:143
 msgid "_Show Music File"
 msgstr ""
 
-#: src/ui/music-entry.vala:140
+#: src/ui/music-entry.vala:145
 msgid "Show _Cover File"
 msgstr ""
 
-#: src/ui/music-entry.vala:142
+#: src/ui/music-entry.vala:147
 msgid "_Export Cover"
 msgstr ""
 
-#: src/ui/play-bar.vala:70
+#: src/ui/play-bar.vala:75
 msgid "Repeat Music"
 msgstr ""
 
-#: src/ui/play-bar.vala:80
+#: src/ui/play-bar.vala:85
 msgid "Play Previous"
 msgstr ""
 
 #. media-playback-pause-symbolic
-#: src/ui/play-bar.vala:86
+#: src/ui/play-bar.vala:91
 msgid "Play/Pause"
 msgstr ""
 
-#: src/ui/play-bar.vala:93
+#: src/ui/play-bar.vala:98
 msgid "Play Next"
 msgstr ""
 
-#: src/ui/play-panel.vala:225
+#: src/ui/play-panel.vala:232
 msgid ""
 "Drag and drop music files here,\n"
 "or change music location: "
