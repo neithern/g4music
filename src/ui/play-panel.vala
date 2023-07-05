@@ -57,8 +57,15 @@ namespace G4 {
                 () => win.start_search ("title:" + music_title.label));
             make_right_clickable (music_box, show_popover_menu);
 
+            Idle.add (() => {
+                // Delay update info after the window shown to avoid slowing down it showing
+                if (root.get_height () > 0 && _current_music != _app.current_music) {
+                    update_music_info (_app.current_music);
+                }
+                return root.get_height () == 0;
+            }, Priority.LOW);
+
             app.music_changed.connect (on_music_changed);
-            app.music_store.loading_changed.connect (on_loading_changed);
             app.music_tag_parsed.connect (on_music_tag_parsed);
             app.player.state_changed.connect (on_player_state_changed);
 
@@ -87,16 +94,6 @@ namespace G4 {
                 _show_peak = value;
                 on_player_state_changed (_app.player.state);
             }
-        }
-
-        private void on_loading_changed (bool loading) {
-            Idle.add (() => {
-                // Delay update info after the window shown to avoid slowing down it showing
-                if (root.get_height () > 0 && _current_music != _app.current_music) {
-                    update_music_info (_app.current_music);
-                }
-                return root.get_height () == 0;
-            }, Priority.LOW);
         }
 
         private Music? _current_music = new Music.empty ();
