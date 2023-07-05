@@ -6,7 +6,7 @@ namespace G4 {
         private Gtk.Label _time = new Gtk.Label ("0:00");
         private Gtk.Button _play = new Gtk.Button ();
         private Gtk.Button _next = new Gtk.Button ();
-        private int _duration = 1;
+        private int _duration = 0;
         private int _position = 0;
 
         private CrossFadePaintable _paintable = new CrossFadePaintable ();
@@ -128,7 +128,10 @@ namespace G4 {
         }
 
         private void update_time_label () {
-            _time.label = format_time (_position) + "/" + format_time (_duration);
+            if (_duration > 0)
+                _time.label = format_time (_position) + "/" + format_time (_duration);
+            else
+                _time.label = "";
         }
     }
 }

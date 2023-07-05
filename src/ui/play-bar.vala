@@ -10,7 +10,7 @@ namespace G4 {
         private Gtk.Button _play = new Gtk.Button ();
         private Gtk.Button _next = new Gtk.Button ();
         private VolumeButton _volume = new VolumeButton ();
-        private int _duration = 1;
+        private int _duration = 0;
         private int _position = 0;
         private bool _remain_progress = false;
 

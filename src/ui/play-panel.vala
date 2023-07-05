@@ -92,14 +92,17 @@ namespace G4 {
         private void on_loading_changed (bool loading) {
             Idle.add (() => {
                 // Delay update info after the window shown to avoid slowing down it showing
-                if (root.get_height () > 0) {
+                if (root.get_height () > 0 && _current_music != _app.current_music) {
                     update_music_info (_app.current_music);
                 }
                 return root.get_height () == 0;
             }, Priority.LOW);
         }
 
+        private Music? _current_music = new Music.empty ();
+
         private void on_music_changed (Music? music) {
+            _current_music = music;
             update_music_info (music);
             root.action_set_enabled (ACTION_APP + ACTION_PLAY, music != null);
         }
@@ -196,12 +199,13 @@ namespace G4 {
         }
 
         private void update_music_info (Music? music) {
-            var empty = music == null && !_app.is_loading_store && _app.music_store.size == 0;
+            var empty = music == null && _app.music_store.size == 0;
             if (empty) {
                 update_cover_paintables (null, _app.icon);
-                update_initial_label (_app.music_folder);
+                if (!_app.is_loading_store)
+                    update_initial_label (_app.music_folder);
             }
-            initial_label.visible = empty;
+            initial_label.visible = empty && !_app.is_loading_store;
 
             music_album.visible = !empty;
             music_artist.visible = !empty;

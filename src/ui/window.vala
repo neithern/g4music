@@ -124,7 +124,7 @@ namespace G4 {
             var app = (Application) application;
             _cover_paintable = cover.paintable;
             _mini_bar.cover = music != null ? (app.thumbnailer.find ((!)music)  ?? _cover_paintable) : app.icon;
-            _mini_bar.title = music?.title ?? app.name;
+            _mini_bar.title = music?.title ?? "";
             update_background ();
 
             var target = new Adw.CallbackAnimationTarget ((value) => {
