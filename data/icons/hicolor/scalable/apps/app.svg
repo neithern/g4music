@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg height="128px" viewBox="0 0 128 128" width="128px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg height="128px" width="128px" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <linearGradient id="a" gradientUnits="userSpaceOnUse">
         <stop offset="0" stop-color="#f9f06b"/>
         <stop offset="1" stop-color="#33d17a"/>
     </linearGradient>
-    <radialGradient id="b" cx="40" cy="34.000031" r="120" xlink:href="#a"/>
-    <radialGradient id="c" cx="40" cy="32.000031" r="120" xlink:href="#a"/>
-    <radialGradient id="d" cx="48.00000028061" cy="39.99999401871" gradientUnits="userSpaceOnUse" r="79.999997">
+    <radialGradient id="b" cx="40" cy="34" r="120" xlink:href="#a"/>
+    <radialGradient id="c" cx="40" cy="32" r="120" xlink:href="#a"/>
+    <radialGradient id="d" cx="48" cy="40" gradientUnits="userSpaceOnUse" r="80">
         <stop offset="0" stop-color="#241f31" stop-opacity="0.4"/>
         <stop offset="1" stop-color="#241f31" stop-opacity="0"/>
     </radialGradient>
