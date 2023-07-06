@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-06 08:10+0800\n"
+"POT-Creation-Date: 2023-07-06 09:13+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -174,7 +174,7 @@ msgid "Main Menu"
 msgstr ""
 
 #: src/gtk/store-panel.ui:46
-msgid "Sort Mode"
+msgid "Sort By"
 msgstr ""
 
 #: src/gtk/store-panel.ui:80
@@ -193,24 +193,24 @@ msgstr ""
 msgid "_About"
 msgstr ""
 
-#: src/gtk/store-panel.ui:103
-msgid "By Album"
+#: src/gtk/store-panel.ui:103 src/ui/preferences.vala:64
+msgid "Album"
 msgstr ""
 
 #: src/gtk/store-panel.ui:108
-msgid "By Artist"
+msgid "Artist"
 msgstr ""
 
 #: src/gtk/store-panel.ui:113
-msgid "By Artist/Album"
+msgid "Artist/Album"
 msgstr ""
 
 #: src/gtk/store-panel.ui:118
-msgid "By Title"
+msgid "Title"
 msgstr ""
 
 #: src/gtk/store-panel.ui:123
-msgid "By Date"
+msgid "Recent"
 msgstr ""
 
 #: src/gtk/store-panel.ui:128
@@ -295,10 +295,6 @@ msgstr ""
 
 #: src/ui/preferences.vala:64
 msgid "Track"
-msgstr ""
-
-#: src/ui/preferences.vala:64
-msgid "Album"
 msgstr ""
 
 #: src/ui/store-panel.vala:34

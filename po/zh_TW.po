@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-06 08:10+0800\n"
-"PO-Revision-Date: 2023-07-05 23:38+0800\n"
+"POT-Creation-Date: 2023-07-06 09:13+0800\n"
+"PO-Revision-Date: 2023-07-06 09:16+0800\n"
 "Last-Translator: Nanling <neithern@outlook.com>\n"
 "Language-Team: Chinese - China <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
@@ -178,8 +178,8 @@ msgid "Main Menu"
 msgstr "主選單"
 
 #: src/gtk/store-panel.ui:46
-msgid "Sort Mode"
-msgstr "排序方式"
+msgid "Sort By"
+msgstr "排序"
 
 #: src/gtk/store-panel.ui:80
 msgid "_Reload List"
@@ -197,25 +197,25 @@ msgstr "快捷鍵(_K)"
 msgid "_About"
 msgstr "關於(_A)"
 
-#: src/gtk/store-panel.ui:103
-msgid "By Album"
-msgstr "依專輯"
+#: src/gtk/store-panel.ui:103 src/ui/preferences.vala:64
+msgid "Album"
+msgstr "專輯"
 
 #: src/gtk/store-panel.ui:108
-msgid "By Artist"
-msgstr "依藝術家"
+msgid "Artist"
+msgstr "藝術家"
 
 #: src/gtk/store-panel.ui:113
-msgid "By Artist/Album"
-msgstr "依藝術家/專輯"
+msgid "Artist/Album"
+msgstr "藝術家/專輯"
 
 #: src/gtk/store-panel.ui:118
-msgid "By Title"
-msgstr "依歌名"
+msgid "Title"
+msgstr "歌名"
 
 #: src/gtk/store-panel.ui:123
-msgid "By Date"
-msgstr "依日期"
+msgid "Recent"
+msgstr "最近"
 
 #: src/gtk/store-panel.ui:128
 msgid "Shuffle"
@@ -304,10 +304,6 @@ msgstr "僅封面"
 #: src/ui/preferences.vala:64
 msgid "Track"
 msgstr "曲目"
-
-#: src/ui/preferences.vala:64
-msgid "Album"
-msgstr "專輯"
 
 #: src/ui/store-panel.vala:34
 msgid "Loading…"
