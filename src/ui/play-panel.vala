@@ -66,6 +66,7 @@ namespace G4 {
             }, Priority.LOW);
 
             app.music_changed.connect (on_music_changed);
+            app.music_list.items_changed.connect (on_music_items_changed);
             app.music_tag_parsed.connect (on_music_tag_parsed);
             app.player.state_changed.connect (on_player_state_changed);
 
@@ -111,9 +112,15 @@ namespace G4 {
             return true;
         }
 
-        private async void on_music_tag_parsed (Music music, Gst.Sample? image) {
-            update_music_info (music);
+        private void on_music_items_changed (uint position, uint removed, uint added) {
+            var visible = _app.current_music == null && _app.music_store.size == 0
+                        && !_app.is_loading_store;
+            initial_label.visible = visible;
+            if (visible)
+                update_initial_label (_app.music_folder);
+        }
 
+        private async void on_music_tag_parsed (Music music, Gst.Sample? image) {
             Gdk.Pixbuf? pixbuf = null;
             Gdk.Paintable? paintable = null;
             var thumbnailer = _app.thumbnailer;
@@ -198,11 +205,8 @@ namespace G4 {
         private void update_music_info (Music? music) {
             var empty = music == null && _app.music_store.size == 0;
             if (empty) {
-                update_cover_paintables (null, _app.icon);
-                if (!_app.is_loading_store)
-                    update_initial_label (_app.music_folder);
+                update_cover_paintables (music, _app.icon);
             }
-            initial_label.visible = empty && !_app.is_loading_store;
 
             music_album.visible = !empty;
             music_artist.visible = !empty;
