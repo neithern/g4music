@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-04 05:38+0800\n"
-"PO-Revision-Date: 2023-07-04 18:31+0200\n"
+"POT-Creation-Date: 2023-07-06 09:13+0800\n"
+"PO-Revision-Date: 2023-07-06 09:59+0200\n"
 "Last-Translator: Jürgen Benvenuti <gastornis@posteo.org>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "Language: de\n"
@@ -177,8 +177,8 @@ msgid "Main Menu"
 msgstr "Hauptmenü"
 
 #: src/gtk/store-panel.ui:46
-msgid "Sort Mode"
-msgstr "Sortiermodus"
+msgid "Sort By"
+msgstr "Sortieren nach"
 
 #: src/gtk/store-panel.ui:80
 msgid "_Reload List"
@@ -196,23 +196,27 @@ msgstr "_Tastenkürzel"
 msgid "_About"
 msgstr "_Info"
 
-#: src/gtk/store-panel.ui:103
-msgid "By Album"
-msgstr "Nach Album"
+#: src/gtk/store-panel.ui:103 src/ui/preferences.vala:64
+msgid "Album"
+msgstr "Album"
 
 #: src/gtk/store-panel.ui:108
-msgid "By Artist"
-msgstr "Nach Interpret"
+msgid "Artist"
+msgstr "Interpret"
 
 #: src/gtk/store-panel.ui:113
-msgid "By Title"
-msgstr "Nach Titel"
+msgid "Artist/Album"
+msgstr "Interpret/Album"
 
 #: src/gtk/store-panel.ui:118
-msgid "By Date"
-msgstr "Nach Datum"
+msgid "Title"
+msgstr "Titel"
 
 #: src/gtk/store-panel.ui:123
+msgid "Recent"
+msgstr "Zuletzt gespielt"
+
+#: src/gtk/store-panel.ui:128
 msgid "Shuffle"
 msgstr "Durchmischen"
 
@@ -231,52 +235,52 @@ msgstr "Jürgen Benvenuti <gastornis@posteo.org>, 2022, 2023"
 msgid "Keep playing"
 msgstr "Musik weiterspielen"
 
-#: src/ui/music-entry.vala:134
+#: src/ui/music-entry.vala:139
 msgid "Play at Next"
 msgstr "Als Nächstes wiedergeben"
 
-#: src/ui/music-entry.vala:135 src/ui/play-panel.vala:51
+#: src/ui/music-entry.vala:140 src/ui/play-panel.vala:51
 msgid "Search Title"
 msgstr "Titel suchen"
 
-#: src/ui/music-entry.vala:136 src/ui/play-panel.vala:49
+#: src/ui/music-entry.vala:141 src/ui/play-panel.vala:49
 msgid "Search Album"
 msgstr "Album suchen"
 
-#: src/ui/music-entry.vala:137 src/ui/play-panel.vala:50
+#: src/ui/music-entry.vala:142 src/ui/play-panel.vala:50
 msgid "Search Artist"
 msgstr "Interpret suchen"
 
-#: src/ui/music-entry.vala:138
+#: src/ui/music-entry.vala:143
 msgid "_Show Music File"
 msgstr "Musikdatei _anzeigen"
 
-#: src/ui/music-entry.vala:140
+#: src/ui/music-entry.vala:145
 msgid "Show _Cover File"
 msgstr "Album_bild-Datei anzeigen"
 
-#: src/ui/music-entry.vala:142
+#: src/ui/music-entry.vala:147
 msgid "_Export Cover"
 msgstr "Albumbild expo_rtieren"
 
-#: src/ui/play-bar.vala:70
+#: src/ui/play-bar.vala:75
 msgid "Repeat Music"
 msgstr "Den Titel wiederholen"
 
-#: src/ui/play-bar.vala:80
+#: src/ui/play-bar.vala:85
 msgid "Play Previous"
 msgstr "Den vorigen Titel wiedergeben"
 
 #. media-playback-pause-symbolic
-#: src/ui/play-bar.vala:86
+#: src/ui/play-bar.vala:91
 msgid "Play/Pause"
 msgstr "Wiedergabe/Pause"
 
-#: src/ui/play-bar.vala:93
+#: src/ui/play-bar.vala:98
 msgid "Play Next"
 msgstr "Den nächsten Titel wiedergeben"
 
-#: src/ui/play-panel.vala:225
+#: src/ui/play-panel.vala:232
 msgid ""
 "Drag and drop music files here,\n"
 "or change music location: "
@@ -300,10 +304,6 @@ msgstr "Nur mit Albumbild"
 msgid "Track"
 msgstr "Titel"
 
-#: src/ui/preferences.vala:64
-msgid "Album"
-msgstr "Album"
-
 #: src/ui/store-panel.vala:34
 msgid "Loading…"
 msgstr "Wird geladen …"
@@ -319,6 +319,12 @@ msgstr "Unbekanntes Album"
 #: src/utils/music.vala:3
 msgid "Unknown Artist"
 msgstr "Unbekannter Interpret"
+
+#~ msgid "By Album"
+#~ msgstr "Nach Album"
+
+#~ msgid "By Date"
+#~ msgstr "Nach Datum"
 
 #~ msgid "Appearance"
 #~ msgstr "Erscheinungsbild"
