@@ -3,10 +3,10 @@ namespace G4 {
     namespace SortMode {
         public const uint ALBUM = 0;
         public const uint ARTIST = 1;
-        public const uint TITLE = 2;
-        public const uint RECENT = 3;
-        public const uint SHUFFLE = 4;
-        public const uint ARTIST_ALBUM = 5;
+        public const uint ARTIST_ALBUM = 2;
+        public const uint TITLE = 3;
+        public const uint RECENT = 4;
+        public const uint SHUFFLE = 5;
         public const uint MAX = 5;
     }
 

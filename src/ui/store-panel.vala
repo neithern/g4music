@@ -86,10 +86,10 @@ namespace G4 {
         private const string[] SORT_MODE_ICONS = {
             "media-optical-cd-audio-symbolic",  // ALBUM
             "system-users-symbolic",            // ARTIST
+            "avatar-default-symbolic",          // ARTIST_ALBUM
             "folder-music-symbolic",            // TITLE
             "document-open-recent-symbolic",    // RECENT
             "media-playlist-shuffle-symbolic",  // SHUFFLE
-            "avatar-default-symbolic",          // ARTIST_ALBUM
         };
 
         public uint sort_mode {

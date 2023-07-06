@@ -43,7 +43,7 @@
           <object class="GtkMenuButton" id="sort_btn">
             <property name="icon_name">audio-x-generic-symbolic</property>
             <property name="menu_model">sort_menu</property>
-            <property name="tooltip-text" translatable="yes">Sort Mode</property>
+            <property name="tooltip-text" translatable="yes">Sort By</property>
           </object>
         </child>
       </object>
@@ -100,34 +100,34 @@
   <menu id="sort_menu">
     <section>
       <item>
-        <attribute name="label" translatable="yes">By Album</attribute>
+        <attribute name="label" translatable="yes">Album</attribute>
         <attribute name="action">app.sort</attribute>
         <attribute name="target">0</attribute>
       </item>
       <item>
-        <attribute name="label" translatable="yes">By Artist</attribute>
+        <attribute name="label" translatable="yes">Artist</attribute>
         <attribute name="action">app.sort</attribute>
         <attribute name="target">1</attribute>
       </item>
       <item>
-        <attribute name="label" translatable="yes">By Artist/Album</attribute>
-        <attribute name="action">app.sort</attribute>
-        <attribute name="target">5</attribute>
-      </item>
-      <item>
-        <attribute name="label" translatable="yes">By Title</attribute>
+        <attribute name="label" translatable="yes">Artist/Album</attribute>
         <attribute name="action">app.sort</attribute>
         <attribute name="target">2</attribute>
       </item>
       <item>
-        <attribute name="label" translatable="yes">By Date</attribute>
+        <attribute name="label" translatable="yes">Title</attribute>
         <attribute name="action">app.sort</attribute>
         <attribute name="target">3</attribute>
       </item>
       <item>
-        <attribute name="label" translatable="yes">Shuffle</attribute>
+        <attribute name="label" translatable="yes">Recent</attribute>
         <attribute name="action">app.sort</attribute>
         <attribute name="target">4</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Shuffle</attribute>
+        <attribute name="action">app.sort</attribute>
+        <attribute name="target">5</attribute>
       </item>
     </section>
   </menu>
