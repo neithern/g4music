@@ -100,7 +100,8 @@ namespace G4 {
                 _sort_mode = value;
                 if (value >= SortMode.ALBUM && value <= SortMode.MAX) {
                     sort_btn.set_icon_name (SORT_MODE_ICONS[value]);
-                    list_view.factory = create_list_factory ();
+                    if (get_music_count () > 0)
+                        list_view.factory = create_list_factory ();
                 }
             }
         }
