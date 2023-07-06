@@ -223,6 +223,10 @@ namespace G4 {
 
         private void on_bus_message (Gst.Message message) {
             switch (message.type) {
+                case Gst.MessageType.ASYNC_DONE:
+                    parse_position ();
+                    break;
+
                 case Gst.MessageType.DURATION_CHANGED:
                     parse_duration ();
                     break;
@@ -250,7 +254,6 @@ namespace G4 {
                                 _timer_handle = Timeout.add (200, parse_position);
                             }
                             state_changed (state);
-                            parse_position ();
                             //  print (@"State changed: $old -> $state\n");
                         }
                     }
@@ -297,24 +300,19 @@ namespace G4 {
         }
 
         private bool parse_duration () {
-            int64 duration = (int64) Gst.CLOCK_TIME_NONE;
-            if ((_pipeline?.query_duration (Gst.Format.TIME, out duration) ?? false)
-                    && _duration != duration) {
-                _duration = duration;
-                //  print ("Duration changed: %lld\n", duration);
-                duration_changed (duration);
+            var done = _pipeline?.query_duration (Gst.Format.TIME, out _duration) ?? false;
+            if (done) {
+                duration_changed (_duration);
             }
-            return duration != (int64) Gst.CLOCK_TIME_NONE;
+            return done;
         }
 
         private bool parse_position () {
-            int64 position = (int64) Gst.CLOCK_TIME_NONE;
-            if ((_pipeline?.query_position (Gst.Format.TIME, out position) ?? false)
-                    && _position != position) {
-                _position = position;
-                position_updated (position);
+            var done = _pipeline?.query_position (Gst.Format.TIME, out _position) ?? false;
+            if (done) {
+                position_updated (_position);
             }
-            return true;
+            return done;
         }
 
         private bool parse_peak_from_last_sample (ref double peak_value) {
