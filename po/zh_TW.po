@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-05 23:37+0800\n"
+"POT-Creation-Date: 2023-07-06 08:10+0800\n"
 "PO-Revision-Date: 2023-07-05 23:38+0800\n"
 "Last-Translator: Nanling <neithern@outlook.com>\n"
 "Language-Team: Chinese - China <i18n-zh@googlegroups.com>\n"
@@ -206,8 +206,8 @@ msgid "By Artist"
 msgstr "依藝術家"
 
 #: src/gtk/store-panel.ui:113
-msgid "By Artist:Album"
-msgstr "依藝術家:專輯"
+msgid "By Artist/Album"
+msgstr "依藝術家/專輯"
 
 #: src/gtk/store-panel.ui:118
 msgid "By Title"
