@@ -21,12 +21,12 @@ namespace G4 {
 
         private Application _app;
         private int _cover_size = 1024;
+        private double _degrees_per_second = 360 / 20; // 20s per lap
         private CrossFadePaintable _crossfade_paintable = new CrossFadePaintable ();
         private MatrixPaintable _matrix_paintable = new MatrixPaintable ();
         private RoundPaintable _round_paintable = new RoundPaintable ();
         private bool _rotate_cover = true;
         private bool _show_peak = true;
-        private int _seconds_per_lap = 20;
 
         public signal void cover_changed (Music? music, CrossFadePaintable cover);
 
@@ -34,7 +34,7 @@ namespace G4 {
             _app = app;
 
             append (_play_bar);
-            _play_bar.position_seeked.connect ((pos) => _matrix_paintable.rotation = pos * _seconds_per_lap);
+            _play_bar.position_seeked.connect (on_position_seeked);
 
             leaflet.bind_property ("folded", back_btn, "visible", BindingFlags.SYNC_CREATE);
             back_btn.clicked.connect (() => leaflet.navigate (Adw.NavigationDirection.BACK));
@@ -81,8 +81,8 @@ namespace G4 {
             }
             set {
                 _rotate_cover = value;
-                _round_paintable.ratio = _rotate_cover ? 0.5 : 0.05;
-                _matrix_paintable.rotation = 0;
+                _round_paintable.ratio = value ? 0.5 : 0.05;
+                _matrix_paintable.rotation = value ? _play_bar.position * _degrees_per_second : 0;
                 on_player_state_changed (_app.player.state);
             }
         }
@@ -177,11 +177,16 @@ namespace G4 {
             }
         }
 
+        private void on_position_seeked (double pos) {
+            if (_rotate_cover)
+                _matrix_paintable.rotation = pos * _degrees_per_second;
+        }
+
         private bool on_tick_callback (Gtk.Widget widget, Gdk.FrameClock clock) {
             if (_rotate_cover) {
                 var now = get_monotonic_time ();
                 var elapsed = (now - _tick_last_time) / 1e6;
-                var angle = elapsed * 360 / _seconds_per_lap;
+                var angle = elapsed * _degrees_per_second;
                 _matrix_paintable.rotation += angle;
                 _tick_last_time = now;
             }

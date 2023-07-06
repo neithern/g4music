@@ -117,6 +117,12 @@ namespace G4 {
             }
         }
 
+        public double position {
+            get {
+                return _seek.get_value ();
+            }
+        }
+
         public bool remain_progress {
             get {
                 return _remain_progress;
