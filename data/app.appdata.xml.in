@@ -48,6 +48,18 @@
     </screenshots>
 
     <releases>
+        <release version="2.4" date="2023-7-7">
+            <description>
+                <ul>
+                <li>App icon refresh from @ddaudix.</li>
+                <li>Add a sort mode by: Artist/Album</li>
+                <li>Drag-drop folders works from Files.</li>
+                <li>Rotating cover sync with play progress, fix issues.</li>
+                <li>Fix gapless related issues.</li>
+                <li>Update German translation.</li>
+                </ul>
+            </description>
+        </release>
         <release version="2.3" date="2023-7-1">
             <description>
                 <ul>
