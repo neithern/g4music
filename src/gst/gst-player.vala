@@ -122,14 +122,12 @@ namespace G4 {
             }
             set {
                 if (_pipeline != null) lock (_pipeline) {
+                    _current_uri = value;
                     _duration = Gst.CLOCK_TIME_NONE;
                     _position = Gst.CLOCK_TIME_NONE;
                     _last_sample_time = Gst.CLOCK_TIME_NONE;
                     _tag_parsed = false;
-                    if (strcmp (_current_uri, value) != 0) {
-                        _current_uri = value;
-                        ((!)_pipeline).uri = value;
-                    }
+                    ((!)_pipeline).uri = value;
                 }
             }
         }
