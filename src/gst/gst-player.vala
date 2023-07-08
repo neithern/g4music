@@ -74,10 +74,6 @@ namespace G4 {
         ~GstPlayer () {
             _peaks.clear ();
             _pipeline?.set_state (Gst.State.NULL);
-            if (_timer_handle != 0) {
-                Source.remove (_timer_handle);
-                _timer_handle = 0;
-            }
         }
 
         public bool gapless {
@@ -245,14 +241,14 @@ namespace G4 {
                         }
                         if (old != state && _state != state) {
                             _state = state;
-                            if (_timer_handle != 0 && state != Gst.State.PLAYING) {
-                                Source.remove (_timer_handle);
-                                _timer_handle = 0;
-                            } else if (_timer_handle == 0 && state == Gst.State.PLAYING) {
-                                _timer_handle = Timeout.add (200, parse_position);
-                            }
                             state_changed (state);
                             //  print (@"State changed: $old -> $state\n");
+                        }
+                        if (_timer_handle == 0 && state == Gst.State.PLAYING) {
+                            _timer_handle = Timeout.add (200, parse_position);
+                        } else if (_timer_handle != 0 && state != Gst.State.PLAYING) {
+                            Source.remove (_timer_handle);
+                            _timer_handle = 0;
                         }
                     }
                     break;
@@ -297,20 +293,17 @@ namespace G4 {
             }
         }
 
-        private bool parse_duration () {
-            var done = _pipeline?.query_duration (Gst.Format.TIME, out _duration) ?? false;
-            if (done) {
+        private void parse_duration () {
+            if (_pipeline?.query_duration (Gst.Format.TIME, out _duration) ?? false) {
                 duration_changed (_duration);
             }
-            return done;
         }
 
         private bool parse_position () {
-            var done = _pipeline?.query_position (Gst.Format.TIME, out _position) ?? false;
-            if (done) {
+            if (_pipeline?.query_position (Gst.Format.TIME, out _position) ?? false) {
                 position_updated (_position);
             }
-            return done;
+            return true;
         }
 
         private bool parse_peak_from_last_sample (ref double peak_value) {
