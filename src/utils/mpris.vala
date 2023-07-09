@@ -5,8 +5,10 @@ namespace G4 {
         [DBus (visible = false)]
         private unowned Application _app;
         private unowned DBusConnection _connection;
+        private bool _cover_parsed = false;
+        private int64 _current_duration = 0;
+        private unowned Music? _current_music = null;
         private HashTable<string, Variant> _metadata = new HashTable<string, Variant> (str_hash, str_equal);
-        private int64 _music_hash = int64.MIN;
 
         public MprisPlayer (Application app, DBusConnection connection) {
             _app = app;
@@ -94,6 +96,13 @@ namespace G4 {
             _app.player.pause ();
         }
 
+        private void on_duration_changed (Gst.ClockTime duration) {
+            _current_duration = (int64) duration / Gst.USECOND;
+            _metadata.insert ("mpris:length", new Variant.int64 (_current_duration));
+            if (_cover_parsed)
+                send_property ("Metadata", _metadata);
+        }
+
         private void on_index_changed (int index, uint size) {
             var builder = new VariantBuilder (new VariantType ("a{sv}"));
             builder.add ("{sv}", "CanGoNext", new Variant.boolean (index < (int) size - 1));
@@ -104,21 +113,21 @@ namespace G4 {
         }
 
         private void on_music_changed (Music? music) {
+            _current_music = music;
             _metadata.remove_all ();
+            _cover_parsed = false;
             if (music != null) {
                 var artists = new VariantBuilder (new VariantType ("as"));
                 artists.add ("s", music?.artist ?? "");
                 _metadata.insert ("xesam:artist", artists.end());
                 _metadata.insert ("xesam:title", new Variant.string (music?.title ?? ""));
                 _metadata.insert ("xesam:album", new Variant.string (music?.album ?? ""));
-                _music_hash = direct_hash (music);
-            } else {
-                _music_hash = int64.MIN;
+                _metadata.insert ("mpris:length", new Variant.int64 (_current_duration));
             }
         }
 
         private void on_music_cover_parsed (Music music, string? uri) {
-            if (_music_hash != direct_hash (music)) {
+            if (_current_music != music) {
                 on_music_changed (music);
             }
             if (uri != null) {
@@ -127,16 +136,11 @@ namespace G4 {
                 _metadata.remove ("mpris:artUrl");
             }
             send_property ("Metadata", _metadata);
+            _cover_parsed = true;
         }
 
         private void on_state_changed (Gst.State state) {
             send_property ("PlaybackStatus", new Variant.string (get_mpris_status(state)));
-        }
-
-        private void on_duration_changed (Gst.ClockTime duration) {
-            var value = (double) duration / Gst.USECOND;
-            _metadata.insert ("mpris:length", new Variant.int64 ((int) value));
-            send_property ("Metadata", _metadata);
         }
 
         private void send_property (string name, Variant variant) {
