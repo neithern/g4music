@@ -12,7 +12,7 @@ namespace G4 {
         public ulong first_draw_handler = 0;
 
         public MusicEntry (bool compact = true) {
-            var cover_margin =  5;
+            var cover_margin = compact ? 5 : 6;
             var cover_size = compact ? 36 : 48;
             _cover.margin_top = cover_margin;
             _cover.margin_bottom = cover_margin;

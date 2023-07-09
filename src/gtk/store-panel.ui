@@ -68,6 +68,7 @@
         <property name="vexpand">true</property>
         <child>
           <object class="GtkListView" id="list_view">
+            <property name="enable_rubberband">false</property>
             <property name="single_click_activate">true</property>
             <style>
               <class name="navigation-sidebar"/>

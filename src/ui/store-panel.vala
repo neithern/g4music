@@ -137,7 +137,7 @@ namespace G4 {
 
         private Gtk.ListItemFactory create_list_factory () {
             var factory = new Gtk.SignalListItemFactory ();
-            factory.setup.connect ((item) => item.child = new MusicEntry (_compact_playlist));
+            factory.setup.connect (on_create_item);
             factory.bind.connect (on_bind_item);
             factory.unbind.connect (on_unbind_item);
             return factory;
@@ -156,6 +156,11 @@ namespace G4 {
             search_entry.text = text;
             search_entry.select_region (text.index_of_char (':') + 1, -1);
             search_btn.active = true;
+        }
+
+        private void on_create_item (Gtk.ListItem item) {
+            item.child = new MusicEntry (_compact_playlist);
+            _row_height = item.child.height_request + 2;
         }
 
         private async void on_bind_item (Gtk.ListItem item) {
