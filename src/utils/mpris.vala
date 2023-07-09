@@ -16,6 +16,7 @@ namespace G4 {
             app.music_changed.connect (on_music_changed);
             app.music_cover_parsed.connect (on_music_cover_parsed);
             app.player.state_changed.connect (on_state_changed);
+            app.player.duration_changed.connect (on_duration_changed);
         }
 
         public bool can_control {
@@ -130,6 +131,12 @@ namespace G4 {
 
         private void on_state_changed (Gst.State state) {
             send_property ("PlaybackStatus", new Variant.string (get_mpris_status(state)));
+        }
+
+        private void on_duration_changed (Gst.ClockTime duration) {
+            var value = (double) duration / Gst.USECOND;
+            _metadata.insert ("mpris:length", new Variant.int64 ((int) value));
+            send_property ("Metadata", _metadata);
         }
 
         private void send_property (string name, Variant variant) {
