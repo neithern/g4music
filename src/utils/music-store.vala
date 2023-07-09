@@ -10,23 +10,36 @@ namespace G4 {
         public const uint MAX = 5;
     }
 
-    public class Progress : Object {
-        private int _percent = 0;
+    public class Progress {
         private int _progress = 0;
-        private int _total = 1;
+        private int _total = 0;
 
-        public signal void percent_changed (int percent);
-
-        public Progress (int total) {
+        public Progress (int total = 0) {
             _total = total;
+        }
+
+        public int total {
+            get {
+                return AtomicInt.get (ref _total);
+            }
+            set {
+                AtomicInt.set (ref _total, value);
+            }
+        }
+
+        public double fraction {
+            get {
+                return _total > 0 ? _progress / (double) _total : 0;
+            }
+        }
+
+        public void reset () {
+            _progress = 0;
+            _total = 0;
         }
 
         public void step () {
             AtomicInt.inc (ref _progress);
-            var per = _progress * 100 / _total;
-            if (AtomicInt.compare_and_exchange (ref _percent, _percent, per)) {
-                run_idle_once (() => percent_changed (per));
-            }
         }
     }
 
@@ -46,12 +59,12 @@ namespace G4 {
         private CompareFunc<Music> _compare = Music.compare_by_title;
         private CoverCache _cover_cache = new CoverCache ();
         private DirMonitor _dir_monitor = new DirMonitor ();
+        private Progress _progress = new Progress ();
         private uint _sort_mode = SortMode.TITLE;
         private ListStore _store = new ListStore (typeof (Music));
         private TagCache _tag_cache = new TagCache ();
 
         public signal void loading_changed (bool loading);
-        public signal void parse_progress (int percent);
 
         public MusicStore () {
             _dir_monitor.add_file.connect ((file) => {
@@ -72,6 +85,12 @@ namespace G4 {
             }
             set {
                 _dir_monitor.enabled = value;
+            }
+        }
+
+        public double loading_progress {
+            get {
+                return _progress.fraction;
             }
         }
 
@@ -182,6 +201,7 @@ namespace G4 {
             var dirs = new GenericArray<File> (128);
             var musics = new GenericArray<Music> (4096);
 
+            _progress.reset ();
             loading_changed (true);
             yield run_void_async (() => {
                 var begin_time = get_monotonic_time ();
@@ -311,14 +331,13 @@ namespace G4 {
             }
             var queue_count = queue.length ();
             if (queue_count > 0) {
-                var progress = new Progress (queue_count);
-                progress.percent_changed.connect ((percent) => parse_progress (percent));
+                _progress.total = queue_count;
                 var num_tasks = uint.min (queue_count, get_num_processors ());
                 run_in_threads<void> (() => {
                     Music? music;
                     while ((music = queue.try_pop ()) != null) {
                         music?.parse_tags ();
-                        progress.step ();
+                        _progress.step ();
                     }
                 }, num_tasks);
             }

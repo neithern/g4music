@@ -12,7 +12,7 @@ namespace G4 {
         [GtkChild]
         private unowned Gtk.HeaderBar header_bar;
         [GtkChild]
-        private unowned Gtk.Spinner spinner;
+        private unowned Gtk.ProgressBar progress_bar;
         [GtkChild]
         private unowned Gtk.Label index_title;
         [GtkChild]
@@ -31,7 +31,6 @@ namespace G4 {
         private Application _app;
         private bool _compact_playlist = false;
         private Gdk.Paintable _loading_paintable;
-        private string _loading_text = _("Loading…");
         private double _row_height = 0;
         private double _scroll_range = 0;
         private uint _sort_mode = 0;
@@ -66,7 +65,6 @@ namespace G4 {
 
             app.index_changed.connect (on_index_changed);
             app.music_store.loading_changed.connect (on_loading_changed);
-            app.music_store.parse_progress.connect ((percent) => index_title.label = @"$percent%");
 
             var settings = app.settings;
             settings.bind ("compact-playlist", this, "compact-playlist", SettingsBindFlags.DEFAULT);
@@ -196,13 +194,27 @@ namespace G4 {
             scroll_to_item (index);
         }
 
+        private uint _tick_handler = 0;
+
         private void on_loading_changed (bool loading) {
-            var index = _app.current_item;
-            var size = get_music_count ();
             root.action_set_enabled (ACTION_APP + ACTION_RELOAD_LIST, !loading);
-            spinner.spinning = loading;
-            spinner.visible = loading;
-            index_title.label = loading ? _loading_text : @"$(index+1)/$(size)";
+            progress_bar.visible = loading;
+
+            if (loading && _tick_handler == 0) {
+                _tick_handler = add_tick_callback (on_loading_tick_callback);
+            } else if (!loading && _tick_handler != 0) {
+                remove_tick_callback (_tick_handler);
+                _tick_handler = 0;
+            }
+        }
+
+        private bool on_loading_tick_callback (Gtk.Widget widget, Gdk.FrameClock clock) {
+            var fraction = _app.music_store.loading_progress;
+            if (fraction > 0)
+                progress_bar.fraction = fraction;
+            else
+                progress_bar.pulse ();
+            return true;
         }
 
         private void on_scrollview_vadjustment_changed () {

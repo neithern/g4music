@@ -18,9 +18,6 @@
           </object>
         </child>
         <child>
-          <object class="GtkSpinner" id="spinner"/>
-        </child>
-        <child>
           <object class="GtkLabel" id="index_title">
             <style>
               <class name="title-leading"/>
@@ -45,6 +42,14 @@
             <property name="tooltip-text" translatable="yes">Sort By</property>
           </object>
         </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkProgressBar" id="progress_bar">
+        <property name="hexpand">true</property>
+        <style>
+          <class name="osd"/>
+        </style>
       </object>
     </child>
     <child>
