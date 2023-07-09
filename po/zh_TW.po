@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-06 09:13+0800\n"
+"POT-Creation-Date: 2023-07-09 22:46+0800\n"
 "PO-Revision-Date: 2023-07-06 09:16+0800\n"
 "Last-Translator: Nanling <neithern@outlook.com>\n"
 "Language-Team: Chinese - China <i18n-zh@googlegroups.com>\n"
@@ -173,51 +173,51 @@ msgstr "首選音訊輸出"
 msgid "Search"
 msgstr "搜尋"
 
-#: src/gtk/store-panel.ui:39
+#: src/gtk/store-panel.ui:36
 msgid "Main Menu"
 msgstr "主選單"
 
-#: src/gtk/store-panel.ui:46
+#: src/gtk/store-panel.ui:42
 msgid "Sort By"
 msgstr "排序"
 
-#: src/gtk/store-panel.ui:80
+#: src/gtk/store-panel.ui:85
 msgid "_Reload List"
 msgstr "更新清單(_R)"
 
-#: src/gtk/store-panel.ui:86
+#: src/gtk/store-panel.ui:91
 msgid "_Preferences"
 msgstr "偏好設定(_P)"
 
-#: src/gtk/store-panel.ui:90
+#: src/gtk/store-panel.ui:95
 msgid "_Keyboard Shortcuts"
 msgstr "快捷鍵(_K)"
 
-#: src/gtk/store-panel.ui:94
+#: src/gtk/store-panel.ui:99
 msgid "_About"
 msgstr "關於(_A)"
 
-#: src/gtk/store-panel.ui:103 src/ui/preferences.vala:64
+#: src/gtk/store-panel.ui:108 src/ui/preferences.vala:64
 msgid "Album"
 msgstr "專輯"
 
-#: src/gtk/store-panel.ui:108
+#: src/gtk/store-panel.ui:113
 msgid "Artist"
 msgstr "藝術家"
 
-#: src/gtk/store-panel.ui:113
+#: src/gtk/store-panel.ui:118
 msgid "Artist/Album"
 msgstr "藝術家/專輯"
 
-#: src/gtk/store-panel.ui:118
+#: src/gtk/store-panel.ui:123
 msgid "Title"
 msgstr "歌名"
 
-#: src/gtk/store-panel.ui:123
+#: src/gtk/store-panel.ui:128
 msgid "Recent"
 msgstr "最近"
 
-#: src/gtk/store-panel.ui:128
+#: src/gtk/store-panel.ui:133
 msgid "Shuffle"
 msgstr "亂序播放"
 
@@ -281,7 +281,7 @@ msgstr "播放/暫停"
 msgid "Play Next"
 msgstr "播放下一首"
 
-#: src/ui/play-panel.vala:232
+#: src/ui/play-panel.vala:241
 msgid ""
 "Drag and drop music files here,\n"
 "or change music location: "
@@ -304,10 +304,6 @@ msgstr "僅封面"
 #: src/ui/preferences.vala:64
 msgid "Track"
 msgstr "曲目"
-
-#: src/ui/store-panel.vala:34
-msgid "Loading…"
-msgstr "正在載入…"
 
 #: src/ui/volume-button.vala:32
 msgid "Volume: "
