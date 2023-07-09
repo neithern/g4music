@@ -1,0 +1,320 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the g4music package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Gnuey56 <gnuey56@proton.me>, 2023.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: g4music\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-07-06 09:13+0800\n"
+"PO-Revision-Date: 2023-07-09 21:34+0900\n"
+"Last-Translator: Gnuey56 <gnuey56@proton.me>\n"
+"Language-Team: Japanese\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+"X-Generator: Gtranslator 42.0\n"
+
+#: data/app.desktop.in:3 src/application.vala:257 src/main.vala:24
+msgid "G4Music"
+msgstr "G4Music"
+
+#: data/app.desktop.in:4
+msgid "Music Player"
+msgstr "ミュージックプレイヤー"
+
+#: data/app.desktop.in:5
+msgid "Play music"
+msgstr "音楽を再生"
+
+#: data/app.desktop.in:12
+msgid "music;sound;player;media;audio;playlist;"
+msgstr ""
+"music;sound;player;media;audio;playlist;音楽;サウンド;プレイヤー;メディア;"
+"オーディオ;プレイリスト;"
+
+#: src/gtk/help-overlay.ui:11
+msgctxt "shortcut window"
+msgid "General"
+msgstr "一般"
+
+#: src/gtk/help-overlay.ui:14
+msgctxt "shortcut window"
+msgid "Show Shortcuts"
+msgstr "ショートカットを表示"
+
+#: src/gtk/help-overlay.ui:20
+msgctxt "shortcut window"
+msgid "Preferences"
+msgstr "設定"
+
+#: src/gtk/help-overlay.ui:26
+msgctxt "shortcut window"
+msgid "Quit"
+msgstr "終了"
+
+#: src/gtk/help-overlay.ui:34
+msgctxt "shortcut window"
+msgid "Playback"
+msgstr "再生"
+
+#: src/gtk/help-overlay.ui:37
+msgctxt "shortcut window"
+msgid "Play/Pause"
+msgstr "再生/一時停止"
+
+#: src/gtk/help-overlay.ui:43
+msgctxt "shortcut window"
+msgid "Play Next"
+msgstr "次の曲を再生"
+
+#: src/gtk/help-overlay.ui:49
+msgctxt "shortcut window"
+msgid "Play Previous"
+msgstr "前の曲を再生"
+
+#: src/gtk/help-overlay.ui:57
+msgctxt "shortcut window"
+msgid "Playlist"
+msgstr "プレイリスト"
+
+#: src/gtk/help-overlay.ui:60
+msgctxt "shortcut window"
+msgid "Search"
+msgstr "検索"
+
+#: src/gtk/help-overlay.ui:66
+msgctxt "shortcut window"
+msgid "Toggle Sort"
+msgstr "プレイリストの並びを切り替え"
+
+#: src/gtk/help-overlay.ui:72
+msgctxt "shortcut window"
+msgid "Reload List"
+msgstr "プレイリストを再読み込み"
+
+#: src/gtk/play-panel.ui:16
+msgid "Back"
+msgstr "戻る"
+
+#: src/gtk/preferences.ui:10
+msgid "General"
+msgstr "一般"
+
+#: src/gtk/preferences.ui:13
+msgid "Prefer dark theme"
+msgstr "ダークテーマを使用"
+
+#: src/gtk/preferences.ui:24
+msgid "Background blur mode"
+msgstr "背景ぼかしモード"
+
+#: src/gtk/preferences.ui:29
+msgid "Compact playlist view"
+msgstr "プレイリストをコンパクトにする"
+
+#: src/gtk/preferences.ui:40 src/application.vala:441
+msgid "Keep playing after window closed"
+msgstr "ウィンドウが閉じても再生を続ける"
+
+#: src/gtk/preferences.ui:53
+msgid "Music Location"
+msgstr "音源の場所"
+
+#: src/gtk/preferences.ui:56
+msgid "Load music from folder"
+msgstr "フォルダーから音源を読み込み"
+
+#: src/gtk/preferences.ui:67
+msgid "Monitor local file changes"
+msgstr "ローカルファイルの変更を表示"
+
+#: src/gtk/preferences.ui:78
+msgid "Load thumbnails for non-local files"
+msgstr "サムネイルを外部から読み込む"
+
+#: src/gtk/preferences.ui:79
+msgid "May cause slowdowns and excess network usage"
+msgstr "動作が遅くなり、ネットワークを過剰に使用するかもしれません"
+
+#: src/gtk/preferences.ui:92
+msgid "Playback"
+msgstr "再生"
+
+#: src/gtk/preferences.ui:96
+msgid "Show audio peak level"
+msgstr "オーディオレベルを表示"
+
+#: src/gtk/preferences.ui:99
+msgid "Display characters"
+msgstr "文字で表示"
+
+#: src/gtk/preferences.ui:113
+msgid "Rotate album cover"
+msgstr "アルバムカバーを回転させる"
+
+#: src/gtk/preferences.ui:124
+msgid "Enable gapless playback"
+msgstr "高品質な再生を有効化"
+
+#: src/gtk/preferences.ui:135
+msgid "Normalize volume with ReplayGain"
+msgstr "ReplayGain で音量を調整"
+
+#: src/gtk/preferences.ui:140
+msgid "Prefer audio sink"
+msgstr "オーディオシンクを設定"
+
+#: src/gtk/store-panel.ui:17
+msgid "Search"
+msgstr "検索"
+
+#: src/gtk/store-panel.ui:39
+msgid "Main Menu"
+msgstr "メインメニュー"
+
+#: src/gtk/store-panel.ui:46
+msgid "Sort By"
+msgstr "並び替え"
+
+#: src/gtk/store-panel.ui:80
+msgid "_Reload List"
+msgstr "プレイリストを再読み込み(_R)"
+
+#: src/gtk/store-panel.ui:86
+msgid "_Preferences"
+msgstr "設定(_P)"
+
+#: src/gtk/store-panel.ui:90
+msgid "_Keyboard Shortcuts"
+msgstr "設定(_K)"
+
+#: src/gtk/store-panel.ui:94
+msgid "_About"
+msgstr "G4Music について(_A)"
+
+#: src/gtk/store-panel.ui:103 src/ui/preferences.vala:64
+msgid "Album"
+msgstr "アルバム"
+
+#: src/gtk/store-panel.ui:108
+msgid "Artist"
+msgstr "アーティスト"
+
+#: src/gtk/store-panel.ui:113
+msgid "Artist/Album"
+msgstr "アーティスト/アルバム"
+
+#: src/gtk/store-panel.ui:118
+msgid "Title"
+msgstr "タイトル"
+
+#: src/gtk/store-panel.ui:123
+msgid "Recent"
+msgstr "最近"
+
+#: src/gtk/store-panel.ui:128
+msgid "Shuffle"
+msgstr "シャッフル"
+
+#: src/application.vala:447
+msgid "A fast, fluent, light weight music player written in GTK4."
+msgstr "GTK4 で書かれた高速で、なめらかなUI、軽量なミュージックプレイヤー。"
+
+#. Translators: Replace "translator-credits" with your names, one name per line
+#: src/application.vala:449
+msgid "translator-credits"
+msgstr "Gnuey56"
+
+#: src/application.vala:671
+msgid "Keep playing"
+msgstr "再生を続ける"
+
+#: src/ui/music-entry.vala:139
+msgid "Play at Next"
+msgstr "次に再生"
+
+#: src/ui/music-entry.vala:140 src/ui/play-panel.vala:51
+msgid "Search Title"
+msgstr "タイトルを探す"
+
+#: src/ui/music-entry.vala:141 src/ui/play-panel.vala:49
+msgid "Search Album"
+msgstr "アルバムを探す"
+
+#: src/ui/music-entry.vala:142 src/ui/play-panel.vala:50
+msgid "Search Artist"
+msgstr "アーティストを探す"
+
+#: src/ui/music-entry.vala:143
+msgid "_Show Music File"
+msgstr "音楽ファイルを表示(_S)"
+
+#: src/ui/music-entry.vala:145
+msgid "Show _Cover File"
+msgstr "カバーファイルを表示(_C)"
+
+#: src/ui/music-entry.vala:147
+msgid "_Export Cover"
+msgstr "カバーをエクスポート(_E)"
+
+#: src/ui/play-bar.vala:75
+msgid "Repeat Music"
+msgstr "再生をリピート"
+
+#: src/ui/play-bar.vala:85
+msgid "Play Previous"
+msgstr "前の曲を再生"
+
+#. media-playback-pause-symbolic
+#: src/ui/play-bar.vala:91
+msgid "Play/Pause"
+msgstr "再生/一時停止"
+
+#: src/ui/play-bar.vala:98
+msgid "Play Next"
+msgstr "次の曲を再生"
+
+#: src/ui/play-panel.vala:232
+msgid ""
+"Drag and drop music files here,\n"
+"or change music location: "
+msgstr ""
+"音源ファイルをここにドラッグアンドドロップ、\n"
+"または音源の場所を変更: "
+
+#: src/ui/preferences.vala:44 src/ui/preferences.vala:64
+msgid "Never"
+msgstr "しない"
+
+#: src/ui/preferences.vala:44
+msgid "Always"
+msgstr "常に"
+
+#: src/ui/preferences.vala:44
+msgid "Art Only"
+msgstr "カバーがある場合のみ"
+
+#: src/ui/preferences.vala:64
+msgid "Track"
+msgstr "トラック"
+
+#: src/ui/store-panel.vala:34
+msgid "Loading…"
+msgstr "読み込み中…"
+
+#: src/ui/volume-button.vala:32
+msgid "Volume: "
+msgstr "音量: "
+
+#: src/utils/music.vala:2
+msgid "Unknown Album"
+msgstr "不明のアルバム"
+
+#: src/utils/music.vala:3
+msgid "Unknown Artist"
+msgstr "不明のアーティスト"
