@@ -63,7 +63,7 @@ namespace G4 {
             _children.add (child);
         }
 
-        public bool load (Queue<DirCache> stack, GenericArray<Object> musics, out string? cover_name) {
+        public bool load (Queue<DirCache> stack, GenericArray<Music> musics, out string? cover_name) {
             cover_name = null;
             try {
                 var mapped = new MappedFile (_file.get_path () ?? "", false);

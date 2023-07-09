@@ -187,13 +187,13 @@ namespace G4 {
             return (int) diff.clamp (-1, 1);
         }
 
-        public static void shuffle_order (GenericArray<Object> arr) {
+        public static void shuffle_order (GenericArray<Music> arr) {
             for (var i = arr.length - 1; i > 0; i--) {
                 var r = Random.int_range (0, i);
                 var s = arr[i];
                 arr[i] = arr[r];
                 arr[r] = s;
-                ((Music)arr[i])._order = i;
+                arr[i]._order = i;
             }
         }
     }

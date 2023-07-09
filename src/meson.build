@@ -20,6 +20,7 @@ sources = [
   'utils/cover-cache.vala',
   'utils/data-io.vala',
   'utils/dir-cache.vala',
+  'utils/dir-monitor.vala',
   'utils/mpris.vala',
   'utils/music.vala',
   'utils/music-store.vala',
