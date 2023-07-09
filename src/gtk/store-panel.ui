@@ -41,7 +41,6 @@
         </child>
         <child type="end">
           <object class="GtkMenuButton" id="sort_btn">
-            <property name="icon_name">audio-x-generic-symbolic</property>
             <property name="menu_model">sort_menu</property>
             <property name="tooltip-text" translatable="yes">Sort By</property>
           </object>
