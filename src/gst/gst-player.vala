@@ -1,10 +1,6 @@
 namespace G4 {
 
     public class GstPlayer : Object {
-        struct Peak {
-            Gst.ClockTime time;
-            double peak;
-        }
 
         public static void init (ref unowned string[]? args) {
             Gst.init (ref args);
@@ -31,23 +27,17 @@ namespace G4 {
         private dynamic Gst.Pipeline? _pipeline = Gst.ElementFactory.make ("playbin", "player") as Gst.Pipeline;
         private dynamic Gst.Element? _audio_sink = null;
         private dynamic Gst.Element? _replay_gain = null;
-        private int _audio_channels = 2;
-        private int _audio_bps = 2;
-        private int _sample_bps = 2;
         private string _audio_sink_name = "";
         private string? _current_uri = null;
         private Gst.ClockTime _duration = Gst.CLOCK_TIME_NONE;
         private Gst.ClockTime _position = Gst.CLOCK_TIME_NONE;
         private ulong _about_to_finish_id = 0;
         private int _next_uri_requested = 0;
+        private double _last_peak = 0;
+        private LevelCalculator _peak_calculator = new LevelCalculator ();
         private Gst.State _state = Gst.State.NULL;
         private bool _tag_parsed = false;
         private uint _timer_handle = 0;
-        private double _last_peak = 0;
-        private Queue<Peak?> _peaks = new Queue<Peak?> ();
-        private unowned Gst.Caps? _last_caps = null;
-        private unowned Gst.ClockTime _last_sample_time = Gst.CLOCK_TIME_NONE;
-        private LevelCalculateFunc? _level_calculate = null;
         private unowned Thread<void> _main_thread = Thread<void>.self ();
 
         public signal void duration_changed (Gst.ClockTime duration);
@@ -72,7 +62,7 @@ namespace G4 {
         }
 
         ~GstPlayer () {
-            _peaks.clear ();
+            _peak_calculator.clear ();
             _pipeline?.set_state (Gst.State.NULL);
         }
 
@@ -121,7 +111,6 @@ namespace G4 {
                     _current_uri = value;
                     _duration = Gst.CLOCK_TIME_NONE;
                     _position = Gst.CLOCK_TIME_NONE;
-                    _last_sample_time = Gst.CLOCK_TIME_NONE;
                     _tag_parsed = false;
                     ((!)_pipeline).uri = value;
                 }
@@ -153,6 +142,21 @@ namespace G4 {
             }
         }
 
+        public double peak {
+            get {
+                var value = _last_peak;
+                dynamic Gst.Element? sink = _audio_sink ?? _pipeline?.audio_sink;
+                if (sink != null) {
+                    dynamic Gst.Sample? sample = ((!)sink).last_sample;
+                    if (sample != null)
+                        _peak_calculator.calculate_sample ((!)sample, _position, ref value);
+                }
+                value = double.max (value, _last_peak >= 0.033 ? _last_peak - 0.033 : 0);
+                _last_peak = value;
+                return value;
+            }
+        }
+
         public uint replay_gain {
             get {
                 if (_replay_gain != null)
@@ -167,16 +171,6 @@ namespace G4 {
                     update_audio_sink ();
                     print (@"Enable ReplayGain: $(value != 0 && _replay_gain != null)\n");
                 }
-            }
-        }
-
-        public double peak {
-            get {
-                double value = _last_peak;
-                parse_peak_from_last_sample (ref value);
-                value = double.max (value, _last_peak >= 0.033 ? _last_peak - 0.033 : 0);
-                _last_peak = value;
-                return value;
             }
         }
 
@@ -245,7 +239,7 @@ namespace G4 {
                             //  print (@"State changed: $old -> $state\n");
                         }
                         if (_timer_handle == 0 && state == Gst.State.PLAYING) {
-                            _timer_handle = Timeout.add (200, parse_position);
+                            _timer_handle = Timeout.add (100, parse_position);
                         } else if (_timer_handle != 0 && state != Gst.State.PLAYING) {
                             Source.remove (_timer_handle);
                             _timer_handle = 0;
@@ -266,7 +260,7 @@ namespace G4 {
 
                 case Gst.MessageType.STREAM_START:
                     if (AtomicInt.compare_and_exchange (ref _next_uri_requested, 1, 0)) {
-                        _peaks.clear ();
+                        _peak_calculator.clear ();
                         next_uri_start ();
                         parse_duration ();
                         parse_position ();
@@ -304,32 +298,6 @@ namespace G4 {
                 position_updated (_position);
             }
             return true;
-        }
-
-        private bool parse_peak_from_last_sample (ref double peak_value) {
-            bool parsed = false;
-            dynamic Gst.Element? sink = _audio_sink ?? _pipeline?.audio_sink;
-            if (sink != null) {
-                dynamic Gst.Sample? sample = ((!)sink).last_sample;
-                var peak = Peak ();
-                peak.time = sample?.get_segment ()?.position ?? int64.MIN;
-                if (sample != null && _last_sample_time != peak.time
-                        && parse_peak_in_sample ((!)sample, out peak.peak)) {
-                    _peaks.push_tail (peak);
-                    _last_sample_time = peak.time;
-                    parsed = true;
-                }
-                while (_peaks.length > 0) {
-                    unowned var p = (!)_peaks.peek_head ();
-                    if (p.time >= _position) {
-                        peak_value = p.peak;
-                        _peaks.pop_head ();
-                    } else {
-                        break;
-                    }
-                }
-            }
-            return parsed;
         }
 
         private void update_audio_sink () {
@@ -373,129 +341,5 @@ namespace G4 {
                 });
             }
         }
-
-        private delegate void LevelCalculateFunc (uint8* data, uint num, uint channels, uint value_size, uint sample_size, out double nps);
-
-        private bool parse_peak_in_sample (Gst.Sample sample, out double peak) {
-            peak = 0;
-
-            unowned var caps = sample.get_caps ();
-            if (_last_caps != caps || _level_calculate == null) {
-                unowned var st = caps?.get_structure (0);
-                st?.get_int ("channels", out _audio_channels);
-                if (_audio_channels == 0)
-                    return false;
-
-                unowned var format = st?.get_string ("format") ?? "";
-                switch (format) {
-                    case "S8":
-                        _audio_bps = _sample_bps = 1;
-                        _level_calculate = level_calculate_int;
-                        break;
-                    case "S16LE":
-                        _audio_bps = _sample_bps = 2;
-                        _level_calculate = level_calculate_int16;
-                        break;
-                    case "S24LE":
-                        _audio_bps = _sample_bps = 3;
-                        _level_calculate = level_calculate_int;
-                        break;
-                    case "S24_32LE":
-                        _audio_bps = 3;
-                        _sample_bps = 4;
-                        _level_calculate = level_calculate_int;
-                        break;
-                    case "S32LE":
-                        _audio_bps = _sample_bps = 4;
-                        _level_calculate = level_calculate_int;
-                        break;
-                    case "F32LE":
-                        _audio_bps = _sample_bps = 4;
-                        _level_calculate = level_calculate_float;
-                        break;
-                    case "F64LE":
-                        _audio_bps = _sample_bps = 8;
-                        _level_calculate = level_calculate_double;
-                        break;
-                    default:
-                        print ("Unsupported sample format: %s\n", format);
-                        return false;
-                }
-                _last_caps = caps;
-            }
-
-            var channels = _audio_channels;
-            var bps = _audio_bps;
-            var sample_size = _sample_bps;
-            var block_size = channels * sample_size;
-            var buffer = sample.get_buffer ();
-            var size = buffer?.get_size () ?? 0;
-
-            Gst.MapInfo? map_info = null;
-            if (buffer?.map (out map_info, Gst.MapFlags.READ) ?? false) {
-                unowned uint8* p = ((!)map_info).data;
-                var num = (uint) (size / block_size);
-                double total_nps = 0;
-                for (var i = 0; i < channels; i++) {
-                    double nps = 0;
-                    _level_calculate (p + (sample_size * i), num, channels, bps, sample_size, out nps);
-                    total_nps += nps;
-                }
-                peak = double.min (total_nps / channels, 1);
-                buffer?.unmap ((!)map_info);
-                return true;
-            }
-            return false;
-        }
-    }
-
-    void level_calculate_double (uint8* data, uint num, uint channels, uint value_size, uint sample_size, out double nps) {
-        double peak = 0;
-        double* p = (double*)data;
-        for (uint i = 0; i < num; i += channels) {
-            double value = p[i] >= 0 ? p[i] : -p[i];
-            if (peak < value)
-                peak = value;
-        }
-        nps = peak * peak;
-    }
-
-    void level_calculate_float (uint8* data, uint num, uint channels, uint value_size, uint sample_size, out double nps) {
-        float peak = 0f;
-        float* p = (float*)data;
-        for (uint i = 0; i < num; i += channels) {
-            float value = p[i] >= 0 ? p[i] : -p[i];
-            if (peak < value)
-                peak = value;
-        }
-        nps = (double) peak * peak;
-    }
-
-    void level_calculate_int16 (uint8* data, uint num, uint channels, uint value_size, uint sample_size, out double nps) {
-        int16 peak = 0;
-        int16* p = (int16*)data;
-        for (uint i = 0; i < num; i += channels) {
-            int16 value = p[i] >= 0 ? p[i] : -p[i];
-            if (peak < value)
-                peak = value;
-        }
-        nps = (double) peak * peak / (((int64) 1) << (15 * 2));
-    }
-
-    void level_calculate_int (uint8* data, uint num, uint channels, uint value_size, uint sample_size, out double nps) {
-        int32 peak = 0;
-        uint block_size = channels * sample_size;
-        for (uint i = 0; i < num; i += channels) {
-            int32 value = 0;
-            uint8* p = (uint8*)&value + (4 - value_size);
-            for (uint j = 0; j < value_size; j++) {
-                p[j] = data[j];
-            }
-            data += block_size;
-            value = value >= 0 ? value : -value;
-            if (peak < value)
-                peak = value;
-        }
-        nps = (double) peak * peak / (((int64) 1) << (31 * 2));
     }
 }

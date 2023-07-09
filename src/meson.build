@@ -5,6 +5,7 @@ sources = [
   'main.vala',
   'gst/ape-demux.c',
   'gst/gst-player.vala',
+  'gst/peak-calculator.vala',
   'gst/tag-parser.vala',
   'ui/mini-bar.vala',
   'ui/music-entry.vala',
