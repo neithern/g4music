@@ -47,6 +47,7 @@
     <child>
       <object class="GtkProgressBar" id="progress_bar">
         <property name="hexpand">true</property>
+        <property name="pulse-step">0.02</property>
         <style>
           <class name="osd"/>
         </style>
