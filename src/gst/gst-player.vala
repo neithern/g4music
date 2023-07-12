@@ -78,7 +78,7 @@ namespace G4 {
                         _about_to_finish_id = 0;
                     }
                     if (value) {
-                        _about_to_finish_id = pipeline.about_to_finish.connect (on_about_to_finish);
+                        _about_to_finish_id = pipeline.about_to_finish.connect (on_stream_to_finish);
                     }
                 }
             }
@@ -122,23 +122,22 @@ namespace G4 {
                 return _audio_sink_name;
             }
             set {
-                if (_pipeline != null) {
-                    var sink_name = value;
-                    if (sink_name.length == 0) {
-                        var sinks = new GenericArray<Gst.ElementFactory> (8);
-                        get_audio_sinks (sinks);
-                        if (sinks.length > 0)
-                            sink_name = sinks[0].name;
-                    }
-                    var sink = Gst.ElementFactory.make (sink_name, "audiosink");
-                    if (sink != null) {
-                        _audio_sink = sink;
-                        _audio_sink_name = value;
-                        ((!)_audio_sink).enable_last_sample = true;
-                    }
-                    update_audio_sink ();
-                    print (@"Audio sink$(sink != null ? ":" : "!=") $(sink_name)\n");
+                var sink_name = value;
+                if (sink_name.length == 0) {
+                    var sinks = new GenericArray<Gst.ElementFactory> (8);
+                    get_audio_sinks (sinks);
+                    if (sinks.length > 0)
+                        sink_name = sinks[0].name;
                 }
+                var sink = Gst.ElementFactory.make (sink_name, "audiosink");
+                if (sink != null) {
+                    _audio_sink = sink;
+                    _audio_sink_name = value;
+                    ((!)_audio_sink).enable_last_sample = true;
+                }
+                if (_pipeline != null)
+                    update_audio_sink ();
+                print (@"Audio sink$(sink != null ? ":" : "!=") $(sink_name)\n");
             }
         }
 
@@ -164,13 +163,12 @@ namespace G4 {
                 return 0;
             }
             set {
-                if (_pipeline != null) {
-                    _replay_gain = value != 0 ? Gst.ElementFactory.make ("rgvolume", "gain") : null;
-                    if (_replay_gain != null)
-                        ((!)_replay_gain).album_mode = value == 2;
+                _replay_gain = value != 0 ? Gst.ElementFactory.make ("rgvolume", "gain") : null;
+                if (_replay_gain != null)
+                    ((!)_replay_gain).album_mode = value == 2;
+                if (_pipeline != null)
                     update_audio_sink ();
-                    print (@"Enable ReplayGain: $(value != 0 && _replay_gain != null)\n");
-                }
+                print (@"Enable ReplayGain: $(value != 0 && _replay_gain != null)\n");
             }
         }
 
@@ -221,29 +219,9 @@ namespace G4 {
 
                 case Gst.MessageType.STATE_CHANGED:
                     if (message.src == (!)_pipeline) {
-                        Gst.State old = Gst.State.NULL;
-                        Gst.State state = Gst.State.NULL;
-                        Gst.State pending = Gst.State.NULL;
-                        message.parse_state_changed (out old, out state, out pending);
-                        if (old == Gst.State.READY && state == Gst.State.PAUSED) {
-                            parse_duration ();
-                            if (!_tag_parsed) {
-                                //  Hack: force emit if no tag parsed for MOD files
-                                _tag_parsed = true;
-                                tag_parsed (_current_uri, null);
-                            }
-                        }
-                        if (old != state && _state != state) {
-                            _state = state;
-                            state_changed (state);
-                            //  print (@"State changed: $old -> $state\n");
-                        }
-                        if (_timer_handle == 0 && state == Gst.State.PLAYING) {
-                            _timer_handle = Timeout.add (100, parse_position);
-                        } else if (_timer_handle != 0 && state != Gst.State.PLAYING) {
-                            Source.remove (_timer_handle);
-                            _timer_handle = 0;
-                        }
+                        Gst.State old = Gst.State.NULL, state = Gst.State.NULL, pend = Gst.State.NULL;
+                        message.parse_state_changed (out old, out state, out pend);
+                        on_state_changed (old, state);
                     }
                     break;
 
@@ -259,12 +237,7 @@ namespace G4 {
                     break;
 
                 case Gst.MessageType.STREAM_START:
-                    if (AtomicInt.compare_and_exchange (ref _next_uri_requested, 1, 0)) {
-                        _peak_calculator.clear ();
-                        next_uri_start ();
-                        parse_duration ();
-                        parse_position ();
-                    }
+                    on_stream_start ();
                     break;
 
                 case Gst.MessageType.TAG:
@@ -279,7 +252,38 @@ namespace G4 {
             }
         }
 
-        private void on_about_to_finish () {
+        private void on_state_changed (Gst.State old, Gst.State state) {
+            if (old == Gst.State.READY && state == Gst.State.PAUSED) {
+                parse_duration ();
+                if (!_tag_parsed) {
+                    //  Hack: force emit if no tag parsed for MOD files
+                    _tag_parsed = true;
+                    tag_parsed (_current_uri, null);
+                }
+            }
+            if (old != state && _state != state) {
+                _state = state;
+                state_changed (state);
+                //  print (@"State changed: $old -> $state\n");
+            }
+            if (_timer_handle == 0 && state == Gst.State.PLAYING) {
+                _timer_handle = Timeout.add (100, parse_position);
+            } else if (_timer_handle != 0 && state != Gst.State.PLAYING) {
+                Source.remove (_timer_handle);
+                _timer_handle = 0;
+            }
+        }
+
+        private void on_stream_start () {
+            if (AtomicInt.compare_and_exchange (ref _next_uri_requested, 1, 0)) {
+                _peak_calculator.clear ();
+                next_uri_start ();
+                parse_duration ();
+                parse_position ();
+            }
+        }
+
+        private void on_stream_to_finish () {
             var next_uri = next_uri_request ();
             if (next_uri != null && ((!)next_uri).length > 0) {
                 AtomicInt.set (ref _next_uri_requested, 1);
@@ -288,22 +292,23 @@ namespace G4 {
         }
 
         private void parse_duration () {
-            if (_pipeline?.query_duration (Gst.Format.TIME, out _duration) ?? false) {
+            if (((!)_pipeline).query_duration (Gst.Format.TIME, out _duration)) {
                 duration_changed (_duration);
             }
         }
 
         private bool parse_position () {
-            if (_pipeline?.query_position (Gst.Format.TIME, out _position) ?? false) {
+            if (((!)_pipeline).query_position (Gst.Format.TIME, out _position)) {
                 position_updated (_position);
             }
             return true;
         }
 
         private void update_audio_sink () {
+            var pipeline = (!)_pipeline;
             var saved_pos = _position;
             var saved_state = _state;
-            _pipeline?.set_state (Gst.State.NULL);
+            pipeline.set_state (Gst.State.NULL);
 
             if (_audio_sink != null) {
                 var bin = _audio_sink?.parent as Gst.Bin;
@@ -327,9 +332,9 @@ namespace G4 {
                 }
             }
 
-            ((!)_pipeline).audio_sink = bin != null ? bin : _audio_sink;
+            pipeline.audio_sink = bin != null ? bin : _audio_sink;
             if (saved_state != Gst.State.NULL) {
-                _pipeline?.set_state (saved_state);
+                pipeline.set_state (saved_state);
             }
             if (saved_pos != Gst.CLOCK_TIME_NONE && saved_state >= Gst.State.PAUSED) {
                 Idle.add (() => {
