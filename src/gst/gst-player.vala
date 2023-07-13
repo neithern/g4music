@@ -36,6 +36,7 @@ namespace G4 {
         private double _last_peak = 0;
         private LevelCalculator _peak_calculator = new LevelCalculator ();
         private Gst.State _state = Gst.State.NULL;
+        private bool _seeking = false;
         private bool _tag_parsed = false;
         private uint _timer_handle = 0;
         private unowned Thread<void> _main_thread = Thread<void>.self ();
@@ -183,10 +184,9 @@ namespace G4 {
         }
 
         public void seek (Gst.ClockTime position) {
-            var diff = (Gst.ClockTimeDiff) (position - _position);
-            if (diff > 50 * Gst.MSECOND || diff < -50 * Gst.MSECOND) {
+            if (!_seeking) {
                 //  print ("Seek: %g -> %g\n", to_second (_position), to_second (position));
-                _position = position;
+                _seeking = true;
                 _pipeline?.seek_simple (Gst.Format.TIME, Gst.SeekFlags.ACCURATE | Gst.SeekFlags.FLUSH, (int64) position);
             }
         }
@@ -211,6 +211,7 @@ namespace G4 {
             switch (message.type) {
                 case Gst.MessageType.ASYNC_DONE:
                     parse_position ();
+                    _seeking = false;
                     break;
 
                 case Gst.MessageType.DURATION_CHANGED:
