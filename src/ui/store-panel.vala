@@ -56,11 +56,11 @@ namespace G4 {
             list_view.activate.connect ((index) => _app.current_item = (int) index);
             Idle.add (() => {
                 // Delay set model after the window shown to avoid slowing down it showing
-                if (root.get_height () > 0 && list_view.get_model () == null) {
+                if (win.get_height () > 0 && list_view.get_model () == null) {
                     list_view.model = new Gtk.NoSelection (_app.music_list);
                     run_idle_once (() => scroll_to_item (_app.current_item), Priority.HIGH);
                 }
-                return root.get_height () == 0;
+                return win.get_height () == 0;
             }, Priority.LOW);
 
             app.index_changed.connect (on_index_changed);

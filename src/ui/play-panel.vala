@@ -59,10 +59,10 @@ namespace G4 {
 
             Idle.add (() => {
                 // Delay update info after the window shown to avoid slowing down it showing
-                if (root.get_height () > 0 && _current_music != _app.current_music) {
+                if (win.get_height () > 0 && _current_music != _app.current_music) {
                     update_music_info (_app.current_music);
                 }
-                return root.get_height () == 0;
+                return win.get_height () == 0;
             }, Priority.LOW);
 
             app.music_changed.connect (on_music_changed);
