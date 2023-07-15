@@ -6,7 +6,7 @@ namespace G4 {
         private Gtk.Label _title = new Gtk.Label (null);
         private Gtk.Label _subtitle = new Gtk.Label (null);
         private Gtk.Image _playing = new Gtk.Image ();
-        private BasePaintable _paintable = new BasePaintable ();
+        private RoundPaintable _paintable = new RoundPaintable ();
         private Music? _music = null;
 
         public ulong first_draw_handler = 0;
@@ -17,7 +17,7 @@ namespace G4 {
             _cover.margin_top = cover_margin;
             _cover.margin_bottom = cover_margin;
             _cover.pixel_size = cover_size;
-            _cover.paintable = new RoundPaintable (_paintable);
+            _cover.paintable = _paintable;
             _paintable.queue_draw.connect (_cover.queue_draw);
             append (_cover);
 
@@ -46,6 +46,7 @@ namespace G4 {
             _playing.valign = Gtk.Align.CENTER;
             _playing.icon_name = "media-playback-start-symbolic";
             _playing.pixel_size = 12;
+            _playing.visible = false;
             _playing.add_css_class ("dim-label");
             append (_playing);
 
@@ -54,11 +55,9 @@ namespace G4 {
             var padding = 2;
             var item_height = (height + padding + 3) / 4 * 4;
             height_request = int.max (item_height - padding, cover_size + cover_margin * 2);
-
-            make_right_clickable (this, show_popover);
         }
 
-        public BasePaintable cover {
+        public RoundPaintable cover {
             get {
                 return _paintable;
             }
@@ -76,11 +75,22 @@ namespace G4 {
             }
         }
 
+        public string title {
+            set {
+                _title.label = value;
+                _subtitle.visible = false;
+            }
+        }
+
         public void disconnect_first_draw () {
             if (first_draw_handler != 0) {
                 _paintable.disconnect (first_draw_handler);
                 first_draw_handler = 0;
             }
+        }
+
+        public void setup_right_clickable () {
+            make_right_clickable (this, show_popover);
         }
 
         public void update (Music music, uint sort) {

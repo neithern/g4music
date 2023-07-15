@@ -29,7 +29,7 @@ namespace G4 {
         private unowned Gtk.ListView list_view;
 
         private Application _app;
-        private bool _compact_playlist = false;
+        private bool _compact_list = false;
         private Gdk.Paintable _loading_paintable;
         private double _row_height = 0;
         private double _scroll_range = 0;
@@ -67,16 +67,16 @@ namespace G4 {
             app.music_store.loading_changed.connect (on_loading_changed);
 
             var settings = app.settings;
-            settings.bind ("compact-playlist", this, "compact-playlist", SettingsBindFlags.DEFAULT);
+            settings.bind ("compact-playlist", this, "compact-list", SettingsBindFlags.DEFAULT);
             settings.bind ("sort-mode", this, "sort-mode", SettingsBindFlags.DEFAULT);
         }
 
-        public bool compact_playlist {
+        public bool compact_list {
             get {
-                return _compact_playlist;
+                return _compact_list;
             }
             set {
-                _compact_playlist = value;
+                _compact_list = value;
                 list_view.factory = create_list_factory ();
             }
         }
@@ -159,8 +159,10 @@ namespace G4 {
         }
 
         private void on_create_item (Gtk.ListItem item) {
-            item.child = new MusicEntry (_compact_playlist);
-            _row_height = item.child.height_request + 2;
+            var entry = new MusicEntry (_compact_list);
+            entry.setup_right_clickable ();
+            item.child = entry;
+            _row_height = entry.height_request + 2;
         }
 
         private async void on_bind_item (Gtk.ListItem item) {
