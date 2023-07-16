@@ -2,7 +2,8 @@ namespace G4 {
 
     public class MusicList : Adw.Bin {
         private bool _compact_list = false;
-        private ListModel? _model = null;
+        private ListStore? _data_store = null;
+        private Gtk.FilterListModel? _filter_model = null;
         private double _row_height = 0;
         private double _scroll_range = 0;
         private Gtk.ListView _list_view = new Gtk.ListView (null, null);
@@ -39,19 +40,23 @@ namespace G4 {
             }
         }
 
-        public ListModel? data_model {
+        public ListStore? data_store {
             get {
-                return _model;
+                return _data_store;
             }
             set {
-                _model = value;
+                _data_store = value;
             }
         }
 
         public Gtk.FilterListModel? filter_model {
+            get {
+                return _filter_model;
+            }
             set {
-                if (_model != null && value != null)
-                    ((!)value).model = (!)_model;
+                if (_data_store != null && value != null)
+                    ((!)value).model = (!)_data_store;
+                _filter_model = value;
                 _list_view.model = new Gtk.NoSelection (value);
             }
         }

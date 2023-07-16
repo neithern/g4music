@@ -191,7 +191,7 @@ namespace G4 {
             return s1._order - s2._order;
         }
 
-        public static int compare_by_date_ascending (Music s1, Music s2) {
+        public static int compare_by_recent (Music s1, Music s2) {
             var diff = s2.modified_time - s1.modified_time;
             return (int) diff.clamp (-1, 1);
         }

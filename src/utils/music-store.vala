@@ -118,35 +118,10 @@ namespace G4 {
                 return _sort_mode;
             }
             set {
+                _compare = get_sort_compare (value);
                 _sort_mode = value;
-                switch (value) {
-                    case SortMode.ALBUM:
-                        _compare = Music.compare_by_album;
-                        break;
-                    case SortMode.ARTIST:
-                        _compare = Music.compare_by_artist;
-                        break;
-                    case SortMode.ARTIST_ALBUM:
-                        _compare = Music.compare_by_artist_album;
-                        break;
-                    case SortMode.RECENT:
-                        _compare = Music.compare_by_date_ascending;
-                        break;
-                    case SortMode.SHUFFLE:
-                        _compare = Music.compare_by_order;
-                        break;
-                    default:
-                        _compare = Music.compare_by_title;
-                        break;
-                }
-                if (_sort_mode == SortMode.SHUFFLE) {
-                    var count = _store.get_n_items ();
-                    var arr = new GenericArray<Music> (count);
-                    for (var i = 0; i < count; i++) {
-                        arr.add ((Music)_store.get_item (i));
-                    }
-                    Music.shuffle_order (arr);
-                }
+                if (value == SortMode.SHUFFLE)
+                    shuffle_order (_store);
                 _store.sort ((CompareDataFunc) _compare);
             }
         }
@@ -381,5 +356,29 @@ namespace G4 {
                 thread.join ();
             }
         }
+    }
+
+    private const CompareFunc<Music>[] COMPARE_FUNCS = {
+        Music.compare_by_album,
+        Music.compare_by_artist,
+        Music.compare_by_artist_album,
+        Music.compare_by_title,
+        Music.compare_by_recent,
+        Music.compare_by_order,
+    };
+
+    public CompareFunc<Music> get_sort_compare (uint sort_mode) {
+        if (sort_mode <= COMPARE_FUNCS.length)
+            return COMPARE_FUNCS[sort_mode];
+        return Music.compare_by_order;
+    }
+
+    public void shuffle_order (ListStore store) {
+        var count = store.get_n_items ();
+        var arr = new GenericArray<Music> (count);
+        for (var i = 0; i < count; i++) {
+            arr.add ((Music)store.get_item (i));
+        }
+        Music.shuffle_order (arr);
     }
 }

@@ -1,11 +1,10 @@
 namespace G4 {
 
     namespace PageType {
-        public const uint ALL = 0;
-        public const uint ALBUM = 1;
-        public const uint ALBUMS = 2;
-        public const uint ARTIST = 3;
-        public const uint ARTISTS = 4;
+        public const uint NORMAL = 0;
+        public const uint ALBUMS = 1;
+        public const uint ARTIST = 2;
+        public const uint ARTISTS = 3;
     }
 
     namespace SearchMode {
@@ -41,7 +40,7 @@ namespace G4 {
         private MusicLibrary _library;
         private Gdk.Paintable _loading_paintable;
         private Adw.TabPage? _current_page = null;
-        private uint _current_page_type = PageType.ALL;
+        private uint _current_page_type = PageType.NORMAL;
         private uint _sort_mode = 0;
 
         private string _search_text = "";
@@ -64,16 +63,17 @@ namespace G4 {
             _artist_list = create_artist_list ();
             _album_list = create_album_list_from_artist ();
 
-            _current_list = create_music_list ();
-            add_tab_page (_current_list, PageType.ALL, _("All"), true);
-            add_tab_page (_artist_list, PageType.ARTISTS, _("Artists"), true);
+            var music_list = create_music_list ();
+            _current_list = music_list;
+            add_tab_page (_current_list, PageType.NORMAL, _("Songs"), true);
             add_tab_page (_album_list, PageType.ALBUMS, _("Albums"), true);
+            add_tab_page (_artist_list, PageType.ARTISTS, _("Artists"), true);
             Idle.add (() => {
                 // Delay set model after the window shown to avoid slowing down it showing
                 if (win.get_height () > 0) {
+                    music_list.data_store = _app.music_store.store;
+                    music_list.filter_model = _app.music_list;
                     tab_view.bind_property ("selected-page", this, "selected-page", BindingFlags.SYNC_CREATE);
-                    _current_list.data_model = _app.music_store.store;
-                    _current_list.filter_model = _app.music_list;
                     run_idle_once (() => scroll_to_item (_app.current_item), Priority.HIGH);
                 }
                 return win.get_height () == 0;
@@ -81,7 +81,6 @@ namespace G4 {
 
             app.index_changed.connect (on_index_changed);
             app.music_store.loading_changed.connect (on_loading_changed);
-
             app.settings.bind ("sort-mode", this, "sort-mode", SettingsBindFlags.DEFAULT);
         }
 
@@ -102,12 +101,13 @@ namespace G4 {
                 if (value != null && value != _current_page) {
                     var page = (!)value;
                     var type = page.get_qdata<uint> (_page_type_quark);
+                    var normal = type == PageType.NORMAL;
                     _current_list.filter_model = null;
                     _current_list = (MusicList) page.child;
-                    _current_list.filter_model = _app.music_list;
+                    _current_list.filter_model = normal ? _app.music_list : new Gtk.FilterListModel (null, null);
                     _current_page = value;
                     _current_page_type = type;
-                    sort_btn.visible = type == PageType.ALL;
+                    sort_btn.visible = normal;
                 }
             }
         }
@@ -118,10 +118,17 @@ namespace G4 {
             }
             set {
                 _sort_mode = value;
-                if (value < SORT_MODE_ICONS.length) {
+                if (value < SORT_MODE_ICONS.length)
                     sort_btn.set_icon_name (SORT_MODE_ICONS[value]);
-                    if (_current_list.item_count > 0)
-                        _current_list.create_factory ();
+                var store =_current_list.data_store;
+                if (store != null) { 
+                    var compare = (CompareDataFunc) get_sort_compare (value);
+                    if (value == SortMode.SHUFFLE)
+                        shuffle_order ((!)store);
+                    ((!)store).sort (compare);
+                }
+                if (_current_list.item_count > 0) {
+                    _current_list.create_factory ();
                 }
             }
         }
@@ -158,8 +165,7 @@ namespace G4 {
         }
 
         private const string[] PAGE_TYPE_ICONS = {
-            "view-list-symbolic",               // ALL
-            "media-optical-cd-audio-symbolic",  // ALBUM
+            "view-list-symbolic",               // NORMAL
             "drive-multidisk-symbolic",         // ALBUMS
             "avatar-default-symbolic",          // ARTIST
             "system-users-symbolic",            // ARTISTS
@@ -196,13 +202,13 @@ namespace G4 {
                 var store = new ListStore (typeof (Music));
                 ((!)artist).albums.foreach ((name, album) => store.append (album.cover_music));
                 store.sort ((CompareDataFunc) Music.compare_by_album);
-                list.data_model = store;
+                list.data_store = store;
             }
             list.item_activated.connect ((position, obj) => {
                 unowned var album = _library.albums.lookup ((obj as Music)?.album ?? "");
                 if (album is Album) {
                     var mlist = create_music_list (album);
-                    add_tab_page (mlist, PageType.ALBUM, album.name);
+                    add_tab_page (mlist, PageType.NORMAL, album.name);
                 }
             });
             list.item_binded.connect ((item) => {
@@ -223,7 +229,7 @@ namespace G4 {
                     if (artist.albums.length == 1) {
                         unowned var album = artist.albums.get_values ().first ().data;
                         var mlist = create_music_list (album);
-                        add_tab_page (mlist, PageType.ALBUM, album.name);
+                        add_tab_page (mlist, PageType.NORMAL, album.name);
                     } else {
                         var mlist = create_album_list_from_artist (artist);
                         add_tab_page (mlist, PageType.ARTIST, artist.name);
@@ -250,7 +256,7 @@ namespace G4 {
                 var store = new ListStore (typeof (Music));
                 ((!)album).musics.foreach ((uri, music) => store.append (music));
                 store.sort ((CompareDataFunc) Music.compare_by_album);
-                list.data_model = store;
+                list.data_store = store;
             }
             list.item_activated.connect ((position, obj) => {
                 _app.current_item = (int) position;
@@ -276,7 +282,7 @@ namespace G4 {
         }
 
         private void on_index_changed (int index, uint size) {
-            if (_current_page_type <= PageType.ALBUM) {
+            if (_current_page_type == PageType.NORMAL) {
                 root.action_set_enabled (ACTION_APP + ACTION_PREV, index > 0);
                 root.action_set_enabled (ACTION_APP + ACTION_NEXT, index < (int) size - 1);
                 index_title.label = size > 0 ? @"$(index+1)/$(size)" : "";
@@ -303,12 +309,12 @@ namespace G4 {
                 var albums = new ListStore (typeof (Music));
                 _library.albums.foreach ((name, album) => albums.append (album.cover_music));
                 albums.sort ((CompareDataFunc) Music.compare_by_album);
-                _album_list.data_model = albums;
+                _album_list.data_store = albums;
 
                 var artists = new ListStore (typeof (Music));
                 _library.artists.foreach ((name, artist) => artists.append (artist.cover_music));
                 artists.sort ((CompareDataFunc) Music.compare_by_artist);
-                _artist_list.data_model = artists;
+                _artist_list.data_store = artists;
             }
         }
 
@@ -363,7 +369,7 @@ namespace G4 {
         }
 
         private void update_search_filter () {
-            _app.music_list.set_filter (search_btn.active ? new Gtk.CustomFilter (on_search_match) : (Gtk.CustomFilter?) null);
+            _current_list.filter_model?.set_filter (search_btn.active ? new Gtk.CustomFilter (on_search_match) : (Gtk.CustomFilter?) null);
         }
     }
 }
