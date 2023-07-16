@@ -101,12 +101,11 @@ namespace G4 {
                 // Delay set model after the window shown to avoid slowing down it showing
                 if (win.get_height () > 0) {
                     _current_list.filter_model = _app.music_list;
-                    scroll_to_item (_app.current_item);
+                    _app.update_current_item ();
                     tab_view.bind_property ("selected-page", this, "selected-page", BindingFlags.SYNC_CREATE);
                 }
                 return win.get_height () == 0;
             }, Priority.LOW);
-
 
             app.index_changed.connect (on_index_changed);
             app.music_store.loading_changed.connect (on_loading_changed);
@@ -130,7 +129,7 @@ namespace G4 {
                     _current_page = value;
                     _current_page_type = type;
                     sort_btn.visible = playing;
-                    if (playing) {
+                    if (playing && _current_list.get_height () > 0) {
                         run_idle_once (() => scroll_to_item (_app.current_item));
                     }
                 }
@@ -336,7 +335,7 @@ namespace G4 {
             root.action_set_enabled (ACTION_APP + ACTION_PREV, index > 0);
             root.action_set_enabled (ACTION_APP + ACTION_NEXT, index < (int) size - 1);
             index_title.label = size > 0 ? @"$(index+1)/$(size)" : "";
-            if (_current_page_type == PageType.PLAYING) {
+            if (_current_page_type == PageType.PLAYING && _playing_list.filter_model != null) {
                 scroll_to_item (index);
             }
         }
