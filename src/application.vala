@@ -274,15 +274,17 @@ namespace G4 {
 
         public bool single_loop { get; set; }
 
+        private uint _sort_mode = SortMode.TITLE;
+
         public uint sort_mode {
             get {
-                return _music_store.sort_mode;
+                return _sort_mode;
             }
             set {
                 var action = lookup_action (ACTION_SORT);
                 var state = new Variant.string (value.to_string ());
                 (action as SimpleAction)?.set_state (state);
-                _music_store.sort_mode = value;
+                _sort_mode = value;
             }
         }
 

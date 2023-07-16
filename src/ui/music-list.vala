@@ -2,7 +2,7 @@ namespace G4 {
 
     public class MusicList : Adw.Bin {
         private bool _compact_list = false;
-        private ListStore? _data_store = null;
+        private ListStore _data_store = new ListStore (typeof (Music));
         private Gtk.FilterListModel? _filter_model = null;
         private double _row_height = 0;
         private double _scroll_range = 0;
@@ -40,12 +40,9 @@ namespace G4 {
             }
         }
 
-        public ListStore? data_store {
+        public ListStore data_store {
             get {
                 return _data_store;
-            }
-            set {
-                _data_store = value;
             }
         }
 
@@ -54,14 +51,14 @@ namespace G4 {
                 return _filter_model;
             }
             set {
-                if (_data_store != null && value != null)
-                    ((!)value).model = (!)_data_store;
+                if (value != null)
+                    ((!)value).model = _data_store;
                 _filter_model = value;
                 _list_view.model = new Gtk.NoSelection (value);
             }
         }
 
-        public uint item_count {
+        public uint visible_count {
             get {
                 return _list_view.get_model ()?.get_n_items () ?? 0;
             }
@@ -96,7 +93,7 @@ namespace G4 {
                     _scroll_animation = new Adw.TimedAnimation (_scroll_view, from, scroll_to, 500, target);
                     _scroll_animation?.play ();
                 } 
-            } else if (item_count > 0) {
+            } else if (visible_count > 0) {
 #if GTK_4_10
                 _list_view.activate_action_variant ("list.scroll-to-item", new Variant.uint32 (index));
 #else
@@ -143,7 +140,7 @@ namespace G4 {
         private void on_vadjustment_changed () {
             var adj = _scroll_view.vadjustment;
             var range = adj.upper - adj.lower;
-            var count = item_count;
+            var count = visible_count;
             if (count > 0 && _scroll_range != range && range > _list_view.get_height ()) {
                 _row_height = range / count;
                 _scroll_range = range;

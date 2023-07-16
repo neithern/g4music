@@ -1,10 +1,11 @@
 namespace G4 {
 
     namespace PageType {
-        public const uint NORMAL = 0;
+        public const uint PLAYING = 0;
         public const uint ALBUMS = 1;
         public const uint ARTIST = 2;
         public const uint ARTISTS = 3;
+        public const uint SONGS = 4;
     }
 
     namespace SearchMode {
@@ -13,6 +14,23 @@ namespace G4 {
         public const uint ARTIST = 2;
         public const uint TITLE = 3;
     }
+
+    public const string[] SORT_MODE_ICONS = {
+        "media-optical-cd-audio-symbolic",  // ALBUM
+        "system-users-symbolic",            // ARTIST
+        "avatar-default-symbolic",          // ARTIST_ALBUM
+        "folder-music-symbolic",            // TITLE
+        "document-open-recent-symbolic",    // RECENT
+        "media-playlist-shuffle-symbolic",  // SHUFFLE
+    };
+
+    public const string[] PAGE_TYPE_ICONS = {
+        "media-playback-start-symbolic",    // PLAYING
+        "drive-multidisk-symbolic",         // ALBUMS
+        "avatar-default-symbolic",          // ARTIST
+        "system-users-symbolic",            // ARTISTS
+        "view-list-symbolic",               // SONGS
+    };
 
     [GtkTemplate (ui = "/com/github/neithern/g4music/gtk/store-panel.ui")]
     public class StorePanel : Gtk.Box {
@@ -37,10 +55,13 @@ namespace G4 {
         private MusicList _album_list;
         private MusicList _artist_list;
         private MusicList _current_list;
+        private MusicList _songs_list;
+        private MusicList _playing_list;
         private MusicLibrary _library;
         private Gdk.Paintable _loading_paintable;
         private Adw.TabPage? _current_page = null;
-        private uint _current_page_type = PageType.NORMAL;
+        private bool _appending_mode = false;
+        private uint _current_page_type = PageType.PLAYING;
         private uint _sort_mode = 0;
 
         private string _search_text = "";
@@ -62,36 +83,35 @@ namespace G4 {
 
             _artist_list = create_artist_list ();
             _album_list = create_album_list_from_artist ();
+            _songs_list = create_songs_list ();
+            append_tab_page (_artist_list, PageType.ARTISTS, _("Artists"), true);
+            append_tab_page (_album_list, PageType.ALBUMS, _("Albums"), true);
+            append_tab_page (_songs_list, PageType.SONGS, _("Songs"), true);
 
-            var music_list = create_music_list ();
-            _current_list = music_list;
-            add_tab_page (_current_list, PageType.NORMAL, _("Songs"), true);
-            add_tab_page (_album_list, PageType.ALBUMS, _("Albums"), true);
-            add_tab_page (_artist_list, PageType.ARTISTS, _("Artists"), true);
+            _playing_list = _current_list = create_normal_music_list ();
+            tab_view.selected_page = ensure_playing_page ();
+            tab_view.close_page.connect ((page) => {
+                if (page.child == _playing_list) {
+                    _playing_list.data_store.remove_all ();
+                    _appending_mode = true;
+                }
+                return false;
+            });
             Idle.add (() => {
                 // Delay set model after the window shown to avoid slowing down it showing
                 if (win.get_height () > 0) {
-                    music_list.data_store = _app.music_store.store;
-                    music_list.filter_model = _app.music_list;
+                    _current_list.filter_model = _app.music_list;
+                    scroll_to_item (_app.current_item);
                     tab_view.bind_property ("selected-page", this, "selected-page", BindingFlags.SYNC_CREATE);
-                    run_idle_once (() => scroll_to_item (_app.current_item), Priority.HIGH);
                 }
                 return win.get_height () == 0;
             }, Priority.LOW);
+
 
             app.index_changed.connect (on_index_changed);
             app.music_store.loading_changed.connect (on_loading_changed);
             app.settings.bind ("sort-mode", this, "sort-mode", SettingsBindFlags.DEFAULT);
         }
-
-        private const string[] SORT_MODE_ICONS = {
-            "media-optical-cd-audio-symbolic",  // ALBUM
-            "system-users-symbolic",            // ARTIST
-            "avatar-default-symbolic",          // ARTIST_ALBUM
-            "folder-music-symbolic",            // TITLE
-            "document-open-recent-symbolic",    // RECENT
-            "media-playlist-shuffle-symbolic",  // SHUFFLE
-        };
 
         public unowned Adw.TabPage? selected_page {
             get {
@@ -101,13 +121,18 @@ namespace G4 {
                 if (value != null && value != _current_page) {
                     var page = (!)value;
                     var type = page.get_qdata<uint> (_page_type_quark);
-                    var normal = type == PageType.NORMAL;
+                    var playing = type == PageType.PLAYING;
+                    var filter = _current_list.filter_model?.filter;
                     _current_list.filter_model = null;
                     _current_list = (MusicList) page.child;
-                    _current_list.filter_model = normal ? _app.music_list : new Gtk.FilterListModel (null, null);
+                    _current_list.filter_model = playing ? _app.music_list : new Gtk.FilterListModel (null, null);
+                    _current_list.filter_model?.set_filter (filter);
                     _current_page = value;
                     _current_page_type = type;
-                    sort_btn.visible = normal;
+                    sort_btn.visible = playing;
+                    if (playing) {
+                        run_idle_once (() => scroll_to_item (_app.current_item));
+                    }
                 }
             }
         }
@@ -120,15 +145,15 @@ namespace G4 {
                 _sort_mode = value;
                 if (value < SORT_MODE_ICONS.length)
                     sort_btn.set_icon_name (SORT_MODE_ICONS[value]);
-                var store =_current_list.data_store;
-                if (store != null) { 
-                    var compare = (CompareDataFunc) get_sort_compare (value);
-                    if (value == SortMode.SHUFFLE)
-                        shuffle_order ((!)store);
-                    ((!)store).sort (compare);
-                }
-                if (_current_list.item_count > 0) {
-                    _current_list.create_factory ();
+
+                var store = _playing_list.data_store;
+                if (value == SortMode.SHUFFLE)
+                    shuffle_order (store);
+                var compare = (CompareDataFunc) get_sort_compare (value);
+                store.sort (compare);
+
+                if (_playing_list.visible_count > 0) {
+                    _playing_list.create_factory ();
                 }
             }
         }
@@ -164,26 +189,12 @@ namespace G4 {
             search_btn.active = true;
         }
 
-        private const string[] PAGE_TYPE_ICONS = {
-            "view-list-symbolic",               // NORMAL
-            "drive-multidisk-symbolic",         // ALBUMS
-            "avatar-default-symbolic",          // ARTIST
-            "system-users-symbolic",            // ARTISTS
-        };
-
         private Quark _page_type_quark = Quark.from_string ("icon_name_quark");
 
-        private Adw.TabPage add_tab_page (Gtk.Widget widget, uint type, string title, bool pinned = false) {
-            if (!pinned) {
-                var pages = tab_view.pages;
-                for (var i = (int) pages.get_n_items () - 1; i >= 0; i--) {
-                    var page = (Adw.TabPage) pages.get_item (i);
-                    if (page.pinned == pinned && page.title == title
-                            && page.get_qdata<uint> (_page_type_quark) == type) {
-                        tab_view.selected_page = page;
-                        return page;
-                    }
-                }
+        private Adw.TabPage append_tab_page (Gtk.Widget widget, uint type, string title, bool pinned = false) {
+            var page0 = find_tab_page (type, pinned, title);
+            if (page0 != null) {
+                return (!)page0;
             }
 
             var icon_name = type < PAGE_TYPE_ICONS.length ? PAGE_TYPE_ICONS[type] : "";
@@ -191,25 +202,62 @@ namespace G4 {
             page.icon = new ThemedIcon (icon_name);
             page.title = page.tooltip = title;
             page.set_qdata<uint> (_page_type_quark, type);
-            if (!pinned)
-                tab_view.selected_page = page;
             return page;
+        }
+
+        private Adw.TabPage append_to_playing_page (Object? obj) {
+            var store = _playing_list.data_store;
+            if (obj is Album) {
+                var album = (Album) obj;
+                if (album.musics.length == 1) {
+                    obj = album.musics.get_values ().first ().data;
+                } else {
+                    var n_items = _playing_list.data_store.get_n_items ();
+                    var arr = new GenericArray<Music> (album.musics.length);
+                    album.foreach ((uri, music) => arr.add (music));
+                    _playing_list.data_store.splice (_appending_mode ? n_items : 0, _appending_mode ? 0 : n_items, arr.data);
+                    _app.current_item = _appending_mode ? (int) n_items : 0;
+                } 
+            }
+            if (obj is Music) {
+                var music = (Music) obj;
+                uint position = -1;
+                if (store.find (music, out position)) {
+                    _app.current_item = (int) position;
+                } else {
+                    store.append (music);
+                    _app.current_item = (int) store.get_n_items () - 1;
+                }
+            }
+            return ensure_playing_page ();
+        }
+
+        private Adw.TabPage ensure_playing_page () {
+            return append_tab_page (_playing_list, PageType.PLAYING, _("Playing"));
+        }
+
+        private Adw.TabPage? find_tab_page (uint type, bool pinned, string title) {
+            var pages = tab_view.pages;
+            for (var i = (int) pages.get_n_items () - 1; i >= 0; i--) {
+                var page = (Adw.TabPage) pages.get_item (i);
+                if (page.pinned == pinned && page.get_qdata<uint> (_page_type_quark) == type
+                        && page.title == title) {
+                    return page;
+                }
+            }
+            return null;
         }
 
         private MusicList create_album_list_from_artist (Artist? artist = null) {
             var list = new MusicList (_app);
             if (artist != null) {
-                var store = new ListStore (typeof (Music));
+                var store = list.data_store;
                 ((!)artist).albums.foreach ((name, album) => store.append (album.cover_music));
                 store.sort ((CompareDataFunc) Music.compare_by_album);
-                list.data_store = store;
             }
             list.item_activated.connect ((position, obj) => {
                 unowned var album = _library.albums.lookup ((obj as Music)?.album ?? "");
-                if (album is Album) {
-                    var mlist = create_music_list (album);
-                    add_tab_page (mlist, PageType.NORMAL, album.name);
-                }
+                append_to_playing_page (album);
             });
             list.item_binded.connect ((item) => {
                 var entry = (MusicEntry) item.child;
@@ -228,11 +276,10 @@ namespace G4 {
                 if (artist is Artist) {
                     if (artist.albums.length == 1) {
                         unowned var album = artist.albums.get_values ().first ().data;
-                        var mlist = create_music_list (album);
-                        add_tab_page (mlist, PageType.NORMAL, album.name);
+                        append_to_playing_page (album);
                     } else {
                         var mlist = create_album_list_from_artist (artist);
-                        add_tab_page (mlist, PageType.ARTIST, artist.name);
+                        tab_view.selected_page = append_tab_page (mlist, PageType.ARTIST, artist.name);
                     }
                 }
             });
@@ -250,14 +297,8 @@ namespace G4 {
             return list;
         }
 
-        private MusicList create_music_list (Album? album = null) {
+        private MusicList create_normal_music_list () {
             var list = new MusicList (_app);
-            if (album != null) {
-                var store = new ListStore (typeof (Music));
-                ((!)album).musics.foreach ((uri, music) => store.append (music));
-                store.sort ((CompareDataFunc) Music.compare_by_album);
-                list.data_store = store;
-            }
             list.item_activated.connect ((position, obj) => {
                 _app.current_item = (int) position;
             });
@@ -266,12 +307,7 @@ namespace G4 {
                 var music = (Music) item.item;
                 entry.paintable = _loading_paintable;
                 entry.playing = music == _app.current_music;
-                if (album != null) {
-                    var subtitle = (0 < music.track < int.MAX) ? @"$(music.track). $(music.title)" : music.title;
-                    entry.update_title (music.artist, subtitle);
-                } else {
-                    entry.update (music, _sort_mode);
-                }
+                entry.update (music, _sort_mode);
             });
             list.item_created.connect ((item) => {
                 var entry = (MusicEntry) item.child;
@@ -281,14 +317,27 @@ namespace G4 {
             return list;
         }
 
+        private MusicList create_songs_list () {
+            var list = new MusicList (_app);
+            list.item_activated.connect ((position, obj) => {
+                append_to_playing_page (obj);
+            });
+            list.item_binded.connect ((item) => {
+                var entry = (MusicEntry) item.child;
+                var music = (Music) item.item;
+                entry.paintable = _loading_paintable;
+                entry.update_title (music.title, music.artist);
+            });
+            _app.settings.bind ("compact-playlist", list, "compact-list", SettingsBindFlags.DEFAULT);
+            return list;
+        }
+
         private void on_index_changed (int index, uint size) {
-            if (_current_page_type == PageType.NORMAL) {
-                root.action_set_enabled (ACTION_APP + ACTION_PREV, index > 0);
-                root.action_set_enabled (ACTION_APP + ACTION_NEXT, index < (int) size - 1);
-                index_title.label = size > 0 ? @"$(index+1)/$(size)" : "";
+            root.action_set_enabled (ACTION_APP + ACTION_PREV, index > 0);
+            root.action_set_enabled (ACTION_APP + ACTION_NEXT, index < (int) size - 1);
+            index_title.label = size > 0 ? @"$(index+1)/$(size)" : "";
+            if (_current_page_type == PageType.PLAYING) {
                 scroll_to_item (index);
-            } else {
-                index_title.label = size > 0 ? @"$(size)" : "";
             }
         }
 
@@ -306,15 +355,32 @@ namespace G4 {
             }
 
             if (!loading) {
-                var albums = new ListStore (typeof (Music));
-                _library.albums.foreach ((name, album) => albums.append (album.cover_music));
-                albums.sort ((CompareDataFunc) Music.compare_by_album);
-                _album_list.data_store = albums;
+                var store = _app.music_store.store;
+                var count = store.get_n_items ();
+                var arr = new GenericArray<Music> (count);
 
-                var artists = new ListStore (typeof (Music));
-                _library.artists.foreach ((name, artist) => artists.append (artist.cover_music));
-                artists.sort ((CompareDataFunc) Music.compare_by_artist);
-                _artist_list.data_store = artists;
+                _library.albums.foreach ((name, album) => arr.add (album.cover_music));
+                arr.sort (Music.compare_by_album);
+                _album_list.data_store.splice (0, _album_list.data_store.get_n_items (), arr.data);
+                arr.remove_range (0, arr.length);
+
+                _library.artists.foreach ((name, artist) => arr.add (artist.cover_music));
+                arr.sort (Music.compare_by_artist);
+                _artist_list.data_store.splice (0, _artist_list.data_store.get_n_items (), arr.data);
+                arr.remove_range (0, arr.length);
+
+                for (var i = 0; i < count; i++)
+                    arr.add ((Music) store.get_item (i));
+                arr.sort (Music.compare_by_title);
+                _songs_list.data_store.splice (0, _songs_list.data_store.get_n_items (), arr.data);
+
+                if (_playing_list.data_store.get_n_items () == 0) {
+                    _appending_mode = false;
+                    _playing_list.data_store.splice (0, _playing_list.data_store.get_n_items (), arr.data);
+                    if (_sort_mode != SortMode.TITLE)
+                        sort_mode = _sort_mode;
+                    tab_view.selected_page = ensure_playing_page ();
+                }
             }
         }
 

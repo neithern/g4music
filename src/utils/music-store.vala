@@ -56,12 +56,10 @@ namespace G4 {
             });
         }
 
-        private CompareFunc<Music> _compare = Music.compare_by_title;
         private CoverCache _cover_cache = new CoverCache ();
         private DirMonitor _dir_monitor = new DirMonitor ();
         private MusicLibrary _library = new MusicLibrary ();
         private Progress _progress = new Progress ();
-        private uint _sort_mode = SortMode.TITLE;
         private ListStore _store = new ListStore (typeof (Music));
         private TagCache _tag_cache = new TagCache ();
 
@@ -110,19 +108,6 @@ namespace G4 {
         public uint size {
             get {
                 return _store.get_n_items ();
-            }
-        }
-
-        public uint sort_mode {
-            get {
-                return _sort_mode;
-            }
-            set {
-                _compare = get_sort_compare (value);
-                _sort_mode = value;
-                if (value == SortMode.SHUFFLE)
-                    shuffle_order (_store);
-                _store.sort ((CompareDataFunc) _compare);
             }
         }
 
@@ -206,9 +191,6 @@ namespace G4 {
                 lock (_library) {
                     musics.foreach (_library.add_music);
                 }
-                if (_sort_mode == SortMode.SHUFFLE)
-                    Music.shuffle_order (musics);
-                musics.sort (_compare);
                 print ("Load %u artists %u albums %u musics in %lld ms\n",
                     _library.artists.length, _library.albums.length, musics.length,
                     (get_monotonic_time () - begin_time + 500) / 1000);
