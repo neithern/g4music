@@ -59,6 +59,7 @@ namespace G4 {
         private CompareFunc<Music> _compare = Music.compare_by_title;
         private CoverCache _cover_cache = new CoverCache ();
         private DirMonitor _dir_monitor = new DirMonitor ();
+        private MusicLibrary _library = new MusicLibrary ();
         private Progress _progress = new Progress ();
         private uint _sort_mode = SortMode.TITLE;
         private ListStore _store = new ListStore (typeof (Music));
@@ -91,6 +92,12 @@ namespace G4 {
         public double loading_progress {
             get {
                 return _progress.fraction;
+            }
+        }
+
+        public MusicLibrary library {
+            get {
+                return _library;
             }
         }
 
@@ -160,6 +167,9 @@ namespace G4 {
             lock (_dir_monitor) {
                 _dir_monitor.remove_all ();
             }
+            lock (_library) {
+                _library.remove_all ();
+            }
             _store.remove_all ();
             _tag_cache.reset_showing (false);
         }
@@ -174,6 +184,9 @@ namespace G4 {
                         _store.remove (pos);
                     }
                 }
+                lock (_library) {
+                    _library.remove_music (music);
+                }
                 _tag_cache.remove (music);
             } else {
                 var prefix = uri + "/";
@@ -181,6 +194,9 @@ namespace G4 {
                     var music = (Music) _store.get_item (pos);
                     if (music.uri == uri || music.uri.has_prefix (prefix)) {
                         _store.remove (pos);
+                        lock (_library) {
+                            _library.remove_music (music);
+                        }
                         _tag_cache.remove (music);
                     }
                 }
@@ -212,10 +228,14 @@ namespace G4 {
                     (get_monotonic_time () - begin_time + 500) / 1000);
 
                 load_tags_in_threads (musics, ignore_exists);
+                lock (_library) {
+                    musics.foreach (_library.add_music);
+                }
                 if (_sort_mode == SortMode.SHUFFLE)
                     Music.shuffle_order (musics);
                 musics.sort (_compare);
-                print ("Load %u musics in %lld ms\n", musics.length,
+                print ("Load %u artists %u albums %u musics in %lld ms\n",
+                    _library.artists.length, _library.albums.length, musics.length,
                     (get_monotonic_time () - begin_time + 500) / 1000);
             });
             _store.splice (_store.get_n_items (), 0, musics.data);
@@ -274,10 +294,10 @@ namespace G4 {
 
         private void add_directory (DirCache cache, Queue<DirCache> stack, GenericArray<Music> musics) {
             var dir = cache.dir;
+            var start = musics.length;
             string? cover_name = null;
             if (cache.check_valid () && cache.load (stack, musics, out cover_name)) {
-                if (cover_name != null)
-                    _cover_cache.put (dir, (!)cover_name);
+                _cover_cache.put (dir, cover_name ?? "");
             } else try {
                 FileInfo? pi = null;
                 var enumerator = dir.enumerate_children (ATTRIBUTES, FileQueryInfoFlags.NONE);
@@ -308,6 +328,12 @@ namespace G4 {
                 get_save_dir_pool ()?.add (cache);
             } catch (Error e) {
                 warning ("Enumerate %s: %s\n", dir.get_parse_name (), e.message);
+            }
+            if (cover_name != null && ((!)cover_name).length > 0) {
+                for (var i = musics.length - 1; i >= start; i--) {
+                    var music = (Music) musics[i];
+                    music.has_cover = true;
+                }
             }
         }
 

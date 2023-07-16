@@ -24,6 +24,7 @@ sources = [
   'utils/dir-monitor.vala',
   'utils/mpris.vala',
   'utils/music.vala',
+  'utils/music-library.vala',
   'utils/music-store.vala',
   'utils/playlist-file.vala',
   'utils/portal.vala',

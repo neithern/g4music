@@ -1,7 +1,7 @@
 namespace G4 {
 
     public class TagCache {
-        private static uint32 MAGIC = 0x54414743; //  'TAGC'
+        private static uint32 MAGIC = 0x54414744; //  'TAGD'
 
         private Event _event = new Event ();
         private File _file;
@@ -74,7 +74,7 @@ namespace G4 {
                 var dos = new DataOutputBytes ();
                 dos.write_uint32 (MAGIC);
                 dos.write_size (_cache.length);
-                _cache.for_each ((key, music) => {
+                _cache.foreach ((key, music) => {
                     try {
                         music.serialize (dos);
                     } catch (Error e) {

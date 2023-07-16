@@ -9,6 +9,7 @@ namespace G4 {
         public string title = "";
         public string uri = "";
         public int track = UNKNOWN_TRACK;
+        public bool has_cover = false;
         public int64 modified_time = 0;
 
         //  for runtime
@@ -71,6 +72,12 @@ namespace G4 {
                 track = (int) tr;
                 changed = true;
             }
+            Gst.Sample? sample = null;
+            if (tags.get_sample (Gst.Tags.IMAGE, out sample)
+                    && has_cover != (sample != null)) {
+                has_cover = sample != null;
+                changed = true;
+            }
             return changed;
         }
 
@@ -79,6 +86,7 @@ namespace G4 {
             artist = dis.read_string ();
             title = dis.read_string ();
             track = (int) dis.read_uint32 ();
+            has_cover = dis.read_byte () == 1;
             modified_time = (int64) dis.read_uint64 ();
             uri = dis.read_string ();
             _album_key = album.collate_key_for_filename ();
@@ -91,6 +99,7 @@ namespace G4 {
             dos.write_string (artist);
             dos.write_string (title);
             dos.write_uint32 (track);
+            dos.write_byte (has_cover ? 1 : 0);
             dos.write_uint64 (modified_time);
             dos.write_string (uri);
         }
