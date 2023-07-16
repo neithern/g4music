@@ -7,6 +7,7 @@ sources = [
   'gst/gst-player.vala',
   'gst/peak-calculator.vala',
   'gst/tag-parser.vala',
+  'ui/library-page.vala',
   'ui/mini-bar.vala',
   'ui/music-entry.vala',
   'ui/paintables.vala',
