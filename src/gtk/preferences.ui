@@ -54,7 +54,7 @@
         </child>
         <child>
           <object class="AdwPreferencesGroup">
-          <property name="title" translatable="yes">Music Location</property>
+          <property name="title" translatable="yes">Library</property>
             <child>
               <object class="AdwActionRow">
                 <property name="icon-name">folder-symbolic</property>

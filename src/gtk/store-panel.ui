@@ -77,7 +77,7 @@
   <menu id="primary_menu">
     <section>
       <item>
-        <attribute name="label" translatable="yes">_Reload List</attribute>
+        <attribute name="label" translatable="yes">_Reload Library</attribute>
         <attribute name="action">app.reload-list</attribute>
       </item>
     </section>
