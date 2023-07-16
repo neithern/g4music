@@ -54,6 +54,12 @@
       </object>
     </child>
     <child>
+      <object class="AdwTabBar" id="tab_bar">
+        <property name="height-request">44</property>
+        <property name="view">tab_view</property>
+      </object>
+    </child>
+    <child>
       <object class="GtkSearchBar" id="search_bar">
         <child>
           <object class="GtkSearchEntry" id="search_entry">
@@ -63,19 +69,7 @@
       </object>
     </child>
     <child>
-      <object class="GtkScrolledWindow" id="scroll_view">
-        <property name="hscrollbar_policy">never</property>
-        <property name="vscrollbar_policy">automatic</property>
-        <property name="vexpand">true</property>
-        <child>
-          <object class="GtkListView" id="list_view">
-            <property name="enable_rubberband">false</property>
-            <property name="single_click_activate">true</property>
-            <style>
-              <class name="navigation-sidebar"/>
-            </style>
-          </object>
-        </child>
+      <object class="AdwTabView" id="tab_view">
       </object>
     </child>
   </template>

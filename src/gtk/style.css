@@ -16,3 +16,8 @@ searchbar revealer box {
     box-shadow: none;
     background-color: transparent;
 }
+
+tabbar box {
+    box-shadow: none;
+    background-color: transparent;
+}

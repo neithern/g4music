@@ -75,13 +75,6 @@ namespace G4 {
             }
         }
 
-        public string title {
-            set {
-                _title.label = value;
-                _subtitle.visible = false;
-            }
-        }
-
         public void disconnect_first_draw () {
             if (first_draw_handler != 0) {
                 _paintable.disconnect (first_draw_handler);
@@ -122,6 +115,12 @@ namespace G4 {
                     _subtitle.label = music.artist;
                     break;
             }
+        }
+
+        public void update_title (string title, string? subtitle = null) {
+            _title.label = title;
+            _subtitle.label = subtitle ?? "";
+            _subtitle.visible = subtitle != null;
         }
 
         private void show_popover (double x, double y) {
