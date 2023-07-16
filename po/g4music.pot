@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-09 22:46+0800\n"
+"POT-Creation-Date: 2023-07-17 00:05+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -90,7 +90,7 @@ msgstr ""
 
 #: src/gtk/help-overlay.ui:72
 msgctxt "shortcut window"
-msgid "Reload List"
+msgid "Reload Library"
 msgstr ""
 
 #: src/gtk/play-panel.ui:16
@@ -113,12 +113,12 @@ msgstr ""
 msgid "Compact playlist view"
 msgstr ""
 
-#: src/gtk/preferences.ui:40 src/application.vala:441
+#: src/gtk/preferences.ui:40 src/application.vala:443
 msgid "Keep playing after window closed"
 msgstr ""
 
 #: src/gtk/preferences.ui:53
-msgid "Music Location"
+msgid "Library"
 msgstr ""
 
 #: src/gtk/preferences.ui:56
@@ -177,84 +177,84 @@ msgstr ""
 msgid "Sort By"
 msgstr ""
 
-#: src/gtk/store-panel.ui:85
-msgid "_Reload List"
+#: src/gtk/store-panel.ui:80
+msgid "_Reload Library"
 msgstr ""
 
-#: src/gtk/store-panel.ui:91
+#: src/gtk/store-panel.ui:86
 msgid "_Preferences"
 msgstr ""
 
-#: src/gtk/store-panel.ui:95
+#: src/gtk/store-panel.ui:90
 msgid "_Keyboard Shortcuts"
 msgstr ""
 
-#: src/gtk/store-panel.ui:99
+#: src/gtk/store-panel.ui:94
 msgid "_About"
 msgstr ""
 
-#: src/gtk/store-panel.ui:108 src/ui/preferences.vala:64
+#: src/gtk/store-panel.ui:103 src/ui/preferences.vala:64
 msgid "Album"
 msgstr ""
 
-#: src/gtk/store-panel.ui:113
+#: src/gtk/store-panel.ui:108
 msgid "Artist"
 msgstr ""
 
-#: src/gtk/store-panel.ui:118
+#: src/gtk/store-panel.ui:113
 msgid "Artist/Album"
 msgstr ""
 
-#: src/gtk/store-panel.ui:123
+#: src/gtk/store-panel.ui:118
 msgid "Title"
 msgstr ""
 
-#: src/gtk/store-panel.ui:128
+#: src/gtk/store-panel.ui:123
 msgid "Recent"
 msgstr ""
 
-#: src/gtk/store-panel.ui:133
+#: src/gtk/store-panel.ui:128
 msgid "Shuffle"
 msgstr ""
 
-#: src/application.vala:447
+#: src/application.vala:449
 msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr ""
 
 #. Translators: Replace "translator-credits" with your names, one name per line
-#: src/application.vala:449
+#: src/application.vala:451
 msgid "translator-credits"
 msgstr ""
 
-#: src/application.vala:671
+#: src/application.vala:673
 msgid "Keep playing"
 msgstr ""
 
-#: src/ui/music-entry.vala:139
+#: src/ui/music-entry.vala:148
 msgid "Play at Next"
 msgstr ""
 
-#: src/ui/music-entry.vala:140 src/ui/play-panel.vala:51
+#: src/ui/music-entry.vala:149 src/ui/play-panel.vala:51
 msgid "Search Title"
 msgstr ""
 
-#: src/ui/music-entry.vala:141 src/ui/play-panel.vala:49
+#: src/ui/music-entry.vala:150 src/ui/play-panel.vala:49
 msgid "Search Album"
 msgstr ""
 
-#: src/ui/music-entry.vala:142 src/ui/play-panel.vala:50
+#: src/ui/music-entry.vala:151 src/ui/play-panel.vala:50
 msgid "Search Artist"
 msgstr ""
 
-#: src/ui/music-entry.vala:143
+#: src/ui/music-entry.vala:152
 msgid "_Show Music File"
 msgstr ""
 
-#: src/ui/music-entry.vala:145
+#: src/ui/music-entry.vala:154
 msgid "Show _Cover File"
 msgstr ""
 
-#: src/ui/music-entry.vala:147
+#: src/ui/music-entry.vala:156
 msgid "_Export Cover"
 msgstr ""
 
@@ -295,6 +295,22 @@ msgstr ""
 
 #: src/ui/preferences.vala:64
 msgid "Track"
+msgstr ""
+
+#: src/ui/store-panel.vala:87
+msgid "Artists"
+msgstr ""
+
+#: src/ui/store-panel.vala:88
+msgid "Albums"
+msgstr ""
+
+#: src/ui/store-panel.vala:89
+msgid "Songs"
+msgstr ""
+
+#: src/ui/store-panel.vala:236
+msgid "Playing"
 msgstr ""
 
 #: src/ui/volume-button.vala:32
