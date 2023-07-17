@@ -4,26 +4,42 @@ namespace G4 {
         private bool _compact_list = false;
         private ListStore _data_store = new ListStore (typeof (Music));
         private Gtk.FilterListModel? _filter_model = null;
-        private double _row_height = 0;
-        private double _scroll_range = 0;
-        private Gtk.ListView _list_view = new Gtk.ListView (null, null);
+        private bool _grid_mode = false;
+        private Gtk.GridView? _grid_view = null;
+        private Gtk.ListView? _list_view = null;
+        private Gtk.ListBase _list_base;
         private Gtk.ScrolledWindow _scroll_view = new Gtk.ScrolledWindow ();
         private Thumbnailer _thmbnailer;
+        private double _row_height = 0;
+        private double _scroll_range = 0;
 
         public signal void item_activated (uint position, Object? obj);
         public signal void item_created (Gtk.ListItem item);
         public signal void item_binded (Gtk.ListItem item);
 
-        public MusicList (Application app) {
+        public MusicList (Application app, bool grid = false) {
             this.child = _scroll_view;
+            _grid_mode = grid;
             _thmbnailer = app.thumbnailer;
 
-            _list_view.add_css_class ("navigation-sidebar");
-            _list_view.enable_rubberband = false;
-            _list_view.single_click_activate = true;
-            _list_view.activate.connect ((position) => item_activated (position, _list_view.get_model ()?.get_item (position)));
+            if (grid) {
+                var grid_view = new Gtk.GridView (null, null);
+                grid_view.enable_rubberband = false;
+                grid_view.single_click_activate = true;
+                grid_view.activate.connect ((position) => item_activated (position, _grid_view?.get_model ()?.get_item (position)));
+                _grid_view = grid_view;
+                _list_base = grid_view;
+            } else {
+                var list_view = new Gtk.ListView (null, null);
+                list_view.enable_rubberband = false;
+                list_view.single_click_activate = true;
+                list_view.activate.connect ((position) => item_activated (position, _list_view?.get_model ()?.get_item (position)));
+                _list_view = list_view;
+                _list_base = list_view;
+            }
 
-            _scroll_view.child = _list_view;
+            _list_base.add_css_class ("navigation-sidebar");
+            _scroll_view.child = _list_base;
             _scroll_view.hscrollbar_policy = Gtk.PolicyType.NEVER;
             _scroll_view.vscrollbar_policy = Gtk.PolicyType.AUTOMATIC;
             _scroll_view.vexpand = true;
@@ -54,13 +70,18 @@ namespace G4 {
                 if (value != null)
                     ((!)value).model = _data_store;
                 _filter_model = value;
-                _list_view.model = new Gtk.NoSelection (value);
+                var selection = new Gtk.NoSelection (value);
+                if (_grid_mode)
+                    _grid_view?.set_model (selection);
+                else
+                    _list_view?.set_model (selection);
             }
         }
 
         public uint visible_count {
             get {
-                return _list_view.get_model ()?.get_n_items () ?? 0;
+                var model = _grid_mode ? _grid_view?.get_model () : _list_view?.get_model ();
+                return model?.get_n_items () ?? 0;
             }
         }
 
@@ -69,14 +90,17 @@ namespace G4 {
             factory.setup.connect (on_create_item);
             factory.bind.connect (on_bind_item);
             factory.unbind.connect (on_unbind_item);
-            _list_view.factory = factory;
+            if (_grid_mode)
+                _grid_view?.set_factory (factory);
+            else
+                _list_view?.set_factory (factory);
         }
 
         private Adw.Animation? _scroll_animation = null;
 
         public void scroll_to_item (int index) {
             var adj = _scroll_view.vadjustment;
-            var list_height = _list_view.get_height ();
+            var list_height = _list_base.get_height ();
             if (_row_height > 0 && adj.upper - adj.lower > list_height) {
                 var from = adj.value;
                 var max_to = double.max ((index + 1) * _row_height - list_height, 0);
@@ -95,7 +119,7 @@ namespace G4 {
                 } 
             } else if (visible_count > 0) {
 #if GTK_4_10
-                _list_view.activate_action_variant ("list.scroll-to-item", new Variant.uint32 (index));
+                _list_base.activate_action_variant ("list.scroll-to-item", new Variant.uint32 (index));
 #else
                 //  Delay scroll if items not size_allocated, to ensure items visible in GNOME 42
                 run_idle_once (() => scroll_to_item (index));
@@ -104,14 +128,16 @@ namespace G4 {
         }
 
         private void on_create_item (Gtk.ListItem item) {
-            var entry = new MusicEntry (_compact_list);
-            item.child = entry;
+            if (_grid_mode)
+                item.child = new MusicCell ();
+            else
+                item.child = new MusicEntry (_compact_list);
             item_created (item);
-            _row_height = entry.height_request + 2;
+            _row_height = item.child.height_request + 2;
         }
 
         private void on_bind_item (Gtk.ListItem item) {
-            var entry = (MusicEntry) item.child;
+            var entry = (MusicWidget) item.child;
             var music = (Music) item.item;
             item_binded (item);
 
@@ -132,7 +158,7 @@ namespace G4 {
         }
 
         private void on_unbind_item (Gtk.ListItem item) {
-            var entry = (MusicEntry) item.child;
+            var entry = (MusicWidget) item.child;
             entry.disconnect_first_draw ();
             entry.paintable = null;
         }
@@ -141,7 +167,7 @@ namespace G4 {
             var adj = _scroll_view.vadjustment;
             var range = adj.upper - adj.lower;
             var count = visible_count;
-            if (count > 0 && _scroll_range != range && range > _list_view.get_height ()) {
+            if (count > 0 && _scroll_range != range && range > _list_base.get_height ()) {
                 _row_height = range / count;
                 _scroll_range = range;
             }

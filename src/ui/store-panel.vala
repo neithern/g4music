@@ -241,7 +241,7 @@ namespace G4 {
         }
 
         private MusicList create_album_list_from_artist (Artist? artist = null) {
-            var list = new MusicList (_app);
+            var list = new MusicList (_app, true);
             if (artist != null) {
                 var store = list.data_store;
                 ((!)artist).albums.foreach ((name, album) => store.append (album.cover_music));
@@ -252,17 +252,17 @@ namespace G4 {
                 append_to_playing_page (album);
             });
             list.item_binded.connect ((item) => {
-                var entry = (MusicEntry) item.child;
+                var entry = (MusicCell) item.child;
                 var music = (Music) item.item;
                 entry.paintable = _loading_paintable;
-                entry.update_title (music.album);
+                entry.title = music.album;
             });
             _app.settings.bind ("compact-playlist", list, "compact-list", SettingsBindFlags.DEFAULT);
             return list;
         }
 
         private MusicList create_artist_list () {
-            var list = new MusicList (_app);
+            var list = new MusicList (_app, true);
             list.item_activated.connect ((position, obj) => {
                 unowned var artist = _library.artists.lookup ((obj as Music)?.artist ?? "");
                 if (artist is Artist) {
@@ -276,14 +276,14 @@ namespace G4 {
                 }
             });
             list.item_created.connect ((item) => {
-                var entry = (MusicEntry) item.child;
+                var entry = (MusicCell) item.child;
                 entry.cover.ratio = 0.5;
             });
             list.item_binded.connect ((item) => {
-                var entry = (MusicEntry) item.child;
+                var entry = (MusicCell) item.child;
                 var music = (Music) item.item;
                 entry.paintable = _loading_paintable;
-                entry.update_title (music.artist);
+                entry.title  = music.artist;
             });
             _app.settings.bind ("compact-playlist", list, "compact-list", SettingsBindFlags.DEFAULT);
             return list;

@@ -1,15 +1,65 @@
 namespace G4 {
 
-    public class MusicEntry : Gtk.Box {
-
-        private Gtk.Image _cover = new Gtk.Image ();
-        private Gtk.Label _title = new Gtk.Label (null);
-        private Gtk.Label _subtitle = new Gtk.Label (null);
-        private Gtk.Image _playing = new Gtk.Image ();
-        private RoundPaintable _paintable = new RoundPaintable ();
-        private Music? _music = null;
+    public class MusicWidget : Gtk.Box {
+        protected Gtk.Image _cover = new Gtk.Image ();
+        protected Gtk.Label _title = new Gtk.Label (null);
+        protected RoundPaintable _paintable = new RoundPaintable ();
 
         public ulong first_draw_handler = 0;
+
+        public RoundPaintable cover {
+            get {
+                return _paintable;
+            }
+        }
+
+        public Gdk.Paintable? paintable {
+            set {
+                _paintable.paintable = value;
+            }
+        }
+
+        public string title {
+            set {
+                _title.label = value;
+            }
+        }
+
+        public void disconnect_first_draw () {
+            if (first_draw_handler != 0) {
+                _paintable.disconnect (first_draw_handler);
+                first_draw_handler = 0;
+            }
+        }
+    }
+
+    public class MusicCell : MusicWidget {
+        public MusicCell () {
+            orientation = Gtk.Orientation.VERTICAL;
+            margin_top = 10;
+            margin_bottom = 10;
+            spacing = 6;
+
+            _cover.margin_start = 6;
+            _cover.margin_end = 6;
+            _cover.pixel_size = 128;
+            _cover.paintable = _paintable;
+            _paintable.queue_draw.connect (_cover.queue_draw);
+            append (_cover);
+
+            _title.halign = Gtk.Align.CENTER;
+            _title.ellipsize = Pango.EllipsizeMode.END;
+            _title.margin_start = 4;
+            _title.margin_end = 4;
+            _title.add_css_class ("title-leading");
+            append (_title);
+        }
+    }
+
+    public class MusicEntry : MusicWidget {
+        private Gtk.Label _subtitle = new Gtk.Label (null);
+        private Gtk.Image _playing = new Gtk.Image ();
+        private Music? _music = null;
 
         public MusicEntry (bool compact = true) {
             var cover_margin = compact ? 5 : 6;
@@ -57,28 +107,9 @@ namespace G4 {
             height_request = int.max (item_height - padding, cover_size + cover_margin * 2);
         }
 
-        public RoundPaintable cover {
-            get {
-                return _paintable;
-            }
-        }
-
-        public Gdk.Paintable? paintable {
-            set {
-                _paintable.paintable = value;
-            }
-        }
-
         public bool playing {
             set {
                 _playing.visible = value;
-            }
-        }
-
-        public void disconnect_first_draw () {
-            if (first_draw_handler != 0) {
-                _paintable.disconnect (first_draw_handler);
-                first_draw_handler = 0;
             }
         }
 
@@ -115,12 +146,6 @@ namespace G4 {
                     _subtitle.label = music.artist;
                     break;
             }
-        }
-
-        public void update_title (string title, string? subtitle = null) {
-            _title.label = title;
-            _subtitle.label = subtitle ?? "";
-            _subtitle.visible = subtitle != null;
         }
 
         private void show_popover (double x, double y) {
