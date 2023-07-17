@@ -5,7 +5,6 @@ namespace G4 {
         public const uint ALBUMS = 1;
         public const uint ARTIST = 2;
         public const uint ARTISTS = 3;
-        public const uint SONGS = 4;
     }
 
     namespace SearchMode {
@@ -29,7 +28,6 @@ namespace G4 {
         "drive-multidisk-symbolic",         // ALBUMS
         "avatar-default-symbolic",          // ARTIST
         "system-users-symbolic",            // ARTISTS
-        "view-list-symbolic",               // SONGS
     };
 
     [GtkTemplate (ui = "/com/github/neithern/g4music/gtk/store-panel.ui")]
@@ -55,7 +53,6 @@ namespace G4 {
         private MusicList _album_list;
         private MusicList _artist_list;
         private MusicList _current_list;
-        private MusicList _songs_list;
         private MusicList _playing_list;
         private MusicLibrary _library;
         private Gdk.Paintable _loading_paintable;
@@ -82,10 +79,8 @@ namespace G4 {
 
             _artist_list = create_artist_list ();
             _album_list = create_album_list_from_artist ();
-            _songs_list = create_songs_list ();
             append_tab_page (_artist_list, PageType.ARTISTS, _("Artists"), true);
             append_tab_page (_album_list, PageType.ALBUMS, _("Albums"), true);
-            append_tab_page (_songs_list, PageType.SONGS, _("Songs"), true);
 
             _playing_list = _current_list = create_normal_music_list ();
             tab_view.selected_page = ensure_playing_page ();
@@ -316,21 +311,6 @@ namespace G4 {
             return list;
         }
 
-        private MusicList create_songs_list () {
-            var list = new MusicList (_app);
-            list.item_activated.connect ((position, obj) => {
-                append_to_playing_page (obj);
-            });
-            list.item_binded.connect ((item) => {
-                var entry = (MusicEntry) item.child;
-                var music = (Music) item.item;
-                entry.paintable = _loading_paintable;
-                entry.update_title (music.title, music.artist);
-            });
-            _app.settings.bind ("compact-playlist", list, "compact-list", SettingsBindFlags.DEFAULT);
-            return list;
-        }
-
         private void on_index_changed (int index, uint size) {
             root.action_set_enabled (ACTION_APP + ACTION_PREV, index > 0);
             root.action_set_enabled (ACTION_APP + ACTION_NEXT, index < (int) size - 1);
@@ -368,15 +348,11 @@ namespace G4 {
                 _artist_list.data_store.splice (0, _artist_list.data_store.get_n_items (), arr.data);
                 arr.remove_range (0, arr.length);
 
-                for (var i = 0; i < count; i++)
-                    arr.add ((Music) store.get_item (i));
-                arr.sort (Music.compare_by_title);
-                _songs_list.data_store.splice (0, _songs_list.data_store.get_n_items (), arr.data);
-
                 if (_playing_list.data_store.get_n_items () == 0) {
-                    _playing_list.data_store.splice (0, _playing_list.data_store.get_n_items (), arr.data);
-                    if (_sort_mode != SortMode.TITLE)
-                        sort_mode = _sort_mode;
+                    for (var i = 0; i < count; i++)
+                        arr.add ((Music) store.get_item (i));
+                    arr.sort (get_sort_compare (_sort_mode));
+                    _playing_list.data_store.splice (0, 0, arr.data);
                     tab_view.selected_page = ensure_playing_page ();
                 }
             }
