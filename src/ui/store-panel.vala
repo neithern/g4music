@@ -200,16 +200,21 @@ namespace G4 {
             if (obj is Album) {
                 var album = (Album) obj;
                 var arr = new GenericArray<Music> (album.musics.length);
+                var insert_pos = _app.current_item + 1;
                 album.foreach ((uri, music) => {
                     arr.add (music);
                     uint position = -1;
-                    if (store.find (music, out position)) 
+                    if (store.find (music, out position)) {
                         store.remove (position);
+                        if (insert_pos >= position)
+                            insert_pos--;
+                    }
                 });
                 arr.sort (Music.compare_by_album);
-                var n_items = store.get_n_items ();
-                store.splice (n_items, 0, arr.data);
-                _app.current_item = (int) n_items;
+                if (insert_pos < 0)
+                    insert_pos = 0;
+                store.splice (insert_pos, 0, arr.data);
+                _app.current_item = insert_pos;
             }
             if (obj is Music) {
                 var music = (Music) obj;
