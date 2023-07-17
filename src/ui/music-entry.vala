@@ -36,12 +36,11 @@ namespace G4 {
     public class MusicCell : MusicWidget {
         public MusicCell () {
             orientation = Gtk.Orientation.VERTICAL;
-            margin_top = 10;
-            margin_bottom = 10;
-            spacing = 6;
 
-            _cover.margin_start = 6;
-            _cover.margin_end = 6;
+            _cover.margin_start = 16;
+            _cover.margin_end = 16;
+            _cover.margin_top = 10;
+            _cover.margin_bottom = 6;
             _cover.pixel_size = 128;
             _cover.paintable = _paintable;
             _paintable.queue_draw.connect (_cover.queue_draw);
@@ -51,6 +50,7 @@ namespace G4 {
             _title.ellipsize = Pango.EllipsizeMode.END;
             _title.margin_start = 4;
             _title.margin_end = 4;
+            _title.margin_bottom = 10;
             _title.add_css_class ("title-leading");
             append (_title);
         }

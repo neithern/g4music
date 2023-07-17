@@ -63,7 +63,7 @@ namespace G4 {
         }
 
         public override void size_allocate (int width, int height, int baseline) {
-            _store_panel.width_request = int.max (width * 3 / 8, 320);
+            _store_panel.width_request = int.max (width / 2, 340);
             var margin = int.max ((width - _store_panel.width_request - _play_panel.music_cover.pixel_size) / 4, 32);
             _play_panel.music_box.margin_start = margin;
             _play_panel.music_box.margin_end = margin;

@@ -4,7 +4,7 @@
   <template class="G4StorePanel" parent="GtkBox">
     <property name="hexpand">false</property>
     <property name="orientation">vertical</property>
-    <property name="width_request">320</property>
+    <property name="width_request">340</property>
     <child>
       <object class="GtkHeaderBar" id="header_bar">
         <style>
