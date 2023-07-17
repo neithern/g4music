@@ -146,8 +146,12 @@ namespace G4 {
 
         public override void snapshot (Gtk.Snapshot snapshot) {
             base.snapshot (snapshot);
-            var color = Gdk.RGBA ();
-            color.red = color.green = color.blue = color.alpha = 0.5f;
+#if GTK_4_10
+            var color = get_color ();
+#else
+            var color = get_style_context ().get_color ();
+#endif
+            color.alpha = 0.25f;
             var line_width = scale_factor >= 2 ? 0.5f : 1;
             var allocation = Gtk.Allocation ();
             tab_view.get_allocation (out allocation);
