@@ -96,6 +96,20 @@ namespace G4 {
             }
         }
 
+        public override void snapshot (Gtk.Snapshot snapshot) {
+            base.snapshot (snapshot);
+#if GTK_4_10
+            var color = get_color ();
+#else
+            var color = get_style_context ().get_color ();
+#endif
+            color.alpha = 0.25f;
+            var line_width = scale_factor >= 2 ? 0.5f : 1;
+            var rect = Graphene.Rect ();
+            rect.init (0, 0, get_width (), line_width);
+            snapshot.append_color (color, rect);
+        }
+
         private void on_duration_changed (Gst.ClockTime duration) {
             var value = GstPlayer.to_second (duration);
             if (_duration != (int) value) {

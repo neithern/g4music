@@ -144,24 +144,6 @@ namespace G4 {
             }
         }
 
-        public override void snapshot (Gtk.Snapshot snapshot) {
-            base.snapshot (snapshot);
-#if GTK_4_10
-            var color = get_color ();
-#else
-            var color = get_style_context ().get_color ();
-#endif
-            color.alpha = 0.25f;
-            var line_width = scale_factor >= 2 ? 0.5f : 1;
-            var allocation = Gtk.Allocation ();
-            tab_view.get_allocation (out allocation);
-            var rect = Graphene.Rect ();
-            rect.init (allocation.x, allocation.y - line_width, allocation.width, line_width);
-            snapshot.append_color (color, rect);
-            rect.init (allocation.x, allocation.y + allocation.height, allocation.width, line_width);
-            snapshot.append_color (color, rect);
-        }
-
         public void scroll_to_item (int index) {
             _current_list.scroll_to_item (index);
         }
