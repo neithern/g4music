@@ -35,6 +35,7 @@ namespace G4 {
             _leaflet.append (_play_panel);
             _leaflet.bind_property ("folded", this, "leaflet-folded", BindingFlags.SYNC_CREATE);
             _leaflet.bind_property ("folded", _mini_bar, "visible", BindingFlags.SYNC_CREATE);
+            _leaflet.navigate (Adw.NavigationDirection.FORWARD);
 
             setup_drop_target ();
 
@@ -55,14 +56,9 @@ namespace G4 {
             }
         }
 
-        private bool _first_folded = true;
-
         public bool leaflet_folded {
             set {
-                if (!_first_folded)
-                    _leaflet.navigate (Adw.NavigationDirection.FORWARD);
-                else if (value)
-                    _first_folded = false;
+                _leaflet.navigate (Adw.NavigationDirection.FORWARD);
             }
         }
 
