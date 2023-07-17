@@ -64,6 +64,7 @@ namespace G4 {
         public MusicEntry (bool compact = true) {
             var cover_margin = compact ? 5 : 6;
             var cover_size = compact ? 36 : 48;
+            _cover.margin_start = 12;
             _cover.margin_top = cover_margin;
             _cover.margin_bottom = cover_margin;
             _cover.pixel_size = cover_size;
@@ -76,7 +77,7 @@ namespace G4 {
             vbox.hexpand = true;
             vbox.valign = Gtk.Align.CENTER;
             vbox.margin_start = 12;
-            vbox.margin_end = 4;
+            vbox.margin_end = 12;
             vbox.append (_title);
             vbox.append (_subtitle);
             append (vbox);
@@ -105,6 +106,7 @@ namespace G4 {
             var padding = 2;
             var item_height = (height + padding + 3) / 4 * 4;
             height_request = int.max (item_height - padding, cover_size + cover_margin * 2);
+            width_request = 256;
         }
 
         public bool playing {

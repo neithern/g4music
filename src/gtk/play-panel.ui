@@ -5,6 +5,7 @@
     <property name="hexpand">true</property>
     <property name="orientation">vertical</property>
     <property name="margin_bottom">32</property>
+    <property name="width_request">340</property>
     <child>
       <object class="GtkHeaderBar" id="header_bar">
         <style>

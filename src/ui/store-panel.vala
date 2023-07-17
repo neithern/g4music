@@ -155,10 +155,8 @@ namespace G4 {
             var allocation = Gtk.Allocation ();
             tab_view.get_allocation (out allocation);
             var rect = Graphene.Rect ();
-#if ADW_1_2
-            rect.init (allocation.x, allocation.y, allocation.width, line_width);
+            rect.init (allocation.x, allocation.y - line_width, allocation.width, line_width);
             snapshot.append_color (color, rect);
-#endif
             rect.init (allocation.x, allocation.y + allocation.height, allocation.width, line_width);
             snapshot.append_color (color, rect);
         }

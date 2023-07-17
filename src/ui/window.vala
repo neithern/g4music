@@ -33,9 +33,7 @@ namespace G4 {
 
             _leaflet.append (_store_panel);
             _leaflet.append (_play_panel);
-            _leaflet.bind_property ("folded", this, "leaflet-folded", BindingFlags.SYNC_CREATE);
             _leaflet.bind_property ("folded", _mini_bar, "visible", BindingFlags.SYNC_CREATE);
-            _leaflet.navigate (Adw.NavigationDirection.FORWARD);
 
             setup_drop_target ();
 
@@ -56,17 +54,12 @@ namespace G4 {
             }
         }
 
-        public bool leaflet_folded {
-            set {
-                _leaflet.navigate (Adw.NavigationDirection.FORWARD);
-            }
-        }
-
         public override void size_allocate (int width, int height, int baseline) {
-            _store_panel.width_request = int.max (width / 2, 340);
-            var margin = int.max ((width - _store_panel.width_request - _play_panel.music_cover.pixel_size) / 4, 32);
+            _play_panel.width_request = int.max (width * 3 / 8, 340);
+            var margin = int.max ((_play_panel.width_request - _play_panel.music_cover.pixel_size) / 4, 32);
             _play_panel.music_box.margin_start = margin;
             _play_panel.music_box.margin_end = margin;
+            _store_panel.width_request = width - _play_panel.width_request;
             base.size_allocate (width, height, baseline);
         }
 
