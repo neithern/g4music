@@ -53,6 +53,8 @@ namespace G4 {
             _title.margin_bottom = 10;
             _title.add_css_class ("title-leading");
             append (_title);
+
+            width_request = _cover.pixel_size + _cover.margin_start + _cover.margin_end;
         }
     }
 
@@ -62,11 +64,11 @@ namespace G4 {
         private Music? _music = null;
 
         public MusicEntry (bool compact = true) {
-            var cover_margin = compact ? 5 : 6;
+            var cover_margin = compact ? 3 : 4;
             var cover_size = compact ? 36 : 48;
-            _cover.margin_start = 12;
             _cover.margin_top = cover_margin;
             _cover.margin_bottom = cover_margin;
+            _cover.margin_start = 12;
             _cover.pixel_size = cover_size;
             _cover.paintable = _paintable;
             _paintable.queue_draw.connect (_cover.queue_draw);
@@ -97,6 +99,7 @@ namespace G4 {
             _playing.valign = Gtk.Align.CENTER;
             _playing.icon_name = "media-playback-start-symbolic";
             _playing.pixel_size = 12;
+            _playing.margin_end = 8;
             _playing.visible = false;
             _playing.add_css_class ("dim-label");
             append (_playing);
