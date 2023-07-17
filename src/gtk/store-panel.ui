@@ -2,7 +2,6 @@
 <interface>
   <requires lib="gtk" version="4.0"/>
   <template class="G4StorePanel" parent="GtkBox">
-    <property name="hexpand">false</property>
     <property name="orientation">vertical</property>
     <property name="width_request">340</property>
     <child>
