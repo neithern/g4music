@@ -76,11 +76,10 @@ namespace G4 {
 
             _artist_list = create_artist_list ();
             _album_list = create_album_list_from_artist ();
+            _current_list = _playing_list = create_normal_music_list ();
+            ensure_playing_page ();
             append_tab_page (_artist_list, PageType.ARTISTS, _("Artists"), true);
             append_tab_page (_album_list, PageType.ALBUMS, _("Albums"), true);
-
-            _playing_list = _current_list = create_normal_music_list ();
-            tab_view.selected_page = ensure_playing_page ();
             tab_view.close_page.connect ((page) => {
                 if (page.child == _playing_list) {
                     _playing_list.data_store.remove_all ();
