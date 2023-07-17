@@ -3,7 +3,7 @@ namespace G4 {
     public class MusicList : Adw.Bin {
         private bool _compact_list = false;
         private ListStore _data_store = new ListStore (typeof (Music));
-        private Gtk.FilterListModel? _filter_model = null;
+        private Gtk.FilterListModel _filter_model = new Gtk.FilterListModel (null, null);
         private bool _grid_mode = false;
         private int _image_size = 96;
         private Gtk.GridView _grid_view = new Gtk.GridView (null, null);
@@ -16,13 +16,15 @@ namespace G4 {
 
         public MusicList (Application app, bool grid = false) {
             this.child = _scroll_view;
+            _filter_model.model = _data_store;
             _grid_mode = grid;
             _image_size = grid ? Thumbnailer.GRID_SIZE : Thumbnailer.ICON_SIZE;
             _thmbnailer = app.thumbnailer;
 
             _grid_view.enable_rubberband = false;
             _grid_view.single_click_activate = true;
-            _grid_view.activate.connect ((position) => item_activated (position, _grid_view.get_model ()?.get_item (position)));
+            _grid_view.activate.connect ((position) => item_activated (position, _filter_model.get_item (position)));
+            _grid_view.model = new Gtk.NoSelection (_filter_model);
             _grid_view.add_css_class ("navigation-sidebar");
 
             _scroll_view.child = _grid_view;
@@ -45,23 +47,24 @@ namespace G4 {
             get {
                 return _data_store;
             }
+            set {
+                _data_store = value;
+            }
         }
 
-        public Gtk.FilterListModel? filter_model {
+        public Gtk.FilterListModel filter_model {
             get {
                 return _filter_model;
             }
             set {
-                if (value != null)
-                    ((!)value).model = _data_store;
                 _filter_model = value;
-                _grid_view.set_model (new Gtk.NoSelection (value));
+                _grid_view.model = new Gtk.NoSelection (_filter_model);
             }
         }
 
         public uint visible_count {
             get {
-                return _grid_view.get_model ()?.get_n_items () ?? 0;
+                return _filter_model.get_n_items ();
             }
         }
 
@@ -70,7 +73,7 @@ namespace G4 {
             factory.setup.connect (on_create_item);
             factory.bind.connect (on_bind_item);
             factory.unbind.connect (on_unbind_item);
-            _grid_view.set_factory (factory);
+            _grid_view.factory = factory;
         }
 
         public void scroll_to_item (int index) {

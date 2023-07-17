@@ -74,23 +74,23 @@ namespace G4 {
             _app.thumbnailer.pango_context = get_pango_context ();
             _loading_paintable = _app.thumbnailer.create_simple_text_paintable ("...", Thumbnailer.ICON_SIZE);
 
-            _artist_list = create_artist_list ();
-            _album_list = create_album_list_from_artist ();
-            _current_list = _playing_list = create_normal_music_list ();
+            _current_list = _playing_list = create_playing_music_list ();
+            _playing_list.data_store = _app.music_store.store;
+            _playing_list.filter_model = _app.music_list;
             ensure_playing_page ();
+
+            _album_list = create_albums_list ();
+            _artist_list = create_artist_list ();
             append_tab_page (_artist_list, PageType.ARTISTS, _("Artists"), true);
             append_tab_page (_album_list, PageType.ALBUMS, _("Albums"), true);
-            tab_view.close_page.connect ((page) => {
-                if (page.child == _playing_list) {
-                    _playing_list.data_store.remove_all ();
-                }
-                return false;
-            });
+
             Idle.add (() => {
                 // Delay set model after the window shown to avoid slowing down it showing
                 if (win.get_height () > 0) {
-                    _playing_list.filter_model = _app.music_list;
-                    _app.update_current_item ();
+                    _album_list.create_factory ();
+                    _artist_list.create_factory ();
+                    _app.settings.bind ("compact-playlist", _playing_list, "compact-list", SettingsBindFlags.DEFAULT);
+                    _app.settings.bind ("sort-mode", this, "sort-mode", SettingsBindFlags.DEFAULT);
                     tab_view.bind_property ("selected-page", this, "selected-page", BindingFlags.SYNC_CREATE);
                 }
                 return win.get_height () == 0;
@@ -98,7 +98,6 @@ namespace G4 {
 
             app.index_changed.connect (on_index_changed);
             app.music_store.loading_changed.connect (on_loading_changed);
-            app.settings.bind ("sort-mode", this, "sort-mode", SettingsBindFlags.DEFAULT);
         }
 
         private Adw.TabPage? _current_page = null;
@@ -112,14 +111,12 @@ namespace G4 {
                     var page = (!)value;
                     var child = (MusicList) page.child;
                     var playing = child == _playing_list;
-                    var filter = _current_list.filter_model?.filter;
-                    _current_list.filter_model = null;
+                    var filter = _current_list.filter_model.get_filter ();
                     _current_list = child;
-                    _current_list.filter_model = playing ? _app.music_list : new Gtk.FilterListModel (null, null);
-                    _current_list.filter_model?.set_filter (filter);
+                    _current_list.filter_model.set_filter (filter);
                     _current_page = value;
                     sort_btn.visible = playing;
-                    if (playing && _current_list.get_height () > 0) {
+                    if (playing && _current_list.visible_count > 0) {
                         run_idle_once (() => scroll_to_item (_app.current_item));
                     }
                 }
@@ -242,13 +239,8 @@ namespace G4 {
             return null;
         }
 
-        private MusicList create_album_list_from_artist (Artist? artist = null) {
+        private MusicList create_albums_list (Artist? artist = null) {
             var list = new MusicList (_app, true);
-            if (artist != null) {
-                var store = list.data_store;
-                ((!)artist).albums.foreach ((name, album) => store.append (album.cover_music));
-                store.sort ((CompareDataFunc) Music.compare_by_album);
-            }
             list.item_activated.connect ((position, obj) => {
                 unowned var album = _library.albums.lookup ((obj as Music)?.album ?? "");
                 append_to_playing_page (album);
@@ -259,7 +251,11 @@ namespace G4 {
                 entry.paintable = _loading_paintable;
                 entry.title = music.album;
             });
-            _app.settings.bind ("compact-playlist", list, "compact-list", SettingsBindFlags.DEFAULT);
+            if (artist != null) {
+                var store = list.data_store;
+                ((!)artist).albums.foreach ((name, album) => store.append (album.cover_music));
+                store.sort ((CompareDataFunc) Music.compare_by_album);
+            }
             return list;
         }
 
@@ -272,7 +268,8 @@ namespace G4 {
                         unowned var album = artist.albums.get_values ().first ().data;
                         append_to_playing_page (album);
                     } else {
-                        var mlist = create_album_list_from_artist (artist);
+                        var mlist = create_albums_list (artist);
+                        mlist.create_factory ();
                         tab_view.selected_page = append_tab_page (mlist, PageType.ARTIST, artist.name);
                     }
                 }
@@ -287,11 +284,10 @@ namespace G4 {
                 entry.paintable = _loading_paintable;
                 entry.title  = music.artist;
             });
-            _app.settings.bind ("compact-playlist", list, "compact-list", SettingsBindFlags.DEFAULT);
             return list;
         }
 
-        private MusicList create_normal_music_list () {
+        private MusicList create_playing_music_list () {
             var list = new MusicList (_app);
             list.item_activated.connect ((position, obj) => {
                 _app.current_item = (int) position;
@@ -307,7 +303,6 @@ namespace G4 {
                 var entry = (MusicEntry) item.child;
                 entry.setup_right_clickable ();
             });
-            _app.settings.bind ("compact-playlist", list, "compact-list", SettingsBindFlags.DEFAULT);
             return list;
         }
 
@@ -315,7 +310,7 @@ namespace G4 {
             root.action_set_enabled (ACTION_APP + ACTION_PREV, index > 0);
             root.action_set_enabled (ACTION_APP + ACTION_NEXT, index < (int) size - 1);
             index_title.label = size > 0 ? @"$(index+1)/$(size)" : "";
-            if (_current_list == _playing_list && _playing_list.filter_model != null) {
+            if (_current_list == _playing_list && _current_list.visible_count > 0) {
                 scroll_to_item (index);
             }
         }
@@ -337,7 +332,14 @@ namespace G4 {
                 var store = _app.music_store.store;
                 var count = store.get_n_items ();
                 var arr = new GenericArray<Music> (count);
-
+                for (var i = 0; i < count; i++)
+                    arr.add ((Music) store.get_item (i));
+                if (_sort_mode == SortMode.SHUFFLE)
+                    Music.shuffle_order (arr);
+                arr.sort (get_sort_compare (_sort_mode));
+                store.splice (0, count, arr.data);
+                arr.remove_range (0, arr.length);
+ 
                 _library.albums.foreach ((name, album) => arr.add (album.cover_music));
                 arr.sort (Music.compare_by_album);
                 _album_list.data_store.splice (0, _album_list.data_store.get_n_items (), arr.data);
@@ -346,17 +348,6 @@ namespace G4 {
                 _library.artists.foreach ((name, artist) => arr.add (artist.cover_music));
                 arr.sort (Music.compare_by_artist);
                 _artist_list.data_store.splice (0, _artist_list.data_store.get_n_items (), arr.data);
-                arr.remove_range (0, arr.length);
-
-                if (_playing_list.data_store.get_n_items () == 0) {
-                    for (var i = 0; i < count; i++)
-                        arr.add ((Music) store.get_item (i));
-                    if (_sort_mode == SortMode.SHUFFLE)
-                        Music.shuffle_order (arr);
-                    arr.sort (get_sort_compare (_sort_mode));
-                    _playing_list.data_store.splice (0, 0, arr.data);
-                    tab_view.selected_page = ensure_playing_page ();
-                }
             }
         }
 
@@ -411,7 +402,7 @@ namespace G4 {
         }
 
         private void update_search_filter () {
-            _current_list.filter_model?.set_filter (search_btn.active ? new Gtk.CustomFilter (on_search_match) : (Gtk.CustomFilter?) null);
+            _current_list.filter_model.set_filter (search_btn.active ? new Gtk.CustomFilter (on_search_match) : (Gtk.CustomFilter?) null);
         }
     }
 }
