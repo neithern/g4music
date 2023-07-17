@@ -60,7 +60,6 @@ namespace G4 {
         private MusicLibrary _library;
         private Gdk.Paintable _loading_paintable;
         private Adw.TabPage? _current_page = null;
-        private bool _appending_mode = false;
         private uint _current_page_type = PageType.PLAYING;
         private uint _sort_mode = 0;
 
@@ -93,7 +92,6 @@ namespace G4 {
             tab_view.close_page.connect ((page) => {
                 if (page.child == _playing_list) {
                     _playing_list.data_store.remove_all ();
-                    _appending_mode = true;
                 }
                 return false;
             });
@@ -208,15 +206,17 @@ namespace G4 {
             var store = _playing_list.data_store;
             if (obj is Album) {
                 var album = (Album) obj;
-                if (album.musics.length == 1) {
-                    obj = album.musics.get_values ().first ().data;
-                } else {
-                    var n_items = _playing_list.data_store.get_n_items ();
-                    var arr = new GenericArray<Music> (album.musics.length);
-                    album.foreach ((uri, music) => arr.add (music));
-                    _playing_list.data_store.splice (_appending_mode ? n_items : 0, _appending_mode ? 0 : n_items, arr.data);
-                    _app.current_item = _appending_mode ? (int) n_items : 0;
-                } 
+                var arr = new GenericArray<Music> (album.musics.length);
+                album.foreach ((uri, music) => {
+                    arr.add (music);
+                    uint position = -1;
+                    if (store.find (music, out position)) 
+                        store.remove (position);
+                });
+                arr.sort (Music.compare_by_album);
+                var n_items = store.get_n_items ();
+                store.splice (n_items, 0, arr.data);
+                _app.current_item = (int) n_items;
             }
             if (obj is Music) {
                 var music = (Music) obj;
@@ -374,7 +374,6 @@ namespace G4 {
                 _songs_list.data_store.splice (0, _songs_list.data_store.get_n_items (), arr.data);
 
                 if (_playing_list.data_store.get_n_items () == 0) {
-                    _appending_mode = false;
                     _playing_list.data_store.splice (0, _playing_list.data_store.get_n_items (), arr.data);
                     if (_sort_mode != SortMode.TITLE)
                         sort_mode = _sort_mode;
