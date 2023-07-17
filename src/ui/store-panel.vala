@@ -56,13 +56,10 @@ namespace G4 {
         private MusicList _playing_list;
         private MusicLibrary _library;
         private Gdk.Paintable _loading_paintable;
-        private Adw.TabPage? _current_page = null;
-        private uint _current_page_type = PageType.PLAYING;
-        private uint _sort_mode = 0;
-
         private string _search_text = "";
         private string _search_property = "";
         private uint _search_mode = SearchMode.ALL;
+        private uint _sort_mode = 0;
 
         public StorePanel (Application app, Window win, Adw.Leaflet leaflet) {
             _app = app;
@@ -93,7 +90,7 @@ namespace G4 {
             Idle.add (() => {
                 // Delay set model after the window shown to avoid slowing down it showing
                 if (win.get_height () > 0) {
-                    _current_list.filter_model = _app.music_list;
+                    _playing_list.filter_model = _app.music_list;
                     _app.update_current_item ();
                     tab_view.bind_property ("selected-page", this, "selected-page", BindingFlags.SYNC_CREATE);
                 }
@@ -105,6 +102,8 @@ namespace G4 {
             app.settings.bind ("sort-mode", this, "sort-mode", SettingsBindFlags.DEFAULT);
         }
 
+        private Adw.TabPage? _current_page = null;
+
         public unowned Adw.TabPage? selected_page {
             get {
                 return _current_page;
@@ -112,15 +111,14 @@ namespace G4 {
             set {
                 if (value != null && value != _current_page) {
                     var page = (!)value;
-                    var type = page.get_qdata<uint> (_page_type_quark);
-                    var playing = type == PageType.PLAYING;
+                    var child = (MusicList) page.child;
+                    var playing = child == _playing_list;
                     var filter = _current_list.filter_model?.filter;
                     _current_list.filter_model = null;
-                    _current_list = (MusicList) page.child;
+                    _current_list = child;
                     _current_list.filter_model = playing ? _app.music_list : new Gtk.FilterListModel (null, null);
                     _current_list.filter_model?.set_filter (filter);
                     _current_page = value;
-                    _current_page_type = type;
                     sort_btn.visible = playing;
                     if (playing && _current_list.get_height () > 0) {
                         run_idle_once (() => scroll_to_item (_app.current_item));
@@ -227,7 +225,7 @@ namespace G4 {
         }
 
         private Adw.TabPage ensure_playing_page () {
-            return append_tab_page (_playing_list, PageType.PLAYING, _("Playing"));
+            return append_tab_page (_playing_list, PageType.PLAYING, _("Playing"), true);
         }
 
         private Adw.TabPage? find_tab_page (uint type, bool pinned, string title) {
@@ -315,7 +313,7 @@ namespace G4 {
             root.action_set_enabled (ACTION_APP + ACTION_PREV, index > 0);
             root.action_set_enabled (ACTION_APP + ACTION_NEXT, index < (int) size - 1);
             index_title.label = size > 0 ? @"$(index+1)/$(size)" : "";
-            if (_current_page_type == PageType.PLAYING && _playing_list.filter_model != null) {
+            if (_current_list == _playing_list && _playing_list.filter_model != null) {
                 scroll_to_item (index);
             }
         }
@@ -351,6 +349,8 @@ namespace G4 {
                 if (_playing_list.data_store.get_n_items () == 0) {
                     for (var i = 0; i < count; i++)
                         arr.add ((Music) store.get_item (i));
+                    if (_sort_mode == SortMode.SHUFFLE)
+                        Music.shuffle_order (arr);
                     arr.sort (get_sort_compare (_sort_mode));
                     _playing_list.data_store.splice (0, 0, arr.data);
                     tab_view.selected_page = ensure_playing_page ();
