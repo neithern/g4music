@@ -73,8 +73,6 @@ namespace G4 {
             _grid_view.set_factory (factory);
         }
 
-        private Adw.Animation? _scroll_animation = null;
-
         public void scroll_to_item (int index) {
             _grid_view.activate_action_variant ("list.scroll-to-item", new Variant.uint32 (index));
         }
