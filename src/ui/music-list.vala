@@ -5,6 +5,7 @@ namespace G4 {
         private ListStore _data_store = new ListStore (typeof (Music));
         private Gtk.FilterListModel? _filter_model = null;
         private bool _grid_mode = false;
+        private int _image_size = 96;
         private Gtk.GridView? _grid_view = null;
         private Gtk.ListView? _list_view = null;
         private Gtk.ListBase _list_base;
@@ -20,6 +21,7 @@ namespace G4 {
         public MusicList (Application app, bool grid = false) {
             this.child = _scroll_view;
             _grid_mode = grid;
+            _image_size = grid ? Thumbnailer.GRID_SIZE : Thumbnailer.ICON_SIZE;
             _thmbnailer = app.thumbnailer;
 
             if (grid) {
@@ -141,13 +143,13 @@ namespace G4 {
             var music = (Music) item.item;
             item_binded (item);
 
-            var paintable = _thmbnailer.find (music);
+            var paintable = _thmbnailer.find (music, _image_size);
             if (paintable != null) {
                 entry.paintable = paintable;
             } else {
                 entry.first_draw_handler = entry.cover.first_draw.connect (() => {
                     entry.disconnect_first_draw ();
-                    _thmbnailer.load_async.begin (music, Thumbnailer.ICON_SIZE, (obj, res) => {
+                    _thmbnailer.load_async.begin (music, _image_size, (obj, res) => {
                         var paintable2 = _thmbnailer.load_async.end (res);
                         if (music == (Music) item.item) {
                             entry.paintable = paintable2;

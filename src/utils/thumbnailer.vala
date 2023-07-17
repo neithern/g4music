@@ -62,12 +62,13 @@ namespace G4 {
     }
 
     public class Thumbnailer : Object {
+        public const int GRID_SIZE = 256;
         public const int ICON_SIZE = 96;
-        public const size_t MAX_COUNT = 1000;
 
         private HashTable<string, string> _album_covers = new HashTable<string, string> (str_hash, str_equal);
-        private LruCache<Gdk.Pixbuf?> _album_pixbufs = new LruCache<Gdk.Pixbuf?> (MAX_COUNT);
-        private LruCache<Gdk.Paintable?> _cover_cache = new LruCache<Gdk.Paintable?> (MAX_COUNT);
+        private LruCache<Gdk.Pixbuf?> _album_pixbufs = new LruCache<Gdk.Pixbuf?> (1000);
+        private LruCache<Gdk.Paintable?> _grid_cache = new LruCache<Gdk.Paintable?> (500);
+        private LruCache<Gdk.Paintable?> _icon_cache = new LruCache<Gdk.Paintable?> (1000);
         private Quark _loading_quark = Quark.from_string ("loading_quark");
 
         public signal void tag_updated (Music music);
@@ -78,16 +79,18 @@ namespace G4 {
 
         public bool remote_thumbnail { get; set; }
 
-        public Gdk.Paintable? find (Music music) {
-            return _cover_cache.find (music.cover_key);
+        public Gdk.Paintable? find (Music music, int size = ICON_SIZE) {
+            unowned var cache = size >= GRID_SIZE ? _grid_cache : _icon_cache;
+            return cache.find (music.cover_key);
         }
 
-        public void put (Music music, Gdk.Paintable paintable, bool replace = false) {
-            _cover_cache.put (music.cover_key, paintable, replace);
+        public void put (Music music, Gdk.Paintable paintable, bool replace = false, int size = ICON_SIZE) {
+            unowned var cache = size >= GRID_SIZE ? _grid_cache : _icon_cache;
+            cache.put (music.cover_key, paintable, replace);
         }
 
         public async Gdk.Paintable? load_async (Music music, int size) {
-            var is_small = size <= ICON_SIZE;
+            var is_small = size <= GRID_SIZE;
             if (is_small && !music.replace_qdata<bool, bool> (_loading_quark, false, true, null)) {
                 return null;
             }
@@ -97,7 +100,7 @@ namespace G4 {
                 music.steal_qdata<bool> (_loading_quark);
             }
 
-            var paintable0 = find (music);
+            var paintable0 = find (music, size);
             if (is_small && paintable0 != null) {
                 //  Check if already exist with changed cover_key
                 //  print ("Already exist: %s\n", music.cover_key);
@@ -108,11 +111,11 @@ namespace G4 {
                 ? Gdk.Texture.for_pixbuf ((!)pixbuf)
                 : create_album_text_paintable (music);
             if (is_small) {
-                put (music, paintable);
+                put (music, paintable, false, size);
             } else if (pixbuf != null && paintable0 == null) {
                 var minbuf = find_pixbuf_from_cache (music.cover_key);
                 if (minbuf != null) {
-                    put (music, Gdk.Texture.for_pixbuf ((!)minbuf));
+                    put (music, Gdk.Texture.for_pixbuf ((!)minbuf), false, size);
                 }
             }
             return paintable;
