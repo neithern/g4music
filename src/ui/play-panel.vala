@@ -5,9 +5,9 @@ namespace G4 {
         [GtkChild]
         private unowned Gtk.Button back_btn;
         [GtkChild]
-        public unowned Gtk.Box music_box;
+        private unowned Gtk.Box music_box;
         [GtkChild]
-        public unowned Gtk.Image music_cover;
+        private unowned Gtk.Image music_cover;
         [GtkChild]
         private unowned Gtk.Label music_album;
         [GtkChild]
@@ -95,6 +95,12 @@ namespace G4 {
                 _show_peak = value;
                 on_player_state_changed (_app.player.state);
             }
+        }
+
+        public void size_to_change (int panel_width) {
+            var margin = int.max ((panel_width - music_cover.pixel_size) / 4, 32);
+            music_cover.margin_start = margin;
+            music_cover.margin_end = margin;
         }
 
         private Music? _current_music = new Music.empty ();

@@ -41,11 +41,13 @@ namespace G4 {
         [GtkChild]
         private unowned Gtk.MenuButton sort_btn;
         [GtkChild]
-        public unowned Gtk.ToggleButton search_btn;
+        private unowned Gtk.ToggleButton search_btn;
         [GtkChild]
         private unowned Gtk.SearchBar search_bar;
         [GtkChild]
         private unowned Gtk.SearchEntry search_entry;
+        [GtkChild]
+        private unowned Adw.TabBar tab_bar;
         [GtkChild]
         private unowned Adw.TabView tab_view;
 
@@ -144,6 +146,19 @@ namespace G4 {
             }
         }
 
+        public void size_to_change (int width) {
+            tab_bar.ref ();
+            tab_bar.unparent ();
+            if (width >= 512) {
+                header_bar.hexpand = false;
+                tab_bar.insert_after (header_bar.parent, null);
+            } else {
+                header_bar.hexpand = true;
+                tab_bar.insert_after (search_bar.parent, search_bar);
+            }
+            tab_bar.unref ();
+        }
+
         public void scroll_to_item (int index) {
             _current_list.scroll_to_item (index);
         }
@@ -157,6 +172,11 @@ namespace G4 {
             search_entry.text = text;
             search_entry.select_region (text.index_of_char (':') + 1, -1);
             search_btn.active = true;
+        }
+
+        public bool toggle_search () {
+            search_btn.active = ! search_btn.active;
+            return search_btn.active;
         }
 
         private Quark _page_type_quark = Quark.from_string ("icon_name_quark");

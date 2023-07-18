@@ -109,7 +109,7 @@ namespace G4 {
             var padding = 2;
             var item_height = (height + padding + 3) / 4 * 4;
             height_request = int.max (item_height - padding, cover_size + cover_margin * 2);
-            width_request = 256;
+            width_request = 300;
         }
 
         public bool playing {

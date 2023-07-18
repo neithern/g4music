@@ -55,11 +55,10 @@ namespace G4 {
         }
 
         public override void size_allocate (int width, int height, int baseline) {
-            _play_panel.width_request = int.max (width * 3 / 8, 340);
-            var margin = int.max ((_play_panel.width_request - _play_panel.music_cover.pixel_size) / 4, 32);
-            _play_panel.music_box.margin_start = margin;
-            _play_panel.music_box.margin_end = margin;
-            _store_panel.width_request = width - _play_panel.width_request;
+            var play_width = int.max (width * 3 / 8, 340);
+            _play_panel.width_request = play_width;
+            _play_panel.size_to_change (play_width);
+            _store_panel.size_to_change (width - play_width);
             base.size_allocate (width, height, baseline);
         }
 
@@ -94,9 +93,7 @@ namespace G4 {
         }
 
         public void toggle_search () {
-            var search_btn = _store_panel.search_btn;
-            search_btn.active = ! search_btn.active;
-            if (search_btn.active && _leaflet.folded) {
+            if (_store_panel.toggle_search () && _leaflet.folded) {
                 _leaflet.navigate (Adw.NavigationDirection.BACK);
             }
         }

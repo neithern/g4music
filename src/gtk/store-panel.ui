@@ -3,42 +3,50 @@
   <requires lib="gtk" version="4.0"/>
   <template class="G4StorePanel" parent="GtkBox">
     <property name="orientation">vertical</property>
+    <property name="hexpand">true</property>
     <property name="width_request">340</property>
     <child>
-      <object class="GtkHeaderBar" id="header_bar">
-        <style>
-          <class name="flat"/>
-        </style>
-        <child type="start">
-          <object class="GtkToggleButton" id="search_btn">
-            <property name="icon_name">edit-find-symbolic</property>
-            <property name="active" bind-source="search_bar" bind-property="search_mode_enabled" bind-flags="bidirectional"/>
-            <property name="tooltip-text" translatable="yes">Search</property>
-          </object>
-        </child>
+      <object class="GtkBox">
+        <property name="orientation">horizontal</property>
+        <property name="hexpand">true</property>
         <child>
-          <object class="GtkLabel" id="index_title">
+          <object class="GtkHeaderBar" id="header_bar">
+            <property name="hexpand">true</property>
             <style>
-              <class name="title-leading"/>
+              <class name="flat"/>
             </style>
-          </object>
-        </child>
-        <child type="title">
-          <object class="GtkLabel">
-            <property name="visible">false</property>
-          </object>
-        </child>
-        <child type="end">
-          <object class="GtkMenuButton">
-            <property name="icon_name">open-menu-symbolic</property>
-            <property name="menu_model">primary_menu</property>
-            <property name="tooltip-text" translatable="yes">Main Menu</property>
-          </object>
-        </child>
-        <child type="end">
-          <object class="GtkMenuButton" id="sort_btn">
-            <property name="menu_model">sort_menu</property>
-            <property name="tooltip-text" translatable="yes">Sort By</property>
+            <child type="start">
+              <object class="GtkToggleButton" id="search_btn">
+                <property name="icon_name">edit-find-symbolic</property>
+                <property name="active" bind-source="search_bar" bind-property="search_mode_enabled" bind-flags="bidirectional"/>
+                <property name="tooltip-text" translatable="yes">Search</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="index_title">
+                <style>
+                  <class name="title-leading"/>
+                </style>
+              </object>
+            </child>
+            <child type="title">
+              <object class="GtkLabel">
+                <property name="visible">false</property>
+              </object>
+            </child>
+            <child type="end">
+              <object class="GtkMenuButton">
+                <property name="icon_name">open-menu-symbolic</property>
+                <property name="menu_model">primary_menu</property>
+                <property name="tooltip-text" translatable="yes">Main Menu</property>
+              </object>
+            </child>
+            <child type="end">
+              <object class="GtkMenuButton" id="sort_btn">
+                <property name="menu_model">sort_menu</property>
+                <property name="tooltip-text" translatable="yes">Sort By</property>
+              </object>
+            </child>
           </object>
         </child>
       </object>
@@ -55,6 +63,7 @@
     <child>
       <object class="AdwTabBar" id="tab_bar">
         <property name="height-request">44</property>
+        <property name="hexpand">true</property>
         <property name="expand-tabs">false</property>
         <property name="view">tab_view</property>
       </object>

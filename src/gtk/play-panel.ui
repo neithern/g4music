@@ -3,10 +3,12 @@
   <requires lib="gtk" version="4.0"/>
   <template class="G4PlayPanel" parent="GtkBox">
     <property name="orientation">vertical</property>
+    <property name="hexpand">false</property>
     <property name="margin_bottom">32</property>
     <property name="width_request">340</property>
     <child>
       <object class="GtkHeaderBar" id="header_bar">
+        <property name="hexpand">true</property>
         <style>
           <class name="flat"/>
         </style>
@@ -26,21 +28,19 @@
     <child>
       <object class="GtkBox" id="music_box">
         <property name="orientation">vertical</property>
-        <property name="hexpand">true</property>
-        <property name="margin_start">32</property>
-        <property name="margin_end">32</property>
         <property name="margin_top">8</property>
         <child>
           <object class="GtkImage" id="music_cover">
-            <property name="hexpand">true</property>
-            <property name="vexpand">true</property>
             <property name="pixel_size">240</property>
+            <property name="vexpand">true</property>
           </object>
         </child>
         <child>
           <object class="GtkBox">
             <property name="orientation">vertical</property>
             <property name="valign">end</property>
+            <property name="margin_start">32</property>
+            <property name="margin_end">32</property>
             <property name="margin_top">39</property>
             <property name="height_request">80</property>
             <child>
