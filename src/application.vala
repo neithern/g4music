@@ -510,7 +510,7 @@ namespace G4 {
                     _pending_mic_handler = 0;
                     if (!update_current_item ())
                         index_changed (_current_item, _music_list.get_n_items ());
-                }, Priority.LOW);
+                });
             }
         }
 
