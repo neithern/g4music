@@ -10,6 +10,7 @@
             <property name="title" translatable="yes">General</property>
             <child>
               <object class="AdwActionRow" id="dark_theme">
+                <property name="icon-name">night-light-symbolic</property>
                 <property name="title" translatable="yes">Prefer dark theme</property>
                 <property name="activatable_widget">dark_btn</property>
                 <child>
@@ -21,11 +22,13 @@
             </child>
             <child>
               <object class="AdwComboRow" id="blur_row">
+                <property name="icon-name">view-dual-symbolic</property>
                 <property name="title" translatable="yes">Background blur mode</property>
               </object>
             </child>
             <child>
               <object class="AdwActionRow" id="compact_list">
+                <property name="icon-name">view-list-symbolic</property>
                 <property name="title" translatable="yes">Compact playlist view</property>
                 <property name="activatable_widget">compact_btn</property>
                 <child>
@@ -37,6 +40,7 @@
             </child>
             <child>
               <object class="AdwActionRow">
+                <property name="icon-name">media-playback-start-symbolic</property>
                 <property name="title" translatable="yes">Keep playing after window closed</property>
                 <property name="activatable_widget">playbkgnd_btn</property>
                 <child>
@@ -53,6 +57,7 @@
           <property name="title" translatable="yes">Music Location</property>
             <child>
               <object class="AdwActionRow">
+                <property name="icon-name">folder-symbolic</property>
                 <property name="title" translatable="yes">Load music from folder</property>
                 <property name="activatable_widget">music_dir_btn</property>
                 <child>
@@ -64,6 +69,7 @@
             </child>
             <child>
               <object class="AdwActionRow">
+                <property name="icon-name">software-update-available-symbolic</property>
                 <property name="title" translatable="yes">Monitor local file changes</property>
                 <property name="activatable_widget">monitor_btn</property>
                 <child>
@@ -75,6 +81,7 @@
             </child>
             <child>
               <object class="AdwActionRow">
+                <property name="icon-name">folder-remote-symbolic</property>
                 <property name="title" translatable="yes">Load thumbnails for non-local files</property>
                 <property name="subtitle" translatable="yes">May cause slowdowns and excess network usage</property>
                 <property name="activatable_widget">thumbnail_btn</property>
@@ -92,8 +99,9 @@
           <property name="title" translatable="yes">Playback</property>
             <child>
               <object class="AdwExpanderRow" id="peak_row">
-              	<property name="show_enable_switch">true</property>
+                <property name="icon-name">edit-select-symbolic</property>
                 <property name="title" translatable="yes">Show audio peak level</property>
+              	<property name="show-enable-switch">true</property>
                 <child>
                   <object class="AdwActionRow" id="peak_act_row">
                     <property name="title" translatable="yes">Display characters</property>
@@ -110,6 +118,7 @@
             </child>
             <child>
               <object class="AdwActionRow" id="rotate_cover">
+                <property name="icon-name">object-rotate-right-symbolic</property>
                 <property name="title" translatable="yes">Rotate album cover</property>
                 <property name="activatable_widget">rotate_btn</property>
                 <child>
@@ -121,6 +130,7 @@
             </child>
             <child>
               <object class="AdwActionRow">
+                <property name="icon-name">media-playlist-repeat-symbolic</property>
                 <property name="title" translatable="yes">Enable gapless playback</property>
                 <property name="activatable_widget">gapless_btn</property>
                 <child>
@@ -132,11 +142,13 @@
             </child>
             <child>
               <object class="AdwComboRow" id="replaygain_row">
+                <property name="icon-name">audio-volume-high-symbolic</property>
                 <property name="title" translatable="yes">Normalize volume with ReplayGain</property>
               </object>
             </child>
             <child>
               <object class="AdwComboRow" id="audiosink_row">
+                <property name="icon-name">audio-card-symbolic</property>
                 <property name="title" translatable="yes">Prefer audio sink</property>
               </object>
             </child>
