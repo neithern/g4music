@@ -206,8 +206,9 @@ namespace G4 {
                     uint position = -1;
                     if (store.find (music, out position)) {
                         store.remove (position);
-                        if (insert_pos >= position)
+                        if (insert_pos >= position) {
                             insert_pos--;
+                        }
                     }
                 });
                 arr.sort (Music.compare_by_album);
@@ -215,8 +216,9 @@ namespace G4 {
                     insert_pos = 0;
                 store.splice (insert_pos, 0, arr.data);
                 _app.current_item = insert_pos;
-            }
-            if (obj is Music) {
+                if (insert_pos > 0) // update the previous playing item
+                    _app.music_list.items_changed (insert_pos - 1, 0, 0);
+            } else if (obj is Music) {
                 var music = (Music) obj;
                 uint position = -1;
                 if (store.find (music, out position)) {

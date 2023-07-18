@@ -122,6 +122,7 @@ namespace G4 {
         private void on_bind_item (Gtk.ListItem item) {
             var entry = (MusicWidget) item.child;
             var music = (Music) item.item;
+            var position = item.position;
             item_binded (item);
 
             var paintable = _thmbnailer.find (music, _image_size);
@@ -132,7 +133,7 @@ namespace G4 {
                     entry.disconnect_first_draw ();
                     _thmbnailer.load_async.begin (music, _image_size, (obj, res) => {
                         var paintable2 = _thmbnailer.load_async.end (res);
-                        if (music == (Music) item.item) {
+                        if (music == (Music) item.item && position == item.position) {
                             entry.paintable = paintable2;
                         }
                     });
