@@ -55,11 +55,45 @@ namespace G4 {
         }
 
         public override void size_allocate (int width, int height, int baseline) {
-            var play_width = int.max (width * 3 / 8, 340);
-            _play_panel.width_request = play_width;
+            var min_width = 340;
+            var play_width = int.max (width * 3 / 8, min_width);
+            var store_width = int.max (width - play_width, min_width);
             _play_panel.size_to_change (play_width);
-            _store_panel.size_to_change (width - play_width);
+            _store_panel.size_to_change (store_width);
+
             base.size_allocate (width, height, baseline);
+
+            var rtl = get_direction () == Gtk.TextDirection.RTL;
+            var left_width = rtl ? play_width : store_width;
+            var right_width = rtl ? store_width : play_width;
+            var left_panel = rtl ? (Gtk.Widget) _play_panel : (Gtk.Widget) _store_panel;
+            var right_panel = rtl ? (Gtk.Widget) _store_panel : (Gtk.Widget) _play_panel;
+            if (_leaflet.folded) {
+                if (_leaflet.get_visible_child () == right_panel) {
+                    right_width = width;
+                    var allocation = Gtk.Allocation ();
+                    _play_panel.get_allocation (out allocation);
+                    allocation.width = right_width;
+                    allocation.x = width - right_width;
+                    right_panel.allocate_size (allocation, baseline);
+                } else {
+                    left_width = width;
+                    var allocation = Gtk.Allocation ();
+                    left_panel.get_allocation (out allocation);
+                    allocation.width = left_width;
+                    left_panel.allocate_size (allocation, baseline);
+                }
+            } else {
+                var allocation = Gtk.Allocation ();
+                left_panel.get_allocation (out allocation);
+                allocation.width = left_width;
+                left_panel.allocate_size (allocation, baseline);
+
+                right_panel.get_allocation (out allocation);
+                allocation.width = right_width;
+                allocation.x = width - right_width;
+                right_panel.allocate_size (allocation, baseline);
+            }
         }
 
         public override void snapshot (Gtk.Snapshot snapshot) {
