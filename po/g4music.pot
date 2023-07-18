@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-17 00:05+0800\n"
+"POT-Creation-Date: 2023-07-18 09:36+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -101,79 +101,79 @@ msgstr ""
 msgid "General"
 msgstr ""
 
-#: src/gtk/preferences.ui:13
+#: src/gtk/preferences.ui:14
 msgid "Prefer dark theme"
 msgstr ""
 
-#: src/gtk/preferences.ui:24
+#: src/gtk/preferences.ui:26
 msgid "Background blur mode"
 msgstr ""
 
-#: src/gtk/preferences.ui:29
+#: src/gtk/preferences.ui:32
 msgid "Compact playlist view"
 msgstr ""
 
-#: src/gtk/preferences.ui:40 src/application.vala:443
+#: src/gtk/preferences.ui:44 src/application.vala:443
 msgid "Keep playing after window closed"
 msgstr ""
 
-#: src/gtk/preferences.ui:53
+#: src/gtk/preferences.ui:57
 msgid "Library"
 msgstr ""
 
-#: src/gtk/preferences.ui:56
+#: src/gtk/preferences.ui:61
 msgid "Load music from folder"
 msgstr ""
 
-#: src/gtk/preferences.ui:67
+#: src/gtk/preferences.ui:73
 msgid "Monitor local file changes"
 msgstr ""
 
-#: src/gtk/preferences.ui:78
+#: src/gtk/preferences.ui:85
 msgid "Load thumbnails for non-local files"
 msgstr ""
 
-#: src/gtk/preferences.ui:79
+#: src/gtk/preferences.ui:86
 msgid "May cause slowdowns and excess network usage"
 msgstr ""
 
-#: src/gtk/preferences.ui:92
+#: src/gtk/preferences.ui:99
 msgid "Playback"
 msgstr ""
 
-#: src/gtk/preferences.ui:96
+#: src/gtk/preferences.ui:103
 msgid "Show audio peak level"
 msgstr ""
 
-#: src/gtk/preferences.ui:99
+#: src/gtk/preferences.ui:107
 msgid "Display characters"
 msgstr ""
 
-#: src/gtk/preferences.ui:113
+#: src/gtk/preferences.ui:122
 msgid "Rotate album cover"
 msgstr ""
 
-#: src/gtk/preferences.ui:124
+#: src/gtk/preferences.ui:134
 msgid "Enable gapless playback"
 msgstr ""
 
-#: src/gtk/preferences.ui:135
+#: src/gtk/preferences.ui:146
 msgid "Normalize volume with ReplayGain"
 msgstr ""
 
-#: src/gtk/preferences.ui:140
+#: src/gtk/preferences.ui:152
 msgid "Prefer audio sink"
 msgstr ""
 
-#: src/gtk/store-panel.ui:17
+#: src/gtk/store-panel.ui:16
 msgid "Search"
 msgstr ""
 
-#: src/gtk/store-panel.ui:36
+#: src/gtk/store-panel.ui:35
 msgid "Main Menu"
 msgstr ""
 
-#: src/gtk/store-panel.ui:42
+#: src/gtk/store-panel.ui:41
 msgid "Sort By"
 msgstr ""
 
@@ -230,31 +230,31 @@ msgstr ""
 msgid "Keep playing"
 msgstr ""
 
-#: src/ui/music-entry.vala:148
+#: src/ui/music-entry.vala:178
 msgid "Play at Next"
 msgstr ""
 
-#: src/ui/music-entry.vala:149 src/ui/play-panel.vala:51
+#: src/ui/music-entry.vala:179 src/ui/play-panel.vala:51
 msgid "Search Title"
 msgstr ""
 
-#: src/ui/music-entry.vala:150 src/ui/play-panel.vala:49
+#: src/ui/music-entry.vala:180 src/ui/play-panel.vala:49
 msgid "Search Album"
 msgstr ""
 
-#: src/ui/music-entry.vala:151 src/ui/play-panel.vala:50
+#: src/ui/music-entry.vala:181 src/ui/play-panel.vala:50
 msgid "Search Artist"
 msgstr ""
 
-#: src/ui/music-entry.vala:152
+#: src/ui/music-entry.vala:182
 msgid "_Show Music File"
 msgstr ""
 
-#: src/ui/music-entry.vala:154
+#: src/ui/music-entry.vala:184
 msgid "Show _Cover File"
 msgstr ""
 
-#: src/ui/music-entry.vala:156
+#: src/ui/music-entry.vala:186
 msgid "_Export Cover"
 msgstr ""
 
@@ -297,19 +297,15 @@ msgstr ""
 msgid "Track"
 msgstr ""
 
-#: src/ui/store-panel.vala:87
+#: src/ui/store-panel.vala:84
 msgid "Artists"
 msgstr ""
 
-#: src/ui/store-panel.vala:88
+#: src/ui/store-panel.vala:85
 msgid "Albums"
 msgstr ""
 
-#: src/ui/store-panel.vala:89
-msgid "Songs"
-msgstr ""
-
-#: src/ui/store-panel.vala:236
+#: src/ui/store-panel.vala:213
 msgid "Playing"
 msgstr ""
 

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-17 00:05+0800\n"
+"POT-Creation-Date: 2023-07-18 09:36+0800\n"
 "PO-Revision-Date: 2023-07-17 00:08+0800\n"
 "Last-Translator: Nanling <neithern@outlook.com>\n"
 "Language-Team: Chinese - China <i18n-zh@googlegroups.com>\n"
@@ -105,79 +105,79 @@ msgstr "返回"
 msgid "General"
 msgstr "一般"
 
-#: src/gtk/preferences.ui:13
+#: src/gtk/preferences.ui:14
 msgid "Prefer dark theme"
 msgstr "首選暗色主題"
 
-#: src/gtk/preferences.ui:24
+#: src/gtk/preferences.ui:26
 msgid "Background blur mode"
 msgstr "背景模糊模式"
 
-#: src/gtk/preferences.ui:29
+#: src/gtk/preferences.ui:32
 msgid "Compact playlist view"
 msgstr "緊湊播放列表"
 
-#: src/gtk/preferences.ui:40 src/application.vala:443
+#: src/gtk/preferences.ui:44 src/application.vala:443
 msgid "Keep playing after window closed"
 msgstr "關閉視窗後繼續播放"
 
-#: src/gtk/preferences.ui:53
+#: src/gtk/preferences.ui:57
 msgid "Library"
 msgstr "音樂庫"
 
-#: src/gtk/preferences.ui:56
+#: src/gtk/preferences.ui:61
 msgid "Load music from folder"
 msgstr "從資料夾載入音樂"
 
-#: src/gtk/preferences.ui:67
+#: src/gtk/preferences.ui:73
 msgid "Monitor local file changes"
 msgstr "監控本地檔案變化"
 
-#: src/gtk/preferences.ui:78
+#: src/gtk/preferences.ui:85
 msgid "Load thumbnails for non-local files"
 msgstr "載入非本機檔案的縮圖"
 
-#: src/gtk/preferences.ui:79
+#: src/gtk/preferences.ui:86
 msgid "May cause slowdowns and excess network usage"
 msgstr "可能會導致速度減慢與增加網路使用"
 
-#: src/gtk/preferences.ui:92
+#: src/gtk/preferences.ui:99
 msgid "Playback"
 msgstr "播放"
 
-#: src/gtk/preferences.ui:96
+#: src/gtk/preferences.ui:103
 msgid "Show audio peak level"
 msgstr "顯示音訊峰值"
 
-#: src/gtk/preferences.ui:99
+#: src/gtk/preferences.ui:107
 msgid "Display characters"
 msgstr "顯示的字元"
 
-#: src/gtk/preferences.ui:113
+#: src/gtk/preferences.ui:122
 msgid "Rotate album cover"
 msgstr "旋轉專輯封面"
 
-#: src/gtk/preferences.ui:124
+#: src/gtk/preferences.ui:134
 msgid "Enable gapless playback"
 msgstr "啟用無縫播放"
 
-#: src/gtk/preferences.ui:135
+#: src/gtk/preferences.ui:146
 msgid "Normalize volume with ReplayGain"
 msgstr "使用 ReplayGain 正規化音量"
 
-#: src/gtk/preferences.ui:140
+#: src/gtk/preferences.ui:152
 msgid "Prefer audio sink"
 msgstr "首選音訊輸出"
 
-#: src/gtk/store-panel.ui:17
+#: src/gtk/store-panel.ui:16
 msgid "Search"
 msgstr "搜尋"
 
-#: src/gtk/store-panel.ui:36
+#: src/gtk/store-panel.ui:35
 msgid "Main Menu"
 msgstr "主選單"
 
-#: src/gtk/store-panel.ui:42
+#: src/gtk/store-panel.ui:41
 msgid "Sort By"
 msgstr "排序"
 
@@ -236,31 +236,31 @@ msgstr ""
 msgid "Keep playing"
 msgstr "持續播放"
 
-#: src/ui/music-entry.vala:148
+#: src/ui/music-entry.vala:178
 msgid "Play at Next"
 msgstr "插播"
 
-#: src/ui/music-entry.vala:149 src/ui/play-panel.vala:51
+#: src/ui/music-entry.vala:179 src/ui/play-panel.vala:51
 msgid "Search Title"
 msgstr "搜尋歌名"
 
-#: src/ui/music-entry.vala:150 src/ui/play-panel.vala:49
+#: src/ui/music-entry.vala:180 src/ui/play-panel.vala:49
 msgid "Search Album"
 msgstr "搜尋專輯"
 
-#: src/ui/music-entry.vala:151 src/ui/play-panel.vala:50
+#: src/ui/music-entry.vala:181 src/ui/play-panel.vala:50
 msgid "Search Artist"
 msgstr "搜尋藝術家"
 
-#: src/ui/music-entry.vala:152
+#: src/ui/music-entry.vala:182
 msgid "_Show Music File"
 msgstr "顯示音樂檔案(_S)"
 
-#: src/ui/music-entry.vala:154
+#: src/ui/music-entry.vala:184
 msgid "Show _Cover File"
 msgstr "顯示封面檔案(_C)"
 
-#: src/ui/music-entry.vala:156
+#: src/ui/music-entry.vala:186
 msgid "_Export Cover"
 msgstr "輸出封面(_E)"
 
@@ -305,19 +305,15 @@ msgstr "僅封面"
 msgid "Track"
 msgstr "曲目"
 
-#: src/ui/store-panel.vala:87
+#: src/ui/store-panel.vala:84
 msgid "Artists"
 msgstr "藝術家"
 
-#: src/ui/store-panel.vala:88
+#: src/ui/store-panel.vala:85
 msgid "Albums"
 msgstr "專輯"
 
-#: src/ui/store-panel.vala:89
-msgid "Songs"
-msgstr "曲目"
-
-#: src/ui/store-panel.vala:236
+#: src/ui/store-panel.vala:213
 msgid "Playing"
 msgstr "正在播放"
 
