@@ -178,6 +178,7 @@ namespace G4 {
                 return _current_music;
             }
             set {
+                var playing = _current_music != null || _player.state == Gst.State.PLAYING;
                 if (_current_music != value) {
                     _current_music = value;
                     _current_cover = null;
@@ -186,7 +187,6 @@ namespace G4 {
                 }
                 var uri = value?.uri ?? "";
                 if (strcmp (_current_uri, uri) != 0) {
-                    var playing = _player.state == Gst.State.PLAYING;
                     _player.state = Gst.State.READY;
                     _player.uri = _current_uri = uri;
                     _player.state = playing ? Gst.State.PLAYING : Gst.State.PAUSED;
