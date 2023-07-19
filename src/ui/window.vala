@@ -68,30 +68,18 @@ namespace G4 {
             var right_width = rtl ? store_width : play_width;
             var left_panel = rtl ? (Gtk.Widget) _play_panel : (Gtk.Widget) _store_panel;
             var right_panel = rtl ? (Gtk.Widget) _store_panel : (Gtk.Widget) _play_panel;
+            var allocation = Gtk.Allocation ();
+            allocation.x = allocation.y = 0;
             if (_leaflet.folded) {
-                if (_leaflet.get_visible_child () == right_panel) {
-                    right_width = width;
-                    var allocation = Gtk.Allocation ();
-                    _play_panel.get_allocation (out allocation);
-                    allocation.width = right_width;
-                    allocation.x = width - right_width;
-                    right_panel.allocate_size (allocation, baseline);
-                } else {
-                    left_width = width;
-                    var allocation = Gtk.Allocation ();
-                    left_panel.get_allocation (out allocation);
-                    allocation.width = left_width;
-                    left_panel.allocate_size (allocation, baseline);
-                }
+                allocation.width = width;
+                allocation.height = height;
+                _leaflet.get_visible_child ()?.allocate_size (allocation, baseline);
             } else {
-                var allocation = Gtk.Allocation ();
-                left_panel.get_allocation (out allocation);
                 allocation.width = left_width;
+                allocation.height = height;
                 left_panel.allocate_size (allocation, baseline);
-
-                right_panel.get_allocation (out allocation);
-                allocation.width = right_width;
                 allocation.x = width - right_width;
+                allocation.width = right_width;
                 right_panel.allocate_size (allocation, baseline);
             }
         }

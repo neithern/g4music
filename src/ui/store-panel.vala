@@ -147,16 +147,17 @@ namespace G4 {
         }
 
         public void size_to_change (int width) {
-            tab_bar.ref ();
-            tab_bar.unparent ();
-            if (width >= 512) {
+            var bar = tab_bar; // Keep ref to the tab_bar to unparent
+            var wide = width >= 500;
+            if (wide && bar.parent != header_bar.parent) {
                 header_bar.hexpand = false;
-                tab_bar.insert_after (header_bar.parent, null);
-            } else {
+                bar.unparent ();
+                bar.insert_after (header_bar.parent, null);
+            } else if (!wide && bar.parent != progress_bar.parent) {
                 header_bar.hexpand = true;
-                tab_bar.insert_after (search_bar.parent, search_bar);
+                bar.unparent ();
+                bar.insert_after (progress_bar.parent, progress_bar);
             }
-            tab_bar.unref ();
         }
 
         public void scroll_to_item (int index) {

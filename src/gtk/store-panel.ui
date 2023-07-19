@@ -4,7 +4,6 @@
   <template class="G4StorePanel" parent="GtkBox">
     <property name="orientation">vertical</property>
     <property name="hexpand">true</property>
-    <property name="width_request">340</property>
     <child>
       <object class="GtkBox">
         <property name="orientation">horizontal</property>
@@ -79,6 +78,7 @@
     </child>
     <child>
       <object class="AdwTabView" id="tab_view">
+        <property name="width_request">340</property>
       </object>
     </child>
   </template>

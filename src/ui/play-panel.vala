@@ -5,6 +5,8 @@ namespace G4 {
         [GtkChild]
         private unowned Gtk.Button back_btn;
         [GtkChild]
+        private unowned Adw.Clamp clamp;
+        [GtkChild]
         private unowned Gtk.Box music_box;
         [GtkChild]
         private unowned Gtk.Image music_cover;
@@ -33,8 +35,9 @@ namespace G4 {
         public PlayPanel (Application app, Window win, Adw.Leaflet leaflet) {
             _app = app;
 
-            append (_play_bar);
+            _play_bar.margin_bottom = 32;
             _play_bar.position_seeked.connect (on_position_seeked);
+            append (_play_bar);
 
             leaflet.bind_property ("folded", back_btn, "visible", BindingFlags.SYNC_CREATE);
             back_btn.clicked.connect (() => leaflet.navigate (Adw.NavigationDirection.BACK));
@@ -98,9 +101,9 @@ namespace G4 {
         }
 
         public void size_to_change (int panel_width) {
-            var margin = int.max ((panel_width - music_cover.pixel_size) / 4, 32);
-            music_cover.margin_start = margin;
-            music_cover.margin_end = margin;
+            var max_size = int.max (panel_width * 3 / 4, music_cover.pixel_size);
+            clamp.maximum_size = max_size;
+            clamp.tightening_threshold = max_size;
         }
 
         private Music? _current_music = new Music.empty ();
