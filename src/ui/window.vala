@@ -58,8 +58,9 @@ namespace G4 {
             var min_width = 340;
             var play_width = int.max (width * 3 / 8, min_width);
             var store_width = int.max (width - play_width, min_width);
-            _play_panel.size_to_change (play_width);
-            _store_panel.size_to_change (store_width);
+            var wide = width > min_width * 2;
+            _play_panel.size_to_change (wide ? play_width : width);
+            _store_panel.size_to_change (wide ? store_width : width);
 
             base.size_allocate (width, height, baseline);
 

@@ -37,8 +37,8 @@ namespace G4 {
         public MusicCell () {
             orientation = Gtk.Orientation.VERTICAL;
 
-            _cover.margin_start = 16;
-            _cover.margin_end = 16;
+            _cover.margin_start = 8;
+            _cover.margin_end = 8;
             _cover.margin_top = 10;
             _cover.margin_bottom = 6;
             _cover.pixel_size = 128;
@@ -68,7 +68,7 @@ namespace G4 {
             var cover_size = compact ? 36 : 48;
             _cover.margin_top = cover_margin;
             _cover.margin_bottom = cover_margin;
-            _cover.margin_start = 12;
+            _cover.margin_start = 4;
             _cover.pixel_size = cover_size;
             _cover.paintable = _paintable;
             _paintable.queue_draw.connect (_cover.queue_draw);
@@ -79,7 +79,7 @@ namespace G4 {
             vbox.hexpand = true;
             vbox.valign = Gtk.Align.CENTER;
             vbox.margin_start = 12;
-            vbox.margin_end = 12;
+            vbox.margin_end = 4;
             vbox.append (_title);
             vbox.append (_subtitle);
             append (vbox);
@@ -99,7 +99,7 @@ namespace G4 {
             _playing.valign = Gtk.Align.CENTER;
             _playing.icon_name = "media-playback-start-symbolic";
             _playing.pixel_size = 12;
-            _playing.margin_end = 8;
+            _playing.margin_end = 4;
             _playing.visible = false;
             _playing.add_css_class ("dim-label");
             append (_playing);

@@ -1,6 +1,6 @@
 namespace G4 {
 
-    public class MusicList : Adw.Bin {
+    public class MusicList : Gtk.Box {
         private bool _compact_list = false;
         private ListStore _data_store = new ListStore (typeof (Music));
         private Gtk.FilterListModel _filter_model = new Gtk.FilterListModel (null, null);
@@ -20,14 +20,19 @@ namespace G4 {
         public signal void item_binded (Gtk.ListItem item);
 
         public MusicList (Application app, bool grid = false) {
-            this.child = _scroll_view;
+            orientation = Gtk.Orientation.VERTICAL;
+            hexpand = true;
+            append (_scroll_view);
+
             _filter_model.model = _data_store;
             _grid_mode = grid;
             _image_size = grid ? Thumbnailer.GRID_SIZE : Thumbnailer.ICON_SIZE;
             _thmbnailer = app.thumbnailer;
 
             _grid_view.enable_rubberband = false;
-            _grid_view.max_columns = 5;
+            _grid_view.max_columns = 8;
+            _grid_view.margin_start = _grid_view.margin_end = 8;
+            _grid_view.margin_top = _grid_view.margin_bottom = 8;
             _grid_view.single_click_activate = true;
             _grid_view.activate.connect ((position) => item_activated (position, _filter_model.get_item (position)));
             _grid_view.model = new Gtk.NoSelection (_filter_model);
