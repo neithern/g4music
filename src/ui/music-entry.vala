@@ -61,7 +61,6 @@ namespace G4 {
     public class MusicEntry : MusicWidget {
         private Gtk.Label _subtitle = new Gtk.Label (null);
         private Gtk.Image _playing = new Gtk.Image ();
-        private Music? _music = null;
 
         public MusicEntry (bool compact = true) {
             var cover_margin = compact ? 3 : 4;
@@ -111,6 +110,8 @@ namespace G4 {
             height_request = int.max (item_height - padding, cover_size + cover_margin * 2);
             width_request = 300;
         }
+
+        public Music? music { get; set; }
 
         public bool playing {
             set {

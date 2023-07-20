@@ -33,6 +33,7 @@ namespace G4 {
         [GtkChild]
         private unowned Adw.ViewStack stack_view;
 
+        private Adw.ViewStack _album_stack = new Adw.ViewStack ();
         private Adw.ViewStack _artist_stack = new Adw.ViewStack ();
 
         private Application _app;
@@ -67,11 +68,12 @@ namespace G4 {
             stack_view.visible_child = _playing_list;
 
             _artist_list = create_artist_list ();
-            _artist_stack.add_named (_artist_list, "Artists");
+            _artist_stack.add_named (_artist_list, "artists");
             stack_view.add_titled (_artist_stack, "Artists", _("Artists")).icon_name = "system-users-symbolic";
 
             _album_list = create_albums_list ();
-            stack_view.add_titled (_album_list, "Albums", _("Albums")).icon_name = "drive-multidisk-symbolic";
+            _album_stack.add_named (_album_list, "albums");
+            stack_view.add_titled (_album_stack, "Albums", _("Albums")).icon_name = "drive-multidisk-symbolic";
 
             var switcher = new SwitchBar ();
             switcher.stack = stack_view;
@@ -104,7 +106,7 @@ namespace G4 {
 
         public Gtk.Widget visible_child {
             set {
-                var mlist = (MusicList) (value == _artist_stack ? _artist_stack.visible_child : value);
+                var mlist = (MusicList) ((value as Adw.ViewStack)?.visible_child ?? value);
                 var playing = mlist == _playing_list;
                 var filter = _current_list.filter_model.get_filter ();
                 _current_list = mlist;
@@ -198,7 +200,12 @@ namespace G4 {
             list.item_activated.connect ((position, obj) => {
                 var name = (obj as Music)?.album ?? "";
                 var album = artist != null ? ((!)artist).albums.lookup (name) : _library.albums.lookup (name);
-                append_to_playing_page (album);
+                if (album is Album) {
+                    var mlist  = create_music_list (album, true);
+                    mlist.create_factory ();
+                    var stack = artist != null ? _artist_stack : _album_stack;
+                    create_page_for_music_list (stack, mlist, name, album);
+                }
             });
             list.item_binded.connect ((item) => {
                 var entry = (MusicCell) item.child;
@@ -219,7 +226,9 @@ namespace G4 {
             list.item_activated.connect ((position, obj) => {
                 unowned var artist = _library.artists.lookup ((obj as Music)?.artist ?? "");
                 if (artist is Artist) {
-                    create_artist_page (artist);
+                    var mlist = create_albums_list (artist);
+                    mlist.create_factory ();
+                    create_page_for_music_list (_artist_stack, mlist, artist.name);
                 }
             });
             list.item_created.connect ((item) => {
@@ -235,34 +244,31 @@ namespace G4 {
             return list;
         }
 
-        private Adw.ViewStackPage create_artist_page (Artist artist) {
-            var mlist = create_albums_list (artist);
-            mlist.create_factory ();
-
-            var header = new Adw.HeaderBar ();
-            header.show_end_title_buttons = false;
-            header.title_widget = new Gtk.Label (artist.name);
-            header.add_css_class ("flat");
-            mlist.prepend (header);
-
-            var back_btn = new Gtk.Button.from_icon_name ("go-previous-symbolic");
-            back_btn.tooltip_text = _("Back");
-            back_btn.clicked.connect (() => {
-                _artist_stack.remove (mlist);
-                _artist_stack.visible_child = _artist_list;
+        private MusicList create_music_list (Album album, bool from_artist = false) {
+            var list = new MusicList (_app);
+            list.item_activated.connect ((position, obj) =>
+                                        append_to_playing_page (obj));
+            list.item_binded.connect ((item) => {
+                var entry = (MusicEntry) item.child;
+                var music = (Music) item.item;
+                entry.music = music;
+                entry.paintable = _loading_paintable;
+                entry.title = music.title;
             });
-            header.pack_start (back_btn);
-
-            var page = _artist_stack.add_titled (mlist, artist.name, artist.name);
-            _artist_stack.visible_child = mlist;
-            return page;
+            list.item_created.connect ((item) => {
+                var entry = (MusicEntry) item.child;
+                entry.setup_right_clickable ();
+            });
+            var store = list.data_store;
+            album.foreach ((uri, music) => store.append (music));
+            store.sort ((CompareDataFunc) Music.compare_by_album);
+            return list;
         }
 
         private MusicList create_playing_music_list () {
             var list = new MusicList (_app);
-            list.item_activated.connect ((position, obj) => {
-                _app.current_item = (int) position;
-            });
+            list.item_activated.connect ((position, obj) =>
+                                        _app.current_item = (int) position);
             list.item_binded.connect ((item) => {
                 var entry = (MusicEntry) item.child;
                 var music = (Music) item.item;
@@ -275,6 +281,35 @@ namespace G4 {
                 entry.setup_right_clickable ();
             });
             return list;
+        }
+
+        private void create_page_for_music_list (Adw.ViewStack stack, MusicList mlist, string name, Album? album = null) {
+            var label = new Gtk.Label (name);
+            label.ellipsize = Pango.EllipsizeMode.END;
+            var header = new Adw.HeaderBar ();
+            header.show_end_title_buttons = false;
+            header.title_widget = label;
+            header.add_css_class ("flat");
+            mlist.prepend (header);
+
+            var back_btn = new Gtk.Button.from_icon_name ("go-previous-symbolic");
+            back_btn.tooltip_text = _("Back");
+            back_btn.clicked.connect (() => {
+                var prev = mlist.get_prev_sibling ();
+                stack.remove (mlist);
+                stack.visible_child = (!)prev;
+            });
+            header.pack_start (back_btn);
+
+            if (album != null) {
+                var play_btn = new Gtk.Button.from_icon_name ("media-playback-start-symbolic");
+                play_btn.tooltip_text = _("Play All");
+                play_btn.clicked.connect (() => append_to_playing_page (album));
+                header.pack_end (play_btn);
+            }
+
+            stack.add_titled (mlist, name, name);
+            stack.visible_child = mlist;
         }
 
         private void on_index_changed (int index, uint size) {

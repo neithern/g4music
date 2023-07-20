@@ -189,8 +189,8 @@ namespace G4 {
                 if (strcmp (_current_uri, uri) != 0) {
                     _player.state = Gst.State.READY;
                     _player.uri = _current_uri = uri;
-                    _player.state = playing ? Gst.State.PLAYING : Gst.State.PAUSED;
                 }
+                _player.state = playing ? Gst.State.PLAYING : Gst.State.PAUSED;
                 _settings.set_string ("played-uri", uri);
             }
         }
