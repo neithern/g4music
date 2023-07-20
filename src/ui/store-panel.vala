@@ -196,7 +196,8 @@ namespace G4 {
         private MusicList create_albums_list (Artist? artist = null) {
             var list = new MusicList (_app, true);
             list.item_activated.connect ((position, obj) => {
-                unowned var album = _library.albums.lookup ((obj as Music)?.album ?? "");
+                var name = (obj as Music)?.album ?? "";
+                var album = artist != null ? ((!)artist).albums.lookup (name) : _library.albums.lookup (name);
                 append_to_playing_page (album);
             });
             list.item_binded.connect ((item) => {
