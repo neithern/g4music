@@ -23,8 +23,6 @@ namespace G4 {
         [GtkChild]
         private unowned Gtk.ProgressBar progress_bar;
         [GtkChild]
-        private unowned Gtk.Label index_title;
-        [GtkChild]
         private unowned Gtk.MenuButton sort_btn;
         [GtkChild]
         private unowned Gtk.ToggleButton search_btn;
@@ -69,22 +67,24 @@ namespace G4 {
             stack_view.visible_child = _playing_list;
 
             _artist_list = create_artist_list ();
-            _artist_stack.add_named (_artist_list, null);
+            _artist_stack.add_named (_artist_list, "Artists");
             stack_view.add_titled (_artist_stack, "Artists", _("Artists")).icon_name = "system-users-symbolic";
 
             _album_list = create_albums_list ();
             stack_view.add_titled (_album_list, "Albums", _("Albums")).icon_name = "drive-multidisk-symbolic";
 
-            var revealer = new Gtk.Revealer ();
-            var switcher = new Adw.ViewSwitcher ();
+            var switcher = new SwitchBar ();
             switcher.stack = stack_view;
-            revealer.child = switcher;
-            insert_child_after (revealer, progress_bar);
+            switcher.transition_type = Gtk.RevealerTransitionType.SLIDE_RIGHT;
+            header_bar.pack_start (switcher);
 
-            var switcher_title = new Adw.ViewSwitcherTitle ();
-            switcher_title.stack = stack_view;
-            switcher_title.bind_property ("title-visible", revealer, "reveal-child", BindingFlags.SYNC_CREATE);
-            header_bar.title_widget = switcher_title;
+            var switcher2 = new SwitchBar ();
+            switcher2.stack = stack_view;
+            var revealer = new Gtk.Revealer ();
+            revealer.child = switcher2;
+            revealer.transition_type = Gtk.RevealerTransitionType.SLIDE_UP;
+            insert_child_after (revealer, progress_bar);
+            switcher.bind_property ("reveal-child", revealer, "reveal-child", BindingFlags.SYNC_CREATE | BindingFlags.INVERT_BOOLEAN);
 
             Idle.add (() => {
                 // Delay set model after the window shown to avoid slowing down it showing
@@ -92,7 +92,6 @@ namespace G4 {
                     _album_list.create_factory ();
                     _artist_list.create_factory ();
                     _app.settings.bind ("compact-playlist", _playing_list, "compact-list", SettingsBindFlags.DEFAULT);
-                    _app.settings.bind ("sort-mode", this, "sort-mode", SettingsBindFlags.DEFAULT);
                     stack_view.bind_property ("visible-child", this, "visible-child", BindingFlags.SYNC_CREATE);
                 }
                 return win.get_height () == 0;
@@ -100,6 +99,7 @@ namespace G4 {
 
             app.index_changed.connect (on_index_changed);
             app.music_store.loading_changed.connect (on_loading_changed);
+            app.settings.bind ("sort-mode", this, "sort-mode", SettingsBindFlags.DEFAULT);
         }
 
         public Gtk.Widget visible_child {
@@ -109,7 +109,7 @@ namespace G4 {
                 var filter = _current_list.filter_model.get_filter ();
                 _current_list = mlist;
                 _current_list.filter_model.set_filter (filter);
-                sort_btn.visible = playing;
+                sort_btn.sensitive = playing;
                 if (playing && _current_list.visible_count > 0) {
                     run_idle_once (() => scroll_to_item (_app.current_item));
                 }
@@ -131,7 +131,7 @@ namespace G4 {
                 var compare = (CompareDataFunc) get_sort_compare (value);
                 store.sort (compare);
 
-                if (_playing_list.visible_count > 0) {
+                if (_playing_list.get_height () > 0) {
                     _playing_list.create_factory ();
                 }
             }
@@ -280,7 +280,6 @@ namespace G4 {
         private void on_index_changed (int index, uint size) {
             root.action_set_enabled (ACTION_APP + ACTION_PREV, index > 0);
             root.action_set_enabled (ACTION_APP + ACTION_NEXT, index < (int) size - 1);
-            index_title.label = size > 0 ? @"$(index+1)/$(size)" : "";
             if (_current_list == _playing_list && _current_list.visible_count > 0) {
                 scroll_to_item (index);
             }

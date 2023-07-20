@@ -5,6 +5,8 @@ namespace G4 {
         [GtkChild]
         private unowned Gtk.Button back_btn;
         [GtkChild]
+        private unowned Gtk.Label index_label;
+        [GtkChild]
         private unowned Adw.Clamp clamp;
         [GtkChild]
         private unowned Gtk.Box music_box;
@@ -68,6 +70,7 @@ namespace G4 {
                 return win.get_height () == 0;
             }, Priority.LOW);
 
+            app.index_changed.connect (on_index_changed);
             app.music_changed.connect (on_music_changed);
             app.music_list.items_changed.connect (on_music_items_changed);
             app.music_tag_parsed.connect (on_music_tag_parsed);
@@ -104,6 +107,12 @@ namespace G4 {
             var max_size = int.max (panel_width * 3 / 4, music_cover.pixel_size);
             clamp.maximum_size = max_size;
             clamp.tightening_threshold = max_size;
+        }
+
+        private void on_index_changed (int index, uint size) {
+            root.action_set_enabled (ACTION_APP + ACTION_PREV, index > 0);
+            root.action_set_enabled (ACTION_APP + ACTION_NEXT, index < (int) size - 1);
+            index_label.label = size > 0 ? @"$(index+1)/$(size)" : "";
         }
 
         private Music? _current_music = new Music.empty ();

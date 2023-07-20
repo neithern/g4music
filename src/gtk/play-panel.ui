@@ -16,6 +16,10 @@
             <property name="tooltip-text" translatable="yes">Back</property>
           </object>
         </child>
+        <child type="start">
+          <object class="GtkLabel" id="index_label">
+          </object>
+        </child>
         <child type="title">
           <object class="GtkLabel">
             <property name="visible">false</property>

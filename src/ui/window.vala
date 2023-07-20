@@ -23,17 +23,20 @@ namespace G4 {
 
             _bkgnd_paintable.queue_draw.connect (this.queue_draw);
 
+            var revealer = new Gtk.Revealer ();
+            revealer.child = _mini_bar;
+            revealer.transition_type = Gtk.RevealerTransitionType.SLIDE_DOWN;
             _mini_bar.activated.connect (() => _leaflet.navigate (Adw.NavigationDirection.FORWARD));
 
             _store_panel = new StorePanel (app, this, _leaflet);
-            _store_panel.append (_mini_bar);
+            _store_panel.append (revealer);
 
             _play_panel = new PlayPanel (app, this, _leaflet);
             _play_panel.cover_changed.connect (on_cover_changed);
 
             _leaflet.append (_store_panel);
             _leaflet.append (_play_panel);
-            _leaflet.bind_property ("folded", _mini_bar, "visible", BindingFlags.SYNC_CREATE);
+            _leaflet.bind_property ("folded", revealer, "reveal-child", BindingFlags.SYNC_CREATE);
 
             setup_drop_target ();
 
