@@ -303,7 +303,7 @@ namespace G4 {
 
             if (album != null) {
                 var play_btn = new Gtk.Button.from_icon_name ("media-playback-start-symbolic");
-                play_btn.tooltip_text = _("Play All");
+                play_btn.tooltip_text = _("Play Album");
                 play_btn.clicked.connect (() => append_to_playing_page (album));
                 header.pack_end (play_btn);
             }
