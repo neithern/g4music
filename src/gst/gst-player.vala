@@ -184,10 +184,9 @@ namespace G4 {
         }
 
         public void seek (Gst.ClockTime position) {
-            if (!_seeking) {
+            if (_pipeline != null && !_seeking) {
                 //  print ("Seek: %g -> %g\n", to_second (_position), to_second (position));
-                _seeking = true;
-                _pipeline?.seek_simple (Gst.Format.TIME, Gst.SeekFlags.ACCURATE | Gst.SeekFlags.FLUSH, (int64) position);
+                _seeking = ((!)_pipeline).seek_simple (Gst.Format.TIME, Gst.SeekFlags.ACCURATE | Gst.SeekFlags.FLUSH, (int64) position);
             }
         }
 
