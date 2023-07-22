@@ -277,6 +277,7 @@ namespace G4 {
                 entry.music = music;
                 entry.paintable = _loading_paintable;
                 entry.title = music.title;
+                entry.subtitle = "";
             });
             list.item_created.connect ((item) => {
                 var entry = (MusicEntry) item.child;

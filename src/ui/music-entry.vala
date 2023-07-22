@@ -1,8 +1,58 @@
 namespace G4 {
 
+    public class StableLabel : Gtk.Widget {
+        private Gtk.Label _label = new Gtk.Label (null);
+
+        public StableLabel () {
+            add_child (new Gtk.Builder (), _label, null);
+        }
+
+        ~StableLabel () {
+            _label.unparent ();
+        }
+
+        public Pango.EllipsizeMode ellipsize {
+            get {
+                return _label.ellipsize;
+            }
+            set {
+                _label.ellipsize = value;
+            }
+        }
+
+        public string label {
+            get {
+                return _label.label;
+            }
+            set {
+                _label.label = value;
+            }
+        }
+
+        public override void measure (Gtk.Orientation orientation, int for_size, out int minimum, out int natural, out int minimum_baseline, out int natural_baseline) {
+            var vertical = orientation == Gtk.Orientation.VERTICAL;
+            _label.measure (orientation, for_size, out minimum, out natural, out minimum_baseline, out natural_baseline);
+            if (vertical) {
+                // Ensure enough space for different text
+                var font_size = _label.get_pango_context ().get_font_description ().get_size () / Pango.SCALE;
+                minimum = natural = int.max ((int) (font_size * 1.6), natural);
+            }
+        }
+
+        public override void size_allocate (int width, int height, int baseline) {
+            var allocation = Gtk.Allocation ();
+            allocation.x = 0;
+            allocation.y = 0;
+            allocation.width = width;
+            allocation.height = height;
+            _label.allocate_size (allocation, baseline);
+        }
+    }
+
     public class MusicWidget : Gtk.Box {
         protected Gtk.Image _cover = new Gtk.Image ();
-        protected Gtk.Label _title = new Gtk.Label (null);
+        protected StableLabel _title = new StableLabel ();
+        protected StableLabel _subtitle = new StableLabel ();
         protected RoundPaintable _paintable = new RoundPaintable ();
 
         public ulong first_draw_handler = 0;
@@ -22,6 +72,13 @@ namespace G4 {
         public string title {
             set {
                 _title.label = value;
+            }
+        }
+
+        public string subtitle {
+            set {
+                _subtitle.label = value;
+                _subtitle.visible = value.length > 0;
             }
         }
 
@@ -59,7 +116,6 @@ namespace G4 {
     }
 
     public class MusicEntry : MusicWidget {
-        private Gtk.Label _subtitle = new Gtk.Label (null);
         private Gtk.Image _playing = new Gtk.Image ();
 
         public MusicEntry (bool compact = true) {
@@ -88,7 +144,6 @@ namespace G4 {
             _title.add_css_class ("title-leading");
 
             _subtitle.halign = Gtk.Align.START;
-            _subtitle.valign = Gtk.Align.CENTER;
             _subtitle.ellipsize = Pango.EllipsizeMode.END;
             _subtitle.add_css_class ("dim-label");
             var font_size = _subtitle.get_pango_context ().get_font_description ().get_size () / Pango.SCALE;
@@ -103,11 +158,6 @@ namespace G4 {
             _playing.add_css_class ("dim-label");
             append (_playing);
 
-            //  Make enough space for text
-            var height = (int) (font_size * 2.65) + spacing;
-            var padding = 2;
-            var item_height = (height + padding + 3) / 4 * 4;
-            height_request = int.max (item_height - padding, cover_size + cover_margin * 2);
             width_request = 300;
         }
 
