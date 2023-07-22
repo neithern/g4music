@@ -205,40 +205,39 @@ namespace G4 {
         }
 
         private void show_popover (double x, double y) {
-            var app = (Application) GLib.Application.get_default ();
-            app.popover_music = _music;
             if (_music != null) {
-                var music = (!)_music;
-                var has_cover = app.thumbnailer.find (music) is Gdk.Texture;
-                var popover = create_music_popover_menu (music, x, y, music != app.current_music, has_cover);
+                var music = (!) _music;
+                var app = (Application) GLib.Application.get_default ();
+                var popover = create_music_popover_menu (music, x, y);
+                var menu = (Menu) popover.menu_model;
+                if (music != app.current_music)
+                    menu.prepend_item (create_menu_item (music.uri, _("Play at Next"), ACTION_APP + ACTION_PLAY_AT_NEXT));
+                if (music.cover_uri != null)
+                    menu.append_item (create_menu_item (music.uri, _("Show _Cover File"), ACTION_APP + ACTION_SHOW_COVER_FILE));
+                else if (app.thumbnailer.find (music) is Gdk.Texture)
+                    menu.append_item (create_menu_item (music.uri, _("_Export Cover"), ACTION_APP + ACTION_EXPORT_COVER));
                 popover.set_parent (this);
-                popover.closed.connect (() => {
-                    run_idle_once (() => {
-                        if (app.popover_music == music)
-                            app.popover_music = null;
-                    });
-                });
                 popover.popup ();
             }
         }
     }
 
-    public Gtk.PopoverMenu create_music_popover_menu (Music music, double x, double y, bool play_at_next = true, bool has_cover = true) {
+    public MenuItem create_menu_item (string value, string label, string action) {
+        var item = new MenuItem (label, null);
+        item.set_action_and_target_value (action, new Variant.string (value));
+        return item;
+    }
+
+    public Gtk.PopoverMenu create_music_popover_menu (Music music, double x, double y) {
         var menu = new Menu ();
-        if (play_at_next)
-            menu.append (_("Play at Next"), ACTION_APP + ACTION_PLAY_AT_NEXT);
-        menu.append (_("Search Title"), ACTION_APP + ACTION_SEARCH_TITLE);
-        menu.append (_("Search Album"), ACTION_APP + ACTION_SEARCH_ALBUM);
-        menu.append (_("Search Artist"), ACTION_APP + ACTION_SEARCH_ARTIST);
-        menu.append (_("_Show Music File"), ACTION_APP + ACTION_SHOW_MUSIC_FILES);
-        if (music.cover_uri != null)
-            menu.append (_("Show _Cover File"), ACTION_APP + ACTION_SHOW_COVER_FILE);
-        else if (has_cover)
-            menu.append (_("_Export Cover"), ACTION_APP + ACTION_EXPORT_COVER);
+        menu.append_item (create_menu_item (music.title, _("Search Title"), ACTION_APP + ACTION_SEARCH_TITLE));
+        menu.append_item (create_menu_item (music.album, _("Search Album"), ACTION_APP + ACTION_SEARCH_ALBUM));
+        menu.append_item (create_menu_item (music.artist, _("Search Artist"), ACTION_APP + ACTION_SEARCH_ARTIST));
+        menu.append_item (create_menu_item (music.uri, _("_Show Music File"), ACTION_APP + ACTION_SHOW_MUSIC_FILES));
 
         var rect = Gdk.Rectangle ();
-        rect.x = (int)x;
-        rect.y = (int)y;
+        rect.x = (int) x;
+        rect.y = (int) y;
         rect.width = rect.height = 0;
 
         var popover = new Gtk.PopoverMenu.from_model (menu);

@@ -51,18 +51,18 @@ namespace G4 {
             ActionEntry[] action_entries = {
                 { ACTION_ABOUT, show_about },
                 { ACTION_PREFS, show_preferences },
-                { ACTION_EXPORT_COVER, export_cover },
-                { ACTION_PLAY_AT_NEXT, play_at_next },
+                { ACTION_EXPORT_COVER, export_cover, "s" },
+                { ACTION_PLAY_AT_NEXT, play_at_next, "s" },
                 { ACTION_PLAY, play_pause },
                 { ACTION_PREV, play_previous },
                 { ACTION_NEXT, play_next },
                 { ACTION_RELOAD_LIST, reload_music_store },
                 { ACTION_SEARCH, toggle_search },
-                { ACTION_SEARCH_ALBUM, search_album },
-                { ACTION_SEARCH_ARTIST, search_artist },
-                { ACTION_SEARCH_TITLE, search_title },
-                { ACTION_SHOW_COVER_FILE, show_cover_file },
-                { ACTION_SHOW_MUSIC_FILES, show_music_file },
+                { ACTION_SEARCH_ALBUM, search_album, "s" },
+                { ACTION_SEARCH_ARTIST, search_artist, "s" },
+                { ACTION_SEARCH_TITLE, search_title, "s" },
+                { ACTION_SHOW_COVER_FILE, show_cover_file, "s" },
+                { ACTION_SHOW_MUSIC_FILES, show_music_file, "s" },
                 { ACTION_SORT, sort_by, "s", "'2'" },
                 { ACTION_TOGGLE_SORT, toggle_sort },
                 { ACTION_QUIT, quit }
@@ -263,8 +263,6 @@ namespace G4 {
                 return _player;
             }
         }
-
-        public Music? popover_music { get; set; }
 
         public Settings settings {
             get {
@@ -526,11 +524,10 @@ namespace G4 {
             }
         }
 
-        private async void _export_cover_async () {
-            var music = _popover_music ?? _current_music;
+        private async void _export_cover_async (Music? music) {
             Gst.Sample? sample = _current_cover;
-            if (_popover_music != null && _popover_music != _current_music) {
-                var file = File.new_for_uri (_popover_music?.uri ?? "");
+            if (music != null && music != _current_music) {
+                var file = File.new_for_uri (music?.uri ?? "");
                 sample = yield run_async<Gst.Sample?> (() => {
                     var tags = parse_gst_tags (file);
                     return tags != null ? parse_image_from_tag_list ((!)tags) : null;
@@ -572,8 +569,14 @@ namespace G4 {
             }
         }
 
-        private void export_cover () {
-            _export_cover_async.begin ((obj, res) => _export_cover_async.end (res));
+        private Music? _get_music_from_parameter (Variant? parameter) {
+            unowned var uri = parameter?.get_string (null);
+            return uri != null ? _music_store.find_cache ((!)uri) : null;
+        }
+
+        private void export_cover (SimpleAction action, Variant? parameter) {
+            var music = _get_music_from_parameter (parameter);
+            _export_cover_async.begin (music, (obj, res) => _export_cover_async.end (res));
         }
 
         private Music? get_next_music (ref int index) {
@@ -582,18 +585,19 @@ namespace G4 {
             return _music_list.get_item (index) as Music;
         }
 
-        private void play_at_next () {
-            if (_current_music != null && _popover_music != null) {
+        private void play_at_next (SimpleAction action, Variant? parameter) {
+            var music = _get_music_from_parameter (parameter);
+            if (_current_music != null && music != null) {
                 uint playing_item = -1;
                 uint popover_item = -1;
                 var store = _music_store.store;
                 if (store.find ((!)_current_music, out playing_item)
-                        && store.find ((!)_popover_music, out popover_item)
+                        && store.find ((!)music, out popover_item)
                         && playing_item != popover_item
                         && playing_item != popover_item - 1) {
                     var next_item = popover_item > playing_item ? playing_item + 1 : playing_item;
                     store.remove (popover_item);
-                    store.insert (next_item, (!)_popover_music);
+                    store.insert (next_item, (!)music);
                     //  update current playing item without scrolling
                     var old_item = _current_item;
                     _current_item = find_music_item (_current_music);
@@ -603,6 +607,21 @@ namespace G4 {
             }
         }
 
+        private void search_album (SimpleAction action, Variant? parameter) {
+            unowned var text = parameter?.get_string (null) ?? "";
+            (active_window as Window)?.start_search (text, SearchMode.ALBUM);
+        }
+
+        private void search_artist (SimpleAction action, Variant? parameter) {
+            unowned var text = parameter?.get_string (null) ?? "";
+            (active_window as Window)?.start_search (text, SearchMode.ARTIST);
+        }
+
+        private void search_title (SimpleAction action, Variant? parameter) {
+            unowned var text = parameter?.get_string (null) ?? "";
+            (active_window as Window)?.start_search (text, SearchMode.TITLE);
+        }
+
         private void _show_uri_with_portal (string? uri) {
             if (uri != null) {
                 _portal.open_directory_async.begin ((!)uri,
@@ -610,29 +629,14 @@ namespace G4 {
             }
         }
 
-        private void show_cover_file () {
-            var music = _popover_music ?? _current_music;
+        private void show_cover_file (SimpleAction action, Variant? parameter) {
+            var music = _get_music_from_parameter (parameter);
             _show_uri_with_portal (music?.cover_uri);
         }
 
-        private void show_music_file () {
-            var music = _popover_music ?? _current_music;
-            _show_uri_with_portal (music?.uri);
-        }
-
-        private void search_album () {
-            var album = (_popover_music ?? _current_music)?.album ?? "";
-            (active_window as Window)?.start_search (album, SearchMode.ALBUM);
-        }
-
-        private void search_artist () {
-            var artist = (_popover_music ?? _current_music)?.artist ?? "";
-            (active_window as Window)?.start_search (artist, SearchMode.ARTIST);
-        }
-
-        private void search_title () {
-            var title = (_popover_music ?? _current_music)?.title ?? "";
-            (active_window as Window)?.start_search (title, SearchMode.TITLE);
+        private void show_music_file (SimpleAction action, Variant? parameter) {
+            unowned var uri = parameter?.get_string (null);
+            _show_uri_with_portal (uri);
         }
 
         private void on_player_end () {

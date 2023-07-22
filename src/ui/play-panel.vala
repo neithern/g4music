@@ -216,10 +216,14 @@ namespace G4 {
         }
 
         private void show_popover_menu (double x, double y) {
-            var music = _app.current_music;
-            if (music != null) {
-                var popover = create_music_popover_menu ((!)music, x, y, 
-                                false, _app.current_cover != null);
+            if (_app.current_music != null) {
+                var music = (!)_app.current_music;
+                var popover = create_music_popover_menu ((!)music, x, y);
+                var menu = (Menu) popover.menu_model;
+                if (music.cover_uri != null)
+                    menu.append_item (create_menu_item (music.uri, _("Show _Cover File"), ACTION_APP + ACTION_SHOW_COVER_FILE));
+                else if (_app.current_cover != null)
+                    menu.append_item (create_menu_item (music.uri, _("_Export Cover"), ACTION_APP + ACTION_EXPORT_COVER));
                 popover.set_parent (music_box);
                 popover.popup ();
             }
