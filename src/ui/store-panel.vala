@@ -44,9 +44,8 @@ namespace G4 {
         private MusicList _playing_list;
         private MusicLibrary _library;
         private Gdk.Paintable _loading_paintable;
-        private string _search_text = "";
-        private string _search_property = "";
         private uint _search_mode = SearchMode.ANY;
+        private string _search_text = "";
         private uint _sort_mode = 0;
 
         public StorePanel (Application app, Window win, Adw.Leaflet leaflet) {
@@ -112,11 +111,13 @@ namespace G4 {
 
         public Gtk.Widget visible_child {
             set {
-                var mlist = (MusicList) (value as Gtk.Stack)?.visible_child;
-                var playing = mlist == _playing_list;
-                var filter = _current_list.filter_model.get_filter ();
-                _current_list = mlist;
-                _current_list.filter_model.set_filter (filter);
+                var child = value.get_first_child ();
+                if (child is MusicList) {
+                    _current_list = (MusicList) child;
+                }
+                on_search_text_changed ();
+
+                var playing = _current_list == _playing_list;
                 sort_btn.sensitive = playing;
                 if (playing && _current_list.visible_count > 0) {
                     run_idle_once (() => scroll_to_item (_app.current_item));
@@ -393,41 +394,49 @@ namespace G4 {
             if (search_btn.active) {
                 search_entry.grab_focus ();
             }
-            update_search_filter ();
+            on_search_text_changed ();
         }
 
         private bool on_search_match (Object obj) {
             var music = (Music) obj;
+            unowned var text = _search_text;
             switch (_search_mode) {
                 case SearchMode.ALBUM:
-                    return _search_property.match_string (music.album, true);
+                    return text.match_string (music.album, true);
                 case SearchMode.ARTIST:
-                    return _search_property.match_string (music.artist, true);
+                    return text.match_string (music.artist, true);
                 case SearchMode.TITLE:
-                    return _search_property.match_string (music.title, true);
+                    return text.match_string (music.title, true);
                 default:
-                    return _search_text.match_string (music.album, true)
-                        || _search_text.match_string (music.artist, true)
-                        || _search_text.match_string (music.title, true);
+                    return text.match_string (music.album, true)
+                        || text.match_string (music.artist, true)
+                        || text.match_string (music.title, true);
             }
         }
 
         private void on_search_text_changed () {
-            string text = search_entry.text;
-            if (text.ascii_ncasecmp ("album:", 6) == 0) {
-                _search_property = text.substring (6);
+            var text = _search_text = search_entry.text;
+            if (_current_list == _album_list) {
                 _search_mode = SearchMode.ALBUM;
-            } else if (text.ascii_ncasecmp ("artist:", 7) == 0) {
-                _search_property = text.substring (7);
+                if (text.ascii_ncasecmp ("album:", 6) == 0)
+                    _search_text = text.substring (6);
+            } else if (_current_list == _artist_list) {
                 _search_mode = SearchMode.ARTIST;
+                if (text.ascii_ncasecmp ("artist:", 7) == 0)
+                    _search_text = text.substring (7);
+            } else if (text.ascii_ncasecmp ("album:", 6) == 0) {
+                _search_mode = SearchMode.ALBUM;
+                _search_text = text.substring (6);
+            } else if (text.ascii_ncasecmp ("artist:", 7) == 0) {
+                _search_mode = SearchMode.ARTIST;
+                _search_text = text.substring (7);
             } else if (text.ascii_ncasecmp ("title:", 6) == 0) {
-                _search_property = text.substring (6);
                 _search_mode = SearchMode.TITLE;
+                _search_text = text.substring (6);
             } else {
                 _search_mode = SearchMode.ANY;
             }
-            _search_text = text;
-            update_search_filter ();
+            _current_list.filter_model.set_filter (search_btn.active ? new Gtk.CustomFilter (on_search_match) : (Gtk.CustomFilter?) null);
         }
 
         private void pop_pages_except_first (Gtk.Stack stack) {
@@ -440,10 +449,6 @@ namespace G4 {
                     last = last?.get_prev_sibling ()) {
                 stack.remove ((!)last);
             }
-        }
-
-        private void update_search_filter () {
-            _current_list.filter_model.set_filter (search_btn.active ? new Gtk.CustomFilter (on_search_match) : (Gtk.CustomFilter?) null);
         }
     }
 }
