@@ -31,10 +31,10 @@ namespace G4 {
         [GtkChild]
         private unowned Gtk.SearchEntry search_entry;
         [GtkChild]
-        private unowned Adw.ViewStack stack_view;
+        private unowned Gtk.Stack stack_view;
 
-        private Adw.ViewStack _album_stack = new Adw.ViewStack ();
-        private Adw.ViewStack _artist_stack = new Adw.ViewStack ();
+        private Gtk.Stack _album_stack = new Gtk.Stack ();
+        private Gtk.Stack _artist_stack = new Gtk.Stack ();
 
         private Application _app;
         private MusicList _album_list;
@@ -69,10 +69,12 @@ namespace G4 {
 
             _artist_list = create_artist_list ();
             _artist_stack.add_named (_artist_list, "artists");
+            _artist_stack.transition_type = Gtk.StackTransitionType.SLIDE_LEFT_RIGHT;
             stack_view.add_titled (_artist_stack, "Artists", _("Artists")).icon_name = "system-users-symbolic";
 
             _album_list = create_albums_list ();
             _album_stack.add_named (_album_list, "albums");
+            _album_stack.transition_type = Gtk.StackTransitionType.SLIDE_LEFT_RIGHT;
             stack_view.add_titled (_album_stack, "Albums", _("Albums")).icon_name = "drive-multidisk-symbolic";
 
             var switcher = new SwitchBar ();
@@ -85,7 +87,7 @@ namespace G4 {
             var revealer = new Gtk.Revealer ();
             revealer.child = switcher2;
             revealer.transition_type = Gtk.RevealerTransitionType.SLIDE_UP;
-            insert_child_after (revealer, progress_bar);
+            insert_child_after (revealer, header_bar);
             switcher.bind_property ("reveal-child", revealer, "reveal-child", BindingFlags.SYNC_CREATE | BindingFlags.INVERT_BOOLEAN);
 
             Idle.add (() => {
@@ -94,6 +96,7 @@ namespace G4 {
                     _album_list.create_factory ();
                     _artist_list.create_factory ();
                     _app.settings.bind ("compact-playlist", _playing_list, "compact-list", SettingsBindFlags.DEFAULT);
+                    stack_view.transition_type = Gtk.StackTransitionType.SLIDE_LEFT_RIGHT;
                     stack_view.bind_property ("visible-child", this, "visible-child", BindingFlags.SYNC_CREATE);
                 }
                 return win.get_height () == 0;
@@ -106,7 +109,7 @@ namespace G4 {
 
         public Gtk.Widget visible_child {
             set {
-                var mlist = (MusicList) ((value as Adw.ViewStack)?.visible_child ?? value);
+                var mlist = (MusicList) ((value as Gtk.Stack)?.visible_child ?? value);
                 var playing = mlist == _playing_list;
                 var filter = _current_list.filter_model.get_filter ();
                 _current_list = mlist;
@@ -283,7 +286,7 @@ namespace G4 {
             return list;
         }
 
-        private void create_page_for_music_list (Adw.ViewStack stack, MusicList mlist, string name, Album? album = null) {
+        private void create_page_for_music_list (Gtk.Stack stack, MusicList mlist, string name, Album? album = null) {
             var label = new Gtk.Label (name);
             label.ellipsize = Pango.EllipsizeMode.END;
             var header = new Adw.HeaderBar ();
@@ -296,8 +299,8 @@ namespace G4 {
             back_btn.tooltip_text = _("Back");
             back_btn.clicked.connect (() => {
                 var prev = mlist.get_prev_sibling ();
-                stack.remove (mlist);
                 stack.visible_child = (!)prev;
+                run_timeout_once (stack.transition_duration, () => stack.remove (mlist));
             });
             header.pack_start (back_btn);
 

@@ -4,12 +4,13 @@ namespace G4 {
         private Gtk.Box _box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
         private Gtk.Revealer _revealer = new Gtk.Revealer ();
         private int _minimum_width = 0;
-        private Adw.ViewStack? _stack = null;
+        private Gtk.Stack? _stack = null;
 
         public SwitchBar () {
             _box.hexpand = true;
             _box.add_css_class ("toolbar");
             _revealer.child = _box;
+            _revealer.reveal_child = true;
             add_child (new Gtk.Builder (), _revealer, null);
         }
 
@@ -22,7 +23,7 @@ namespace G4 {
             }
         }
 
-        public Adw.ViewStack? stack {
+        public Gtk.Stack? stack {
             get {
                 return _stack;
             }
@@ -30,7 +31,7 @@ namespace G4 {
                 var pages = value?.get_pages ();
                 var n_items = pages?.get_n_items () ?? 0;
                 for (var i = 0; i < n_items; i++) {
-                    var page = (Adw.ViewStackPage) pages?.get_item (i);
+                    var page = (Gtk.StackPage) pages?.get_item (i);
                     var button = new Gtk.ToggleButton ();
                     button.name = page.name;
                     button.icon_name = page.icon_name;
