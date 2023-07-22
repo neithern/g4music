@@ -1,5 +1,6 @@
 
 sources = [
+  'action-handles.vala',
   'application.vala',
   'config.vapi',
   'main.vala',
