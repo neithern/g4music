@@ -55,11 +55,11 @@ namespace G4 {
             music_artist.tooltip_text = _("Search Artist");
             music_title.tooltip_text = _("Search Title");
             make_label_clickable (music_album).released.connect (
-                () => win.start_search ("album:" + music_album.label));
+                () => win.start_search (music_album.label, SearchMode.ALBUM));
             make_label_clickable (music_artist).released.connect (
-                () => win.start_search ("artist:" + music_artist.label));
+                () => win.start_search (music_artist.label, SearchMode.ARTIST));
             make_label_clickable (music_title).released.connect (
-                () => win.start_search ("title:" + music_title.label));
+                () => win.start_search (music_title.label, SearchMode.TITLE));
             make_right_clickable (music_box, show_popover_menu);
 
             Idle.add (() => {

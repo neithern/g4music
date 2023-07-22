@@ -1,7 +1,7 @@
 namespace G4 {
 
     namespace SearchMode {
-        public const uint ALL = 0;
+        public const uint ANY = 0;
         public const uint ALBUM = 1;
         public const uint ARTIST = 2;
         public const uint TITLE = 3;
@@ -35,6 +35,7 @@ namespace G4 {
 
         private Gtk.Stack _album_stack = new Gtk.Stack ();
         private Gtk.Stack _artist_stack = new Gtk.Stack ();
+        private Gtk.Stack _playing_stack = new Gtk.Stack ();
 
         private Application _app;
         private MusicList _album_list;
@@ -45,7 +46,7 @@ namespace G4 {
         private Gdk.Paintable _loading_paintable;
         private string _search_text = "";
         private string _search_property = "";
-        private uint _search_mode = SearchMode.ALL;
+        private uint _search_mode = SearchMode.ANY;
         private uint _sort_mode = 0;
 
         public StorePanel (Application app, Window win, Adw.Leaflet leaflet) {
@@ -64,8 +65,10 @@ namespace G4 {
             _current_list = _playing_list = create_playing_music_list ();
             _playing_list.data_store = _app.music_store.store;
             _playing_list.filter_model = _app.music_list;
-            stack_view.add_titled (_playing_list, "Playing", _("Playing")).icon_name = "media-playback-start-symbolic";
-            stack_view.visible_child = _playing_list;
+            _playing_stack.add_named (_playing_list, "playing");
+            _playing_stack.transition_type = Gtk.StackTransitionType.SLIDE_LEFT_RIGHT;
+            stack_view.add_titled (_playing_stack, "Playing", _("Playing")).icon_name = "media-playback-start-symbolic";
+            stack_view.visible_child = _playing_stack;
 
             _artist_list = create_artist_list ();
             _artist_stack.add_named (_artist_list, "artists");
@@ -109,7 +112,7 @@ namespace G4 {
 
         public Gtk.Widget visible_child {
             set {
-                var mlist = (MusicList) ((value as Gtk.Stack)?.visible_child ?? value);
+                var mlist = (MusicList) (value as Gtk.Stack)?.visible_child;
                 var playing = mlist == _playing_list;
                 var filter = _current_list.filter_model.get_filter ();
                 _current_list = mlist;
@@ -149,7 +152,24 @@ namespace G4 {
             _current_list.scroll_to_item (index);
         }
 
-        public void start_search (string text) {
+        public void start_search (string text, uint mode = SearchMode.ANY) {
+            Gtk.Stack? stack = null;
+            switch (mode) {
+                case SearchMode.ALBUM:
+                stack = _album_stack;
+                    break;
+                case SearchMode.ARTIST:
+                stack = _artist_stack;
+                    break;
+                case SearchMode.TITLE:
+                stack = _playing_stack;
+                    break;
+            }
+            if (stack != null) {
+                pop_pages_except_first ((!)stack);
+                stack_view.visible_child = (!)stack;
+            }
+
 #if GTK_4_10
             var delay = search_entry.search_delay;
             search_entry.search_delay = 0;
@@ -403,10 +423,22 @@ namespace G4 {
                 _search_property = text.substring (6);
                 _search_mode = SearchMode.TITLE;
             } else {
-                _search_mode = SearchMode.ALL;
+                _search_mode = SearchMode.ANY;
             }
             _search_text = text;
             update_search_filter ();
+        }
+
+        private void pop_pages_except_first (Gtk.Stack stack) {
+            var first = stack.get_first_child ();
+            if (first != null) {
+                stack.visible_child = (!)first;
+            }
+            for (var last = stack.get_last_child ();
+                    last != null && last != first;
+                    last = last?.get_prev_sibling ()) {
+                stack.remove ((!)last);
+            }
         }
 
         private void update_search_filter () {

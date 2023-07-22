@@ -622,17 +622,17 @@ namespace G4 {
 
         private void search_album () {
             var album = (_popover_music ?? _current_music)?.album ?? "";
-            (active_window as Window)?.start_search ("album:" + album);
+            (active_window as Window)?.start_search (album, SearchMode.ALBUM);
         }
 
         private void search_artist () {
             var artist = (_popover_music ?? _current_music)?.artist ?? "";
-            (active_window as Window)?.start_search ("artist:" + artist);
+            (active_window as Window)?.start_search (artist, SearchMode.ARTIST);
         }
 
         private void search_title () {
             var title = (_popover_music ?? _current_music)?.title ?? "";
-            (active_window as Window)?.start_search ("title:" + title);
+            (active_window as Window)?.start_search (title, SearchMode.TITLE);
         }
 
         private void on_player_end () {

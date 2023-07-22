@@ -113,9 +113,11 @@ namespace G4 {
             base.snapshot (snapshot);
         }
 
-        public void start_search (string text) {
-            _store_panel.start_search (text);
-            _leaflet.navigate (Adw.NavigationDirection.BACK);
+        public void start_search (string text, uint mode = SearchMode.ANY) {
+            _store_panel.start_search (text, mode);
+            if (_leaflet.folded) {
+                _leaflet.navigate (Adw.NavigationDirection.BACK);
+            }
         }
 
         public void toggle_search () {
