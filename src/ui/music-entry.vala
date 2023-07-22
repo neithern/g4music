@@ -35,7 +35,7 @@ namespace G4 {
             if (vertical) {
                 // Ensure enough space for different text
                 var font_size = _label.get_pango_context ().get_font_description ().get_size () / Pango.SCALE;
-                minimum = natural = int.max ((int) (font_size * 1.6), natural);
+                minimum = natural = int.max ((int) (font_size * 1.65), natural);
             }
         }
 
