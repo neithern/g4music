@@ -101,6 +101,8 @@ namespace G4 {
                 var scroll_to =  from < max_to ? max_to : (from > min_to ? min_to : from);
                 var diff = (scroll_to - from).abs ();
                 if (diff > list_height) {
+                    //  Hack for GNOME 42: jump to correct position when first scroll
+                    _grid_view.activate_action_variant ("list.scroll-to-item", new Variant.uint32 (index));
                     _scroll_animation?.pause ();
                     adj.value = min_to;
                 } else if (diff > 0) {
