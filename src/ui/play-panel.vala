@@ -120,7 +120,7 @@ namespace G4 {
         private void on_music_changed (Music? music) {
             _current_music = music;
             update_music_info (music);
-            root.action_set_enabled (ACTION_APP + ACTION_PLAY, music != null);
+            root.action_set_enabled (ACTION_APP + ACTION_PLAY_PAUSE, music != null);
         }
 
         private bool on_music_folder_clicked (string uri) {
@@ -215,16 +215,17 @@ namespace G4 {
             return true;
         }
 
-        private void show_popover_menu (double x, double y) {
+        private void show_popover_menu (Gtk.Widget widget, double x, double y) {
             if (_app.current_music != null) {
                 var music = (!)_app.current_music;
-                var popover = create_music_popover_menu ((!)music, x, y);
-                var menu = (Menu) popover.menu_model;
-                if (music.cover_uri != null)
+                var menu = create_menu_for_music (music);
+                if (music.cover_uri != null) {
                     menu.append_item (create_menu_item (music.uri, _("Show _Cover File"), ACTION_APP + ACTION_SHOW_COVER_FILE));
-                else if (_app.current_cover != null)
+                } else if (_app.current_cover != null) {
                     menu.append_item (create_menu_item (music.uri, _("_Export Cover"), ACTION_APP + ACTION_EXPORT_COVER));
-                popover.set_parent (music_box);
+                }
+                var popover = create_popover_menu (menu, x, y);
+                popover.set_parent (widget);
                 popover.popup ();
             }
         }
@@ -258,7 +259,7 @@ namespace G4 {
         }
 
         private void update_initial_label (string uri) {
-            var dir_name = get_display_name (uri);
+            var dir_name = Uri.escape_string (get_display_name (uri));
             var link = @"<a href=\"change_dir\">$dir_name</a>";
             initial_label.set_markup (_("Drag and drop music files here,\nor change music location: ") + link);
         }

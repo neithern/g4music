@@ -51,7 +51,7 @@ namespace G4 {
             add_suffix (hbox);
 
             _play.valign = Gtk.Align.CENTER;
-            _play.action_name = ACTION_APP + ACTION_PLAY;
+            _play.action_name = ACTION_APP + ACTION_PLAY_PAUSE;
             _play.icon_name = "media-playback-start-symbolic";
             _play.tooltip_text = _("Play/Pause");
             _play.add_css_class ("circular");

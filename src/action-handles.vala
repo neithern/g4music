@@ -4,8 +4,9 @@ namespace G4 {
     public const string ACTION_ABOUT = "about";
     public const string ACTION_PREFS = "preferences";
     public const string ACTION_EXPORT_COVER = "export-cover";
-    public const string ACTION_PLAY_AT_NEXT = "play-at-next";
     public const string ACTION_PLAY = "play";
+    public const string ACTION_PLAY_AT_NEXT = "play-at-next";
+    public const string ACTION_PLAY_PAUSE = "play-pause";
     public const string ACTION_PREV = "prev";
     public const string ACTION_NEXT = "next";
     public const string ACTION_RELOAD_LIST = "reload-list";
@@ -34,8 +35,9 @@ namespace G4 {
                 { ACTION_ABOUT, show_about },
                 { ACTION_EXPORT_COVER, export_cover, "s" },
                 { ACTION_NEXT, () => _app.play_next () },
+                { ACTION_PLAY, play, "s" },
                 { ACTION_PLAY_AT_NEXT, play_at_next, "s" },
-                { ACTION_PLAY, () => _app.play_pause () },
+                { ACTION_PLAY_PAUSE, () => _app.play_pause () },
                 { ACTION_PREV, () => _app.play_previous () },
                 { ACTION_PREFS, show_preferences },
                 { ACTION_RELOAD_LIST, () => app.reload_music_store () },
@@ -53,7 +55,7 @@ namespace G4 {
 
             ActionShortKey[] action_keys = {
                 { ACTION_PREFS, "<primary>comma" },
-                { ACTION_PLAY, "<primary>p" },
+                { ACTION_PLAY_PAUSE, "<primary>p" },
                 { ACTION_PREV, "<primary>Left" },
                 { ACTION_NEXT, "<primary>Right" },
                 { ACTION_RELOAD_LIST, "<primary>r" },
@@ -121,9 +123,45 @@ namespace G4 {
             _export_cover_async.begin (music, (obj, res) => _export_cover_async.end (res));
         }
 
+        private Object? _parse_music_or_album_from_parameter (Variant? parameter) {
+            unowned var text = parameter?.get_string (null);
+            if (text != null) {
+                var uri = (!)text;
+                var store = _app.music_store;
+                var music = store.find_cache (uri);
+                if (music != null) {
+                    return music;
+                } else if (uri.has_prefix ("album://")) try {
+                    var u = Uri.parse ((!)uri, UriFlags.NONE);
+                    var library = store.library;
+                    var path = u.get_path ();
+                    var arr = path.split ("/");
+                    var count = arr.length;
+                    if (count > 2) {
+                        //  The first part is ""
+                        var album_name = Uri.unescape_string (arr[2]) ?? "";
+                        if (arr[1] != "*") {
+                            var artist_name = Uri.unescape_string (arr[1]) ?? "";
+                            var artist = library.artists[artist_name];
+                            if (artist is Artist)
+                                return artist.albums[album_name];
+                        }
+                        return library.albums[album_name];
+                    }
+                } catch (Error e) {
+                }
+            }
+            return null;
+        }
+
+        private void play (SimpleAction action, Variant? parameter) {
+            var obj = _parse_music_or_album_from_parameter (parameter);
+            _app.play (obj);
+        }
+
         private void play_at_next (SimpleAction action, Variant? parameter) {
-            var music = _get_music_from_parameter (parameter);
-            _app.play_at_next (music);
+            var obj = _parse_music_or_album_from_parameter (parameter);
+            _app.play_at_next (obj);
         }
 
         private void search () {

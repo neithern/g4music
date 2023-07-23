@@ -290,24 +290,71 @@ namespace G4 {
             }
         }
 
-        public void play_at_next (Music? music) {
-            if (_current_music != null && music != null) {
-                uint playing_item = -1;
-                uint popover_item = -1;
-                var store = _music_store.store;
-                if (store.find ((!)_current_music, out playing_item)
-                        && store.find ((!)music, out popover_item)
-                        && playing_item != popover_item
-                        && playing_item != popover_item - 1) {
-                    var next_item = popover_item > playing_item ? playing_item + 1 : playing_item;
-                    store.remove (popover_item);
-                    store.insert (next_item, (!)music);
-                    //  update current playing item without scrolling
-                    var old_item = _current_item;
-                    _current_item = find_music_item (_current_music);
-                    _music_list.items_changed (old_item, 0, 0);
-                    _music_list.items_changed (_current_item, 0, 0);
+        public void play (Object? obj) {
+            var store = _music_store.store;
+            if (obj is Music) {
+                var music = (Music) obj;
+                uint position = -1;
+                if (store.find (music, out position)) {
+                    current_item = (int) position;
+                } else {
+                    store.append (music);
+                    current_item = (int) store.get_n_items () - 1;
                 }
+            } else if (obj is Album) {
+                var album = (Album) obj;
+                var arr = new GenericArray<Music> (album.musics.length);
+                var insert_pos = (uint) store.get_n_items () - 1;
+                _music_list.items_changed (_current_item, 0, 0);
+                album.foreach ((uri, music) => {
+                    arr.add (music);
+                    uint position = -1;
+                    if (store.find (music, out position)) {
+                        store.remove (position);
+                        if (insert_pos > position) {
+                            insert_pos = position;
+                        }
+                    }
+                });
+                arr.sort (Music.compare_by_album);
+                store.splice (insert_pos, 0, arr.data);
+                current_item = (int) insert_pos;
+            }
+        }
+
+        public void play_at_next (Object? obj) {
+            if (_current_music != null) {
+                var store = _music_store.store;
+                _music_list.items_changed (_current_item, 0, 0);
+                if (obj is Music) {
+                    var music = (Music) obj;
+                    uint playing_item = -1;
+                    uint popover_item = -1;
+                    if (store.find ((!)_current_music, out playing_item)
+                            && store.find ((!)music, out popover_item)
+                            && playing_item != popover_item
+                            && playing_item != popover_item - 1) {
+                        var next_item = popover_item > playing_item ? playing_item + 1 : playing_item;
+                        store.remove (popover_item);
+                        store.insert (next_item, music);
+                    }
+                } else if (obj is Album) {
+                    var album = (Album) obj;
+                    var arr = new GenericArray<Music> (album.musics.length);
+                    album.foreach ((uri, music) => {
+                        arr.add (music);
+                        uint position = -1;
+                        if (store.find (music, out position)) {
+                            store.remove (position);
+                        }
+                    });
+                    arr.sort (Music.compare_by_album);
+                    uint playing_item = store.get_n_items () - 1;
+                    store.find ((!)_current_music, out playing_item);
+                    store.splice (playing_item + 1, 0, arr.data);
+                }
+                _current_item = find_music_item (_current_music);
+                _music_list.items_changed (_current_item, 0, 0);
             }
         }
 
@@ -522,3 +569,4 @@ namespace G4 {
         return false;
     }
 }
+

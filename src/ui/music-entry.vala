@@ -88,9 +88,23 @@ namespace G4 {
                 first_draw_handler = 0;
             }
         }
+
+        public void show_popover_menu (Gtk.Widget widget, double x, double y) {
+            var menu = create_item_menu ();
+            var popover = create_popover_menu (menu, x, y);
+            popover.set_parent (widget);
+            popover.popup ();
+        }
+
+        public virtual Menu create_item_menu () {
+            return new Menu ();
+        }
     }
 
     public class MusicCell : MusicWidget {
+        public string? album_name = null;
+        public string? artist_name = null;
+
         public MusicCell () {
             orientation = Gtk.Orientation.VERTICAL;
 
@@ -113,9 +127,18 @@ namespace G4 {
 
             width_request = _cover.pixel_size + _cover.margin_start + _cover.margin_end;
         }
+
+        public override Menu create_item_menu () {
+            if (album_name != null) {
+                return create_menu_for_album ((!)album_name, artist_name);
+            }
+            return base.create_item_menu ();
+        }
     }
 
     public class MusicEntry : MusicWidget {
+        public Music? music = null;
+
         private Gtk.Image _playing = new Gtk.Image ();
 
         public MusicEntry (bool compact = true) {
@@ -161,20 +184,14 @@ namespace G4 {
             width_request = 300;
         }
 
-        public Music? music { get; set; }
-
         public bool playing {
             set {
                 _playing.visible = value;
             }
         }
 
-        public void setup_right_clickable () {
-            make_right_clickable (this, show_popover);
-        }
-
-        public void update (Music music, uint sort) {
-            _music = music;
+        public void set_titles (Music music, uint sort) {
+            this.music = music;
             switch (sort) {
                 case SortMode.ALBUM:
                     _title.label = music.album;
@@ -204,21 +221,23 @@ namespace G4 {
             }
         }
 
-        private void show_popover (double x, double y) {
-            if (_music != null) {
-                var music = (!) _music;
+        public override Menu create_item_menu () {
+            if (this.music != null) {
                 var app = (Application) GLib.Application.get_default ();
-                var popover = create_music_popover_menu (music, x, y);
-                var menu = (Menu) popover.menu_model;
-                if (music != app.current_music)
+                var music = (!) this.music;
+                var menu = create_menu_for_music (music);
+                if (music != app.current_music) {
                     menu.prepend_item (create_menu_item (music.uri, _("Play at Next"), ACTION_APP + ACTION_PLAY_AT_NEXT));
-                if (music.cover_uri != null)
+                    menu.prepend_item (create_menu_item (music.uri, _("Play"), ACTION_APP + ACTION_PLAY));
+                }
+                if (music.cover_uri != null) {
                     menu.append_item (create_menu_item (music.uri, _("Show _Cover File"), ACTION_APP + ACTION_SHOW_COVER_FILE));
-                else if (app.thumbnailer.find (music) is Gdk.Texture)
+                } else if (app.thumbnailer.find (music) is Gdk.Texture) {
                     menu.append_item (create_menu_item (music.uri, _("_Export Cover"), ACTION_APP + ACTION_EXPORT_COVER));
-                popover.set_parent (this);
-                popover.popup ();
+                }
+                return menu;
             }
+            return base.create_item_menu ();
         }
     }
 
@@ -228,13 +247,28 @@ namespace G4 {
         return item;
     }
 
-    public Gtk.PopoverMenu create_music_popover_menu (Music music, double x, double y) {
+    public Menu create_menu_for_album (string album_name, string? artist_name = null) {
+        var sb = new StringBuilder ("/");
+        sb.append (Uri.escape_string (artist_name ?? "*"));
+        sb.append ("/");
+        sb.append (Uri.escape_string (album_name));
+        var uri = Uri.join (UriFlags.NONE, "album", null, "local", -1, sb.str, null, null);
+        var menu = new Menu ();
+        menu.append_item (create_menu_item (uri, _("Play"), ACTION_APP + ACTION_PLAY));
+        menu.append_item (create_menu_item (uri, _("Play at Next"), ACTION_APP + ACTION_PLAY_AT_NEXT));
+        return menu;
+    }
+
+    public Menu create_menu_for_music (Music music) {
         var menu = new Menu ();
         menu.append_item (create_menu_item (music.title, _("Search Title"), ACTION_APP + ACTION_SEARCH_TITLE));
         menu.append_item (create_menu_item (music.album, _("Search Album"), ACTION_APP + ACTION_SEARCH_ALBUM));
         menu.append_item (create_menu_item (music.artist, _("Search Artist"), ACTION_APP + ACTION_SEARCH_ARTIST));
         menu.append_item (create_menu_item (music.uri, _("_Show Music File"), ACTION_APP + ACTION_SHOW_MUSIC_FILES));
+        return menu;
+    }
 
+    public Gtk.PopoverMenu create_popover_menu (Menu menu, double x, double y) {
         var rect = Gdk.Rectangle ();
         rect.x = (int) x;
         rect.y = (int) y;
@@ -248,14 +282,14 @@ namespace G4 {
         return popover;
     }
 
-    public delegate void Pressed (double x, double y);
+    public delegate void Pressed (Gtk.Widget widget, double x, double y);
 
     public void make_right_clickable (Gtk.Widget widget, Pressed pressed) {
         var long_press = new Gtk.GestureLongPress ();
-        long_press.pressed.connect ((x, y) => pressed (x, y));
+        long_press.pressed.connect ((x, y) => pressed (widget, x, y));
         var right_click = new Gtk.GestureClick ();
         right_click.button = Gdk.BUTTON_SECONDARY;
-        right_click.pressed.connect ((n, x, y) => pressed (x, y));
+        right_click.pressed.connect ((n, x, y) => pressed (widget, x, y));
         widget.add_controller (long_press);
         widget.add_controller (right_click);
     }
