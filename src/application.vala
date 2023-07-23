@@ -50,7 +50,7 @@ namespace G4 {
             _player.tag_parsed.connect (on_tag_parsed);
 
             _mpris_id = Bus.own_name (BusType.SESSION,
-                "org.mpris.MediaPlayer2.G4Music",
+                "org.mpris.MediaPlayer2.Gapless",
                 BusNameOwnerFlags.NONE,
                 on_bus_acquired,
                 null, null
@@ -200,7 +200,7 @@ namespace G4 {
 
         public string name {
             get {
-                return _("G4Music");
+                return _("Gapless");
             }
         }
 
