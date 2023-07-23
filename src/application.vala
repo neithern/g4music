@@ -7,6 +7,7 @@ namespace G4 {
         private string _current_uri = "";
         private Gst.Sample? _current_cover = null;
         private bool _current_tag_parsed = false;
+        private bool _list_modified = false;
         private bool _loading_store = false;
         private string _music_folder = "";
         private uint _mpris_id = 0;
@@ -84,8 +85,8 @@ namespace G4 {
             var window = (active_window as Window) ?? new Window (this);
             window.present ();
 
-            load_musics_async.begin (files, (obj, res) => {
-                current_item = load_musics_async.end (res);
+            load_files_async.begin (files, (obj, res) => {
+                current_item = load_files_async.end (res);
                 if (files.length > 0)
                     _player.play ();
             });
@@ -164,7 +165,13 @@ namespace G4 {
             }
         }
 
-        public bool is_loading_store {
+        public bool list_modified {
+            get {
+                return _list_modified;
+            }
+        }
+
+        public bool loading_store {
             get {
                 return _loading_store;
             }
@@ -238,7 +245,7 @@ namespace G4 {
             }
         }
 
-        public async int load_musics_async (owned File[] files) {
+        public async int load_files_async (owned File[] files) {
             var saved_size = _music_store.size;
             var play_item = _current_item;
 
@@ -300,6 +307,7 @@ namespace G4 {
                 } else {
                     store.append (music);
                     current_item = (int) store.get_n_items () - 1;
+                    _list_modified = true;
                 }
             } else if (obj is Album) {
                 var album = (Album) obj;
@@ -319,6 +327,7 @@ namespace G4 {
                 arr.sort (Music.compare_by_album);
                 store.splice (insert_pos, 0, arr.data);
                 current_item = (int) insert_pos;
+                _list_modified = true;
             }
         }
 
@@ -337,6 +346,7 @@ namespace G4 {
                         var next_item = popover_item > playing_item ? playing_item + 1 : playing_item;
                         store.remove (popover_item);
                         store.insert (next_item, music);
+                        _list_modified = true;
                     }
                 } else if (obj is Album) {
                     var album = (Album) obj;
@@ -352,6 +362,7 @@ namespace G4 {
                     uint playing_item = store.get_n_items () - 1;
                     store.find ((!)_current_music, out playing_item);
                     store.splice (playing_item + 1, 0, arr.data);
+                    _list_modified = true;
                 }
                 _current_item = find_music_item (_current_music);
                 _music_list.items_changed (_current_item, 0, 0);
@@ -376,7 +387,7 @@ namespace G4 {
             if (!_loading_store) {
                 _music_store.clear ();
                 change_current_item (-1);
-                load_musics_async.begin ({}, (obj, res) => current_item = load_musics_async.end (res));
+                load_files_async.begin ({}, (obj, res) => current_item = load_files_async.end (res));
             }
         }
 
@@ -569,4 +580,3 @@ namespace G4 {
         return false;
     }
 }
-

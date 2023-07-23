@@ -132,7 +132,7 @@ namespace G4 {
 
         private void on_music_items_changed (uint position, uint removed, uint added) {
             var visible = _app.current_music == null && _app.music_store.size == 0
-                        && !_app.is_loading_store;
+                        && !_app.loading_store;
             initial_label.visible = visible;
             if (visible)
                 update_initial_label (_app.music_folder);

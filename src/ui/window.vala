@@ -188,8 +188,8 @@ namespace G4 {
             }
 
             var app = (Application) application;
-            app.load_musics_async.begin (files, (obj, res) => {
-                var item = app.load_musics_async.end (res);
+            app.load_files_async.begin (files, (obj, res) => {
+                var item = app.load_files_async.end (res);
                 if (app.current_music == null) {
                     app.current_item = item;
                 } else {

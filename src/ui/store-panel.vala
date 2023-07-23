@@ -333,11 +333,14 @@ namespace G4 {
                 var store = _app.music_store.store;
                 var count = store.get_n_items ();
                 var arr = new GenericArray<Music> (count);
-                for (var i = 0; i < count; i++)
-                    arr.add ((Music) store.get_item (i));
-                if (_sort_mode == SortMode.SHUFFLE)
-                    Music.shuffle_order (arr);
-                store.sort ((CompareDataFunc) get_sort_compare (_sort_mode));
+                if (!_app.list_modified) {
+                    if (_sort_mode == SortMode.SHUFFLE) {
+                        for (var i = 0; i < count; i++)
+                            arr.add ((Music) store.get_item (i));
+                        Music.shuffle_order (arr);
+                    }
+                    store.sort ((CompareDataFunc) get_sort_compare (_sort_mode));
+                }
 
                 arr.length = 0; 
                 _library.albums.foreach ((name, album) => arr.add (album.cover_music));
