@@ -115,16 +115,10 @@ namespace G4 {
                 return _sort_mode;
             }
             set {
-                _sort_mode = value;
-                if (value < SORT_MODE_ICONS.length)
+                if (value < SORT_MODE_ICONS.length) {
                     sort_btn.set_icon_name (SORT_MODE_ICONS[value]);
-
-                var store = _playing_list.data_store;
-                if (value == SortMode.SHUFFLE)
-                    shuffle_order (store);
-                var compare = (CompareDataFunc) get_sort_compare (value);
-                store.sort (compare);
-
+                    _sort_mode = value;
+                }
                 if (_playing_list.get_height () > 0) {
                     _playing_list.create_factory ();
                 }
@@ -137,8 +131,12 @@ namespace G4 {
                 if (child is MusicList) {
                     _current_list = (MusicList) child;
                 }
+                var playing = _current_list == _playing_list;
+                sort_btn.sensitive = playing;
+                if (playing) {
+                    run_idle_once (() => scroll_to_item (_app.current_item));
+                }
                 on_search_text_changed ();
-                sort_btn.sensitive = _current_list == _playing_list;
             }
         }
 

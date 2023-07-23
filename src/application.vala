@@ -236,6 +236,11 @@ namespace G4 {
                 var action = lookup_action (ACTION_SORT);
                 var state = new Variant.string (value.to_string ());
                 (action as SimpleAction)?.set_state (state);
+
+                if (value == SortMode.SHUFFLE) {
+                    shuffle_order (_music_store.store);
+                }
+                _music_store.store.sort ((CompareDataFunc) get_sort_compare (value));
                 _sort_mode = value;
             }
         }
@@ -257,15 +262,7 @@ namespace G4 {
             if (files.length > 0) {
                 yield _music_store.add_files_async (files);
                 if (!_list_modified) {
-                    var store = _music_store.store;
-                    var count = store.get_n_items ();
-                    var arr = new GenericArray<Music> ();
-                    if (_sort_mode == SortMode.SHUFFLE) {
-                        for (var i = 0; i < count; i++)
-                            arr.add ((Music) store.get_item (i));
-                        Music.shuffle_order (arr);
-                    }
-                    store.sort ((CompareDataFunc) get_sort_compare (_sort_mode));
+                    sort_mode = _sort_mode;
                 }
             }
             if (saved_size > 0) {

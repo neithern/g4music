@@ -14,7 +14,6 @@ namespace G4 {
         private uint _row_width = 0;
         private double _row_height = 0;
         private double _scroll_range = 0;
-        private int _scroll_to_index = -1;
 
         public signal void item_activated (uint position, Object? obj);
         public signal void item_created (Gtk.ListItem item);
@@ -87,19 +86,10 @@ namespace G4 {
             factory.bind.connect (on_bind_item);
             factory.unbind.connect (on_unbind_item);
             _grid_view.factory = factory;
-
-            if (_scroll_to_index != -1) {
-                scroll_to_item (_scroll_to_index);
-                _scroll_to_index = -1;
-            }
         }
 
         public void scroll_to_item (int index) {
-            if (_grid_view.get_factory () != null) {
-                _grid_view.activate_action_variant ("list.scroll-to-item", new Variant.uint32 (index));
-            } else {
-                _scroll_to_index = index;
-            }
+            _grid_view.activate_action_variant ("list.scroll-to-item", new Variant.uint32 (index));
         }
 
         private Adw.Animation? _scroll_animation = null;
@@ -115,6 +105,8 @@ namespace G4 {
                 var scroll_to =  from < max_to ? max_to : (from > min_to ? min_to : from);
                 var diff = (scroll_to - from).abs ();
                 if (diff > list_height) {
+                    //  Hack for GNOME 42: jump to correct position when first scroll
+                    scroll_to_item (index);
                     _scroll_animation?.pause ();
                     adj.value = min_to;
                 } else if (diff > 0) {
