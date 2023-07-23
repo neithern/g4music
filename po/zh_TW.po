@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-21 09:06+0800\n"
-"PO-Revision-Date: 2023-07-21 09:07+0800\n"
+"POT-Creation-Date: 2023-07-23 11:11+0800\n"
+"PO-Revision-Date: 2023-07-23 11:12+0800\n"
 "Last-Translator: Nanling <neithern@outlook.com>\n"
 "Language-Team: Chinese - China <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0\n"
 "X-Generator: Gtranslator 45.alpha0\n"
 
-#: data/app.desktop.in:3 src/application.vala:257 src/main.vala:24
+#: data/app.desktop.in:3 src/application.vala:203 src/main.vala:24
 msgid "G4Music"
 msgstr "G4音樂"
 
@@ -97,7 +97,7 @@ msgctxt "shortcut window"
 msgid "Reload Library"
 msgstr "更新音樂庫"
 
-#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:296
+#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:294
 msgid "Back"
 msgstr "返回"
 
@@ -117,7 +117,7 @@ msgstr "背景模糊模式"
 msgid "Compact playlist view"
 msgstr "緊湊播放列表"
 
-#: src/gtk/preferences.ui:44 src/application.vala:443
+#: src/gtk/preferences.ui:44 src/application.vala:384
 msgid "Keep playing after window closed"
 msgstr "關閉視窗後繼續播放"
 
@@ -181,88 +181,92 @@ msgstr "排序"
 msgid "Search"
 msgstr "搜尋"
 
-#: src/gtk/store-panel.ui:68
+#: src/gtk/store-panel.ui:73
 msgid "_Reload Library"
 msgstr "更新音樂庫(_R)"
 
-#: src/gtk/store-panel.ui:74
+#: src/gtk/store-panel.ui:79
 msgid "_Preferences"
 msgstr "偏好設定(_P)"
 
-#: src/gtk/store-panel.ui:78
+#: src/gtk/store-panel.ui:83
 msgid "_Keyboard Shortcuts"
 msgstr "快捷鍵(_K)"
 
-#: src/gtk/store-panel.ui:82
+#: src/gtk/store-panel.ui:87
 msgid "_About"
 msgstr "關於(_A)"
 
-#: src/gtk/store-panel.ui:91 src/ui/preferences.vala:64
+#: src/gtk/store-panel.ui:96 src/ui/preferences.vala:64
 msgid "Album"
 msgstr "專輯"
 
-#: src/gtk/store-panel.ui:96
+#: src/gtk/store-panel.ui:101
 msgid "Artist"
 msgstr "藝術家"
 
-#: src/gtk/store-panel.ui:101
+#: src/gtk/store-panel.ui:106
 msgid "Artist/Album"
 msgstr "藝術家/專輯"
 
-#: src/gtk/store-panel.ui:106
+#: src/gtk/store-panel.ui:111
 msgid "Title"
 msgstr "歌名"
 
-#: src/gtk/store-panel.ui:111
+#: src/gtk/store-panel.ui:116
 msgid "Recent"
 msgstr "最近"
 
-#: src/gtk/store-panel.ui:116
+#: src/gtk/store-panel.ui:121
 msgid "Shuffle"
 msgstr "亂序播放"
 
-#: src/application.vala:449
+#: src/action-handles.vala:188
 msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr "一個快速、流暢、輕量，基於 GTK4 的音樂播放軟體。"
 
 #. Translators: Replace "translator-credits" with your names, one name per line
-#: src/application.vala:451
+#: src/action-handles.vala:190
 msgid "translator-credits"
 msgstr ""
 "Julian\n"
 "Nanling"
 
-#: src/application.vala:673
+#: src/application.vala:519
 msgid "Keep playing"
 msgstr "持續播放"
 
-#: src/ui/music-entry.vala:179
+#: src/ui/music-widgets.vala:230 src/ui/music-widgets.vala:258
 msgid "Play at Next"
 msgstr "插播"
 
-#: src/ui/music-entry.vala:180 src/ui/play-panel.vala:56
-msgid "Search Title"
-msgstr "搜尋歌名"
+#: src/ui/music-widgets.vala:231 src/ui/music-widgets.vala:257
+msgid "Play"
+msgstr "播放"
 
-#: src/ui/music-entry.vala:181 src/ui/play-panel.vala:54
-msgid "Search Album"
-msgstr "搜尋專輯"
-
-#: src/ui/music-entry.vala:182 src/ui/play-panel.vala:55
-msgid "Search Artist"
-msgstr "搜尋藝術家"
-
-#: src/ui/music-entry.vala:183
-msgid "_Show Music File"
-msgstr "顯示音樂檔案(_S)"
-
-#: src/ui/music-entry.vala:185
+#: src/ui/music-widgets.vala:234 src/ui/play-panel.vala:223
 msgid "Show _Cover File"
 msgstr "顯示封面檔案(_C)"
 
-#: src/ui/music-entry.vala:187
+#: src/ui/music-widgets.vala:236 src/ui/play-panel.vala:225
 msgid "_Export Cover"
 msgstr "輸出封面(_E)"
+
+#: src/ui/music-widgets.vala:264 src/ui/play-panel.vala:56
+msgid "Search Title"
+msgstr "搜尋歌名"
+
+#: src/ui/music-widgets.vala:265 src/ui/play-panel.vala:54
+msgid "Search Album"
+msgstr "搜尋專輯"
+
+#: src/ui/music-widgets.vala:266 src/ui/play-panel.vala:55
+msgid "Search Artist"
+msgstr "搜尋藝術家"
+
+#: src/ui/music-widgets.vala:267
+msgid "_Show Music File"
+msgstr "顯示音樂檔案(_S)"
 
 #: src/ui/play-bar.vala:75
 msgid "Repeat Music"
@@ -281,7 +285,7 @@ msgstr "播放/暫停"
 msgid "Play Next"
 msgstr "播放下一首"
 
-#: src/ui/play-panel.vala:259
+#: src/ui/play-panel.vala:264
 msgid ""
 "Drag and drop music files here,\n"
 "or change music location: "
@@ -305,21 +309,17 @@ msgstr "僅封面"
 msgid "Track"
 msgstr "曲目"
 
-#: src/ui/store-panel.vala:67
+#: src/ui/store-panel.vala:69
 msgid "Playing"
 msgstr "正在播放"
 
-#: src/ui/store-panel.vala:72
+#: src/ui/store-panel.vala:75
 msgid "Artists"
 msgstr "藝術家"
 
-#: src/ui/store-panel.vala:76
+#: src/ui/store-panel.vala:80
 msgid "Albums"
 msgstr "專輯"
-
-#: src/ui/store-panel.vala:306
-msgid "Play Album"
-msgstr "播放專輯"
 
 #: src/ui/volume-button.vala:32
 msgid "Volume: "

@@ -3,6 +3,7 @@ src/gtk/help-overlay.ui
 src/gtk/play-panel.ui
 src/gtk/preferences.ui
 src/gtk/store-panel.ui
+src/action-handles.vala
 src/application.vala
 src/main.vala
 src/ui/music-widgets.vala
