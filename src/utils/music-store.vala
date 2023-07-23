@@ -136,7 +136,7 @@ namespace G4 {
 
         public void remove (File file) {
             var uri = file.get_uri ();
-            var mus = _tag_cache[uri];
+            var mus = _tag_cache.remove (uri);
             if (mus != null) {
                 var music = (!)mus;
                 for (var pos = (int) _store.get_n_items () - 1; pos >= 0; pos--) {
@@ -147,17 +147,17 @@ namespace G4 {
                 lock (_library) {
                     _library.remove_music (music);
                 }
-                _tag_cache.remove (music);
             } else {
                 var prefix = uri + "/";
                 for (var pos = (int) _store.get_n_items () - 1; pos >= 0; pos--) {
                     var music = (Music) _store.get_item (pos);
-                    if (music.uri == uri || music.uri.has_prefix (prefix)) {
+                    unowned var uri2 = music.uri;
+                    if (uri2.has_prefix (prefix) || uri2 == uri) {
                         _store.remove (pos);
                         lock (_library) {
                             _library.remove_music (music);
                         }
-                        _tag_cache.remove (music);
+                        _tag_cache.remove (uri2);
                     }
                 }
             }

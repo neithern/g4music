@@ -33,9 +33,14 @@ namespace G4 {
             _modified = true;
         }
 
-        public void remove (Music music) {
-            if (_cache.remove (music.uri))
+        public Music? remove (string uri) {
+            string key;
+            Music value;
+            if (_cache.steal_extended (uri, out key, out value)) {
                 _modified = true;
+                return value;
+            }
+            return null;
         }
 
         public void reset_showing (bool showing) {
