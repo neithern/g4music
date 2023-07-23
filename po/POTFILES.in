@@ -5,7 +5,7 @@ src/gtk/preferences.ui
 src/gtk/store-panel.ui
 src/application.vala
 src/main.vala
-src/ui/music-entry.vala
+src/ui/music-widgets.vala
 src/ui/play-bar.vala
 src/ui/play-panel.vala
 src/ui/preferences.vala
