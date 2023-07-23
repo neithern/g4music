@@ -105,6 +105,7 @@ namespace G4 {
             }, Priority.LOW);
 
             app.index_changed.connect (on_index_changed);
+            app.music_batch_changed.connect (on_music_batch_changed);
             app.music_store.loading_changed.connect (on_loading_changed);
             app.settings.bind ("sort-mode", this, "sort-mode", SettingsBindFlags.DEFAULT);
         }
@@ -145,7 +146,7 @@ namespace G4 {
         }
 
         public void scroll_to_item (int index) {
-            _current_list.scroll_to_item (index);
+            _current_list.scroll_to_item_smoothly (index);
         }
 
         public void start_search (string text, uint mode = SearchMode.ANY) {
@@ -311,7 +312,7 @@ namespace G4 {
         private void on_index_changed (int index, uint size) {
             root.action_set_enabled (ACTION_APP + ACTION_PREV, index > 0);
             root.action_set_enabled (ACTION_APP + ACTION_NEXT, index < (int) size - 1);
-            if (_current_list == _playing_list && _current_list.visible_count > 0) {
+            if (_current_list == _playing_list) {
                 scroll_to_item (index);
             }
         }
@@ -328,30 +329,6 @@ namespace G4 {
                 remove_tick_callback (_tick_handler);
                 _tick_handler = 0;
             }
-
-            if (!loading) {
-                var store = _app.music_store.store;
-                var count = store.get_n_items ();
-                var arr = new GenericArray<Music> (count);
-                if (!_app.list_modified) {
-                    if (_sort_mode == SortMode.SHUFFLE) {
-                        for (var i = 0; i < count; i++)
-                            arr.add ((Music) store.get_item (i));
-                        Music.shuffle_order (arr);
-                    }
-                    store.sort ((CompareDataFunc) get_sort_compare (_sort_mode));
-                }
-
-                arr.length = 0; 
-                _library.albums.foreach ((name, album) => arr.add (album.cover_music));
-                arr.sort (Music.compare_by_album);
-                _album_list.data_store.splice (0, _album_list.data_store.get_n_items (), arr.data);
-
-                arr.length = 0; 
-                _library.artists.foreach ((name, artist) => arr.add (artist.cover_music));
-                arr.sort (Music.compare_by_artist);
-                _artist_list.data_store.splice (0, _artist_list.data_store.get_n_items (), arr.data);
-            }
         }
 
         private bool on_loading_tick_callback (Gtk.Widget widget, Gdk.FrameClock clock) {
@@ -361,6 +338,17 @@ namespace G4 {
             else
                 progress_bar.pulse ();
             return true;
+        }
+
+        private void on_music_batch_changed () {
+            var arr = new GenericArray<Music> (1024);
+            _library.albums.foreach ((name, album) => arr.add (album.cover_music));
+            arr.sort (Music.compare_by_album);
+            _album_list.data_store.splice (0, _album_list.data_store.get_n_items (), arr.data);
+            arr.length = 0; 
+            _library.artists.foreach ((name, artist) => arr.add (artist.cover_music));
+            arr.sort (Music.compare_by_artist);
+            _artist_list.data_store.splice (0, _artist_list.data_store.get_n_items (), arr.data);
         }
 
         private void on_search_btn_toggled () {

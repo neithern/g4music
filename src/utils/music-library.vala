@@ -15,6 +15,12 @@ namespace G4 {
             }
         }
 
+        public uint length {
+            get {
+                return musics.length;
+            }
+        }
+
         public void @foreach (HFunc<unowned string, Music> func) {
             musics.foreach (func);
         }
@@ -50,6 +56,12 @@ namespace G4 {
             }
         }
 
+        public uint length {
+            get {
+                return albums.length;
+            }
+        }
+
         public void @foreach (HFunc<unowned string, Album> func) {
             albums.foreach (func);
         }
@@ -68,15 +80,7 @@ namespace G4 {
         }
 
         public bool remove_music (Music music) {
-            var list = new GenericArray<Album> (16);
-            albums.foreach ((name, album) => {
-                if (album.remove_music (music))
-                list.add (album);
-            });
-            foreach (var album in list) {
-                albums.steal (album.name);
-            }
-            return albums.length > 0;
+            return albums.foreach_steal ((name, album) => album.remove_music (music) && album.length == 0) > 0;
         }
     }
 
@@ -115,25 +119,9 @@ namespace G4 {
         }
 
         public bool remove_music (Music music) {
-            var albums = new GenericArray<Album> (16);
-            _albums.foreach ((name, album) => {
-                if (album.remove_music (music))
-                    albums.add (album);
-            });
-            foreach (var album in albums) {
-                _albums.steal (album.name);
-            }
-
-            var artists = new GenericArray<Artist> (16);
-            _artists.foreach ((name, artist) => {
-                if (artist.remove_music (music))
-                    artists.add (artist);
-            });
-            foreach (var artist in artists) {
-                _artists.steal (artist.name);
-            }
-
-            return artists.length > 0 || albums.length > 0;
+            var album_removed = _albums.foreach_steal ((name, album) => album.remove_music (music) && album.length == 0);
+            var artist_removed = _artists.foreach_steal ((name, artist) => artist.remove_music (music) && artist.length == 0);
+            return album_removed > 0 || artist_removed > 0;
         }
 
         public void remove_all () {

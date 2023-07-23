@@ -20,6 +20,7 @@ namespace G4 {
         private Settings _settings;
 
         public signal void index_changed (int index, uint size);
+        public signal void music_batch_changed ();
         public signal void music_changed (Music? music);
         public signal void music_tag_parsed (Music music, Gst.Sample? image);
         public signal void music_cover_parsed (Music music, string? uri);
@@ -255,8 +256,18 @@ namespace G4 {
             }
             if (files.length > 0) {
                 yield _music_store.add_files_async (files);
+                if (!_list_modified) {
+                    var store = _music_store.store;
+                    var count = store.get_n_items ();
+                    var arr = new GenericArray<Music> ();
+                    if (_sort_mode == SortMode.SHUFFLE) {
+                        for (var i = 0; i < count; i++)
+                            arr.add ((Music) store.get_item (i));
+                        Music.shuffle_order (arr);
+                    }
+                    store.sort ((CompareDataFunc) get_sort_compare (_sort_mode));
+                }
             }
-
             if (saved_size > 0) {
                 play_item = (int) saved_size;
             } else if (_current_music != null && _current_music == _music_list.get_item (_current_item)) {
@@ -488,6 +499,7 @@ namespace G4 {
                     _pending_mic_handler = 0;
                     if (!update_current_item ())
                         index_changed (_current_item, _music_list.get_n_items ());
+                    music_batch_changed ();
                 });
             }
         }

@@ -14,6 +14,7 @@ namespace G4 {
         private uint _row_width = 0;
         private double _row_height = 0;
         private double _scroll_range = 0;
+        private int _scroll_to_index = -1;
 
         public signal void item_activated (uint position, Object? obj);
         public signal void item_created (Gtk.ListItem item);
@@ -86,14 +87,27 @@ namespace G4 {
             factory.bind.connect (on_bind_item);
             factory.unbind.connect (on_unbind_item);
             _grid_view.factory = factory;
+
+            if (_scroll_to_index != -1) {
+                scroll_to_item (_scroll_to_index);
+                _scroll_to_index = -1;
+            }
+        }
+
+        public void scroll_to_item (int index) {
+            if (_grid_view.get_factory () != null) {
+                _grid_view.activate_action_variant ("list.scroll-to-item", new Variant.uint32 (index));
+            } else {
+                _scroll_to_index = index;
+            }
         }
 
         private Adw.Animation? _scroll_animation = null;
 
-        public void scroll_to_item (int index) {
+        public void scroll_to_item_smoothly (int index) {
             var adj = _scroll_view.vadjustment;
             var list_height = _grid_view.get_height ();
-            if (_row_height > 0 && adj.upper - adj.lower > list_height) {
+            if (_columns > 0 && _row_height > 0 && adj.upper - adj.lower > list_height) {
                 var from = adj.value;
                 var row = index / _columns;
                 var max_to = double.max ((row + 1) * _row_height - list_height, 0);
@@ -101,8 +115,6 @@ namespace G4 {
                 var scroll_to =  from < max_to ? max_to : (from > min_to ? min_to : from);
                 var diff = (scroll_to - from).abs ();
                 if (diff > list_height) {
-                    //  Hack for GNOME 42: jump to correct position when first scroll
-                    _grid_view.activate_action_variant ("list.scroll-to-item", new Variant.uint32 (index));
                     _scroll_animation?.pause ();
                     adj.value = min_to;
                 } else if (diff > 0) {
@@ -112,8 +124,8 @@ namespace G4 {
                     _scroll_animation = new Adw.TimedAnimation (_scroll_view, from, scroll_to, 500, target);
                     _scroll_animation?.play ();
                 }
-            } else if (visible_count > 0) {
-                _grid_view.activate_action_variant ("list.scroll-to-item", new Variant.uint32 (index));
+            } else {
+                scroll_to_item (index);
             }
         }
 
