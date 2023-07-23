@@ -9,7 +9,7 @@ namespace G4 {
     public const string ACTION_PLAY_PAUSE = "play-pause";
     public const string ACTION_PREV = "prev";
     public const string ACTION_NEXT = "next";
-    public const string ACTION_RELOAD_LIST = "reload-list";
+    public const string ACTION_RELOAD = "reload";
     public const string ACTION_SEARCH = "search";
     public const string ACTION_SEARCH_ALBUM = "search-album";
     public const string ACTION_SEARCH_ARTIST = "search-artist";
@@ -40,7 +40,7 @@ namespace G4 {
                 { ACTION_PLAY_PAUSE, () => _app.play_pause () },
                 { ACTION_PREV, () => _app.play_previous () },
                 { ACTION_PREFS, show_preferences },
-                { ACTION_RELOAD_LIST, () => _app.reload_music_files () },
+                { ACTION_RELOAD, () => _app.reload_library () },
                 { ACTION_SEARCH, search },
                 { ACTION_SEARCH_ALBUM, search_album, "s" },
                 { ACTION_SEARCH_ARTIST, search_artist, "s" },
@@ -58,7 +58,7 @@ namespace G4 {
                 { ACTION_PLAY_PAUSE, "<primary>p" },
                 { ACTION_PREV, "<primary>Left" },
                 { ACTION_NEXT, "<primary>Right" },
-                { ACTION_RELOAD_LIST, "<primary>r" },
+                { ACTION_RELOAD, "<primary>r" },
                 { ACTION_SEARCH, "<primary>f" },
                 { ACTION_TOGGLE_SORT, "<primary>s" },
                 { ACTION_QUIT, "<primary>q" }

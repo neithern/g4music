@@ -86,11 +86,16 @@ namespace G4 {
             var window = (active_window as Window) ?? new Window (this);
             window.present ();
 
-            load_files_async.begin (files, (obj, res) => {
-                current_item = load_files_async.end (res);
-                if (files.length > 0)
-                    _player.play ();
-            });
+            var has_files = files.length > 0;
+            if (has_files && _loader.store.get_n_items () > 0) {
+                open_files_async.begin (files, true, (obj, res) => open_files_async.end (res));
+            } else {
+                load_files_async.begin (files, (obj, res) => {
+                    current_item = load_files_async.end (res);
+                    if (has_files)
+                        _player.play ();
+                });
+            }
         }
 
         public override void shutdown () {
@@ -195,7 +200,7 @@ namespace G4 {
             set {
                 _music_folder = value;
                 if (active_window is Window) {
-                    reload_music_files ();
+                    reload_library ();
                 }
             }
         }
@@ -276,6 +281,18 @@ namespace G4 {
                 }
             }
             return play_item;
+        }
+
+        public async void open_files_async (File[] files, bool play_now = false) {
+            var musics = new GenericArray<Music> (4096);
+            yield _loader.load_files_async (files, musics);
+            var album = new Album ("");
+            musics.foreach (album.add_music);
+            if (play_now) {
+                play (album);
+            } else {
+                play_at_next (album);
+            }
         }
 
         public async void parse_music_cover_async () {
@@ -391,7 +408,7 @@ namespace G4 {
             _player.play ();
         }
 
-        public void reload_music_files () {
+        public void reload_library () {
             if (!_loading) {
                 _loader.clear ();
                 change_current_item (-1);

@@ -70,7 +70,7 @@
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes" context="shortcut window">Reload Library</property>
-                <property name="action-name">app.reload-list</property>
+                <property name="action-name">app.reload</property>
               </object>
             </child>
           </object>

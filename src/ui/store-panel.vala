@@ -318,7 +318,7 @@ namespace G4 {
         private uint _tick_handler = 0;
 
         private void on_loading_changed (bool loading) {
-            root.action_set_enabled (ACTION_APP + ACTION_RELOAD_LIST, !loading);
+            root.action_set_enabled (ACTION_APP + ACTION_RELOAD, !loading);
             progress_bar.visible = loading;
 
             if (loading && _tick_handler == 0) {

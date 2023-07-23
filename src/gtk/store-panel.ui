@@ -71,7 +71,7 @@
     <section>
       <item>
         <attribute name="label" translatable="yes">_Reload Library</attribute>
-        <attribute name="action">app.reload-list</attribute>
+        <attribute name="action">app.reload</attribute>
       </item>
     </section>
     <section>
