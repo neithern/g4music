@@ -50,7 +50,7 @@ namespace G4 {
 
         public StorePanel (Application app, Window win, Adw.Leaflet leaflet) {
             _app = app;
-            _library = app.music_store.library;
+            _library = app.loader.library;
 
             leaflet.bind_property ("folded", header_bar, "show-title-buttons", BindingFlags.SYNC_CREATE);
 
@@ -62,7 +62,7 @@ namespace G4 {
             _loading_paintable = _app.thumbnailer.create_simple_text_paintable ("...", Thumbnailer.ICON_SIZE);
 
             _current_list = _playing_list = create_playing_music_list ();
-            _playing_list.data_store = _app.music_store.store;
+            _playing_list.data_store = _app.loader.store;
             _playing_list.filter_model = _app.music_list;
             _playing_stack.add_named (_playing_list, "playing");
             _playing_stack.transition_type = Gtk.StackTransitionType.SLIDE_LEFT_RIGHT;
@@ -106,7 +106,7 @@ namespace G4 {
 
             app.index_changed.connect (on_index_changed);
             app.music_batch_changed.connect (on_music_batch_changed);
-            app.music_store.loading_changed.connect (on_loading_changed);
+            app.loader.loading_changed.connect (on_loading_changed);
             app.settings.bind ("sort-mode", this, "sort-mode", SettingsBindFlags.DEFAULT);
         }
 
@@ -330,7 +330,7 @@ namespace G4 {
         }
 
         private bool on_loading_tick_callback (Gtk.Widget widget, Gdk.FrameClock clock) {
-            var fraction = _app.music_store.loading_progress;
+            var fraction = _app.loader.loading_progress;
             if (fraction > 0)
                 progress_bar.fraction = fraction;
             else

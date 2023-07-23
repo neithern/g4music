@@ -14,4 +14,3 @@ src/ui/store-panel.vala
 src/ui/volume-button.vala
 src/ui/window.vala
 src/utils/music.vala
-src/utils/music-store.vala

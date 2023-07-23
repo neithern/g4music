@@ -43,7 +43,7 @@ namespace G4 {
         }
     }
 
-    public class MusicStore : Object {
+    public class MusicLoader : Object {
         private static Once<ThreadPool<DirCache>?> _save_dir_pool;
 
         static unowned ThreadPool<DirCache>? get_save_dir_pool () {
@@ -65,7 +65,7 @@ namespace G4 {
 
         public signal void loading_changed (bool loading);
 
-        public MusicStore () {
+        public MusicLoader () {
             _dir_monitor.add_file.connect ((file) => {
                 add_files_async.begin ({file}, true, false, (obj, res) => add_files_async.end (res));
             });

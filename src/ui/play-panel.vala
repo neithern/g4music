@@ -131,8 +131,8 @@ namespace G4 {
         }
 
         private void on_music_items_changed (uint position, uint removed, uint added) {
-            var visible = _app.current_music == null && _app.music_store.size == 0
-                        && !_app.loading_store;
+            var visible = _app.current_music == null && _app.loader.size == 0
+                        && !_app.loading;
             initial_label.visible = visible;
             if (visible)
                 update_initial_label (_app.music_folder);
@@ -231,7 +231,7 @@ namespace G4 {
         }
 
         private void update_music_info (Music? music) {
-            var empty = music == null && _app.music_store.size == 0;
+            var empty = music == null && _app.loader.size == 0;
             if (empty) {
                 update_cover_paintables (music, _app.icon);
             }

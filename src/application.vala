@@ -8,11 +8,11 @@ namespace G4 {
         private Gst.Sample? _current_cover = null;
         private bool _current_tag_parsed = false;
         private bool _list_modified = false;
-        private bool _loading_store = false;
+        private bool _loading = false;
         private string _music_folder = "";
         private uint _mpris_id = 0;
+        private MusicLoader _loader = new MusicLoader ();
         private Gtk.FilterListModel _music_list = new Gtk.FilterListModel (null, null);
-        private MusicStore _music_store = new MusicStore ();
         private StringBuilder _next_uri = new StringBuilder ();
         private GstPlayer _player = new GstPlayer ();
         private Portal _portal = new Portal ();
@@ -33,16 +33,16 @@ namespace G4 {
             base.startup ();
 
             //  Must load tag cache after the app register (GLib init), to make sort works
-            _music_store.load_tag_cache ();
+            _loader.load_tag_cache ();
 
             _actions = new ActionHandles (this);
 
-            _music_list.model = _music_store.store;
+            _music_list.model = _loader.store;
             _music_list.items_changed.connect (on_music_items_changed);
-            _music_store.loading_changed.connect ((loading) => _loading_store = loading);
+            _loader.loading_changed.connect ((loading) => _loading = loading);
 
-            _thumbnailer.cover_finder = _music_store.cover_cache;
-            _thumbnailer.tag_updated.connect (_music_store.add_to_cache);
+            _thumbnailer.cover_finder = _loader.cover_cache;
+            _thumbnailer.tag_updated.connect (_loader.add_to_cache);
 
             _player.end_of_stream.connect (on_player_end);
             _player.error.connect (on_player_error);
@@ -64,7 +64,7 @@ namespace G4 {
             settings.bind ("dark-theme", this, "dark-theme", SettingsBindFlags.DEFAULT);
             settings.bind ("music-dir", this, "music-folder", SettingsBindFlags.DEFAULT);
             settings.bind ("sort-mode", this, "sort-mode", SettingsBindFlags.DEFAULT);
-            settings.bind ("monitor-changes", _music_store, "monitor-changes", SettingsBindFlags.DEFAULT);
+            settings.bind ("monitor-changes", _loader, "monitor-changes", SettingsBindFlags.DEFAULT);
             settings.bind ("remote-thumbnail", _thumbnailer, "remote-thumbnail", SettingsBindFlags.DEFAULT);
             settings.bind ("gapless-playback", _player, "gapless", SettingsBindFlags.DEFAULT);
             settings.bind ("replay-gain", _player, "replay-gain", SettingsBindFlags.DEFAULT);
@@ -95,7 +95,7 @@ namespace G4 {
 
         public override void shutdown () {
             _actions = null;
-            _music_store.save_tag_cache ();
+            _loader.save_tag_cache ();
             delete_cover_tmp_file_async.begin ((obj, res) => delete_cover_tmp_file_async.end (res));
 
             if (_mpris_id != 0) {
@@ -172,9 +172,15 @@ namespace G4 {
             }
         }
 
-        public bool loading_store {
+        public MusicLoader loader {
             get {
-                return _loading_store;
+                return _loader;
+            }
+        }
+
+        public bool loading {
+            get {
+                return _loading;
             }
         }
 
@@ -189,7 +195,7 @@ namespace G4 {
             set {
                 _music_folder = value;
                 if (active_window is Window) {
-                    reload_music_store ();
+                    reload_music_files ();
                 }
             }
         }
@@ -197,12 +203,6 @@ namespace G4 {
         public Gtk.FilterListModel music_list {
             get {
                 return _music_list;
-            }
-        }
-
-        public MusicStore music_store {
-            get {
-                return _music_store;
             }
         }
 
@@ -238,9 +238,9 @@ namespace G4 {
                 (action as SimpleAction)?.set_state (state);
 
                 if (value == SortMode.SHUFFLE) {
-                    shuffle_order (_music_store.store);
+                    shuffle_order (_loader.store);
                 }
-                _music_store.store.sort ((CompareDataFunc) get_sort_compare (value));
+                _loader.store.sort ((CompareDataFunc) get_sort_compare (value));
                 _sort_mode = value;
             }
         }
@@ -252,7 +252,7 @@ namespace G4 {
         }
 
         public async int load_files_async (owned File[] files) {
-            var saved_size = _music_store.size;
+            var saved_size = _loader.size;
             var play_item = _current_item;
 
             if (saved_size == 0 && files.length == 0) {
@@ -260,7 +260,7 @@ namespace G4 {
                 files[0] = File.new_for_uri (music_folder);
             }
             if (files.length > 0) {
-                yield _music_store.add_files_async (files);
+                yield _loader.add_files_async (files);
                 if (!_list_modified) {
                     sort_mode = _sort_mode;
                 }
@@ -306,7 +306,7 @@ namespace G4 {
         }
 
         public void play (Object? obj) {
-            var store = _music_store.store;
+            var store = _loader.store;
             if (obj is Music) {
                 var music = (Music) obj;
                 uint position = -1;
@@ -341,7 +341,7 @@ namespace G4 {
 
         public void play_at_next (Object? obj) {
             if (_current_music != null) {
-                var store = _music_store.store;
+                var store = _loader.store;
                 _music_list.items_changed (_current_item, 0, 0);
                 if (obj is Music) {
                     var music = (Music) obj;
@@ -391,9 +391,9 @@ namespace G4 {
             _player.play ();
         }
 
-        public void reload_music_store () {
-            if (!_loading_store) {
-                _music_store.clear ();
+        public void reload_music_files () {
+            if (!_loading) {
+                _loader.clear ();
                 change_current_item (-1);
                 load_files_async.begin ({}, (obj, res) => current_item = load_files_async.end (res));
             }
@@ -452,7 +452,7 @@ namespace G4 {
         }
 
         private int find_music_item_by_uri (string uri) {
-            var music = _music_store.find_cache (uri);
+            var music = _loader.find_cache (uri);
             if (music != null) {
                 var item = find_music_item (music);
                 if (item != -1)

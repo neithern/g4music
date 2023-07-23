@@ -40,7 +40,7 @@ namespace G4 {
                 { ACTION_PLAY_PAUSE, () => _app.play_pause () },
                 { ACTION_PREV, () => _app.play_previous () },
                 { ACTION_PREFS, show_preferences },
-                { ACTION_RELOAD_LIST, () => _app.reload_music_store () },
+                { ACTION_RELOAD_LIST, () => _app.reload_music_files () },
                 { ACTION_SEARCH, search },
                 { ACTION_SEARCH_ALBUM, search_album, "s" },
                 { ACTION_SEARCH_ARTIST, search_artist, "s" },
@@ -115,7 +115,7 @@ namespace G4 {
 
         private Music? _get_music_from_parameter (Variant? parameter) {
             unowned var uri = parameter?.get_string (null);
-            return uri != null ? _app.music_store.find_cache ((!)uri) : null;
+            return uri != null ? _app.loader.find_cache ((!)uri) : null;
         }
 
         private void export_cover (SimpleAction action, Variant? parameter) {
@@ -127,13 +127,13 @@ namespace G4 {
             unowned var text = parameter?.get_string (null);
             if (text != null) {
                 var uri = (!)text;
-                var store = _app.music_store;
-                var music = store.find_cache (uri);
+                var loader = _app.loader;
+                var music = loader.find_cache (uri);
                 if (music != null) {
                     return music;
                 } else if (uri.has_prefix ("album://")) try {
                     var u = Uri.parse ((!)uri, UriFlags.NONE);
-                    var library = store.library;
+                    var library = loader.library;
                     var path = u.get_path ();
                     var arr = path.split ("/");
                     var count = arr.length;
