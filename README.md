@@ -3,18 +3,18 @@
 # Gapless
 Play your music elegantly.
 
-<img src="./shots/window.png" width="822"/>
-<img src="./shots/playbar.png" width="458"/>
-<img src="./shots/playlist.png" width="458"/>
+<img src="./shots/window.png" width="1134"/>
+<img src="./shots/albums.png" width="1134"/>
+<img src="./shots/playing.png" width="462"/>
+<img src="./shots/playlist.png" width="466"/>
 
 A fast, fluent, light weight music player written in GTK4, with a beautiful, adaptive user interface, focuses on high performance, for those people who have huge number of songs.
 
 ## Features
 - Supports most music file types, samba and any other remote protocols (depends on GIO and GStreamer).
 - Fast loading and parsing thousands of music files in very few seconds, monitor local changes.
-- Low memory usage for huge playlist with album covers, no thumbnail caches to store.
-- Sorts by album/artist/title and shuffle, full-text searching.
-- Supports embedded album art and external album cover.
+- Low memory usage for huge playlist with album covers (embedded and external), no thumbnail caches to store..
+- Group and sorts by album/artist/title, shuffle list, full-text searching.
 - Gaussian blurred cover as background, follows GNOME light/dark mode.
 - Drag-drop from GNOME Files, showing music in Files.
 - Supports audio peaks visualizer.

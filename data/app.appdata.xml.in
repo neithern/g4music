@@ -21,9 +21,8 @@
         <ul>
         <li>Supports most music file types, samba and any other remote protocols (depends on GIO and GStreamer).</li>
         <li>Fast loading and parsing thousands of music files in very few seconds, monitor local changes.</li>
-        <li>Low memory usage for huge playlist with album covers, no thumbnail caches to store.</li>
-        <li>Sorts by album/artist/title and shuffle, full-text searching.</li>
-        <li>Supports embedded album art and external album cover.</li>
+        <li>Low memory usage for huge playlist with album covers (embedded and external), no thumbnail caches to store.</li>
+        <li>Group and sorts by album/artist/title, shuffle list, full-text searching.</li>
         <li>Gaussian blurred cover as background, follows GNOME light/dark mode.</li>
         <li>Drag-drop from GNOME Files, showing music in Files.</li>
         <li>Supports audio peaks visualizer.</li>
