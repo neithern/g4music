@@ -109,22 +109,6 @@ namespace G4 {
             app.settings.bind ("sort-mode", this, "sort-mode", SettingsBindFlags.DEFAULT);
         }
 
-        public Gtk.Widget visible_child {
-            set {
-                var child = value.get_first_child ();
-                if (child is MusicList) {
-                    _current_list = (MusicList) child;
-                }
-                on_search_text_changed ();
-
-                var playing = _current_list == _playing_list;
-                sort_btn.sensitive = playing;
-                if (playing && _current_list.visible_count > 0) {
-                    run_idle_once (() => scroll_to_item (_app.current_item));
-                }
-            }
-        }
-
         public uint sort_mode {
             get {
                 return _sort_mode;
@@ -143,6 +127,17 @@ namespace G4 {
                 if (_playing_list.get_height () > 0) {
                     _playing_list.create_factory ();
                 }
+            }
+        }
+
+        public Gtk.Widget visible_child {
+            set {
+                var child = value.get_first_child ();
+                if (child is MusicList) {
+                    _current_list = (MusicList) child;
+                }
+                on_search_text_changed ();
+                sort_btn.sensitive = _current_list == _playing_list;
             }
         }
 
@@ -342,15 +337,14 @@ namespace G4 {
                     arr.add ((Music) store.get_item (i));
                 if (_sort_mode == SortMode.SHUFFLE)
                     Music.shuffle_order (arr);
-                arr.sort (get_sort_compare (_sort_mode));
-                store.splice (0, count, arr.data);
-                arr.remove_range (0, arr.length);
- 
+                store.sort ((CompareDataFunc) get_sort_compare (_sort_mode));
+
+                arr.length = 0; 
                 _library.albums.foreach ((name, album) => arr.add (album.cover_music));
                 arr.sort (Music.compare_by_album);
                 _album_list.data_store.splice (0, _album_list.data_store.get_n_items (), arr.data);
-                arr.remove_range (0, arr.length);
 
+                arr.length = 0; 
                 _library.artists.foreach ((name, artist) => arr.add (artist.cover_music));
                 arr.sort (Music.compare_by_artist);
                 _artist_list.data_store.splice (0, _artist_list.data_store.get_n_items (), arr.data);

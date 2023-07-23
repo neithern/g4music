@@ -40,7 +40,7 @@ namespace G4 {
                 { ACTION_PLAY_PAUSE, () => _app.play_pause () },
                 { ACTION_PREV, () => _app.play_previous () },
                 { ACTION_PREFS, show_preferences },
-                { ACTION_RELOAD_LIST, () => app.reload_music_store () },
+                { ACTION_RELOAD_LIST, () => _app.reload_music_store () },
                 { ACTION_SEARCH, search },
                 { ACTION_SEARCH_ALBUM, search_album, "s" },
                 { ACTION_SEARCH_ARTIST, search_artist, "s" },
