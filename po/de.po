@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-23 11:41+0800\n"
-"PO-Revision-Date: 2023-07-06 09:59+0200\n"
+"PO-Revision-Date: 2023-07-23 19:47+0200\n"
 "Last-Translator: Jürgen Benvenuti <gastornis@posteo.org>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "Language: de\n"
@@ -20,7 +20,7 @@ msgstr ""
 
 #: data/app.desktop.in:3 src/application.vala:203 src/main.vala:24
 msgid "Gapless"
-msgstr ""
+msgstr "Gapless"
 
 #: data/app.desktop.in:4
 msgid "Music Player"
@@ -33,8 +33,8 @@ msgstr "Musik wiedergeben"
 #: data/app.desktop.in:12
 msgid "music;sound;player;media;audio;playlist;"
 msgstr ""
-"music;sound;player;media;audio;playlist;Musik;Klang;Wiedergabe;Medien;Audio;"
-"Wiedergabeliste;"
+"music;sound;player;media;audio;playlist;Musik;Klang;Wiedergabe;Medien;"
+"Audio;Wiedergabeliste;"
 
 #: src/gtk/help-overlay.ui:11
 msgctxt "shortcut window"
@@ -92,10 +92,9 @@ msgid "Toggle Sort"
 msgstr "Sortiermodus umschalten"
 
 #: src/gtk/help-overlay.ui:72
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Reload Library"
-msgstr "Liste neu laden"
+msgstr "Bibliothek neu laden"
 
 #: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:294
 msgid "Back"
@@ -123,7 +122,7 @@ msgstr "Musik weiterspielen nach dem Schließen des Fensters"
 
 #: src/gtk/preferences.ui:57
 msgid "Library"
-msgstr ""
+msgstr "Bibliothek"
 
 #: src/gtk/preferences.ui:61
 msgid "Load music from folder"
@@ -135,7 +134,7 @@ msgstr "Lokale Dateiänderungen überwachen"
 
 #: src/gtk/preferences.ui:85
 msgid "Load thumbnails for non-local files"
-msgstr "Vorschaubilder für nicht-lokale Dateien laden"
+msgstr "Vorschaubilder für nicht lokale Dateien laden"
 
 #: src/gtk/preferences.ui:86
 msgid "May cause slowdowns and excess network usage"
@@ -182,9 +181,8 @@ msgid "Search"
 msgstr "Suchen"
 
 #: src/gtk/store-panel.ui:73
-#, fuzzy
 msgid "_Reload Library"
-msgstr "_Liste neu laden"
+msgstr "Bibliothek neu _laden"
 
 #: src/gtk/store-panel.ui:79
 msgid "_Preferences"
@@ -242,9 +240,8 @@ msgid "Play at Next"
 msgstr "Als Nächstes wiedergeben"
 
 #: src/ui/music-widgets.vala:231 src/ui/music-widgets.vala:257
-#, fuzzy
 msgid "Play"
-msgstr "Wiedergabe"
+msgstr "Wiedergeben"
 
 #: src/ui/music-widgets.vala:234 src/ui/play-panel.vala:223
 msgid "Show _Cover File"
@@ -312,19 +309,16 @@ msgid "Track"
 msgstr "Titel"
 
 #: src/ui/store-panel.vala:69
-#, fuzzy
 msgid "Playing"
-msgstr "Wiedergabeliste"
+msgstr "Aktuelle Wiedergabe"
 
 #: src/ui/store-panel.vala:75
-#, fuzzy
 msgid "Artists"
-msgstr "Interpret"
+msgstr "Interpreten"
 
 #: src/ui/store-panel.vala:80
-#, fuzzy
 msgid "Albums"
-msgstr "Album"
+msgstr "Alben"
 
 #: src/ui/volume-button.vala:32
 msgid "Volume: "
