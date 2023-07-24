@@ -175,13 +175,13 @@ namespace G4 {
 
             _playing.valign = Gtk.Align.CENTER;
             _playing.icon_name = "media-playback-start-symbolic";
-            _playing.pixel_size = 12;
+            _playing.pixel_size = 10;
             _playing.margin_end = 4;
             _playing.visible = false;
             _playing.add_css_class ("dim-label");
             append (_playing);
 
-            width_request = 300;
+            width_request = 312;
         }
 
         public bool playing {

@@ -30,7 +30,7 @@ namespace G4 {
             _thmbnailer = app.thumbnailer;
 
             _grid_view.enable_rubberband = false;
-            _grid_view.max_columns = 8;
+            _grid_view.max_columns = 5;
             _grid_view.margin_start = _grid_view.margin_end = 8;
             _grid_view.margin_top = _grid_view.margin_bottom = 8;
             _grid_view.single_click_activate = true;
