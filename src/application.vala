@@ -322,22 +322,23 @@ namespace G4 {
             }
         }
 
-        public void play (Object? obj) {
+        public int play (Object? obj, bool immediately = true) {
             var store = _loader.store;
+            uint insert_pos = -1;
             if (obj is Music) {
                 var music = (Music) obj;
                 uint position = -1;
                 if (store.find (music, out position)) {
-                    current_item = (int) position;
+                    insert_pos = (int) position;
                 } else {
                     store.append (music);
-                    current_item = (int) store.get_n_items () - 1;
+                    insert_pos = (int) store.get_n_items () - 1;
                     _list_modified = true;
                 }
             } else if (obj is Album) {
                 var album = (Album) obj;
                 var arr = new GenericArray<Music> (album.musics.length);
-                var insert_pos = (uint) store.get_n_items () - 1;
+                insert_pos = (uint) store.get_n_items () - 1;
                 _music_list.items_changed (_current_item, 0, 0);
                 album.foreach ((uri, music) => {
                     arr.add (music);
@@ -351,9 +352,11 @@ namespace G4 {
                 });
                 arr.sort (Music.compare_by_album);
                 store.splice (insert_pos, 0, arr.data);
-                current_item = (int) insert_pos;
                 _list_modified = true;
             }
+            if (immediately)
+                current_item = (int) insert_pos;
+            return (int) insert_pos;
         }
 
         public void play_at_next (Object? obj) {
@@ -460,11 +463,9 @@ namespace G4 {
         }
 
         private int find_music_item (Music? music) {
-            var count = _music_list.get_n_items ();
-            for (var i = 0; i < count; i++) {
-                if (music == _music_list.get_item (i))
-                    return (int) i;
-            }
+            var index = find_item_in_model (_music_list, music);
+            if (index != -1)
+                return index;
             return music != null ? locate_music_item_by_uri (((!)music).uri) : -1;
         }
 
@@ -577,6 +578,15 @@ namespace G4 {
             }
             return false;
         }
+    }
+
+    public int find_item_in_model (ListModel model, Object? obj) {
+        var count = model.get_n_items ();
+        for (var i = 0; i < count; i++) {
+            if (model.get_item (i) == obj)
+                return (int) i;
+        }
+        return -1;
     }
 
     public async bool save_sample_to_file_async (File file, Gst.Sample sample) {

@@ -74,6 +74,12 @@ namespace G4 {
             }
         }
 
+        public bool grid_mode {
+            get {
+                return _grid_mode;
+            }
+        }
+
         public uint visible_count {
             get {
                 return _filter_model.get_n_items ();
