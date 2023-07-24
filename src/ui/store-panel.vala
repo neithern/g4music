@@ -35,7 +35,6 @@ namespace G4 {
 
         private Gtk.Stack _album_stack = new Gtk.Stack ();
         private Gtk.Stack _artist_stack = new Gtk.Stack ();
-        private Gtk.Stack _playing_stack = new Gtk.Stack ();
 
         private Application _app;
         private MusicList _album_list;
@@ -64,10 +63,8 @@ namespace G4 {
             _current_list = _playing_list = create_playing_music_list ();
             _playing_list.data_store = _app.loader.store;
             _playing_list.filter_model = _app.music_list;
-            _playing_stack.add_named (_playing_list, "playing");
-            _playing_stack.transition_type = Gtk.StackTransitionType.SLIDE_LEFT_RIGHT;
-            stack_view.add_titled (_playing_stack, "Playing", _("Playing")).icon_name = "media-playback-start-symbolic";
-            stack_view.visible_child = _playing_stack;
+            stack_view.add_titled (_playing_list, "playing", _("Playing")).icon_name = "media-playback-start-symbolic";
+            stack_view.visible_child = _playing_list;
 
             _artist_list = create_artist_list ();
             _artist_stack.add_named (_artist_list, "artists");
@@ -98,6 +95,8 @@ namespace G4 {
                     _album_list.create_factory ();
                     _artist_list.create_factory ();
                     _app.settings.bind ("compact-playlist", _playing_list, "compact-list", SettingsBindFlags.DEFAULT);
+                    _album_stack.bind_property ("visible-child", this, "visible-child", BindingFlags.SYNC_CREATE);
+                    _artist_stack.bind_property ("visible-child", this, "visible-child", BindingFlags.SYNC_CREATE);
                     stack_view.transition_type = Gtk.StackTransitionType.SLIDE_LEFT_RIGHT;
                     stack_view.bind_property ("visible-child", this, "visible-child", BindingFlags.SYNC_CREATE);
                 }
@@ -127,9 +126,11 @@ namespace G4 {
 
         public Gtk.Widget visible_child {
             set {
-                var child = value.get_first_child ();
-                if (child is MusicList) {
-                    _current_list = (MusicList) child;
+                if (value is Gtk.Stack) {
+                    value = ((Gtk.Stack) value).visible_child;
+                }
+                if (value is MusicList) {
+                    _current_list = (MusicList) value;
                 }
                 var playing = _current_list == _playing_list;
                 sort_btn.sensitive = playing;
@@ -155,9 +156,6 @@ namespace G4 {
                     break;
                 case SearchMode.ARTIST:
                 stack = _artist_stack;
-                    break;
-                case SearchMode.TITLE:
-                stack = _playing_stack;
                     break;
             }
             if (stack != null) {
