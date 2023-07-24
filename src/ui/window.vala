@@ -10,6 +10,8 @@ namespace G4 {
         private uint _bkgnd_blur = BlurMode.ALWAYS;
         private CrossFadePaintable _bkgnd_paintable = new CrossFadePaintable ();
         private Gdk.Paintable? _cover_paintable = null;
+        private int _window_width = 0;
+        private int _window_height = 0;
 
         public Window (Application app) {
             this.application = app;
@@ -52,7 +54,7 @@ namespace G4 {
             }
             set {
                 _bkgnd_blur = value;
-                if (get_width () > 0)
+                if (_window_height > 0)
                     update_background ();
             }
         }
@@ -87,11 +89,20 @@ namespace G4 {
                 allocation.width = right_width;
                 right_panel.allocate_size (allocation, baseline);
             }
+
+            if (_window_width == 0 && width > 0) {
+                run_idle_once (() => {
+                    _play_panel.size_allocated ();
+                    _store_panel.size_allocated ();
+                });
+            }
+            _window_width = width;
+            _window_height = height;
         }
 
         public override void snapshot (Gtk.Snapshot snapshot) {
-            var width = get_width ();
-            var height = get_height ();
+            var width = _window_width;
+            var height = _window_height;
             _bkgnd_paintable.snapshot (snapshot, width, height);
             if (!_leaflet.folded) {
                 var page = (Adw.LeafletPage) _leaflet.pages.get_item (0);

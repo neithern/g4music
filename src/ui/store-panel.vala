@@ -89,20 +89,6 @@ namespace G4 {
             insert_child_after (revealer, header_bar);
             switcher.bind_property ("reveal-child", revealer, "reveal-child", BindingFlags.SYNC_CREATE | BindingFlags.INVERT_BOOLEAN);
 
-            Idle.add (() => {
-                // Delay set model after the window shown to avoid slowing down it showing
-                if (win.get_height () > 0) {
-                    _album_list.create_factory ();
-                    _artist_list.create_factory ();
-                    _app.settings.bind ("compact-playlist", _playing_list, "compact-list", SettingsBindFlags.DEFAULT);
-                    _album_stack.bind_property ("visible-child", this, "visible-child", BindingFlags.SYNC_CREATE);
-                    _artist_stack.bind_property ("visible-child", this, "visible-child", BindingFlags.SYNC_CREATE);
-                    stack_view.transition_type = Gtk.StackTransitionType.SLIDE_LEFT_RIGHT;
-                    stack_view.bind_property ("visible-child", this, "visible-child", BindingFlags.SYNC_CREATE);
-                }
-                return win.get_height () == 0;
-            }, Priority.LOW);
-
             app.index_changed.connect (on_index_changed);
             app.music_batch_changed.connect (on_music_batch_changed);
             app.loader.loading_changed.connect (on_loading_changed);
@@ -139,6 +125,17 @@ namespace G4 {
                 }
                 on_search_text_changed ();
             }
+        }
+
+        public void size_allocated () {
+            // Delay set model after the window size allocated to avoid showing slowly
+            _album_list.create_factory ();
+            _artist_list.create_factory ();
+            _app.settings.bind ("compact-playlist", _playing_list, "compact-list", SettingsBindFlags.DEFAULT);
+            _album_stack.bind_property ("visible-child", this, "visible-child", BindingFlags.SYNC_CREATE);
+            _artist_stack.bind_property ("visible-child", this, "visible-child", BindingFlags.SYNC_CREATE);
+            stack_view.transition_type = Gtk.StackTransitionType.SLIDE_LEFT_RIGHT;
+            stack_view.bind_property ("visible-child", this, "visible-child", BindingFlags.SYNC_CREATE);
         }
 
         public void size_to_change (int panel_width) {

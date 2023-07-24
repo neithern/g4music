@@ -62,14 +62,6 @@ namespace G4 {
                 () => win.start_search (music_title.label, SearchMode.TITLE));
             make_right_clickable (music_box, show_popover_menu);
 
-            Idle.add (() => {
-                // Delay update info after the window shown to avoid slowing down it showing
-                if (win.get_height () > 0 && _current_music != _app.current_music) {
-                    update_music_info (_app.current_music);
-                }
-                return win.get_height () == 0;
-            }, Priority.LOW);
-
             app.index_changed.connect (on_index_changed);
             app.music_changed.connect (on_music_changed);
             app.music_list.items_changed.connect (on_music_items_changed);
@@ -100,6 +92,13 @@ namespace G4 {
             set {
                 _show_peak = value;
                 on_player_state_changed (_app.player.state);
+            }
+        }
+
+        public void size_allocated () {
+            // Delay update info after the window size allocated to avoid showing slowly
+            if (_current_music != _app.current_music) {
+                update_music_info (_app.current_music);
             }
         }
 
