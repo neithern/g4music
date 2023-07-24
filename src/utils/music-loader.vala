@@ -236,7 +236,12 @@ namespace G4 {
                         var uris = new GenericArray<string> (128);
                         load_playlist_file (file, playlist_type, uris);
                         foreach (var uri in uris) {
-                            add_file (File.new_for_uri (uri), dirs, musics, false);
+                            var cached_music = _tag_cache[uri];
+                            if (cached_music != null) {
+                                musics.add ((!)cached_music);
+                            } else {
+                                add_file (File.new_for_uri (uri), dirs, musics, false);
+                            }
                         }
                     } else if (is_music_type (ctype)) {
                         var time = info.get_modification_date_time ()?.to_unix () ?? 0;
