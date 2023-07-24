@@ -152,10 +152,13 @@ namespace G4 {
             Gtk.Stack? stack = null;
             switch (mode) {
                 case SearchMode.ALBUM:
-                stack = _album_stack;
+                    stack = _album_stack;
                     break;
                 case SearchMode.ARTIST:
-                stack = _artist_stack;
+                    stack = _artist_stack;
+                    break;
+                case SearchMode.TITLE:
+                    stack_view.visible_child = _playing_list;
                     break;
             }
             if (stack != null) {
