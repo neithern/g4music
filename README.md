@@ -8,7 +8,7 @@ Play your music elegantly.
 <img src="./shots/playing.png" width="462"/>
 <img src="./shots/playlist.png" width="466"/>
 
-A fast, fluent, light weight music player written in GTK4, with a beautiful, adaptive user interface, focuses on high performance, for those people who have huge number of songs.
+Gapless is a fast fluent lightweight music player written in GTK4, with a beautiful and adaptive user interface, focuses on high performance for huge number of songs.
 
 ## Features
 - Supports most music file types, samba and any other remote protocols (depends on GIO and GStreamer).

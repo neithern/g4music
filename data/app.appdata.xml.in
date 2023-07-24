@@ -16,7 +16,7 @@
     <content_rating type="oars-1.1"/>
 
     <description>
-      	<p>A fast, fluent, light weight music player written in GTK4, with a beautiful, adaptive user interface, focuses on high performance, for those people who have huge number of songs.</p>
+      	<p>Gapless is a fast fluent lightweight music player written in GTK4, with a beautiful and adaptive user interface, focuses on high performance for huge number of songs.</p>
         <p>Features</p>
         <ul>
         <li>Supports most music file types, samba and any other remote protocols (depends on GIO and GStreamer).</li>
@@ -39,7 +39,10 @@
             <image>https://gitlab.gnome.org/neithern/g4music/-/raw/master/shots/window.png</image>
         </screenshot>
         <screenshot>
-            <image>https://gitlab.gnome.org/neithern/g4music/-/raw/master/shots/playbar.png</image>
+            <image>https://gitlab.gnome.org/neithern/g4music/-/raw/master/shots/albums.png</image>
+        </screenshot>
+        <screenshot>
+            <image>https://gitlab.gnome.org/neithern/g4music/-/raw/master/shots/playing.png</image>
         </screenshot>
         <screenshot>
             <image>https://gitlab.gnome.org/neithern/g4music/-/raw/master/shots/playlist.png</image>
