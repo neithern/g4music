@@ -4,6 +4,7 @@ namespace G4 {
         private Gtk.Image _cover = new Gtk.Image ();
         private Gtk.Label _title = new Gtk.Label (null);
         private Gtk.Label _time = new Gtk.Label ("0:00");
+        private Gtk.Button _prev = new Gtk.Button ();
         private Gtk.Button _play = new Gtk.Button ();
         private Gtk.Button _next = new Gtk.Button ();
         private int _duration = 0;
@@ -50,6 +51,14 @@ namespace G4 {
             hbox.valign = Gtk.Align.CENTER;
             add_suffix (hbox);
 
+            _prev.valign = Gtk.Align.CENTER;
+            _prev.action_name = ACTION_APP + ACTION_PREV;
+            _prev.icon_name = "media-skip-backward-symbolic";
+            _prev.tooltip_text = _("Play Previous");
+            _prev.add_css_class ("circular");
+            _prev.add_css_class ("flat");
+            hbox.append (_prev);
+
             _play.valign = Gtk.Align.CENTER;
             _play.action_name = ACTION_APP + ACTION_PLAY_PAUSE;
             _play.icon_name = "media-playback-start-symbolic";
@@ -94,6 +103,10 @@ namespace G4 {
             set {
                 _title.label = value;
             }
+        }
+
+        public void size_to_change (int panel_width) {
+            _prev.visible = panel_width >= 360;
         }
 
         public override void snapshot (Gtk.Snapshot snapshot) {

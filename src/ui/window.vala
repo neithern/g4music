@@ -64,6 +64,7 @@ namespace G4 {
             var wide = width > min_width * 2;
             _play_panel.size_to_change (wide ? play_width : width);
             _store_panel.size_to_change (wide ? store_width : width);
+            _mini_bar.size_to_change (wide ? store_width : width);
 
             base.size_allocate (width, height, baseline);
 
