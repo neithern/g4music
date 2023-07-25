@@ -105,36 +105,35 @@ namespace G4 {
             _grid_view.factory = factory;
         }
 
-        public void scroll_to_item (int index) {
-            _grid_view.activate_action_variant ("list.scroll-to-item", new Variant.uint32 (index));
+        public void scroll_to_current_item () {
+            if (_current_item != -1)
+                scroll_to_item (_current_item);
         }
 
         private Adw.Animation? _scroll_animation = null;
 
-        public void scroll_to_item_smoothly (int index) {
+        public void scroll_to_item (int index, bool smoothly = true) {
             var adj = _scroll_view.vadjustment;
             var list_height = _grid_view.get_height ();
-            if (_columns > 0 && _row_height > 0 && adj.upper - adj.lower > list_height) {
+            if (smoothly && _columns > 0 && _row_height > 0 && adj.upper - adj.lower > list_height) {
                 var from = adj.value;
                 var row = index / _columns;
                 var max_to = double.max ((row + 1) * _row_height - list_height, 0);
                 var min_to = double.max (row * _row_height, 0);
                 var scroll_to =  from < max_to ? max_to : (from > min_to ? min_to : from);
                 var diff = (scroll_to - from).abs ();
-                if (diff > list_height) {
-                    //  Hack for GNOME 42: jump to correct position when first scroll
-                    scroll_to_item (index);
-                    _scroll_animation?.pause ();
-                    adj.value = min_to;
-                } else if (diff > 0) {
-                    //  Scroll smoothly
-                    var target = new Adw.CallbackAnimationTarget (adj.set_value);
-                    _scroll_animation?.pause ();
-                    _scroll_animation = new Adw.TimedAnimation (_scroll_view, from, scroll_to, 500, target);
-                    _scroll_animation?.play ();
+                var jump = diff > list_height;
+                if (jump) {
+                    // Jump to correct position first
+                    _grid_view.activate_action_variant ("list.scroll-to-item", new Variant.uint32 (index));
                 }
+                //  Scroll smoothly
+                var target = new Adw.CallbackAnimationTarget (adj.set_value);
+                _scroll_animation?.pause ();
+                _scroll_animation = new Adw.TimedAnimation (_scroll_view, adj.value, scroll_to, jump ? 50 : 500, target);
+                _scroll_animation?.play ();
             } else {
-                scroll_to_item (index);
+                _grid_view.activate_action_variant ("list.scroll-to-item", new Variant.uint32 (index));
             }
         }
 

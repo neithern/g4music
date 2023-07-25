@@ -117,16 +117,17 @@ namespace G4 {
                     value = ((Gtk.Stack) value).visible_child;
                 }
                 if (value is MusicList) {
-                    on_music_changed (_app.current_music);
                     _current_list = (MusicList) value;
                     on_music_changed (_app.current_music);
                 }
-                var playing = _current_list == _playing_list;
-                sort_btn.sensitive = playing;
-                if (playing) {
-                    run_idle_once (() => scroll_to_item (_app.current_item));
-                }
+                sort_btn.sensitive = _current_list == _playing_list;
                 on_search_text_changed ();
+                run_idle_once (() => {
+                    if (_current_list == _playing_list)
+                        _current_list.scroll_to_item (_app.current_item);
+                    else
+                        _current_list.scroll_to_current_item ();
+                });
             }
         }
 
@@ -142,10 +143,6 @@ namespace G4 {
         }
 
         public void size_to_change (int panel_width) {
-        }
-
-        public void scroll_to_item (int index) {
-            _current_list.scroll_to_item_smoothly (index);
         }
 
         public void start_search (string text, uint mode = SearchMode.ANY) {
@@ -322,7 +319,7 @@ namespace G4 {
             root.action_set_enabled (ACTION_APP + ACTION_PREV, index > 0);
             root.action_set_enabled (ACTION_APP + ACTION_NEXT, index < (int) size - 1);
             if (_current_list == _playing_list) {
-                scroll_to_item (index);
+                _current_list.scroll_to_item (index);
             }
         }
 
