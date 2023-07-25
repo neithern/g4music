@@ -58,7 +58,7 @@ namespace G4 {
             _negative.add_css_class ("dim-label");
             _negative.add_css_class ("numeric");
 
-            make_label_clickable (_negative).pressed.connect (() => remain_progress = !remain_progress);
+            make_widget_clickable (_negative).pressed.connect (() => remain_progress = !remain_progress);
 
             var buttons = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 16);
             buttons.halign = Gtk.Align.CENTER;
@@ -178,7 +178,7 @@ namespace G4 {
         return sb.str;
     }
 
-    public static Gtk.GestureClick make_label_clickable (Gtk.Label label) {
+    public static Gtk.GestureClick make_widget_clickable (Gtk.Widget label) {
         var controller = new Gtk.GestureClick ();
         label.add_controller (controller);
         label.set_cursor_from_name ("hand");

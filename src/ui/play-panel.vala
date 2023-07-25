@@ -13,11 +13,11 @@ namespace G4 {
         [GtkChild]
         private unowned Gtk.Image music_cover;
         [GtkChild]
-        private unowned Gtk.Label music_album;
+        private unowned StableLabel music_album;
         [GtkChild]
-        private unowned Gtk.Label music_artist;
+        private unowned StableLabel music_artist;
         [GtkChild]
-        private unowned Gtk.Label music_title;
+        private unowned StableLabel music_title;
         [GtkChild]
         private unowned Gtk.Label initial_label;
 
@@ -54,11 +54,11 @@ namespace G4 {
             music_album.tooltip_text = _("Search Album");
             music_artist.tooltip_text = _("Search Artist");
             music_title.tooltip_text = _("Search Title");
-            make_label_clickable (music_album).released.connect (
+            make_widget_clickable (music_album).released.connect (
                 () => win.start_search (music_album.label, SearchMode.ALBUM));
-            make_label_clickable (music_artist).released.connect (
+            make_widget_clickable (music_artist).released.connect (
                 () => win.start_search (music_artist.label, SearchMode.ARTIST));
-            make_label_clickable (music_title).released.connect (
+            make_widget_clickable (music_title).released.connect (
                 () => win.start_search (music_title.label, SearchMode.TITLE));
             make_right_clickable (music_box, show_popover_menu);
 

@@ -49,7 +49,7 @@
             <property name="valign">end</property>
             <property name="margin_start">32</property>
             <property name="margin_end">32</property>
-            <property name="margin_top">39</property>
+            <property name="margin_top">22</property>
             <property name="height_request">80</property>
             <child>
               <object class="GtkLabel" id="initial_label">
@@ -61,7 +61,7 @@
               </object>
             </child>
             <child>
-              <object class="GtkLabel" id="music_title">
+              <object class="G4StableLabel" id="music_title">
                 <property name="ellipsize">end</property>
                 <property name="halign">center</property>
                 <style>
@@ -70,20 +70,19 @@
               </object>
             </child>
             <child>
-              <object class="GtkLabel" id="music_artist">
+              <object class="G4StableLabel" id="music_artist">
                 <property name="ellipsize">end</property>
                 <property name="halign">center</property>
-                <property name="margin_top">4</property>
+                <property name="margin_top">2</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
               </object>
             </child>
             <child>
-              <object class="GtkLabel" id="music_album">
+              <object class="G4StableLabel" id="music_album">
                 <property name="ellipsize">end</property>
                 <property name="halign">center</property>
-                <property name="margin_top">4</property>
                 <style>
                   <class name="dim-label"/>
                 </style>

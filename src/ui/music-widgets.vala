@@ -3,7 +3,7 @@ namespace G4 {
     public class StableLabel : Gtk.Widget {
         private Gtk.Label _label = new Gtk.Label (null);
 
-        public StableLabel () {
+        construct {
             add_child (new Gtk.Builder (), _label, null);
         }
 
@@ -30,12 +30,14 @@ namespace G4 {
         }
 
         public override void measure (Gtk.Orientation orientation, int for_size, out int minimum, out int natural, out int minimum_baseline, out int natural_baseline) {
-            var vertical = orientation == Gtk.Orientation.VERTICAL;
-            _label.measure (orientation, for_size, out minimum, out natural, out minimum_baseline, out natural_baseline);
-            if (vertical) {
+            if (orientation == Gtk.Orientation.VERTICAL) {
                 // Ensure enough space for different text
-                var font_size = _label.get_pango_context ().get_font_description ().get_size () / Pango.SCALE;
-                minimum = natural = int.max ((int) (font_size * 1.65), natural);
+                var text = _label.label;
+                _label.label = "A中";
+                _label.measure (orientation, for_size, out minimum, out natural, out minimum_baseline, out natural_baseline);
+                _label.label = text;
+            } else {
+                _label.measure (orientation, for_size, out minimum, out natural, out minimum_baseline, out natural_baseline);
             }
         }
 
