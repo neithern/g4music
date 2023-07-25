@@ -117,9 +117,9 @@ namespace G4 {
                     value = ((Gtk.Stack) value).visible_child;
                 }
                 if (value is MusicList) {
+                    on_music_changed (_app.current_music);
                     _current_list = (MusicList) value;
-                    if (_current_list.grid_mode)
-                        on_music_changed (_current_music);
+                    on_music_changed (_app.current_music);
                 }
                 var playing = _current_list == _playing_list;
                 sort_btn.sensitive = playing;
@@ -318,10 +318,6 @@ namespace G4 {
             stack.visible_child = mlist;
         }
 
-        private bool music_list_in_album () {
-            return !_current_list.grid_mode && _current_list != _playing_list;
-        }
-
         private void on_index_changed (int index, uint size) {
             root.action_set_enabled (ACTION_APP + ACTION_PREV, index > 0);
             root.action_set_enabled (ACTION_APP + ACTION_NEXT, index < (int) size - 1);
@@ -364,19 +360,10 @@ namespace G4 {
             _artist_list.data_store.splice (0, _artist_list.data_store.get_n_items (), arr.data);
         }
 
-        private Music? _current_music = null;
-
         private void on_music_changed (Music? music) {
-            if (music_list_in_album ()) {
-                var model = _current_list.filter_model;
-                var index = find_item_in_model (model, _current_music);
-                if (index != -1)
-                    model.items_changed (index, 0, 0);
-                index = find_item_in_model (model, music);
-                if (index != -1)
-                    model.items_changed (index, 0, 0);
+            if (!_current_list.grid_mode && _current_list != _playing_list) {
+                _current_list.current_item = _app.current_music;
             }
-            _current_music = music;
         }
 
         private void on_search_btn_toggled () {

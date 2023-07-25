@@ -2,6 +2,7 @@ namespace G4 {
 
     public class MusicList : Gtk.Box {
         private bool _compact_list = false;
+        private int _current_item = -1;
         private ListStore _data_store = new ListStore (typeof (Music));
         private Gtk.FilterListModel _filter_model = new Gtk.FilterListModel (null, null);
         private bool _grid_mode = false;
@@ -52,6 +53,16 @@ namespace G4 {
             set {
                 _compact_list = value;
                 create_factory ();
+            }
+        }
+
+        public Object? current_item {
+            set {
+                if (_current_item != -1)
+                    _filter_model.items_changed (_current_item, 0, 0);
+                _current_item = find_item_in_model (_filter_model, value);
+                if (_current_item != -1)
+                    _filter_model.items_changed (_current_item, 0, 0);
             }
         }
 
