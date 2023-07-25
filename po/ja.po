@@ -9,9 +9,9 @@ msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-23 11:41+0800\n"
-"PO-Revision-Date: 2023-07-09 21:34+0900\n"
+"PO-Revision-Date: 2023-07-25 20:04+0900\n"
 "Last-Translator: Gnuey56 <gnuey56@proton.me>\n"
-"Language-Team: Japanese\n"
+"Language-Team: Japanese <>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,7 +21,7 @@ msgstr ""
 
 #: data/app.desktop.in:3 src/application.vala:203 src/main.vala:24
 msgid "Gapless"
-msgstr ""
+msgstr "Gapless"
 
 #: data/app.desktop.in:4
 msgid "Music Player"
@@ -93,10 +93,9 @@ msgid "Toggle Sort"
 msgstr "プレイリストの並びを切り替え"
 
 #: src/gtk/help-overlay.ui:72
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Reload Library"
-msgstr "プレイリストを再読み込み"
+msgstr "ライブラリを再読み込み"
 
 #: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:294
 msgid "Back"
@@ -124,7 +123,7 @@ msgstr "ウィンドウが閉じても再生を続ける"
 
 #: src/gtk/preferences.ui:57
 msgid "Library"
-msgstr ""
+msgstr "ライブラリ"
 
 #: src/gtk/preferences.ui:61
 msgid "Load music from folder"
@@ -183,9 +182,8 @@ msgid "Search"
 msgstr "検索"
 
 #: src/gtk/store-panel.ui:73
-#, fuzzy
 msgid "_Reload Library"
-msgstr "プレイリストを再読み込み(_R)"
+msgstr "ライブラリを再読み込み(_R)"
 
 #: src/gtk/store-panel.ui:79
 msgid "_Preferences"
@@ -241,7 +239,6 @@ msgid "Play at Next"
 msgstr "次に再生"
 
 #: src/ui/music-widgets.vala:231 src/ui/music-widgets.vala:257
-#, fuzzy
 msgid "Play"
 msgstr "再生"
 
@@ -311,17 +308,14 @@ msgid "Track"
 msgstr "トラック"
 
 #: src/ui/store-panel.vala:69
-#, fuzzy
 msgid "Playing"
-msgstr "プレイリスト"
+msgstr "再生"
 
 #: src/ui/store-panel.vala:75
-#, fuzzy
 msgid "Artists"
 msgstr "アーティスト"
 
 #: src/ui/store-panel.vala:80
-#, fuzzy
 msgid "Albums"
 msgstr "アルバム"
 
