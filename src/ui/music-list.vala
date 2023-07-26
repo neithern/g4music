@@ -58,11 +58,13 @@ namespace G4 {
 
         public Object? current_item {
             set {
-                if (_current_item != -1)
-                    _filter_model.items_changed (_current_item, 0, 0);
-                _current_item = find_item_in_model (_filter_model, value);
-                if (_current_item != -1)
-                    _filter_model.items_changed (_current_item, 0, 0);
+                if (_filter_model.get_item (_current_item) != value) {
+                    if (_current_item != -1)
+                        _filter_model.items_changed (_current_item, 0, 0);
+                    _current_item = find_item_in_model (_filter_model, value);
+                    if (_current_item != -1)
+                        _filter_model.items_changed (_current_item, 0, 0);
+                }
             }
         }
 

@@ -136,10 +136,11 @@ namespace G4 {
             _album_list.create_factory ();
             _artist_list.create_factory ();
             _app.settings.bind ("compact-playlist", _playing_list, "compact-list", SettingsBindFlags.DEFAULT);
-            _album_stack.bind_property ("visible-child", this, "visible-child", BindingFlags.SYNC_CREATE);
-            _artist_stack.bind_property ("visible-child", this, "visible-child", BindingFlags.SYNC_CREATE);
+            _current_list.scroll_to_item (_app.current_item);
+            _album_stack.bind_property ("visible-child", this, "visible-child", BindingFlags.DEFAULT);
+            _artist_stack.bind_property ("visible-child", this, "visible-child", BindingFlags.DEFAULT);
             stack_view.transition_type = Gtk.StackTransitionType.SLIDE_LEFT_RIGHT;
-            stack_view.bind_property ("visible-child", this, "visible-child", BindingFlags.SYNC_CREATE);
+            stack_view.bind_property ("visible-child", this, "visible-child", BindingFlags.DEFAULT);
         }
 
         public void size_to_change (int panel_width) {
