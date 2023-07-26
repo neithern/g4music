@@ -51,6 +51,15 @@ namespace G4 {
             return false;
         }
 
+        public void delete () {
+            _file.delete_async.begin (Priority.DEFAULT, null, (obj, res) => {
+                try {
+                    _file.delete_async.end (res);
+                } catch (Error e) {
+                }
+            });
+        }
+
         public void add_child (FileInfo info) {
             var time = info.get_modification_date_time ()?.to_unix () ?? 0;
             var type = (uint8) info.get_file_type ();

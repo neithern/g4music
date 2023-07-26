@@ -14,7 +14,6 @@ namespace G4 {
 
         //  for runtime
         public string? cover_uri = null;
-        public bool showing = true;
 
         //  for sorting
         private string _album_key = "";

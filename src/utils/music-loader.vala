@@ -1,15 +1,5 @@
 namespace G4 {
 
-    namespace SortMode {
-        public const uint ALBUM = 0;
-        public const uint ARTIST = 1;
-        public const uint ARTIST_ALBUM = 2;
-        public const uint TITLE = 3;
-        public const uint RECENT = 4;
-        public const uint SHUFFLE = 5;
-        public const uint MAX = 5;
-    }
-
     public class Progress {
         private int _progress = 0;
         private int _total = 0;
@@ -63,12 +53,12 @@ namespace G4 {
         private TagCache _tag_cache = new TagCache ();
 
         public signal void loading_changed (bool loading);
+        public signal void music_found (GenericArray<Music> arr);
+        public signal void music_lost (GenericSet<Music> arr);
 
         public MusicLoader () {
-            _dir_monitor.add_file.connect ((file) => {
-                add_files_async.begin ({file}, true, false, (obj, res) => add_files_async.end (res));
-            });
-            _dir_monitor.remove_file.connect (remove);
+            _dir_monitor.add_file.connect (on_file_added);
+            _dir_monitor.remove_file.connect (on_file_removed);
         }
 
         public CoverCache cover_cache {
@@ -110,30 +100,6 @@ namespace G4 {
             }
         }
 
-        public void clear () {
-            lock (_dir_monitor) {
-                _dir_monitor.remove_all ();
-            }
-            lock (_library) {
-                _library.remove_all ();
-            }
-            _tag_cache.reset_showing (false);
-        }
-
-        public void remove (File file) {
-            var uri = file.get_uri ();
-            var music = _tag_cache.remove (uri);
-            if (music != null) {
-                lock (_library) {
-                    _library.remove_music ((!)music);
-                }
-            } else {
-                lock (_library) {
-                    _library.remove_uri (uri, (u, m) => _tag_cache.remove (u));
-                }
-            }
-        }
-
         public void load_tag_cache () {
             run_void_async.begin (_tag_cache.load, (obj, res) => run_void_async.end (res));
         }
@@ -144,14 +110,7 @@ namespace G4 {
             }
         }
 
-        public async void add_files_async (File[] files, bool ignore_exists = false, bool include_playlist = true) {
-            var musics = new GenericArray<Music> (4096);
-            yield load_files_async (files,  musics, ignore_exists, include_playlist);
-            var store = _library.store;
-            store.splice (store.get_n_items (), 0, musics.data);
-        }
-
-        public async void load_files_async (owned File[] files, GenericArray<Music> musics, bool ignore_exists = false, bool include_playlist = true) {
+        public async void load_files_async (owned File[] files, GenericArray<Music> musics, bool ignore_exists = false, bool include_playlist = true, uint sort_mode = -1) {
             var dirs = new GenericArray<File> (128);
 
             _progress.reset ();
@@ -164,9 +123,16 @@ namespace G4 {
                 print ("Find %u files in %d folders in %lld ms\n", musics.length, dirs.length,
                     (get_monotonic_time () - begin_time + 500) / 1000);
 
-                load_tags_in_threads (musics, ignore_exists);
+                load_tags_in_threads (musics);
+                if (sort_mode <= SortMode.MAX) {
+                    sort_music_array (musics, sort_mode);
+                }
                 lock (_library) {
-                    musics.foreach (_library.add_music);
+                    for (var i = musics.length - 1; i >= 0; i--) {
+                        var music = musics[i];
+                        if (!_library.add_music (music) && ignore_exists)
+                            musics.remove_index_fast (i);
+                    }
                 }
                 print ("Load %u artists %u albums %u musics in %lld ms\n",
                     _library.artists.length, _library.albums.length, musics.length,
@@ -181,6 +147,15 @@ namespace G4 {
             }, (obj, res) => run_void_async.end (res));
 
             save_tag_cache ();
+        }
+
+        public void remove_all () {
+            lock (_dir_monitor) {
+                _dir_monitor.remove_all ();
+            }
+            lock (_library) {
+                _library.remove_all ();
+            }
         }
 
         private const string ATTRIBUTES = FileAttribute.STANDARD_CONTENT_TYPE + ","
@@ -275,17 +250,14 @@ namespace G4 {
             }
         }
 
-        private void load_tags_in_threads (GenericArray<Music> musics, bool ignore_exists) {
+        private void load_tags_in_threads (GenericArray<Music> musics) {
             var queue = new AsyncQueue<Music?> ();
             _tag_cache.wait_loading ();
             lock (_tag_cache) {
                 for (var i = musics.length - 1; i >= 0; i--) {
                     unowned var music = musics[i];
                     var cached_music = _tag_cache[music.uri];
-                    if (ignore_exists && cached_music != null && ((!)cached_music).showing) {
-                        musics.remove_index_fast (i);
-                    } else if (cached_music != null && ((!)cached_music).modified_time == music.modified_time) {
-                        ((!)cached_music).showing = true;
+                    if (cached_music != null && ((!)cached_music).modified_time == music.modified_time) {
                         musics[i] = (!)cached_music;
                     } else {
                         _tag_cache.add (music);
@@ -307,6 +279,35 @@ namespace G4 {
             }
         }
 
+        private void on_file_added (File file) {
+            var arr = new GenericArray<Music> (1024);
+            load_files_async.begin ({file}, arr, true, false, -1, (obj, res) => {
+                load_files_async.end (res);
+                if (arr.length > 0) {
+                    music_found (arr);
+                }
+            });
+        }
+
+        private void on_file_removed (File file) {
+            var uri = file.get_uri ();
+            var music = _tag_cache.remove (uri);
+            if (music != null) {
+                lock (_library) {
+                    _library.remove_music ((!)music);
+                }
+            } else {
+                var removed = new GenericSet<Music> (direct_hash, direct_equal);
+                lock (_library) {
+                    _library.remove_uri (uri, removed);
+                }
+                if (removed.length > 0) {
+                    music_lost (removed);
+                }
+                new DirCache (file).delete ();
+            }
+        }
+
         private delegate G ThreadFunc<G> ();
 
         private static void run_in_threads<G> (owned ThreadFunc<G> func, uint num_tasks) {
@@ -319,29 +320,5 @@ namespace G4 {
                 thread.join ();
             }
         }
-    }
-
-    private const CompareFunc<Music>[] COMPARE_FUNCS = {
-        Music.compare_by_album,
-        Music.compare_by_artist,
-        Music.compare_by_artist_album,
-        Music.compare_by_title,
-        Music.compare_by_recent,
-        Music.compare_by_order,
-    };
-
-    public CompareFunc<Music> get_sort_compare (uint sort_mode) {
-        if (sort_mode <= COMPARE_FUNCS.length)
-            return COMPARE_FUNCS[sort_mode];
-        return Music.compare_by_order;
-    }
-
-    public void shuffle_order (ListStore store) {
-        var count = store.get_n_items ();
-        var arr = new GenericArray<Music> (count);
-        for (var i = 0; i < count; i++) {
-            arr.add ((Music)store.get_item (i));
-        }
-        Music.shuffle_order (arr);
     }
 }

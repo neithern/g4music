@@ -61,7 +61,7 @@ namespace G4 {
             _loading_paintable = _app.thumbnailer.create_simple_text_paintable ("...", Thumbnailer.ICON_SIZE);
 
             _current_list = _playing_list = create_playing_music_list ();
-            _playing_list.data_store = _library.store;
+            _playing_list.data_store = _app.music_store;
             _playing_list.filter_model = _app.music_list;
             stack_view.add_titled (_playing_list, "playing", _("Playing")).icon_name = "media-playback-start-symbolic";
             stack_view.visible_child = _playing_list;
@@ -199,11 +199,7 @@ namespace G4 {
                 cell.paintable = _loading_paintable;
                 cell.title = music.album;
             });
-            if (artist != null) {
-                var store = list.data_store;
-                ((!)artist).albums.foreach ((name, album) => store.append (album.cover_music));
-                store.sort ((CompareDataFunc) Music.compare_by_album);
-            }
+            artist?.get_sorted_albums (list.data_store);
             return list;
         }
 
@@ -254,9 +250,7 @@ namespace G4 {
                 var entry = (MusicEntry) item.child;
                 make_right_clickable (entry, entry.show_popover_menu);
             });
-            var store = list.data_store;
-            album.foreach ((uri, music) => store.append (music));
-            store.sort ((CompareDataFunc) Music.compare_by_album);
+            album.get_sorted_musics (list.data_store);
             return list;
         }
 
@@ -347,14 +341,7 @@ namespace G4 {
         }
 
         private void on_music_batch_changed () {
-            var arr = new GenericArray<Music> (1024);
-            _library.albums.foreach ((name, album) => arr.add (album.cover_music));
-            arr.sort (Music.compare_by_album);
-            _album_list.data_store.splice (0, _album_list.data_store.get_n_items (), arr.data);
-            arr.length = 0; 
-            _library.artists.foreach ((name, artist) => arr.add (artist.cover_music));
-            arr.sort (Music.compare_by_artist);
-            _artist_list.data_store.splice (0, _artist_list.data_store.get_n_items (), arr.data);
+            _library.get_sorted_albums_and_artists (_album_list.data_store, _artist_list.data_store);
         }
 
         private void on_music_changed (Music? music) {

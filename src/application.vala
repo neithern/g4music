@@ -13,6 +13,7 @@ namespace G4 {
         private uint _mpris_id = 0;
         private MusicLoader _loader = new MusicLoader ();
         private Gtk.FilterListModel _music_list = new Gtk.FilterListModel (null, null);
+        private ListStore _music_store = new ListStore (typeof (Music));
         private StringBuilder _next_uri = new StringBuilder ();
         private GstPlayer _player = new GstPlayer ();
         private Portal _portal = new Portal ();
@@ -37,9 +38,11 @@ namespace G4 {
 
             _actions = new ActionHandles (this);
 
-            _music_list.model = _loader.library.store;
+            _music_list.model = _music_store;
             _music_list.items_changed.connect (on_music_items_changed);
             _loader.loading_changed.connect ((loading) => _loading = loading);
+            _loader.music_found.connect (on_music_found);
+            _loader.music_lost.connect (on_music_lost);
 
             _thumbnailer.cover_finder = _loader.cover_cache;
             _thumbnailer.tag_updated.connect (_loader.add_to_cache);
@@ -87,7 +90,7 @@ namespace G4 {
             window.present ();
 
             var has_files = files.length > 0;
-            if (has_files && _loader.library.size > 0) {
+            if (has_files && _music_store.get_n_items () > 0) {
                 open_files_async.begin (files, true, (obj, res) => open_files_async.end (res));
             } else {
                 load_files_async.begin (files, (obj, res) => {
@@ -211,6 +214,12 @@ namespace G4 {
             }
         }
 
+        public ListStore music_store {
+            get {
+                return _music_store;
+            }
+        }
+
         public string name {
             get {
                 return _("Gapless");
@@ -242,12 +251,8 @@ namespace G4 {
                 var state = new Variant.string (value.to_string ());
                 (action as SimpleAction)?.set_state (state);
 
-                var store = _loader.library.store;
-                if (value == SortMode.SHUFFLE) {
-                    shuffle_order (store);
-                }
-                store.sort ((CompareDataFunc) get_sort_compare (value));
                 _sort_mode = value;
+                sort_music_store (_music_store, _sort_mode);
             }
         }
 
@@ -258,22 +263,18 @@ namespace G4 {
         }
 
         public async int load_files_async (owned File[] files) {
-            var saved_size = _loader.library.size;
             var play_item = _current_item;
-
-            if (saved_size == 0 && files.length == 0) {
+            if (files.length == 0) {
                 files.resize (1);
                 files[0] = File.new_for_uri (music_folder);
             }
             if (files.length > 0) {
-                yield _loader.add_files_async (files);
-                if (!_list_modified) {
-                    sort_mode = _sort_mode;
-                }
+                var musics = new GenericArray<Music> (4096);
+                yield _loader.load_files_async (files, musics, false, true, _sort_mode);
+                _music_store.splice (0, _music_store.get_n_items (), musics.data);
+                _list_modified = false;
             }
-            if (saved_size > 0) {
-                play_item = (int) saved_size;
-            } else if (_current_music != null && _current_music == _music_list.get_item (_current_item)) {
+            if (_current_music != null && _current_music == _music_list.get_item (_current_item)) {
                 play_item = _current_item;
             } else {
                 var uri = _current_music?.uri ?? _settings.get_string ("played-uri");
@@ -288,7 +289,7 @@ namespace G4 {
             var musics = new GenericArray<Music> (4096);
             yield _loader.load_files_async (files, musics);
             var album = new Album ("");
-            musics.foreach (album.add_music);
+            musics.foreach ((music) => album.add_music (music));
             if (play_now) {
                 play (album);
             } else {
@@ -324,7 +325,7 @@ namespace G4 {
         }
 
         public int play (Object? obj, bool immediately = true) {
-            var store = _loader.library.store;
+            var store = _music_store;
             uint insert_pos = -1;
             if (obj is Music) {
                 var music = (Music) obj;
@@ -362,7 +363,7 @@ namespace G4 {
 
         public void play_at_next (Object? obj) {
             if (_current_music != null) {
-                var store = _loader.library.store;
+                var store = _music_store;
                 _music_list.items_changed (_current_item, 0, 0);
                 if (obj is Music) {
                     var music = (Music) obj;
@@ -414,9 +415,8 @@ namespace G4 {
 
         public void reload_library () {
             if (!_loading) {
-                _loader.clear ();
-                change_current_item (-1);
-                load_files_async.begin ({}, (obj, res) => current_item = load_files_async.end (res));
+                _loader.remove_all ();
+                load_files_async.begin ({}, (obj, res) => load_files_async.end (res));
             }
         }
 
@@ -505,6 +505,10 @@ namespace G4 {
             }
         }
 
+        private void on_music_found (GenericArray<Music> arr) {
+            _music_store.splice (_music_store.get_n_items (), 0, arr.data);
+        }
+
         private uint _pending_mic_handler = 0;
 
         private void on_music_items_changed (uint position, uint removed, uint added) {
@@ -518,6 +522,17 @@ namespace G4 {
                     music_batch_changed ();
                 });
             }
+        }
+
+        private void on_music_lost (GenericSet<Music> removed) {
+            var count = _music_store.get_n_items ();
+            var remain = new GenericArray<Music> (count);
+            for (var i = 0; i < count; i++) {
+                var music = (Music) _music_store.get_item (i);
+                if (!removed.contains (music))
+                    remain.add (music);
+            }
+            _music_store.splice (0, _music_store.get_n_items (), remain.data);
         }
 
         private void on_player_end () {

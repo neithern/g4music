@@ -43,10 +43,6 @@ namespace G4 {
             return null;
         }
 
-        public void reset_showing (bool showing) {
-            _cache.foreach ((key, music) => music.showing = showing);
-        }
-
         public void load () {
             _event.reset ();
             try {
