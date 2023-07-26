@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-23 11:41+0800\n"
+"POT-Creation-Date: 2023-07-26 21:16+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Radi4Ever <EMAIL@ADDRESS>\n"
 "Language-Team: Spanish <LL@li.org>\n"
@@ -17,9 +17,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: data/app.desktop.in:3 src/application.vala:203 src/main.vala:24
-msgid "Gapless"
-msgstr ""
+#: data/app.desktop.in:3 src/application.vala:225 src/main.vala:24
+msgid "G4Music"
+msgstr "G4Music"
 
 #: data/app.desktop.in:4
 msgid "Music Player"
@@ -95,7 +95,7 @@ msgctxt "shortcut window"
 msgid "Reload Library"
 msgstr "_Recargar Lista"
 
-#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:294
+#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:290
 msgid "Back"
 msgstr "Atras"
 
@@ -116,7 +116,7 @@ msgstr "Modo de blur de fondo"
 msgid "Compact playlist view"
 msgstr "Playlist compacta"
 
-#: src/gtk/preferences.ui:44 src/application.vala:384
+#: src/gtk/preferences.ui:44 src/application.vala:424
 msgid "Keep playing after window closed"
 msgstr "Seguir reproduciendo despues de cerrar la ventana"
 
@@ -234,40 +234,40 @@ msgstr "Un rapido, fluido y ligero reproductor de musica escrito en GTK4"
 msgid "translator-credits"
 msgstr "Radi4ever"
 
-#: src/application.vala:519
+#: src/application.vala:573
 msgid "Keep playing"
 msgstr "Seguir Reproduciendo"
 
-#: src/ui/music-widgets.vala:230 src/ui/music-widgets.vala:258
+#: src/ui/music-widgets.vala:232 src/ui/music-widgets.vala:260
 msgid "Play at Next"
 msgstr "Reproducir a la Siguiente"
 
-#: src/ui/music-widgets.vala:231 src/ui/music-widgets.vala:257
+#: src/ui/music-widgets.vala:233 src/ui/music-widgets.vala:259
 #, fuzzy
 msgid "Play"
 msgstr "Reproduccion"
 
-#: src/ui/music-widgets.vala:234 src/ui/play-panel.vala:223
+#: src/ui/music-widgets.vala:236 src/ui/play-panel.vala:222
 msgid "Show _Cover File"
 msgstr "Mostrar _Portada"
 
-#: src/ui/music-widgets.vala:236 src/ui/play-panel.vala:225
+#: src/ui/music-widgets.vala:238 src/ui/play-panel.vala:224
 msgid "_Export Cover"
 msgstr "_Exportar Portada"
 
-#: src/ui/music-widgets.vala:264 src/ui/play-panel.vala:56
+#: src/ui/music-widgets.vala:266 src/ui/play-panel.vala:56
 msgid "Search Title"
 msgstr "Buscar Titulo"
 
-#: src/ui/music-widgets.vala:265 src/ui/play-panel.vala:54
+#: src/ui/music-widgets.vala:267 src/ui/play-panel.vala:54
 msgid "Search Album"
 msgstr "Buscar Album"
 
-#: src/ui/music-widgets.vala:266 src/ui/play-panel.vala:55
+#: src/ui/music-widgets.vala:268 src/ui/play-panel.vala:55
 msgid "Search Artist"
 msgstr "Buscar Artista"
 
-#: src/ui/music-widgets.vala:267
+#: src/ui/music-widgets.vala:269
 msgid "_Show Music File"
 msgstr "_Mostrar Archivo de Pista"
 
@@ -288,7 +288,7 @@ msgstr "Reproducir/Pausar"
 msgid "Play Next"
 msgstr "Reproducir Siguiente"
 
-#: src/ui/play-panel.vala:264
+#: src/ui/play-panel.vala:263
 msgid ""
 "Drag and drop music files here,\n"
 "or change music location: "
@@ -312,17 +312,17 @@ msgstr "Solo Portada"
 msgid "Track"
 msgstr "Pista"
 
-#: src/ui/store-panel.vala:69
+#: src/ui/store-panel.vala:66
 #, fuzzy
 msgid "Playing"
 msgstr "Lista de Reproduccion"
 
-#: src/ui/store-panel.vala:75
+#: src/ui/store-panel.vala:72
 #, fuzzy
 msgid "Artists"
 msgstr "Por Artista"
 
-#: src/ui/store-panel.vala:80
+#: src/ui/store-panel.vala:77
 #, fuzzy
 msgid "Albums"
 msgstr "Por Album"
@@ -338,9 +338,6 @@ msgstr "Album Desconocido"
 #: src/utils/music.vala:3
 msgid "Unknown Artist"
 msgstr "Artista Desconocido"
-
-#~ msgid "G4Music"
-#~ msgstr "G4Music"
 
 #~ msgid "Appearance"
 #~ msgstr "Apariencia"

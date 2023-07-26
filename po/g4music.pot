@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-23 11:41+0800\n"
+"POT-Creation-Date: 2023-07-26 21:16+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,8 +17,8 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: data/app.desktop.in:3 src/application.vala:203 src/main.vala:24
-msgid "Gapless"
+#: data/app.desktop.in:3 src/application.vala:225 src/main.vala:24
+msgid "G4Music"
 msgstr ""
 
 #: data/app.desktop.in:4
@@ -93,7 +93,7 @@ msgctxt "shortcut window"
 msgid "Reload Library"
 msgstr ""
 
-#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:294
+#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:290
 msgid "Back"
 msgstr ""
 
@@ -113,7 +113,7 @@ msgstr ""
 msgid "Compact playlist view"
 msgstr ""
 
-#: src/gtk/preferences.ui:44 src/application.vala:384
+#: src/gtk/preferences.ui:44 src/application.vala:424
 msgid "Keep playing after window closed"
 msgstr ""
 
@@ -226,39 +226,39 @@ msgstr ""
 msgid "translator-credits"
 msgstr ""
 
-#: src/application.vala:519
+#: src/application.vala:573
 msgid "Keep playing"
 msgstr ""
 
-#: src/ui/music-widgets.vala:230 src/ui/music-widgets.vala:258
+#: src/ui/music-widgets.vala:232 src/ui/music-widgets.vala:260
 msgid "Play at Next"
 msgstr ""
 
-#: src/ui/music-widgets.vala:231 src/ui/music-widgets.vala:257
+#: src/ui/music-widgets.vala:233 src/ui/music-widgets.vala:259
 msgid "Play"
 msgstr ""
 
-#: src/ui/music-widgets.vala:234 src/ui/play-panel.vala:223
+#: src/ui/music-widgets.vala:236 src/ui/play-panel.vala:222
 msgid "Show _Cover File"
 msgstr ""
 
-#: src/ui/music-widgets.vala:236 src/ui/play-panel.vala:225
+#: src/ui/music-widgets.vala:238 src/ui/play-panel.vala:224
 msgid "_Export Cover"
 msgstr ""
 
-#: src/ui/music-widgets.vala:264 src/ui/play-panel.vala:56
+#: src/ui/music-widgets.vala:266 src/ui/play-panel.vala:56
 msgid "Search Title"
 msgstr ""
 
-#: src/ui/music-widgets.vala:265 src/ui/play-panel.vala:54
+#: src/ui/music-widgets.vala:267 src/ui/play-panel.vala:54
 msgid "Search Album"
 msgstr ""
 
-#: src/ui/music-widgets.vala:266 src/ui/play-panel.vala:55
+#: src/ui/music-widgets.vala:268 src/ui/play-panel.vala:55
 msgid "Search Artist"
 msgstr ""
 
-#: src/ui/music-widgets.vala:267
+#: src/ui/music-widgets.vala:269
 msgid "_Show Music File"
 msgstr ""
 
@@ -279,7 +279,7 @@ msgstr ""
 msgid "Play Next"
 msgstr ""
 
-#: src/ui/play-panel.vala:264
+#: src/ui/play-panel.vala:263
 msgid ""
 "Drag and drop music files here,\n"
 "or change music location: "
@@ -301,15 +301,15 @@ msgstr ""
 msgid "Track"
 msgstr ""
 
-#: src/ui/store-panel.vala:69
+#: src/ui/store-panel.vala:66
 msgid "Playing"
 msgstr ""
 
-#: src/ui/store-panel.vala:75
+#: src/ui/store-panel.vala:72
 msgid "Artists"
 msgstr ""
 
-#: src/ui/store-panel.vala:80
+#: src/ui/store-panel.vala:77
 msgid "Albums"
 msgstr ""
 

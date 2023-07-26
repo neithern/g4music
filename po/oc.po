@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-23 11:41+0800\n"
+"POT-Creation-Date: 2023-07-26 21:16+0800\n"
 "PO-Revision-Date: 2022-12-10 14:38+0100\n"
 "Last-Translator: Quentin PAGÈS\n"
 "Language-Team: \n"
@@ -18,9 +18,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 "X-Generator: Poedit 3.2.2\n"
 
-#: data/app.desktop.in:3 src/application.vala:203 src/main.vala:24
-msgid "Gapless"
-msgstr ""
+#: data/app.desktop.in:3 src/application.vala:225 src/main.vala:24
+msgid "G4Music"
+msgstr "G4Music"
 
 #: data/app.desktop.in:4
 msgid "Music Player"
@@ -96,7 +96,7 @@ msgctxt "shortcut window"
 msgid "Reload Library"
 msgstr "_Recargar la lista"
 
-#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:294
+#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:290
 msgid "Back"
 msgstr "Tornar"
 
@@ -117,7 +117,7 @@ msgstr "Mòde del rèireplan fosc"
 msgid "Compact playlist view"
 msgstr ""
 
-#: src/gtk/preferences.ui:44 src/application.vala:384
+#: src/gtk/preferences.ui:44 src/application.vala:424
 msgid "Keep playing after window closed"
 msgstr "Téner de legir un còp la fenèstra tampada"
 
@@ -236,45 +236,45 @@ msgstr "Un lector de musica rapid e leugièr esrich en GTK4."
 msgid "translator-credits"
 msgstr "Quentin PAGÈS"
 
-#: src/application.vala:519
+#: src/application.vala:573
 msgid "Keep playing"
 msgstr "Contunhar de legir"
 
-#: src/ui/music-widgets.vala:230 src/ui/music-widgets.vala:258
+#: src/ui/music-widgets.vala:232 src/ui/music-widgets.vala:260
 #, fuzzy
 msgid "Play at Next"
 msgstr "Legir la seguenta"
 
-#: src/ui/music-widgets.vala:231 src/ui/music-widgets.vala:257
+#: src/ui/music-widgets.vala:233 src/ui/music-widgets.vala:259
 #, fuzzy
 msgid "Play"
 msgstr "Lectura"
 
-#: src/ui/music-widgets.vala:234 src/ui/play-panel.vala:223
+#: src/ui/music-widgets.vala:236 src/ui/play-panel.vala:222
 #, fuzzy
 msgid "Show _Cover File"
 msgstr "_Afichar los fichièrs"
 
-#: src/ui/music-widgets.vala:236 src/ui/play-panel.vala:225
+#: src/ui/music-widgets.vala:238 src/ui/play-panel.vala:224
 msgid "_Export Cover"
 msgstr "_Exportar la pocheta"
 
-#: src/ui/music-widgets.vala:264 src/ui/play-panel.vala:56
+#: src/ui/music-widgets.vala:266 src/ui/play-panel.vala:56
 #, fuzzy
 msgid "Search Title"
 msgstr "Cercar"
 
-#: src/ui/music-widgets.vala:265 src/ui/play-panel.vala:54
+#: src/ui/music-widgets.vala:267 src/ui/play-panel.vala:54
 #, fuzzy
 msgid "Search Album"
 msgstr "Afichar l’album"
 
-#: src/ui/music-widgets.vala:266 src/ui/play-panel.vala:55
+#: src/ui/music-widgets.vala:268 src/ui/play-panel.vala:55
 #, fuzzy
 msgid "Search Artist"
 msgstr "Afichar l’artista"
 
-#: src/ui/music-widgets.vala:267
+#: src/ui/music-widgets.vala:269
 #, fuzzy
 msgid "_Show Music File"
 msgstr "_Afichar los fichièrs"
@@ -296,7 +296,7 @@ msgstr "Lectura/Pausa"
 msgid "Play Next"
 msgstr "Legir la seguenta"
 
-#: src/ui/play-panel.vala:264
+#: src/ui/play-panel.vala:263
 msgid ""
 "Drag and drop music files here,\n"
 "or change music location: "
@@ -320,17 +320,17 @@ msgstr "Pocheta de l'album sonque"
 msgid "Track"
 msgstr ""
 
-#: src/ui/store-panel.vala:69
+#: src/ui/store-panel.vala:66
 #, fuzzy
 msgid "Playing"
 msgstr "Lista de lectura"
 
-#: src/ui/store-panel.vala:75
+#: src/ui/store-panel.vala:72
 #, fuzzy
 msgid "Artists"
 msgstr "Per artista"
 
-#: src/ui/store-panel.vala:80
+#: src/ui/store-panel.vala:77
 #, fuzzy
 msgid "Albums"
 msgstr "Per album"
@@ -346,9 +346,6 @@ msgstr "Album desconegut"
 #: src/utils/music.vala:3
 msgid "Unknown Artist"
 msgstr "Artista desconegut"
-
-#~ msgid "G4Music"
-#~ msgstr "G4Music"
 
 #~ msgid "Appearance"
 #~ msgstr "Aparéncia"

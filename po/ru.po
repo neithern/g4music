@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-23 11:41+0800\n"
+"POT-Creation-Date: 2023-07-26 21:16+0800\n"
 "PO-Revision-Date: 2022-08-15 10:33+0300\n"
 "Last-Translator: David Lapshin <ddaudix@gmail.com>\n"
 "Language-Team: \n"
@@ -17,9 +17,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.1.1\n"
 
-#: data/app.desktop.in:3 src/application.vala:203 src/main.vala:24
-msgid "Gapless"
-msgstr ""
+#: data/app.desktop.in:3 src/application.vala:225 src/main.vala:24
+msgid "G4Music"
+msgstr "G4Music"
 
 #: data/app.desktop.in:4
 msgid "Music Player"
@@ -95,7 +95,7 @@ msgctxt "shortcut window"
 msgid "Reload Library"
 msgstr "_Перезагрузить список"
 
-#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:294
+#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:290
 msgid "Back"
 msgstr "Назад"
 
@@ -116,7 +116,7 @@ msgstr "Режим размытия фона"
 msgid "Compact playlist view"
 msgstr ""
 
-#: src/gtk/preferences.ui:44 src/application.vala:384
+#: src/gtk/preferences.ui:44 src/application.vala:424
 msgid "Keep playing after window closed"
 msgstr "Продолжать играть после закрытия окна"
 
@@ -237,45 +237,45 @@ msgstr ""
 msgid "translator-credits"
 msgstr "Давид Лапшин <ddaudix@gmail.com>, 2022"
 
-#: src/application.vala:519
+#: src/application.vala:573
 msgid "Keep playing"
 msgstr "Продолжать играть"
 
-#: src/ui/music-widgets.vala:230 src/ui/music-widgets.vala:258
+#: src/ui/music-widgets.vala:232 src/ui/music-widgets.vala:260
 #, fuzzy
 msgid "Play at Next"
 msgstr "Играть следующее"
 
-#: src/ui/music-widgets.vala:231 src/ui/music-widgets.vala:257
+#: src/ui/music-widgets.vala:233 src/ui/music-widgets.vala:259
 #, fuzzy
 msgid "Play"
 msgstr "Воспроизведение"
 
-#: src/ui/music-widgets.vala:234 src/ui/play-panel.vala:223
+#: src/ui/music-widgets.vala:236 src/ui/play-panel.vala:222
 #, fuzzy
 msgid "Show _Cover File"
 msgstr "_Показать в файлах"
 
-#: src/ui/music-widgets.vala:236 src/ui/play-panel.vala:225
+#: src/ui/music-widgets.vala:238 src/ui/play-panel.vala:224
 msgid "_Export Cover"
 msgstr "_Экспортировать обложку"
 
-#: src/ui/music-widgets.vala:264 src/ui/play-panel.vala:56
+#: src/ui/music-widgets.vala:266 src/ui/play-panel.vala:56
 #, fuzzy
 msgid "Search Title"
 msgstr "Поиск"
 
-#: src/ui/music-widgets.vala:265 src/ui/play-panel.vala:54
+#: src/ui/music-widgets.vala:267 src/ui/play-panel.vala:54
 #, fuzzy
 msgid "Search Album"
 msgstr "Показать альбом"
 
-#: src/ui/music-widgets.vala:266 src/ui/play-panel.vala:55
+#: src/ui/music-widgets.vala:268 src/ui/play-panel.vala:55
 #, fuzzy
 msgid "Search Artist"
 msgstr "Показать артиста"
 
-#: src/ui/music-widgets.vala:267
+#: src/ui/music-widgets.vala:269
 #, fuzzy
 msgid "_Show Music File"
 msgstr "_Показать в файлах"
@@ -297,7 +297,7 @@ msgstr "Воспроизведение/Пауза"
 msgid "Play Next"
 msgstr "Играть следующее"
 
-#: src/ui/play-panel.vala:264
+#: src/ui/play-panel.vala:263
 msgid ""
 "Drag and drop music files here,\n"
 "or change music location: "
@@ -321,17 +321,17 @@ msgstr "Только обложки"
 msgid "Track"
 msgstr ""
 
-#: src/ui/store-panel.vala:69
+#: src/ui/store-panel.vala:66
 #, fuzzy
 msgid "Playing"
 msgstr "Плейлист"
 
-#: src/ui/store-panel.vala:75
+#: src/ui/store-panel.vala:72
 #, fuzzy
 msgid "Artists"
 msgstr "По артисту"
 
-#: src/ui/store-panel.vala:80
+#: src/ui/store-panel.vala:77
 #, fuzzy
 msgid "Albums"
 msgstr "По альбому"
@@ -347,9 +347,6 @@ msgstr "Неизвестный альбом"
 #: src/utils/music.vala:3
 msgid "Unknown Artist"
 msgstr "Неизвестный артист"
-
-#~ msgid "G4Music"
-#~ msgstr "G4Music"
 
 #~ msgid "Appearance"
 #~ msgstr "Внешний вид"

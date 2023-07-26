@@ -1,6 +1,6 @@
 <img align="left" alt="Project logo" src="data/icons/hicolor/scalable/apps/app.svg" />
 
-# Gapless
+# G4Music
 Play your music elegantly.
 
 <img src="./shots/window.png" width="1134"/>
@@ -8,7 +8,7 @@ Play your music elegantly.
 <img src="./shots/playing.png" width="462"/>
 <img src="./shots/playlist.png" width="466"/>
 
-Gapless is a fast fluent lightweight music player written in GTK4, with a beautiful and adaptive user interface, focuses on high performance for huge number of songs.
+G4Music is a fast fluent lightweight music player written in GTK4, with a beautiful and adaptive user interface, focuses on high performance for huge number of songs.
 
 ## Features
 - Supports most music file types, samba and any other remote protocols (depends on GIO and GStreamer).
@@ -23,12 +23,6 @@ Gapless is a fast fluent lightweight music player written in GTK4, with a beauti
 - Supports pipewire and other audio sink.
 - Supports MPRIS control.
 - Only need less than 500KB to install.
-
-## Why renamed to "Gapless"?
-1. Make name follow [GNOME HIG](https://developer.gnome.org/hig/guidelines/app-naming.html).
-2. Gapless is a feature of a music player.
-3. In this player, once you click the "Play" button, it will keep playing all your music!
-4. The code name remains "g4music" which means "Gapless for Music".
 
 ## Install from Flathub
 <a href="https://flathub.org/apps/com.github.neithern.g4music">

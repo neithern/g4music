@@ -1,5 +1,5 @@
 [Desktop Entry]
-Name=Gapless
+Name=G4Music
 GenericName=Music Player
 Comment=Play music
 Exec=g4music %U

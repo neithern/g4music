@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-23 11:41+0800\n"
+"POT-Creation-Date: 2023-07-26 21:16+0800\n"
 "PO-Revision-Date: 2023-07-25 20:04+0900\n"
 "Last-Translator: Gnuey56 <gnuey56@proton.me>\n"
 "Language-Team: Japanese <>\n"
@@ -19,9 +19,9 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0\n"
 "X-Generator: Gtranslator 42.0\n"
 
-#: data/app.desktop.in:3 src/application.vala:203 src/main.vala:24
-msgid "Gapless"
-msgstr "Gapless"
+#: data/app.desktop.in:3 src/application.vala:225 src/main.vala:24
+msgid "G4Music"
+msgstr "G4Music"
 
 #: data/app.desktop.in:4
 msgid "Music Player"
@@ -97,7 +97,7 @@ msgctxt "shortcut window"
 msgid "Reload Library"
 msgstr "ライブラリを再読み込み"
 
-#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:294
+#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:290
 msgid "Back"
 msgstr "戻る"
 
@@ -117,7 +117,7 @@ msgstr "背景ぼかしモード"
 msgid "Compact playlist view"
 msgstr "プレイリストをコンパクトにする"
 
-#: src/gtk/preferences.ui:44 src/application.vala:384
+#: src/gtk/preferences.ui:44 src/application.vala:424
 msgid "Keep playing after window closed"
 msgstr "ウィンドウが閉じても再生を続ける"
 
@@ -230,39 +230,39 @@ msgstr "GTK4 で書かれた高速で、なめらかなUI、軽量なミュー�
 msgid "translator-credits"
 msgstr "Gnuey56"
 
-#: src/application.vala:519
+#: src/application.vala:573
 msgid "Keep playing"
 msgstr "再生を続ける"
 
-#: src/ui/music-widgets.vala:230 src/ui/music-widgets.vala:258
+#: src/ui/music-widgets.vala:232 src/ui/music-widgets.vala:260
 msgid "Play at Next"
 msgstr "次に再生"
 
-#: src/ui/music-widgets.vala:231 src/ui/music-widgets.vala:257
+#: src/ui/music-widgets.vala:233 src/ui/music-widgets.vala:259
 msgid "Play"
 msgstr "再生"
 
-#: src/ui/music-widgets.vala:234 src/ui/play-panel.vala:223
+#: src/ui/music-widgets.vala:236 src/ui/play-panel.vala:222
 msgid "Show _Cover File"
 msgstr "カバーファイルを表示(_C)"
 
-#: src/ui/music-widgets.vala:236 src/ui/play-panel.vala:225
+#: src/ui/music-widgets.vala:238 src/ui/play-panel.vala:224
 msgid "_Export Cover"
 msgstr "カバーをエクスポート(_E)"
 
-#: src/ui/music-widgets.vala:264 src/ui/play-panel.vala:56
+#: src/ui/music-widgets.vala:266 src/ui/play-panel.vala:56
 msgid "Search Title"
 msgstr "タイトルを探す"
 
-#: src/ui/music-widgets.vala:265 src/ui/play-panel.vala:54
+#: src/ui/music-widgets.vala:267 src/ui/play-panel.vala:54
 msgid "Search Album"
 msgstr "アルバムを探す"
 
-#: src/ui/music-widgets.vala:266 src/ui/play-panel.vala:55
+#: src/ui/music-widgets.vala:268 src/ui/play-panel.vala:55
 msgid "Search Artist"
 msgstr "アーティストを探す"
 
-#: src/ui/music-widgets.vala:267
+#: src/ui/music-widgets.vala:269
 msgid "_Show Music File"
 msgstr "音楽ファイルを表示(_S)"
 
@@ -283,7 +283,7 @@ msgstr "再生/一時停止"
 msgid "Play Next"
 msgstr "次の曲を再生"
 
-#: src/ui/play-panel.vala:264
+#: src/ui/play-panel.vala:263
 msgid ""
 "Drag and drop music files here,\n"
 "or change music location: "
@@ -307,15 +307,15 @@ msgstr "カバーがある場合のみ"
 msgid "Track"
 msgstr "トラック"
 
-#: src/ui/store-panel.vala:69
+#: src/ui/store-panel.vala:66
 msgid "Playing"
 msgstr "再生"
 
-#: src/ui/store-panel.vala:75
+#: src/ui/store-panel.vala:72
 msgid "Artists"
 msgstr "アーティスト"
 
-#: src/ui/store-panel.vala:80
+#: src/ui/store-panel.vala:77
 msgid "Albums"
 msgstr "アルバム"
 
@@ -330,9 +330,6 @@ msgstr "不明のアルバム"
 #: src/utils/music.vala:3
 msgid "Unknown Artist"
 msgstr "不明のアーティスト"
-
-#~ msgid "G4Music"
-#~ msgstr "G4Music"
 
 #~ msgid "Music Location"
 #~ msgstr "音源の場所"

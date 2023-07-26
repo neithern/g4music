@@ -222,7 +222,7 @@ namespace G4 {
 
         public string name {
             get {
-                return _("Gapless");
+                return _("G4Music");
             }
         }
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
     <id>@app_id@</id>
-    <name>Gapless</name>
+    <name>G4Music</name>
     <metadata_license>CC0-1.0</metadata_license>
     <project_license>GPL-3.0-or-later</project_license>
     <summary>Play your music elegantly</summary>
@@ -16,7 +16,7 @@
     <content_rating type="oars-1.1"/>
 
     <description>
-      	<p>Gapless is a fast fluent lightweight music player written in GTK4, with a beautiful and adaptive user interface, focuses on high performance for huge number of songs.</p>
+      	<p>G4Music is a fast fluent lightweight music player written in GTK4, with a beautiful and adaptive user interface, focuses on high performance for huge number of songs.</p>
         <p>Features</p>
         <ul>
         <li>Supports most music file types, samba and any other remote protocols (depends on GIO and GStreamer).</li>
