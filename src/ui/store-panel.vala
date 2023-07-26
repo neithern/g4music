@@ -170,7 +170,7 @@ namespace G4 {
             run_idle_once (() => search_entry.search_delay = delay);
 #endif
             search_entry.text = text;
-            search_entry.select_region (text.index_of_char (':') + 1, -1);
+            search_entry.select_region (0, -1);
             search_btn.active = true;
         }
 
@@ -385,17 +385,9 @@ namespace G4 {
                 _search_mode = SearchMode.ARTIST;
                 if (text.ascii_ncasecmp ("artist:", 7) == 0)
                     _search_text = text.substring (7);
-            } else if (text.ascii_ncasecmp ("album:", 6) == 0) {
-                _search_mode = SearchMode.ALBUM;
-                _search_text = text.substring (6);
-            } else if (text.ascii_ncasecmp ("artist:", 7) == 0) {
-                _search_mode = SearchMode.ARTIST;
-                _search_text = text.substring (7);
-            } else if (text.ascii_ncasecmp ("title:", 6) == 0) {
-                _search_mode = SearchMode.TITLE;
-                _search_text = text.substring (6);
             } else {
                 _search_mode = SearchMode.ANY;
+                parse_search_mode (ref _search_text, ref _search_mode);
             }
             _current_list.filter_model.set_filter (search_btn.active ? new Gtk.CustomFilter (on_search_match) : (Gtk.CustomFilter?) null);
         }
@@ -410,6 +402,19 @@ namespace G4 {
                     last = last?.get_prev_sibling ()) {
                 stack.remove ((!)last);
             }
+        }
+    }
+
+    public void parse_search_mode (ref string text, ref uint mode) {
+        if (text.ascii_ncasecmp ("album:", 6) == 0) {
+            mode = SearchMode.ALBUM;
+            text = text.substring (6);
+        } else if (text.ascii_ncasecmp ("artist:", 7) == 0) {
+            mode = SearchMode.ARTIST;
+            text = text.substring (7);
+        } else if (text.ascii_ncasecmp ("title:", 6) == 0) {
+            mode = SearchMode.TITLE;
+            text = text.substring (6);
         }
     }
 }

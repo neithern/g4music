@@ -263,9 +263,9 @@ namespace G4 {
 
     public Menu create_menu_for_music (Music music) {
         var menu = new Menu ();
-        menu.append_item (create_menu_item (music.title, _("Search Title"), ACTION_APP + ACTION_SEARCH_TITLE));
-        menu.append_item (create_menu_item (music.album, _("Search Album"), ACTION_APP + ACTION_SEARCH_ALBUM));
-        menu.append_item (create_menu_item (music.artist, _("Search Artist"), ACTION_APP + ACTION_SEARCH_ARTIST));
+        menu.append_item (create_menu_item ("title:" + music.title, _("Search Title"), ACTION_APP + ACTION_SEARCH));
+        menu.append_item (create_menu_item ("album:" + music.album, _("Search Album"), ACTION_APP + ACTION_SEARCH));
+        menu.append_item (create_menu_item ("artist:" + music.artist, _("Search Artist"), ACTION_APP + ACTION_SEARCH));
         menu.append_item (create_menu_item (music.uri, _("_Show Music File"), ACTION_APP + ACTION_SHOW_MUSIC_FILES));
         return menu;
     }

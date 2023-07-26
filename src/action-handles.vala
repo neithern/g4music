@@ -11,12 +11,10 @@ namespace G4 {
     public const string ACTION_NEXT = "next";
     public const string ACTION_RELOAD = "reload";
     public const string ACTION_SEARCH = "search";
-    public const string ACTION_SEARCH_ALBUM = "search-album";
-    public const string ACTION_SEARCH_ARTIST = "search-artist";
-    public const string ACTION_SEARCH_TITLE = "search-title";
     public const string ACTION_SHOW_COVER_FILE = "show-cover-file";
     public const string ACTION_SHOW_MUSIC_FILES = "show-music-file";
     public const string ACTION_SORT = "sort";
+    public const string ACTION_TOGGLE_SEARCH = "toggle-earch";
     public const string ACTION_TOGGLE_SORT = "toggle-sort";
     public const string ACTION_QUIT = "quit";
 
@@ -41,14 +39,12 @@ namespace G4 {
                 { ACTION_PREV, () => _app.play_previous () },
                 { ACTION_PREFS, show_preferences },
                 { ACTION_RELOAD, () => _app.reload_library () },
-                { ACTION_SEARCH, search },
-                { ACTION_SEARCH_ALBUM, search_album, "s" },
-                { ACTION_SEARCH_ARTIST, search_artist, "s" },
-                { ACTION_SEARCH_TITLE, search_title, "s" },
+                { ACTION_SEARCH, search_by, "s" },
                 { ACTION_SHOW_COVER_FILE, show_cover_file, "s" },
                 { ACTION_SHOW_MUSIC_FILES, show_music_file, "s" },
                 { ACTION_SORT, sort_by, "s", "'2'" },
-                { ACTION_TOGGLE_SORT, sort },
+                { ACTION_TOGGLE_SEARCH, toggle_search },
+                { ACTION_TOGGLE_SORT, toggle_sort },
                 { ACTION_QUIT, () => _app.quit () }
             };
             app.add_action_entries (action_entries, this);
@@ -59,7 +55,7 @@ namespace G4 {
                 { ACTION_PREV, "<primary>Left" },
                 { ACTION_NEXT, "<primary>Right" },
                 { ACTION_RELOAD, "<primary>r" },
-                { ACTION_SEARCH, "<primary>f" },
+                { ACTION_TOGGLE_SEARCH, "<primary>f" },
                 { ACTION_TOGGLE_SORT, "<primary>s" },
                 { ACTION_QUIT, "<primary>q" }
             };
@@ -164,23 +160,11 @@ namespace G4 {
             _app.play_at_next (obj);
         }
 
-        private void search () {
-            (_app.active_window as Window)?.toggle_search ();
-        }
-
-        private void search_album (SimpleAction action, Variant? parameter) {
-            unowned var text = parameter?.get_string (null) ?? "";
-            (_app.active_window as Window)?.start_search (text, SearchMode.ALBUM);
-        }
-
-        private void search_artist (SimpleAction action, Variant? parameter) {
-            unowned var text = parameter?.get_string (null) ?? "";
-            (_app.active_window as Window)?.start_search (text, SearchMode.ARTIST);
-        }
-
-        private void search_title (SimpleAction action, Variant? parameter) {
-            unowned var text = parameter?.get_string (null) ?? "";
-            (_app.active_window as Window)?.start_search (text, SearchMode.TITLE);
+        private void search_by (SimpleAction action, Variant? parameter) {
+            var text = parameter?.get_string (null) ?? "";
+            var mode = SearchMode.ANY;
+            parse_search_mode (ref text, ref mode);
+            (_app.active_window as Window)?.start_search (text, mode);
         }
 
         private void show_about () {
@@ -240,18 +224,22 @@ namespace G4 {
             win.present ();
         }
 
-        private void sort () {
-            if (_app.sort_mode >= SortMode.MAX)
-                _app.sort_mode = SortMode.ALBUM;
-            else
-                _app.sort_mode = _app.sort_mode + 1;
-        }
-
         private void sort_by (SimpleAction action, Variant? state) {
             unowned var value = state?.get_string () ?? "";
             int mode = 2;
             int.try_parse (value, out mode, null, 10);
             _app.sort_mode = mode;
+        }
+
+        public void toggle_search () {
+            (_app.active_window as Window)?.toggle_search ();
+        }
+
+        private void toggle_sort () {
+            if (_app.sort_mode >= SortMode.MAX)
+                _app.sort_mode = SortMode.ALBUM;
+            else
+                _app.sort_mode = _app.sort_mode + 1;
         }
     }
 }
