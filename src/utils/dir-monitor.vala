@@ -52,7 +52,6 @@ namespace G4 {
                     break;
 
                 case FileMonitorEvent.DELETED:
-                case FileMonitorEvent.MOVED_OUT:
                     remove_file (file);
                     break;
 
