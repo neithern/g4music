@@ -87,6 +87,7 @@ namespace G4 {
     public class MusicLibrary : Object {
         private HashTable<unowned string, Album> _albums = new HashTable<unowned string, Album> (str_hash, str_equal);        
         private HashTable<unowned string, Artist> _artists = new HashTable<unowned string, Artist> (str_hash, str_equal);        
+        private ListStore _store = new ListStore (typeof (Music));
 
         public HashTable<unowned string, Album> albums {
             get {
@@ -97,6 +98,18 @@ namespace G4 {
         public HashTable<unowned string, Artist> artists {
             get {
                 return _artists;
+            }
+        }
+
+        public uint size {
+            get {
+                return _store.get_n_items ();
+            }
+        }
+
+        public ListStore store {
+            get {
+                return _store;
             }
         }
 
@@ -118,15 +131,37 @@ namespace G4 {
             artist.add_music (music);
         }
 
-        public bool remove_music (Music music) {
-            var album_removed = _albums.foreach_steal ((name, album) => album.remove_music (music) && album.length == 0);
-            var artist_removed = _artists.foreach_steal ((name, artist) => artist.remove_music (music) && artist.length == 0);
-            return album_removed > 0 || artist_removed > 0;
+        public void remove_music (Music music) {
+            remove_from_albums_and_artists (music);
+            for (var pos = (int) _store.get_n_items () - 1; pos >= 0; pos--) {
+                if (_store.get_item (pos) == music) {
+                    _store.remove (pos);
+                }
+            }
+        }
+
+        public void remove_uri (string uri, HFunc<unowned string, Music> func) {
+            var prefix = uri + "/";
+            for (var pos = (int) _store.get_n_items () - 1; pos >= 0; pos--) {
+                var music = (Music) _store.get_item (pos);
+                unowned var uri2 = music.uri;
+                if (uri2.has_prefix (prefix) || uri2 == uri) {
+                    _store.remove (pos);
+                    remove_from_albums_and_artists (music);
+                    func (uri2, music);
+                }
+            }
         }
 
         public void remove_all () {
             _albums.remove_all ();
             _artists.remove_all ();
+            _store.remove_all ();
+        }
+
+        private void remove_from_albums_and_artists (Music music) {
+            _albums.foreach_steal ((name, album) => album.remove_music (music) && album.length == 0);
+            _artists.foreach_steal ((name, artist) => artist.remove_music (music) && artist.length == 0);
         }
     }
 }

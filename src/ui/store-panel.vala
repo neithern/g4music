@@ -61,7 +61,7 @@ namespace G4 {
             _loading_paintable = _app.thumbnailer.create_simple_text_paintable ("...", Thumbnailer.ICON_SIZE);
 
             _current_list = _playing_list = create_playing_music_list ();
-            _playing_list.data_store = _app.loader.store;
+            _playing_list.data_store = _library.store;
             _playing_list.filter_model = _app.music_list;
             stack_view.add_titled (_playing_list, "playing", _("Playing")).icon_name = "media-playback-start-symbolic";
             stack_view.visible_child = _playing_list;

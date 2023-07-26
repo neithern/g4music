@@ -37,7 +37,7 @@ namespace G4 {
 
             _actions = new ActionHandles (this);
 
-            _music_list.model = _loader.store;
+            _music_list.model = _loader.library.store;
             _music_list.items_changed.connect (on_music_items_changed);
             _loader.loading_changed.connect ((loading) => _loading = loading);
 
@@ -87,7 +87,7 @@ namespace G4 {
             window.present ();
 
             var has_files = files.length > 0;
-            if (has_files && _loader.store.get_n_items () > 0) {
+            if (has_files && _loader.library.size > 0) {
                 open_files_async.begin (files, true, (obj, res) => open_files_async.end (res));
             } else {
                 load_files_async.begin (files, (obj, res) => {
@@ -242,10 +242,11 @@ namespace G4 {
                 var state = new Variant.string (value.to_string ());
                 (action as SimpleAction)?.set_state (state);
 
+                var store = _loader.library.store;
                 if (value == SortMode.SHUFFLE) {
-                    shuffle_order (_loader.store);
+                    shuffle_order (store);
                 }
-                _loader.store.sort ((CompareDataFunc) get_sort_compare (value));
+                store.sort ((CompareDataFunc) get_sort_compare (value));
                 _sort_mode = value;
             }
         }
@@ -257,7 +258,7 @@ namespace G4 {
         }
 
         public async int load_files_async (owned File[] files) {
-            var saved_size = _loader.size;
+            var saved_size = _loader.library.size;
             var play_item = _current_item;
 
             if (saved_size == 0 && files.length == 0) {
@@ -323,7 +324,7 @@ namespace G4 {
         }
 
         public int play (Object? obj, bool immediately = true) {
-            var store = _loader.store;
+            var store = _loader.library.store;
             uint insert_pos = -1;
             if (obj is Music) {
                 var music = (Music) obj;
@@ -361,7 +362,7 @@ namespace G4 {
 
         public void play_at_next (Object? obj) {
             if (_current_music != null) {
-                var store = _loader.store;
+                var store = _loader.library.store;
                 _music_list.items_changed (_current_item, 0, 0);
                 if (obj is Music) {
                     var music = (Music) obj;

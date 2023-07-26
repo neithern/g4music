@@ -60,7 +60,6 @@ namespace G4 {
         private DirMonitor _dir_monitor = new DirMonitor ();
         private MusicLibrary _library = new MusicLibrary ();
         private Progress _progress = new Progress ();
-        private ListStore _store = new ListStore (typeof (Music));
         private TagCache _tag_cache = new TagCache ();
 
         public signal void loading_changed (bool loading);
@@ -99,18 +98,6 @@ namespace G4 {
             }
         }
 
-        public ListStore store {
-            get {
-                return _store;
-            }
-        }
-
-        public uint size {
-            get {
-                return _store.get_n_items ();
-            }
-        }
-
         public void add_to_cache (Music music) {
             lock (_tag_cache) {
                 _tag_cache.add (music);
@@ -130,35 +117,19 @@ namespace G4 {
             lock (_library) {
                 _library.remove_all ();
             }
-            _store.remove_all ();
             _tag_cache.reset_showing (false);
         }
 
         public void remove (File file) {
             var uri = file.get_uri ();
-            var mus = _tag_cache.remove (uri);
-            if (mus != null) {
-                var music = (!)mus;
-                for (var pos = (int) _store.get_n_items () - 1; pos >= 0; pos--) {
-                    if (_store.get_item (pos) == music) {
-                        _store.remove (pos);
-                    }
-                }
+            var music = _tag_cache.remove (uri);
+            if (music != null) {
                 lock (_library) {
-                    _library.remove_music (music);
+                    _library.remove_music ((!)music);
                 }
             } else {
-                var prefix = uri + "/";
-                for (var pos = (int) _store.get_n_items () - 1; pos >= 0; pos--) {
-                    var music = (Music) _store.get_item (pos);
-                    unowned var uri2 = music.uri;
-                    if (uri2.has_prefix (prefix) || uri2 == uri) {
-                        _store.remove (pos);
-                        lock (_library) {
-                            _library.remove_music (music);
-                        }
-                        _tag_cache.remove (uri2);
-                    }
+                lock (_library) {
+                    _library.remove_uri (uri, (u, m) => _tag_cache.remove (u));
                 }
             }
         }
@@ -176,7 +147,8 @@ namespace G4 {
         public async void add_files_async (File[] files, bool ignore_exists = false, bool include_playlist = true) {
             var musics = new GenericArray<Music> (4096);
             yield load_files_async (files,  musics, ignore_exists, include_playlist);
-            _store.splice (_store.get_n_items (), 0, musics.data);
+            var store = _library.store;
+            store.splice (store.get_n_items (), 0, musics.data);
         }
 
         public async void load_files_async (owned File[] files, GenericArray<Music> musics, bool ignore_exists = false, bool include_playlist = true) {
