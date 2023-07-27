@@ -110,15 +110,19 @@ namespace G4 {
             }
         }
 
-        public async void load_files_async (owned File[] files, GenericArray<Music> musics, bool ignore_exists = false, bool include_playlist = true, uint sort_mode = -1) {
+        public async void load_files_async (owned File[] files, GenericArray<Music> musics, bool ignore_exists = false, bool open_playlist = true, uint sort_mode = -1) {
             var dirs = new GenericArray<File> (128);
+            var playlists = new GenericArray<File> (128);
 
             _progress.reset ();
             loading_changed (true);
             yield run_void_async (() => {
                 var begin_time = get_monotonic_time ();
                 foreach (var file in files) {
-                    add_file (file, dirs, musics, include_playlist);
+                    add_file (file, musics, dirs, playlists);
+                }
+                if (open_playlist) {
+                    load_playlists (playlists, musics);
                 }
                 print ("Find %u files in %d folders in %lld ms\n", musics.length, dirs.length,
                     (get_monotonic_time () - begin_time + 500) / 1000);
@@ -164,7 +168,7 @@ namespace G4 {
                                         + FileAttribute.STANDARD_TYPE + ","
                                         + FileAttribute.TIME_MODIFIED;
 
-        private void add_file (File file, GenericArray<File> dirs, GenericArray<Music> musics, bool include_playlist) {
+        private void add_file (File file, GenericArray<Music> musics, GenericArray<File>? dirs = null, GenericArray<File>? playlists = null) {
             try {
                 var info = file.query_info (ATTRIBUTES, FileQueryInfoFlags.NONE);
                 if (info.get_file_type () == FileType.DIRECTORY) {
@@ -172,32 +176,24 @@ namespace G4 {
                     stack.push_head (new DirCache (file, info));
                     while (stack.length > 0) {
                         var cache = stack.pop_head ();
-                        dirs.add (cache.dir);
-                        add_directory (cache, stack, musics);
+                        dirs?.add (cache.dir);
+                        add_directory (cache, stack, musics, playlists);
                     }
                 } else {
-                    uint playlist_type = 0;
                     unowned var ctype = info.get_content_type () ?? "";
                     unowned var name = info.get_name ();
-                    if (include_playlist && (playlist_type = get_playlist_type (ctype)) != PlayListType.NONE) {
-                        var uris = new GenericArray<string> (128);
-                        load_playlist_file (file, playlist_type, uris);
-                        foreach (var uri in uris) {
-                            var cached_music = _tag_cache[uri];
-                            if (cached_music != null) {
-                                musics.add ((!)cached_music);
-                            } else {
-                                add_file (File.new_for_uri (uri), dirs, musics, false);
-                            }
-                        }
-                    } else if (is_music_type (ctype)) {
+                    if (is_music_type (ctype)) {
                         var time = info.get_modification_date_time ()?.to_unix () ?? 0;
                         var music = new Music (file.get_uri (), name, time);
                         musics.add (music);
+                    } else if (is_playlist_file (ctype)) {
+                        playlists?.add (file);
                     } else if (is_cover_file (ctype, name)) {
                         var parent = file.get_parent ();
                         if (parent != null)
                             _cover_cache.put ((!)parent, name);
+                    } else {
+                        print ("unknown type: %s, %s\n", ctype, file.get_path () ?? "");
                     }
                 }
             } catch (Error e) {
@@ -205,11 +201,11 @@ namespace G4 {
             }
         }
 
-        private void add_directory (DirCache cache, Queue<DirCache> stack, GenericArray<Music> musics) {
+        private void add_directory (DirCache cache, Queue<DirCache> stack, GenericArray<Music> musics, GenericArray<File>? playlists) {
             var dir = cache.dir;
             var start = musics.length;
             string? cover_name = null;
-            if (cache.check_valid () && cache.load (stack, musics, out cover_name)) {
+            if (cache.check_valid () && cache.load (stack, musics, playlists, out cover_name)) {
                 _cover_cache.put (dir, cover_name ?? "");
             } else try {
                 FileInfo? pi = null;
@@ -221,7 +217,7 @@ namespace G4 {
                     } else if (info.get_file_type () == FileType.DIRECTORY) {
                         var child = dir.get_child (info.get_name ());
                         stack.push_head (new DirCache (child, info));
-                        cache.add_child (info);
+                        cache.add_child (info, FileType.DIRECTORY);
                     } else {
                         unowned var ctype = info.get_content_type () ?? "";
                         unowned var name = info.get_name ();
@@ -230,10 +226,12 @@ namespace G4 {
                             var file = dir.get_child (name);
                             var music = new Music (file.get_uri (), name, time);
                             musics.add (music);
-                            cache.add_child (info);
+                            cache.add_child (info, FileType.MUSIC);
+                        } else if (is_playlist_file (ctype)) {
+                            cache.add_child (info, FileType.PLAYLIST);
                         } else if (is_cover_file (ctype, name)) {
                             cover_name = name;
-                            cache.add_child (info);
+                            cache.add_child (info, FileType.COVER);
                         }
                     }
                 }
@@ -247,6 +245,22 @@ namespace G4 {
                     var music = (Music) musics[i];
                     music.has_cover = true;
                 }
+            }
+        }
+
+        private void load_playlists (GenericArray<File> playlists, GenericArray<Music> musics) {
+            var uris = new GenericArray<string> (1024);
+            foreach (var file in playlists) {
+                load_playlist_file (file, uris);
+                foreach (var uri in uris) {
+                    var cached_music = _tag_cache[uri];
+                    if (cached_music != null) {
+                        musics.add ((!)cached_music);
+                    } else {
+                        add_file (File.new_for_uri (uri), musics);
+                    }
+                }
+                uris.remove_range (0, uris.length);
             }
         }
 

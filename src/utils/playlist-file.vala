@@ -17,18 +17,23 @@ namespace G4 {
         }
     }
 
-    public void load_playlist_file (File file, uint type, GenericArray<string> uris) throws Error {
-        switch (type) {
-            case PlayListType.M3U:
-                load_m3u_file (file, uris);
-                break;
+    public bool is_playlist_file (string mimetype) {
+        return get_playlist_type (mimetype) != PlayListType.NONE;
+    }
 
-            case PlayListType.PLS:
-                load_pls_file (file, uris);
-                break;
-
-            default:
-                break;
+    public void load_playlist_file (File file, GenericArray<string> uris) {
+        try {
+            var info = file.query_info (FileAttribute.STANDARD_CONTENT_TYPE, FileQueryInfoFlags.NONE);
+            var type = get_playlist_type (info.get_content_type () ?? "");
+            switch (type) {
+                case PlayListType.M3U:
+                    load_m3u_file (file, uris);
+                    break;
+                case PlayListType.PLS:
+                    load_pls_file (file, uris);
+                    break;
+            }
+        } catch (Error e) {
         }
     }
 

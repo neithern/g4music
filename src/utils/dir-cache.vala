@@ -1,13 +1,17 @@
 namespace G4 {
 
+    namespace FileType {
+        public const uint8 UNKNOWN = 0;
+        public const uint8 DIRECTORY = 1;
+        public const uint8 MUSIC = 2;
+        public const uint8 PLAYLIST = 3;
+        public const uint8 COVER = 4;
+    }
+
     public class DirCache : Object {
-        private static uint32 MAGIC = 0x44495243; //  'DIRC'
+        private static uint32 MAGIC = 0x44495244; //  'DIRD'
 
         private class ChildInfo {
-            public const uint8 DIRECTORY = FileType.DIRECTORY;
-            public const uint8 MUSIC = FileType.REGULAR;
-            public const uint8 COVER = FileType.UNKNOWN;
-
             public uint8 type;
             public string name;
             public int64 time;
@@ -60,19 +64,13 @@ namespace G4 {
             });
         }
 
-        public void add_child (FileInfo info) {
+        public void add_child (FileInfo info, uint8 type) {
             var time = info.get_modification_date_time ()?.to_unix () ?? 0;
-            var type = (uint8) info.get_file_type ();
-            if (type == FileType.REGULAR) {
-                unowned var ctype = info.get_content_type () ?? "";
-                if (ContentType.is_mime_type (ctype, "image/*"))
-                    type = ChildInfo.COVER;
-            }
             var child = new ChildInfo (type, info.get_name (), time);
             _children.add (child);
         }
 
-        public bool load (Queue<DirCache> stack, GenericArray<Music> musics, out string? cover_name) {
+        public bool load (Queue<DirCache> stack, GenericArray<Music> musics, GenericArray<File>? playlists, out string? cover_name) {
             cover_name = null;
             try {
                 var mapped = new MappedFile (_file.get_path () ?? "", false);
@@ -92,11 +90,13 @@ namespace G4 {
                     var name = dis.read_string ();
                     var time = (int64) dis.read_uint64 ();
                     var child = _dir.get_child (name);
-                    if (type == ChildInfo.MUSIC) {
+                    if (type == FileType.MUSIC) {
                         musics.add (new Music (child.get_uri (), name, time));
-                    } else if (type == ChildInfo.DIRECTORY) {
+                    } else if (type == FileType.DIRECTORY) {
                         stack.push_head (new DirCache (child));
-                    } else if (type == ChildInfo.COVER) {
+                    } else if (type == FileType.PLAYLIST) {
+                        playlists?.add (child);
+                    } else if (type == FileType.COVER) {
                         cover_name = name;
                     }
                 }
