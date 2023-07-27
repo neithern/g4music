@@ -264,13 +264,14 @@ namespace G4 {
 
         public async int load_files_async (owned File[] files) {
             var play_item = _current_item;
-            if (files.length == 0) {
+            var default_mode = files.length == 0;
+            if (default_mode) {
                 files.resize (1);
                 files[0] = File.new_for_uri (music_folder);
             }
             if (files.length > 0) {
                 var musics = new GenericArray<Music> (4096);
-                yield _loader.load_files_async (files, musics, false, true, _sort_mode);
+                yield _loader.load_files_async (files, musics, true, !default_mode, _sort_mode);
                 _music_store.splice (0, _music_store.get_n_items (), musics.data);
                 _list_modified = false;
             }
