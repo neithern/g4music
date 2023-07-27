@@ -1,8 +1,8 @@
 namespace G4 {
 
-    namespace FileType {
-        public const uint8 UNKNOWN = 0;
-        public const uint8 DIRECTORY = 1;
+    namespace ChildType {
+        public const uint8 NONE = 0;
+        public const uint8 FOLDER = 1;
         public const uint8 MUSIC = 2;
         public const uint8 PLAYLIST = 3;
         public const uint8 COVER = 4;
@@ -90,20 +90,20 @@ namespace G4 {
                     var name = dis.read_string ();
                     var time = (int64) dis.read_uint64 ();
                     var child = _dir.get_child (name);
-                    if (type == FileType.MUSIC) {
+                    if (type == ChildType.MUSIC) {
                         musics.add (new Music (child.get_uri (), name, time));
-                    } else if (type == FileType.DIRECTORY) {
+                    } else if (type == ChildType.FOLDER) {
                         stack.push_head (new DirCache (child));
-                    } else if (type == FileType.PLAYLIST) {
+                    } else if (type == ChildType.PLAYLIST) {
                         playlists?.add (child);
-                    } else if (type == FileType.COVER) {
+                    } else if (type == ChildType.COVER) {
                         cover_name = name;
                     }
                 }
                 return true;
             } catch (Error e) {
                 if (e.code != FileError.NOENT)
-                    print ("Load dirs error: %s\n", e.message);
+                    print ("Load dir error: %s\n", e.message);
             }
             return false;
         }
@@ -126,7 +126,7 @@ namespace G4 {
                 }
                 dos.write_to (fos);
             } catch (Error e) {
-                print ("Save dirs error: %s\n", e.message);
+                print ("Save dir error: %s\n", e.message);
             }
         }
     }
