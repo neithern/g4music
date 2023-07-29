@@ -50,6 +50,18 @@
     </screenshots>
 
     <releases>
+        <release version="3.0" date="2023-7-29">
+            <description>
+                <ul>
+                <li>Group artists/albums as library.</li>
+                <li>Optimize layout for landscape view</li>
+                <li>Show progressbar when loading.</li>
+                <li>Add icons for preference rows.</li>
+                <li>Optimize seeking.</li>
+                <li>Add Japanese translation, thanks to @Gnuey56.</li>
+                </ul>
+            </description>
+        </release>
         <release version="2.4" date="2023-7-7">
             <description>
                 <ul>
