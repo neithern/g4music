@@ -64,7 +64,7 @@ namespace G4 {
 
             app.index_changed.connect (on_index_changed);
             app.music_changed.connect (on_music_changed);
-            app.music_list.items_changed.connect (on_music_items_changed);
+            app.music_store.items_changed.connect (on_music_items_changed);
             app.music_tag_parsed.connect (on_music_tag_parsed);
             app.player.state_changed.connect (on_player_state_changed);
 
@@ -117,7 +117,6 @@ namespace G4 {
         private Music? _current_music = new Music.empty ();
 
         private void on_music_changed (Music? music) {
-            _current_music = music;
             update_music_info (music);
             root.action_set_enabled (ACTION_APP + ACTION_PLAY_PAUSE, music != null);
         }
@@ -129,12 +128,19 @@ namespace G4 {
             return true;
         }
 
+        private uint _pending_mic_handler = 0;
+
         private void on_music_items_changed (uint position, uint removed, uint added) {
-            var visible = _app.current_music == null && _app.music_store.get_n_items () == 0
-                        && !_app.loading;
-            initial_label.visible = visible;
-            if (visible)
-                update_initial_label (_app.music_folder);
+            if (_pending_mic_handler != 0)
+                Source.remove (_pending_mic_handler);
+            _pending_mic_handler = run_idle_once (() => {
+                _pending_mic_handler = 0;
+                var visible = !_app.loading && _current_music == null
+                        && _app.music_store.get_n_items () == 0;
+                initial_label.visible = visible;
+                if (visible)
+                    update_initial_label (_app.music_folder);
+            });
         }
 
         private async void on_music_tag_parsed (Music music, Gst.Sample? image) {
@@ -157,7 +163,7 @@ namespace G4 {
                     );
                     if (pixbuf != null && music == _app.current_music) {
                         thumbnailer.put (music, Gdk.Texture.for_pixbuf ((!)pixbuf), true);
-                        _app.music_list.items_changed (_app.current_item, 0, 0);
+                        _app.rebind_current_item ();
                     }
                 }
 
@@ -231,8 +237,10 @@ namespace G4 {
 
         private void update_music_info (Music? music) {
             var empty = music == null && _app.music_store.get_n_items () == 0;
+            _current_music = music;
             if (empty) {
                 update_cover_paintables (music, _app.icon);
+                initial_label.visible = empty && !_app.loading;
             }
 
             music_album.visible = !empty;

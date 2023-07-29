@@ -263,7 +263,6 @@ namespace G4 {
         }
 
         public async int load_files_async (owned File[] files) {
-            var play_item = _current_item;
             var default_mode = files.length == 0;
             if (default_mode) {
                 files.resize (1);
@@ -276,14 +275,11 @@ namespace G4 {
                 _list_modified = false;
             }
             if (_current_music != null && _current_music == _music_list.get_item (_current_item)) {
-                play_item = _current_item;
+                return _current_item;
             } else {
                 var uri = _current_music?.uri ?? _settings.get_string ("played-uri");
-                if (uri.length > 0) {
-                    play_item = find_music_item_by_uri ((!)uri);
-                }
+                return uri.length > 0 ? find_music_item_by_uri ((!)uri) : -1;
             }
-            return play_item;
         }
 
         public async void open_files_async (File[] files, bool play_now = false) {
@@ -342,7 +338,7 @@ namespace G4 {
                 var album = (Album) obj;
                 var arr = new GenericArray<Music> (album.musics.length);
                 insert_pos = (uint) store.get_n_items () - 1;
-                _music_list.items_changed (_current_item, 0, 0);
+                rebind_current_item ();
                 album.foreach ((uri, music) => {
                     arr.add (music);
                     uint position = -1;
@@ -365,7 +361,7 @@ namespace G4 {
         public void play_at_next (Object? obj) {
             if (_current_music != null) {
                 var store = _music_store;
-                _music_list.items_changed (_current_item, 0, 0);
+                rebind_current_item ();
                 if (obj is Music) {
                     var music = (Music) obj;
                     uint playing_item = -1;
@@ -396,7 +392,7 @@ namespace G4 {
                     _list_modified = true;
                 }
                 _current_item = find_music_item (_current_music);
-                _music_list.items_changed (_current_item, 0, 0);
+                rebind_current_item ();
             }
         }
 
@@ -414,10 +410,14 @@ namespace G4 {
             _player.play ();
         }
 
+        public void rebind_current_item () {
+            _music_list.items_changed (_current_item, 0, 0);
+        }
+
         public void reload_library () {
             if (!_loading) {
                 _loader.remove_all ();
-                load_files_async.begin ({}, (obj, res) => load_files_async.end (res));
+                load_files_async.begin ({}, (obj, res) => current_item = load_files_async.end (res));
             }
         }
 
@@ -439,10 +439,9 @@ namespace G4 {
 
         private void change_current_item (int item) {
             //  update _current_item but don't change current music
-            var old_item = _current_item;
+            rebind_current_item ();
             _current_item = item;
-            _music_list.items_changed (old_item, 0, 0);
-            _music_list.items_changed (item, 0, 0);
+            rebind_current_item ();
             index_changed (item, _music_list.get_n_items ());
 
             var next = item + 1;
