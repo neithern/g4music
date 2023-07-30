@@ -9,7 +9,7 @@ namespace G4 {
     }
 
     public class DirCache : Object {
-        private static uint32 MAGIC = 0x44495244; //  'DIRD'
+        private static uint32 MAGIC = 0x44495231; //  'DIR1'
 
         private class ChildInfo {
             public uint8 type;

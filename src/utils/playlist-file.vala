@@ -21,23 +21,22 @@ namespace G4 {
         return get_playlist_type (mimetype) != PlayListType.NONE;
     }
 
-    public void load_playlist_file (File file, GenericArray<string> uris) {
+    public string? load_playlist_file (File file, GenericArray<string> uris) {
         try {
             var info = file.query_info (FileAttribute.STANDARD_CONTENT_TYPE, FileQueryInfoFlags.NONE);
             var type = get_playlist_type (info.get_content_type () ?? "");
             switch (type) {
                 case PlayListType.M3U:
-                    load_m3u_file (file, uris);
-                    break;
+                    return load_m3u_file (file, uris);
                 case PlayListType.PLS:
-                    load_pls_file (file, uris);
-                    break;
+                    return load_pls_file (file, uris);
             }
         } catch (Error e) {
         }
+        return null;
     }
 
-    public void load_m3u_file (File file, GenericArray<string> uris) throws Error {
+    public string load_m3u_file (File file, GenericArray<string> uris) throws Error {
         var fis = file.read ();
         var bis = new BufferedInputStream (fis);
         var dis = new DataInputStream (bis);
@@ -50,28 +49,35 @@ namespace G4 {
                 uris.add (parse_relative_uri (uri, parent));
             }
         }
+        return get_file_display_name (file);
     }
 
-    public void load_pls_file (File file, GenericArray<string> uris) throws Error {
+    public string load_pls_file (File file, GenericArray<string> uris) throws Error {
+        var name = get_file_display_name (file);
         var fis = file.read ();
         var bis = new BufferedInputStream (fis);
         var dis = new DataInputStream (bis);
         var parent = file.get_parent ();
         bool list_found = false;
         size_t length = 0;
+        int pos = -1;
         string? str = null;
         while ((str = dis.read_line_utf8 (out length)) != null) {
             var line = ((!)str).strip ();
             if (line.length > 1 && line[0] == '[') {
                 list_found = strcmp (line, "[playlist]") == 0;
-            } else if (list_found && line.has_prefix ("File")) {
-                var pos = line.index_of_char ('=');
-                if (pos > 0) {
+            } else if (list_found && (pos = line.index_of_char ('=')) > 0) {
+                if (line.has_prefix ("File")) {
                     var uri = line.substring (pos + 1).strip ();
                     uris.add (parse_relative_uri (uri, parent));
+                } else if (line.ascii_ncasecmp ("X-GNOME-Title", pos) == 0) {
+                    var title = line.substring (pos + 1).strip ();
+                    if (title.length > 0)
+                        name = title;
                 }
             }
         }
+        return name;
     }
 
     public string parse_relative_uri (string uri, File? parent = null) {

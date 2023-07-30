@@ -110,9 +110,34 @@ namespace G4 {
         }
     }
 
+    public class Playlist : Album {
+        public GenericArray<Music> items;
+        public string uri;
+
+        public Playlist (string name, string uri, GenericArray<Music> arr) {
+            base (name);
+            this.uri = uri;
+            this.items = arr;
+
+            Music.original_order (arr);
+            arr.foreach ((music) => add_music (music));
+
+            var music = cover_music;
+            _cover_music = new Music.titled (name, music.uri);
+            ((!)_cover_music).cover_key = music.cover_key;
+            ((!)_cover_music).album = uri;
+        }
+
+        protected override void sort (GenericArray<Music> arr) {
+            Music.original_order (items);
+            arr.sort (Music.compare_by_order);
+        }
+    }
+
     public class MusicLibrary : Object {
         private HashTable<unowned string, Album> _albums = new HashTable<unowned string, Album> (str_hash, str_equal);        
         private HashTable<unowned string, Artist> _artists = new HashTable<unowned string, Artist> (str_hash, str_equal);        
+        private HashTable<unowned string, Playlist> _playlists = new HashTable<unowned string, Playlist> (str_hash, str_equal);        
 
         public unowned HashTable<unowned string, Album> albums {
             get {
@@ -123,6 +148,12 @@ namespace G4 {
         public unowned HashTable<unowned string, Artist> artists {
             get {
                 return _artists;
+            }
+        }
+
+        public unowned HashTable<unowned string, Playlist> playlists {
+            get {
+                return _playlists;
             }
         }
 
@@ -145,15 +176,25 @@ namespace G4 {
             return r1 || r2;
         }
 
-        public void get_sorted_albums_and_artists (ListStore album_store, ListStore artist_store) {
+        public void add_playlist (Playlist playlist) {
+            _playlists.insert (playlist.uri, playlist);
+        }
+
+        public void get_sorted (ListStore album_store, ListStore artist_store, ListStore playlist_store) {
             var arr = new GenericArray<Music> (uint.max (albums.length, artists.length));
             _albums.foreach ((name, album) => arr.add (album.cover_music));
             arr.sort (Music.compare_by_album);
             album_store.splice (0, album_store.get_n_items (), arr.data);
-            arr.length = 0; 
+
+            arr.remove_range (0, arr.length);
             _artists.foreach ((name, artist) => arr.add (artist.cover_music));
             arr.sort (Music.compare_by_artist);
             artist_store.splice (0, artist_store.get_n_items (), arr.data);
+
+            arr.remove_range (0, arr.length);
+            _playlists.foreach ((uri, playlist) => arr.add (playlist.cover_music));
+            arr.sort (Music.compare_by_title);
+            playlist_store.splice (0, playlist_store.get_n_items (), arr.data);
         }
 
         public void remove_music (Music music) {
@@ -163,7 +204,7 @@ namespace G4 {
 
         public void remove_uri (string uri, GenericSet<Music> removed) {
             var prefix = uri + "/";
-            _albums.foreach_steal ((name, album) => {
+            var n_removed = _albums.foreach_steal ((name, album) => {
                 album.musics.foreach_steal ((uri, music) => {
                     unowned var uri2 = music.uri;
                     if (uri2.has_prefix (prefix)/*|| uri2 == uri*/) {
@@ -177,11 +218,15 @@ namespace G4 {
             removed.foreach ((music) => {
                 _artists.foreach_steal ((name, artist) => artist.remove_music (music) && artist.length == 0);
             });
+            if (n_removed == 0) {
+                _playlists.remove (uri);
+            }
         }
 
         public void remove_all () {
             _albums.remove_all ();
             _artists.remove_all ();
+            _playlists.remove_all ();
         }
     }
 

@@ -116,23 +116,18 @@ namespace G4 {
             _progress.reset ();
             loading_changed (true);
             yield run_void_async (() => {
+                var playlists = new GenericArray<File> (128);
                 var begin_time = get_monotonic_time ();
                 foreach (var file in files) {
-                    add_file (file, musics, dirs, null, load_lists);
+                    add_file (file, musics, dirs, playlists, load_lists);
                 }
                 print ("Find %u files in %d folders in %lld ms\n", musics.length, dirs.length,
                     (get_monotonic_time () - begin_time + 500) / 1000);
 
                 load_tags_in_threads (musics);
+                add_musics_to_library (musics, playlists, ignore_exists);
                 if (sort_mode <= SortMode.MAX) {
                     sort_music_array (musics, sort_mode);
-                }
-                lock (_library) {
-                    for (var i = musics.length - 1; i >= 0; i--) {
-                        var music = musics[i];
-                        if (!_library.add_music (music) && ignore_exists)
-                            musics.remove_index_fast (i);
-                    }
                 }
                 print ("Load %u artists %u albums %u musics in %lld ms\n",
                     _library.artists.length, _library.albums.length, musics.length,
@@ -249,9 +244,30 @@ namespace G4 {
             }
         }
 
-        private void load_playlist (File file, GenericArray<Music> musics) {
+        private void add_musics_to_library (GenericArray<Music> musics, GenericArray<File> playlists, bool ignore_exists) {
+            lock (_library) {
+                for (var i = musics.length - 1; i >= 0; i--) {
+                    var music = musics[i];
+                    if (!_library.add_music (music) && ignore_exists)
+                        musics.remove_index_fast (i);
+                }
+
+                foreach (var file in playlists) {
+                    if (file.is_native ()) {
+                        var arr = new GenericArray<Music> (128);
+                        var name = load_playlist (file, arr);
+                        if (name != null && arr.length > 0) {
+                            var playlist = new Playlist ((!)name, file.get_uri (), arr);
+                            _library.add_playlist (playlist);
+                        }
+                    }
+                }
+            }
+        }
+
+        private string? load_playlist (File file, GenericArray<Music> musics) {
             var uris = new GenericArray<string> (1024);
-            load_playlist_file (file, uris);
+            var name = load_playlist_file (file, uris);
             foreach (var uri in uris) {
                 var cached_music = _tag_cache[uri];
                 if (cached_music != null) {
@@ -260,6 +276,7 @@ namespace G4 {
                     add_file (File.new_for_uri (uri), musics);
                 }
             }
+            return name;
         }
 
         private void load_tags_in_threads (GenericArray<Music> musics) {
@@ -293,9 +310,16 @@ namespace G4 {
 
         private void on_file_added (File file) {
             var arr = new GenericArray<Music> (1024);
+            var n_playlists = 0;
+            lock (_library) {
+                n_playlists = (int) _library.playlists.length;
+            }
             load_files_async.begin ({file}, arr, true, false, -1, (obj, res) => {
                 load_files_async.end (res);
-                if (arr.length > 0) {
+                lock (_library) {
+                    n_playlists -= (int) _library.playlists.length;
+                }
+                if (arr.length > 0 || n_playlists != 0) {
                     music_found (arr);
                 }
             });
@@ -303,6 +327,7 @@ namespace G4 {
 
         private void on_file_removed (File file) {
             var uri = file.get_uri ();
+            var n_playlists = 0;
             var music = _tag_cache.remove (uri);
             var removed = new GenericSet<Music> (direct_hash, direct_equal);
             if (music != null) {
@@ -312,11 +337,13 @@ namespace G4 {
                 removed.add ((!)music);
             } else {
                 lock (_library) {
+                    n_playlists = (int) _library.playlists.length;
                     _library.remove_uri (uri, removed);
+                    n_playlists -= (int) _library.playlists.length;
                 }
                 new DirCache (file).delete ();
             }
-            if (removed.length > 0) {
+            if (removed.length > 0 || n_playlists != 0) {
                 music_lost (removed);
             }
         }

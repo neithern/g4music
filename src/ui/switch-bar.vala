@@ -4,7 +4,7 @@ namespace G4 {
         private Gtk.Box _box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
         private Gtk.Revealer _revealer = new Gtk.Revealer ();
         private int _minimum_width = 0;
-        private Gtk.Stack? _stack = null;
+        private Gtk.Stack _stack = (Gtk.Stack) null;
 
         public SwitchBar () {
             _box.hexpand = true;
@@ -23,27 +23,14 @@ namespace G4 {
             }
         }
 
-        public Gtk.Stack? stack {
+        public Gtk.Stack stack {
             get {
                 return _stack;
             }
             set {
-                var pages = value?.get_pages ();
-                var n_items = pages?.get_n_items () ?? 0;
-                for (var i = 0; i < n_items; i++) {
-                    var page = (Gtk.StackPage) pages?.get_item (i);
-                    var button = new Gtk.ToggleButton ();
-                    button.name = page.name;
-                    button.icon_name = page.icon_name;
-                    button.tooltip_text = page.title;
-                    button.toggled.connect (() => {
-                        if (button.active)
-                            _stack?.set_visible_child_name (button.name);
-                    });
-                    _box.append (button);
-                }
                 _stack = value;
-                _stack?.bind_property ("visible-child-name", this, "visible-child-name", BindingFlags.SYNC_CREATE);
+                _stack.bind_property ("visible-child-name", this, "visible-child-name", BindingFlags.SYNC_CREATE);
+                update_buttons ();
             }
         }
 
@@ -86,6 +73,37 @@ namespace G4 {
             allocation.height = height;
             _revealer.allocate_size (allocation, baseline);
             reveal_child = width >= _minimum_width - 4; // -4 to avoid size_allocate() be called continuously when (_minimum_width - width) == 1
+        }
+
+        public void update_buttons () {
+            var pages = _stack.pages;
+            var n_items = pages.get_n_items ();
+            for (var child = _box.get_last_child (); child != null; child = child?.get_prev_sibling ()) {
+                if (_stack.get_child_by_name (child?.name ?? "") == null)
+                    _box.remove((!)child);
+            }
+            for (var i = 0; i < n_items; i++) {
+                var page = (Gtk.StackPage) pages.get_item (i);
+                if (find_child_by_name (page.name) == null) {
+                    var button = new Gtk.ToggleButton ();
+                    button.name = page.name;
+                    button.icon_name = page.icon_name;
+                    button.tooltip_text = page.title;
+                    button.toggled.connect (() => {
+                        if (button.active)
+                            _stack.set_visible_child_name (button.name);
+                    });
+                    _box.append (button);
+                }
+            }
+        }
+
+        private Gtk.Widget? find_child_by_name (string name) {
+            for (var child = _box.get_first_child (); child != null; child = child?.get_next_sibling ()) {
+                if (strcmp (child?.name, name) == 0)
+                    return child;
+            }
+            return null;
         }
     }
 }

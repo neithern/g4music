@@ -509,7 +509,12 @@ namespace G4 {
         }
 
         private void on_music_found (GenericArray<Music> arr) {
-            _music_store.splice (_music_store.get_n_items (), 0, arr.data);
+            var n_items = _music_store.get_n_items ();
+            if (arr.length > 0) {
+                _music_store.splice (n_items, 0, arr.data);
+            } else {
+                _music_store.items_changed (0, n_items, n_items);
+            }
         }
 
         private uint _pending_mic_handler = 0;
@@ -528,14 +533,18 @@ namespace G4 {
         }
 
         private void on_music_lost (GenericSet<Music> removed) {
-            var count = _music_store.get_n_items ();
-            var remain = new GenericArray<Music> (count);
-            for (var i = 0; i < count; i++) {
-                var music = (Music) _music_store.get_item (i);
-                if (!removed.contains (music))
-                    remain.add (music);
+            var n_items = _music_store.get_n_items ();
+            if (removed.length > 0) {
+                var remain = new GenericArray<Music> (n_items);
+                for (var i = 0; i < n_items; i++) {
+                    var music = (Music) _music_store.get_item (i);
+                    if (!removed.contains (music))
+                        remain.add (music);
+                }
+                _music_store.splice (0, n_items, remain.data);
+            } else {
+                _music_store.items_changed (0, n_items, n_items);
             }
-            _music_store.splice (0, _music_store.get_n_items (), remain.data);
         }
 
         private void on_player_end () {

@@ -31,6 +31,12 @@ namespace G4 {
         public Music.empty () {
         }
 
+        public Music.titled (string title, string uri) {
+            this.title = title;
+            this.uri = uri;
+            _title_key = title.collate_key_for_filename ();
+        }
+
         public unowned string cover_key {
             get {
                 return _cover_key ?? uri;
@@ -195,6 +201,12 @@ namespace G4 {
             return (int) diff.clamp (-1, 1);
         }
 
+        public static void original_order (GenericArray<Music> arr) {
+            for (var i = arr.length - 1; i >= 0; i--) {
+                arr[i]._order = i;
+            }
+        }
+
         public static void shuffle_order (GenericArray<Music> arr) {
             for (var i = arr.length - 1; i > 0; i--) {
                 var r = Random.int_range (0, i);
@@ -225,11 +237,14 @@ namespace G4 {
     }
 
     public string get_display_name (string uri) {
-        var file = File.new_for_uri (uri);
+        return get_file_display_name (File.new_for_uri (uri));
+    }
+
+    public string get_file_display_name (File file) {
         var name = file.get_basename () ?? "";
         if (name.length == 0 || name == "/")
             name = file.get_parse_name ();
-        return name;
+        return name.substring (0, name.index_of_char ('.'));
     }
 
     public string get_uri_with_end_sep (File file) {

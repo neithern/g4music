@@ -142,7 +142,7 @@ namespace G4 {
                             if (artist is Artist)
                                 return artist.albums[album_name];
                         }
-                        return library.albums[album_name];
+                        return Uri.is_valid (album_name, UriFlags.NONE) ? library.playlists[album_name] : library.albums[album_name];
                     }
                 } catch (Error e) {
                 }
