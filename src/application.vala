@@ -39,7 +39,7 @@ namespace G4 {
             _actions = new ActionHandles (this);
 
             _music_list.model = _music_store;
-            _music_list.items_changed.connect (on_music_items_changed);
+            _music_store.items_changed.connect (on_music_items_changed);
             _loader.loading_changed.connect ((loading) => _loading = loading);
             _loader.music_found.connect (on_music_found);
             _loader.music_lost.connect (on_music_lost);

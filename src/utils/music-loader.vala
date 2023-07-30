@@ -304,19 +304,20 @@ namespace G4 {
         private void on_file_removed (File file) {
             var uri = file.get_uri ();
             var music = _tag_cache.remove (uri);
+            var removed = new GenericSet<Music> (direct_hash, direct_equal);
             if (music != null) {
                 lock (_library) {
                     _library.remove_music ((!)music);
                 }
+                removed.add ((!)music);
             } else {
-                var removed = new GenericSet<Music> (direct_hash, direct_equal);
                 lock (_library) {
                     _library.remove_uri (uri, removed);
                 }
-                if (removed.length > 0) {
-                    music_lost (removed);
-                }
                 new DirCache (file).delete ();
+            }
+            if (removed.length > 0) {
+                music_lost (removed);
             }
         }
 
