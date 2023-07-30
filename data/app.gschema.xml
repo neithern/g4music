@@ -14,6 +14,9 @@
       <default>false</default>
       <summary>Compact playlist view</summary>
     </key>
+    <key name="library-path" type="as">
+      <default>[]</default>
+    </key>
     <key name="monitor-changes" type="b">
       <default>false</default>
       <summary>Monitor local file changes</summary>
