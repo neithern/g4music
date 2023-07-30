@@ -74,6 +74,7 @@ namespace G4 {
             }
             set {
                 _data_store = value;
+                _filter_model.model = value;
             }
         }
 
@@ -87,9 +88,9 @@ namespace G4 {
             }
         }
 
-        public bool grid_mode {
+        public bool list_mode {
             get {
-                return _grid_mode;
+                return !_grid_mode;
             }
         }
 

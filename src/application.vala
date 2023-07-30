@@ -212,6 +212,12 @@ namespace G4 {
             get {
                 return _music_list;
             }
+            set {
+                _music_list.items_changed.disconnect (on_music_items_changed);
+                _music_list = value;
+                _music_list.items_changed.connect (on_music_items_changed);
+                update_current_item ();
+            }
         }
 
         public ListStore music_store {
@@ -322,11 +328,11 @@ namespace G4 {
         }
 
         public int play (Object? obj, bool immediately = true) {
-            var store = _music_store;
             uint insert_pos = -1;
             if (obj is Music) {
                 var music = (Music) obj;
                 uint position = -1;
+                var store = (ListStore) _music_list.model;
                 if (store.find (music, out position)) {
                     insert_pos = (int) position;
                 } else {
@@ -337,6 +343,7 @@ namespace G4 {
             } else if (obj is Album) {
                 var album = (Album) obj;
                 var arr = new GenericArray<Music> (album.musics.length);
+                var store = _music_store;
                 insert_pos = (uint) store.get_n_items () - 1;
                 rebind_current_item ();
                 album.foreach ((uri, music) => {
@@ -360,12 +367,12 @@ namespace G4 {
 
         public void play_at_next (Object? obj) {
             if (_current_music != null) {
-                var store = _music_store;
                 rebind_current_item ();
                 if (obj is Music) {
                     var music = (Music) obj;
                     uint playing_item = -1;
                     uint popover_item = -1;
+                    var store = (ListStore) _music_list.model;
                     if (store.find ((!)_current_music, out playing_item)
                             && store.find ((!)music, out popover_item)
                             && playing_item != popover_item
@@ -378,6 +385,7 @@ namespace G4 {
                 } else if (obj is Album) {
                     var album = (Album) obj;
                     var arr = new GenericArray<Music> (album.musics.length);
+                    var store = _music_store;
                     album.foreach ((uri, music) => {
                         arr.add (music);
                         uint position = -1;

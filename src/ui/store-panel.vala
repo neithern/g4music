@@ -62,7 +62,7 @@ namespace G4 {
 
             _current_list = _playing_list = create_playing_music_list ();
             _playing_list.data_store = _app.music_store;
-            _playing_list.filter_model = _app.music_list;
+            _app.music_list = _playing_list.filter_model;
             stack_view.add_titled (_playing_list, "playing", _("Playing")).icon_name = "media-playback-start-symbolic";
             stack_view.visible_child = _playing_list;
 
@@ -118,16 +118,14 @@ namespace G4 {
                 }
                 if (value is MusicList) {
                     _current_list = (MusicList) value;
-                    on_music_changed (_app.current_music);
+                    if (_current_list.list_mode) {
+                        _app.music_list = _current_list.filter_model;
+                        _current_list.current_item = _app.current_music;
+                        run_idle_once (() => _current_list.scroll_to_current_item ());
+                    }
                 }
                 sort_btn.sensitive = _current_list == _playing_list;
                 on_search_text_changed ();
-                run_idle_once (() => {
-                    if (_current_list == _playing_list)
-                        _current_list.scroll_to_item (_app.current_item);
-                    else
-                        _current_list.scroll_to_current_item ();
-                });
             }
         }
 
@@ -226,18 +224,9 @@ namespace G4 {
             return list;
         }
 
-        private Album? _current_album = null;
-
         private MusicList create_music_list (Album album, bool from_artist = false) {
             var list = new MusicList (_app);
-            list.item_activated.connect ((position, obj) => {
-                // Insert the whole album to let Previous/Next button works
-                if (_current_album != album) {
-                    _current_album = album;
-                    _app.play (album, false);
-                }
-                _app.play (obj);
-            });
+            list.item_activated.connect ((position, obj) => _app.play (obj));
             list.item_binded.connect ((item) => {
                 var entry = (MusicEntry) item.child;
                 var music = (Music) item.item;
@@ -313,7 +302,7 @@ namespace G4 {
         private void on_index_changed (int index, uint size) {
             root.action_set_enabled (ACTION_APP + ACTION_PREV, index > 0);
             root.action_set_enabled (ACTION_APP + ACTION_NEXT, index < (int) size - 1);
-            if (_current_list == _playing_list) {
+            if (_current_list.list_mode) {
                 _current_list.scroll_to_item (index);
             }
         }
@@ -346,9 +335,7 @@ namespace G4 {
         }
 
         private void on_music_changed (Music? music) {
-            if (!_current_list.grid_mode && _current_list != _playing_list) {
-                _current_list.current_item = _app.current_music;
-            }
+            _current_list.current_item = music;
         }
 
         private void on_search_btn_toggled () {
