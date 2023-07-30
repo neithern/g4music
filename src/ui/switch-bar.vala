@@ -67,6 +67,10 @@ namespace G4 {
 
         public override void measure (Gtk.Orientation orientation, int for_size, out int minimum, out int natural, out int minimum_baseline, out int natural_baseline) {
             var horizontal = orientation == Gtk.Orientation.HORIZONTAL;
+            if (for_size < 0) {
+                var parent = get_parent ();
+                for_size = (horizontal ? parent?.get_width () : parent?.get_height ()) ?? 1000;
+            }
             _box.measure (orientation, for_size, out minimum, out natural, out minimum_baseline, out natural_baseline);
             if (horizontal) {
                 minimum = 0;
@@ -81,7 +85,7 @@ namespace G4 {
             allocation.width = width;
             allocation.height = height;
             _revealer.allocate_size (allocation, baseline);
-            reveal_child = width >= _minimum_width;
+            reveal_child = width >= _minimum_width - 4; // -4 to avoid size_allocate() be called continuously when (_minimum_width - width) == 1
         }
     }
 }
