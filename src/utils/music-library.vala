@@ -11,7 +11,7 @@ namespace G4 {
     }
 
     public class Album : Object {
-        private Music? _cover_music = null;
+        protected Music? _cover_music = null;
         public string name;
         public HashTable<unowned string, Music> musics = new HashTable<unowned string, Music> (str_hash, str_equal);
 
@@ -44,15 +44,19 @@ namespace G4 {
             musics.foreach (func);
         }
 
-        public void get_sorted_musics (ListStore store) {
+        public void get_sorted_musics (ListStore store, uint insert_pos = 0) {
             var arr = new GenericArray<Music> (musics.length);
             musics.foreach ((name, music) => arr.add (music));
-            arr.sort (Music.compare_by_album);
-            store.splice (0, store.get_n_items (), arr.data);
+            sort (arr);
+            store.splice (insert_pos, 0, arr.data);
         }
 
         public bool remove_music (Music music) {
             return musics.steal (music.uri);
+        }
+
+        protected virtual void sort (GenericArray<Music> arr) {
+            arr.sort (Music.compare_by_album);
         }
     }
 

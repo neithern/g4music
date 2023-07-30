@@ -327,27 +327,25 @@ namespace G4 {
             }
         }
 
-        public int play (Object? obj, bool immediately = true) {
-            uint insert_pos = -1;
+        public void play (Object? obj, bool immediately = true) {
             if (obj is Music) {
                 var music = (Music) obj;
                 uint position = -1;
                 var store = (ListStore) _music_list.model;
-                if (store.find (music, out position)) {
-                    insert_pos = (int) position;
-                } else {
+                if (!store.find (music, out position)) {
                     store.append (music);
-                    insert_pos = (int) store.get_n_items () - 1;
+                    position = (int) store.get_n_items () - 1;
                     _list_modified = true;
+                }
+                if (immediately) {
+                    current_item = (int) position;
                 }
             } else if (obj is Album) {
                 var album = (Album) obj;
-                var arr = new GenericArray<Music> (album.musics.length);
                 var store = _music_store;
-                insert_pos = (uint) store.get_n_items () - 1;
+                var insert_pos = (uint) store.get_n_items () - 1;
                 rebind_current_item ();
                 album.foreach ((uri, music) => {
-                    arr.add (music);
                     uint position = -1;
                     if (store.find (music, out position)) {
                         store.remove (position);
@@ -356,13 +354,13 @@ namespace G4 {
                         }
                     }
                 });
-                arr.sort (Music.compare_by_album);
-                store.splice (insert_pos, 0, arr.data);
+                album.get_sorted_musics (store, insert_pos);
                 _list_modified = true;
+                if (immediately) {
+                    current_music = store.get_item (insert_pos) as Music;
+                    update_current_item ();
+                }
             }
-            if (immediately)
-                current_item = (int) insert_pos;
-            return (int) insert_pos;
         }
 
         public void play_at_next (Object? obj) {
@@ -384,19 +382,16 @@ namespace G4 {
                     }
                 } else if (obj is Album) {
                     var album = (Album) obj;
-                    var arr = new GenericArray<Music> (album.musics.length);
                     var store = _music_store;
                     album.foreach ((uri, music) => {
-                        arr.add (music);
                         uint position = -1;
                         if (store.find (music, out position)) {
                             store.remove (position);
                         }
                     });
-                    arr.sort (Music.compare_by_album);
-                    uint playing_item = store.get_n_items () - 1;
-                    store.find ((!)_current_music, out playing_item);
-                    store.splice (playing_item + 1, 0, arr.data);
+                    uint insert_pos = store.get_n_items () - 1;
+                    store.find ((!)_current_music, out insert_pos);
+                    album.get_sorted_musics (store, insert_pos + 1);
                     _list_modified = true;
                 }
                 _current_item = find_music_item (_current_music);
