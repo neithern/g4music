@@ -196,8 +196,8 @@ namespace G4 {
         private MusicList create_album_list (Artist? artist = null) {
             var list = new MusicList (_app, true, artist);
             list.item_activated.connect ((position, obj) => {
-                var name = (obj as Music)?.album ?? "";
-                var album = artist != null ? ((!)artist).albums[name] : _library.albums[name];
+                var album_key = (obj as Music)?.album_key ?? "";
+                var album = artist != null ? ((!)artist).albums[album_key] : _library.albums[album_key];
                 if (album is Album) {
                     create_sub_stack_page (artist, album);
                 }
@@ -209,10 +209,12 @@ namespace G4 {
             list.item_binded.connect ((item) => {
                 var cell = (MusicCell) item.child;
                 var music = (Music) item.item;
-                cell.album_name = music.album;
+                var year = music.year;
+                cell.album_name = music.album_key;
                 cell.artist_name = artist?.name;
                 cell.paintable = _loading_paintable;
                 cell.title = music.album;
+                cell.subtitle = year > 0 ? year.to_string () : " ";
             });
             return list;
         }
@@ -305,7 +307,7 @@ namespace G4 {
             var mlist = album_mode ? create_music_list ((!)album, artist != null) : create_album_list (artist);
             mlist.create_factory ();
 
-            var name = (album_mode ? album?.name : artist?.name) ?? "";
+            var name = (album_mode ? album?.cover_music?.get_album_and_year () : artist?.name) ?? "";
             var label = new Gtk.Label (name);
             label.ellipsize = Pango.EllipsizeMode.END;
             var header = new Adw.HeaderBar ();

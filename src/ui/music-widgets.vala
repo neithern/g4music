@@ -110,10 +110,11 @@ namespace G4 {
 
         public MusicCell () {
             orientation = Gtk.Orientation.VERTICAL;
+            margin_top = 10;
+            margin_bottom = 10;
 
             _cover.margin_start = 8;
             _cover.margin_end = 8;
-            _cover.margin_top = 10;
             _cover.margin_bottom = 6;
             _cover.pixel_size = 128;
             _cover.paintable = _paintable;
@@ -124,9 +125,17 @@ namespace G4 {
             _title.ellipsize = Pango.EllipsizeMode.END;
             _title.margin_start = 4;
             _title.margin_end = 4;
-            _title.margin_bottom = 10;
             _title.add_css_class ("title-leading");
             append (_title);
+
+            _subtitle.halign = Gtk.Align.CENTER;
+            _subtitle.ellipsize = Pango.EllipsizeMode.END;
+            _subtitle.visible = false;
+            _subtitle.add_css_class ("dim-label");
+            var font_size = _subtitle.get_pango_context ().get_font_description ().get_size () / Pango.SCALE;
+            if (font_size >= 13)
+                _subtitle.add_css_class ("title-secondly");
+            append (_subtitle);
 
             width_request = _cover.pixel_size + _cover.margin_start + _cover.margin_end;
         }

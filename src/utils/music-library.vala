@@ -20,14 +20,19 @@ namespace G4 {
 
         public Music cover_music {
             get {
-                return _cover_music ?? get_first_music ();
+                if (_cover_music == null)
+                    _cover_music = get_first_cover_music ();
+                return (!)_cover_music;
+            }
+            set {
+                _cover_music = value;
             }
         }
 
         public virtual void get_sorted (ListStore store) {
         }
 
-        protected virtual Music get_first_music () {
+        protected virtual Music get_first_cover_music () {
             return new Music.empty ();
         }
     }
@@ -46,9 +51,6 @@ namespace G4 {
         }
 
         public bool add_music (Music music) {
-            if (_cover_music == null && music.has_cover) {
-                _cover_music = music;
-            }
             var count = musics.length;
             musics.insert (music.uri, music);
             return musics.length > count;
@@ -73,8 +75,17 @@ namespace G4 {
             return musics.steal (music.uri);
         }
 
-        protected override Music get_first_music () {
-            return musics.find ((name, music) => true);
+        protected override Music get_first_cover_music () {
+            var arr = new Music?[] { null };
+            musics.foreach ((name, music) => {
+                var m0 = arr[0];
+                if (m0 == null) {
+                    arr[0] = music;
+                } else if (music.has_cover && music.track < ((!)m0).track) {
+                    arr[0] = music;
+                }
+            });
+            return (!)arr[0];
         }
 
         protected virtual void sort (GenericArray<Music> arr) {
@@ -95,15 +106,19 @@ namespace G4 {
             }
         }
 
+        public void add_cover_music (Music music) {
+            if (_cover_music == null || Music.compare_by_album (music, (!)_cover_music) < 0) {
+                _cover_music = music;
+            }
+        }
+
         public bool add_music (Music music) {
             unowned string key;
             Album album;
-            if (!albums.lookup_extended (music.album, out key, out album)) {
+            unowned var album_key = music.album_key;
+            if (!albums.lookup_extended (album_key, out key, out album)) {
                 album = new Album (music.album);
-                albums[album.name] = album;
-            }
-            if (_cover_music == null && music.has_cover) {
-                _cover_music = music;
+                albums[album_key] = album;
             }
             return album.add_music (music);
         }
@@ -123,7 +138,7 @@ namespace G4 {
             return albums.foreach_steal ((name, album) => album.remove_music (music) && album.length == 0) > 0;
         }
 
-        protected override Music get_first_music () {
+        protected override Music get_first_cover_music () {
             return albums.find ((name, album) => true).cover_music;
         }
     }
@@ -144,6 +159,14 @@ namespace G4 {
             _cover_music = new Music.titled (name, music.uri);
             ((!)_cover_music).cover_key = music.cover_key;
             ((!)_cover_music).album = uri;
+        }
+
+        protected override Music get_first_cover_music () {
+            foreach (var music in items) {
+                if (music.has_cover)
+                    return music;
+            }
+            return items[0];
         }
 
         protected override void sort (GenericArray<Music> arr) {
@@ -177,21 +200,34 @@ namespace G4 {
 
         public bool add_music (Music music) {
             unowned string key;
-
+            unowned var album_key = music.album_key;
             Album album;
-            if (!_albums.lookup_extended (music.album, out key, out album)) {
+            if (!_albums.lookup_extended (album_key, out key, out album)) {
                 album = new Album (music.album);
-                _albums[album.name] = album;
+                _albums[album_key] = album;
             }
-            var r1 = album.add_music (music);
+            var added = album.add_music (music);
 
+            unowned var artist_name = music.artist;
             Artist artist;
-            if (!_artists.lookup_extended (music.artist, out key, out artist)) {
-                artist = new Artist (music.artist);
-                _artists[artist.name] = artist;
+            if (!_artists.lookup_extended (artist_name, out key, out artist)) {
+                artist = new Artist (artist_name);
+                _artists[artist_name] = artist;
             }
-            var r2 = artist.add_music (music);
-            return r1 || r2;
+            added |= artist.add_music (music);
+
+            if (music.album_artist.length > 0) {
+                unowned var artist_name2 = music.album_artist;
+                Artist artist2;
+                if (!_artists.lookup_extended (artist_name2, out key, out artist2)) {
+                    artist2 = new Artist (artist_name2);
+                    _artists[artist_name2] = artist2;
+                }
+                added |= artist2.add_music (music);
+                // Clone a new music only for sort and cover
+                artist2.add_cover_music (new Music.with_album_artist (music));
+            }
+            return added;
         }
 
         public void add_playlist (Playlist playlist) {

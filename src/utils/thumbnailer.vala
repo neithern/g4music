@@ -128,7 +128,7 @@ namespace G4 {
                 return null;
             }
 
-            var album_key_ = @"$(music.album)-$(music.artist)-";
+            var album_key_ = @"$(music.album_key)-$(music.artist)-";
             var tags = new Gst.TagList?[] { null };
             var args = new string[] { music.cover_key, music.cover_uri ?? "", music.album };
             var pixbuf = yield run_async<Gdk.Pixbuf?> (() => {
