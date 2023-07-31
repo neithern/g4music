@@ -213,9 +213,7 @@ namespace G4 {
                 return _music_list;
             }
             set {
-                _music_list.items_changed.disconnect (on_music_items_changed);
                 _music_list = value;
-                _music_list.items_changed.connect (on_music_items_changed);
                 update_current_item ();
             }
         }
