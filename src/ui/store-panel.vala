@@ -369,14 +369,14 @@ namespace G4 {
                 stack_view.transition_type = Gtk.StackTransitionType.SLIDE_LEFT_RIGHT;
                 var visible_child = stack_view.visible_child;
                 if (visible_child is Gtk.Stack && length > 1) {
+                    var stack = (Gtk.Stack) visible_child;
+                    stack.transition_type = Gtk.StackTransitionType.NONE;
                     Artist? artist = null;
                     Album? album = null;
                     if (paths[0] == "artists") {
                         artist = _library.artists[paths[1]];
                         if (artist is Artist) {
-                            _artist_stack.transition_type = Gtk.StackTransitionType.NONE;
                             create_sub_stack_page (artist, null);
-                            _artist_stack.transition_type = Gtk.StackTransitionType.SLIDE_LEFT_RIGHT;
                             if (length > 2) {
                                 album = ((!)artist).albums[paths[2]];
                             }
@@ -387,11 +387,9 @@ namespace G4 {
                         album = _library.playlists[paths[1]];
                     }
                     if (album is Album) {
-                        var stack = _current_list.parent as Gtk.Stack;
-                        stack?.set_transition_type (Gtk.StackTransitionType.NONE);
                         create_sub_stack_page (artist, album);
-                        stack?.set_transition_type (Gtk.StackTransitionType.SLIDE_LEFT_RIGHT);
                     }
+                    stack.transition_type = Gtk.StackTransitionType.SLIDE_LEFT_RIGHT;
                 }
             }
             _library_path = null;
