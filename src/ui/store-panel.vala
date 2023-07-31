@@ -101,6 +101,7 @@ namespace G4 {
             app.index_changed.connect (on_index_changed);
             app.music_batch_changed.connect (on_music_batch_changed);
             app.music_changed.connect (on_music_changed);
+            app.music_external_changed.connect (on_music_external_changed);
             app.loader.loading_changed.connect (on_loading_changed);
 
             var settings = app.settings;
@@ -293,8 +294,8 @@ namespace G4 {
             list.item_binded.connect ((item) => {
                 var cell = (MusicCell) item.child;
                 var music = (Music) item.item;
-                cell.album_name = music.album;
                 cell.paintable = _loading_paintable;
+                cell.playlist_name = music.album;
                 cell.title = music.title;
             });
             return list;
@@ -414,8 +415,6 @@ namespace G4 {
             return true;
         }
 
-        private bool _first_items_changed = true;
-
         private void on_music_batch_changed () {
             _library.get_sorted (_album_list.data_store, _artist_list.data_store, _playlist_list.data_store);
 
@@ -431,15 +430,16 @@ namespace G4 {
 
             if (_library_path != null && _library.albums.length > 0 && _album_stack.pages.get_n_items () == 1) {
                 locate_to_library_path ();
-            } else if (!_first_items_changed) {
-                for (var child = stack_view.get_last_child (); child is Gtk.Stack; child = child?.get_prev_sibling ())
-                    update_stack_pages ((Gtk.Stack) child);
             }
-            _first_items_changed = false;
         }
 
         private void on_music_changed (Music? music) {
             _current_list.current_item = music;
+        }
+
+        private void on_music_external_changed () {
+            for (var child = stack_view.get_last_child (); child is Gtk.Stack; child = child?.get_prev_sibling ())
+                update_stack_pages ((Gtk.Stack) child);
         }
 
         private void on_search_btn_toggled () {

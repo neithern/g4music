@@ -12,7 +12,7 @@ namespace G4 {
     public const string ACTION_RELOAD = "reload";
     public const string ACTION_SEARCH = "search";
     public const string ACTION_SHOW_COVER_FILE = "show-cover-file";
-    public const string ACTION_SHOW_MUSIC_FILES = "show-music-file";
+    public const string ACTION_SHOW_MUSIC_FILE = "show-music-file";
     public const string ACTION_SORT = "sort";
     public const string ACTION_TOGGLE_SEARCH = "toggle-earch";
     public const string ACTION_TOGGLE_SORT = "toggle-sort";
@@ -31,17 +31,17 @@ namespace G4 {
 
             ActionEntry[] action_entries = {
                 { ACTION_ABOUT, show_about },
-                { ACTION_EXPORT_COVER, export_cover, "s" },
+                { ACTION_EXPORT_COVER, export_cover, "as" },
                 { ACTION_NEXT, () => _app.play_next () },
-                { ACTION_PLAY, play, "s" },
-                { ACTION_PLAY_AT_NEXT, play_at_next, "s" },
+                { ACTION_PLAY, play, "as" },
+                { ACTION_PLAY_AT_NEXT, play_at_next, "as" },
                 { ACTION_PLAY_PAUSE, () => _app.play_pause () },
                 { ACTION_PREV, () => _app.play_previous () },
                 { ACTION_PREFS, show_preferences },
                 { ACTION_RELOAD, () => _app.reload_library () },
-                { ACTION_SEARCH, search_by, "s" },
-                { ACTION_SHOW_COVER_FILE, show_cover_file, "s" },
-                { ACTION_SHOW_MUSIC_FILES, show_music_file, "s" },
+                { ACTION_SEARCH, search_by, "as" },
+                { ACTION_SHOW_COVER_FILE, show_cover_file, "as" },
+                { ACTION_SHOW_MUSIC_FILE, show_music_file, "as" },
                 { ACTION_SORT, sort_by, "s", "'2'" },
                 { ACTION_TOGGLE_SEARCH, toggle_search },
                 { ACTION_TOGGLE_SORT, toggle_sort },
@@ -110,7 +110,7 @@ namespace G4 {
         }
 
         private Music? _get_music_from_parameter (Variant? parameter) {
-            unowned var uri = parameter?.get_string (null);
+            var uri = _parse_uri_form_parameter (parameter);
             return uri != null ? _app.loader.find_cache ((!)uri) : null;
         }
 
@@ -119,52 +119,60 @@ namespace G4 {
             _export_cover_async.begin (music, (obj, res) => _export_cover_async.end (res));
         }
 
-        private Object? _parse_music_or_album_from_parameter (Variant? parameter) {
-            unowned var text = parameter?.get_string (null);
-            if (text != null) {
-                var uri = (!)text;
+        private unowned string? _parse_uri_form_parameter (Variant? parameter) {
+            unowned var strv = parameter?.get_strv ();
+            if (strv != null && ((!)strv).length > 1) {
+                var arr = (!)strv;
+                return arr[0] == "uri" ? (string?) arr[1] : null;
+            }
+            return null;
+        }
+
+        private Object? _parse_music_node_form_parameter (Variant? parameter) {
+            unowned var strv = parameter?.get_strv ();
+            if (strv != null && ((!)strv).length > 1) {
+                var arr = (!)strv;
                 var loader = _app.loader;
-                var music = loader.find_cache (uri);
-                if (music != null) {
-                    return music;
-                } else if (uri.has_prefix ("album://")) try {
-                    var u = Uri.parse ((!)uri, UriFlags.NONE);
-                    var library = loader.library;
-                    var path = u.get_path ();
-                    var arr = path.split ("/");
-                    var count = arr.length;
-                    if (count > 2) {
-                        //  The first part is ""
-                        var album_name = Uri.unescape_string (arr[2]) ?? "";
-                        if (arr[1] != "*") {
-                            var artist_name = Uri.unescape_string (arr[1]) ?? "";
-                            var artist = library.artists[artist_name];
+                var library = loader.library;
+                unowned var key = arr[1];
+                switch (arr[0]) {
+                    case "album":
+                        return library.albums[key];
+                    case "artist":
+                        if (arr.length > 2) {
+                            var artist = library.artists[key];
                             if (artist is Artist)
-                                return artist.albums[album_name];
+                                return ((Artist) artist).albums[arr[2]];
                         }
-                        return is_valid_uri (album_name) ? library.playlists[album_name] : library.albums[album_name];
-                    }
-                } catch (Error e) {
+                        break;
+                    case "playlist":
+                        return library.playlists[key];
+                    default:
+                        return loader.find_cache (key);
                 }
             }
             return null;
         }
 
         private void play (SimpleAction action, Variant? parameter) {
-            var obj = _parse_music_or_album_from_parameter (parameter);
+            var obj = _parse_music_node_form_parameter (parameter);
             _app.play (obj);
         }
 
         private void play_at_next (SimpleAction action, Variant? parameter) {
-            var obj = _parse_music_or_album_from_parameter (parameter);
+            var obj = _parse_music_node_form_parameter (parameter);
             _app.play_at_next (obj);
         }
 
         private void search_by (SimpleAction action, Variant? parameter) {
-            var text = parameter?.get_string (null) ?? "";
+            unowned var strv = parameter?.get_strv ();
             var mode = SearchMode.ANY;
-            parse_search_mode (ref text, ref mode);
-            (_app.active_window as Window)?.start_search (text, mode);
+            if (strv != null && ((!)strv).length > 1) {
+                var arr = (!)strv;
+                var text = arr[0] + ":";
+                parse_search_mode (ref text, ref mode);
+                (_app.active_window as Window)?.start_search (arr[1], mode);
+            }
         }
 
         private void show_about () {
@@ -206,7 +214,7 @@ namespace G4 {
         }
 
         private void show_music_file (SimpleAction action, Variant? parameter) {
-            unowned var uri = parameter?.get_string (null);
+            var uri = _parse_uri_form_parameter (parameter);
             _app.show_uri_with_portal (uri);
         }
 

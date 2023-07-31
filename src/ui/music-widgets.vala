@@ -106,6 +106,7 @@ namespace G4 {
     public class MusicCell : MusicWidget {
         public string? album_name = null;
         public string? artist_name = null;
+        public string? playlist_name = null;
 
         public MusicCell () {
             orientation = Gtk.Orientation.VERTICAL;
@@ -131,8 +132,8 @@ namespace G4 {
         }
 
         public override Menu create_item_menu () {
-            if (album_name != null) {
-                return create_menu_for_album ((!)album_name, artist_name);
+            if (album_name != null || playlist_name != null) {
+                return create_menu_for_album (artist_name, album_name, playlist_name);
             }
             return base.create_item_menu ();
         }
@@ -229,13 +230,13 @@ namespace G4 {
                 var music = (!) this.music;
                 var menu = create_menu_for_music (music);
                 if (music != app.current_music) {
-                    menu.prepend_item (create_menu_item (music.uri, _("Play at Next"), ACTION_APP + ACTION_PLAY_AT_NEXT));
-                    menu.prepend_item (create_menu_item (music.uri, _("Play"), ACTION_APP + ACTION_PLAY));
+                    menu.prepend_item (create_menu_item_for_uri (music.uri, _("Play at Next"), ACTION_APP + ACTION_PLAY_AT_NEXT));
+                    menu.prepend_item (create_menu_item_for_uri (music.uri, _("Play"), ACTION_APP + ACTION_PLAY));
                 }
                 if (music.cover_uri != null) {
-                    menu.append_item (create_menu_item (music.uri, _("Show _Cover File"), ACTION_APP + ACTION_SHOW_COVER_FILE));
+                    menu.append_item (create_menu_item_for_uri (music.uri, _("Show _Cover File"), ACTION_APP + ACTION_SHOW_COVER_FILE));
                 } else if (app.thumbnailer.find (music) is Gdk.Texture) {
-                    menu.append_item (create_menu_item (music.uri, _("_Export Cover"), ACTION_APP + ACTION_EXPORT_COVER));
+                    menu.append_item (create_menu_item_for_uri (music.uri, _("_Export Cover"), ACTION_APP + ACTION_EXPORT_COVER));
                 }
                 return menu;
             }
@@ -243,30 +244,38 @@ namespace G4 {
         }
     }
 
-    public MenuItem create_menu_item (string value, string label, string action) {
+    public MenuItem create_menu_item_for_strv (string[] strv, string label, string action) {
         var item = new MenuItem (label, null);
-        item.set_action_and_target_value (action, new Variant.string (value));
+        item.set_action_and_target_value (action, new Variant.strv (strv));
         return item;
     }
 
-    public Menu create_menu_for_album (string album_name, string? artist_name = null) {
-        var sb = new StringBuilder ("/");
-        sb.append (Uri.escape_string (artist_name ?? "*"));
-        sb.append ("/");
-        sb.append (Uri.escape_string (album_name));
-        var uri = Uri.join (UriFlags.NONE, "album", null, "local", -1, sb.str, null, null);
+    public MenuItem create_menu_item_for_uri (string uri, string label, string action) {
+        return create_menu_item_for_strv ({"uri", uri}, label, action);
+    }
+
+    public Menu create_menu_for_album (string? artist_name, string? album_name, string? playlist_name) {
+        string[] strv;
+        if (artist_name != null && album_name != null)
+            strv = {"artist", (!)artist_name, (!)album_name};
+        else if (album_name != null)
+            strv = {"album", (!)album_name};
+        else if (playlist_name != null)
+            strv = {"playlist", (!)playlist_name};
+        else
+            strv = {""};
         var menu = new Menu ();
-        menu.append_item (create_menu_item (uri, _("Play"), ACTION_APP + ACTION_PLAY));
-        menu.append_item (create_menu_item (uri, _("Play at Next"), ACTION_APP + ACTION_PLAY_AT_NEXT));
+        menu.append_item (create_menu_item_for_strv (strv, _("Play"), ACTION_APP + ACTION_PLAY));
+        menu.append_item (create_menu_item_for_strv (strv, _("Play at Next"), ACTION_APP + ACTION_PLAY_AT_NEXT));
         return menu;
     }
 
     public Menu create_menu_for_music (Music music) {
         var menu = new Menu ();
-        menu.append_item (create_menu_item ("title:" + music.title, _("Search Title"), ACTION_APP + ACTION_SEARCH));
-        menu.append_item (create_menu_item ("album:" + music.album, _("Search Album"), ACTION_APP + ACTION_SEARCH));
-        menu.append_item (create_menu_item ("artist:" + music.artist, _("Search Artist"), ACTION_APP + ACTION_SEARCH));
-        menu.append_item (create_menu_item (music.uri, _("_Show Music File"), ACTION_APP + ACTION_SHOW_MUSIC_FILES));
+        menu.append_item (create_menu_item_for_strv ({"title", music.title}, _("Search Title"), ACTION_APP + ACTION_SEARCH));
+        menu.append_item (create_menu_item_for_strv ({"album", music.title}, _("Search Album"), ACTION_APP + ACTION_SEARCH));
+        menu.append_item (create_menu_item_for_strv ({"artist", music.title}, _("Search Artist"), ACTION_APP + ACTION_SEARCH));
+        menu.append_item (create_menu_item_for_uri (music.uri, _("_Show Music File"), ACTION_APP + ACTION_SHOW_MUSIC_FILE));
         return menu;
     }
 

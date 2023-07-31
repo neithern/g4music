@@ -23,6 +23,7 @@ namespace G4 {
         public signal void index_changed (int index, uint size);
         public signal void music_batch_changed ();
         public signal void music_changed (Music? music);
+        public signal void music_external_changed ();
         public signal void music_tag_parsed (Music music, Gst.Sample? image);
         public signal void music_cover_parsed (Music music, string? uri);
 
@@ -366,17 +367,12 @@ namespace G4 {
                 rebind_current_item ();
                 if (obj is Music) {
                     var music = (Music) obj;
-                    uint playing_item = -1;
-                    uint popover_item = -1;
                     var store = (ListStore) _music_list.model;
-                    if (store.find ((!)_current_music, out playing_item)
-                            && store.find ((!)music, out popover_item)
-                            && playing_item != popover_item
-                            && playing_item != popover_item - 1) {
-                        var next_item = popover_item > playing_item ? playing_item + 1 : playing_item;
-                        store.remove (popover_item);
-                        store.insert (next_item, music);
+                    if (insert_to_next (music, _music_store)) {
                         _list_modified = true;
+                    }
+                    if (store != _music_store) {
+                        insert_to_next (music, store);
                     }
                 } else if (obj is Album) {
                     var album = (Album) obj;
@@ -481,6 +477,23 @@ namespace G4 {
             return locate_music_item_by_uri (uri);
         }
 
+        private bool insert_to_next (Music music, ListStore store) {
+            uint playing_pos = -1;
+            if (!store.find ((!)_current_music, out playing_pos)) {
+                playing_pos = -1;
+            }
+            uint music_pos = -1;
+            if (store.find ((!)music, out music_pos)
+                    && playing_pos != music_pos
+                    && playing_pos != music_pos - 1) {
+                var next_pos = (int) music_pos > (int) playing_pos ? playing_pos + 1 : playing_pos;
+                store.remove (music_pos);
+                store.insert (next_pos, music);
+                return true;
+            }
+            return false;
+        }
+
         private int locate_music_item_by_uri (string uri) {
             var count = _music_list.get_n_items ();
             for (var i = 0; i < count; i++) {
@@ -513,6 +526,7 @@ namespace G4 {
             } else {
                 _music_store.items_changed (0, n_items, n_items);
             }
+            music_external_changed ();
         }
 
         private uint _pending_mic_handler = 0;
@@ -543,6 +557,7 @@ namespace G4 {
             } else {
                 _music_store.items_changed (0, n_items, n_items);
             }
+            music_external_changed ();
         }
 
         private void on_player_end () {
