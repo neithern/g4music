@@ -158,7 +158,7 @@ namespace G4 {
             _playlist_stack.bind_property ("visible-child", this, "visible-child", BindingFlags.DEFAULT);
             stack_view.transition_type = Gtk.StackTransitionType.SLIDE_LEFT_RIGHT;
             stack_view.bind_property ("visible-child", this, "visible-child", BindingFlags.DEFAULT);
-            if (_library.albums.length > 0) {
+            if (_library.albums.length > 0 && _album_stack.pages.get_n_items () == 1) {
                 locate_to_library_path ();
             }
         }
@@ -319,11 +319,7 @@ namespace G4 {
 
             var back_btn = new Gtk.Button.from_icon_name ("go-previous-symbolic");
             back_btn.tooltip_text = _("Back");
-            back_btn.clicked.connect (() => {
-                var prev = mlist.get_prev_sibling ();
-                stack.visible_child = (!)prev;
-                run_timeout_once (stack.transition_duration, () => stack.remove (mlist));
-            });
+            back_btn.clicked.connect (() => remove_stack_child (stack, mlist));
             header.pack_start (back_btn);
 
             if (album_mode) {
@@ -432,6 +428,10 @@ namespace G4 {
                 _switch_bar.update_buttons ();
                 _switch_bar2.update_buttons ();
             }
+
+            if (_library.albums.length > 0 && _album_stack.pages.get_n_items () == 1) {
+                locate_to_library_path ();
+            }
         }
 
         private void on_music_changed (Music? music) {
@@ -477,6 +477,13 @@ namespace G4 {
                 parse_search_mode (ref _search_text, ref _search_mode);
             }
             _current_list.filter_model.set_filter (search_btn.active ? new Gtk.CustomFilter (on_search_match) : (Gtk.CustomFilter?) null);
+        }
+
+        private void remove_stack_child (Gtk.Stack stack, Gtk.Widget child) {
+            var prev = child.get_prev_sibling ();
+            if (prev != null)
+                stack.visible_child = (!)prev;
+            run_timeout_once (stack.transition_duration, () => stack.remove (child));
         }
     }
 
