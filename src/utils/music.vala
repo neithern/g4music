@@ -8,8 +8,8 @@ namespace G4 {
         public string artist = "";
         public string title = "";
         public string album_artist = "";
-        public Gst.DateTime? date_time = null;
-        public string? genre = null;
+        public uint32 date = 0;
+        public string genre = "";
         public int track = UNKNOWN_TRACK;
         public bool has_cover = false;
         public int64 modified_time = 0;
@@ -48,7 +48,7 @@ namespace G4 {
             modified_time = src.modified_time;
             uri = src.uri;
 
-            date_time = src.date_time;
+            date = src.date;
             genre = src.genre;
             track = src.track;
 
@@ -74,7 +74,7 @@ namespace G4 {
 
         public int year {
             get {
-                return date_time?.get_year () ?? 0;
+                return (int) (date / 400);
             }
         }
 
@@ -83,7 +83,6 @@ namespace G4 {
         }
 
         public inline string get_album_and_year () {
-            var year = date_time?.get_year () ?? 0;
             return year > 0 ? @"$album ($year)" : album;
         }
 
@@ -118,9 +117,10 @@ namespace G4 {
                 changed = true;
             }
             Gst.DateTime? dt = null;
+            uint dt2 = 0;
             if (tags.get_date_time (Gst.Tags.DATE_TIME, out dt)
-                    && dt != null && !equal_gst_date_time (date_time, dt)) {
-                date_time = dt;
+                    && dt != null && (dt2 = gst_date_time_to_uint (dt)) != date) {
+                date = dt2;
                 changed = true;
             }
             uint tr = 0;
@@ -150,7 +150,7 @@ namespace G4 {
             uri = dis.read_string ();
 
             album_artist = dis.read_string ();
-            date_time = gst_date_time_from_uint (dis.read_uint32 ());
+            date = dis.read_uint32 ();
             genre = dis.read_string ();
             track = (int) dis.read_size ();
 
@@ -168,8 +168,8 @@ namespace G4 {
             dos.write_string (uri);
 
             dos.write_string (album_artist);
-            dos.write_uint32 (gst_date_time_to_uint (date_time));
-            dos.write_string (genre ?? "");
+            dos.write_uint32 (date);
+            dos.write_string (genre);
             dos.write_size (track);
         }
 
@@ -225,7 +225,6 @@ namespace G4 {
         }
 
         private void update_album_key () {
-            var year = date_time?.get_year () ?? 0;
             _album_key = album.collate_key_for_filename () + album_artist.collate_key_for_filename () + year.to_string ();
         }
 
@@ -273,22 +272,11 @@ namespace G4 {
         public static inline uint32 gst_date_time_to_uint (Gst.DateTime? dt) {
             if (dt != null) {
                 var d = (!)dt;
-                return d.get_year () * 370 + d.get_month () * 32 + d.get_day ();
+                return (d.has_year () ? d.get_year () : 0) * 400
+                    + (d.has_month () ? d.get_month () : 0) * 32
+                    + (d.has_day () ? d.get_day () : 0);
             }
             return 0;
-        }
-
-        public static inline Gst.DateTime gst_date_time_from_uint (uint n) {
-            var year = n / 370;
-            var month = (n % 370) / 32;
-            var day = (n % 370) % 32;
-            return new Gst.DateTime.ymd ((int) year, (int) month, (int) day);
-        }
-
-        public static inline bool equal_gst_date_time (Gst.DateTime? dt1, Gst.DateTime? dt2) {
-            var n1 = gst_date_time_to_uint (dt1);
-            var n2 = gst_date_time_to_uint (dt2);
-            return n1 == n2;
         }
 
         public static void original_order (GenericArray<Music> arr) {
