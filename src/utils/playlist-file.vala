@@ -21,6 +21,13 @@ namespace G4 {
         return get_playlist_type (mimetype) != PlayListType.NONE;
     }
 
+    public bool is_valid_uri (string uri, UriFlags flags = UriFlags.NONE) {
+        try {
+            return Uri.is_valid (uri, flags);        } catch (Error e) {
+        }
+        return false;
+    }
+
     public string? load_playlist_file (File file, GenericArray<string> uris) {
         try {
             var info = file.query_info (FileAttribute.STANDARD_CONTENT_TYPE, FileQueryInfoFlags.NONE);
@@ -83,11 +90,8 @@ namespace G4 {
     public string parse_relative_uri (string uri, File? parent = null) {
         if (uri.length > 0 && uri[0] == '/') {
             return File.new_for_path (uri).get_uri ();
-        }
-        try {
-            if (Uri.is_valid (uri, UriFlags.NONE))
-                return uri;
-        } catch (Error e) {
+        } else if (is_valid_uri (uri)) {
+            return uri;
         }
         return parent?.resolve_relative_path (uri)?.get_uri () ?? uri;
     }
