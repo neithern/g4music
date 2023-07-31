@@ -82,16 +82,20 @@ namespace G4 {
                 if (_stack.get_child_by_name (child?.name ?? "") == null)
                     _box.remove((!)child);
             }
+            var visible_child = _stack.visible_child;
             for (var i = 0; i < n_items; i++) {
                 var page = (Gtk.StackPage) pages.get_item (i);
                 if (find_child_by_name (page.name) == null) {
                     var button = new Gtk.ToggleButton ();
+                    button.active = page.child == visible_child;
                     button.name = page.name;
                     button.icon_name = page.icon_name;
                     button.tooltip_text = page.title;
                     button.toggled.connect (() => {
-                        if (button.active)
+                        if (button.active && _stack.visible_child_name != button.name)
                             _stack.set_visible_child_name (button.name);
+                        else if (!button.active && _stack.visible_child_name == button.name)
+                            run_idle_once (() => button.active = true);
                     });
                     _box.append (button);
                 }
