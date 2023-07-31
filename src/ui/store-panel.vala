@@ -158,7 +158,7 @@ namespace G4 {
             _playlist_stack.bind_property ("visible-child", this, "visible-child", BindingFlags.DEFAULT);
             stack_view.transition_type = Gtk.StackTransitionType.SLIDE_LEFT_RIGHT;
             stack_view.bind_property ("visible-child", this, "visible-child", BindingFlags.DEFAULT);
-            if (_library.albums.length > 0 && _album_stack.pages.get_n_items () == 1) {
+            if (_library_path != null && _library.albums.length > 0 && _album_stack.pages.get_n_items () == 1) {
                 locate_to_library_path ();
             }
         }
@@ -195,7 +195,7 @@ namespace G4 {
         }
 
         private MusicList create_album_list (Artist? artist = null) {
-            var list = new MusicList (_app, true);
+            var list = new MusicList (_app, true, artist);
             list.item_activated.connect ((position, obj) => {
                 var name = (obj as Music)?.album ?? "";
                 var album = artist != null ? ((!)artist).albums[name] : _library.albums[name];
@@ -215,7 +215,6 @@ namespace G4 {
                 cell.paintable = _loading_paintable;
                 cell.title = music.album;
             });
-            artist?.get_sorted_albums (list.data_store);
             return list;
         }
 
@@ -242,7 +241,7 @@ namespace G4 {
         }
 
         private MusicList create_music_list (Album album, bool from_artist = false) {
-            var list = new MusicList (_app);
+            var list = new MusicList (_app, false, album);
             list.item_activated.connect ((position, obj) => _app.play (obj));
             list.item_binded.connect ((item) => {
                 var entry = (MusicEntry) item.child;
@@ -257,7 +256,6 @@ namespace G4 {
                 var entry = (MusicEntry) item.child;
                 make_right_clickable (entry, entry.show_popover_menu);
             });
-            album.get_sorted_musics (list.data_store);
             _app.settings.bind ("compact-playlist", list, "compact-list", SettingsBindFlags.DEFAULT);
             return list;
         }
@@ -416,6 +414,8 @@ namespace G4 {
             return true;
         }
 
+        private bool _first_items_changed = true;
+
         private void on_music_batch_changed () {
             _library.get_sorted (_album_list.data_store, _artist_list.data_store, _playlist_list.data_store);
 
@@ -429,9 +429,13 @@ namespace G4 {
                 _switch_bar2.update_buttons ();
             }
 
-            if (_library.albums.length > 0 && _album_stack.pages.get_n_items () == 1) {
+            if (_library_path != null && _library.albums.length > 0 && _album_stack.pages.get_n_items () == 1) {
                 locate_to_library_path ();
+            } else if (!_first_items_changed) {
+                for (var child = stack_view.get_last_child (); child is Gtk.Stack; child = child?.get_prev_sibling ())
+                    update_stack_pages ((Gtk.Stack) child);
             }
+            _first_items_changed = false;
         }
 
         private void on_music_changed (Music? music) {
@@ -483,7 +487,21 @@ namespace G4 {
             var prev = child.get_prev_sibling ();
             if (prev != null)
                 stack.visible_child = (!)prev;
-            run_timeout_once (stack.transition_duration, () => stack.remove (child));
+            if (stack.transition_type == Gtk.StackTransitionType.NONE)
+                stack.remove (child);
+            else
+                run_timeout_once (stack.transition_duration, () => stack.remove (child));
+        }
+
+        private void update_stack_pages (Gtk.Stack stack) {
+            for (var child = stack.get_last_child (); child is MusicList; child = child?.get_prev_sibling ()) {
+                var mlist = (MusicList) child;
+                if (mlist.update_store () == 0) {
+                    stack.transition_type = Gtk.StackTransitionType.NONE;
+                    remove_stack_child (stack, mlist);
+                    stack.transition_type = Gtk.StackTransitionType.SLIDE_LEFT_RIGHT;
+                }
+            }
         }
     }
 

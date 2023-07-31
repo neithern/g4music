@@ -10,19 +10,33 @@ namespace G4 {
         public const uint MAX = 5;
     }
 
-    public class Album : Object {
+    public class MusicNode : Object {
         protected Music? _cover_music = null;
         public string name;
-        public HashTable<unowned string, Music> musics = new HashTable<unowned string, Music> (str_hash, str_equal);
 
-        public Album (string name) {
+        public MusicNode (string name) {
             this.name = name;
         }
 
-        public unowned Music cover_music {
+        public Music cover_music {
             get {
-                return _cover_music ?? musics.find ((name, music) => true);
+                return _cover_music ?? get_first_music ();
             }
+        }
+
+        public virtual void get_sorted (ListStore store) {
+        }
+
+        protected virtual Music get_first_music () {
+            return new Music.empty ();
+        }
+    }
+
+    public class Album : MusicNode {
+        public HashTable<unowned string, Music> musics = new HashTable<unowned string, Music> (str_hash, str_equal);
+
+        public Album (string name) {
+            base (name);
         }
 
         public uint length {
@@ -44,6 +58,10 @@ namespace G4 {
             musics.foreach (func);
         }
 
+        public override void get_sorted (ListStore store) {
+            get_sorted_musics (store);
+        }
+
         public void get_sorted_musics (ListStore store, uint insert_pos = 0) {
             var arr = new GenericArray<Music> (musics.length);
             musics.foreach ((name, music) => arr.add (music));
@@ -55,24 +73,20 @@ namespace G4 {
             return musics.steal (music.uri);
         }
 
+        protected override Music get_first_music () {
+            return musics.find ((name, music) => true);
+        }
+
         protected virtual void sort (GenericArray<Music> arr) {
             arr.sort (Music.compare_by_album);
         }
     }
 
-    public class Artist : Object {
-        private Music? _cover_music = null;
+    public class Artist : MusicNode {
         public HashTable<unowned string, Album> albums = new HashTable<unowned string, Album> (str_hash, str_equal);
-        public string name = "";
 
         public Artist (string name) {
-            this.name = name;
-        }
-
-        public unowned Music cover_music {
-            get {
-                return _cover_music ?? (!)albums.find ((name, album) => true).cover_music;
-            }
+            base (name);
         }
 
         public uint length {
@@ -98,7 +112,7 @@ namespace G4 {
             albums.foreach (func);
         }
 
-        public void get_sorted_albums (ListStore store) {
+        public override void get_sorted (ListStore store) {
             var arr = new GenericArray<Music> (albums.length);
             albums.foreach ((name, album) => arr.add (album.cover_music));
             arr.sort (Music.compare_by_album);
@@ -107,6 +121,10 @@ namespace G4 {
 
         public bool remove_music (Music music) {
             return albums.foreach_steal ((name, album) => album.remove_music (music) && album.length == 0) > 0;
+        }
+
+        protected override Music get_first_music () {
+            return albums.find ((name, album) => true).cover_music;
         }
     }
 
