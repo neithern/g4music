@@ -159,9 +159,7 @@ namespace G4 {
             _playlist_stack.bind_property ("visible-child", this, "visible-child", BindingFlags.DEFAULT);
             stack_view.transition_type = Gtk.StackTransitionType.SLIDE_LEFT_RIGHT;
             stack_view.bind_property ("visible-child", this, "visible-child", BindingFlags.DEFAULT);
-            if (_library_path != null && _library.albums.length > 0 && _album_stack.pages.get_n_items () == 1) {
-                locate_to_library_path ();
-            }
+            init_library_view ();
         }
 
         public void size_to_change (int panel_width) {
@@ -347,6 +345,21 @@ namespace G4 {
             }
         }
 
+        private void init_library_view () {
+            if (_library.playlists.length > 0 && _playlist_stack.get_parent () == null) {
+                stack_view.add_titled (_playlist_stack, "playlists", _("Playlists")).icon_name = "view-list-symbolic";
+                _switch_bar.update_buttons ();
+                _switch_bar2.update_buttons ();
+            } else if (_library.playlists.length == 0 && _playlist_stack.get_parent () != null) {
+                remove_stack_child (stack_view, _playlist_stack);
+                _switch_bar.update_buttons ();
+                _switch_bar2.update_buttons ();
+            }
+            if (_library_path != null && _library.albums.length > 0 && _album_stack.pages.get_n_items () == 1) {
+                locate_to_library_path ();
+            }
+        }
+
         private void locate_to_library_path () {
             var length = _library_path?.length ?? 0;
             if (length > 0) {
@@ -417,20 +430,7 @@ namespace G4 {
 
         private void on_music_batch_changed () {
             _library.get_sorted (_album_list.data_store, _artist_list.data_store, _playlist_list.data_store);
-
-            if (_playlist_list.data_store.get_n_items () > 0 && _playlist_stack.get_parent () == null) {
-                stack_view.add_titled (_playlist_stack, "playlists", _("Playlists")).icon_name = "view-list-symbolic";
-                _switch_bar.update_buttons ();
-                _switch_bar2.update_buttons ();
-            } else if (_playlist_list.data_store.get_n_items () == 0 && _playlist_stack.get_parent () != null) {
-                stack_view.remove (_playlist_stack);
-                _switch_bar.update_buttons ();
-                _switch_bar2.update_buttons ();
-            }
-
-            if (_library_path != null && _library.albums.length > 0 && _album_stack.pages.get_n_items () == 1) {
-                locate_to_library_path ();
-            }
+            init_library_view ();
         }
 
         private void on_music_changed (Music? music) {
