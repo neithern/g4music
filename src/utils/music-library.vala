@@ -216,8 +216,8 @@ namespace G4 {
             }
             added |= artist.add_music (music);
 
-            if (music.album_artist.length > 0) {
-                unowned var artist_name2 = music.album_artist;
+            unowned var artist_name2 = music.album_artist;
+            if (artist_name2.length > 0 && artist_name2 != artist_name) {
                 Artist artist2;
                 if (!_artists.lookup_extended (artist_name2, out key, out artist2)) {
                     artist2 = new Artist (artist_name2);
