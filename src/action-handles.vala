@@ -31,17 +31,17 @@ namespace G4 {
 
             ActionEntry[] action_entries = {
                 { ACTION_ABOUT, show_about },
-                { ACTION_EXPORT_COVER, export_cover, "as" },
+                { ACTION_EXPORT_COVER, export_cover, "aay" },
                 { ACTION_NEXT, () => _app.play_next () },
-                { ACTION_PLAY, play, "as" },
-                { ACTION_PLAY_AT_NEXT, play_at_next, "as" },
+                { ACTION_PLAY, play, "aay" },
+                { ACTION_PLAY_AT_NEXT, play_at_next, "aay" },
                 { ACTION_PLAY_PAUSE, () => _app.play_pause () },
                 { ACTION_PREV, () => _app.play_previous () },
                 { ACTION_PREFS, show_preferences },
                 { ACTION_RELOAD, () => _app.reload_library () },
-                { ACTION_SEARCH, search_by, "as" },
-                { ACTION_SHOW_COVER_FILE, show_cover_file, "as" },
-                { ACTION_SHOW_MUSIC_FILE, show_music_file, "as" },
+                { ACTION_SEARCH, search_by, "aay" },
+                { ACTION_SHOW_COVER_FILE, show_cover_file, "aay" },
+                { ACTION_SHOW_MUSIC_FILE, show_music_file, "aay" },
                 { ACTION_SORT, sort_by, "s", "'2'" },
                 { ACTION_TOGGLE_SEARCH, toggle_search },
                 { ACTION_TOGGLE_SORT, toggle_sort },
@@ -120,7 +120,7 @@ namespace G4 {
         }
 
         private unowned string? _parse_uri_form_parameter (Variant? parameter) {
-            unowned var strv = parameter?.get_strv ();
+            unowned var strv = parameter?.get_bytestring_array ();
             if (strv != null && ((!)strv).length > 1) {
                 var arr = (!)strv;
                 return arr[0] == "uri" ? (string?) arr[1] : null;
@@ -129,7 +129,7 @@ namespace G4 {
         }
 
         private Object? _parse_music_node_form_parameter (Variant? parameter) {
-            unowned var strv = parameter?.get_strv ();
+            unowned var strv = parameter?.get_bytestring_array ();
             if (strv != null && ((!)strv).length > 1) {
                 var arr = (!)strv;
                 var loader = _app.loader;
@@ -165,7 +165,7 @@ namespace G4 {
         }
 
         private void search_by (SimpleAction action, Variant? parameter) {
-            unowned var strv = parameter?.get_strv ();
+            unowned var strv = parameter?.get_bytestring_array ();
             var mode = SearchMode.ANY;
             if (strv != null && ((!)strv).length > 1) {
                 var arr = (!)strv;

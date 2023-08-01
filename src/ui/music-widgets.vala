@@ -255,7 +255,7 @@ namespace G4 {
 
     public MenuItem create_menu_item_for_strv (string[] strv, string label, string action) {
         var item = new MenuItem (label, null);
-        item.set_action_and_target_value (action, new Variant.strv (strv));
+        item.set_action_and_target_value (action, new Variant.bytestring_array (strv));
         return item;
     }
 
