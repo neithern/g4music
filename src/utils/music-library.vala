@@ -117,7 +117,7 @@ namespace G4 {
             Album album;
             unowned var album_key = music.album_key;
             if (!albums.lookup_extended (album_key, out key, out album)) {
-                album = new Album (music.album);
+                album = new Album (music.get_album_and_year ());
                 albums[album_key] = album;
             }
             return album.add_music (music);
@@ -158,7 +158,7 @@ namespace G4 {
             var music = cover_music;
             _cover_music = new Music.titled (name, music.uri);
             ((!)_cover_music).cover_key = music.cover_key;
-            ((!)_cover_music).album = uri;
+            ((!)_cover_music).album_key = uri;
         }
 
         protected override Music get_first_cover_music () {
@@ -203,7 +203,7 @@ namespace G4 {
             unowned var album_key = music.album_key;
             Album album;
             if (!_albums.lookup_extended (album_key, out key, out album)) {
-                album = new Album (music.album);
+                album = new Album (music.get_album_and_year ());
                 _albums[album_key] = album;
             }
             var added = album.add_music (music);

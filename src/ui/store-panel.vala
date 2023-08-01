@@ -281,7 +281,7 @@ namespace G4 {
         private MusicList create_playlist_list () {
             var list = new MusicList (_app, true);
             list.item_activated.connect ((position, obj) => {
-                var uri = (obj as Music)?.album ?? "";
+                var uri = (obj as Music)?.album_key ?? "";
                 var playlist = _library.playlists[uri];
                 if (playlist is Playlist) {
                     create_sub_stack_page (null, playlist);
@@ -295,20 +295,21 @@ namespace G4 {
                 var cell = (MusicCell) item.child;
                 var music = (Music) item.item;
                 cell.paintable = _loading_paintable;
-                cell.playlist_name = music.album;
+                cell.playlist_name = music.album_key;
                 cell.title = music.title;
             });
             return list;
         }
 
         private void create_sub_stack_page (Artist? artist = null, Album? album = null) {
-            var stack = artist != null ? _artist_stack : ((album is Playlist) ? _playlist_stack : _album_stack);
             var album_mode = album != null;
-            var mlist = album_mode ? create_music_list ((!)album, artist != null) : create_album_list (artist);
+            var artist_mode = artist != null;
+            var playlist_mode = album is Playlist;
+            var mlist = album_mode ? create_music_list ((!)album, artist_mode) : create_album_list (artist);
             mlist.create_factory ();
 
-            var name = (album_mode ? album?.cover_music?.get_album_and_year () : artist?.name) ?? "";
-            var label = new Gtk.Label (name);
+            var title = album_mode ? album?.name : artist?.name;
+            var label = new Gtk.Label (title);
             label.ellipsize = Pango.EllipsizeMode.END;
             var header = new Adw.HeaderBar ();
             header.show_end_title_buttons = false;
@@ -316,22 +317,25 @@ namespace G4 {
             header.add_css_class ("flat");
             mlist.prepend (header);
 
+            var stack = artist_mode ? _artist_stack : playlist_mode ? _playlist_stack : _album_stack;
             var back_btn = new Gtk.Button.from_icon_name ("go-previous-symbolic");
             back_btn.tooltip_text = _("Back");
             back_btn.clicked.connect (() => remove_stack_child (stack, mlist));
             header.pack_start (back_btn);
 
+            var album_key = album?.cover_music?.album_key;
             if (album_mode) {
                 var cell = new MusicCell ();
-                cell.album_name = album?.name;
+                cell.album_name = playlist_mode ? null : album_key;
                 cell.artist_name = artist?.name;
+                cell.playlist_name = playlist_mode ? album_key : null;
                 var menu_btn = new Gtk.MenuButton ();
                 menu_btn.icon_name = "view-more-symbolic";
                 menu_btn.menu_model = cell.create_item_menu ();
                 header.pack_end (menu_btn);
             }
 
-            stack.add_titled (mlist, (album is Playlist) ? ((Playlist) album).uri : name, name);
+            stack.add_titled (mlist, album_mode ? album_key : artist?.name, title ?? "");
             stack.visible_child = mlist;
         }
 

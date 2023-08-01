@@ -61,6 +61,9 @@ namespace G4 {
             get {
                 return _album_key;
             }
+            set {
+                _album_key = value;
+            }
         }
 
         public unowned string cover_key {
@@ -225,7 +228,7 @@ namespace G4 {
         }
 
         private void update_album_key () {
-            _album_key = album.collate_key_for_filename () + album_artist.collate_key_for_filename () + year.to_string ();
+            _album_key = (album + date.to_string () + album_artist).collate_key_for_filename ();
         }
 
         public static int compare_by_album (Music s1, Music s2) {
