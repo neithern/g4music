@@ -54,7 +54,9 @@ namespace G4 {
         while ((str = dis.read_line_utf8 (out length)) != null) {
             var uri = (!)str;
             if (length > 0 && uri[0] != '#') {
-                uris.add (parse_relative_uri (uri, parent));
+                var abs_uri = parse_relative_uri (uri, parent);
+                if (abs_uri != null)
+                    uris.add ((!)abs_uri);
             }
         }
         return get_file_display_name (file);
@@ -77,7 +79,9 @@ namespace G4 {
             } else if (list_found && (pos = line.index_of_char ('=')) > 0) {
                 if (line.has_prefix ("File")) {
                     var uri = line.substring (pos + 1).strip ();
-                    uris.add (parse_relative_uri (uri, parent));
+                    var abs_uri = parse_relative_uri (uri, parent);
+                    if (abs_uri != null)
+                        uris.add ((!)abs_uri);
                 } else if (line.ascii_ncasecmp ("X-GNOME-Title", pos) == 0) {
                     var title = line.substring (pos + 1).strip ();
                     if (title.length > 0)
@@ -88,12 +92,13 @@ namespace G4 {
         return name;
     }
 
-    public string parse_relative_uri (string uri, File? parent = null) {
+    public string? parse_relative_uri (string uri, File? parent = null) {
         if (uri.length > 0 && uri[0] == '/') {
             return File.new_for_path (uri).get_uri ();
         } else if (is_valid_uri (uri)) {
-            return uri;
+            //  Native files only
+            return uri.has_prefix ("file://") ? (string?) uri : null;
         }
-        return parent?.resolve_relative_path (uri)?.get_uri () ?? uri;
+        return parent?.resolve_relative_path (uri)?.get_uri ();
     }
 }
