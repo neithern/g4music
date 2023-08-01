@@ -13,19 +13,19 @@ namespace G4 {
             _length = bytes.length;
         }
 
-        public uint8 read_byte () throws IOError {
+        public inline uint8 read_byte () throws IOError {
             if (_pos + 1 > _length)
                 throw new IOError.INVALID_ARGUMENT (@"Pos:$_pos+1>$_length");
             return _data[_pos++];
         }
 
-        public uint16 read_uint16 () throws IOError {
+        public inline uint16 read_uint16 () throws IOError {
             if (_pos + 2 > _length)
                 throw new IOError.INVALID_ARGUMENT (@"Pos:$_pos+2>$_length");
             return ((uint16) (_data[_pos++]) << 8) | _data[_pos++];
         }
 
-        public uint32 read_uint32 () throws IOError {
+        public inline uint32 read_uint32 () throws IOError {
             if (_pos + 4 > _length)
                 throw new IOError.INVALID_ARGUMENT (@"Pos:$_pos+4>$_length");
             return ((uint32) (_data[_pos++]) << 24)
@@ -34,7 +34,7 @@ namespace G4 {
                 | _data[_pos++];
         }
 
-        public uint64 read_uint64 () throws IOError {
+        public inline uint64 read_uint64 () throws IOError {
             uint64 hi = read_uint32 ();
             uint64 lo = read_uint32 ();
             return (hi << 32) | lo;
@@ -78,18 +78,18 @@ namespace G4 {
             _bytes = new ByteArray.sized (reserved_size);
         }
 
-        public void write_byte (uint8 n) {
+        public inline void write_byte (uint8 n) {
             _data[0] = n;
             _bytes.append (_data[0:1]);
         }
 
-        public void write_uint16 (uint16 n) {
+        public inline void write_uint16 (uint16 n) {
             _data[0] = (uint8) (n >> 8);
             _data[1] = (uint8) (n);
             _bytes.append (_data[0:2]);
         }
 
-        public void write_uint32 (uint32 n) {
+        public inline void write_uint32 (uint32 n) {
             _data[0] = (uint8) (n >> 24);
             _data[1] = (uint8) (n >> 16);
             _data[2] = (uint8) (n >> 8);
@@ -97,7 +97,7 @@ namespace G4 {
             _bytes.append (_data[0:4]);
         }
 
-        public void write_uint64 (uint64 n) {
+        public inline void write_uint64 (uint64 n) {
             var hi = (uint32) (n >> 32);
             var lo = (uint32) (n);
             write_uint32 (hi);

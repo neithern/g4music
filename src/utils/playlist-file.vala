@@ -23,7 +23,8 @@ namespace G4 {
 
     public bool is_valid_uri (string uri, UriFlags flags = UriFlags.NONE) {
         try {
-            return Uri.is_valid (uri, flags);        } catch (Error e) {
+            return Uri.is_valid (uri, flags);
+        } catch (Error e) {
         }
         return false;
     }

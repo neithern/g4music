@@ -99,38 +99,38 @@ namespace G4 {
             || t.get_tag_size (Gst.Tags.IMAGE) > 0;
     }
 
-    public static uint8[] new_uint8_array (uint size) throws Error {
+    public inline uint8[] new_uint8_array (uint size) throws Error {
         if ((int) size <= 0 || size > 0xfffffff) // 28 bits
             throw new IOError.INVALID_ARGUMENT ("invalid size");
         return new uint8[size];
     }
 
-    public static void read_full (BufferedInputStream stream, uint8[] buffer) throws Error {
+    public inline void read_full (BufferedInputStream stream, uint8[] buffer) throws Error {
         size_t bytes = 0;
         if (! stream.read_all (buffer, out bytes) || bytes != buffer.length)
             throw new IOError.FAILED ("read_all");
     }
 
-    public static void seek_full (BufferedInputStream stream, int64 offset, SeekType type = SeekType.CUR) throws Error {
+    public inline void seek_full (BufferedInputStream stream, int64 offset, SeekType type = SeekType.CUR) throws Error {
         if (! stream.seek (offset, type))
             throw new IOError.FAILED ("seek");
     }
 
-    public static uint32 read_uint32_be (uint8[] data, uint pos = 0) {
+    public inline uint32 read_uint32_be (uint8[] data, uint pos = 0) {
         return data[pos + 3]
             | ((uint32) (data[pos+2]) << 8)
             | ((uint32) (data[pos+1]) << 16)
             | ((uint32) (data[pos]) << 24);
     }
 
-    public static uint32 read_uint32_le (uint8[] data, uint pos = 0) {
+    public inline uint32 read_uint32_le (uint8[] data, uint pos = 0) {
         return data[pos]
             | ((uint32) (data[pos+1]) << 8)
             | ((uint32) (data[pos+2]) << 16)
             | ((uint32) (data[pos+3]) << 24);
     }
 
-    public static uint32 read_decimal_uint (uint8[] data) {
+    public inline uint32 read_decimal_uint (uint8[] data) {
         uint32 n = 0;
         for (var i = 0; i < data.length; i++) {
             n = n * 10 + (data[i] - '0');
