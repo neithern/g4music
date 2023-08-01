@@ -414,7 +414,10 @@ namespace G4 {
         public void reload_library () {
             if (!_loading) {
                 _loader.remove_all ();
-                load_files_async.begin ({}, (obj, res) => current_item = load_files_async.end (res));
+                load_files_async.begin ({}, (obj, res) => {
+                    var item = load_files_async.end (res);
+                    run_idle_once (() => current_item = item);
+                });
             }
         }
 
