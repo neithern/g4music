@@ -111,12 +111,14 @@ namespace G4 {
         var music_dir = File.new_for_uri (app.music_folder);
 #if GTK_4_10
         var dialog = new Gtk.FileDialog ();
-        dialog.initial_file = music_dir;
+        dialog.initial_folder = music_dir;
         dialog.modal = true;
         try {
             var dir = yield dialog.select_folder (parent, null);
-            if (dir != null && dir != music_dir) {
-                app.music_folder = ((!)dir).get_uri ();
+            if (dir != null) {
+                var uri = ((!)dir).get_uri ();
+                if (app.music_folder != uri)
+                    app.music_folder = uri;
                 picked ((!)dir);
             }
         } catch (Error e) {
@@ -132,8 +134,10 @@ namespace G4 {
         chooser.response.connect ((id) => {
             if (id == Gtk.ResponseType.ACCEPT) {
                 var dir = chooser.get_file ();
-                if (dir is File && dir != music_dir) {
-                    app.music_folder = ((!)dir).get_uri ();
+                if (dir != null) {
+                    var uri = ((!)dir).get_uri ();
+                    if (app.music_folder != uri)
+                        app.music_folder = uri;
                     picked ((!)dir);
                 }
             }
