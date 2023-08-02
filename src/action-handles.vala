@@ -11,8 +11,7 @@ namespace G4 {
     public const string ACTION_NEXT = "next";
     public const string ACTION_RELOAD = "reload";
     public const string ACTION_SEARCH = "search";
-    public const string ACTION_SHOW_COVER_FILE = "show-cover-file";
-    public const string ACTION_SHOW_MUSIC_FILE = "show-music-file";
+    public const string ACTION_SHOW_FILE = "show-file";
     public const string ACTION_SORT = "sort";
     public const string ACTION_TOGGLE_SEARCH = "toggle-earch";
     public const string ACTION_TOGGLE_SORT = "toggle-sort";
@@ -40,8 +39,7 @@ namespace G4 {
                 { ACTION_PREFS, show_preferences },
                 { ACTION_RELOAD, () => _app.reload_library () },
                 { ACTION_SEARCH, search_by, "aay" },
-                { ACTION_SHOW_COVER_FILE, show_cover_file, "aay" },
-                { ACTION_SHOW_MUSIC_FILE, show_music_file, "aay" },
+                { ACTION_SHOW_FILE, show_file, "aay" },
                 { ACTION_SORT, sort_by, "s", "'2'" },
                 { ACTION_TOGGLE_SEARCH, toggle_search },
                 { ACTION_TOGGLE_SORT, toggle_sort },
@@ -208,12 +206,7 @@ namespace G4 {
 #endif
         }
 
-        private void show_cover_file (SimpleAction action, Variant? parameter) {
-            var music = _get_music_from_parameter (parameter);
-            _app.show_uri_with_portal (music?.cover_uri);
-        }
-
-        private void show_music_file (SimpleAction action, Variant? parameter) {
+        private void show_file (SimpleAction action, Variant? parameter) {
             var uri = _parse_uri_form_parameter (parameter);
             _app.show_uri_with_portal (uri);
         }

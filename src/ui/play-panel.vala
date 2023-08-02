@@ -225,7 +225,7 @@ namespace G4 {
                 var music = (!)_app.current_music;
                 var menu = create_menu_for_music (music);
                 if (music.cover_uri != null) {
-                    menu.append_item (create_menu_item_for_uri (music.uri, _("Show _Cover File"), ACTION_APP + ACTION_SHOW_COVER_FILE));
+                    menu.append_item (create_menu_item_for_uri ((!)music.cover_uri, _("Show _Cover File"), ACTION_APP + ACTION_SHOW_FILE));
                 } else if (_app.current_cover != null) {
                     menu.append_item (create_menu_item_for_uri (music.uri, _("_Export Cover"), ACTION_APP + ACTION_EXPORT_COVER));
                 }

@@ -239,7 +239,7 @@ namespace G4 {
                     menu.prepend_item (create_menu_item_for_uri (music.uri, _("Play"), ACTION_APP + ACTION_PLAY));
                 }
                 if (music.cover_uri != null) {
-                    menu.append_item (create_menu_item_for_uri (music.uri, _("Show _Cover File"), ACTION_APP + ACTION_SHOW_COVER_FILE));
+                    menu.append_item (create_menu_item_for_uri ((!)music.cover_uri, _("Show _Cover File"), ACTION_APP + ACTION_SHOW_FILE));
                 } else if (app.thumbnailer.find (music) is Gdk.Texture) {
                     menu.append_item (create_menu_item_for_uri (music.uri, _("_Export Cover"), ACTION_APP + ACTION_EXPORT_COVER));
                 }
@@ -262,8 +262,9 @@ namespace G4 {
     public Menu create_menu_for_album (Album album) {
         unowned var album_artist = album.album_artist;
         unowned var album_key = album.album_key;
+        var is_playlist = album is Playlist;
         string[] strv;
-        if (album is Playlist)
+        if (is_playlist)
             strv = {"playlist", album_key};
         else if (album_artist.length > 0)
             strv = {"artist", album_artist, album_key};
@@ -272,6 +273,8 @@ namespace G4 {
         var menu = new Menu ();
         menu.append_item (create_menu_item_for_strv (strv, _("Play"), ACTION_APP + ACTION_PLAY));
         menu.append_item (create_menu_item_for_strv (strv, _("Play at Next"), ACTION_APP + ACTION_PLAY_AT_NEXT));
+        if (is_playlist)
+            menu.append_item (create_menu_item_for_uri (((Playlist) album).list_uri, _("Show List File"), ACTION_APP + ACTION_SHOW_FILE));
         return menu;
     }
 
@@ -280,7 +283,7 @@ namespace G4 {
         menu.append_item (create_menu_item_for_strv ({"title", music.title}, _("Search Title"), ACTION_APP + ACTION_SEARCH));
         menu.append_item (create_menu_item_for_strv ({"album", music.album}, _("Search Album"), ACTION_APP + ACTION_SEARCH));
         menu.append_item (create_menu_item_for_strv ({"artist", music.artist}, _("Search Artist"), ACTION_APP + ACTION_SEARCH));
-        menu.append_item (create_menu_item_for_uri (music.uri, _("_Show Music File"), ACTION_APP + ACTION_SHOW_MUSIC_FILE));
+        menu.append_item (create_menu_item_for_uri (music.uri, _("_Show Music File"), ACTION_APP + ACTION_SHOW_FILE));
         return menu;
     }
 
