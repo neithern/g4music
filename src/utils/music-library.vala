@@ -158,7 +158,13 @@ namespace G4 {
             this.items = items;
             this.list_uri = uri;
             Music.original_order (items);
-            items.foreach ((music) => add_music (music));
+            items.foreach ((music) => {
+                musics.insert (music.uri, music);
+                if (!has_cover && music.has_cover) {
+                    has_cover = true;
+                    this.uri = music.uri;
+                }
+            });
         }
 
         protected override void sort (GenericArray<Music> arr) {

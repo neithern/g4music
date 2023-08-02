@@ -40,23 +40,6 @@ namespace G4 {
             _title_key = title.collate_key_for_filename ();
         }
 
-        public Music.with_album_artist (Music src) {
-            album = src.album;
-            artist = src.album_artist;
-            title = src.title;
-            has_cover = src.has_cover;
-            modified_time = src.modified_time;
-            uri = src.uri;
-
-            date = src.date;
-            genre = src.genre;
-            track = src.track;
-
-            update_album_key ();
-            _artist_key = artist.collate_key_for_filename ();
-            _title_key = title.collate_key_for_filename ();
-        }
-
         public unowned string album_key {
             get {
                 return _album_key;
