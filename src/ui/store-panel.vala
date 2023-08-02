@@ -321,12 +321,17 @@ namespace G4 {
             back_btn.clicked.connect (() => remove_stack_child (stack, mlist));
             header.pack_start (back_btn);
 
-            var cell = new MusicCell ();
-            cell.music = album_mode ? (Music?) album : (Music?) artist;
-            var menu_btn = new Gtk.MenuButton ();
-            menu_btn.icon_name = "view-more-symbolic";
-            menu_btn.menu_model = cell.create_item_menu ();
-            header.pack_end (menu_btn);
+            var button = new Gtk.Button.from_icon_name ("media-playback-start-symbolic");
+            button.tooltip_text = _("Play");
+            button.clicked.connect (() => {
+                string[] strv;
+                if (album_mode)
+                    strv = build_action_target_for_album ((!)album);
+                else
+                    strv = { PageName.ARTIST, artist?.name ?? "" };
+                _app.activate_action (ACTION_PLAY, new Variant.bytestring_array (strv));
+            });
+            header.pack_end (button);
 
             stack.add_titled (mlist, album_mode ? album?.album_key : artist?.name, title ?? "");
             stack.visible_child = mlist;
