@@ -31,6 +31,7 @@ namespace G4 {
         private RoundPaintable _round_paintable = new RoundPaintable ();
         private bool _rotate_cover = true;
         private bool _show_peak = true;
+        private bool _size_allocated = false;
 
         public signal void cover_changed (Music? music, CrossFadePaintable cover);
 
@@ -97,6 +98,7 @@ namespace G4 {
 
         public void size_allocated () {
             // Delay update info after the window size allocated to avoid showing slowly
+            _size_allocated = true;
             if (_current_music != _app.current_music) {
                 update_music_info (_app.current_music);
             }
@@ -117,7 +119,9 @@ namespace G4 {
         private Music? _current_music = new Music.empty ();
 
         private void on_music_changed (Music? music) {
-            update_music_info (music);
+            if (_size_allocated) {
+                update_music_info (music);
+            }
             root.action_set_enabled (ACTION_APP + ACTION_PLAY_PAUSE, music != null);
         }
 

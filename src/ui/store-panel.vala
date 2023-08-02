@@ -50,6 +50,7 @@ namespace G4 {
         private Gdk.Paintable _loading_paintable;
         private uint _search_mode = SearchMode.ANY;
         private string _search_text = "";
+        private bool _size_allocated = false;
         private uint _sort_mode = 0;
 
         public StorePanel (Application app, Window win, Adw.Leaflet leaflet) {
@@ -68,9 +69,7 @@ namespace G4 {
 
             _current_list = _playing_list = create_playing_music_list ();
             _playing_list.data_store = _app.music_store;
-            _app.music_list = _playing_list.filter_model;
             stack_view.add_titled (_playing_list, PageName.PLAYING, _("Playing")).icon_name = "media-playback-start-symbolic";
-            stack_view.visible_child = _playing_list;
 
             _artist_list = create_artist_list ();
             _artist_stack.add_named (_artist_list, "artist");
@@ -159,6 +158,7 @@ namespace G4 {
             _playlist_stack.bind_property ("visible-child", this, "visible-child", BindingFlags.DEFAULT);
             stack_view.transition_type = Gtk.StackTransitionType.SLIDE_LEFT_RIGHT;
             stack_view.bind_property ("visible-child", this, "visible-child", BindingFlags.DEFAULT);
+            _size_allocated = true;
             initialize_library_view ();
         }
 
@@ -359,7 +359,7 @@ namespace G4 {
                 _switch_bar.update_buttons ();
                 _switch_bar2.update_buttons ();
             }
-            if (_library_path != null && _library.albums.length > 0 && _album_stack.pages.get_n_items () == 1) {
+            if (_library_path != null && _library.albums.length > 0) {
                 locate_to_path ((!)_library_path, null, true);
                 _library_path = null;
             }
@@ -436,7 +436,9 @@ namespace G4 {
 
         private void on_music_batch_changed () {
             _library.get_sorted (_album_list.data_store, _artist_list.data_store, _playlist_list.data_store);
-            initialize_library_view ();
+            if (_size_allocated) {
+                initialize_library_view ();
+            }
         }
 
         private void on_music_changed (Music? music) {
