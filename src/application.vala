@@ -345,7 +345,10 @@ namespace G4 {
                 album.get_sorted_musics (store, insert_pos);
                 _list_modified = true;
                 if (immediately) {
-                    current_music = store.get_item (insert_pos) as Music;
+                    if (album.musics.contains (_current_uri))
+                        _player.play ();
+                    else
+                        current_music = store.get_item (insert_pos) as Music;
                     update_current_item ();
                 }
             } else if (obj is Music) {
