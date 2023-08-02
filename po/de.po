@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-26 21:16+0800\n"
-"PO-Revision-Date: 2023-07-23 19:47+0200\n"
+"POT-Creation-Date: 2023-08-02 19:24+0800\n"
+"PO-Revision-Date: 2023-08-02 14:31+0200\n"
 "Last-Translator: Jürgen Benvenuti <gastornis@posteo.org>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "Language: de\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.3.1\n"
 
-#: data/app.desktop.in:3 src/application.vala:225 src/main.vala:24
+#: data/app.desktop.in:3 src/application.vala:230 src/main.vala:24
 msgid "G4Music"
 msgstr "G4Music"
 
@@ -33,8 +33,8 @@ msgstr "Musik wiedergeben"
 #: data/app.desktop.in:12
 msgid "music;sound;player;media;audio;playlist;"
 msgstr ""
-"music;sound;player;media;audio;playlist;Musik;Klang;Wiedergabe;Medien;Audio;"
-"Wiedergabeliste;"
+"music;sound;player;media;audio;playlist;Musik;Klang;Wiedergabe;Medien;"
+"Audio;Wiedergabeliste;"
 
 #: src/gtk/help-overlay.ui:11
 msgctxt "shortcut window"
@@ -96,7 +96,7 @@ msgctxt "shortcut window"
 msgid "Reload Library"
 msgstr "Bibliothek neu laden"
 
-#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:290
+#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:319
 msgid "Back"
 msgstr "Zurück"
 
@@ -116,7 +116,7 @@ msgstr "Hintergrund weichzeichnen"
 msgid "Compact playlist view"
 msgstr "Kompaktansicht der Wiedergabeliste"
 
-#: src/gtk/preferences.ui:44 src/application.vala:424
+#: src/gtk/preferences.ui:44 src/application.vala:426
 msgid "Keep playing after window closed"
 msgstr "Musik weiterspielen nach dem Schließen des Fensters"
 
@@ -220,50 +220,54 @@ msgstr "Zuletzt gespielt"
 msgid "Shuffle"
 msgstr "Durchmischen"
 
-#: src/action-handles.vala:188
+#: src/action-handles.vala:178
 msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr ""
 "Eine schnelle, geschmeidige, leichtgewichtige Musikwiedergabe, geschrieben "
 "in GTK4."
 
 #. Translators: Replace "translator-credits" with your names, one name per line
-#: src/action-handles.vala:190
+#: src/action-handles.vala:180
 msgid "translator-credits"
 msgstr "Jürgen Benvenuti <gastornis@posteo.org>, 2022, 2023"
 
-#: src/application.vala:573
+#: src/application.vala:602
 msgid "Keep playing"
 msgstr "Musik weiterspielen"
 
-#: src/ui/music-widgets.vala:232 src/ui/music-widgets.vala:260
+#: src/ui/music-widgets.vala:238 src/ui/music-widgets.vala:275
 msgid "Play at Next"
 msgstr "Als Nächstes wiedergeben"
 
-#: src/ui/music-widgets.vala:233 src/ui/music-widgets.vala:259
+#: src/ui/music-widgets.vala:239 src/ui/music-widgets.vala:274
 msgid "Play"
 msgstr "Wiedergeben"
 
-#: src/ui/music-widgets.vala:236 src/ui/play-panel.vala:222
+#: src/ui/music-widgets.vala:242 src/ui/play-panel.vala:228
 msgid "Show _Cover File"
 msgstr "Album_bild-Datei anzeigen"
 
-#: src/ui/music-widgets.vala:238 src/ui/play-panel.vala:224
+#: src/ui/music-widgets.vala:244 src/ui/play-panel.vala:230
 msgid "_Export Cover"
 msgstr "Albumbild expo_rtieren"
 
-#: src/ui/music-widgets.vala:266 src/ui/play-panel.vala:56
+#: src/ui/music-widgets.vala:277
+msgid "Show List File"
+msgstr "Listendatei anzeigen"
+
+#: src/ui/music-widgets.vala:283 src/ui/play-panel.vala:56
 msgid "Search Title"
 msgstr "Titel suchen"
 
-#: src/ui/music-widgets.vala:267 src/ui/play-panel.vala:54
+#: src/ui/music-widgets.vala:284 src/ui/play-panel.vala:54
 msgid "Search Album"
 msgstr "Album suchen"
 
-#: src/ui/music-widgets.vala:268 src/ui/play-panel.vala:55
+#: src/ui/music-widgets.vala:285 src/ui/play-panel.vala:55
 msgid "Search Artist"
 msgstr "Interpret suchen"
 
-#: src/ui/music-widgets.vala:269
+#: src/ui/music-widgets.vala:286
 msgid "_Show Music File"
 msgstr "Musikdatei _anzeigen"
 
@@ -284,7 +288,7 @@ msgstr "Wiedergabe/Pause"
 msgid "Play Next"
 msgstr "Den nächsten Titel wiedergeben"
 
-#: src/ui/play-panel.vala:263
+#: src/ui/play-panel.vala:271
 msgid ""
 "Drag and drop music files here,\n"
 "or change music location: "
@@ -308,17 +312,21 @@ msgstr "Nur mit Albumbild"
 msgid "Track"
 msgstr "Titel"
 
-#: src/ui/store-panel.vala:66
+#: src/ui/store-panel.vala:72
 msgid "Playing"
 msgstr "Aktuelle Wiedergabe"
 
-#: src/ui/store-panel.vala:72
+#: src/ui/store-panel.vala:78
 msgid "Artists"
 msgstr "Interpreten"
 
-#: src/ui/store-panel.vala:77
+#: src/ui/store-panel.vala:83
 msgid "Albums"
 msgstr "Alben"
+
+#: src/ui/store-panel.vala:351
+msgid "Playlists"
+msgstr "Wiedergabelisten"
 
 #: src/ui/volume-button.vala:32
 msgid "Volume: "
