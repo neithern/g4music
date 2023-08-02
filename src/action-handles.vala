@@ -126,22 +126,21 @@ namespace G4 {
             return null;
         }
 
-        private Object? _parse_music_node_form_parameter (Variant? parameter) {
-            unowned var strv = parameter?.get_bytestring_array ();
+        private Object? _parse_music_node_form_strv (string[]? strv) {
             if (strv != null && ((!)strv).length > 1) {
                 var arr = (!)strv;
                 var loader = _app.loader;
                 var library = loader.library;
                 unowned var key = arr[1];
                 switch (arr[0]) {
-                    case "album":
+                    case PageName.ALBUM:
                         return library.albums[key];
-                    case "artist":
+                    case PageName.ARTIST:
                         var artist = library.artists[key];
                         if ((artist is Artist) && arr.length > 2)
                             return ((Artist) artist).albums[arr[2]];
                         return artist;
-                    case "playlist":
+                    case PageName.PLAYLIST:
                         return library.playlists[key];
                     default:
                         return loader.find_cache (key);
@@ -151,21 +150,30 @@ namespace G4 {
         }
 
         private void play (SimpleAction action, Variant? parameter) {
-            var obj = _parse_music_node_form_parameter (parameter);
+            var strv = parameter?.get_bytestring_array ();
+            var obj = _parse_music_node_form_strv (strv);
+            if (obj is Artist) {
+                obj = ((Artist) obj).get_as_playlist ();
+            }
+            (_app.active_window as Window)?.open_page (strv, obj);
             _app.play (obj);
         }
 
         private void play_at_next (SimpleAction action, Variant? parameter) {
-            var obj = _parse_music_node_form_parameter (parameter);
+            var strv = parameter?.get_bytestring_array ();
+            var obj = _parse_music_node_form_strv (strv);
+            if (obj is Artist) {
+                obj = ((Artist) obj).get_as_playlist ();
+            }
             _app.play_at_next (obj);
         }
 
         private void search_by (SimpleAction action, Variant? parameter) {
-            unowned var strv = parameter?.get_bytestring_array ();
-            var mode = SearchMode.ANY;
+            var strv = parameter?.get_bytestring_array ();
             if (strv != null && ((!)strv).length > 1) {
                 var arr = (!)strv;
                 var text = arr[0] + ":";
+                var mode = SearchMode.ANY;
                 parse_search_mode (ref text, ref mode);
                 (_app.active_window as Window)?.start_search (arr[1], mode);
             }

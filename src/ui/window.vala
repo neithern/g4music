@@ -125,6 +125,10 @@ namespace G4 {
             base.snapshot (snapshot);
         }
 
+        public void open_page (string[] paths, Object? obj = null) {
+            _store_panel.locate_to_path (paths, obj);
+        }
+
         public void start_search (string text, uint mode = SearchMode.ANY) {
             _store_panel.start_search (text, mode);
             if (_leaflet.folded) {

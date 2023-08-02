@@ -1,5 +1,12 @@
 namespace G4 {
 
+    namespace PageName {
+        public const string ALBUM = "album";
+        public const string ARTIST = "artist";
+        public const string PLAYING = "playing";
+        public const string PLAYLIST = "playlist";
+    }
+
     public class StableLabel : Gtk.Widget {
         private Gtk.Label _label = new Gtk.Label (null);
 
@@ -251,6 +258,18 @@ namespace G4 {
         }
     }
 
+    public string[] build_action_target_for_album (Album album) {
+        unowned var album_artist = album.album_artist;
+        unowned var album_key = album.album_key;
+        var is_playlist = album is Playlist;
+        if (is_playlist)
+            return { PageName.PLAYLIST, album_key };
+        else if (album_artist.length > 0)
+            return { PageName.ARTIST, album_artist, album_key };
+        else
+            return { PageName.ALBUM, album_key };
+    }
+
     public MenuItem create_menu_item_for_strv (string[] strv, string label, string action) {
         var item = new MenuItem (label, null);
         item.set_action_and_target_value (action, new Variant.bytestring_array (strv));
@@ -262,16 +281,8 @@ namespace G4 {
     }
 
     public Menu create_menu_for_album (Album album) {
-        unowned var album_artist = album.album_artist;
-        unowned var album_key = album.album_key;
         var is_playlist = album is Playlist;
-        string[] strv;
-        if (is_playlist)
-            strv = {"playlist", album_key};
-        else if (album_artist.length > 0)
-            strv = {"artist", album_artist, album_key};
-        else
-            strv = {"album", album_key};
+        var strv = build_action_target_for_album (album);
         var menu = new Menu ();
         menu.append_item (create_menu_item_for_strv (strv, _("Play"), ACTION_APP + ACTION_PLAY));
         menu.append_item (create_menu_item_for_strv (strv, _("Play at Next"), ACTION_APP + ACTION_PLAY_AT_NEXT));
@@ -281,7 +292,7 @@ namespace G4 {
     }
 
     public Menu create_menu_for_artist (Artist artist) {
-        string[] strv = {"artist", artist.name};
+        string[] strv = { PageName.ARTIST, artist.name };
         var menu = new Menu ();
         menu.append_item (create_menu_item_for_strv (strv, _("Play"), ACTION_APP + ACTION_PLAY));
         menu.append_item (create_menu_item_for_strv (strv, _("Play at Next"), ACTION_APP + ACTION_PLAY_AT_NEXT));

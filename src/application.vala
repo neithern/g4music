@@ -327,10 +327,7 @@ namespace G4 {
             }
         }
 
-        public void play (owned Object? obj, bool immediately = true) {
-            if (obj is Artist) {
-                obj = ((Artist) obj).get_as_playlist ();
-            }
+        public void play (Object? obj, bool immediately = true) {
             if (obj is Album) {
                 var album = (Album) obj;
                 var store = _music_store;
@@ -366,11 +363,8 @@ namespace G4 {
             }
         }
 
-        public void play_at_next (owned Object? obj) {
+        public void play_at_next (Object? obj) {
             if (_current_music != null) {
-                if (obj is Artist) {
-                    obj = ((Artist) obj).get_as_playlist ();
-                }
                 rebind_current_item ();
                 if (obj is Album) {
                     var album = (Album) obj;
