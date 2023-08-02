@@ -159,7 +159,7 @@ namespace G4 {
             _playlist_stack.bind_property ("visible-child", this, "visible-child", BindingFlags.DEFAULT);
             stack_view.transition_type = Gtk.StackTransitionType.SLIDE_LEFT_RIGHT;
             stack_view.bind_property ("visible-child", this, "visible-child", BindingFlags.DEFAULT);
-            init_library_view ();
+            initialize_library_view ();
         }
 
         public void size_to_change (int panel_width) {
@@ -349,7 +349,7 @@ namespace G4 {
             }
         }
 
-        private void init_library_view () {
+        private void initialize_library_view () {
             if (_library.playlists.length > 0 && _playlist_stack.get_parent () == null) {
                 stack_view.add_titled (_playlist_stack, PageName.PLAYLIST, _("Playlists")).icon_name = "view-list-symbolic";
                 _switch_bar.update_buttons ();
@@ -360,22 +360,24 @@ namespace G4 {
                 _switch_bar2.update_buttons ();
             }
             if (_library_path != null && _library.albums.length > 0 && _album_stack.pages.get_n_items () == 1) {
-                locate_to_path ((!)_library_path);
+                locate_to_path ((!)_library_path, null, true);
                 _library_path = null;
             }
         }
 
-        public void locate_to_path (string[] paths, Object? obj = null) {
+        public void locate_to_path (string[] paths, Object? obj = null, bool initializing = false) {
             if (paths.length > 0) {
-                stack_view.transition_type = Gtk.StackTransitionType.NONE;
+                if (initializing)
+                    stack_view.transition_type = Gtk.StackTransitionType.NONE;
                 stack_view.visible_child_name = paths[0];
                 stack_view.transition_type = Gtk.StackTransitionType.SLIDE_LEFT_RIGHT;
                 var visible_child = stack_view.visible_child;
                 if (visible_child is Gtk.Stack && paths.length > 1) {
                     var stack = (Gtk.Stack) visible_child;
-                    stack.transition_type = Gtk.StackTransitionType.NONE;
+                    if (initializing)
+                        stack.transition_type = Gtk.StackTransitionType.NONE;
                     Artist? artist = null;
-                    Album? album = null;
+                    Album? album = obj as Album;
                     if (paths[0] == PageName.ARTIST) {
                         artist = _library.artists[paths[1]];
                         if (artist is Artist) {
@@ -383,8 +385,6 @@ namespace G4 {
                                 create_sub_stack_page (artist, null);
                             if (paths.length > 2)
                                 album = ((!)artist).albums[paths[2]];
-                            else if (obj is Album)
-                                album = (Album) obj;
                         }
                     } else if (paths[0] == PageName.ALBUM) {
                         album = _library.albums[paths[1]];
@@ -432,7 +432,7 @@ namespace G4 {
 
         private void on_music_batch_changed () {
             _library.get_sorted (_album_list.data_store, _artist_list.data_store, _playlist_list.data_store);
-            init_library_view ();
+            initialize_library_view ();
         }
 
         private void on_music_changed (Music? music) {
