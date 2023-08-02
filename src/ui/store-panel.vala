@@ -324,12 +324,12 @@ namespace G4 {
             var button = new Gtk.Button.from_icon_name ("media-playback-start-symbolic");
             button.tooltip_text = _("Play");
             button.clicked.connect (() => {
-                string[] strv;
-                if (album_mode)
-                    strv = build_action_target_for_album ((!)album);
-                else
-                    strv = { PageName.ARTIST, artist?.name ?? "" };
-                _app.activate_action (ACTION_PLAY, new Variant.bytestring_array (strv));
+                if (album_mode) {
+                    _app.play (album);
+                } else {
+                    string[] strv = { PageName.ARTIST, artist?.name ?? "" };
+                    _app.activate_action (ACTION_PLAY, new Variant.bytestring_array (strv));
+                }
             });
             header.pack_end (button);
 
@@ -367,8 +367,7 @@ namespace G4 {
 
         public void locate_to_path (string[] paths, Object? obj = null, bool initializing = false) {
             if (paths.length > 0) {
-                if (initializing)
-                    stack_view.transition_type = Gtk.StackTransitionType.NONE;
+                stack_view.transition_type = Gtk.StackTransitionType.NONE;
                 stack_view.visible_child_name = paths[0];
                 stack_view.transition_type = Gtk.StackTransitionType.SLIDE_LEFT_RIGHT;
                 var visible_child = stack_view.visible_child;
