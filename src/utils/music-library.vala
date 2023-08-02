@@ -115,20 +115,26 @@ namespace G4 {
         }
 
         public void get_sorted_albums (ListStore store) {
-            var arr = new GenericArray<Music> (albums.length);
-            albums.foreach ((name, album) => arr.add (album));
-            arr.sort (compare_album);
+            var arr = new GenericArray<Album> (albums.length);
+            get_sorted_album_items (arr);
             store.splice (0, store.get_n_items (), arr.data);
         }
 
+        public void get_sorted_album_items (GenericArray<Album> items) {
+            albums.foreach ((name, album) => items.add (album));
+            items.sort (compare_album);
+        }
+
         public Playlist get_as_playlist () {
+            var arr = new GenericArray<Album> (albums.length);
+            get_sorted_album_items (arr);
             var items = new GenericArray<Music> (128);
-            albums.foreach ((name, album) => {
-                var arr = new GenericArray<Music> (16);
-                album.get_sorted_items (arr);
-                items.extend (arr, (src) => src);
-            });
-            return new Playlist ("", "", items);
+            foreach (var album in arr) {
+                var musics = new GenericArray<Music> (16);
+                album.get_sorted_items (musics);
+                items.extend (musics, (src) => src);
+            }
+            return new Playlist (name, "", items);
         }
 
         public bool remove_music (Music music) {
