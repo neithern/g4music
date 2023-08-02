@@ -383,8 +383,13 @@ namespace G4 {
                         if (artist is Artist) {
                             if (stack.get_child_by_name (((!)artist).name) == null)
                                 create_sub_stack_page (artist, null);
-                            if (paths.length > 2)
-                                album = ((!)artist).albums[paths[2]];
+                            if (paths.length > 2) {
+                                unowned var album_key = paths[2];
+                                if (album_key.length > 0)
+                                    album = ((!)artist).albums[album_key];
+                                else if (album == null)
+                                    album = ((!)artist).get_as_playlist ();
+                            }
                         }
                     } else if (paths[0] == PageName.ALBUM) {
                         album = _library.albums[paths[1]];
