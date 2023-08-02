@@ -230,10 +230,12 @@ namespace G4 {
             list.item_created.connect ((item) => {
                 var cell = (MusicCell) item.child;
                 cell.cover.ratio = 0.5;
+                make_right_clickable (cell, cell.show_popover_menu);
             });
             list.item_binded.connect ((item) => {
                 var cell = (MusicCell) item.child;
                 var artist = (Artist) item.item;
+                cell.music = artist;
                 cell.paintable = _loading_paintable;
                 cell.title = artist.name;
             });
@@ -320,17 +322,14 @@ namespace G4 {
             back_btn.clicked.connect (() => remove_stack_child (stack, mlist));
             header.pack_start (back_btn);
 
-            var album_key = album?.album_key;
-            if (album_mode) {
-                var cell = new MusicCell ();
-                cell.music = (!)album;
-                var menu_btn = new Gtk.MenuButton ();
-                menu_btn.icon_name = "view-more-symbolic";
-                menu_btn.menu_model = cell.create_item_menu ();
-                header.pack_end (menu_btn);
-            }
+            var cell = new MusicCell ();
+            cell.music = album_mode ? (Music?) album : (Music?) artist;
+            var menu_btn = new Gtk.MenuButton ();
+            menu_btn.icon_name = "view-more-symbolic";
+            menu_btn.menu_model = cell.create_item_menu ();
+            header.pack_end (menu_btn);
 
-            stack.add_titled (mlist, album_mode ? album_key : artist?.name, title ?? "");
+            stack.add_titled (mlist, album_mode ? album?.album_key : artist?.name, title ?? "");
             stack.visible_child = mlist;
         }
 

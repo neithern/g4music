@@ -44,10 +44,14 @@ namespace G4 {
             musics.foreach (func);
         }
 
-        public void get_sorted_musics (ListStore store, uint insert_pos = 0) {
-            var arr = new GenericArray<Music> (musics.length);
+        public void get_sorted_items (GenericArray<Music> arr) {
             musics.foreach ((name, music) => arr.add (music));
             sort (arr);
+        }
+
+        public void get_sorted_musics (ListStore store, uint insert_pos = 0) {
+            var arr = new GenericArray<Music> (musics.length);
+            get_sorted_items (arr);
             store.splice (insert_pos, 0, arr.data);
         }
 
@@ -115,6 +119,16 @@ namespace G4 {
             albums.foreach ((name, album) => arr.add (album));
             arr.sort (compare_album);
             store.splice (0, store.get_n_items (), arr.data);
+        }
+
+        public Playlist get_as_playlist () {
+            var items = new GenericArray<Music> (128);
+            albums.foreach ((name, album) => {
+                var arr = new GenericArray<Music> (16);
+                album.get_sorted_items (arr);
+                items.extend (arr, (src) => src);
+            });
+            return new Playlist ("", "", items);
         }
 
         public bool remove_music (Music music) {

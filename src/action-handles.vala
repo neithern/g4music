@@ -137,12 +137,10 @@ namespace G4 {
                     case "album":
                         return library.albums[key];
                     case "artist":
-                        if (arr.length > 2) {
-                            var artist = library.artists[key];
-                            if (artist is Artist)
-                                return ((Artist) artist).albums[arr[2]];
-                        }
-                        break;
+                        var artist = library.artists[key];
+                        if ((artist is Artist) && arr.length > 2)
+                            return ((Artist) artist).albums[arr[2]];
+                        return artist;
                     case "playlist":
                         return library.playlists[key];
                     default:

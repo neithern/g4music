@@ -141,6 +141,8 @@ namespace G4 {
         public override Menu create_item_menu () {
             if (music is Album) {
                 return create_menu_for_album ((Album) music);
+            } else if (music is Artist) {
+                return create_menu_for_artist ((Artist) music);
             }
             return base.create_item_menu ();
         }
@@ -275,6 +277,14 @@ namespace G4 {
         menu.append_item (create_menu_item_for_strv (strv, _("Play at Next"), ACTION_APP + ACTION_PLAY_AT_NEXT));
         if (is_playlist)
             menu.append_item (create_menu_item_for_uri (((Playlist) album).list_uri, _("Show List File"), ACTION_APP + ACTION_SHOW_FILE));
+        return menu;
+    }
+
+    public Menu create_menu_for_artist (Artist artist) {
+        string[] strv = {"artist", artist.name};
+        var menu = new Menu ();
+        menu.append_item (create_menu_item_for_strv (strv, _("Play"), ACTION_APP + ACTION_PLAY));
+        menu.append_item (create_menu_item_for_strv (strv, _("Play at Next"), ACTION_APP + ACTION_PLAY_AT_NEXT));
         return menu;
     }
 
