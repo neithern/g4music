@@ -290,12 +290,13 @@ namespace G4 {
         public async void open_files_async (File[] files, bool play_now = false) {
             var musics = new GenericArray<Music> (4096);
             yield _loader.load_files_async (files, musics);
-            var album = new Album ("");
-            musics.foreach ((music) => album.add_music (music));
-            if (play_now) {
-                play (album);
-            } else {
-                play_at_next (album);
+            if (musics.length > 0) {
+                var playlist = new Playlist ("", "", musics);
+                if (play_now) {
+                    play (playlist);
+                } else {
+                    play_at_next (playlist);
+                }
             }
         }
 
@@ -312,7 +313,7 @@ namespace G4 {
                     if (_current_cover != null) {
                         yield save_sample_to_file_async (file, (!)_current_cover);
                     } else {
-                        var svg = _thumbnailer.create_album_text_svg (music);
+                        var svg = _thumbnailer.create_music_text_svg (music);
                         yield save_text_to_file_async (file, svg);
                     }
                     if (music == _current_music) {
@@ -327,19 +328,7 @@ namespace G4 {
         }
 
         public void play (Object? obj, bool immediately = true) {
-            if (obj is Music) {
-                var music = (Music) obj;
-                uint position = -1;
-                var store = (ListStore) _music_list.model;
-                if (!store.find (music, out position)) {
-                    store.append (music);
-                    position = (int) store.get_n_items () - 1;
-                    _list_modified = true;
-                }
-                if (immediately) {
-                    current_item = (int) position;
-                }
-            } else if (obj is Album) {
+            if (obj is Album) {
                 var album = (Album) obj;
                 var store = _music_store;
                 var insert_pos = (uint) store.get_n_items () - 1;
@@ -359,22 +348,25 @@ namespace G4 {
                     current_music = store.get_item (insert_pos) as Music;
                     update_current_item ();
                 }
+            } else if (obj is Music) {
+                var music = (Music) obj;
+                uint position = -1;
+                var store = (ListStore) _music_list.model;
+                if (!store.find (music, out position)) {
+                    store.append (music);
+                    position = (int) store.get_n_items () - 1;
+                    _list_modified = true;
+                }
+                if (immediately) {
+                    current_item = (int) position;
+                }
             }
         }
 
         public void play_at_next (Object? obj) {
             if (_current_music != null) {
                 rebind_current_item ();
-                if (obj is Music) {
-                    var music = (Music) obj;
-                    var store = (ListStore) _music_list.model;
-                    if (insert_to_next (music, _music_store)) {
-                        _list_modified = true;
-                    }
-                    if (store != _music_store) {
-                        insert_to_next (music, store);
-                    }
-                } else if (obj is Album) {
+                if (obj is Album) {
                     var album = (Album) obj;
                     var store = _music_store;
                     album.foreach ((uri, music) => {
@@ -387,6 +379,15 @@ namespace G4 {
                     store.find ((!)_current_music, out insert_pos);
                     album.get_sorted_musics (store, insert_pos + 1);
                     _list_modified = true;
+                } else if (obj is Music) {
+                    var music = (Music) obj;
+                    var store = (ListStore) _music_list.model;
+                    if (insert_to_next (music, _music_store)) {
+                        _list_modified = true;
+                    }
+                    if (store != _music_store) {
+                        insert_to_next (music, store);
+                    }
                 }
                 _current_item = find_music_item (_current_music);
                 rebind_current_item ();

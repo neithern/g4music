@@ -10,38 +10,18 @@ namespace G4 {
         public const uint MAX = 5;
     }
 
-    public class MusicNode : Object {
-        protected Music? _cover_music = null;
-        public string name;
-
-        public MusicNode (string name) {
-            this.name = name;
-        }
-
-        public Music cover_music {
-            get {
-                if (_cover_music == null)
-                    _cover_music = get_first_cover_music ();
-                return (!)_cover_music;
-            }
-            set {
-                _cover_music = value;
-            }
-        }
-
-        public virtual void get_sorted (ListStore store) {
-        }
-
-        protected virtual Music get_first_cover_music () {
-            return new Music.empty ();
-        }
-    }
-
-    public class Album : MusicNode {
+    public class Album : Music {
         public HashTable<unowned string, Music> musics = new HashTable<unowned string, Music> (str_hash, str_equal);
 
-        public Album (string name) {
-            base (name);
+        public Album (Music music) {
+            base.titled (music.title, music.uri);
+            base.album = music.album;
+            base.artist = music.artist;
+            base._album_key = music._album_key;
+            base._artist_key = music._artist_key;
+            base.date = music.date;
+            base.track = music.track;
+            base.uri = music.uri;
         }
 
         public uint length {
@@ -51,6 +31,10 @@ namespace G4 {
         }
 
         public bool add_music (Music music) {
+            if (music.has_cover && music.track < track) {
+                // For cover
+                uri = music.uri;
+            }
             var count = musics.length;
             musics.insert (music.uri, music);
             return musics.length > count;
@@ -58,10 +42,6 @@ namespace G4 {
 
         public void @foreach (HFunc<unowned string, Music> func) {
             musics.foreach (func);
-        }
-
-        public override void get_sorted (ListStore store) {
-            get_sorted_musics (store);
         }
 
         public void get_sorted_musics (ListStore store, uint insert_pos = 0) {
@@ -75,29 +55,23 @@ namespace G4 {
             return musics.steal (music.uri);
         }
 
-        protected override Music get_first_cover_music () {
-            var arr = new Music?[] { null };
-            musics.foreach ((name, music) => {
-                var m0 = arr[0];
-                if (m0 == null) {
-                    arr[0] = music;
-                } else if (music.has_cover && music.track < ((!)m0).track) {
-                    arr[0] = music;
-                }
-            });
-            return (!)arr[0];
-        }
-
         protected virtual void sort (GenericArray<Music> arr) {
             arr.sort (Music.compare_by_album);
         }
     }
 
-    public class Artist : MusicNode {
+    public class Artist : Music {
         public HashTable<unowned string, Album> albums = new HashTable<unowned string, Album> (str_hash, str_equal);
 
-        public Artist (string name) {
-            base (name);
+        public Artist (Music music) {
+            base.titled (music.title, music.uri);
+            base.album = music.album;
+            base.artist = music.artist;
+            base.album_artist = music.album_artist;
+            base._album_key = music._album_key;
+            base._artist_key = this.name.collate_key_for_filename ();
+            base.date = music.date;
+            base.uri = music.uri;
         }
 
         public uint length {
@@ -106,18 +80,27 @@ namespace G4 {
             }
         }
 
-        public void add_cover_music (Music music) {
-            if (_cover_music == null || Music.compare_by_album (music, (!)_cover_music) < 0) {
-                _cover_music = music;
+        public unowned string name {
+            get {
+                return album_artist.length > 0 ? album_artist : artist;
             }
         }
 
+        public override string get_abbreviation () {
+            return parse_abbreviation (name);
+        }
+
         public bool add_music (Music music) {
+            if (music.has_cover && compare_album (music, this) < 0) {
+                // For cover
+                uri = music.uri;
+            }
             unowned string key;
-            Album album;
             unowned var album_key = music.album_key;
+            Album album;
             if (!albums.lookup_extended (album_key, out key, out album)) {
-                album = new Album (music.get_album_and_year ());
+                album = new Album (music);
+                album.album_artist = name;
                 albums[album_key] = album;
             }
             return album.add_music (music);
@@ -127,10 +110,10 @@ namespace G4 {
             albums.foreach (func);
         }
 
-        public override void get_sorted (ListStore store) {
+        public void get_sorted_albums (ListStore store) {
             var arr = new GenericArray<Music> (albums.length);
-            albums.foreach ((name, album) => arr.add (album.cover_music));
-            arr.sort (Music.compare_by_album);
+            albums.foreach ((name, album) => arr.add (album));
+            arr.sort (compare_album);
             store.splice (0, store.get_n_items (), arr.data);
         }
 
@@ -138,35 +121,24 @@ namespace G4 {
             return albums.foreach_steal ((name, album) => album.remove_music (music) && album.length == 0) > 0;
         }
 
-        protected override Music get_first_cover_music () {
-            return albums.find ((name, album) => true).cover_music;
+        private static int compare_album (Music m1, Music m2) {
+            return (m1.date > 0 && m2.date > 0) ? (int) (m1.date - m2.date) : strcmp (m1._album_key, m2._album_key);
         }
     }
 
     public class Playlist : Album {
         public GenericArray<Music> items;
-        public string uri;
+        public string list_uri;
 
-        public Playlist (string name, string uri, GenericArray<Music> arr) {
-            base (name);
-            this.uri = uri;
-            this.items = arr;
-
-            Music.original_order (arr);
-            arr.foreach ((music) => add_music (music));
-
-            var music = cover_music;
-            _cover_music = new Music.titled (name, music.uri);
-            ((!)_cover_music).cover_key = music.cover_key;
-            ((!)_cover_music).album_key = uri;
-        }
-
-        protected override Music get_first_cover_music () {
-            foreach (var music in items) {
-                if (music.has_cover)
-                    return music;
-            }
-            return items[0];
+        public Playlist (string name, string uri, GenericArray<Music> items) {
+            base (items.length > 0 ? items[0] : new Music.empty ());
+            base.album = name;
+            base.title = name;
+            base._album_key = uri;
+            this.items = items;
+            this.list_uri = uri;
+            Music.original_order (items);
+            items.foreach ((music) => add_music (music));
         }
 
         protected override void sort (GenericArray<Music> arr) {
@@ -203,50 +175,40 @@ namespace G4 {
             unowned var album_key = music.album_key;
             Album album;
             if (!_albums.lookup_extended (album_key, out key, out album)) {
-                album = new Album (music.get_album_and_year ());
+                album = new Album (music);
+                album.album_artist = "";
                 _albums[album_key] = album;
             }
             var added = album.add_music (music);
 
-            unowned var artist_name = music.artist;
+            unowned var album_artist = music.album_artist;
+            unowned var artist_name = album_artist.length > 0 ? album_artist : music.artist;
             Artist artist;
             if (!_artists.lookup_extended (artist_name, out key, out artist)) {
-                artist = new Artist (artist_name);
+                artist = new Artist (music);
                 _artists[artist_name] = artist;
             }
             added |= artist.add_music (music);
-
-            unowned var artist_name2 = music.album_artist;
-            if (artist_name2.length > 0 && artist_name2 != artist_name) {
-                Artist artist2;
-                if (!_artists.lookup_extended (artist_name2, out key, out artist2)) {
-                    artist2 = new Artist (artist_name2);
-                    _artists[artist_name2] = artist2;
-                }
-                added |= artist2.add_music (music);
-                // Clone a new music only for sort and cover
-                artist2.add_cover_music (new Music.with_album_artist (music));
-            }
             return added;
         }
 
         public void add_playlist (Playlist playlist) {
-            _playlists.insert (playlist.uri, playlist);
+            _playlists.insert (playlist.list_uri, playlist);
         }
 
         public void get_sorted (ListStore album_store, ListStore artist_store, ListStore playlist_store) {
             var arr = new GenericArray<Music> (uint.max (albums.length, artists.length));
-            _albums.foreach ((name, album) => arr.add (album.cover_music));
+            _albums.foreach ((name, album) => arr.add (album));
             arr.sort (Music.compare_by_album);
             album_store.splice (0, album_store.get_n_items (), arr.data);
 
             arr.remove_range (0, arr.length);
-            _artists.foreach ((name, artist) => arr.add (artist.cover_music));
+            _artists.foreach ((name, artist) => arr.add (artist));
             arr.sort (Music.compare_by_artist);
             artist_store.splice (0, artist_store.get_n_items (), arr.data);
 
             arr.remove_range (0, arr.length);
-            _playlists.foreach ((uri, playlist) => arr.add (playlist.cover_music));
+            _playlists.foreach ((uri, playlist) => arr.add (playlist));
             arr.sort (Music.compare_by_title);
             playlist_store.splice (0, playlist_store.get_n_items (), arr.data);
         }

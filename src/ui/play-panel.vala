@@ -169,7 +169,7 @@ namespace G4 {
 
                 if (music == _app.current_music) {
                     if (paintable == null)
-                        paintable = thumbnailer.create_album_text_paintable (music);
+                        paintable = thumbnailer.create_music_text_paintable (music);
                     update_cover_paintables (music, paintable);
                     yield _app.parse_music_cover_async ();
                 }

@@ -58,6 +58,7 @@ namespace G4 {
         protected RoundPaintable _paintable = new RoundPaintable ();
 
         public ulong first_draw_handler = 0;
+        public Music? music = null;
 
         public RoundPaintable cover {
             get {
@@ -104,9 +105,6 @@ namespace G4 {
     }
 
     public class MusicCell : MusicWidget {
-        public string? album_name = null;
-        public string? artist_name = null;
-        public string? playlist_name = null;
 
         public MusicCell () {
             orientation = Gtk.Orientation.VERTICAL;
@@ -141,16 +139,14 @@ namespace G4 {
         }
 
         public override Menu create_item_menu () {
-            if (album_name != null || playlist_name != null) {
-                return create_menu_for_album (artist_name, album_name, playlist_name);
+            if (music is Album) {
+                return create_menu_for_album ((Album) music);
             }
             return base.create_item_menu ();
         }
     }
 
     public class MusicEntry : MusicWidget {
-        public Music? music = null;
-
         private Gtk.Image _playing = new Gtk.Image ();
 
         public MusicEntry (bool compact = true) {
@@ -263,16 +259,16 @@ namespace G4 {
         return create_menu_item_for_strv ({"uri", uri}, label, action);
     }
 
-    public Menu create_menu_for_album (string? artist_name, string? album_name, string? playlist_name) {
+    public Menu create_menu_for_album (Album album) {
+        unowned var album_artist = album.album_artist;
+        unowned var album_key = album.album_key;
         string[] strv;
-        if (artist_name != null && album_name != null)
-            strv = {"artist", (!)artist_name, (!)album_name};
-        else if (album_name != null)
-            strv = {"album", (!)album_name};
-        else if (playlist_name != null)
-            strv = {"playlist", (!)playlist_name};
+        if (album is Playlist)
+            strv = {"playlist", album_key};
+        else if (album_artist.length > 0)
+            strv = {"artist", album_artist, album_key};
         else
-            strv = {""};
+            strv = {"album", album_key};
         var menu = new Menu ();
         menu.append_item (create_menu_item_for_strv (strv, _("Play"), ACTION_APP + ACTION_PLAY));
         menu.append_item (create_menu_item_for_strv (strv, _("Play at Next"), ACTION_APP + ACTION_PLAY_AT_NEXT));
@@ -282,8 +278,8 @@ namespace G4 {
     public Menu create_menu_for_music (Music music) {
         var menu = new Menu ();
         menu.append_item (create_menu_item_for_strv ({"title", music.title}, _("Search Title"), ACTION_APP + ACTION_SEARCH));
-        menu.append_item (create_menu_item_for_strv ({"album", music.title}, _("Search Album"), ACTION_APP + ACTION_SEARCH));
-        menu.append_item (create_menu_item_for_strv ({"artist", music.title}, _("Search Artist"), ACTION_APP + ACTION_SEARCH));
+        menu.append_item (create_menu_item_for_strv ({"album", music.album}, _("Search Album"), ACTION_APP + ACTION_SEARCH));
+        menu.append_item (create_menu_item_for_strv ({"artist", music.artist}, _("Search Artist"), ACTION_APP + ACTION_SEARCH));
         menu.append_item (create_menu_item_for_uri (music.uri, _("_Show Music File"), ACTION_APP + ACTION_SHOW_MUSIC_FILE));
         return menu;
     }

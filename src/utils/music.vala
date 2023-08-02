@@ -19,9 +19,9 @@ namespace G4 {
         public string? cover_uri = null;
 
         //  for sorting
-        private string _album_key = "";
-        private string _artist_key = "";
-        private string _title_key = "";
+        protected string _album_key = "";
+        protected string _artist_key = "";
+        protected string _title_key = "";
         private string? _cover_key = null;
         private int _order = 0;
 
@@ -61,9 +61,6 @@ namespace G4 {
             get {
                 return _album_key;
             }
-            set {
-                _album_key = value;
-            }
         }
 
         public unowned string cover_key {
@@ -87,6 +84,10 @@ namespace G4 {
 
         public inline string get_album_and_year () {
             return year > 0 ? @"$album ($year)" : album;
+        }
+
+        public virtual string get_abbreviation () {
+            return parse_abbreviation (album);
         }
 
         public bool from_gst_tags (Gst.TagList tags) {

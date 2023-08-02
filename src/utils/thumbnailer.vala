@@ -109,7 +109,7 @@ namespace G4 {
 
             var paintable = pixbuf != null
                 ? Gdk.Texture.for_pixbuf ((!)pixbuf)
-                : create_album_text_paintable (music);
+                : create_music_text_paintable (music);
             if (is_small) {
                 put (music, paintable, false, size);
             } else if (pixbuf != null && paintable0 == null) {
@@ -130,7 +130,7 @@ namespace G4 {
 
             var album_key_ = @"$(music.album_key)-$(music.artist)-";
             var tags = new Gst.TagList?[] { null };
-            var args = new string[] { music.cover_key, music.cover_uri ?? "", music.album };
+            var args = new string[] { music.cover_key, music.cover_uri ?? "", music.get_abbreviation () };
             var pixbuf = yield run_async<Gdk.Pixbuf?> (() => {
                 var tag = tags[0] = parse_gst_tags (file);
                 File? cover_file = null;
@@ -156,7 +156,7 @@ namespace G4 {
                     }
                     return size <= ICON_SIZE ? minbuf : pixbuf;
                 }
-                args[0] = parse_abbreviation (args[2]);
+                args[0] = args[2];
                 return null;
                 //  Run in single_thread_pool for samba to save connections
             }, false, file.has_uri_scheme ("smb"));
@@ -172,8 +172,8 @@ namespace G4 {
             return pixbuf;
         }
 
-        public Gdk.Paintable create_album_text_paintable (Music music) {
-            var text = parse_abbreviation (music.album);
+        public Gdk.Paintable create_music_text_paintable (Music music) {
+            var text = music.get_abbreviation ();
             var color_count = BACKGROUND_COLORS.length / 2;
             var color_index = (text.length == 0 || text == UNKNOWN_ALBUM)
                     ? color_count - 1
@@ -181,8 +181,8 @@ namespace G4 {
             return create_simple_text_paintable (text, ICON_SIZE, color_index);
         }
 
-        public string create_album_text_svg (Music music) {
-            var text = parse_abbreviation (music.album);
+        public string create_music_text_svg (Music music) {
+            var text = music.get_abbreviation ();
             var color_count = BACKGROUND_COLORS.length / 2;
             var color_index = (text.length == 0 || text == UNKNOWN_ALBUM)
                     ? color_count - 1

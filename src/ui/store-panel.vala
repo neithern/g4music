@@ -196,10 +196,8 @@ namespace G4 {
         private MusicList create_album_list (Artist? artist = null) {
             var list = new MusicList (_app, true, artist);
             list.item_activated.connect ((position, obj) => {
-                var album_key = (obj as Music)?.album_key ?? "";
-                var album = artist != null ? ((!)artist).albums[album_key] : _library.albums[album_key];
-                if (album is Album) {
-                    create_sub_stack_page (artist, album);
+                if (obj is Album) {
+                    create_sub_stack_page (artist, (Album) obj);
                 }
             });
             list.item_created.connect ((item) => {
@@ -208,13 +206,16 @@ namespace G4 {
             });
             list.item_binded.connect ((item) => {
                 var cell = (MusicCell) item.child;
-                var music = (Music) item.item;
-                var year = music.year;
-                cell.album_name = music.album_key;
-                cell.artist_name = artist?.name;
+                var album = (Album) item.item;
+                var album_artist = album.album_artist;
+                var year = album.year;
+                cell.music = album;
                 cell.paintable = _loading_paintable;
-                cell.title = music.album;
-                cell.subtitle = year > 0 ? year.to_string () : " ";
+                cell.title = album.album;
+                var subtitle = year > 0 ? year.to_string () : " ";
+                if (artist == null)
+                    subtitle = (album_artist.length > 0 ? album_artist + " " : "") + subtitle;
+                cell.subtitle = subtitle;
             });
             return list;
         }
@@ -222,10 +223,8 @@ namespace G4 {
         private MusicList create_artist_list () {
             var list = new MusicList (_app, true);
             list.item_activated.connect ((position, obj) => {
-                var artist_name = (obj as Music)?.artist ?? "";
-                var artist = _library.artists[artist_name];
-                if (artist is Artist) {
-                    create_sub_stack_page (artist);
+                if (obj is Artist) {
+                    create_sub_stack_page ((Artist) obj);
                 }
             });
             list.item_created.connect ((item) => {
@@ -234,9 +233,9 @@ namespace G4 {
             });
             list.item_binded.connect ((item) => {
                 var cell = (MusicCell) item.child;
-                var music = (Music) item.item;
+                var artist = (Artist) item.item;
                 cell.paintable = _loading_paintable;
-                cell.title = music.artist;
+                cell.title = artist.name;
             });
             return list;
         }
@@ -281,10 +280,8 @@ namespace G4 {
         private MusicList create_playlist_list () {
             var list = new MusicList (_app, true);
             list.item_activated.connect ((position, obj) => {
-                var uri = (obj as Music)?.album_key ?? "";
-                var playlist = _library.playlists[uri];
-                if (playlist is Playlist) {
-                    create_sub_stack_page (null, playlist);
+                if (obj is Playlist) {
+                    create_sub_stack_page (null, (Playlist) obj);
                 }
             });
             list.item_created.connect ((item) => {
@@ -293,10 +290,10 @@ namespace G4 {
             });
             list.item_binded.connect ((item) => {
                 var cell = (MusicCell) item.child;
-                var music = (Music) item.item;
+                var playlist = (Playlist) item.item;
+                cell.music = playlist;
                 cell.paintable = _loading_paintable;
-                cell.playlist_name = music.album_key;
-                cell.title = music.title;
+                cell.title = playlist.title;
             });
             return list;
         }
@@ -308,7 +305,7 @@ namespace G4 {
             var mlist = album_mode ? create_music_list ((!)album, artist_mode) : create_album_list (artist);
             mlist.create_factory ();
 
-            var title = album_mode ? album?.name : artist?.name;
+            var title = album_mode ? album?.album : artist?.name;
             var label = new Gtk.Label (title);
             label.ellipsize = Pango.EllipsizeMode.END;
             var header = new Adw.HeaderBar ();
@@ -323,12 +320,10 @@ namespace G4 {
             back_btn.clicked.connect (() => remove_stack_child (stack, mlist));
             header.pack_start (back_btn);
 
-            var album_key = album?.cover_music?.album_key;
+            var album_key = album?.album_key;
             if (album_mode) {
                 var cell = new MusicCell ();
-                cell.album_name = playlist_mode ? null : album_key;
-                cell.artist_name = artist?.name;
-                cell.playlist_name = playlist_mode ? album_key : null;
+                cell.music = (!)album;
                 var menu_btn = new Gtk.MenuButton ();
                 menu_btn.icon_name = "view-more-symbolic";
                 menu_btn.menu_model = cell.create_item_menu ();
@@ -460,12 +455,12 @@ namespace G4 {
                 case SearchMode.ALBUM:
                     return text.match_string (music.album, true);
                 case SearchMode.ARTIST:
-                    return text.match_string (music.artist, true);
+                    return text.match_string (music.artist, true) || text.match_string (music.album_artist, true);
                 case SearchMode.TITLE:
                     return text.match_string (music.title, true);
                 default:
                     return text.match_string (music.album, true)
-                        || text.match_string (music.artist, true)
+                        || text.match_string (music.artist, true) || text.match_string (music.album_artist, true)
                         || text.match_string (music.title, true);
             }
         }

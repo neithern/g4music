@@ -8,7 +8,7 @@ namespace G4 {
         private bool _grid_mode = false;
         private Gtk.GridView _grid_view = new Gtk.GridView (null, null);
         private int _image_size = 96;
-        private MusicNode? _music_node = null;
+        private Music? _music_node = null;
         private Gtk.ScrolledWindow _scroll_view = new Gtk.ScrolledWindow ();
         private Thumbnailer _thmbnailer;
 
@@ -21,7 +21,7 @@ namespace G4 {
         public signal void item_created (Gtk.ListItem item);
         public signal void item_binded (Gtk.ListItem item);
 
-        public MusicList (Application app, bool grid = false, MusicNode? node = null) {
+        public MusicList (Application app, bool grid = false, Music? node = null) {
             orientation = Gtk.Orientation.VERTICAL;
             hexpand = true;
             append (_scroll_view);
@@ -31,7 +31,7 @@ namespace G4 {
             _image_size = grid ? Thumbnailer.GRID_SIZE : Thumbnailer.ICON_SIZE;
             _music_node = node;
             _thmbnailer = app.thumbnailer;
-            _music_node?.get_sorted (_data_store);
+            update_store ();
 
             _grid_view.enable_rubberband = false;
             _grid_view.max_columns = 5;
@@ -146,7 +146,10 @@ namespace G4 {
         public uint update_store () {
             if (_music_node != null) {
                 _data_store.remove_all ();
-                ((!)_music_node).get_sorted (_data_store);
+                if (_music_node is Album)
+                    ((Album)_music_node).get_sorted_musics (_data_store);
+                else if (_music_node is Artist)
+                    ((Artist)_music_node).get_sorted_albums (_data_store);
             }
             return _data_store.get_n_items ();
         }
