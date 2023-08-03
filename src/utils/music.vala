@@ -1,7 +1,6 @@
 namespace G4 {
     public const string UNKNOWN_ALBUM = _("Unknown Album");
     public const string UNKNOWN_ARTIST = _("Unknown Artist");
-    public const int UNKNOWN_TRACK = int.MAX;
 
     public class Music : Object {
         public string album = "";
@@ -10,7 +9,7 @@ namespace G4 {
         public string album_artist = "";
         public uint32 date = 0;
         public string genre = "";
-        public int track = UNKNOWN_TRACK;
+        public int track = 0;
         public bool has_cover = false;
         public int64 modified_time = 0;
         public string uri = "";
@@ -197,7 +196,7 @@ namespace G4 {
                     artist = len >= 2 ? sa[len - 2] : UNKNOWN_ARTIST;
                     _artist_key = artist.collate_key_for_filename ();
                 }
-                if (track_index == UNKNOWN_TRACK) {
+                if (track_index == 0) {
                     if (track_index == 0 && len >= 3)
                         int.try_parse (sa[0], out track_index, null, 10);
                     if (track_index > 0)
