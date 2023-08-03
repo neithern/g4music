@@ -49,7 +49,7 @@ namespace G4 {
             sort (arr);
         }
 
-        public void get_sorted_musics (ListStore store, uint insert_pos = 0) {
+        public void insert_to_store (ListStore store, uint insert_pos = 0) {
             var arr = new GenericArray<Music> (musics.length);
             get_sorted_items (arr);
             store.splice (insert_pos, 0, arr.data);
@@ -114,20 +114,24 @@ namespace G4 {
             albums.foreach (func);
         }
 
-        public void get_sorted_albums (ListStore store) {
-            var arr = new GenericArray<Album> (albums.length);
-            get_sorted_album_items (arr);
-            store.splice (0, store.get_n_items (), arr.data);
-        }
-
-        public void get_sorted_album_items (GenericArray<Album> items) {
+        public void get_sorted_albums (GenericArray<Album> items) {
             albums.foreach ((name, album) => items.add (album));
             items.sort (compare_album);
         }
 
-        public Playlist get_as_playlist () {
+        public void replace_to_store (ListStore store) {
             var arr = new GenericArray<Album> (albums.length);
-            get_sorted_album_items (arr);
+            get_sorted_albums (arr);
+            store.splice (0, store.get_n_items (), arr.data);
+        }
+
+        public bool remove_music (Music music) {
+            return albums.foreach_steal ((name, album) => album.remove_music (music) && album.length == 0) > 0;
+        }
+
+        public Playlist to_playlist () {
+            var arr = new GenericArray<Album> (albums.length);
+            get_sorted_albums (arr);
             var items = new GenericArray<Music> (128);
             foreach (var album in arr) {
                 var musics = new GenericArray<Music> (16);
@@ -135,10 +139,6 @@ namespace G4 {
                 items.extend (musics, (src) => src);
             }
             return new Playlist (name, "", items);
-        }
-
-        public bool remove_music (Music music) {
-            return albums.foreach_steal ((name, album) => album.remove_music (music) && album.length == 0) > 0;
         }
 
         private static int compare_album (Music m1, Music m2) {

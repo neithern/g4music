@@ -147,9 +147,9 @@ namespace G4 {
             if (_music_node != null) {
                 _data_store.remove_all ();
                 if (_music_node is Album)
-                    ((Album)_music_node).get_sorted_musics (_data_store);
+                    ((Album)_music_node).insert_to_store (_data_store);
                 else if (_music_node is Artist)
-                    ((Artist)_music_node).get_sorted_albums (_data_store);
+                    ((Artist)_music_node).replace_to_store (_data_store);
             }
             return _data_store.get_n_items ();
         }

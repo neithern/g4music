@@ -387,7 +387,7 @@ namespace G4 {
                                 if (album_key.length > 0)
                                     album = ((!)artist).albums[album_key];
                                 else if (album == null)
-                                    album = ((!)artist).get_as_playlist ();
+                                    album = ((!)artist).to_playlist ();
                             }
                         }
                     } else if (paths[0] == PageName.ALBUM) {

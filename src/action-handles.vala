@@ -153,7 +153,7 @@ namespace G4 {
             var strv = parameter?.get_bytestring_array ();
             var obj = _parse_music_node_form_strv (strv);
             if (obj is Artist) {
-                obj = ((Artist) obj).get_as_playlist ();
+                obj = ((Artist) obj).to_playlist ();
             }
             (_app.active_window as Window)?.open_page (strv, obj);
             _app.play (obj);
@@ -163,7 +163,7 @@ namespace G4 {
             var strv = parameter?.get_bytestring_array ();
             var obj = _parse_music_node_form_strv (strv);
             if (obj is Artist) {
-                obj = ((Artist) obj).get_as_playlist ();
+                obj = ((Artist) obj).to_playlist ();
             }
             _app.play_at_next (obj);
         }

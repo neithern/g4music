@@ -342,7 +342,7 @@ namespace G4 {
                         }
                     }
                 });
-                album.get_sorted_musics (store, insert_pos);
+                album.insert_to_store (store, insert_pos);
                 _list_modified = true;
                 if (immediately) {
                     if (album.musics.contains (_current_uri))
@@ -380,7 +380,7 @@ namespace G4 {
                     });
                     uint insert_pos = store.get_n_items () - 1;
                     store.find ((!)_current_music, out insert_pos);
-                    album.get_sorted_musics (store, insert_pos + 1);
+                    album.insert_to_store (store, insert_pos + 1);
                     _list_modified = true;
                 } else if (obj is Music) {
                     var music = (Music) obj;
