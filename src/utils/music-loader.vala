@@ -33,6 +33,21 @@ namespace G4 {
         }
     }
 
+    public class StopWatch {
+        private int64 _start_time;
+
+        public StopWatch () {
+            _start_time = get_monotonic_time ();
+        }
+
+        public int64 lap () {
+            var now = get_monotonic_time ();
+            var used = now - _start_time;
+            _start_time = now;
+            return used;
+        }
+    }
+
     public class MusicLoader : Object {
         private static Once<ThreadPool<DirCache>?> _save_dir_pool;
 
@@ -117,21 +132,22 @@ namespace G4 {
             loading_changed (true);
             yield run_void_async (() => {
                 var playlists = new GenericArray<File> (128);
-                var begin_time = get_monotonic_time ();
+                var stop_watch = new StopWatch ();
                 foreach (var file in files) {
                     add_file (file, musics, dirs, playlists, load_lists);
                 }
                 print ("Find %u files in %d folders in %lld ms\n", musics.length, dirs.length,
-                    (get_monotonic_time () - begin_time + 500) / 1000);
+                    stop_watch.lap () / 1000);
 
                 load_tags_in_threads (musics);
+                print ("Load %u musics in %lld ms\n", musics.length,
+                    stop_watch.lap () / 1000);
                 add_musics_to_library (musics, playlists, ignore_exists);
                 if (sort_mode <= SortMode.MAX) {
                     sort_music_array (musics, sort_mode);
                 }
-                print ("Load %u artists %u albums %u musics in %lld ms\n",
-                    _library.artists.length, _library.albums.length, musics.length,
-                    (get_monotonic_time () - begin_time + 500) / 1000);
+                print ("Group %u artists %u albums in %lld ms\n", _library.artists.length, _library.albums.length,
+                    stop_watch.lap () / 1000);
             });
             loading_changed (false);
 
