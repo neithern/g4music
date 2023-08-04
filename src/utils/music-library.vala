@@ -110,8 +110,8 @@ namespace G4 {
             return album.add_music (music);
         }
 
-        public Album? find_by_artist (string artist) {
-            return albums.find ((aa, album) => artist.match_string (album.artist, true)) as Album;
+        public Album? find_by_partial_artist (string artist) {
+            return albums.find ((name, album) => artist.match_string (album.artist, true)) as Album;
         }
 
         public void @foreach (HFunc<unowned string, Album> func) {

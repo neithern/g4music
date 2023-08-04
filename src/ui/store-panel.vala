@@ -186,6 +186,7 @@ namespace G4 {
             search_entry.text = text;
             search_entry.select_region (0, -1);
             search_btn.active = true;
+            _search_mode = mode;
         }
 
         public bool toggle_search () {
@@ -458,15 +459,15 @@ namespace G4 {
         }
 
         private bool on_search_match (Object obj) {
-            var music = (Music) obj;
+            unowned var music = (Music) obj;
             unowned var text = _search_text;
             switch (_search_mode) {
                 case SearchMode.ALBUM:
                     return text.match_string (music.album, true);
                 case SearchMode.ARTIST:
-                    return text.match_string (music.album_artist, true)
+                    return text.match_string (music.artist, true)
                         || text.match_string (music.album_artist, true)
-                        || ((music as Artist)?.find_by_artist (text) != null);
+                        || ((music as Artist)?.find_by_partial_artist (text) != null);
                 case SearchMode.TITLE:
                     return text.match_string (music.title, true);
                 default:
@@ -478,18 +479,12 @@ namespace G4 {
         }
 
         private void on_search_text_changed () {
-            var text = _search_text = search_entry.text;
+            _search_text = search_entry.text;
+            parse_search_mode (ref _search_text, ref _search_mode);
             if (_current_list == _album_list) {
                 _search_mode = SearchMode.ALBUM;
-                if (text.ascii_ncasecmp ("album:", 6) == 0)
-                    _search_text = text.substring (6);
             } else if (_current_list == _artist_list) {
                 _search_mode = SearchMode.ARTIST;
-                if (text.ascii_ncasecmp ("artist:", 7) == 0)
-                    _search_text = text.substring (7);
-            } else {
-                _search_mode = SearchMode.ANY;
-                parse_search_mode (ref _search_text, ref _search_mode);
             }
             _current_list.filter_model.set_filter (search_btn.active ? new Gtk.CustomFilter (on_search_match) : (Gtk.CustomFilter?) null);
         }
