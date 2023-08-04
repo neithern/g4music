@@ -464,12 +464,15 @@ namespace G4 {
                 case SearchMode.ALBUM:
                     return text.match_string (music.album, true);
                 case SearchMode.ARTIST:
-                    return text.match_string (music.artist, true) || text.match_string (music.album_artist, true);
+                    return text.match_string (music.album_artist, true)
+                        || text.match_string (music.album_artist, true)
+                        || ((music as Artist)?.find_by_artist (text) != null);
                 case SearchMode.TITLE:
                     return text.match_string (music.title, true);
                 default:
                     return text.match_string (music.album, true)
-                        || text.match_string (music.artist, true) || text.match_string (music.album_artist, true)
+                        || text.match_string (music.album_artist, true)
+                        || text.match_string (music.artist, true)
                         || text.match_string (music.title, true);
             }
         }
