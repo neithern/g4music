@@ -137,6 +137,7 @@ namespace G4 {
                     }
                 }
                 sort_btn.sensitive = _current_list == _playing_list;
+                _search_mode = SearchMode.ANY;
                 on_search_text_changed ();
 
                 var paths = new GenericArray<string> (4);
