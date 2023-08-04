@@ -387,7 +387,7 @@ namespace G4 {
                             if (paths.length > 2) {
                                 unowned var album_key = paths[2];
                                 if (album_key.length > 0)
-                                    album = ((!)artist).albums[album_key];
+                                    album = ((!)artist)[album_key];
                                 else if (album == null)
                                     album = ((!)artist).to_playlist ();
                             }

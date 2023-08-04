@@ -345,7 +345,7 @@ namespace G4 {
                 album.insert_to_store (store, insert_pos);
                 _list_modified = true;
                 if (immediately) {
-                    if (album.musics.contains (_current_uri))
+                    if (album.contains (_current_uri))
                         _player.play ();
                     else
                         current_music = store.get_item (insert_pos) as Music;

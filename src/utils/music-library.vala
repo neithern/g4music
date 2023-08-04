@@ -11,7 +11,7 @@ namespace G4 {
     }
 
     public class Album : Music {
-        public HashTable<unowned string, Music> musics = new HashTable<unowned string, Music> (str_hash, str_equal);
+        protected HashTable<unowned string, Music> _musics = new HashTable<unowned string, Music> (str_hash, str_equal);
 
         public Album (Music music) {
             base.titled (music.title, music.uri);
@@ -26,7 +26,7 @@ namespace G4 {
 
         public uint length {
             get {
-                return musics.length;
+                return _musics.length;
             }
         }
 
@@ -35,28 +35,36 @@ namespace G4 {
                 // For cover
                 uri = music.uri;
             }
-            var count = musics.length;
-            musics.insert (music.uri, music);
-            return musics.length > count;
+            var count = _musics.length;
+            _musics.insert (music.uri, music);
+            return _musics.length > count;
+        }
+
+        public bool contains (string uri) {
+            return _musics.contains (uri);
         }
 
         public void @foreach (HFunc<unowned string, Music> func) {
-            musics.foreach (func);
+            _musics.foreach (func);
+        }
+
+        public uint foreach_steal (HRFunc<unowned string, Music> func) {
+            return _musics.foreach_steal (func);
         }
 
         public void get_sorted_items (GenericArray<Music> arr) {
-            musics.foreach ((name, music) => arr.add (music));
+            _musics.foreach ((name, music) => arr.add (music));
             sort (arr);
         }
 
         public void insert_to_store (ListStore store, uint insert_pos = 0) {
-            var arr = new GenericArray<Music> (musics.length);
+            var arr = new GenericArray<Music> (_musics.length);
             get_sorted_items (arr);
             store.splice (insert_pos, 0, arr.data);
         }
 
         public bool remove_music (Music music) {
-            return musics.steal (music.uri);
+            return _musics.steal (music.uri);
         }
 
         protected virtual void sort (GenericArray<Music> arr) {
@@ -65,7 +73,7 @@ namespace G4 {
     }
 
     public class Artist : Music {
-        public HashTable<unowned string, Album> albums = new HashTable<unowned string, Album> (str_hash, str_equal);
+        protected HashTable<unowned string, Album> _albums = new HashTable<unowned string, Album> (str_hash, str_equal);
 
         public Artist (Music music) {
             base.titled (music.title, music.uri);
@@ -80,7 +88,7 @@ namespace G4 {
 
         public uint length {
             get {
-                return albums.length;
+                return _albums.length;
             }
         }
 
@@ -102,39 +110,43 @@ namespace G4 {
             unowned string key;
             unowned var album_key = music.album_key;
             Album album;
-            if (!albums.lookup_extended (album_key, out key, out album)) {
+            if (!_albums.lookup_extended (album_key, out key, out album)) {
                 album = new Album (music);
                 album.album_artist = name;
-                albums[album_key] = album;
+                _albums[album_key] = album;
             }
             return album.add_music (music);
         }
 
         public Album? find_by_partial_artist (string artist) {
-            return albums.find ((name, album) => artist.match_string (album.artist, true)) as Album;
+            return _albums.find ((name, album) => artist.match_string (album.artist, true)) as Album;
         }
 
         public void @foreach (HFunc<unowned string, Album> func) {
-            albums.foreach (func);
+            _albums.foreach (func);
+        }
+
+        public new Album? @get (string name) {
+            return _albums[name];
         }
 
         public void get_sorted_albums (GenericArray<Album> items) {
-            albums.foreach ((name, album) => items.add (album));
+            _albums.foreach ((name, album) => items.add (album));
             items.sort (compare_album);
         }
 
         public void replace_to_store (ListStore store) {
-            var arr = new GenericArray<Album> (albums.length);
+            var arr = new GenericArray<Album> (_albums.length);
             get_sorted_albums (arr);
             store.splice (0, store.get_n_items (), arr.data);
         }
 
         public bool remove_music (Music music) {
-            return albums.foreach_steal ((name, album) => album.remove_music (music) && album.length == 0) > 0;
+            return _albums.foreach_steal ((name, album) => album.remove_music (music) && album.length == 0) > 0;
         }
 
         public Playlist to_playlist () {
-            var arr = new GenericArray<Album> (albums.length);
+            var arr = new GenericArray<Album> (_albums.length);
             get_sorted_albums (arr);
             var items = new GenericArray<Music> (128);
             foreach (var album in arr) {
@@ -163,7 +175,7 @@ namespace G4 {
             this.list_uri = uri;
             Music.original_order (items);
             items.foreach ((music) => {
-                musics.insert (music.uri, music);
+                _musics.insert (music.uri, music);
                 if (!has_cover && music.has_cover) {
                     has_cover = true;
                     this.uri = music.uri;
@@ -251,7 +263,7 @@ namespace G4 {
         public void remove_uri (string uri, GenericSet<Music> removed) {
             var prefix = uri + "/";
             var n_removed = _albums.foreach_steal ((name, album) => {
-                album.musics.foreach_steal ((uri, music) => {
+                album.foreach_steal ((uri, music) => {
                     unowned var uri2 = music.uri;
                     if (uri2.has_prefix (prefix)/*|| uri2 == uri*/) {
                         removed.add (music);

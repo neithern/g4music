@@ -138,7 +138,7 @@ namespace G4 {
                     case PageName.ARTIST:
                         var artist = library.artists[key];
                         if ((artist is Artist) && arr.length > 2)
-                            return ((Artist) artist).albums[arr[2]];
+                            return ((Artist) artist)[arr[2]];
                         return artist;
                     case PageName.PLAYLIST:
                         return library.playlists[key];
