@@ -50,11 +50,24 @@
     </screenshots>
 
     <releases>
+        <release version="3.1" date="2023-8-5">
+            <description>
+                <ul>
+                <li>Group by album-artist, sort albums by year.</li>
+                <li>Save and restore the last library view.</li>
+                <li>Open a new page when play all music of an artist.</li>
+                <li>Stay in the current list when playing the whole album.</li>
+                <li>Show the local playlists.</li>
+                <li>Optimize searching.</li>
+                <li>Update German and Japanese translation.</li>
+                </ul>
+            </description>
+        </release>
         <release version="3.0" date="2023-7-29">
             <description>
                 <ul>
                 <li>Group artists/albums as library.</li>
-                <li>Optimize layout for landscape view</li>
+                <li>Optimize layout for landscape view.</li>
                 <li>Show progressbar when loading.</li>
                 <li>Add icons for preference rows.</li>
                 <li>Optimize seeking.</li>
