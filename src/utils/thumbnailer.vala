@@ -115,7 +115,7 @@ namespace G4 {
             } else if (pixbuf != null && paintable0 == null) {
                 var minbuf = find_pixbuf_from_cache (music.cover_key);
                 if (minbuf != null) {
-                    put (music, Gdk.Texture.for_pixbuf ((!)minbuf), false, size);
+                    put (music, Gdk.Texture.for_pixbuf ((!)minbuf), false, ICON_SIZE);
                 }
             }
             return paintable;
