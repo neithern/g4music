@@ -120,21 +120,23 @@ namespace G4 {
 
             _cover.margin_start = 8;
             _cover.margin_end = 8;
-            _cover.margin_bottom = 6;
-            _cover.pixel_size = 128;
+            _cover.margin_bottom = 8;
+            _cover.pixel_size = 160;
             _cover.paintable = _paintable;
             _paintable.queue_draw.connect (_cover.queue_draw);
             append (_cover);
 
             _title.halign = Gtk.Align.CENTER;
             _title.ellipsize = Pango.EllipsizeMode.END;
-            _title.margin_start = 4;
-            _title.margin_end = 4;
+            _title.margin_start = 2;
+            _title.margin_end = 2;
             _title.add_css_class ("title-leading");
             append (_title);
 
             _subtitle.halign = Gtk.Align.CENTER;
             _subtitle.ellipsize = Pango.EllipsizeMode.END;
+            _subtitle.margin_start = 2;
+            _subtitle.margin_end = 2;
             _subtitle.visible = false;
             _subtitle.add_css_class ("dim-label");
             var font_size = _subtitle.get_pango_context ().get_font_description ().get_size () / Pango.SCALE;
@@ -142,7 +144,7 @@ namespace G4 {
                 _subtitle.add_css_class ("title-secondly");
             append (_subtitle);
 
-            width_request = _cover.pixel_size + _cover.margin_start + _cover.margin_end;
+            width_request = 200;
         }
 
         public override Menu create_item_menu () {
@@ -198,7 +200,7 @@ namespace G4 {
             _playing.add_css_class ("dim-label");
             append (_playing);
 
-            width_request = 312;
+            width_request = 328;
         }
 
         public bool playing {

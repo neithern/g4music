@@ -62,7 +62,7 @@ namespace G4 {
     }
 
     public class Thumbnailer : Object {
-        public const int GRID_SIZE = 256;
+        public const int GRID_SIZE = 320;
         public const int ICON_SIZE = 96;
 
         private HashTable<string, string> _album_covers = new HashTable<string, string> (str_hash, str_equal);

@@ -47,9 +47,10 @@
           <object class="GtkBox">
             <property name="orientation">vertical</property>
             <property name="valign">end</property>
-            <property name="margin_start">32</property>
-            <property name="margin_end">32</property>
+            <property name="margin_start">16</property>
+            <property name="margin_end">16</property>
             <property name="margin_top">22</property>
+            <property name="width_request">272</property>
             <property name="height_request">80</property>
             <child>
               <object class="GtkLabel" id="initial_label">
@@ -57,7 +58,6 @@
                 <property name="hexpand">false</property>
                 <property name="lines">3</property>
                 <property name="single_line_mode">false</property>
-                <property name="width_request">272</property>
               </object>
             </child>
             <child>
