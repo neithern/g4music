@@ -125,6 +125,9 @@ namespace G4 {
 
         public Gtk.Widget visible_child {
             set {
+                if (_size_allocated) {
+                    update_visible_store ();
+                }
                 if (value is Gtk.Stack) {
                     value = ((Gtk.Stack) value).visible_child;
                 }
@@ -437,8 +440,11 @@ namespace G4 {
         }
 
         private void on_music_batch_changed () {
-            _library.get_sorted (_album_list.data_store, _artist_list.data_store, _playlist_list.data_store);
             if (_size_allocated) {
+                _album_list.data_store.remove_all ();
+                _artist_list.data_store.remove_all ();
+                _playlist_list.data_store.remove_all ();
+                update_visible_store ();
                 initialize_library_view ();
             }
         }
@@ -508,6 +514,17 @@ namespace G4 {
                     remove_stack_child (stack, mlist);
                     stack.transition_type = Gtk.StackTransitionType.SLIDE_LEFT_RIGHT;
                 }
+            }
+        }
+
+        private void update_visible_store () {
+            var visible_child = stack_view.visible_child;
+            if (visible_child == _album_stack && _album_list.data_store.get_n_items () == 0) {
+                _library.get_sorted_albums (_album_list.data_store);
+            } else if (visible_child == _artist_stack && _artist_list.data_store.get_n_items () == 0) {
+                _library.get_sorted_artists (_artist_list.data_store);
+            } else if (visible_child == _playlist_stack && _playlist_list.data_store.get_n_items () == 0) {
+                _library.get_sorted_playlists (_playlist_list.data_store);
             }
         }
     }

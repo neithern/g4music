@@ -238,21 +238,25 @@ namespace G4 {
             _playlists.insert (playlist.list_uri, playlist);
         }
 
-        public void get_sorted (ListStore album_store, ListStore artist_store, ListStore playlist_store) {
-            var arr = new GenericArray<Music> (uint.max (albums.length, artists.length));
+        public void get_sorted_albums (ListStore store) {
+            var arr = new GenericArray<Music> (_albums.length);
             _albums.foreach ((name, album) => arr.add (album));
             arr.sort (Music.compare_by_album);
-            album_store.splice (0, album_store.get_n_items (), arr.data);
+            store.splice (0, store.get_n_items (), arr.data);
+        }
 
-            arr.remove_range (0, arr.length);
+        public void get_sorted_artists (ListStore store) {
+            var arr = new GenericArray<Music> (_artists.length);
             _artists.foreach ((name, artist) => arr.add (artist));
             arr.sort (Music.compare_by_artist);
-            artist_store.splice (0, artist_store.get_n_items (), arr.data);
+            store.splice (0, store.get_n_items (), arr.data);
+        }
 
-            arr.remove_range (0, arr.length);
+        public void get_sorted_playlists (ListStore store) {
+            var arr = new GenericArray<Music> (_playlists.length);
             _playlists.foreach ((uri, playlist) => arr.add (playlist));
             arr.sort (Music.compare_by_title);
-            playlist_store.splice (0, playlist_store.get_n_items (), arr.data);
+            store.splice (0, store.get_n_items (), arr.data);
         }
 
         public void remove_music (Music music) {
