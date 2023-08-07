@@ -446,9 +446,6 @@ namespace G4 {
 
         private void on_music_batch_changed () {
             if (_size_allocated) {
-                _album_list.data_store.remove_all ();
-                _artist_list.data_store.remove_all ();
-                _playlist_list.data_store.remove_all ();
                 update_visible_store ();
                 initialize_library_view ();
             }
@@ -459,6 +456,11 @@ namespace G4 {
         }
 
         private void on_music_external_changed () {
+            _album_list.data_store.remove_all ();
+            _artist_list.data_store.remove_all ();
+            _playlist_list.data_store.remove_all ();
+            update_visible_store ();
+
             for (var child = stack_view.get_last_child (); child is Gtk.Stack; child = child?.get_prev_sibling ())
                 update_stack_pages ((Gtk.Stack) child);
         }
@@ -512,8 +514,9 @@ namespace G4 {
         }
 
         private void update_stack_pages (Gtk.Stack stack) {
-            for (var child = stack.get_last_child (); child is MusicList; child = child?.get_prev_sibling ()) {
+            for (var child = stack.get_last_child (); child is MusicList; ) {
                 var mlist = (MusicList) child;
+                child = child?.get_prev_sibling ();
                 if (mlist.update_store () == 0) {
                     stack.transition_type = Gtk.StackTransitionType.NONE;
                     remove_stack_child (stack, mlist);
