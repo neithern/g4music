@@ -314,9 +314,14 @@ namespace G4 {
             var title = album_mode ? album?.album : artist?.name;
             var label = new Gtk.Label (title);
             label.ellipsize = Pango.EllipsizeMode.END;
+            var icon = new Gtk.Image.from_icon_name (album_mode ? "media-optical-cd-audio-symbolic" : "avatar-default-symbolic");
+            var label_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 2);
+            label_box.append (icon);
+            label_box.append (label);
+
             var header = new Adw.HeaderBar ();
             header.show_end_title_buttons = false;
-            header.title_widget = label;
+            header.title_widget = label_box;
             header.add_css_class ("flat");
             mlist.prepend (header);
 
