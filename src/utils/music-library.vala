@@ -73,28 +73,24 @@ namespace G4 {
     }
 
     public class Artist : Music {
+        public string name;
         protected HashTable<unowned string, Album> _albums = new HashTable<unowned string, Album> (str_hash, str_equal);
 
-        public Artist (Music music) {
+        public Artist (Music music, string artist_name) {
             base.titled (music.title, music.uri);
             base.album = music.album;
             base.artist = music.artist;
             base.album_artist = music.album_artist;
             base._album_key = music._album_key;
-            base._artist_key = this.name.collate_key_for_filename ();
+            base._artist_key = artist_name.collate_key_for_filename ();
             base.date = music.date;
             base.uri = music.uri;
+            name = artist_name;
         }
 
         public uint length {
             get {
                 return _albums.length;
-            }
-        }
-
-        public unowned string name {
-            get {
-                return album_artist.length > 0 ? album_artist : artist;
             }
         }
 
@@ -227,7 +223,7 @@ namespace G4 {
             unowned var artist_name = album_artist.length > 0 ? album_artist : music.artist;
             Artist artist;
             if (!_artists.lookup_extended (artist_name, out key, out artist)) {
-                artist = new Artist (music);
+                artist = new Artist (music, artist_name);
                 _artists[artist_name] = artist;
             }
             added |= artist.add_music (music);
