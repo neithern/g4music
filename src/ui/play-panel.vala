@@ -24,7 +24,7 @@ namespace G4 {
         private PlayBar _play_bar = new PlayBar ();
 
         private Application _app;
-        private int _cover_size = 1024;
+        private int _cover_size = 480;
         private double _degrees_per_second = 360 / 20; // 20s per lap
         private CrossFadePaintable _crossfade_paintable = new CrossFadePaintable ();
         private MatrixPaintable _matrix_paintable = new MatrixPaintable ();
@@ -153,7 +153,7 @@ namespace G4 {
             var thumbnailer = _app.thumbnailer;
             if (image != null) {
                 pixbuf = yield run_async<Gdk.Pixbuf?> (
-                    () => load_clamp_pixbuf_from_sample ((!)image, _cover_size), true);
+                    () => load_clamp_pixbuf_from_sample ((!)image, _cover_size * scale_factor), true);
                 if (pixbuf != null)
                     paintable = Gdk.Texture.for_pixbuf ((!)pixbuf);
             } else {
@@ -163,7 +163,7 @@ namespace G4 {
                 //  Remote thumbnail may not loaded
                 if (pixbuf != null && !(thumbnailer.find (music) is Gdk.Texture)) {
                     pixbuf = yield run_async<Gdk.Pixbuf?> (
-                        () => create_clamp_pixbuf ((!)pixbuf, Thumbnailer.ICON_SIZE)
+                        () => create_clamp_pixbuf ((!)pixbuf, Thumbnailer.ICON_SIZE * scale_factor)
                     );
                     if (pixbuf != null && music == _app.current_music) {
                         thumbnailer.put (music, Gdk.Texture.for_pixbuf ((!)pixbuf), true);

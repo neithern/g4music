@@ -59,6 +59,7 @@ namespace G4 {
 
             var thumbnailer = app.thumbnailer;
             thumbnailer.pango_context = get_pango_context ();
+            thumbnailer.scale_factor = this.scale_factor;
             _loading_paintable = thumbnailer.create_simple_text_paintable ("...", Thumbnailer.ICON_SIZE);
 
             leaflet.bind_property ("folded", header_bar, "show-title-buttons", BindingFlags.SYNC_CREATE);

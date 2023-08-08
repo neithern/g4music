@@ -62,8 +62,8 @@ namespace G4 {
     }
 
     public class Thumbnailer : Object {
-        public const int GRID_SIZE = 320;
-        public const int ICON_SIZE = 96;
+        public const int GRID_SIZE = 160;
+        public const int ICON_SIZE = 48;
 
         private HashTable<string, string> _album_covers = new HashTable<string, string> (str_hash, str_equal);
         private LruCache<Gdk.Pixbuf?> _album_pixbufs = new LruCache<Gdk.Pixbuf?> (1000);
@@ -78,6 +78,8 @@ namespace G4 {
         public Pango.Context? pango_context { get; set; }
 
         public bool remote_thumbnail { get; set; }
+
+        public int scale_factor { get; set; }
 
         public Gdk.Paintable? find (Music music, int size = ICON_SIZE) {
             unowned var cache = size >= GRID_SIZE ? _grid_cache : _icon_cache;
@@ -141,17 +143,17 @@ namespace G4 {
                     var image_size = sample?.get_buffer ()?.get_size () ?? 0;
                     var album_key = album_key_ + image_size.to_string ("%x");
                     check_same_album_cover (album_key, ref args[0]);
-                    pixbuf = load_clamp_pixbuf_from_sample ((!)sample, size);
+                    pixbuf = load_clamp_pixbuf_from_sample ((!)sample, size * _scale_factor);
                 } else if ((cover_file = _cover_finder?.find (file.get_parent ())) != null) {
                     var album_key = (!) cover_file?.get_path ();
                     args[0] = args[1] = (!) cover_file?.get_uri ();
                     check_same_album_cover (album_key, ref args[0]);
-                    pixbuf = load_clamp_pixbuf_from_file ((!)cover_file, size);
+                    pixbuf = load_clamp_pixbuf_from_file ((!)cover_file, size * _scale_factor);
                 }
                 if (pixbuf != null) {
                     var minbuf = find_pixbuf_from_cache (args[0]);
                     if (minbuf == null) {
-                        minbuf = create_clamp_pixbuf ((!)pixbuf, ICON_SIZE);
+                        minbuf = create_clamp_pixbuf ((!)pixbuf, ICON_SIZE * _scale_factor);
                         put_pixbuf_to_cache (args[0], (!)minbuf);
                     }
                     return size <= ICON_SIZE ? minbuf : pixbuf;
@@ -191,7 +193,7 @@ namespace G4 {
         }
 
         public Gdk.Paintable create_simple_text_paintable (string text, int size, uint color_index = 0x7fffffff) {
-            var paintable = create_text_paintable ((!)_pango_context, text, size, size, color_index);
+            var paintable = create_text_paintable ((!)_pango_context, text, size * _scale_factor, size * _scale_factor, color_index);
             return paintable ?? new BasePaintable ();
         }
 
