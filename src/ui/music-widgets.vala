@@ -8,10 +8,12 @@ namespace G4 {
     }
 
     public class StableLabel : Gtk.Widget {
+        private static Gtk.Builder _builder = new Gtk.Builder ();
+
         private Gtk.Label _label = new Gtk.Label (null);
 
         construct {
-            add_child (new Gtk.Builder (), _label, null);
+            add_child (_builder, _label, null);
         }
 
         ~StableLabel () {
