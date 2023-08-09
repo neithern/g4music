@@ -197,6 +197,8 @@ namespace G4 {
             get {
                 if (_music_folder.length == 0) {
                     var path = Environment.get_user_special_dir (UserDirectory.MUSIC);
+                    if (path == (string) null)
+                        path = "Music";
                     _music_folder = File.new_build_filename (path).get_uri ();
                 }
                 return _music_folder;
