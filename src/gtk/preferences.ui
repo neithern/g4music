@@ -39,6 +39,18 @@
               </object>
             </child>
             <child>
+              <object class="AdwActionRow" id="grid_mode">
+                <property name="icon-name">view-grid-symbolic</property>
+                <property name="title" translatable="yes">Grid view for artists/albums</property>
+                <property name="activatable_widget">grid_btn</property>
+                <child>
+                  <object class="GtkSwitch" id="grid_btn">
+                    <property name="valign">center</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
               <object class="AdwActionRow">
                 <property name="icon-name">media-playback-start-symbolic</property>
                 <property name="title" translatable="yes">Keep playing after window closed</property>

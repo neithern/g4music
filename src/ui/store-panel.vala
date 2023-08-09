@@ -134,7 +134,7 @@ namespace G4 {
                 }
                 if (value is MusicList) {
                     _current_list = (MusicList) value;
-                    if (_current_list.list_mode) {
+                    if (_current_list.playable) {
                         _app.music_list = _current_list.filter_model;
                         _current_list.current_item = _app.current_music;
                         run_idle_once (() => _current_list.scroll_to_current_item ());
@@ -153,7 +153,7 @@ namespace G4 {
 
         public void size_allocated () {
             // Delay set model after the window size allocated to avoid showing slowly
-            _app.settings.bind ("compact-playlist", _playing_list, "compact-list", SettingsBindFlags.DEFAULT);
+            _playing_list.create_factory ();
             _current_list.scroll_to_item (_app.current_item);
             _album_list.create_factory ();
             _artist_list.create_factory ();
@@ -200,18 +200,18 @@ namespace G4 {
         }
 
         private MusicList create_album_list (Artist? artist = null) {
-            var list = new MusicList (_app, true, artist);
+            var list = new MusicList (_app, false, artist);
             list.item_activated.connect ((position, obj) => {
                 if (obj is Album) {
                     create_sub_stack_page (artist, (Album) obj);
                 }
             });
             list.item_created.connect ((item) => {
-                var cell = (MusicCell) item.child;
+                var cell = (MusicWidget) item.child;
                 make_right_clickable (cell, cell.show_popover_menu);
             });
             list.item_binded.connect ((item) => {
-                var cell = (MusicCell) item.child;
+                var cell = (MusicWidget) item.child;
                 var album = (Album) item.item;
                 var album_artist = album.album_artist;
                 var year = album.year;
@@ -223,34 +223,39 @@ namespace G4 {
                     subtitle = (album_artist.length > 0 ? album_artist + " " : "") + subtitle;
                 cell.subtitle = subtitle;
             });
+            _app.settings.bind ("compact-playlist", list, "compact-list", SettingsBindFlags.DEFAULT);
+            _app.settings.bind ("grid-mode", list, "grid-mode", SettingsBindFlags.DEFAULT);
             return list;
         }
 
         private MusicList create_artist_list () {
-            var list = new MusicList (_app, true);
+            var list = new MusicList (_app, false);
             list.item_activated.connect ((position, obj) => {
                 if (obj is Artist) {
                     create_sub_stack_page ((Artist) obj);
                 }
             });
             list.item_created.connect ((item) => {
-                var cell = (MusicCell) item.child;
+                var cell = (MusicWidget) item.child;
                 cell.cover.ratio = 0.5;
                 make_right_clickable (cell, cell.show_popover_menu);
             });
             list.item_binded.connect ((item) => {
-                var cell = (MusicCell) item.child;
+                var cell = (MusicWidget) item.child;
                 var artist = (Artist) item.item;
                 cell.music = artist;
                 cell.paintable = _loading_paintable;
                 cell.title = artist.name;
+                cell.subtitle = "";
             });
+            _app.settings.bind ("compact-playlist", list, "compact-list", SettingsBindFlags.DEFAULT);
+            _app.settings.bind ("grid-mode", list, "grid-mode", SettingsBindFlags.DEFAULT);
             return list;
         }
 
         private MusicList create_music_list (Album album, bool from_artist = false) {
             var sort_mode = (album is Playlist && from_artist) ? SortMode.ALBUM : SortMode.TITLE;
-            var list = new MusicList (_app, false, album);
+            var list = new MusicList (_app, true, album);
             list.item_activated.connect ((position, obj) => _app.play (obj));
             list.item_binded.connect ((item) => {
                 var entry = (MusicEntry) item.child;
@@ -268,7 +273,7 @@ namespace G4 {
         }
 
         private MusicList create_playing_music_list () {
-            var list = new MusicList (_app);
+            var list = new MusicList (_app, true);
             list.item_activated.connect ((position, obj) => _app.current_item = (int) position);
             list.item_binded.connect ((item) => {
                 var entry = (MusicEntry) item.child;
@@ -281,27 +286,30 @@ namespace G4 {
                 var entry = (MusicEntry) item.child;
                 make_right_clickable (entry, entry.show_popover_menu);
             });
+            _app.settings.bind ("compact-playlist", list, "compact-list", SettingsBindFlags.DEFAULT);
             return list;
         }
 
         private MusicList create_playlist_list () {
-            var list = new MusicList (_app, true);
+            var list = new MusicList (_app, false);
             list.item_activated.connect ((position, obj) => {
                 if (obj is Playlist) {
                     create_sub_stack_page (null, (Playlist) obj);
                 }
             });
             list.item_created.connect ((item) => {
-                var cell = (MusicCell) item.child;
+                var cell = (MusicWidget) item.child;
                 make_right_clickable (cell, cell.show_popover_menu);
             });
             list.item_binded.connect ((item) => {
-                var cell = (MusicCell) item.child;
+                var cell = (MusicWidget) item.child;
                 var playlist = (Playlist) item.item;
                 cell.music = playlist;
                 cell.paintable = _loading_paintable;
                 cell.title = playlist.title;
             });
+            _app.settings.bind ("compact-playlist", list, "compact-list", SettingsBindFlags.DEFAULT);
+            _app.settings.bind ("grid-mode", list, "grid-mode", SettingsBindFlags.DEFAULT);
             return list;
         }
 
@@ -417,7 +425,7 @@ namespace G4 {
         private void on_index_changed (int index, uint size) {
             root.action_set_enabled (ACTION_APP + ACTION_PREV, index > 0);
             root.action_set_enabled (ACTION_APP + ACTION_NEXT, index < (int) size - 1);
-            if (_current_list.list_mode) {
+            if (_current_list.playable) {
                 _current_list.scroll_to_item (index);
             }
         }

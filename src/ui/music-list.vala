@@ -7,8 +7,9 @@ namespace G4 {
         private Gtk.FilterListModel _filter_model = new Gtk.FilterListModel (null, null);
         private bool _grid_mode = false;
         private Gtk.GridView _grid_view = new Gtk.GridView (null, null);
-        private int _image_size = 96;
+        private int _image_size = Thumbnailer.ICON_SIZE;
         private Music? _music_node = null;
+        private bool _playable = false;
         private Gtk.ScrolledWindow _scroll_view = new Gtk.ScrolledWindow ();
         private Thumbnailer _thmbnailer;
 
@@ -21,14 +22,13 @@ namespace G4 {
         public signal void item_created (Gtk.ListItem item);
         public signal void item_binded (Gtk.ListItem item);
 
-        public MusicList (Application app, bool grid = false, Music? node = null) {
+        public MusicList (Application app, bool playable = false, Music? node = null) {
             orientation = Gtk.Orientation.VERTICAL;
             hexpand = true;
             append (_scroll_view);
 
+            _playable = playable;
             _filter_model.model = _data_store;
-            _grid_mode = grid;
-            _image_size = grid ? Thumbnailer.GRID_SIZE : Thumbnailer.ICON_SIZE;
             _music_node = node;
             _thmbnailer = app.thumbnailer;
             update_store ();
@@ -49,13 +49,22 @@ namespace G4 {
             _scroll_view.vadjustment.changed.connect (on_vadjustment_changed);
         }
 
+        public bool playable {
+            get {
+                return _playable;
+            }
+        }
+
         public bool compact_list {
             get {
                 return _compact_list;
             }
             set {
+                var factory = _grid_view.get_factory ();
                 _compact_list = value;
-                create_factory ();
+                if (factory != null) {
+                    create_factory ();
+                }
             }
         }
 
@@ -85,15 +94,19 @@ namespace G4 {
             get {
                 return _filter_model;
             }
-            set {
-                _filter_model = value;
-                _grid_view.model = new Gtk.NoSelection (_filter_model);
-            }
         }
 
-        public bool list_mode {
+        public bool grid_mode {
             get {
-                return !_grid_mode;
+                return _grid_mode;
+            }
+            set {
+                var factory = _grid_view.get_factory ();
+                _grid_mode = value;
+                _image_size = value ? Thumbnailer.GRID_SIZE : Thumbnailer.ICON_SIZE;
+                if (factory != null) {
+                    create_factory ();
+                }
             }
         }
 
@@ -155,10 +168,7 @@ namespace G4 {
         }
 
         private void on_create_item (Gtk.ListItem item) {
-            if (_grid_mode)
-                item.child = new MusicCell ();
-            else
-                item.child = new MusicEntry (_compact_list);
+            item.child = _grid_mode ? (MusicWidget) new MusicCell () : (MusicWidget) new MusicEntry (_compact_list);
             item.selectable = false;
             item_created (item);
             _row_width = item.child.width_request;

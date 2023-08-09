@@ -14,6 +14,10 @@
       <default>false</default>
       <summary>Compact playlist view</summary>
     </key>
+    <key name="grid-mode" type="b">
+      <default>true</default>
+      <summary>Grid view for artists/albums</summary>
+    </key>
     <key name="library-path" type="as">
       <default>[]</default>
     </key>

@@ -129,14 +129,14 @@ namespace G4 {
             append (_cover);
 
             _title.halign = Gtk.Align.CENTER;
-            _title.ellipsize = Pango.EllipsizeMode.END;
+            _title.ellipsize = Pango.EllipsizeMode.MIDDLE;
             _title.margin_start = 2;
             _title.margin_end = 2;
             _title.add_css_class ("title-leading");
             append (_title);
 
             _subtitle.halign = Gtk.Align.CENTER;
-            _subtitle.ellipsize = Pango.EllipsizeMode.END;
+            _subtitle.ellipsize = Pango.EllipsizeMode.MIDDLE;
             _subtitle.margin_start = 2;
             _subtitle.margin_end = 2;
             _subtitle.visible = false;
