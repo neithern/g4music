@@ -159,6 +159,7 @@ namespace G4 {
                 item.child = new MusicCell ();
             else
                 item.child = new MusicEntry (_compact_list);
+            item.selectable = false;
             item_created (item);
             _row_width = item.child.width_request;
         }
