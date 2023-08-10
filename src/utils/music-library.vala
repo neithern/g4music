@@ -138,6 +138,14 @@ namespace G4 {
         }
 
         public bool remove_music (Music music) {
+            unowned var album_key = music.album_key;
+            var album = _albums[album_key];
+            if (album is Album) {
+                var ret = album.remove_music (music);
+                if (album.length == 0)
+                    _albums.remove (album_key);
+                return ret;
+            }
             return _albums.foreach_steal ((name, album) => album.remove_music (music) && album.length == 0) > 0;
         }
 
@@ -256,8 +264,26 @@ namespace G4 {
         }
 
         public void remove_music (Music music) {
-            _albums.foreach_steal ((name, album) => album.remove_music (music) && album.length == 0);
-            _artists.foreach_steal ((name, artist) => artist.remove_music (music) && artist.length == 0);
+            unowned var album_key = music.album_key;
+            var album = _albums[album_key];
+            if (album is Album) {
+                album.remove_music (music);
+                if (album.length == 0)
+                    _albums.steal (album_key);
+            } else {
+                _albums.foreach_steal ((name, album) => album.remove_music (music) && album.length == 0);
+            }
+
+            unowned var album_artist = music.album_artist;
+            unowned var artist_name = album_artist.length > 0 ? album_artist : music.artist;
+            var artist = _artists[artist_name];
+            if (artist is Artist) {
+                artist.remove_music (music);
+                if (artist.length == 0)
+                    _artists.remove (artist_name);
+            } else {
+                _artists.foreach_steal ((name, artist) => artist.remove_music (music) && artist.length == 0);
+            }
         }
 
         public void remove_uri (string uri, GenericSet<Music> removed) {

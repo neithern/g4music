@@ -559,10 +559,15 @@ namespace G4 {
                 var remain = new GenericArray<Music> (n_items);
                 for (var i = 0; i < n_items; i++) {
                     var music = (Music) _music_store.get_item (i);
-                    if (!removed.contains (music))
+                    if (removed.contains (music)) {
+                        if (_current_item > i)
+                            _current_item--;
+                    } else {
                         remain.add (music);
+                    }
                 }
                 _music_store.splice (0, n_items, remain.data);
+                current_item = _current_item;
             } else {
                 _music_store.items_changed (0, n_items, n_items);
             }
