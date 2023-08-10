@@ -70,6 +70,7 @@ namespace G4 {
 
             _current_list = _playing_list = create_playing_music_list ();
             _playing_list.data_store = _app.music_store;
+            _app.music_list = _playing_list.filter_model;
             stack_view.add_titled (_playing_list, PageName.PLAYING, _("Playing")).icon_name = "media-playback-start-symbolic";
 
             _artist_list = create_artist_list ();
@@ -154,7 +155,7 @@ namespace G4 {
         public void size_allocated () {
             // Delay set model after the window size allocated to avoid showing slowly
             _playing_list.create_factory ();
-            _current_list.scroll_to_item (_app.current_item);
+            _playing_list.scroll_to_item (_app.current_item);
             _album_list.create_factory ();
             _artist_list.create_factory ();
             _playlist_list.create_factory ();
@@ -256,7 +257,7 @@ namespace G4 {
         private MusicList create_music_list (Album album, bool from_artist = false) {
             var sort_mode = (album is Playlist && from_artist) ? SortMode.ALBUM : SortMode.TITLE;
             var list = new MusicList (_app, true, album);
-            list.item_activated.connect ((position, obj) => _app.play (obj));
+            list.item_activated.connect ((position, obj) => _app.current_item = (int) position);
             list.item_binded.connect ((item) => {
                 var entry = (MusicEntry) item.child;
                 var music = (Music) item.item;
