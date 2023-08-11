@@ -355,15 +355,17 @@ namespace G4 {
                 }
             } else if (obj is Music) {
                 var music = (Music) obj;
-                uint position = -1;
-                var store = (ListStore) _music_list.model;
-                if (!store.find (music, out position)) {
+                int position = find_item_in_model (_music_list, obj);
+                if (position == -1) {
+                    var store = (ListStore) _music_list.model;
                     store.append (music);
-                    position = (int) store.get_n_items () - 1;
+                    position = find_item_in_model (_music_list, obj);
                     _list_modified = true;
                 }
                 if (immediately) {
-                    current_item = (int) position;
+                    current_item = position;
+                    if (position == -1)
+                        current_music = music;
                 }
             }
         }
