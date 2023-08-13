@@ -137,7 +137,7 @@ namespace G4 {
         chooser.response.connect ((id) => {
             if (id == Gtk.ResponseType.ACCEPT) {
                 var dir = chooser.get_file ();
-                if (dir != null) {
+                if (dir is File) {
                     var uri = ((!)dir).get_uri ();
                     if (app.music_folder != uri)
                         app.music_folder = uri;

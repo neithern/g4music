@@ -60,7 +60,7 @@ namespace G4 {
         public void insert_to_store (ListStore store, uint insert_pos = 0) {
             var arr = new GenericArray<Music> (_musics.length);
             get_sorted_items (arr);
-            store.splice (insert_pos, 0, arr.data);
+            store.splice (insert_pos, 0, (Object[]) arr.data);
         }
 
         public bool remove_music (Music music) {
@@ -134,7 +134,7 @@ namespace G4 {
         public void replace_to_store (ListStore store) {
             var arr = new GenericArray<Album> (_albums.length);
             get_sorted_albums (arr);
-            store.splice (0, store.get_n_items (), arr.data);
+            store.splice (0, store.get_n_items (), (Object[]) arr.data);
         }
 
         public bool remove_music (Music music) {
@@ -246,21 +246,21 @@ namespace G4 {
             var arr = new GenericArray<Music> (_albums.length);
             _albums.foreach ((name, album) => arr.add (album));
             arr.sort (Music.compare_by_album);
-            store.splice (0, store.get_n_items (), arr.data);
+            store.splice (0, store.get_n_items (), (Object[]) arr.data);
         }
 
         public void get_sorted_artists (ListStore store) {
             var arr = new GenericArray<Music> (_artists.length);
             _artists.foreach ((name, artist) => arr.add (artist));
             arr.sort (Music.compare_by_artist);
-            store.splice (0, store.get_n_items (), arr.data);
+            store.splice (0, store.get_n_items (), (Object[]) arr.data);
         }
 
         public void get_sorted_playlists (ListStore store) {
             var arr = new GenericArray<Music> (_playlists.length);
             _playlists.foreach ((uri, playlist) => arr.add (playlist));
             arr.sort (Music.compare_by_title);
-            store.splice (0, store.get_n_items (), arr.data);
+            store.splice (0, store.get_n_items (), (Object[]) arr.data);
         }
 
         public void remove_music (Music music) {
@@ -314,19 +314,21 @@ namespace G4 {
         }
     }
 
-    private const CompareFunc<Music>[] COMPARE_FUNCS = {
-        Music.compare_by_album,
-        Music.compare_by_artist,
-        Music.compare_by_artist_album,
-        Music.compare_by_title,
-        Music.compare_by_recent,
-        Music.compare_by_order,
-    };
-
     public CompareFunc<Music> get_sort_compare (uint sort_mode) {
-        if (sort_mode <= COMPARE_FUNCS.length)
-            return COMPARE_FUNCS[sort_mode];
-        return Music.compare_by_order;
+        switch (sort_mode) {
+            case SortMode.ALBUM:
+                return Music.compare_by_album;
+            case SortMode.ARTIST:
+                return Music.compare_by_artist;
+            case SortMode.ARTIST_ALBUM:
+                return Music.compare_by_artist_album;
+            case SortMode.TITLE:
+                return Music.compare_by_title;
+            case SortMode.RECENT:
+                return Music.compare_by_recent;
+            default:
+                return Music.compare_by_order;
+        }
     }
 
     public void sort_music_array (GenericArray<Music> arr, uint sort_mode) {
@@ -342,6 +344,6 @@ namespace G4 {
             arr.add ((Music) store.get_item (pos));
         }
         sort_music_array (arr, sort_mode);
-        store.splice (0, count, arr.data);
+        store.splice (0, count, (Object[]) arr.data);
     }
 }

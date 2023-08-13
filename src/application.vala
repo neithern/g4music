@@ -278,7 +278,7 @@ namespace G4 {
             if (files.length > 0) {
                 var musics = new GenericArray<Music> (4096);
                 yield _loader.load_files_async (files, musics, true, !default_mode, _sort_mode);
-                _music_store.splice (0, _music_store.get_n_items (), musics.data);
+                _music_store.splice (0, _music_store.get_n_items (), (Object[]) musics.data);
                 _list_modified = false;
             }
             if (_current_music != null && _current_music == _music_list.get_item (_current_item)) {
@@ -533,7 +533,7 @@ namespace G4 {
         private void on_music_found (GenericArray<Music> arr) {
             var n_items = _music_store.get_n_items ();
             if (arr.length > 0) {
-                _music_store.splice (n_items, 0, arr.data);
+                _music_store.splice (n_items, 0, (Object[]) arr.data);
             } else {
                 _music_store.items_changed (0, n_items, n_items);
             }
@@ -568,7 +568,7 @@ namespace G4 {
                         remain.add (music);
                     }
                 }
-                _music_store.splice (0, n_items, remain.data);
+                _music_store.splice (0, n_items, (Object[]) remain.data);
                 current_item = _current_item;
             } else {
                 _music_store.items_changed (0, n_items, n_items);
