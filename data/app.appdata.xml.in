@@ -50,6 +50,15 @@
     </screenshots>
 
     <releases>
+        <release version="3.2" date="2023-8-13">
+            <description>
+                <ul>
+                <li>Option: Grid view for artists/albums.</li>
+                <li>Bigger image size and column width for grid view.</li>
+                <li>UI improvement and fixing.</li>
+                </ul>
+            </description>
+        </release>
         <release version="3.1" date="2023-8-5">
             <description>
                 <ul>
