@@ -396,8 +396,7 @@ namespace G4 {
                         insert_to_next (music, store);
                     }
                 }
-                _current_item = find_music_item (_current_music);
-                rebind_current_item ();
+                update_current_item ();
             }
         }
 
