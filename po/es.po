@@ -90,10 +90,9 @@ msgid "Toggle Sort"
 msgstr "Cambiar Orden"
 
 #: src/gtk/help-overlay.ui:72
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Reload Library"
-msgstr "_Recargar Lista"
+msgstr "Recargar Biblioteca"
 
 #: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:290
 msgid "Back"
@@ -116,13 +115,17 @@ msgstr "Modo de blur de fondo"
 msgid "Compact playlist view"
 msgstr "Playlist compacta"
 
+#: src/gtk/preferences.ui:44
+msgid "Grid view for artists/albums"
+msgstr "Vista en cuadricula para artistas/albums"
+
 #: src/gtk/preferences.ui:44 src/application.vala:424
 msgid "Keep playing after window closed"
 msgstr "Seguir reproduciendo despues de cerrar la ventana"
 
-#: src/gtk/preferences.ui:57
+#: src/gtk/preferences.ui:69
 msgid "Library"
-msgstr ""
+msgstr "Biblioteca"
 
 #: src/gtk/preferences.ui:61
 msgid "Load music from folder"
@@ -173,18 +176,16 @@ msgid "Main Menu"
 msgstr "Menu Principal"
 
 #: src/gtk/store-panel.ui:28
-#, fuzzy
 msgid "Sort By"
-msgstr "Modo de Clasificacion"
+msgstr "Ordenar Por"
 
 #: src/gtk/store-panel.ui:35
 msgid "Search"
 msgstr "Buscar"
 
 #: src/gtk/store-panel.ui:73
-#, fuzzy
 msgid "_Reload Library"
-msgstr "_Recargar Lista"
+msgstr "_Recargar Biblioteca"
 
 #: src/gtk/store-panel.ui:79
 msgid "_Preferences"
@@ -198,28 +199,25 @@ msgstr "_Atajos de Teclado"
 msgid "_About"
 msgstr "_Acerca de"
 
-#: src/gtk/store-panel.ui:96 src/ui/preferences.vala:64
-#, fuzzy
+#: src/gtk/store-panel.ui:96 src/ui/preferences.vala:67
 msgid "Album"
-msgstr "Por Album"
+msgstr "Album"
 
 #: src/gtk/store-panel.ui:101
-#, fuzzy
 msgid "Artist"
-msgstr "Por Artista"
+msgstr "Artista"
 
 #: src/gtk/store-panel.ui:106
 msgid "Artist/Album"
-msgstr ""
+msgstr "Artista/Album"
 
 #: src/gtk/store-panel.ui:111
-#, fuzzy
 msgid "Title"
-msgstr "Por Titulo"
+msgstr "Titulo"
 
 #: src/gtk/store-panel.ui:116
 msgid "Recent"
-msgstr ""
+msgstr "Reciente"
 
 #: src/gtk/store-panel.ui:121
 msgid "Shuffle"
@@ -308,29 +306,6 @@ msgstr "Siempre"
 msgid "Art Only"
 msgstr "Solo Portada"
 
-#: src/ui/preferences.vala:64
-msgid "Track"
-msgstr "Pista"
-
-#: src/ui/store-panel.vala:66
-#, fuzzy
-msgid "Playing"
-msgstr "Lista de Reproduccion"
-
-#: src/ui/store-panel.vala:72
-#, fuzzy
-msgid "Artists"
-msgstr "Por Artista"
-
-#: src/ui/store-panel.vala:77
-#, fuzzy
-msgid "Albums"
-msgstr "Por Album"
-
-#: src/ui/volume-button.vala:32
-msgid "Volume: "
-msgstr "Volumen: "
-
 #: src/utils/music.vala:2
 msgid "Unknown Album"
 msgstr "Album Desconocido"
@@ -338,6 +313,30 @@ msgstr "Album Desconocido"
 #: src/utils/music.vala:3
 msgid "Unknown Artist"
 msgstr "Artista Desconocido"
+
+#: src/ui/preferences.vala:67
+msgid "Track"
+msgstr "Pista"
+
+#: src/ui/store-panel.vala:73
+msgid "Playing"
+msgstr "Reproduciendo Ahora"
+
+#: src/ui/store-panel.vala:78
+msgid "Artists"
+msgstr "Artistas"
+
+#: src/ui/store-panel.vala:83
+msgid "Albums"
+msgstr "Albums"
+
+#: src/ui/store-panel.vala:373
+msgid "Playlists"
+msgstr "Listas De Reproduccion"
+
+#: src/ui/volume-button.vala:32
+msgid "Volume: "
+msgstr "Volumen:"
 
 #~ msgid "Appearance"
 #~ msgstr "Apariencia"
