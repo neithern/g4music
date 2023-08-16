@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-09 21:51+0800\n"
-"PO-Revision-Date: 2023-08-09 21:52+0800\n"
+"POT-Creation-Date: 2023-08-16 22:53+0800\n"
+"PO-Revision-Date: 2023-08-16 22:55+0800\n"
 "Last-Translator: Nanling <neithern@outlook.com>\n"
 "Language-Team: Chinese - China <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
@@ -97,7 +97,7 @@ msgctxt "shortcut window"
 msgid "Reload Library"
 msgstr "更新音樂庫"
 
-#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:339
+#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:340
 msgid "Back"
 msgstr "返回"
 
@@ -121,7 +121,7 @@ msgstr "緊湊播放列表"
 msgid "Grid view for artists/albums"
 msgstr "藝術家/專輯使用網格檢視"
 
-#: src/gtk/preferences.ui:56 src/application.vala:431
+#: src/gtk/preferences.ui:56 src/application.vala:432
 msgid "Keep playing after window closed"
 msgstr "關閉視窗後繼續播放"
 
@@ -170,7 +170,7 @@ msgid "Normalize volume with ReplayGain"
 msgstr "使用 ReplayGain 正規化音量"
 
 #: src/gtk/preferences.ui:164
-msgid "Prefer audio sink"
+msgid "Prefer audio sink of GStreamer"
 msgstr "首選音訊輸出"
 
 #: src/gtk/store-panel.ui:22
@@ -236,62 +236,64 @@ msgstr ""
 "Julian\n"
 "Nanling"
 
-#: src/application.vala:607
+#: src/application.vala:613
 msgid "Keep playing"
 msgstr "持續播放"
 
-#: src/ui/music-widgets.vala:251 src/ui/music-widgets.vala:292
-#: src/ui/music-widgets.vala:302
+#. Translators: Play this music at next position of current playing music
+#: src/ui/music-widgets.vala:252 src/ui/music-widgets.vala:293
+#: src/ui/music-widgets.vala:303
 msgid "Play at Next"
 msgstr "插播"
 
-#: src/ui/music-widgets.vala:252 src/ui/music-widgets.vala:291
-#: src/ui/music-widgets.vala:301 src/ui/store-panel.vala:344
+#: src/ui/music-widgets.vala:253 src/ui/music-widgets.vala:292
+#: src/ui/music-widgets.vala:302 src/ui/store-panel.vala:345
 msgid "Play"
 msgstr "播放"
 
-#: src/ui/music-widgets.vala:255 src/ui/play-panel.vala:232
+#: src/ui/music-widgets.vala:256 src/ui/play-panel.vala:232
 msgid "Show _Cover File"
 msgstr "顯示封面檔案(_C)"
 
-#: src/ui/music-widgets.vala:257 src/ui/play-panel.vala:234
+#: src/ui/music-widgets.vala:258 src/ui/play-panel.vala:234
 msgid "_Export Cover"
 msgstr "輸出封面(_E)"
 
-#: src/ui/music-widgets.vala:294
+#: src/ui/music-widgets.vala:295
 msgid "Show List File"
 msgstr "顯示清單檔案"
 
-#: src/ui/music-widgets.vala:308 src/ui/play-panel.vala:57
+#: src/ui/music-widgets.vala:309 src/ui/play-panel.vala:57
 msgid "Search Title"
 msgstr "搜尋歌名"
 
-#: src/ui/music-widgets.vala:309 src/ui/play-panel.vala:55
+#: src/ui/music-widgets.vala:310 src/ui/play-panel.vala:55
 msgid "Search Album"
 msgstr "搜尋專輯"
 
-#: src/ui/music-widgets.vala:310 src/ui/play-panel.vala:56
+#: src/ui/music-widgets.vala:311 src/ui/play-panel.vala:56
 msgid "Search Artist"
 msgstr "搜尋藝術家"
 
-#: src/ui/music-widgets.vala:311
+#: src/ui/music-widgets.vala:312
 msgid "_Show Music File"
 msgstr "顯示音樂檔案(_S)"
 
-#: src/ui/play-bar.vala:75
-msgid "Repeat Music"
+#. Translators: single loop the current music
+#: src/ui/play-bar.vala:76
+msgid "Single Loop"
 msgstr "單曲迴圈"
 
-#: src/ui/play-bar.vala:85
+#: src/ui/play-bar.vala:86
 msgid "Play Previous"
 msgstr "播放上一首"
 
 #. media-playback-pause-symbolic
-#: src/ui/play-bar.vala:91
+#: src/ui/play-bar.vala:92
 msgid "Play/Pause"
 msgstr "播放/暫停"
 
-#: src/ui/play-bar.vala:98
+#: src/ui/play-bar.vala:99
 msgid "Play Next"
 msgstr "播放下一首"
 
@@ -319,25 +321,27 @@ msgstr "僅封面"
 msgid "Track"
 msgstr "曲目"
 
-#: src/ui/store-panel.vala:73
+#: src/ui/store-panel.vala:74
 msgid "Playing"
 msgstr "正在播放"
 
-#: src/ui/store-panel.vala:78
+#: src/ui/store-panel.vala:79
 msgid "Artists"
 msgstr "藝術家"
 
-#: src/ui/store-panel.vala:83
+#: src/ui/store-panel.vala:84
 msgid "Albums"
 msgstr "專輯"
 
-#: src/ui/store-panel.vala:373
+#: src/ui/store-panel.vala:374
 msgid "Playlists"
 msgstr "播放清單"
 
-#: src/ui/volume-button.vala:32
-msgid "Volume: "
-msgstr "音量："
+#. Translators: Current volume: 0~100
+#: src/ui/volume-button.vala:33
+#, c-format
+msgid "Volume %d"
+msgstr "音量 %d"
 
 #: src/utils/music.vala:2
 msgid "Unknown Album"

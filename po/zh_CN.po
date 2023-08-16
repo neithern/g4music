@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-09 21:51+0800\n"
-"PO-Revision-Date: 2023-08-09 21:51+0800\n"
+"POT-Creation-Date: 2023-08-16 22:53+0800\n"
+"PO-Revision-Date: 2023-08-16 22:52+0800\n"
 "Last-Translator: Nanling <neithern@outlook.com>\n"
 "Language-Team: Chinese - China <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
@@ -97,7 +97,7 @@ msgctxt "shortcut window"
 msgid "Reload Library"
 msgstr "重载曲库"
 
-#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:339
+#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:340
 msgid "Back"
 msgstr "返回"
 
@@ -121,7 +121,7 @@ msgstr "紧凑播放列表"
 msgid "Grid view for artists/albums"
 msgstr "艺术家/专辑使用网格视图"
 
-#: src/gtk/preferences.ui:56 src/application.vala:431
+#: src/gtk/preferences.ui:56 src/application.vala:432
 msgid "Keep playing after window closed"
 msgstr "关闭窗口后继续播放"
 
@@ -170,7 +170,7 @@ msgid "Normalize volume with ReplayGain"
 msgstr "自动音量平衡"
 
 #: src/gtk/preferences.ui:164
-msgid "Prefer audio sink"
+msgid "Prefer audio sink of GStreamer"
 msgstr "首选音频输出"
 
 #: src/gtk/store-panel.ui:22
@@ -234,62 +234,64 @@ msgstr "一个快速、流畅、轻量的，基于GTK4的音乐播放软件。"
 msgid "translator-credits"
 msgstr "Nanling"
 
-#: src/application.vala:607
+#: src/application.vala:613
 msgid "Keep playing"
 msgstr "持续播放"
 
-#: src/ui/music-widgets.vala:251 src/ui/music-widgets.vala:292
-#: src/ui/music-widgets.vala:302
+#. Translators: Play this music at next position of current playing music
+#: src/ui/music-widgets.vala:252 src/ui/music-widgets.vala:293
+#: src/ui/music-widgets.vala:303
 msgid "Play at Next"
 msgstr "插播"
 
-#: src/ui/music-widgets.vala:252 src/ui/music-widgets.vala:291
-#: src/ui/music-widgets.vala:301 src/ui/store-panel.vala:344
+#: src/ui/music-widgets.vala:253 src/ui/music-widgets.vala:292
+#: src/ui/music-widgets.vala:302 src/ui/store-panel.vala:345
 msgid "Play"
 msgstr "播放"
 
-#: src/ui/music-widgets.vala:255 src/ui/play-panel.vala:232
+#: src/ui/music-widgets.vala:256 src/ui/play-panel.vala:232
 msgid "Show _Cover File"
 msgstr "显示封面文件(_C)"
 
-#: src/ui/music-widgets.vala:257 src/ui/play-panel.vala:234
+#: src/ui/music-widgets.vala:258 src/ui/play-panel.vala:234
 msgid "_Export Cover"
 msgstr "导出封面(_E)"
 
-#: src/ui/music-widgets.vala:294
+#: src/ui/music-widgets.vala:295
 msgid "Show List File"
 msgstr "显示列表文件"
 
-#: src/ui/music-widgets.vala:308 src/ui/play-panel.vala:57
+#: src/ui/music-widgets.vala:309 src/ui/play-panel.vala:57
 msgid "Search Title"
 msgstr "搜索标题"
 
-#: src/ui/music-widgets.vala:309 src/ui/play-panel.vala:55
+#: src/ui/music-widgets.vala:310 src/ui/play-panel.vala:55
 msgid "Search Album"
 msgstr "搜索专辑"
 
-#: src/ui/music-widgets.vala:310 src/ui/play-panel.vala:56
+#: src/ui/music-widgets.vala:311 src/ui/play-panel.vala:56
 msgid "Search Artist"
 msgstr "搜索艺术家"
 
-#: src/ui/music-widgets.vala:311
+#: src/ui/music-widgets.vala:312
 msgid "_Show Music File"
 msgstr "显示音乐文件(_S)"
 
-#: src/ui/play-bar.vala:75
-msgid "Repeat Music"
+#. Translators: single loop the current music
+#: src/ui/play-bar.vala:76
+msgid "Single Loop"
 msgstr "单曲循环"
 
-#: src/ui/play-bar.vala:85
+#: src/ui/play-bar.vala:86
 msgid "Play Previous"
 msgstr "播放上一首"
 
 #. media-playback-pause-symbolic
-#: src/ui/play-bar.vala:91
+#: src/ui/play-bar.vala:92
 msgid "Play/Pause"
 msgstr "播放/暂停"
 
-#: src/ui/play-bar.vala:98
+#: src/ui/play-bar.vala:99
 msgid "Play Next"
 msgstr "播放下一首"
 
@@ -317,25 +319,27 @@ msgstr "仅封面"
 msgid "Track"
 msgstr "曲目"
 
-#: src/ui/store-panel.vala:73
+#: src/ui/store-panel.vala:74
 msgid "Playing"
 msgstr "正在播放"
 
-#: src/ui/store-panel.vala:78
+#: src/ui/store-panel.vala:79
 msgid "Artists"
 msgstr "艺术家"
 
-#: src/ui/store-panel.vala:83
+#: src/ui/store-panel.vala:84
 msgid "Albums"
 msgstr "专辑"
 
-#: src/ui/store-panel.vala:373
+#: src/ui/store-panel.vala:374
 msgid "Playlists"
 msgstr "播放列表"
 
-#: src/ui/volume-button.vala:32
-msgid "Volume: "
-msgstr "音量："
+#. Translators: Current volume: 0~100
+#: src/ui/volume-button.vala:33
+#, c-format
+msgid "Volume %d"
+msgstr "音量 %d"
 
 #: src/utils/music.vala:2
 msgid "Unknown Album"
