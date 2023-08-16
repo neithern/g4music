@@ -161,7 +161,7 @@
             <child>
               <object class="AdwComboRow" id="audiosink_row">
                 <property name="icon-name">audio-card-symbolic</property>
-                <property name="title" translatable="yes">Prefer audio sink</property>
+                <property name="title" translatable="yes">Prefer audio sink of GStreamer</property>
               </object>
             </child>
           </object>

@@ -248,6 +248,7 @@ namespace G4 {
                 var music = (!) this.music;
                 var menu = create_menu_for_music (music);
                 if (music != app.current_music) {
+                    /* Translators: Play this music at next position of current playing music */
                     menu.prepend_item (create_menu_item_for_uri (music.uri, _("Play at Next"), ACTION_APP + ACTION_PLAY_AT_NEXT));
                     menu.prepend_item (create_menu_item_for_uri (music.uri, _("Play"), ACTION_APP + ACTION_PLAY));
                 }

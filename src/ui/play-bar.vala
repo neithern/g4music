@@ -72,7 +72,8 @@ namespace G4 {
 
             _repeat.icon_name = "media-playlist-repeat-symbolic";
             _repeat.valign = Gtk.Align.CENTER;
-            _repeat.tooltip_text = _("Repeat Music");
+            /* Translators: single loop the current music */
+            _repeat.tooltip_text = _("Single Loop");
             _repeat.add_css_class ("flat");
             _repeat.toggled.connect (() => {
                 _repeat.icon_name = _repeat.active ? "media-playlist-repeat-song-symbolic" : "media-playlist-repeat-symbolic";
