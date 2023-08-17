@@ -11,6 +11,7 @@
 
     <url type="homepage">https://gitlab.gnome.org/neithern/g4music</url>
     <url type="bugtracker">https://gitlab.gnome.org/neithern/g4music/issues</url>
+    <url type="translate">https://l10n.gnome.org/module/g4music</url>
 
     <launchable type="desktop-id">@app_id@.desktop</launchable>
     <content_rating type="oars-1.1"/>
