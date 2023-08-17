@@ -7,8 +7,6 @@ namespace G4 {
         [GtkChild]
         private unowned Gtk.Label index_label;
         [GtkChild]
-        private unowned Adw.Clamp clamp;
-        [GtkChild]
         private unowned Gtk.Box music_box;
         [GtkChild]
         private unowned Gtk.Image music_cover;
@@ -106,8 +104,9 @@ namespace G4 {
 
         public void size_to_change (int panel_width) {
             var max_size = int.max (panel_width * 3 / 4, music_cover.pixel_size);
-            clamp.maximum_size = max_size;
-            clamp.tightening_threshold = max_size;
+            var margin = int.max ((panel_width - max_size) / 2, 32);
+            music_cover.margin_start = margin;
+            music_cover.margin_end = margin;
         }
 
         private void on_index_changed (int index, uint size) {

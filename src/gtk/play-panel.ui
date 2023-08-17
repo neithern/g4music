@@ -33,14 +33,9 @@
         <property name="margin_top">8</property>
         <property name="width_request">340</property>
         <child>
-          <object class="AdwClamp" id="clamp">
-            <property name="halign">center</property>
-            <child>
-              <object class="GtkImage" id="music_cover">
-                <property name="pixel_size">240</property>
-                <property name="vexpand">true</property>
-              </object>
-            </child>
+          <object class="GtkImage" id="music_cover">
+            <property name="pixel_size">240</property>
+            <property name="vexpand">true</property>
           </object>
         </child>
         <child>
