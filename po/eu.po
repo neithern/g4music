@@ -1,0 +1,343 @@
+# Basque translation for g4music.
+# Copyright (C) 2023 g4music's COPYRIGHT HOLDER
+# This file is distributed under the same license as the g4music package.
+# Asier Sarasua Garmendia <asiersarasua@ni.eus>, 2023.
+#
+msgid ""
+msgstr "Project-Id-Version: g4music master\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/neithern/g4music/-/issues\n"
+"POT-Creation-Date: 2023-08-17 10:19+0000\n"
+"PO-Revision-Date: 2023-08-18 18:04+0000\n"
+"Last-Translator: Asier Sarasua Garmendia <asiersarasua@ni.eus>\n"
+"Language-Team: Basque <librezale@librezale.eus>\n"
+"Language: eu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: data/app.desktop.in:3 src/application.vala:232 src/main.vala:24
+msgid "G4Music"
+msgstr "G4Music"
+
+#: data/app.desktop.in:4
+msgid "Music Player"
+msgstr "Musika-erreproduzitzailea"
+
+#: data/app.desktop.in:5
+msgid "Play music"
+msgstr "Erreproduzitu musika"
+
+#: data/app.desktop.in:12
+msgid "music;sound;player;media;audio;playlist;"
+msgstr "musika;soinua;erreproduzigailua;multimedia;audioa;erreprodukzio-zerrenda;"
+
+#: src/gtk/help-overlay.ui:11
+msgctxt "shortcut window"
+msgid "General"
+msgstr "Orokorra"
+
+#: src/gtk/help-overlay.ui:14
+msgctxt "shortcut window"
+msgid "Show Shortcuts"
+msgstr "Erakutsi lasterbideak"
+
+#: src/gtk/help-overlay.ui:20
+msgctxt "shortcut window"
+msgid "Preferences"
+msgstr "Hobespenak"
+
+#: src/gtk/help-overlay.ui:26
+msgctxt "shortcut window"
+msgid "Quit"
+msgstr "Irten"
+
+#: src/gtk/help-overlay.ui:34
+msgctxt "shortcut window"
+msgid "Playback"
+msgstr "Erreproduzitu"
+
+#: src/gtk/help-overlay.ui:37
+msgctxt "shortcut window"
+msgid "Play/Pause"
+msgstr "Erreproduzitu/pausarazi"
+
+#: src/gtk/help-overlay.ui:43
+msgctxt "shortcut window"
+msgid "Play Next"
+msgstr "Erreproduzitu hurrengoa"
+
+#: src/gtk/help-overlay.ui:49
+msgctxt "shortcut window"
+msgid "Play Previous"
+msgstr "Erreproduzitu aurrekoa"
+
+#: src/gtk/help-overlay.ui:57
+msgctxt "shortcut window"
+msgid "Playlist"
+msgstr "Erreprodukzio-zerrenda"
+
+#: src/gtk/help-overlay.ui:60
+msgctxt "shortcut window"
+msgid "Search"
+msgstr "Bilatu"
+
+#: src/gtk/help-overlay.ui:66
+msgctxt "shortcut window"
+msgid "Toggle Sort"
+msgstr "Txandakatu ordena"
+
+#: src/gtk/help-overlay.ui:72
+msgctxt "shortcut window"
+msgid "Reload Library"
+msgstr "Birkargatu liburutegia"
+
+#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:340
+msgid "Back"
+msgstr "Atzera"
+
+#: src/gtk/preferences.ui:10
+msgid "General"
+msgstr "Orokorra"
+
+#: src/gtk/preferences.ui:14
+msgid "Prefer dark theme"
+msgstr "Hobetsi gai iluna"
+
+#: src/gtk/preferences.ui:26
+msgid "Background blur mode"
+msgstr "Atzeko plano lausoaren modua"
+
+#: src/gtk/preferences.ui:32
+msgid "Compact playlist view"
+msgstr "Erreprodukzio-zerrendaren ikuspegi trinkoa"
+
+#: src/gtk/preferences.ui:44
+msgid "Grid view for artists/albums"
+msgstr "Sareta-ikuspegia artistetarako/albumetarako"
+
+#: src/gtk/preferences.ui:56 src/application.vala:432
+msgid "Keep playing after window closed"
+msgstr "Jarraitu erreproduzitzen leihoa itxi ondoren"
+
+#: src/gtk/preferences.ui:69
+msgid "Library"
+msgstr "Liburutegia"
+
+#: src/gtk/preferences.ui:73
+msgid "Load music from folder"
+msgstr "Kargatu musika karpetatik"
+
+#: src/gtk/preferences.ui:85
+msgid "Monitor local file changes"
+msgstr "Monitorizatu fitxategi lokalen aldaketak"
+
+#: src/gtk/preferences.ui:97
+msgid "Load thumbnails for non-local files"
+msgstr "Kargatu miniaturak fitxategi ez lokaletarako"
+
+#: src/gtk/preferences.ui:98
+msgid "May cause slowdowns and excess network usage"
+msgstr "Moteltzeak eta sarearen gehiegizko erabilera gertatu daitezke"
+
+#: src/gtk/preferences.ui:111
+msgid "Playback"
+msgstr "Erreproduzitu"
+
+#: src/gtk/preferences.ui:115
+msgid "Show audio peak level"
+msgstr "Erakutsi audioaren gailur-maila"
+
+#: src/gtk/preferences.ui:119
+msgid "Display characters"
+msgstr "Bistaratu karaktereak"
+
+#: src/gtk/preferences.ui:134
+msgid "Rotate album cover"
+msgstr "Biratu albumaren azala"
+
+#: src/gtk/preferences.ui:146
+msgid "Enable gapless playback"
+msgstr "Gaitu tarterik gabeko erreprodukzioa"
+
+#: src/gtk/preferences.ui:158
+msgid "Normalize volume with ReplayGain"
+msgstr "Normalizatu bolumena ReplayGain bidez"
+
+#: src/gtk/preferences.ui:164
+msgid "Prefer audio sink of GStreamer"
+msgstr "Hobetsi GStreamer-en audio-hustubidea"
+
+#: src/gtk/store-panel.ui:22
+msgid "Main Menu"
+msgstr "Menu nagusia"
+
+#: src/gtk/store-panel.ui:28
+msgid "Sort By"
+msgstr "Ordenatu honen arabera"
+
+#: src/gtk/store-panel.ui:35
+msgid "Search"
+msgstr "Bilatu"
+
+#: src/gtk/store-panel.ui:73
+msgid "_Reload Library"
+msgstr "Birkargatu _liburutegia"
+
+#: src/gtk/store-panel.ui:79
+msgid "_Preferences"
+msgstr "_Hobespenak"
+
+#: src/gtk/store-panel.ui:83
+msgid "_Keyboard Shortcuts"
+msgstr "Las_ter-teklak"
+
+#: src/gtk/store-panel.ui:87
+msgid "_About"
+msgstr "Honi _buruz"
+
+#: src/gtk/store-panel.ui:96 src/ui/preferences.vala:67
+msgid "Album"
+msgstr "Albuma"
+
+#: src/gtk/store-panel.ui:101
+msgid "Artist"
+msgstr "Artista"
+
+#: src/gtk/store-panel.ui:106
+msgid "Artist/Album"
+msgstr "Artista/Albuma"
+
+#: src/gtk/store-panel.ui:111
+msgid "Title"
+msgstr "Titulua"
+
+#: src/gtk/store-panel.ui:116
+msgid "Recent"
+msgstr "Azken aldikoa"
+
+#: src/gtk/store-panel.ui:121
+msgid "Shuffle"
+msgstr "Ausaz"
+
+#: src/action-handles.vala:184
+msgid "A fast, fluent, light weight music player written in GTK4."
+msgstr "GTK4 teknologiarekin idatzitako musika-erreproduzigailu arin eta azkarra."
+
+#. Translators: Replace "translator-credits" with your names, one name per line
+#: src/action-handles.vala:186
+msgid "translator-credits"
+msgstr "translator-credits"
+
+#: src/application.vala:613
+msgid "Keep playing"
+msgstr "Jarraitu erreproduzitzen"
+
+#. Translators: Play this music at next position of current playing music
+#: src/ui/music-widgets.vala:252 src/ui/music-widgets.vala:293
+#: src/ui/music-widgets.vala:303
+msgid "Play at Next"
+msgstr "Erreproduzitu hurrengoan"
+
+#: src/ui/music-widgets.vala:253 src/ui/music-widgets.vala:292
+#: src/ui/music-widgets.vala:302 src/ui/store-panel.vala:345
+msgid "Play"
+msgstr "Erreproduzitu"
+
+#: src/ui/music-widgets.vala:256 src/ui/play-panel.vala:231
+msgid "Show _Cover File"
+msgstr "Erakutsi _azaleko fitxategia"
+
+#: src/ui/music-widgets.vala:258 src/ui/play-panel.vala:233
+msgid "_Export Cover"
+msgstr "_Esportatu azala"
+
+#: src/ui/music-widgets.vala:295
+msgid "Show List File"
+msgstr "Erakusti zerrenda-fitxategia"
+
+#: src/ui/music-widgets.vala:309 src/ui/play-panel.vala:55
+msgid "Search Title"
+msgstr "Bilatu titulua"
+
+#: src/ui/music-widgets.vala:310 src/ui/play-panel.vala:53
+msgid "Search Album"
+msgstr "Bilatu albuma"
+
+#: src/ui/music-widgets.vala:311 src/ui/play-panel.vala:54
+msgid "Search Artist"
+msgstr "Bilatu artista"
+
+#: src/ui/music-widgets.vala:312
+msgid "_Show Music File"
+msgstr "_Erakutsi musika-fitxategia"
+
+#. Translators: single loop the current music
+#: src/ui/play-bar.vala:76
+msgid "Single Loop"
+msgstr "Begizta bakarra"
+
+#: src/ui/play-bar.vala:86
+msgid "Play Previous"
+msgstr "Erreproduzitu aurrekoa"
+
+#. media-playback-pause-symbolic
+#: src/ui/play-bar.vala:92
+msgid "Play/Pause"
+msgstr "Erreproduzitu/pausarazi"
+
+#: src/ui/play-bar.vala:99
+msgid "Play Next"
+msgstr "Erreproduzitu hurrengoa"
+
+#: src/ui/play-panel.vala:274
+msgid ""
+"Drag and drop music files here,\n"
+"or change music location: "
+msgstr "Arrastatu eta jaregin musika-fitxategiak hemen,\n"
+"edo aldatu musikaren kokalekua: "
+
+#: src/ui/preferences.vala:46 src/ui/preferences.vala:67
+msgid "Never"
+msgstr "Inoiz ere ez"
+
+#: src/ui/preferences.vala:46
+msgid "Always"
+msgstr "Beti"
+
+#: src/ui/preferences.vala:46
+msgid "Art Only"
+msgstr "Artea soilik"
+
+#: src/ui/preferences.vala:67
+msgid "Track"
+msgstr "Pista"
+
+#: src/ui/store-panel.vala:74
+msgid "Playing"
+msgstr "Erreproduzitzen"
+
+#: src/ui/store-panel.vala:79
+msgid "Artists"
+msgstr "Artistak"
+
+#: src/ui/store-panel.vala:84
+msgid "Albums"
+msgstr "Albumak"
+
+#: src/ui/store-panel.vala:374
+msgid "Playlists"
+msgstr "Erreprodukzio-zerrendak"
+
+#. Translators: Current volume: 0~100
+#: src/ui/volume-button.vala:33
+#, c-format
+msgid "Volume %d"
+msgstr "%d. bolumena"
+
+#: src/utils/music.vala:2
+msgid "Unknown Album"
+msgstr "Album ezezaguna"
+
+#: src/utils/music.vala:3
+msgid "Unknown Artist"
+msgstr "Artista ezezaguna"
