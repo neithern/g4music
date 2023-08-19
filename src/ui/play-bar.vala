@@ -18,14 +18,12 @@ namespace G4 {
 
         construct {
             orientation = Gtk.Orientation.VERTICAL;
-            halign = Gtk.Align.CENTER;
 
             var app = (Application) GLib.Application.get_default ();
             var player = app.player;
 
             _seek.set_range (0, _duration);
             _seek.halign = Gtk.Align.FILL;
-            _seek.width_request = 272;
             _seek.adjust_bounds.connect ((value) => {
                 player.seek (GstPlayer.from_second (value));
                 position_seeked (value);
@@ -132,6 +130,11 @@ namespace G4 {
                 _remain_progress = value;
                 update_negative_label ();
             }
+        }
+
+        public void on_size_changed (int bar_width) {
+            var text_width = int.max (_positive.get_width (), _negative.get_width ());
+            _peak.width_request = bar_width - (text_width + _positive.margin_start + _negative.margin_end) * 2;
         }
 
         private void on_duration_changed (Gst.ClockTime duration) {

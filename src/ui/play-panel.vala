@@ -36,6 +36,7 @@ namespace G4 {
         public PlayPanel (Application app, Window win, Adw.Leaflet leaflet) {
             _app = app;
 
+            _play_bar.halign = Gtk.Align.FILL;
             _play_bar.margin_bottom = 32;
             _play_bar.position_seeked.connect (on_position_seeked);
             append (_play_bar);
@@ -107,6 +108,11 @@ namespace G4 {
             var margin = int.max ((panel_width - max_size) / 2, 32);
             music_cover.margin_start = margin;
             music_cover.margin_end = margin;
+
+            margin -= 8;
+            _play_bar.margin_start = margin;
+            _play_bar.margin_end = margin;
+            _play_bar.on_size_changed (panel_width - margin * 2);
         }
 
         private void on_index_changed (int index, uint size) {
