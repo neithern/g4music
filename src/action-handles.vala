@@ -13,7 +13,7 @@ namespace G4 {
     public const string ACTION_SEARCH = "search";
     public const string ACTION_SHOW_FILE = "show-file";
     public const string ACTION_SORT = "sort";
-    public const string ACTION_TOGGLE_SEARCH = "toggle-earch";
+    public const string ACTION_TOGGLE_SEARCH = "toggle-search";
     public const string ACTION_TOGGLE_SORT = "toggle-sort";
     public const string ACTION_QUIT = "quit";
 
