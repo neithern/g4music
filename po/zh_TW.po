@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-16 22:53+0800\n"
-"PO-Revision-Date: 2023-08-16 22:55+0800\n"
+"POT-Creation-Date: 2023-08-19 12:11+0800\n"
+"PO-Revision-Date: 2023-08-19 12:12+0800\n"
 "Last-Translator: Nanling <neithern@outlook.com>\n"
 "Language-Team: Chinese - China <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
@@ -251,11 +251,11 @@ msgstr "插播"
 msgid "Play"
 msgstr "播放"
 
-#: src/ui/music-widgets.vala:256 src/ui/play-panel.vala:232
+#: src/ui/music-widgets.vala:256 src/ui/play-panel.vala:237
 msgid "Show _Cover File"
 msgstr "顯示封面檔案(_C)"
 
-#: src/ui/music-widgets.vala:258 src/ui/play-panel.vala:234
+#: src/ui/music-widgets.vala:258 src/ui/play-panel.vala:239
 msgid "_Export Cover"
 msgstr "輸出封面(_E)"
 
@@ -263,15 +263,15 @@ msgstr "輸出封面(_E)"
 msgid "Show List File"
 msgstr "顯示清單檔案"
 
-#: src/ui/music-widgets.vala:309 src/ui/play-panel.vala:57
+#: src/ui/music-widgets.vala:309 src/ui/play-panel.vala:56
 msgid "Search Title"
 msgstr "搜尋歌名"
 
-#: src/ui/music-widgets.vala:310 src/ui/play-panel.vala:55
+#: src/ui/music-widgets.vala:310 src/ui/play-panel.vala:54
 msgid "Search Album"
 msgstr "搜尋專輯"
 
-#: src/ui/music-widgets.vala:311 src/ui/play-panel.vala:56
+#: src/ui/music-widgets.vala:311 src/ui/play-panel.vala:55
 msgid "Search Artist"
 msgstr "搜尋藝術家"
 
@@ -280,24 +280,24 @@ msgid "_Show Music File"
 msgstr "顯示音樂檔案(_S)"
 
 #. Translators: single loop the current music
-#: src/ui/play-bar.vala:76
+#: src/ui/play-bar.vala:74
 msgid "Single Loop"
 msgstr "單曲迴圈"
 
-#: src/ui/play-bar.vala:86
+#: src/ui/play-bar.vala:84
 msgid "Play Previous"
 msgstr "播放上一首"
 
 #. media-playback-pause-symbolic
-#: src/ui/play-bar.vala:92
+#: src/ui/play-bar.vala:90
 msgid "Play/Pause"
 msgstr "播放/暫停"
 
-#: src/ui/play-bar.vala:99
+#: src/ui/play-bar.vala:97
 msgid "Play Next"
 msgstr "播放下一首"
 
-#: src/ui/play-panel.vala:275
+#: src/ui/play-panel.vala:280
 msgid ""
 "Drag and drop music files here,\n"
 "or change music location: "
@@ -337,11 +337,11 @@ msgstr "專輯"
 msgid "Playlists"
 msgstr "播放清單"
 
-#. Translators: Current volume: 0~100
+#. Translators: Current volume percent: 0~100%
 #: src/ui/volume-button.vala:33
 #, c-format
-msgid "Volume %d"
-msgstr "音量 %d"
+msgid "Volume %d%%"
+msgstr "音量 %d%%"
 
 #: src/utils/music.vala:2
 msgid "Unknown Album"
