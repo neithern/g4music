@@ -29,8 +29,8 @@ namespace G4 {
             var adj = adjustment;
             var value = get_value ();
             var percent = (int) (100 * value / (adj.upper - adj.lower) + 0.5);
-            /* Translators: Current volume: 0~100 */
-            return _("Volume %d").printf (percent);
+            /* Translators: Current volume percent: 0~100% */
+            return _("Volume %d%%").printf (percent);
         }
 
         private bool on_query_tooltip (int x, int y, bool keyboard_mode, Gtk.Tooltip tooltip) {
