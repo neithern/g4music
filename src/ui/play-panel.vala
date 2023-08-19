@@ -144,7 +144,7 @@ namespace G4 {
                 Source.remove (_pending_mic_handler);
             _pending_mic_handler = run_idle_once (() => {
                 _pending_mic_handler = 0;
-                var visible = !_app.loading && _current_music == null
+                var visible = !_app.loading && _app.current_music == null
                         && _app.music_store.get_n_items () == 0;
                 initial_label.visible = visible;
                 if (visible)
