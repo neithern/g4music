@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/neithern/g4music/-/issues\n"
-"POT-Creation-Date: 2023-08-16 16:03+0000\n"
-"PO-Revision-Date: 2023-08-16 20:37+0300\n"
+"POT-Creation-Date: 2023-08-19 04:11+0000\n"
+"PO-Revision-Date: 2023-08-19 21:11+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -250,11 +250,11 @@ msgstr "Відтворити наступною"
 msgid "Play"
 msgstr "Відтворити"
 
-#: src/ui/music-widgets.vala:256 src/ui/play-panel.vala:232
+#: src/ui/music-widgets.vala:256 src/ui/play-panel.vala:237
 msgid "Show _Cover File"
 msgstr "Показати файл _обкладинки"
 
-#: src/ui/music-widgets.vala:258 src/ui/play-panel.vala:234
+#: src/ui/music-widgets.vala:258 src/ui/play-panel.vala:239
 msgid "_Export Cover"
 msgstr "_Експортувати обкладинку"
 
@@ -262,15 +262,15 @@ msgstr "_Експортувати обкладинку"
 msgid "Show List File"
 msgstr "Показати файл списку"
 
-#: src/ui/music-widgets.vala:309 src/ui/play-panel.vala:57
+#: src/ui/music-widgets.vala:309 src/ui/play-panel.vala:56
 msgid "Search Title"
 msgstr "Шукати за назвою"
 
-#: src/ui/music-widgets.vala:310 src/ui/play-panel.vala:55
+#: src/ui/music-widgets.vala:310 src/ui/play-panel.vala:54
 msgid "Search Album"
 msgstr "Шукати альбом"
 
-#: src/ui/music-widgets.vala:311 src/ui/play-panel.vala:56
+#: src/ui/music-widgets.vala:311 src/ui/play-panel.vala:55
 msgid "Search Artist"
 msgstr "Шукати виконавця"
 
@@ -279,24 +279,24 @@ msgid "_Show Music File"
 msgstr "_Показати файл музики"
 
 #. Translators: single loop the current music
-#: src/ui/play-bar.vala:76
+#: src/ui/play-bar.vala:74
 msgid "Single Loop"
 msgstr "Одне повторення"
 
-#: src/ui/play-bar.vala:86
+#: src/ui/play-bar.vala:84
 msgid "Play Previous"
 msgstr "Відтворити попередній"
 
 #. media-playback-pause-symbolic
-#: src/ui/play-bar.vala:92
+#: src/ui/play-bar.vala:90
 msgid "Play/Pause"
 msgstr "Пуск/Пауза"
 
-#: src/ui/play-bar.vala:99
+#: src/ui/play-bar.vala:97
 msgid "Play Next"
 msgstr "Відтворити наступну"
 
-#: src/ui/play-panel.vala:275
+#: src/ui/play-panel.vala:280
 msgid ""
 "Drag and drop music files here,\n"
 "or change music location: "
@@ -336,11 +336,12 @@ msgstr "Альбоми"
 msgid "Playlists"
 msgstr "Списки відтворення"
 
-#. Translators: Current volume: 0~100
+#. Translators: Current volume percent: 0~100%
 #: src/ui/volume-button.vala:33
 #, c-format
-msgid "Volume %d"
-msgstr "Гучність %d"
+#| msgid "Volume %d"
+msgid "Volume %d%%"
+msgstr "Гучність %d%%"
 
 #: src/utils/music.vala:2
 msgid "Unknown Album"
