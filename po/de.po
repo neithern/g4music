@@ -6,9 +6,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-09 21:51+0800\n"
-"PO-Revision-Date: 2023-08-12 12:20+0200\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/neithern/g4music/-/issues\n"
+"POT-Creation-Date: 2023-08-19 04:11+0000\n"
+"PO-Revision-Date: 2023-08-19 08:46+0200\n"
 "Last-Translator: Jürgen Benvenuti <gastornis@posteo.org>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "Language: de\n"
@@ -96,7 +96,7 @@ msgctxt "shortcut window"
 msgid "Reload Library"
 msgstr "Bibliothek neu laden"
 
-#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:339
+#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:340
 msgid "Back"
 msgstr "Zurück"
 
@@ -120,7 +120,7 @@ msgstr "Kompaktansicht der Wiedergabeliste"
 msgid "Grid view for artists/albums"
 msgstr "Rasteransicht für Interpreten/Alben"
 
-#: src/gtk/preferences.ui:56 src/application.vala:431
+#: src/gtk/preferences.ui:56 src/application.vala:432
 msgid "Keep playing after window closed"
 msgstr "Musik weiterspielen nach dem Schließen des Fensters"
 
@@ -169,8 +169,8 @@ msgid "Normalize volume with ReplayGain"
 msgstr "ReplayGain zur Normalisierung der Lautstärke verwenden"
 
 #: src/gtk/preferences.ui:164
-msgid "Prefer audio sink"
-msgstr "Bevorzugter Audio-Ausgang"
+msgid "Prefer audio sink of GStreamer"
+msgstr "Bevorzugter GStreamer-Audio-Ausgang"
 
 #: src/gtk/store-panel.ui:22
 msgid "Main Menu"
@@ -235,66 +235,68 @@ msgstr ""
 msgid "translator-credits"
 msgstr "Jürgen Benvenuti <gastornis@posteo.org>, 2022, 2023"
 
-#: src/application.vala:607
+#: src/application.vala:613
 msgid "Keep playing"
 msgstr "Musik weiterspielen"
 
-#: src/ui/music-widgets.vala:251 src/ui/music-widgets.vala:292
-#: src/ui/music-widgets.vala:302
+#. Translators: Play this music at next position of current playing music
+#: src/ui/music-widgets.vala:252 src/ui/music-widgets.vala:293
+#: src/ui/music-widgets.vala:303
 msgid "Play at Next"
 msgstr "Als Nächstes wiedergeben"
 
-#: src/ui/music-widgets.vala:252 src/ui/music-widgets.vala:291
-#: src/ui/music-widgets.vala:301 src/ui/store-panel.vala:344
+#: src/ui/music-widgets.vala:253 src/ui/music-widgets.vala:292
+#: src/ui/music-widgets.vala:302 src/ui/store-panel.vala:345
 msgid "Play"
 msgstr "Wiedergeben"
 
-#: src/ui/music-widgets.vala:255 src/ui/play-panel.vala:232
+#: src/ui/music-widgets.vala:256 src/ui/play-panel.vala:237
 msgid "Show _Cover File"
 msgstr "Album_bild-Datei anzeigen"
 
-#: src/ui/music-widgets.vala:257 src/ui/play-panel.vala:234
+#: src/ui/music-widgets.vala:258 src/ui/play-panel.vala:239
 msgid "_Export Cover"
 msgstr "Albumbild expo_rtieren"
 
-#: src/ui/music-widgets.vala:294
+#: src/ui/music-widgets.vala:295
 msgid "Show List File"
 msgstr "Listendatei anzeigen"
 
-#: src/ui/music-widgets.vala:308 src/ui/play-panel.vala:57
+#: src/ui/music-widgets.vala:309 src/ui/play-panel.vala:56
 msgid "Search Title"
 msgstr "Titel suchen"
 
-#: src/ui/music-widgets.vala:309 src/ui/play-panel.vala:55
+#: src/ui/music-widgets.vala:310 src/ui/play-panel.vala:54
 msgid "Search Album"
 msgstr "Album suchen"
 
-#: src/ui/music-widgets.vala:310 src/ui/play-panel.vala:56
+#: src/ui/music-widgets.vala:311 src/ui/play-panel.vala:55
 msgid "Search Artist"
 msgstr "Interpret suchen"
 
-#: src/ui/music-widgets.vala:311
+#: src/ui/music-widgets.vala:312
 msgid "_Show Music File"
 msgstr "Musikdatei _anzeigen"
 
-#: src/ui/play-bar.vala:75
-msgid "Repeat Music"
-msgstr "Den Titel wiederholen"
+#. Translators: single loop the current music
+#: src/ui/play-bar.vala:74
+msgid "Single Loop"
+msgstr "Einfachschleife"
 
-#: src/ui/play-bar.vala:85
+#: src/ui/play-bar.vala:84
 msgid "Play Previous"
 msgstr "Den vorigen Titel wiedergeben"
 
 #. media-playback-pause-symbolic
-#: src/ui/play-bar.vala:91
+#: src/ui/play-bar.vala:90
 msgid "Play/Pause"
 msgstr "Wiedergabe/Pause"
 
-#: src/ui/play-bar.vala:98
+#: src/ui/play-bar.vala:97
 msgid "Play Next"
 msgstr "Den nächsten Titel wiedergeben"
 
-#: src/ui/play-panel.vala:275
+#: src/ui/play-panel.vala:280
 msgid ""
 "Drag and drop music files here,\n"
 "or change music location: "
@@ -318,25 +320,27 @@ msgstr "Nur mit Albumbild"
 msgid "Track"
 msgstr "Titel"
 
-#: src/ui/store-panel.vala:73
+#: src/ui/store-panel.vala:74
 msgid "Playing"
 msgstr "Aktuelle Wiedergabe"
 
-#: src/ui/store-panel.vala:78
+#: src/ui/store-panel.vala:79
 msgid "Artists"
 msgstr "Interpreten"
 
-#: src/ui/store-panel.vala:83
+#: src/ui/store-panel.vala:84
 msgid "Albums"
 msgstr "Alben"
 
-#: src/ui/store-panel.vala:373
+#: src/ui/store-panel.vala:374
 msgid "Playlists"
 msgstr "Wiedergabelisten"
 
-#: src/ui/volume-button.vala:32
-msgid "Volume: "
-msgstr "Lautstärke: "
+#. Translators: Current volume percent: 0~100%
+#: src/ui/volume-button.vala:33
+#, c-format
+msgid "Volume %d%%"
+msgstr "Lautstärke %d%%"
 
 #: src/utils/music.vala:2
 msgid "Unknown Album"
@@ -345,6 +349,9 @@ msgstr "Unbekanntes Album"
 #: src/utils/music.vala:3
 msgid "Unknown Artist"
 msgstr "Unbekannter Interpret"
+
+#~ msgid "Repeat Music"
+#~ msgstr "Den Titel wiederholen"
 
 #~ msgid "Music Location"
 #~ msgstr "Musikspeicherort"
