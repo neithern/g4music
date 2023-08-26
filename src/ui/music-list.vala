@@ -167,14 +167,16 @@ namespace G4 {
             return _data_store.get_n_items ();
         }
 
-        private void on_create_item (Gtk.ListItem item) {
+        private void on_create_item (Object obj) {
+            var item = (Gtk.ListItem) obj;
             item.child = _grid_mode ? (MusicWidget) new MusicCell () : (MusicWidget) new MusicEntry (_compact_list);
             item.selectable = false;
             item_created (item);
             _row_width = item.child.width_request;
         }
 
-        private void on_bind_item (Gtk.ListItem item) {
+        private void on_bind_item (Object obj) {
+            var item = (Gtk.ListItem) obj;
             var entry = (MusicWidget) item.child;
             var music = (Music) item.item;
             item_binded (item);
@@ -195,7 +197,8 @@ namespace G4 {
             }
         }
 
-        private void on_unbind_item (Gtk.ListItem item) {
+        private void on_unbind_item (Object obj) {
+            var item = (Gtk.ListItem) obj;
             var entry = (MusicWidget) item.child;
             entry.disconnect_first_draw ();
             entry.paintable = null;
