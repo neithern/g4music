@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/neithern/g4music/-/issues\n"
-"POT-Creation-Date: 2023-08-16 17:37+0000\n"
-"PO-Revision-Date: 2023-08-16 21:10+0300\n"
+"POT-Creation-Date: 2023-08-19 04:11+0000\n"
+"PO-Revision-Date: 2023-08-27 19:35+0300\n"
 "Last-Translator: Jiri Grönroos <jiri.gronroos+l10n@iki.fi>\n"
 "Language-Team: Finnish <lokalisointi-lista@googlegroups.com>\n"
 "Language: fi\n"
@@ -246,11 +246,11 @@ msgstr "Toista seuraavaksi"
 msgid "Play"
 msgstr "Toista"
 
-#: src/ui/music-widgets.vala:256 src/ui/play-panel.vala:232
+#: src/ui/music-widgets.vala:256 src/ui/play-panel.vala:237
 msgid "Show _Cover File"
 msgstr "Näytä _kansitiedosto"
 
-#: src/ui/music-widgets.vala:258 src/ui/play-panel.vala:234
+#: src/ui/music-widgets.vala:258 src/ui/play-panel.vala:239
 msgid "_Export Cover"
 msgstr "_Vie kansi"
 
@@ -258,15 +258,15 @@ msgstr "_Vie kansi"
 msgid "Show List File"
 msgstr "Näytä luettelotiedosto"
 
-#: src/ui/music-widgets.vala:309 src/ui/play-panel.vala:57
+#: src/ui/music-widgets.vala:309 src/ui/play-panel.vala:56
 msgid "Search Title"
 msgstr "Etsi nimeä"
 
-#: src/ui/music-widgets.vala:310 src/ui/play-panel.vala:55
+#: src/ui/music-widgets.vala:310 src/ui/play-panel.vala:54
 msgid "Search Album"
 msgstr "Etsi albumia"
 
-#: src/ui/music-widgets.vala:311 src/ui/play-panel.vala:56
+#: src/ui/music-widgets.vala:311 src/ui/play-panel.vala:55
 msgid "Search Artist"
 msgstr "Etsi esittäjää"
 
@@ -275,24 +275,24 @@ msgid "_Show Music File"
 msgstr "_Näytä musiikkitiedosto"
 
 #. Translators: single loop the current music
-#: src/ui/play-bar.vala:76
+#: src/ui/play-bar.vala:74
 msgid "Single Loop"
 msgstr "Kertakierto"
 
-#: src/ui/play-bar.vala:86
+#: src/ui/play-bar.vala:84
 msgid "Play Previous"
 msgstr "Toista edellinen"
 
 #. media-playback-pause-symbolic
-#: src/ui/play-bar.vala:92
+#: src/ui/play-bar.vala:90
 msgid "Play/Pause"
 msgstr "Toista/keskeytä"
 
-#: src/ui/play-bar.vala:99
+#: src/ui/play-bar.vala:97
 msgid "Play Next"
 msgstr "Toista seuraava"
 
-#: src/ui/play-panel.vala:275
+#: src/ui/play-panel.vala:280
 msgid ""
 "Drag and drop music files here,\n"
 "or change music location: "
@@ -332,11 +332,12 @@ msgstr "Albumit"
 msgid "Playlists"
 msgstr "Soittolistat"
 
-#. Translators: Current volume: 0~100
+#. Translators: Current volume percent: 0~100%
 #: src/ui/volume-button.vala:33
 #, c-format
-msgid "Volume %d"
-msgstr "Äänenvoimakkuus %d"
+#| msgid "Volume %d"
+msgid "Volume %d%%"
+msgstr "Äänenvoimakkuus %d% %"
 
 #: src/utils/music.vala:2
 msgid "Unknown Album"
