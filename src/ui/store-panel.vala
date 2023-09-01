@@ -143,7 +143,7 @@ namespace G4 {
                 }
                 sort_btn.sensitive = _current_list == _playing_list;
                 _search_mode = SearchMode.ANY;
-                on_search_text_changed ();
+                on_search_btn_toggled ();
 
                 var paths = new GenericArray<string> (4);
                 get_library_paths (paths);
@@ -502,6 +502,8 @@ namespace G4 {
             }
         }
 
+        private Gtk.CustomFilter? _search_filter = null;
+
         private void on_search_text_changed () {
             _search_text = search_entry.text;
             parse_search_mode (ref _search_text, ref _search_mode);
@@ -510,7 +512,13 @@ namespace G4 {
             } else if (_current_list == _artist_list) {
                 _search_mode = SearchMode.ARTIST;
             }
-            _current_list.filter_model.set_filter (search_btn.active ? new Gtk.CustomFilter (on_search_match) : (Gtk.CustomFilter?) null);
+            if (search_btn.active && _search_filter == null) {
+                _search_filter = new Gtk.CustomFilter (on_search_match);
+            } else if (!search_btn.active && _search_filter != null) {
+                _search_filter = null;
+            }
+            _current_list.filter_model.set_filter (_search_filter);
+            _search_filter?.changed (Gtk.FilterChange.DIFFERENT);
         }
 
         private void remove_stack_child (Gtk.Stack stack, Gtk.Widget child) {
