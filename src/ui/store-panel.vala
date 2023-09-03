@@ -100,9 +100,9 @@ namespace G4 {
             _switch_bar.bind_property ("reveal-child", revealer, "reveal-child", BindingFlags.SYNC_CREATE | BindingFlags.INVERT_BOOLEAN);
 
             app.index_changed.connect (on_index_changed);
-            app.music_batch_changed.connect (on_music_batch_changed);
             app.music_changed.connect (on_music_changed);
             app.music_external_changed.connect (on_music_external_changed);
+            app.music_store_changed.connect (on_music_store_changed);
             app.loader.loading_changed.connect (on_loading_changed);
 
             var settings = app.settings;
@@ -454,13 +454,6 @@ namespace G4 {
             return true;
         }
 
-        private void on_music_batch_changed () {
-            if (_size_allocated) {
-                update_visible_store ();
-                initialize_library_view ();
-            }
-        }
-
         private void on_music_changed (Music? music) {
             _current_list.current_item = music;
         }
@@ -473,6 +466,13 @@ namespace G4 {
 
             for (var child = stack_view.get_last_child (); child is Gtk.Stack; child = child?.get_prev_sibling ())
                 update_stack_pages ((Gtk.Stack) child);
+        }
+
+        private void on_music_store_changed () {
+            if (_size_allocated) {
+                update_visible_store ();
+                initialize_library_view ();
+            }
         }
 
         private void on_search_btn_toggled () {

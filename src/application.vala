@@ -21,9 +21,9 @@ namespace G4 {
         private Settings _settings;
 
         public signal void index_changed (int index, uint size);
-        public signal void music_batch_changed ();
         public signal void music_changed (Music? music);
         public signal void music_external_changed ();
+        public signal void music_store_changed ();
         public signal void music_tag_parsed (Music music, Gst.Sample? image);
         public signal void music_cover_parsed (Music music, string? uri);
 
@@ -562,7 +562,7 @@ namespace G4 {
                     Source.remove (_pending_msc_handler);
                 _pending_msc_handler = run_idle_once (() => {
                     _pending_msc_handler = 0;
-                    music_batch_changed ();
+                    music_store_changed ();
                 });
             }
         }
