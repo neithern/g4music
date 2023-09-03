@@ -40,7 +40,8 @@ namespace G4 {
             _actions = new ActionHandles (this);
 
             _music_list.model = _music_store;
-            _music_store.items_changed.connect (on_music_items_changed);
+            _music_list.items_changed.connect (on_music_list_changed);
+            _music_store.items_changed.connect (on_music_store_changed);
             _loader.loading_changed.connect ((loading) => _loading = loading);
             _loader.music_found.connect (on_music_found);
             _loader.music_lost.connect (on_music_lost);
@@ -216,7 +217,9 @@ namespace G4 {
                 return _music_list;
             }
             set {
+                _music_list.items_changed.disconnect (on_music_list_changed);
                 _music_list = value;
+                _music_list.items_changed.connect (on_music_list_changed);
                 update_current_item ();
             }
         }
@@ -540,15 +543,25 @@ namespace G4 {
         }
 
         private uint _pending_mic_handler = 0;
+        private uint _pending_msc_handler = 0;
 
-        private void on_music_items_changed (uint position, uint removed, uint added) {
+        private void on_music_list_changed (uint position, uint removed, uint added) {
             if (removed != 0 || added != 0) {
                 if (_pending_mic_handler != 0)
                     Source.remove (_pending_mic_handler);
                 _pending_mic_handler = run_idle_once (() => {
                     _pending_mic_handler = 0;
-                    if (!update_current_item ())
-                        index_changed (_current_item, _music_list.get_n_items ());
+                    update_current_item ();
+                });
+            }
+        }
+
+        private void on_music_store_changed (uint position, uint removed, uint added) {
+            if (removed != 0 || added != 0) {
+                if (_pending_msc_handler != 0)
+                    Source.remove (_pending_msc_handler);
+                _pending_msc_handler = run_idle_once (() => {
+                    _pending_msc_handler = 0;
                     music_batch_changed ();
                 });
             }
@@ -626,13 +639,11 @@ namespace G4 {
             }
         }
 
-        private bool update_current_item () {
+        private void update_current_item () {
             if (_music_list.get_item (_current_item) != _current_music) {
                 var item = find_music_item (_current_music);
                 change_current_item (item);
-                return true;
             }
-            return false;
         }
     }
 
