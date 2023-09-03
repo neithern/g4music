@@ -51,6 +51,16 @@
     </screenshots>
 
     <releases>
+        <release version="3.3" date="2023-9-3">
+            <description>
+                <ul>
+                <li>Make seek_bar auto width.</li>
+                <li>UI improvement and fixing.</li>
+                <li>Add translation: Ukrainian, Finnish, Indonesian, Basque.</li>
+                <li>Update translation: Spanish, French, German, Turkish, Russian.</li>
+                </ul>
+            </description>
+        </release>
         <release version="3.2" date="2023-8-13">
             <description>
                 <ul>
