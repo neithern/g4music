@@ -1,0 +1,347 @@
+# Belarusian translation for g4music.
+# Copyright (C) 2023 g4music's COPYRIGHT HOLDER
+# This file is distributed under the same license as the g4music package.
+# Yuras Shumovich <shumovichy@gmail.com>, 2023.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: g4music master\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/neithern/g4music/-/issues\n"
+"POT-Creation-Date: 2023-09-04 17:27+0000\n"
+"PO-Revision-Date: 2023-09-04 23:21+0300\n"
+"Last-Translator: Yuras Shumovich <shumovichy@gmail.com>\n"
+"Language-Team: Belarusian <i18n-bel-gnome@googlegroups.com>\n"
+"Language: be\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Poedit 3.3.2\n"
+
+#: data/app.desktop.in:3 src/application.vala:235 src/main.vala:24
+msgid "G4Music"
+msgstr "G4Music"
+
+#: data/app.desktop.in:4
+msgid "Music Player"
+msgstr "Прайгравальнік музыкі"
+
+#: data/app.desktop.in:5
+msgid "Play music"
+msgstr "Прайграванне музыкі"
+
+#: data/app.desktop.in:12
+msgid "music;sound;player;media;audio;playlist;"
+msgstr "music;sound;player;media;audio;playlist;музыка;гук;прайгравальнік;плэер;мультымедыя;аўдыя;спіс прайгравання;плэйліст;плэй-ліст;"
+
+#: src/gtk/help-overlay.ui:11
+msgctxt "shortcut window"
+msgid "General"
+msgstr "Агульныя"
+
+#: src/gtk/help-overlay.ui:14
+msgctxt "shortcut window"
+msgid "Show Shortcuts"
+msgstr "Паказаць спалучэнні клавіш"
+
+#: src/gtk/help-overlay.ui:20
+msgctxt "shortcut window"
+msgid "Preferences"
+msgstr "Налады"
+
+#: src/gtk/help-overlay.ui:26
+msgctxt "shortcut window"
+msgid "Quit"
+msgstr "Выйсці"
+
+#: src/gtk/help-overlay.ui:34
+msgctxt "shortcut window"
+msgid "Playback"
+msgstr "Прайграванне"
+
+#: src/gtk/help-overlay.ui:37
+msgctxt "shortcut window"
+msgid "Play/Pause"
+msgstr "Прайграванне/паўза"
+
+#: src/gtk/help-overlay.ui:43
+msgctxt "shortcut window"
+msgid "Play Next"
+msgstr "Наступная дарожка"
+
+#: src/gtk/help-overlay.ui:49
+msgctxt "shortcut window"
+msgid "Play Previous"
+msgstr "Папярэдняя дарожка"
+
+#: src/gtk/help-overlay.ui:57
+msgctxt "shortcut window"
+msgid "Playlist"
+msgstr "Спіс прайгравання"
+
+#: src/gtk/help-overlay.ui:60
+msgctxt "shortcut window"
+msgid "Search"
+msgstr "Пошук"
+
+#: src/gtk/help-overlay.ui:66
+msgctxt "shortcut window"
+msgid "Toggle Sort"
+msgstr "Пераключыць сартаванне"
+
+#: src/gtk/help-overlay.ui:72
+msgctxt "shortcut window"
+msgid "Reload Library"
+msgstr "Абнавіць бібліятэку"
+
+#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:340
+msgid "Back"
+msgstr "Назад"
+
+#: src/gtk/preferences.ui:10
+msgid "General"
+msgstr "Агульныя"
+
+#: src/gtk/preferences.ui:14
+msgid "Prefer dark theme"
+msgstr "Аддаваць перавагу цёмнай тэме"
+
+#: src/gtk/preferences.ui:26
+msgid "Background blur mode"
+msgstr "Рэжым размывання фона"
+
+#: src/gtk/preferences.ui:32
+msgid "Compact playlist view"
+msgstr "Кампактны спіс прайгравання"
+
+#: src/gtk/preferences.ui:44
+msgid "Grid view for artists/albums"
+msgstr "Рэжыме сеткі для выканаўцаў/альбомаў"
+
+#: src/gtk/preferences.ui:56 src/application.vala:435
+msgid "Keep playing after window closed"
+msgstr "Працягваць прайграванне пасля закрыцця акна"
+
+#: src/gtk/preferences.ui:69
+msgid "Library"
+msgstr "Бібліятэка"
+
+#: src/gtk/preferences.ui:73
+msgid "Load music from folder"
+msgstr "Загрузіць музыку з папкі"
+
+#: src/gtk/preferences.ui:85
+msgid "Monitor local file changes"
+msgstr "Сачыць за змяненнем лакальных файлаў"
+
+#: src/gtk/preferences.ui:97
+msgid "Load thumbnails for non-local files"
+msgstr "Загружаць мініяцюры для не лакальных файлаў"
+
+#: src/gtk/preferences.ui:98
+msgid "May cause slowdowns and excess network usage"
+msgstr "Можа выклікаць празмернае выкарыстанне і запавольванне працы сеткі"
+
+#: src/gtk/preferences.ui:111
+msgid "Playback"
+msgstr "Прайграванне"
+
+#: src/gtk/preferences.ui:115
+msgid "Show audio peak level"
+msgstr "Паказваць пікавы ўзровень гуку"
+
+#: src/gtk/preferences.ui:119
+msgid "Display characters"
+msgstr "Сімвалы для вываду"
+
+#: src/gtk/preferences.ui:134
+msgid "Rotate album cover"
+msgstr "Кружэнне вокладкі альбома"
+
+#: src/gtk/preferences.ui:146
+msgid "Enable gapless playback"
+msgstr "Уключыць бесперапыннае прайграванне"
+
+#: src/gtk/preferences.ui:158
+msgid "Normalize volume with ReplayGain"
+msgstr "Нармалізацыя гучнасці праз ReplayGain"
+
+#: src/gtk/preferences.ui:164
+msgid "Prefer audio sink of GStreamer"
+msgstr "Пераважны прыёмнік сігналу GStreamer"
+
+#: src/gtk/store-panel.ui:22
+msgid "Main Menu"
+msgstr "Галоўнае меню"
+
+#: src/gtk/store-panel.ui:28
+msgid "Sort By"
+msgstr "Сартаванне"
+
+#: src/gtk/store-panel.ui:35
+msgid "Search"
+msgstr "Пошук"
+
+#: src/gtk/store-panel.ui:73
+msgid "_Reload Library"
+msgstr "_Абнавіць бібліятэку"
+
+#: src/gtk/store-panel.ui:79
+msgid "_Preferences"
+msgstr "_Налады"
+
+#: src/gtk/store-panel.ui:83
+msgid "_Keyboard Shortcuts"
+msgstr "_Спалучэнні клавіш"
+
+#: src/gtk/store-panel.ui:87
+msgid "_About"
+msgstr "_Аб праграме"
+
+#: src/gtk/store-panel.ui:96 src/ui/preferences.vala:67
+msgid "Album"
+msgstr "Альбом"
+
+#: src/gtk/store-panel.ui:101
+msgid "Artist"
+msgstr "Выканаўца"
+
+#: src/gtk/store-panel.ui:106
+msgid "Artist/Album"
+msgstr "Выканаўца/Альбом"
+
+#: src/gtk/store-panel.ui:111
+msgid "Title"
+msgstr "Назва"
+
+#: src/gtk/store-panel.ui:116
+msgid "Recent"
+msgstr "Нядаўнія"
+
+#: src/gtk/store-panel.ui:121
+msgid "Shuffle"
+msgstr "Выпадковы парадак"
+
+#: src/action-handles.vala:184
+msgid "A fast, fluent, light weight music player written in GTK4."
+msgstr "Хуткі плаўны і лёгкі прайгравальнік музыкі напісаны на аснове GTK4."
+
+#. Translators: Replace "translator-credits" with your names, one name per line
+#: src/action-handles.vala:186
+msgid "translator-credits"
+msgstr "Юрась Шумовіч <shumovichy@gmail.com>"
+
+#: src/application.vala:626
+msgid "Keep playing"
+msgstr "Працягваць прайграванне"
+
+#. Translators: Play this music at next position of current playing music
+#: src/ui/music-widgets.vala:252 src/ui/music-widgets.vala:293
+#: src/ui/music-widgets.vala:303
+msgid "Play at Next"
+msgstr "Паставіць наступнай"
+
+#: src/ui/music-widgets.vala:253 src/ui/music-widgets.vala:292
+#: src/ui/music-widgets.vala:302 src/ui/store-panel.vala:345
+msgid "Play"
+msgstr "Прайграць"
+
+#: src/ui/music-widgets.vala:256 src/ui/play-panel.vala:237
+msgid "Show _Cover File"
+msgstr "Паказаць файл _вокладкі"
+
+#: src/ui/music-widgets.vala:258 src/ui/play-panel.vala:239
+msgid "_Export Cover"
+msgstr "_Экспартаваць вокладку"
+
+#: src/ui/music-widgets.vala:295
+msgid "Show List File"
+msgstr "Паказаць размяшчэнне файла спіса"
+
+#: src/ui/music-widgets.vala:309 src/ui/play-panel.vala:56
+msgid "Search Title"
+msgstr "Пошук па назве"
+
+#: src/ui/music-widgets.vala:310 src/ui/play-panel.vala:54
+msgid "Search Album"
+msgstr "Пошук па альбому"
+
+#: src/ui/music-widgets.vala:311 src/ui/play-panel.vala:55
+msgid "Search Artist"
+msgstr "Пошук па выканаўцу"
+
+#: src/ui/music-widgets.vala:312
+msgid "_Show Music File"
+msgstr "_Паказаць размяшчэнне файла"
+
+#. Translators: single loop the current music
+#: src/ui/play-bar.vala:74
+msgid "Single Loop"
+msgstr "Паўтор адной песні"
+
+#: src/ui/play-bar.vala:84
+msgid "Play Previous"
+msgstr "Папярэдняя дарожка"
+
+#. media-playback-pause-symbolic
+#: src/ui/play-bar.vala:90
+msgid "Play/Pause"
+msgstr "Прайграванне/паўза"
+
+#: src/ui/play-bar.vala:97
+msgid "Play Next"
+msgstr "Наступная дарожка"
+
+#: src/ui/play-panel.vala:280
+msgid ""
+"Drag and drop music files here,\n"
+"or change music location: "
+msgstr ""
+"Перацягніце сюды аўдыяфайлы або \n"
+"змяніце месца размяшчэння музыкі: "
+
+#: src/ui/preferences.vala:46 src/ui/preferences.vala:67
+msgid "Never"
+msgstr "Ніколі"
+
+#: src/ui/preferences.vala:46
+msgid "Always"
+msgstr "Заўсёды"
+
+#: src/ui/preferences.vala:46
+msgid "Art Only"
+msgstr "Толькі з вокладкай"
+
+#: src/ui/preferences.vala:67
+msgid "Track"
+msgstr "Дарожка"
+
+#: src/ui/store-panel.vala:74
+msgid "Playing"
+msgstr "Прайграванне"
+
+#: src/ui/store-panel.vala:79
+msgid "Artists"
+msgstr "Выканаўцы"
+
+#: src/ui/store-panel.vala:84
+msgid "Albums"
+msgstr "Альбомы"
+
+#: src/ui/store-panel.vala:374
+msgid "Playlists"
+msgstr "Спісы прайгравання"
+
+#. Translators: Current volume percent: 0~100%
+#: src/ui/volume-button.vala:33
+#, c-format
+msgid "Volume %d%%"
+msgstr "Гучнасць %d%%"
+
+#: src/utils/music.vala:2
+msgid "Unknown Album"
+msgstr "Невядомы альбом"
+
+#: src/utils/music.vala:3
+msgid "Unknown Artist"
+msgstr "Невядомы выканаўца"
