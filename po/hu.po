@@ -1,0 +1,347 @@
+# Hungarian translation for g4music.
+# Copyright (C) 2023 Free Software Foundation, Inc.
+# This file is distributed under the same license as the g4music package.
+#
+# Balázs Úr <ur.balazs at fsf dot hu>, 2023.
+msgid ""
+msgstr ""
+"Project-Id-Version: g4music master\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/neithern/g4music/-/issues\n"
+"POT-Creation-Date: 2023-09-07 19:57+0000\n"
+"PO-Revision-Date: 2023-09-23 18:28+0200\n"
+"Last-Translator: Balázs Úr <ur.balazs at fsf dot hu>\n"
+"Language-Team: Hungarian <openscope at fsf dot hu>\n"
+"Language: hu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Lokalize 23.04.3\n"
+
+#: data/app.desktop.in:3 src/application.vala:235 src/main.vala:24
+msgid "G4Music"
+msgstr "G4Music"
+
+#: data/app.desktop.in:4
+msgid "Music Player"
+msgstr "Zenelejátszó"
+
+#: data/app.desktop.in:5
+msgid "Play music"
+msgstr "Zenék lejátszása"
+
+#: data/app.desktop.in:12
+msgid "music;sound;player;media;audio;playlist;"
+msgstr "zene;zaj;lejátszó;média;hang;lejátszási lista;"
+
+#: src/gtk/help-overlay.ui:11
+msgctxt "shortcut window"
+msgid "General"
+msgstr "Általános"
+
+#: src/gtk/help-overlay.ui:14
+msgctxt "shortcut window"
+msgid "Show Shortcuts"
+msgstr "Gyorsbillentyűk megjelenítése"
+
+#: src/gtk/help-overlay.ui:20
+msgctxt "shortcut window"
+msgid "Preferences"
+msgstr "Beállítások"
+
+#: src/gtk/help-overlay.ui:26
+msgctxt "shortcut window"
+msgid "Quit"
+msgstr "Kilépés"
+
+#: src/gtk/help-overlay.ui:34
+msgctxt "shortcut window"
+msgid "Playback"
+msgstr "Lejátszás"
+
+#: src/gtk/help-overlay.ui:37
+msgctxt "shortcut window"
+msgid "Play/Pause"
+msgstr "Lejátszás vagy szüneteltetés"
+
+#: src/gtk/help-overlay.ui:43
+msgctxt "shortcut window"
+msgid "Play Next"
+msgstr "Következő lejátszása"
+
+#: src/gtk/help-overlay.ui:49
+msgctxt "shortcut window"
+msgid "Play Previous"
+msgstr "Előző lejátszása"
+
+#: src/gtk/help-overlay.ui:57
+msgctxt "shortcut window"
+msgid "Playlist"
+msgstr "Lejátszási lista"
+
+#: src/gtk/help-overlay.ui:60
+msgctxt "shortcut window"
+msgid "Search"
+msgstr "Keresés"
+
+#: src/gtk/help-overlay.ui:66
+msgctxt "shortcut window"
+msgid "Toggle Sort"
+msgstr "Rendezés be- és kikapcsolása"
+
+#: src/gtk/help-overlay.ui:72
+msgctxt "shortcut window"
+msgid "Reload Library"
+msgstr "Gyűjtemény újratöltése"
+
+#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:340
+msgid "Back"
+msgstr "Vissza"
+
+#: src/gtk/preferences.ui:10
+msgid "General"
+msgstr "Általános"
+
+#: src/gtk/preferences.ui:14
+msgid "Prefer dark theme"
+msgstr "Sötét téma előnyben részesítése"
+
+#: src/gtk/preferences.ui:26
+msgid "Background blur mode"
+msgstr "Háttér elmosásának módja"
+
+#: src/gtk/preferences.ui:32
+msgid "Compact playlist view"
+msgstr "Tömör lejátszási lista nézet"
+
+#: src/gtk/preferences.ui:44
+msgid "Grid view for artists/albums"
+msgstr "Előadók és albumok rácsnézete"
+
+#: src/gtk/preferences.ui:56 src/application.vala:435
+msgid "Keep playing after window closed"
+msgstr "Lejátszás folytatása az ablak bezárása után"
+
+#: src/gtk/preferences.ui:69
+msgid "Library"
+msgstr "Gyűjtemény"
+
+#: src/gtk/preferences.ui:73
+msgid "Load music from folder"
+msgstr "Zenék betöltése mappából"
+
+#: src/gtk/preferences.ui:85
+msgid "Monitor local file changes"
+msgstr "Helyi fájlváltozások figyelése"
+
+#: src/gtk/preferences.ui:97
+msgid "Load thumbnails for non-local files"
+msgstr "Bélyegképek betöltése a nem helyi fájlokhoz"
+
+#: src/gtk/preferences.ui:98
+msgid "May cause slowdowns and excess network usage"
+msgstr "Lassulást és túlzott hálózathasználatot okozhat"
+
+#: src/gtk/preferences.ui:111
+msgid "Playback"
+msgstr "Lejátszás"
+
+#: src/gtk/preferences.ui:115
+msgid "Show audio peak level"
+msgstr "Hang csúcsszintjének megjelenítése"
+
+#: src/gtk/preferences.ui:119
+msgid "Display characters"
+msgstr "Karakterek megjelenítése"
+
+#: src/gtk/preferences.ui:134
+msgid "Rotate album cover"
+msgstr "Albumborító forgatása"
+
+#: src/gtk/preferences.ui:146
+msgid "Enable gapless playback"
+msgstr "Szünetmentes lejátszás engedélyezése"
+
+#: src/gtk/preferences.ui:158
+msgid "Normalize volume with ReplayGain"
+msgstr "Hangerő normalizálása hangerő-korrekcióval"
+
+#: src/gtk/preferences.ui:164
+msgid "Prefer audio sink of GStreamer"
+msgstr "A GStreamer hangnyelőjének előnyben részesítése"
+
+#: src/gtk/store-panel.ui:22
+msgid "Main Menu"
+msgstr "Főmenü"
+
+#: src/gtk/store-panel.ui:28
+msgid "Sort By"
+msgstr "Rendezési sorrend"
+
+#: src/gtk/store-panel.ui:35
+msgid "Search"
+msgstr "Keresés"
+
+#: src/gtk/store-panel.ui:73
+msgid "_Reload Library"
+msgstr "Gyűjtemény újra_töltése"
+
+#: src/gtk/store-panel.ui:79
+msgid "_Preferences"
+msgstr "_Beállítások"
+
+#: src/gtk/store-panel.ui:83
+msgid "_Keyboard Shortcuts"
+msgstr "_Gyorsbillentyűk"
+
+#: src/gtk/store-panel.ui:87
+msgid "_About"
+msgstr "_Névjegy"
+
+#: src/gtk/store-panel.ui:96 src/ui/preferences.vala:67
+msgid "Album"
+msgstr "Album"
+
+#: src/gtk/store-panel.ui:101
+msgid "Artist"
+msgstr "Előadó"
+
+#: src/gtk/store-panel.ui:106
+msgid "Artist/Album"
+msgstr "Előadó és album"
+
+#: src/gtk/store-panel.ui:111
+msgid "Title"
+msgstr "Cím"
+
+#: src/gtk/store-panel.ui:116
+msgid "Recent"
+msgstr "Legutóbbi"
+
+#: src/gtk/store-panel.ui:121
+msgid "Shuffle"
+msgstr "Keverés"
+
+#: src/action-handles.vala:184
+msgid "A fast, fluent, light weight music player written in GTK4."
+msgstr "Gyors, gördülékeny, pehelysúlyú, GTK4-ben írt zenelejátszó."
+
+#. Translators: Replace "translator-credits" with your names, one name per line
+#: src/action-handles.vala:186
+msgid "translator-credits"
+msgstr "Úr Balázs <ur dot balazs at fsf dot hu>, 2023."
+
+#: src/application.vala:626
+msgid "Keep playing"
+msgstr "Lejátszás folytatása"
+
+#. Translators: Play this music at next position of current playing music
+#: src/ui/music-widgets.vala:252 src/ui/music-widgets.vala:293
+#: src/ui/music-widgets.vala:303
+msgid "Play at Next"
+msgstr "Lejátszás a következőnél"
+
+#: src/ui/music-widgets.vala:253 src/ui/music-widgets.vala:292
+#: src/ui/music-widgets.vala:302 src/ui/store-panel.vala:345
+msgid "Play"
+msgstr "Lejátszás"
+
+#: src/ui/music-widgets.vala:256 src/ui/play-panel.vala:237
+msgid "Show _Cover File"
+msgstr "_Borítófájl megjelenítése"
+
+#: src/ui/music-widgets.vala:258 src/ui/play-panel.vala:239
+msgid "_Export Cover"
+msgstr "Borító _exportálása"
+
+#: src/ui/music-widgets.vala:295
+msgid "Show List File"
+msgstr "Listafájl megjelenítése"
+
+#: src/ui/music-widgets.vala:309 src/ui/play-panel.vala:56
+msgid "Search Title"
+msgstr "Cím keresése"
+
+#: src/ui/music-widgets.vala:310 src/ui/play-panel.vala:54
+msgid "Search Album"
+msgstr "Album keresése"
+
+#: src/ui/music-widgets.vala:311 src/ui/play-panel.vala:55
+msgid "Search Artist"
+msgstr "Előadó keresése"
+
+#: src/ui/music-widgets.vala:312
+msgid "_Show Music File"
+msgstr "_Zenefájl megjelenítése"
+
+#. Translators: single loop the current music
+#: src/ui/play-bar.vala:74
+msgid "Single Loop"
+msgstr "Ismételt lejátszás"
+
+#: src/ui/play-bar.vala:84
+msgid "Play Previous"
+msgstr "Előző lejátszása"
+
+#. media-playback-pause-symbolic
+#: src/ui/play-bar.vala:90
+msgid "Play/Pause"
+msgstr "Lejátszás vagy szüneteltetés"
+
+#: src/ui/play-bar.vala:97
+msgid "Play Next"
+msgstr "Következő lejátszása"
+
+#: src/ui/play-panel.vala:280
+msgid ""
+"Drag and drop music files here,\n"
+"or change music location: "
+msgstr ""
+"Fogjon meg és ejtsen ide zenefájlokat,\n"
+"vagy változtassa meg a zenék helyét: "
+
+#: src/ui/preferences.vala:46 src/ui/preferences.vala:67
+msgid "Never"
+msgstr "Soha"
+
+#: src/ui/preferences.vala:46
+msgid "Always"
+msgstr "Mindig"
+
+#: src/ui/preferences.vala:46
+msgid "Art Only"
+msgstr "Csak borító"
+
+#: src/ui/preferences.vala:67
+msgid "Track"
+msgstr "Szám"
+
+#: src/ui/store-panel.vala:74
+msgid "Playing"
+msgstr "Lejátszás"
+
+#: src/ui/store-panel.vala:79
+msgid "Artists"
+msgstr "Előadók"
+
+#: src/ui/store-panel.vala:84
+msgid "Albums"
+msgstr "Albumok"
+
+#: src/ui/store-panel.vala:374
+msgid "Playlists"
+msgstr "Lejátszási listák"
+
+#. Translators: Current volume percent: 0~100%
+#: src/ui/volume-button.vala:33
+#, c-format
+msgid "Volume %d%%"
+msgstr "Hangerő %d%%"
+
+#: src/utils/music.vala:2
+msgid "Unknown Album"
+msgstr "Ismeretlen album"
+
+#: src/utils/music.vala:3
+msgid "Unknown Artist"
+msgstr "Ismeretlen előadó"
