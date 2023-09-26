@@ -8,7 +8,6 @@ namespace G4 {
 
         public SwitchBar () {
             _box.hexpand = true;
-            _box.add_css_class ("toolbar");
             _revealer.child = _box;
             _revealer.reveal_child = true;
             add_child (new Gtk.Builder (), _revealer, null);
