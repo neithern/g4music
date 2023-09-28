@@ -54,7 +54,7 @@ namespace G4 {
         while ((str = dis.read_line_utf8 (out length)) != null) {
             var uri = (!)str;
             if (length > 0 && uri[0] != '#') {
-                var abs_uri = parse_relative_uri (uri, parent);
+                var abs_uri = parse_relative_uri (uri.replace("\r", ""), parent);
                 if (abs_uri != null)
                     uris.add ((!)abs_uri);
             }
