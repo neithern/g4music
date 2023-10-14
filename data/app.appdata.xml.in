@@ -51,6 +51,17 @@
     </screenshots>
 
     <releases>
+        <release version="3.4" date="2023-10-14">
+            <description>
+                <p>
+                • Build flatpak with GNOME 45
+                • Fix style of switch bar.
+                • Fix loading M3U playlist.
+                • Add Hungarian translation.
+                • Update Swedish translation.
+                </p>
+            </description>
+        </release>
         <release version="3.3" date="2023-9-3">
             <description>
                 <p>
