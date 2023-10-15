@@ -51,15 +51,15 @@
     </screenshots>
 
     <releases>
-        <release version="3.4" date="2023-10-14">
+        <release version="3.4" date="2023-10-15">
             <description>
-                <p>
-                • Build flatpak with GNOME 45
-                • Fix style of switch bar.
-                • Fix loading M3U playlist.
-                • Add Hungarian translation.
-                • Update Swedish translation.
-                </p>
+                <ul>
+                <li>Build flatpak with GNOME 45.</li>
+                <li>Fix style of switch bar.</li>
+                <li>Fix loading M3U playlist.</li>
+                <li>Add Hungarian translation.</li>
+                <li>Update Swedish translation.</li>
+                </ul>
             </description>
         </release>
         <release version="3.3" date="2023-9-3">
