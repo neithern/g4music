@@ -17,22 +17,22 @@
     <content_rating type="oars-1.1"/>
 
     <description>
-        <p>
-        G4Music is a fast fluent lightweight music player written in GTK4, with a beautiful and adaptive user interface, focuses on high performance for large music collection.
-        Features
-        • Supports most music file types, samba and any other remote protocols (depends on GIO and GStreamer).
-        • Fast loading and parsing thousands of music files in very few seconds, monitor local changes.
-        • Low memory usage for large music collection with album covers (embedded and external), no thumbnail caches to store.
-        • Group and sorts by album/artist/title, shuffle list, full-text searching.
-        • Gaussian blurred cover as background, follows GNOME light/dark mode.
-        • Drag-drop from GNOME Files, showing music in Files.
-        • Supports audio peaks visualizer.
-        • Supports gapless playback.
-        • Supports normalizing volume with ReplayGain.
-        • Supports pipewire and other audio sink.
-        • Supports MPRIS control.
-        • Less than 500KB to install.
-        </p>
+      	<p>G4Music is a fast fluent lightweight music player written in GTK4, with a beautiful and adaptive user interface, focuses on high performance for large music collection.</p>
+        <p>Features</p>
+        <ul>
+        <li>Supports most music file types, samba and any other remote protocols (depends on GIO and GStreamer).</li>
+        <li>Fast loading and parsing thousands of music files in very few seconds, monitor local changes.</li>
+        <li>Low memory usage for large music collection with album covers (embedded and external), no thumbnail caches to store.</li>
+        <li>Group and sorts by album/artist/title, shuffle list, full-text searching.</li>
+        <li>Gaussian blurred cover as background, follows GNOME light/dark mode.</li>
+        <li>Drag-drop from GNOME Files, showing music in Files.</li>
+        <li>Supports audio peaks visualizer.</li>
+        <li>Supports gapless playback.</li>
+        <li>Supports normalizing volume with ReplayGain.</li>
+        <li>Supports pipewire and other audio sink.</li>
+        <li>Supports MPRIS control.</li>
+        <li>Less than 500KB to install.</li>
+        </ul>
     </description>
 
     <screenshots>
@@ -64,353 +64,351 @@
         </release>
         <release version="3.3" date="2023-9-3">
             <description>
-                <p>
-                • Make seek_bar auto width.
-                • UI improvement and fixing.
-                • Add translation: Ukrainian, Finnish, Indonesian, Basque.
-                • Update translation: Spanish, French, German, Turkish, Russian.
-                </p>
+                <ul>
+                <li>Make seek_bar auto width.</li>
+                <li>UI improvement and fixing.</li>
+                <li>Add translation: Ukrainian, Finnish, Indonesian, Basque.</li>
+                <li>Update translation: Spanish, French, German, Turkish, Russian.</li>
+                </ul>
             </description>
         </release>
         <release version="3.2" date="2023-8-13">
             <description>
-                <p>
-                • Option: Grid view for artists/albums.
-                • Bigger image size and column width for grid view.
-                • UI improvement and fixing.
-                </p>
+                <ul>
+                <li>Option: Grid view for artists/albums.</li>
+                <li>Bigger image size and column width for grid view.</li>
+                <li>UI improvement and fixing.</li>
+                </ul>
             </description>
         </release>
         <release version="3.1" date="2023-8-5">
             <description>
-                <p>
-                • Group by album-artist, sort albums by year.
-                • Save and restore the last library view.
-                • Open a new page when play all music of an artist.
-                • Stay in the current list when playing the whole album.
-                • Show the local playlists.
-                • Optimize searching.
-                • Update German and Japanese translation.
-                </p>
+                <ul>
+                <li>Group by album-artist, sort albums by year.</li>
+                <li>Save and restore the last library view.</li>
+                <li>Open a new page when play all music of an artist.</li>
+                <li>Stay in the current list when playing the whole album.</li>
+                <li>Show the local playlists.</li>
+                <li>Optimize searching.</li>
+                <li>Update German and Japanese translation.</li>
+                </ul>
             </description>
         </release>
         <release version="3.0" date="2023-7-29">
             <description>
-                <p>
-                • Group artists/albums as library.
-                • Optimize layout for landscape view.
-                • Show progressbar when loading.
-                • Add icons for preference rows.
-                • Optimize seeking.
-                • Add Japanese translation, thanks to @Gnuey56.
-                </p>
+                <ul>
+                <li>Group artists/albums as library.</li>
+                <li>Optimize layout for landscape view.</li>
+                <li>Show progressbar when loading.</li>
+                <li>Add icons for preference rows.</li>
+                <li>Optimize seeking.</li>
+                <li>Add Japanese translation, thanks to @Gnuey56.</li>
+                </ul>
             </description>
         </release>
         <release version="2.4" date="2023-7-7">
             <description>
-                <p>
-                • App icon refresh from @ddaudix.
-                • Add a sort mode by: Artist/Album
-                • Drag-drop folders works from Files.
-                • Rotating cover sync with play progress, fix issues.
-                • Fix gapless related issues.
-                • Update German translation.
-                </p>
+                <ul>
+                <li>App icon refresh from @ddaudix.</li>
+                <li>Add a sort mode by: Artist/Album</li>
+                <li>Drag-drop folders works from Files.</li>
+                <li>Rotating cover sync with play progress, fix issues.</li>
+                <li>Fix gapless related issues.</li>
+                <li>Update German translation.</li>
+                </ul>
             </description>
         </release>
         <release version="2.3" date="2023-7-1">
             <description>
-                <p>
-                • Support .m3u/.pls playlist from command line.
-                • Modeless preferences window.
-                • UI improvement and fixing.
-                • Update Spanish translation.
-                </p>
+                <ul>
+                <li>Support .m3u/.pls playlist from command line.</li>
+                <li>Modeless preferences window.</li>
+                <li>UI improvement and fixing.</li>
+                <li>Update Spanish translation.</li>
+                </ul>
             </description>
         </release>
         <release version="2.2" date="2023-6-23">
             <description>
-                <p>
-                • Option: rotate cover when playing.
-                • Click music title to search.
-                • Revert to single page of preferences.
-                • Add 2 shortcut keys.
-                • UI improvement and fixing.
-                • Update German translation.
-                </p>
+                <ul>
+                <li>Option: rotate cover when playing.</li>
+                <li>Click music title to search.</li>
+                <li>Revert to single page of preferences.</li>
+                <li>Add 2 shortcut keys.</li>
+                <li>UI improvement and fixing.</li>
+                <li>Update German translation.</li>
+                </ul>
             </description>
         </release>
         <release version="2.1" date="2023-6-18">
             <description>
-                <p>
-                • App startup acceleration.
-                • Option: Prefer audio sink.
-                • Replay-gain supports album mode.
-                • Show same album cover in app and MPRIS.
-                </p>
+                <ul>
+                <li>App startup acceleration.</li>
+                <li>Option: Prefer audio sink.</li>
+                <li>Replay-gain supports album mode.</li>
+                <li>Show same album cover in app and MPRIS.</li>
+                </ul>
             </description>
         </release>
         <release version="2.0" date="2023-6-11">
             <description>
-                <p>
-                • Option: Monitor local file changes.
-                • Right click or long press to show popover menu.
-                • Scroll playlist smoothly.
-                • Many UI improvements.
-                • Optimize searching by album/artist/title.
-                • Optimize loading files and cache.
-                • Update German translation.
-                </p>
+                <ul>
+                <li>Option: Monitor local file changes.</li>
+                <li>Right click or long press to show popover menu.</li>
+                <li>Scroll playlist smoothly.</li>
+                <li>Many UI improvements.</li>
+                <li>Optimize searching by album/artist/title.</li>
+                <li>Optimize loading files and cache.</li>
+                <li>Update German translation.</li>
+                </ul>
             </description>
         </release>
         <release version="1.13" date="2023-5-25">
             <description>
-                <p>
-                • Option: compact playlist view.
-                • Option: custom characters for audio peaks.
-                • Optimize playlist text size.
-                • Optimize for macOS.
-                </p>
+                <ul>
+                <li>Option: compact playlist view.</li>
+                <li>Option: custom characters for audio peaks.</li>
+                <li>Optimize playlist text size.</li>
+                <li>Optimize for macOS.</li>
+                </ul>
             </description>
         </release>
         <release version="1.12" date="2023-5-18">
             <description>
-                <p>
-                • Save memory and CPU usage.
-                • New style for no-cover images.
-                • UI improvement and fixing.
-                </p>
+                <ul>
+                <li>Save memory and CPU usage.</li>
+                <li>New style for no-cover images.</li>
+                <li>UI improvement and fixing.</li>
+                </ul>
             </description>
         </release>
         <release version="1.11" date="2023-5-8">
             <description>
-                <p>
-                • MPRIS improvement.
-                • UI improvement and fixing.
-                </p>
+                <ul>
+                <li>MPRIS improvement.</li>
+                <li>UI improvement and fixing.</li>
+                </ul>
             </description>
         </release>
         <release version="1.10" date="2023-5-6">
             <description>
-                <p>
-                • Build flatpak with GNOME 44.
-                • MPRIS improvement.
-                • UI improvement and fixing.
-                • Update Spanish translation.
-                </p>
+                <ul>
+                <li>Build flatpak with GNOME 44.</li>
+                <li>MPRIS improvement.</li>
+                <li>UI improvement and fixing.</li>
+                <li>Update Spanish translation.</li>
+                </ul>
             </description>
         </release>
         <release version="1.9.2" date="2023-4-2">
             <description>
-                <p>
-                • Fix wrong icon name of repeat-song.
-                • Fix wrong state of Switch buttons.
-                </p>
+                <ul>
+                <li>Fix wrong icon name of repeat-song.</li>
+                <li>Fix wrong state of Switch buttons.</li>
+                </ul>
             </description>
         </release>
         <release version="1.9.1" date="2023-3-25">
             <description>
-                <p>
-                • Optimize loading thumbnails.
-                • UI improvement and fixing.
-                • Update German translation.
-                </p>
+                <ul>
+                <li>Optimize loading thumbnails.</li>
+                <li>UI improvement and fixing.</li>
+                <li>Update German translation.</li>
+                </ul>
             </description>
         </release>
         <release version="1.9" date="2023-3-17">
             <description>
-                <p>
-                • Select a music file to "Play at Next".
-                • Lazy load thumbnails to faster startup and saving memory.
-                • UI improvement and fixing.
-                • Add Occitan translation, thanks to Quentin PAGÈS.
-                </p>
+                <ul>
+                <li>Select a music file to "Play at Next".</li>
+                <li>Lazy load thumbnails to faster startup and saving memory.</li>
+                <li>UI improvement and fixing.</li>
+                <li>Add Occitan translation, thanks to Quentin PAGÈS.</li>
+                </ul>
             </description>
         </release>
         <release version="1.8" date="2022-10-19">
             <description>
-                <p>
-                • Build flatpak with GNOME 43.
-                • Cache directories for faster loading.
-                • Show peaks more smoothly.
-                • Update Spanish and German translation, thanks to the translators.
-                • v1.8.2: Build with vala 0.54.
-                </p>
+                <ul>
+                <li>Build flatpak with GNOME 43.</li>
+                <li>Cache directories for faster loading.</li>
+                <li>Show peaks more smoothly.</li>
+                <li>Update Spanish and German translation, thanks to the translators.</li>
+                <li>v1.8.2: Build with vala 0.54.</li>
+                </ul>
             </description>
         </release>
         <release version="1.7" date="2022-10-02">
             <description>
-                <p>
-                • Start to play when music changed.
-                • Optimize audio peaks visualizer.
-                • New style of popover menu.
-                • Update many translation, thanks to the translators.
-                </p>
+                <ul>
+                <li>Start to play when music changed.</li>
+                <li>Optimize audio peaks visualizer.</li>
+                <li>New style of popover menu.</li>
+                <li>Update many translation, thanks to the translators.</li>
+                </ul>
             </description>
         </release>
         <release version="1.6" date="2022-08-06">
             <description>
-                <p>
-                • Option: Background blur mode.
-                • Shortcut key for toggle sort.
-                • Don't changing current song when searching.
-                • Add Estonian translation, thanks to Henri.
-                • Add Traditional Chinese translation, thanks to Julian.
-                • v1.6.1: Fix wrong sort order of cached tags.
-                </p>
+                <ul>
+                <li>Option: Background blur mode.</li>
+                <li>Shortcut key for toggle sort.</li>
+                <li>Don't changing current song when searching.</li>
+                <li>Add Estonian translation, thanks to Henri.</li>
+                <li>Add Traditional Chinese translation, thanks to Julian.</li>
+                <li>v1.6.1: Fix wrong sort order of cached tags.</li>
+                </ul>
             </description>
         </release>
         <release version="1.5" date="2022-07-31">
             <description>
-                <p>
-                • Show loading songs progress with percent.
-                • Add sort by recently added, thanks to Mek101.
-                • Add German translation, thanks to Jürgen Benvenuti.
-                • Bug fix and UI improvement.
-                </p>
+                <ul>
+                <li>Show loading songs progress with percent.</li>
+                <li>Add sort by recently added, thanks to Mek101.</li>
+                <li>Add German translation, thanks to Jürgen Benvenuti.</li>
+                <li>Bug fix and UI improvement.</li>
+                </ul>
             </description>
         </release>
         <release version="1.4" date="2022-07-23">
             <description>
-                <p>
-                • Popover menu for song entry.
-                • Show initial status if no sound found.
-                • Try parse album and track from file path.
-                • Add Italian translation, thanks to Albano Aattistella.
-                </p>
+                <ul>
+                <li>Popover menu for song entry.</li>
+                <li>Show initial status if no sound found.</li>
+                <li>Try parse album and track from file path.</li>
+                <li>Add Italian translation, thanks to Albano Aattistella.</li>
+                </ul>
             </description>
         </release>
         <release version="1.3" date="2022-07-17">
             <description>
-                <p>
-                • App inhibit suspend to keep playing.
-                • Performance improvement and memory saving.
-                • Parse tags of MKV/MKA.
-                • Add French translation, thanks to Aurélien Hamy.
-                • Add Dutch translation, thanks to Heimen Stoffels.
-                </p>
+                <ul>
+                <li>App inhibit suspend to keep playing.</li>
+                <li>Performance improvement and memory saving.</li>
+                <li>Parse tags of MKV/MKA.</li>
+                <li>Add French translation, thanks to Aurélien Hamy.</li>
+                <li>Add Dutch translation, thanks to Heimen Stoffels.</li>
+                </ul>
             </description>
         </release>
         <release version="1.2" date="2022-07-01">
             <description>
-                <p>
-                • Faster parsing OGG and MP4 tags.
-                • Faster drawing texts using pango.
-                • Many UI optimizations.
-                • Add Brazilian Portuguese translation, thanks to @PedroHSilva.
-                </p>
+                <ul>
+                <li>Faster parsing OGG and MP4 tags.</li>
+                <li>Faster drawing texts using pango.</li>
+                <li>Many UI optimizations.</li>
+                <li>Add Brazilian Portuguese translation, thanks to @PedroHSilva.</li>
+                </ul>
             </description>
         </release>
         <release version="1.1" date="2022-06-25">
             <description>
-                <p>
-                • Option: Gapless playback.
-                • Make label clickable instead of hypelinks.
-                • Add Turkish translation, thanks to @Sabri Ünal.
-                • Fix cover image issues.
-                • Fix saving tag cache issues.
-                </p>
+                <ul>
+                <li>Option: Gapless playback.</li>
+                <li>Make label clickable instead of hypelinks.</li>
+                <li>Add Turkish translation, thanks to @Sabri Ünal.</li>
+                <li>Fix cover image issues.</li>
+                <li>Fix saving tag cache issues.</li>
+                </ul>
             </description>
         </release>
         <release version="1.0" date="2022-06-23">
             <description>
-                <p>
-                • Support ReplayGain to normalize volume.
-                • Option: Keep playing after window closed.
-                • Cache tags to make next loading faster.
-                • Share album cover with same artist.
-                • Fix some UI issues.
-                • v1.0.1: Updated Russian translation.
-                </p>
+                <ul>
+                <li>Support ReplayGain to normalize volume.</li>
+                <li>Option: Keep playing after window closed.</li>
+                <li>Cache tags to make next loading faster.</li>
+                <li>Share album cover with same artist.</li>
+                <li>Fix some UI issues.</li>
+                <li>v1.0.1: Updated Russian translation.</li>
+                </ul>
             </description>
         </release>
         <release version="0.9" date="2022-06-20">
             <description>
-                <p>
-                • Scale album cover to fix large window.
-                • Navigate back if start search and folded.
-                • Draw peak to avoid resizing the window.
-                • Request host file permission in flatpak.
-                </p>
+                <ul>
+                <li>Scale album cover to fix large window.</li>
+                <li>Navigate back if start search and folded.</li>
+                <li>Draw peak to avoid resizing the window.</li>
+                <li>Request host file permission in flatpak.</li>
+                </ul>
             </description>
         </release>
         <release version="0.8" date="2022-06-18">
             <description>
-                <p>
-                • Show current song in Files.
-                • Sort by track number in an album.
-                • Sort text by prefix number.
-                • Always follow sym-links when enumerate a folder.
-                • Add spanish translation, thanks to @Radi4Ever.
-                </p>
+                <ul>
+                <li>Show current song in Files.</li>
+                <li>Sort by track number in an album.</li>
+                <li>Sort text by prefix number.</li>
+                <li>Always follow sym-links when enumerate a folder.</li>
+                <li>Add spanish translation, thanks to @Radi4Ever.</li>
+                </ul>
             </description>
         </release>
         <release version="0.7" date="2022-06-16">
             <description>
-                <p>
-                • Parallel parsing tags to make loading songs even faster.
-                • Merge all kinds of tags as possible.
-                • Fix crash when parsing some FLAC files, thanks to @GeoffreyCoulaud.
-                </p>
+                <ul>
+                <li>Parallel parsing tags to make loading songs even faster.</li>
+                <li>Merge all kinds of tags as possible.</li>
+                <li>Fix crash when parsing some FLAC files, thanks to @GeoffreyCoulaud.</li>
+                </ul>
             </description>
         </release>
         <release version="0.6" date="2022-06-15">
             <description>
-                <p>
-                • Use Adw.Leaflet to adapt to PC and phone screens.
-                • Show a mini play bar when only the playlist on the window.
-                • Show a spinner when loading songs.
-                • Save and restore the window size.
-                • Add Swedish translation, thanks to Åke Engelbrektson.
-                • Faster parsing FLAC tags.
-                </p>
+                <ul>
+                <li>Use Adw.Leaflet to adapt to PC and phone screens.</li>
+                <li>Show a mini play bar when only the playlist on the window.</li>
+                <li>Show a spinner when loading songs.</li>
+                <li>Save and restore the window size.</li>
+                <li>Add Swedish translation, thanks to Åke Engelbrektson.</li>
+                <li>Faster parsing FLAC tags.</li>
+                </ul>
             </description>
         </release>
         <release version="0.5" date="2022-06-13">
             <description>
-                <p>
-                • Detect music file type to fix incorrect parsing.
-                • Update app icon to follow GNOME HIG, thanks to @daudix-UFO.
-                • Add Russian translation, thanks to @daudix-UFO.
-                • Change "Force Dark" to "Prefer Dark".
-                </p>
+                <ul>
+                <li>Detect music file type to fix incorrect parsing.</li>
+                <li>Update app icon to follow GNOME HIG, thanks to @daudix-UFO.</li>
+                <li>Add Russian translation, thanks to @daudix-UFO.</li>
+                <li>Change "Force Dark" to "Prefer Dark".</li>
+                </ul>
             </description>
         </release>
         <release version="0.4" date="2022-06-12">
             <description>
-                <p>
-                • Recognize external images as cover art, supports transparency.
-                • Showing peak now works with pipewire in flatpak.
-                • Don't support tracker_sparql because it is slow.
-                </p>
+                <ul>
+                <li>Recognize external images as cover art, supports transparency.</li>
+                <li>Showing peak now works with pipewire in flatpak.</li>
+                <li>Don't support tracker_sparql because it is slow.</li>
+                </ul>
             </description>
         </release>
         <release version="0.3" date="2022-06-11">
             <description>
-                <p>
-                • Sort songs by Album/Artist/Title.
-                • Option: Force dark theme.
-                • Optimized for responsiveness.
-                </p>
+                <ul>
+                <li>Sort songs by Album/Artist/Title.</li>
+                <li>Option: Force dark theme.</li>
+                <li>Optimized for responsiveness.</li>
+                </ul>
             </description>
         </release>
         <release version="0.2" date="2022-06-10">
             <description>
-                <p>
-                • Add volume button.
-                • Repeat single song mode.
-                • Supports pipewire for flatpak.
-                • Supports parsing GIO file tags for flatpak.
-                • Press any key to search, ESC to quit search.
-                • Show abbreviation as MPRIS's cover if no cover image.
-                </p>
+                <ul>
+                <li>Add volume button.</li>
+                <li>Repeat single song mode.</li>
+                <li>Supports pipewire for flatpak.</li>
+                <li>Supports parsing GIO file tags for flatpak.</li>
+                <li>Press any key to search, ESC to quit search.</li>
+                <li>Show abbreviation as MPRIS's cover if no cover image.</li>
+                </ul>
             </description>
         </release>
         <release version="0.1" date="2022-06-06">
             <description>
-                <p>
-                First release.
-                </p>
+                <p>First release.</p>
             </description>
         </release>
     </releases>
