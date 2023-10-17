@@ -7,15 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/neithern/g4music/-/issues\n"
-"POT-Creation-Date: 2023-09-04 17:27+0000\n"
-"PO-Revision-Date: 2023-09-04 23:21+0300\n"
+"POT-Creation-Date: 2023-09-04 20:22+0000\n"
+"PO-Revision-Date: 2023-10-17 20:11+0300\n"
 "Last-Translator: Yuras Shumovich <shumovichy@gmail.com>\n"
 "Language-Team: Belarusian <i18n-bel-gnome@googlegroups.com>\n"
 "Language: be\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Poedit 3.3.2\n"
 
 #: data/app.desktop.in:3 src/application.vala:235 src/main.vala:24
@@ -32,7 +33,9 @@ msgstr "Прайграванне музыкі"
 
 #: data/app.desktop.in:12
 msgid "music;sound;player;media;audio;playlist;"
-msgstr "music;sound;player;media;audio;playlist;музыка;гук;прайгравальнік;плэер;мультымедыя;аўдыя;спіс прайгравання;плэйліст;плэй-ліст;"
+msgstr ""
+"music;sound;player;media;audio;playlist;музыка;гук;прайгравальнік;плэер;"
+"мультымедыя;аўдыя;спіс прайгравання;плэйліст;плэй-ліст;"
 
 #: src/gtk/help-overlay.ui:11
 msgctxt "shortcut window"
@@ -116,7 +119,7 @@ msgstr "Кампактны спіс прайгравання"
 
 #: src/gtk/preferences.ui:44
 msgid "Grid view for artists/albums"
-msgstr "Рэжыме сеткі для выканаўцаў/альбомаў"
+msgstr "Рэжым сеткі для выканаўцаў/альбомаў"
 
 #: src/gtk/preferences.ui:56 src/application.vala:435
 msgid "Keep playing after window closed"
@@ -128,7 +131,7 @@ msgstr "Бібліятэка"
 
 #: src/gtk/preferences.ui:73
 msgid "Load music from folder"
-msgstr "Загрузіць музыку з папкі"
+msgstr "Загружаць музыку з папкі"
 
 #: src/gtk/preferences.ui:85
 msgid "Monitor local file changes"
