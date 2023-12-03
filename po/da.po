@@ -1,0 +1,352 @@
+# Danish translation for g4music.
+# Copyright (C) 2023 g4music's COPYRIGHT HOLDER
+# This file is distributed under the same license as the g4music package.
+# Alan Mortensen <alanmortensen.am@gmail.com>, 2023.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: g4music master\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/neithern/g4music/-/issues\n"
+"POT-Creation-Date: 2023-10-15 09:07+0000\n"
+"PO-Revision-Date: 2023-12-03 15:01+0100\n"
+"Last-Translator: Alan Mortensen <alanmortensen.am@gmail.com>\n"
+"Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
+"Language: da\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.0.1\n"
+
+#: data/app.desktop.in:3 src/application.vala:235 src/main.vala:24
+msgid "G4Music"
+msgstr "G4Musik"
+
+#: data/app.desktop.in:4
+msgid "Music Player"
+msgstr "Musikafspiller"
+
+#: data/app.desktop.in:5
+msgid "Play music"
+msgstr "Afspil musik"
+
+#: data/app.desktop.in:12
+msgid "music;sound;player;media;audio;playlist;"
+msgstr "musik;lyd;afspiller;medie;afspilningsliste;playliste;"
+
+#: src/gtk/help-overlay.ui:11
+msgctxt "shortcut window"
+msgid "General"
+msgstr "Generelt"
+
+#: src/gtk/help-overlay.ui:14
+msgctxt "shortcut window"
+msgid "Show Shortcuts"
+msgstr "Vis genveje"
+
+#: src/gtk/help-overlay.ui:20
+msgctxt "shortcut window"
+msgid "Preferences"
+msgstr "Indstillinger"
+
+#: src/gtk/help-overlay.ui:26
+msgctxt "shortcut window"
+msgid "Quit"
+msgstr "Afslut"
+
+#: src/gtk/help-overlay.ui:34
+msgctxt "shortcut window"
+msgid "Playback"
+msgstr "Afspilning"
+
+#: src/gtk/help-overlay.ui:37
+msgctxt "shortcut window"
+msgid "Play/Pause"
+msgstr "Afspil/pause"
+
+#: src/gtk/help-overlay.ui:43
+msgctxt "shortcut window"
+msgid "Play Next"
+msgstr "Afspil næste"
+
+#: src/gtk/help-overlay.ui:49
+msgctxt "shortcut window"
+msgid "Play Previous"
+msgstr "Afspil forrige"
+
+#: src/gtk/help-overlay.ui:57
+msgctxt "shortcut window"
+msgid "Playlist"
+msgstr "Afspilningsliste"
+
+#: src/gtk/help-overlay.ui:60
+msgctxt "shortcut window"
+msgid "Search"
+msgstr "Søgning"
+
+#: src/gtk/help-overlay.ui:66
+msgctxt "shortcut window"
+msgid "Toggle Sort"
+msgstr "Skift sortering"
+
+#: src/gtk/help-overlay.ui:72
+msgctxt "shortcut window"
+msgid "Reload Library"
+msgstr "Genindlæs bibliotek"
+
+#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:340
+msgid "Back"
+msgstr "Tilbage"
+
+#: src/gtk/preferences.ui:10
+msgid "General"
+msgstr "Generelt"
+
+#: src/gtk/preferences.ui:14
+msgid "Prefer dark theme"
+msgstr "Foretræk mørkt tema"
+
+#: src/gtk/preferences.ui:26
+msgid "Background blur mode"
+msgstr "Baggrundssløringstilstand"
+
+#: src/gtk/preferences.ui:32
+msgid "Compact playlist view"
+msgstr "Kompakt visning af afspilningsliste"
+
+#: src/gtk/preferences.ui:44
+msgid "Grid view for artists/albums"
+msgstr "Gittervisning af kunstnere/album"
+
+#: src/gtk/preferences.ui:56 src/application.vala:435
+msgid "Keep playing after window closed"
+msgstr "Fortsæt med at afspille, efter vinduet er lukket"
+
+#: src/gtk/preferences.ui:69
+msgid "Library"
+msgstr "Bibliotek"
+
+#: src/gtk/preferences.ui:73
+msgid "Load music from folder"
+msgstr "Indlæs musik fra mappe"
+
+#: src/gtk/preferences.ui:85
+msgid "Monitor local file changes"
+msgstr "Overvåg lokale filændringer"
+
+#: src/gtk/preferences.ui:97
+msgid "Load thumbnails for non-local files"
+msgstr "Indlæs ikkelokale filers miniaturebilleder"
+
+#: src/gtk/preferences.ui:98
+msgid "May cause slowdowns and excess network usage"
+msgstr "Kan forårsage langsommere afvikling og forøget netværksforbrug"
+
+#: src/gtk/preferences.ui:111
+msgid "Playback"
+msgstr "Afspilning"
+
+#: src/gtk/preferences.ui:115
+msgid "Show audio peak level"
+msgstr "Vis topniveau for lyd"
+
+#: src/gtk/preferences.ui:119
+msgid "Display characters"
+msgstr "Vis tegn"
+
+#: src/gtk/preferences.ui:134
+msgid "Rotate album cover"
+msgstr "Rotér albumcover"
+
+#: src/gtk/preferences.ui:146
+msgid "Enable gapless playback"
+msgstr "Aktivér afspilning uden mellemrum"
+
+#: src/gtk/preferences.ui:158
+msgid "Normalize volume with ReplayGain"
+msgstr "Normalisér lydstyrke med ReplayGain"
+
+#: src/gtk/preferences.ui:164
+msgid "Prefer audio sink of GStreamer"
+msgstr "Foretræk GSteamers lyddatamodtager"
+
+#: src/gtk/store-panel.ui:22
+msgid "Main Menu"
+msgstr "Hovedmenu"
+
+#: src/gtk/store-panel.ui:28
+msgid "Sort By"
+msgstr "Sortér efter"
+
+#: src/gtk/store-panel.ui:35
+msgid "Search"
+msgstr "Søg"
+
+#: src/gtk/store-panel.ui:73
+msgid "_Reload Library"
+msgstr "_Genindlæs bibliotek"
+
+#: src/gtk/store-panel.ui:79
+msgid "_Preferences"
+msgstr "_Indstillinger"
+
+#: src/gtk/store-panel.ui:83
+msgid "_Keyboard Shortcuts"
+msgstr "_Tastaturgenveje"
+
+#: src/gtk/store-panel.ui:87
+msgid "_About"
+msgstr "_Om"
+
+#: src/gtk/store-panel.ui:96 src/ui/preferences.vala:67
+msgid "Album"
+msgstr "Album"
+
+#: src/gtk/store-panel.ui:101
+msgid "Artist"
+msgstr "Kunstner"
+
+#: src/gtk/store-panel.ui:106
+msgid "Artist/Album"
+msgstr "Kunstner/Album"
+
+#: src/gtk/store-panel.ui:111
+msgid "Title"
+msgstr "Titel"
+
+#: src/gtk/store-panel.ui:116
+msgid "Recent"
+msgstr "Seneste"
+
+#: src/gtk/store-panel.ui:121
+msgid "Shuffle"
+msgstr "Bland"
+
+#: src/action-handles.vala:184
+msgid "A fast, fluent, light weight music player written in GTK4."
+msgstr "En hurtig og flydende letvægtsmusikafspiller skrevet i GTK4."
+
+#. Translators: Replace "translator-credits" with your names, one name per line
+#: src/action-handles.vala:186
+msgid "translator-credits"
+msgstr ""
+"Alan Mortensen <alanmortensen.am@gmail.com>\n"
+"\n"
+"Dansk-gruppen\n"
+"Websted http://dansk-gruppen.dk\n"
+"E-mail <dansk@dansk-gruppen.dk>"
+
+#: src/application.vala:626
+msgid "Keep playing"
+msgstr "Fortsæt med at afspille"
+
+#. Translators: Play this music at next position of current playing music
+#: src/ui/music-widgets.vala:252 src/ui/music-widgets.vala:293
+#: src/ui/music-widgets.vala:303
+msgid "Play at Next"
+msgstr "Afspil ved næste"
+
+#: src/ui/music-widgets.vala:253 src/ui/music-widgets.vala:292
+#: src/ui/music-widgets.vala:302 src/ui/store-panel.vala:345
+msgid "Play"
+msgstr "Afspil"
+
+#: src/ui/music-widgets.vala:256 src/ui/play-panel.vala:237
+msgid "Show _Cover File"
+msgstr "Vis _coverfil"
+
+#: src/ui/music-widgets.vala:258 src/ui/play-panel.vala:239
+msgid "_Export Cover"
+msgstr "_Eksportér cover"
+
+#: src/ui/music-widgets.vala:295
+msgid "Show List File"
+msgstr "Vis listefil"
+
+#: src/ui/music-widgets.vala:309 src/ui/play-panel.vala:56
+msgid "Search Title"
+msgstr "Søg efter titel"
+
+#: src/ui/music-widgets.vala:310 src/ui/play-panel.vala:54
+msgid "Search Album"
+msgstr "Søg efter album"
+
+#: src/ui/music-widgets.vala:311 src/ui/play-panel.vala:55
+msgid "Search Artist"
+msgstr "Søg efter kunstner"
+
+#: src/ui/music-widgets.vala:312
+msgid "_Show Music File"
+msgstr "_Vis musikfil"
+
+#. Translators: single loop the current music
+#: src/ui/play-bar.vala:74
+msgid "Single Loop"
+msgstr "Enkelt afspilning"
+
+#: src/ui/play-bar.vala:84
+msgid "Play Previous"
+msgstr "Afspil forrige"
+
+#. media-playback-pause-symbolic
+#: src/ui/play-bar.vala:90
+msgid "Play/Pause"
+msgstr "Afspil/pause"
+
+#: src/ui/play-bar.vala:97
+msgid "Play Next"
+msgstr "Afspil næste"
+
+#: src/ui/play-panel.vala:280
+msgid ""
+"Drag and drop music files here,\n"
+"or change music location: "
+msgstr ""
+"Træk og slip musikfiler her,\n"
+"eller ændr musikplacering: "
+
+#: src/ui/preferences.vala:46 src/ui/preferences.vala:67
+msgid "Never"
+msgstr "Aldrig"
+
+#: src/ui/preferences.vala:46
+msgid "Always"
+msgstr "Altid"
+
+#: src/ui/preferences.vala:46
+msgid "Art Only"
+msgstr "Kun kunst"
+
+#: src/ui/preferences.vala:67
+msgid "Track"
+msgstr "Spor"
+
+#: src/ui/store-panel.vala:74
+msgid "Playing"
+msgstr "Afspiller"
+
+#: src/ui/store-panel.vala:79
+msgid "Artists"
+msgstr "Kunstnere"
+
+#: src/ui/store-panel.vala:84
+msgid "Albums"
+msgstr "Albummer"
+
+#: src/ui/store-panel.vala:374
+msgid "Playlists"
+msgstr "Afspilningslister"
+
+#. Translators: Current volume percent: 0~100%
+#: src/ui/volume-button.vala:33
+#, c-format
+msgid "Volume %d%%"
+msgstr "Lydstyrke %d %%"
+
+#: src/utils/music.vala:2
+msgid "Unknown Album"
+msgstr "Ukendt album"
+
+#: src/utils/music.vala:3
+msgid "Unknown Artist"
+msgstr "Ukendt kunstner"
