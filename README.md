@@ -35,7 +35,7 @@ G4Music is a fast fluent lightweight music player written in GTK4, with a beauti
 ## FreeBSD Dependencies
 
 ```bash
-pkg install vala meson libadwaita gstreamer1-plugins-all gettext
+pkg install vala meson libadwaita gstreamer1-plugins-all gettext gtk4
 ```
 
 ## How to build 
