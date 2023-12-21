@@ -46,7 +46,8 @@ namespace G4 {
         public void load () {
             _event.reset ();
             try {
-                var mapped = new MappedFile (/*_file.get_path () ??*/ "", false);
+                stdout.printf ("%s\n\n", _file.get_path () ?? "yeet");
+                var mapped = new MappedFile (_file.get_path () ?? "", false);
                 var dis = new DataInputBytes (mapped.get_bytes ());
                 var magic = dis.read_uint32 ();
                 if (magic != MAGIC)

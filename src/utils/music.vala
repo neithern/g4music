@@ -146,6 +146,7 @@ namespace G4 {
             date = dis.read_uint32 ();
             genre = dis.read_string ();
             track = (int) dis.read_size ();
+            disc = (int) dis.read_size ();
 
             update_album_key ();
             _artist_key = artist.collate_key_for_filename ();
@@ -164,6 +165,7 @@ namespace G4 {
             dos.write_uint32 (date);
             dos.write_string (genre);
             dos.write_size (track);
+            dos.write_size (disc);
         }
 
         public void parse_tags () {
