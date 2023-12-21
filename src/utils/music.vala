@@ -10,6 +10,7 @@ namespace G4 {
         public uint32 date = 0;
         public string genre = "";
         public int track = 0;
+        public int disc = 0;
         public bool has_cover = false;
         public int64 modified_time = 0;
         public string uri = "";
@@ -115,6 +116,12 @@ namespace G4 {
                 track = (int) tr;
                 changed = true;
             }
+            uint album_disc = 0;
+            if (tags.get_uint (Gst.Tags.ALBUM_VOLUME_NUMBER, out album_disc)
+                && (int) album_disc > 0 && disc != album_disc) { 
+                disc = (int) album_disc;
+                changed = true;
+            }
             Gst.Sample? sample = null;
             if (tags.get_sample (Gst.Tags.IMAGE, out sample)
                     && has_cover != (sample != null)) {
@@ -124,6 +131,7 @@ namespace G4 {
             if (changed) {
                 update_album_key ();
             }
+            stdout.printf ("Album: %s, Title: %s, Disc #%d\n", album, title, disc);
             return changed;
         }
 
