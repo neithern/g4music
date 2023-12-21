@@ -131,7 +131,6 @@ namespace G4 {
             if (changed) {
                 update_album_key ();
             }
-            stdout.printf ("Album: %s, Title: %s, Disc #%d\n", album, title, disc);
             return changed;
         }
 
@@ -224,6 +223,8 @@ namespace G4 {
 
         public static int compare_by_album (Music s1, Music s2) {
             int ret = strcmp (s1._album_key, s2._album_key);
+            if (ret != 0) return ret;
+            ret = s1.disc - s2.disc;
             if (ret != 0) return ret;
             ret = s1.track - s2.track;
             if (ret != 0) return ret;
