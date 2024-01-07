@@ -1,7 +1,7 @@
 namespace G4 {
 
     public class TagCache {
-        private static uint32 MAGIC = 0x54414731; //  'TAG1'
+        private static uint32 MAGIC = 0x54414732; //  'TAG2'
 
         private Event _event = new Event ();
         private File _file;
