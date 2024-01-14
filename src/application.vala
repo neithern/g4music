@@ -418,6 +418,7 @@ namespace G4 {
         }
 
         public void rebind_current_item () {
+            //  It seems don't work since GTK4 4.12 ?!
             _music_list.items_changed (_current_item, 0, 0);
         }
 
