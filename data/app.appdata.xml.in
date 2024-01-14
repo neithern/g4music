@@ -51,10 +51,11 @@
     </screenshots>
 
     <releases>
-        <release version="3.5" date="2024-1-14">
+        <release version="3.5.1" date="2024-1-14">
             <description>
                 <ul>
                 <li>Fix "playing" state for music entries.</li>
+                <li>Use Overlay to avoid changing list's width.</li>
                 <li>Sorting albums by Disc Number.</li>
                 <li>Add translation: Romanian, Danish, Slovenian.</li>
                 <li>Update translation: Belarusian, Occitan.</li>
