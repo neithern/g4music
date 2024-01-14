@@ -51,6 +51,16 @@
     </screenshots>
 
     <releases>
+        <release version="3.5" date="2024-1-14">
+            <description>
+                <ul>
+                <li>Fix "playing" state for music entries.</li>
+                <li>Sorting albums by Disc Number.</li>
+                <li>Add translation: Romanian, Danish, Slovenian.</li>
+                <li>Update translation: Belarusian, Occitan.</li>
+                </ul>
+            </description>
+        </release>
         <release version="3.4" date="2023-10-15">
             <description>
                 <ul>
