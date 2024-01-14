@@ -262,8 +262,8 @@ namespace G4 {
                 var entry = (MusicEntry) item.child;
                 var music = (Music) item.item;
                 entry.paintable = _loading_paintable;
+                entry.playing = music == _app.current_music;
                 entry.set_titles (music, sort_mode);
-                _app.bind_property ("current_music", entry, "playing_music", BindingFlags.SYNC_CREATE);
             });
             list.item_created.connect ((item) => {
                 var entry = (MusicEntry) item.child;
@@ -280,8 +280,8 @@ namespace G4 {
                 var entry = (MusicEntry) item.child;
                 var music = (Music) item.item;
                 entry.paintable = _loading_paintable;
+                entry.playing = music == _app.current_music;
                 entry.set_titles (music, _sort_mode);
-                _app.bind_property ("current_music", entry, "playing_music", BindingFlags.SYNC_CREATE);
             });
             list.item_created.connect ((item) => {
                 var entry = (MusicEntry) item.child;

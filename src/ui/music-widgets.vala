@@ -205,12 +205,9 @@ namespace G4 {
             width_request = 328;
         }
 
-        public Music? playing_music {
-            get {
-                return music;
-            }
+        public bool playing {
             set {
-                _playing.visible = music == value;
+                _playing.visible = value;
             }
         }
 
