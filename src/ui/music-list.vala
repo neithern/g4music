@@ -1,6 +1,7 @@
 namespace G4 {
 
     public class MusicList : Gtk.Box {
+        private HashTable<Music?, MusicWidget?> _binding_items = new HashTable<Music?, MusicWidget?> (direct_hash, direct_equal);
         private bool _compact_list = false;
         private int _current_item = -1;
         private ListStore _data_store = new ListStore (typeof (Music));
@@ -70,13 +71,21 @@ namespace G4 {
 
         public Object? current_item {
             set {
-                if (_filter_model.get_item (_current_item) != value) {
+                var cur = _filter_model.get_item (_current_item);
+                if (cur != value) {
                     if (_current_item != -1)
                         _filter_model.items_changed (_current_item, 0, 0);
                     _current_item = find_item_in_model (_filter_model, value);
                     if (_current_item != -1)
                         _filter_model.items_changed (_current_item, 0, 0);
                 }
+
+                var widget = _binding_items[cur as Music] as MusicEntry;
+                if (widget != null)
+                    ((!)widget).playing = false;
+                widget = _binding_items[value as Music] as MusicEntry;
+                if (widget != null)
+                    ((!)widget).playing = true;
             }
         }
 
@@ -180,6 +189,7 @@ namespace G4 {
             var entry = (MusicWidget) item.child;
             var music = (Music) item.item;
             item_binded (item);
+            _binding_items[music] = entry;
 
             var paintable = _thmbnailer.find (music, _image_size);
             if (paintable != null) {
@@ -202,6 +212,7 @@ namespace G4 {
             var entry = (MusicWidget) item.child;
             entry.disconnect_first_draw ();
             entry.paintable = null;
+            _binding_items.remove (item.item as Music);
         }
 
         private void on_vadjustment_changed () {
