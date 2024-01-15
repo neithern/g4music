@@ -65,6 +65,7 @@ namespace G4 {
         protected StableLabel _title = new StableLabel ();
         protected StableLabel _subtitle = new StableLabel ();
         protected RoundPaintable _paintable = new RoundPaintable ();
+        protected Gtk.Image _playing = new Gtk.Image ();
 
         public ulong first_draw_handler = 0;
         public Music? music = null;
@@ -78,6 +79,15 @@ namespace G4 {
         public Gdk.Paintable? paintable {
             set {
                 _paintable.paintable = value;
+            }
+        }
+
+        public new bool playing {
+            get {
+                return _playing.visible;
+            }
+            set {
+                _playing.visible = value;
             }
         }
 
@@ -160,8 +170,6 @@ namespace G4 {
     }
 
     public class MusicEntry : MusicWidget {
-        private Gtk.Image _playing = new Gtk.Image ();
-
         public MusicEntry (bool compact = true) {
             var cover_margin = compact ? 3 : 4;
             var cover_size = compact ? 36 : 48;
@@ -206,12 +214,6 @@ namespace G4 {
             overlay.add_overlay (_playing);
 
             width_request = 328;
-        }
-
-        public bool playing {
-            set {
-                _playing.visible = value;
-            }
         }
 
         public void set_titles (Music music, uint sort) {

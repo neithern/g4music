@@ -80,10 +80,10 @@ namespace G4 {
                         _filter_model.items_changed (_current_item, 0, 0);
                 }
 
-                var widget = _binding_items[cur as Music] as MusicEntry;
+                var widget = _binding_items[cur as Music];
                 if (widget != null)
                     ((!)widget).playing = false;
-                widget = _binding_items[value as Music] as MusicEntry;
+                widget = _binding_items[value as Music];
                 if (widget != null)
                     ((!)widget).playing = true;
             }
@@ -189,7 +189,11 @@ namespace G4 {
             var entry = (MusicWidget) item.child;
             var music = (Music) item.item;
             item_binded (item);
+
             _binding_items[music] = entry;
+            if (entry.playing) {
+                _current_item = (int) item.position;
+            }
 
             var paintable = _thmbnailer.find (music, _image_size);
             if (paintable != null) {
