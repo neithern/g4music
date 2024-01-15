@@ -48,8 +48,8 @@ namespace G4 {
             _musics.foreach (func);
         }
 
-        public uint foreach_steal (HRFunc<unowned string, Music> func) {
-            return _musics.foreach_steal (func);
+        public uint foreach_remove (HRFunc<unowned string, Music> func) {
+            return _musics.foreach_remove (func);
         }
 
         public void get_sorted_items (GenericArray<Music> arr) {
@@ -64,7 +64,7 @@ namespace G4 {
         }
 
         public bool remove_music (Music music) {
-            return _musics.steal (music.uri);
+            return _musics.remove (music.uri);
         }
 
         protected virtual void sort (GenericArray<Music> arr) {
@@ -146,7 +146,7 @@ namespace G4 {
                     _albums.remove (album_key);
                 return ret;
             }
-            return _albums.foreach_steal ((name, album) => album.remove_music (music) && album.length == 0) > 0;
+            return _albums.foreach_remove ((name, album) => album.remove_music (music) && album.length == 0) > 0;
         }
 
         public Playlist to_playlist () {
@@ -269,9 +269,9 @@ namespace G4 {
             if (album is Album) {
                 album.remove_music (music);
                 if (album.length == 0)
-                    _albums.steal (album_key);
+                    _albums.remove (album_key);
             } else {
-                _albums.foreach_steal ((name, album) => album.remove_music (music) && album.length == 0);
+                _albums.foreach_remove ((name, album) => album.remove_music (music) && album.length == 0);
             }
 
             unowned var album_artist = music.album_artist;
@@ -282,14 +282,14 @@ namespace G4 {
                 if (artist.length == 0)
                     _artists.remove (artist_name);
             } else {
-                _artists.foreach_steal ((name, artist) => artist.remove_music (music) && artist.length == 0);
+                _artists.foreach_remove ((name, artist) => artist.remove_music (music) && artist.length == 0);
             }
         }
 
         public void remove_uri (string uri, GenericSet<Music> removed) {
             var prefix = uri + "/";
-            var n_removed = _albums.foreach_steal ((name, album) => {
-                album.foreach_steal ((uri, music) => {
+            var n_removed = _albums.foreach_remove ((name, album) => {
+                album.foreach_remove ((uri, music) => {
                     unowned var uri2 = music.uri;
                     if (uri2.has_prefix (prefix)/*|| uri2 == uri*/) {
                         removed.add (music);
@@ -300,7 +300,7 @@ namespace G4 {
                 return album.length == 0;
             });
             removed.foreach ((music) => {
-                _artists.foreach_steal ((name, artist) => artist.remove_music (music) && artist.length == 0);
+                _artists.foreach_remove ((name, artist) => artist.remove_music (music) && artist.length == 0);
             });
             if (n_removed == 0) {
                 _playlists.remove (uri);
