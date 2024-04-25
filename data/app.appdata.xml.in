@@ -51,6 +51,16 @@
     </screenshots>
 
     <releases>
+        <release version="3.5.2" date="2024-4-25">
+            <description>
+                <ul>
+                <li>Update current item when items changed.</li>
+                <li>Free memory when music be removed.</li>
+                <li>Add translation: Georgian, Hindi.</li>
+                <li>Update translation: Spanish, Slovenian.</li>
+                </ul>
+            </description>
+        </release>
         <release version="3.5.1" date="2024-1-14">
             <description>
                 <ul>
