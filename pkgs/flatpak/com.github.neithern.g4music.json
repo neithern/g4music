@@ -1,7 +1,7 @@
 {
     "app-id": "com.github.neithern.g4music",
     "runtime": "org.gnome.Platform",
-    "runtime-version": "45",
+    "runtime-version": "46",
     "sdk": "org.gnome.Sdk",
     "command": "g4music",
     "finish-args": [
