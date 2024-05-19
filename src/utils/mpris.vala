@@ -7,6 +7,7 @@ namespace G4 {
         private unowned DBusConnection _connection;
         private bool _cover_parsed = false;
         private int64 _current_duration = 0;
+        private int64 _current_position = 0;
         private unowned Music? _current_music = null;
         private HashTable<string, Variant> _metadata = new HashTable<string, Variant> (str_hash, str_equal);
 
@@ -19,6 +20,7 @@ namespace G4 {
             app.music_cover_parsed.connect (on_music_cover_parsed);
             app.player.state_changed.connect (on_state_changed);
             app.player.duration_changed.connect (on_duration_changed);
+            app.player.position_updated.connect (on_position_updated);
         }
 
         public bool can_control {
@@ -54,6 +56,12 @@ namespace G4 {
         public HashTable<string, Variant> metadata {
             get {
                 return _metadata;
+            }
+        }
+
+        public int64 position {
+            get {
+                return _current_position;
             }
         }
 
@@ -97,10 +105,20 @@ namespace G4 {
         }
 
         private void on_duration_changed (Gst.ClockTime duration) {
-            _current_duration = (int64) duration / Gst.USECOND;
-            _metadata.insert ("mpris:length", new Variant.int64 (_current_duration));
-            if (_cover_parsed)
-                send_property ("Metadata", _metadata);
+            var ms = (int64) duration / Gst.USECOND;
+            if (_current_duration != ms) {
+                _metadata.insert ("mpris:length", new Variant.int64 (ms));
+                if (_cover_parsed)
+                    send_property ("Metadata", _metadata);
+                _current_duration = ms;
+            }
+        }
+
+        private void on_position_updated (Gst.ClockTime position) {
+            var ms = (int64) position / Gst.USECOND;
+            if ((_current_position / Gst.MSECOND) != (ms / Gst.MSECOND))
+                send_property ("Position", new Variant.int64 (ms));
+            _current_position = ms;
         }
 
         private void on_index_changed (int index, uint size) {
@@ -114,8 +132,10 @@ namespace G4 {
 
         private void on_music_changed (Music? music) {
             _current_music = music;
-            _metadata.remove_all ();
+            _current_duration = 0;
+            _current_position = 0;
             _cover_parsed = false;
+            _metadata.remove_all ();
             if (music != null) {
                 var artists = new VariantBuilder (new VariantType ("as"));
                 artists.add ("s", music?.artist ?? "");
