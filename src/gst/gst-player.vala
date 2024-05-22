@@ -157,6 +157,15 @@ namespace G4 {
             }
         }
 
+        public Gst.ClockTime position {
+            get {
+                return _position;
+            }
+            set {
+                seek (value);
+            }
+        }
+
         public uint replay_gain {
             get {
                 if (_replay_gain != null)

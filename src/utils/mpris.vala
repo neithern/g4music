@@ -7,7 +7,6 @@ namespace G4 {
         private unowned DBusConnection _connection;
         private bool _cover_parsed = false;
         private int64 _current_duration = 0;
-        private int64 _current_position = 0;
         private unowned Music? _current_music = null;
         private HashTable<string, Variant> _metadata = new HashTable<string, Variant> (str_hash, str_equal);
 
@@ -20,7 +19,6 @@ namespace G4 {
             app.music_cover_parsed.connect (on_music_cover_parsed);
             app.player.state_changed.connect (on_state_changed);
             app.player.duration_changed.connect (on_duration_changed);
-            app.player.position_updated.connect (on_position_updated);
         }
 
         public bool can_control {
@@ -61,7 +59,7 @@ namespace G4 {
 
         public int64 position {
             get {
-                return _current_position;
+                return (int64) _app.player.position / Gst.USECOND;
             }
         }
 
@@ -114,13 +112,6 @@ namespace G4 {
             }
         }
 
-        private void on_position_updated (Gst.ClockTime position) {
-            var ms = (int64) position / Gst.USECOND;
-            if ((_current_position / Gst.MSECOND) != (ms / Gst.MSECOND))
-                send_property ("Position", new Variant.int64 (ms));
-            _current_position = ms;
-        }
-
         private void on_index_changed (int index, uint size) {
             var builder = new VariantBuilder (new VariantType ("a{sv}"));
             builder.add ("{sv}", "CanGoNext", new Variant.boolean (index < (int) size - 1));
@@ -131,10 +122,9 @@ namespace G4 {
         }
 
         private void on_music_changed (Music? music) {
+            _cover_parsed = false;
             _current_music = music;
             _current_duration = 0;
-            _current_position = 0;
-            _cover_parsed = false;
             _metadata.remove_all ();
             if (music != null) {
                 var artists = new VariantBuilder (new VariantType ("as"));
