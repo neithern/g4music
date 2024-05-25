@@ -41,6 +41,7 @@ namespace G4 {
             _leaflet.bind_property ("folded", revealer, "reveal-child", BindingFlags.SYNC_CREATE);
 
             setup_drop_target ();
+            setup_focus_controller ();
 
             var settings = app.settings;
             settings.bind ("width", this, "default-width", SettingsBindFlags.DEFAULT);
@@ -56,6 +57,17 @@ namespace G4 {
                 _bkgnd_blur = value;
                 if (_window_height > 0)
                     update_background ();
+            }
+        }
+
+        public bool focus_visibled {
+            get {
+                return focus_visible;
+            }
+            set {
+                if (!value) {
+                    _play_panel.focus_to_play ();
+                }
             }
         }
 
@@ -146,7 +158,7 @@ namespace G4 {
             var app = (Application) application;
             if (app.player.playing && app.settings.get_boolean ("play-background")) {
                 app.request_background ();
-                this.hide ();
+                this.visible = false;
                 return true;
             }
             return false;
@@ -223,6 +235,13 @@ namespace G4 {
             target.on_drop.connect (on_file_dropped);
 #endif
             this.content.add_controller (target);
+        }
+
+        private void setup_focus_controller () {
+            var controller = new Gtk.EventControllerFocus ();
+            controller.enter.connect (() => run_idle_once (() => focus_visibled = false));
+            this.content.add_controller (controller);
+            this.bind_property ("focus_visible", this, "focus_visibled", BindingFlags.SYNC_CREATE);
         }
 
         private void update_background () {

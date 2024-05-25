@@ -95,6 +95,10 @@ namespace G4 {
             }
         }
 
+        public void focus_to_play () {
+            _play_bar.focus_to_play ();
+        }
+
         public void size_allocated () {
             // Delay update info after the window size allocated to avoid showing slowly
             _size_allocated = true;
