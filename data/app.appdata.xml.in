@@ -51,6 +51,15 @@
     </screenshots>
 
     <releases>
+        <release version="3.6" date="2024-5-25">
+            <description>
+                <ul>
+                <li>Press Space to toggle play/pause.</li>
+                <li>Add Position property for MPRIS.</li>
+                <li>Don't change playing music after reload library.</li>
+                </ul>
+            </description>
+        </release>
         <release version="3.5.2" date="2024-4-25">
             <description>
                 <ul>
