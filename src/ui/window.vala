@@ -60,14 +60,21 @@ namespace G4 {
             }
         }
 
-        public bool focus_visibled {
+        public bool focused_visible {
             get {
                 return focus_visible;
             }
             set {
-                if (!value) {
-                    _play_panel.focus_to_play ();
-                }
+                focus_to_play_later ();
+            }
+        }
+
+        public Gtk.Widget focused_widget {
+            owned get {
+                return focus_widget;
+            }
+            set {
+                focus_to_play_later (2000);
             }
         }
 
@@ -152,6 +159,14 @@ namespace G4 {
             if (_store_panel.toggle_search () && _leaflet.folded) {
                 _leaflet.navigate (Adw.NavigationDirection.BACK);
             }
+        }
+
+        private void focus_to_play_later (int delay = 100) {
+            run_timeout_once (delay, () => {
+                if (!focus_visible) {
+                    _play_panel.focus_to_play ();
+                }
+            });
         }
 
         private bool on_close_request () {
@@ -239,9 +254,10 @@ namespace G4 {
 
         private void setup_focus_controller () {
             var controller = new Gtk.EventControllerFocus ();
-            controller.enter.connect (() => run_idle_once (() => focus_visibled = false));
+            controller.enter.connect (() => focused_visible = false);
             this.content.add_controller (controller);
-            this.bind_property ("focus_visible", this, "focus_visibled", BindingFlags.SYNC_CREATE);
+            this.bind_property ("focus_visible", this, "focused_visible", BindingFlags.SYNC_CREATE);
+            this.bind_property ("focus_widget", this, "focused_widget", BindingFlags.SYNC_CREATE);
         }
 
         private void update_background () {
