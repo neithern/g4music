@@ -8,16 +8,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/neithern/g4music/issues\n"
-"POT-Creation-Date: 2024-05-26 08:29+0000\n"
-"PO-Revision-Date: 2024-05-27 20:29+0330\n"
-"Last-Translator: Sohrab Behdani <behdanisohrab@proton.me>\n"
+"POT-Creation-Date: 2024-05-27 23:26+0000\n"
+"PO-Revision-Date: 2024-05-28 17:25+0330\n"
+"Last-Translator: Danial Behzadi <dani.behzi@ubuntu.com>\n"
 "Language-Team: Persian <kde-i18n-doc@kde.org>\n"
 "Language: fa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 24.02.2\n"
+"X-Generator: Poedit 3.2.2\n"
 
 #: data/app.desktop.in:3 src/application.vala:235 src/main.vala:24
 msgid "G4Music"
@@ -25,25 +25,25 @@ msgstr "آهنگ‌های جی‌فور"
 
 #: data/app.desktop.in:4
 msgid "Music Player"
-msgstr "پخش‌کننده موسیقی"
+msgstr "پخش‌کنندهٔ آهنگ"
 
 #: data/app.desktop.in:5
 msgid "Play music"
-msgstr "پخش موسیقی"
+msgstr "پخش آهنگ‌ها"
 
 #: data/app.desktop.in:12
 msgid "music;sound;player;media;audio;playlist;"
-msgstr "آهنگ;صدا;پخش‌کننده;رسانه;صوت;سیاهه‌پخش;"
+msgstr "music;sound;player;media;audio;playlist;آهنگ;صدا;پخش‌کننده;رسانه;صوت;سیاهه‌پخش;"
 
 #: src/gtk/help-overlay.ui:11
 msgctxt "shortcut window"
 msgid "General"
-msgstr "کلی"
+msgstr "عمومی"
 
 #: src/gtk/help-overlay.ui:14
 msgctxt "shortcut window"
 msgid "Show Shortcuts"
-msgstr "نمایش میانبر‌ها"
+msgstr "نمایش میان‌برها"
 
 #: src/gtk/help-overlay.ui:20
 msgctxt "shortcut window"
@@ -63,7 +63,7 @@ msgstr "پخش"
 #: src/gtk/help-overlay.ui:37
 msgctxt "shortcut window"
 msgid "Play/Pause"
-msgstr "پخش/توقف"
+msgstr "پخش یا مکث"
 
 #: src/gtk/help-overlay.ui:43
 msgctxt "shortcut window"
@@ -73,12 +73,12 @@ msgstr "پخش بعدی"
 #: src/gtk/help-overlay.ui:49
 msgctxt "shortcut window"
 msgid "Play Previous"
-msgstr "پخش قبلی"
+msgstr "پخش پیشین"
 
 #: src/gtk/help-overlay.ui:57
 msgctxt "shortcut window"
 msgid "Playlist"
-msgstr "لیست‌پخش"
+msgstr "سیاههٔ پخش"
 
 #: src/gtk/help-overlay.ui:60
 msgctxt "shortcut window"
@@ -88,7 +88,7 @@ msgstr "جست‌وجو"
 #: src/gtk/help-overlay.ui:66
 msgctxt "shortcut window"
 msgid "Toggle Sort"
-msgstr "تغییر ‌حالت مرتب‌سازی"
+msgstr "تغییر ‌حالت چینش"
 
 #: src/gtk/help-overlay.ui:72
 msgctxt "shortcut window"
@@ -101,27 +101,27 @@ msgstr "بازگشت"
 
 #: src/gtk/preferences.ui:10
 msgid "General"
-msgstr "کلی"
+msgstr "عمومی"
 
 #: src/gtk/preferences.ui:14
 msgid "Prefer dark theme"
-msgstr "ترجیح‌دادن پوستهٔ تاریک"
+msgstr "ترجیح پوستهٔ تیره"
 
 #: src/gtk/preferences.ui:26
 msgid "Background blur mode"
-msgstr "محو‌کردن پس‌زمینه"
+msgstr "حالت محوی پس‌زمینه"
 
 #: src/gtk/preferences.ui:32
 msgid "Compact playlist view"
-msgstr "نمای‌ فشرده لیست‌پخش"
+msgstr "نمای‌ سیاههٔ پخش فشرده"
 
 #: src/gtk/preferences.ui:44
 msgid "Grid view for artists/albums"
-msgstr "نمای توری برای هنرمند‌ها/آلبوم‌ها"
+msgstr "نمای شبکه‌ای برای هنرمند‌ها و آلبوم‌ها"
 
 #: src/gtk/preferences.ui:56 src/application.vala:432
 msgid "Keep playing after window closed"
-msgstr "زمانی که پنجره بسته است پخش را ادامه بده"
+msgstr "ادامهٔ پخش پس از بستن پنجره"
 
 #: src/gtk/preferences.ui:69
 msgid "Library"
@@ -129,19 +129,19 @@ msgstr "کتابخانه"
 
 #: src/gtk/preferences.ui:73
 msgid "Load music from folder"
-msgstr "بارکردن موسیقی از پوشه"
+msgstr "بارکردن آهنگ‌ها از شاخه"
 
 #: src/gtk/preferences.ui:85
 msgid "Monitor local file changes"
-msgstr "پایش‌کردن تغییرات پرونده‌های محلی"
+msgstr "پایش تغییرات پرونده‌های محلی"
 
 #: src/gtk/preferences.ui:97
 msgid "Load thumbnails for non-local files"
-msgstr "بارکردن ریزعکس‌ها برای پرونده‌های غیرمحلی"
+msgstr "بارکردن بندانگشتی‌ها برای پرونده‌های غیرمحلی"
 
 #: src/gtk/preferences.ui:98
 msgid "May cause slowdowns and excess network usage"
-msgstr "ممکن است دچار کندی و افزایش استفاده از شبکه شود"
+msgstr "ممکن است موجب کندی و افزایش استفاده از شبکه شود"
 
 #: src/gtk/preferences.ui:111
 msgid "Playback"
@@ -149,11 +149,11 @@ msgstr "پخش"
 
 #: src/gtk/preferences.ui:115
 msgid "Show audio peak level"
-msgstr "نمایش اوج صوت"
+msgstr "نمایش سطح اوج صدا"
 
 #: src/gtk/preferences.ui:119
 msgid "Display characters"
-msgstr "نمایش نماد‌ها"
+msgstr "نمایش نویسه‌ها"
 
 #: src/gtk/preferences.ui:134
 msgid "Rotate album cover"
@@ -161,23 +161,23 @@ msgstr "چرخاندن طرح جلد آلبوم"
 
 #: src/gtk/preferences.ui:146
 msgid "Enable gapless playback"
-msgstr "فعال‌سازی پخش بی‌وقفه"
+msgstr "به کار انداختن پخش بی‌وقفه"
 
 #: src/gtk/preferences.ui:158
 msgid "Normalize volume with ReplayGain"
-msgstr "عادی سازی میزان صدا با ReplayGain"
+msgstr "عادی سازی حجم صدا با ReplayGain"
 
 #: src/gtk/preferences.ui:164
 msgid "Prefer audio sink of GStreamer"
-msgstr "ترجیح سینک صدا از GStreamer"
+msgstr "ترجیح سینک صدای GStreamer"
 
 #: src/gtk/store-panel.ui:22
 msgid "Main Menu"
-msgstr "صفحه‌اصلی"
+msgstr "فهرست اصلی"
 
 #: src/gtk/store-panel.ui:28
 msgid "Sort By"
-msgstr "مرتب‌سازی براساس"
+msgstr "چینش بر پایه"
 
 #: src/gtk/store-panel.ui:35
 msgid "Search"
@@ -193,7 +193,7 @@ msgstr "_ترجیحات"
 
 #: src/gtk/store-panel.ui:83
 msgid "_Keyboard Shortcuts"
-msgstr "_میانبر‌های صفحه‌کلید"
+msgstr "میان‌برهای _صفحه‌کلید"
 
 #: src/gtk/store-panel.ui:87
 msgid "_About"
@@ -209,7 +209,7 @@ msgstr "هنرمند"
 
 #: src/gtk/store-panel.ui:106
 msgid "Artist/Album"
-msgstr "هنرمند/آلبوم"
+msgstr "هنرمند یا آلبوم"
 
 #: src/gtk/store-panel.ui:111
 msgid "Title"
@@ -221,26 +221,28 @@ msgstr "اخیر"
 
 #: src/gtk/store-panel.ui:121
 msgid "Shuffle"
-msgstr "تصادفی"
+msgstr "بُرزنی"
 
 #: src/action-handles.vala:184
 msgid "A fast, fluent, light weight music player written in GTK4."
-msgstr "یک پخش‌کنندهٔ موسیقی سریع، زیبا و سبک نوشته شده در GTK4"
+msgstr "پخش‌کنندهٔ آهنگ سریع، زیبا و سبک نوشته شده با GTK4"
 
 #. Translators: Replace "translator-credits" with your names, one name per line
 #: src/action-handles.vala:186
 msgid "translator-credits"
-msgstr "سهراب بهدانی <behdanisohrab@gmail.com>"
+msgstr ""
+"سهراب بهدانی <behdanisohrab@gmail.com>\n"
+"دانیال بهزادی <dani.behzi@ubuntu.com>"
 
 #: src/application.vala:623
 msgid "Keep playing"
-msgstr "به‌پخش ادامه بده"
+msgstr "ادامهٔ پخش"
 
 #. Translators: Play this music at next position of current playing music
 #: src/ui/music-widgets.vala:257 src/ui/music-widgets.vala:298
 #: src/ui/music-widgets.vala:308
 msgid "Play at Next"
-msgstr "پخش به عنوان بعدی"
+msgstr "پخش در بعدی"
 
 #: src/ui/music-widgets.vala:258 src/ui/music-widgets.vala:297
 #: src/ui/music-widgets.vala:307 src/ui/store-panel.vala:345
@@ -253,7 +255,7 @@ msgstr "نمایش پروندهٔ _طرح جلد"
 
 #: src/ui/music-widgets.vala:263 src/ui/play-panel.vala:243
 msgid "_Export Cover"
-msgstr "_استخراج طرح جلد"
+msgstr "_برون‌ریزی طرح جلد"
 
 #: src/ui/music-widgets.vala:300
 msgid "Show List File"
@@ -261,33 +263,33 @@ msgstr "نمایش پروندهٔ سیاهه"
 
 #: src/ui/music-widgets.vala:314 src/ui/play-panel.vala:56
 msgid "Search Title"
-msgstr "جست‌وجو عنوان"
+msgstr "جست‌وجوی عنوان"
 
 #: src/ui/music-widgets.vala:315 src/ui/play-panel.vala:54
 msgid "Search Album"
-msgstr "جست‌وجو آلبوم"
+msgstr "جست‌وجوی آلبوم"
 
 #: src/ui/music-widgets.vala:316 src/ui/play-panel.vala:55
 msgid "Search Artist"
-msgstr "جست‌وجو هنرمند"
+msgstr "جست‌وجوی هنرمند"
 
 #: src/ui/music-widgets.vala:317
 msgid "_Show Music File"
-msgstr "_نمایش پروندهٔ موسیقی"
+msgstr "_نمایش پروندهٔ آهنگ"
 
 #. Translators: single loop the current music
 #: src/ui/play-bar.vala:74
 msgid "Single Loop"
-msgstr "تکرار یکی"
+msgstr "تکرار تکی"
 
 #: src/ui/play-bar.vala:84
 msgid "Play Previous"
-msgstr "پخش قبلی"
+msgstr "پخش پیشین"
 
 #. media-playback-pause-symbolic
 #: src/ui/play-bar.vala:90
 msgid "Play/Pause"
-msgstr "پخش/توقف"
+msgstr "پخش یا مکث"
 
 #: src/ui/play-bar.vala:97
 msgid "Play Next"
@@ -298,12 +300,12 @@ msgid ""
 "Drag and drop music files here,\n"
 "or change music location: "
 msgstr ""
-"پروندهٔ‌های موسیقی را به اینجا بکشید،\n"
-"یا مسیر موسیقی را عوض کنید:"
+"کشیدن و رها سازی پرونده‌های آهنگ‌ها در این‌جا،\n"
+"یا تغییر مکان آهنگ‌ها:"
 
 #: src/ui/preferences.vala:46 src/ui/preferences.vala:67
 msgid "Never"
-msgstr "هیچ‌وقت"
+msgstr "هرگز"
 
 #: src/ui/preferences.vala:46
 msgid "Always"
@@ -311,7 +313,7 @@ msgstr "همیشه"
 
 #: src/ui/preferences.vala:46
 msgid "Art Only"
-msgstr "فقط نمایه"
+msgstr "فقط کار هنری"
 
 #: src/ui/preferences.vala:67
 msgid "Track"
@@ -319,7 +321,7 @@ msgstr "قطعه"
 
 #: src/ui/store-panel.vala:74
 msgid "Playing"
-msgstr "درحال پخش"
+msgstr "پخش کردن"
 
 #: src/ui/store-panel.vala:79
 msgid "Artists"
@@ -331,20 +333,18 @@ msgstr "آلبوم‌ها"
 
 #: src/ui/store-panel.vala:374
 msgid "Playlists"
-msgstr "سیاهه‌ پخش"
+msgstr "سیاهه‌‌های پخش"
 
 #. Translators: Current volume percent: 0~100%
 #: src/ui/volume-button.vala:33
 #, c-format
 msgid "Volume %d%%"
-msgstr "میزان صدا %d%%"
+msgstr "حجم صدا %d٪"
 
 #: src/utils/music.vala:2
 msgid "Unknown Album"
-msgstr "آلبوم ناشناس"
+msgstr "آلبوم ناشناخته"
 
 #: src/utils/music.vala:3
 msgid "Unknown Artist"
 msgstr "هنرمند ناشناس"
-
-
