@@ -51,6 +51,14 @@
     </screenshots>
 
     <releases>
+        <release version="3.6.1" date="2024-6-2">
+            <description>
+                <ul>
+                <li>Optimize pressing Space to play/pause.</li>
+                <li>Add translation: Persian.</li>
+                </ul>
+            </description>
+        </release>
         <release version="3.6" date="2024-5-25">
             <description>
                 <ul>
