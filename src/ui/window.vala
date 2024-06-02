@@ -65,7 +65,8 @@ namespace G4 {
                 return focus_visible;
             }
             set {
-                focus_to_play_later ();
+                if (!value)
+                    focus_to_play_later ();
             }
         }
 
@@ -74,7 +75,8 @@ namespace G4 {
                 return focus_widget;
             }
             set {
-                focus_to_play_later (2000);
+                if (!(value is Gtk.Editable))
+                    focus_to_play_later (2000);
             }
         }
 
@@ -163,7 +165,7 @@ namespace G4 {
 
         private void focus_to_play_later (int delay = 100) {
             run_timeout_once (delay, () => {
-                if (!focus_visible) {
+                if (!focus_visible && !(focus_widget is Gtk.Editable)) {
                     _play_panel.focus_to_play ();
                 }
             });
