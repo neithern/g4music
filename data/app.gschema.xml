@@ -71,6 +71,9 @@
       <default>2</default>
       <summary>Sort Mode</summary>
     </key>
+    <key name="maximized" type="b">
+      <default>false</default>
+    </key>
     <key name="width" type="i">
       <default>800</default>
     </key>

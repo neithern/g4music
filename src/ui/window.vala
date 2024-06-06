@@ -44,6 +44,7 @@ namespace G4 {
             setup_focus_controller ();
 
             var settings = app.settings;
+            settings.bind ("maximized", this, "maximized", SettingsBindFlags.DEFAULT);
             settings.bind ("width", this, "default-width", SettingsBindFlags.DEFAULT);
             settings.bind ("height", this, "default-height", SettingsBindFlags.DEFAULT);
             settings.bind ("blur-mode", this, "blur-mode", SettingsBindFlags.DEFAULT);
