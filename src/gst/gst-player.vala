@@ -24,7 +24,7 @@ namespace G4 {
             });
         }
 
-        private dynamic Gst.Pipeline? _pipeline = Gst.ElementFactory.make ("playbin", "player") as Gst.Pipeline;
+        private dynamic Gst.Pipeline? _pipeline = null;
         private dynamic Gst.Element? _audio_sink = null;
         private dynamic Gst.Element? _replay_gain = null;
         private string _audio_sink_name = "";
@@ -51,6 +51,16 @@ namespace G4 {
         public signal void tag_parsed (string? uri, Gst.TagList? tags);
 
         public GstPlayer () {
+            uint major = 0, minor = 0, micro = 0, nano = 0;
+            Gst.version (out major, out minor, out micro, out nano);
+            if (major > 1 || (major == 1 && minor >= 24)) {
+                _pipeline = Gst.ElementFactory.make ("playbin3", "player") as Gst.Pipeline;
+                if (_pipeline != null) {
+                    print (@"Use playbin3\n");
+            }
+            } if (_pipeline == null) {
+                _pipeline = Gst.ElementFactory.make ("playbin", "player") as Gst.Pipeline;
+            }
             if (_pipeline != null) {
                 var pipeline = (!)_pipeline;
                 pipeline.async_handling = true;
