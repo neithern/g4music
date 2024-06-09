@@ -330,6 +330,7 @@ namespace G4 {
             label_box.append (label);
 
             var header = new Adw.HeaderBar ();
+            header.show_start_title_buttons = false;
             header.show_end_title_buttons = false;
             header.title_widget = label_box;
             header.add_css_class ("flat");
