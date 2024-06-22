@@ -337,7 +337,6 @@ namespace G4 {
                 var album = (Album) obj;
                 var store = _music_store;
                 var insert_pos = (uint) store.get_n_items () - 1;
-                rebind_current_item ();
                 album.foreach ((uri, music) => {
                     uint position = -1;
                     if (store.find (music, out position)) {
@@ -375,7 +374,6 @@ namespace G4 {
 
         public void play_at_next (Object? obj) {
             if (_current_music != null) {
-                rebind_current_item ();
                 if (obj is Album) {
                     var album = (Album) obj;
                     var store = _music_store;
@@ -417,10 +415,6 @@ namespace G4 {
             _player.play ();
         }
 
-        public void rebind_current_item () {
-            _music_list.items_changed (_current_item, 0, 0);
-        }
-
         public void reload_library () {
             if (!_loading) {
                 _loader.remove_all ();
@@ -446,9 +440,7 @@ namespace G4 {
 
         private void change_current_item (int item) {
             //  update _current_item but don't change current music
-            rebind_current_item ();
             _current_item = item;
-            rebind_current_item ();
             index_changed (item, _music_list.get_n_items ());
 
             var next = item + 1;

@@ -18,10 +18,7 @@ namespace G4 {
             this.icon_name = app.application_id;
             this.title = app.name;
             this.close_request.connect (on_close_request);
-
-            var handle = new Gtk.WindowHandle ();
-            handle.child = _leaflet;
-            this.content = handle;
+            this.content = _leaflet;
 
             _bkgnd_paintable.queue_draw.connect (this.queue_draw);
 

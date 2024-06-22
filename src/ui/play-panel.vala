@@ -176,7 +176,6 @@ namespace G4 {
                     );
                     if (pixbuf != null && music == _app.current_music) {
                         thumbnailer.put (music, Gdk.Texture.for_pixbuf ((!)pixbuf), true);
-                        _app.rebind_current_item ();
                     }
                 }
 
