@@ -69,12 +69,14 @@ namespace G4 {
                 if (cur != value)
                     _current_item = find_item_in_model (_filter_model, value);
 
-                var widget = _binding_items[cur];
-                if (widget != null)
-                    ((!)widget).playing = false;
-                widget = _binding_items[value];
-                if (widget != null)
-                    ((!)widget).playing = true;
+                if (playable) {
+                    var widget = _binding_items[cur];
+                    if (widget != null)
+                        ((!)widget).playing = false;
+                    widget = _binding_items[value];
+                    if (widget != null)
+                        ((!)widget).playing = true;
+                }
             }
         }
 
