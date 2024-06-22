@@ -9,8 +9,8 @@ namespace G4 {
         private bool _grid_mode = false;
         private Gtk.GridView _grid_view = new Gtk.GridView (null, null);
         private int _image_size = Thumbnailer.ICON_SIZE;
+        private Type _item_type = typeof (Music);
         private Music? _music_node = null;
-        private bool _playable = false;
         private Gtk.ScrolledWindow _scroll_view = new Gtk.ScrolledWindow ();
         private Thumbnailer _thmbnailer;
 
@@ -23,13 +23,13 @@ namespace G4 {
         public signal void item_created (Gtk.ListItem item);
         public signal void item_binded (Gtk.ListItem item);
 
-        public MusicList (Application app, bool playable = false, Music? node = null) {
+        public MusicList (Application app, Type item_type = typeof (Music), Music? node = null) {
             orientation = Gtk.Orientation.VERTICAL;
             hexpand = true;
             append (_scroll_view);
 
-            _playable = playable;
             _filter_model.model = _data_store;
+            _item_type = item_type;
             _music_node = node;
             _thmbnailer = app.thumbnailer;
             update_store ();
@@ -50,12 +50,6 @@ namespace G4 {
             _scroll_view.vadjustment.changed.connect (on_vadjustment_changed);
         }
 
-        public bool playable {
-            get {
-                return _playable;
-            }
-        }
-
         public bool compact_list {
             get {
                 return _compact_list;
@@ -69,21 +63,16 @@ namespace G4 {
             }
         }
 
-        public Object? current_item {
+        public Music? current_item {
             set {
-                var cur = _filter_model.get_item (_current_item);
-                if (cur != value) {
-                    if (_current_item != -1)
-                        _filter_model.items_changed (_current_item, 0, 0);
+                var cur = _filter_model.get_item (_current_item) as Music;
+                if (cur != value)
                     _current_item = find_item_in_model (_filter_model, value);
-                    if (_current_item != -1)
-                        _filter_model.items_changed (_current_item, 0, 0);
-                }
 
-                var widget = _binding_items[cur as Music];
+                var widget = _binding_items[cur];
                 if (widget != null)
                     ((!)widget).playing = false;
-                widget = _binding_items[value as Music];
+                widget = _binding_items[value];
                 if (widget != null)
                     ((!)widget).playing = true;
             }
@@ -116,6 +105,24 @@ namespace G4 {
                 if (factory != null) {
                     create_factory ();
                 }
+            }
+        }
+
+        public Type item_type {
+            get {
+                return _item_type;
+            }
+        }
+
+        public Music? music_node {
+            get {
+                return _music_node;
+            }
+        }
+
+        public bool playable {
+            get {
+                return _item_type == typeof (Music);
             }
         }
 

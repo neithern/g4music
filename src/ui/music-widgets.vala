@@ -70,6 +70,10 @@ namespace G4 {
         public ulong first_draw_handler = 0;
         public Music? music = null;
 
+        public MusicWidget () {
+            _playing.visible = false;
+        }
+
         public RoundPaintable cover {
             get {
                 return _paintable;
@@ -82,7 +86,7 @@ namespace G4 {
             }
         }
 
-        public new bool playing {
+        public bool playing {
             get {
                 return _playing.visible;
             }
@@ -209,7 +213,6 @@ namespace G4 {
             _playing.icon_name = "media-playback-start-symbolic";
             _playing.margin_end = 4;
             _playing.pixel_size = 10;
-            _playing.visible = false;
             _playing.add_css_class ("dim-label");
             overlay.add_overlay (_playing);
 

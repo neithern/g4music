@@ -134,12 +134,23 @@ namespace G4 {
                     value = ((Gtk.Stack) value).visible_child;
                 }
                 if (value is MusicList) {
-                    _current_list = (MusicList) value;
-                    if (_current_list.playable) {
-                        _app.music_list = _current_list.filter_model;
-                        _current_list.current_item = _app.current_music;
-                        run_idle_once (() => _current_list.scroll_to_current_item ());
+                    var mlist = _current_list = (MusicList) value;
+                    if (mlist.playable) {
+                        _app.music_list = mlist.filter_model;
+                        mlist.current_item = _app.current_music;
+                    } else if (mlist.item_type == typeof (Artist)) {
+                        var artist = _app.current_music?.artist ?? "";
+                        mlist.current_item = _library.artists[artist];
+                    } else if (mlist.item_type == typeof (Album)) {
+                        var album = _app.current_music?.album_key ?? "";
+                        var artist = mlist.music_node as Artist;
+                        mlist.current_item = artist != null ? ((!)artist)[album] : _library.albums[album];
                     }
+                    run_idle_once (() => {
+                        var parent = mlist.parent;
+                        if (parent is Gtk.Stack && mlist == ((Gtk.Stack) parent).visible_child)
+                            mlist.scroll_to_current_item ();
+                    });
                 }
                 sort_btn.sensitive = _current_list == _playing_list;
                 _search_mode = SearchMode.ANY;
@@ -201,7 +212,7 @@ namespace G4 {
         }
 
         private MusicList create_album_list (Artist? artist = null) {
-            var list = new MusicList (_app, false, artist);
+            var list = new MusicList (_app, typeof (Album), artist);
             list.item_activated.connect ((position, obj) => {
                 if (obj is Album) {
                     create_sub_stack_page (artist, (Album) obj);
@@ -230,7 +241,7 @@ namespace G4 {
         }
 
         private MusicList create_artist_list () {
-            var list = new MusicList (_app, false);
+            var list = new MusicList (_app, typeof (Artist));
             list.item_activated.connect ((position, obj) => {
                 if (obj is Artist) {
                     create_sub_stack_page ((Artist) obj);
@@ -256,7 +267,7 @@ namespace G4 {
 
         private MusicList create_music_list (Album album, bool from_artist = false) {
             var sort_mode = (album is Playlist && from_artist) ? SortMode.ALBUM : SortMode.TITLE;
-            var list = new MusicList (_app, true, album);
+            var list = new MusicList (_app, typeof (Music), album);
             list.item_activated.connect ((position, obj) => _app.current_item = (int) position);
             list.item_binded.connect ((item) => {
                 var entry = (MusicEntry) item.child;
@@ -274,7 +285,7 @@ namespace G4 {
         }
 
         private MusicList create_playing_music_list () {
-            var list = new MusicList (_app, true);
+            var list = new MusicList (_app, typeof (Music));
             list.item_activated.connect ((position, obj) => _app.current_item = (int) position);
             list.item_binded.connect ((item) => {
                 var entry = (MusicEntry) item.child;
@@ -292,7 +303,7 @@ namespace G4 {
         }
 
         private MusicList create_playlist_list () {
-            var list = new MusicList (_app, false);
+            var list = new MusicList (_app, typeof (Playlist));
             list.item_activated.connect ((position, obj) => {
                 if (obj is Playlist) {
                     create_sub_stack_page (null, (Playlist) obj);
@@ -314,7 +325,7 @@ namespace G4 {
             return list;
         }
 
-        private void create_sub_stack_page (Artist? artist = null, Album? album = null) {
+        private void create_sub_stack_page (Artist? artist, Album? album = null) {
             var album_mode = album != null;
             var artist_mode = artist != null;
             var playlist_mode = album is Playlist;
@@ -394,15 +405,17 @@ namespace G4 {
                 var visible_child = stack_view.visible_child;
                 if (visible_child is Gtk.Stack && paths.length > 1) {
                     var stack = (Gtk.Stack) visible_child;
-                    if (initializing)
+                    if (initializing) {
                         stack.transition_type = Gtk.StackTransitionType.NONE;
+                    }
                     Artist? artist = null;
                     Album? album = obj as Album;
                     if (paths[0] == PageName.ARTIST) {
                         artist = _library.artists[paths[1]];
                         if (artist is Artist) {
-                            if (stack.get_child_by_name (((!)artist).name) == null)
-                                create_sub_stack_page (artist, null);
+                            if (stack.get_child_by_name (((!)artist).name) == null) {
+                                create_sub_stack_page (artist);
+                            }
                             if (paths.length > 2) {
                                 unowned var album_key = paths[2];
                                 if (album_key.length > 0)
@@ -456,7 +469,8 @@ namespace G4 {
         }
 
         private void on_music_changed (Music? music) {
-            _current_list.current_item = music;
+            if (_current_list.playable)
+                _current_list.current_item = music;
         }
 
         private void on_music_external_changed () {
