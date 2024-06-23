@@ -357,7 +357,7 @@ namespace G4 {
             button.tooltip_text = _("Play");
             button.clicked.connect (() => {
                 if (album_mode) {
-                    _app.play (album);
+                    _app.current_item = 0;
                 } else {
                     string[] strv = { PageName.ARTIST, artist?.name ?? "" };
                     _app.activate_action (ACTION_PLAY, new Variant.bytestring_array (strv));
