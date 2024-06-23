@@ -64,7 +64,7 @@ namespace G4 {
 
             app.index_changed.connect (on_index_changed);
             app.music_changed.connect (on_music_changed);
-            app.music_store.items_changed.connect (on_music_items_changed);
+            app.music_store_changed.connect (on_music_store_changed);
             app.music_tag_parsed.connect (on_music_tag_parsed);
             app.player.state_changed.connect (on_player_state_changed);
 
@@ -141,19 +141,12 @@ namespace G4 {
             return true;
         }
 
-        private uint _pending_mic_handler = 0;
-
-        private void on_music_items_changed (uint position, uint removed, uint added) {
-            if (_pending_mic_handler != 0)
-                Source.remove (_pending_mic_handler);
-            _pending_mic_handler = run_idle_once (() => {
-                _pending_mic_handler = 0;
-                var visible = !_app.loading && _app.current_music == null
-                        && _app.music_store.get_n_items () == 0;
-                initial_label.visible = visible;
-                if (visible)
-                    update_initial_label (_app.music_folder);
-            });
+        private void on_music_store_changed () {
+            var visible = !_app.loading && _app.current_music == null
+                    && _app.music_store.get_n_items () == 0;
+            initial_label.visible = visible;
+            if (visible)
+                update_initial_label (_app.music_folder);
         }
 
         private async void on_music_tag_parsed (Music music, Gst.Sample? image) {
