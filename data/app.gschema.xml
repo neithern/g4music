@@ -68,7 +68,7 @@
     </key>
     <key name="sort-mode" type="u">
       <range min="0" max="5"/>
-      <default>2</default>
+      <default>3</default>
       <summary>Sort Mode</summary>
     </key>
     <key name="maximized" type="b">

@@ -108,6 +108,9 @@ namespace G4 {
             _loader.save_tag_cache ();
             delete_cover_tmp_file_async.begin ((obj, res) => delete_cover_tmp_file_async.end (res));
 
+            //  save playing-list's sort mode only
+            _settings.set_uint ("sort-mode", _sort_mode_main);
+
             if (_mpris_id != 0) {
                 Bus.unown_name (_mpris_id);
                 _mpris_id = 0;
@@ -251,6 +254,7 @@ namespace G4 {
         public bool single_loop { get; set; }
 
         private uint _sort_mode = SortMode.TITLE;
+        private uint _sort_mode_main = SortMode.TITLE;
 
         public uint sort_mode {
             get {
@@ -261,8 +265,10 @@ namespace G4 {
                 var state = new Variant.string (value.to_string ());
                 (action as SimpleAction)?.set_state (state);
 
+                if (_music_store == _music_list.model)
+                    _sort_mode_main = value;
                 _sort_mode = value;
-                sort_music_store (_music_store, _sort_mode);
+                //  Don't re-sort the music list here, because "sort-mode" is sync with different album's page
             }
         }
 
@@ -425,6 +431,10 @@ namespace G4 {
         public void request_background () {
             _portal.request_background_async.begin (_("Keep playing after window closed"),
                 (obj, res) => _portal.request_background_async.end (res));
+        }
+
+        public void resort_music_list () {
+            sort_music_store ((ListStore) _music_list.model, _sort_mode);
         }
 
         public void show_uri_with_portal (string? uri) {

@@ -52,6 +52,7 @@ namespace G4 {
         private string _search_text = "";
         private bool _size_allocated = false;
         private uint _sort_mode = 0;
+        private HashTable<unowned Gtk.Widget, uint> _sort_map = new HashTable<unowned Gtk.Widget, uint> (direct_hash, direct_equal);
 
         public StorePanel (Application app, Window win, Adw.Leaflet leaflet) {
             _app = app;
@@ -118,9 +119,10 @@ namespace G4 {
                 if (value < SORT_MODE_ICONS.length) {
                     sort_btn.set_icon_name (SORT_MODE_ICONS[value]);
                     _sort_mode = value;
+                    _sort_map[_current_list] = value;
                 }
-                if (_playing_list.get_height () > 0) {
-                    _playing_list.create_factory ();
+                if (_current_list.get_height () > 0) {
+                    _current_list.create_factory ();
                 }
             }
         }
@@ -138,6 +140,7 @@ namespace G4 {
                     if (mlist.playable) {
                         _app.music_list = mlist.filter_model;
                         mlist.current_item = _app.current_music;
+                        sort_mode = _sort_map[mlist];
                     } else if (mlist.item_type == typeof (Artist)) {
                         var artist = _app.current_music?.artist ?? "";
                         mlist.current_item = _library.artists[artist];
@@ -152,7 +155,7 @@ namespace G4 {
                             mlist.scroll_to_current_item ();
                     });
                 }
-                sort_btn.sensitive = _current_list == _playing_list;
+                sort_btn.visible = _current_list.playable;
                 _search_mode = SearchMode.ANY;
                 on_search_btn_toggled ();
 
@@ -543,6 +546,7 @@ namespace G4 {
                 stack.remove (child);
             else
                 run_timeout_once (stack.transition_duration, () => stack.remove (child));
+            _sort_map.remove (child);
         }
 
         private void update_stack_pages (Gtk.Stack stack) {
