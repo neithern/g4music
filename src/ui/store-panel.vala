@@ -48,6 +48,7 @@ namespace G4 {
         private MusicLibrary _library;
         private string[]? _library_path = null;
         private Gdk.Paintable _loading_paintable;
+        private bool _removing_page = false;
         private uint _search_mode = SearchMode.ANY;
         private string _search_text = "";
         private bool _size_allocated = false;
@@ -149,11 +150,13 @@ namespace G4 {
                         var artist = mlist.music_node as Artist;
                         mlist.current_item = artist != null ? ((!)artist)[album] : _library.albums[album];
                     }
-                    run_idle_once (() => {
-                        var parent = mlist.parent;
-                        if (parent is Gtk.Stack && mlist == ((Gtk.Stack) parent).visible_child)
-                            mlist.scroll_to_current_item ();
-                    });
+                    if (!_removing_page) {
+                        run_idle_once (() => {
+                            var parent = mlist.parent;
+                            if (parent is Gtk.Stack && mlist == ((Gtk.Stack) parent).visible_child)
+                                mlist.scroll_to_current_item ();
+                        });
+                    }
                 }
                 sort_btn.visible = _current_list.playable;
                 _search_mode = SearchMode.ANY;
@@ -353,7 +356,7 @@ namespace G4 {
             var stack = artist_mode ? _artist_stack : playlist_mode ? _playlist_stack : _album_stack;
             var back_btn = new Gtk.Button.from_icon_name ("go-previous-symbolic");
             back_btn.tooltip_text = _("Back");
-            back_btn.clicked.connect (() => remove_stack_child (stack, mlist));
+            back_btn.clicked.connect (() => remove_stack_page (stack, mlist));
             header.pack_start (back_btn);
 
             var button = new Gtk.Button.from_icon_name ("media-playback-start-symbolic");
@@ -390,7 +393,7 @@ namespace G4 {
                 _switch_bar.update_buttons ();
                 _switch_bar2.update_buttons ();
             } else if (_library.playlists.length == 0 && _playlist_stack.get_parent () != null) {
-                remove_stack_child (stack_view, _playlist_stack);
+                remove_stack_page (stack_view, _playlist_stack);
                 _switch_bar.update_buttons ();
                 _switch_bar2.update_buttons ();
             }
@@ -538,14 +541,21 @@ namespace G4 {
             model.get_filter ()?.changed (Gtk.FilterChange.DIFFERENT);
         }
 
-        private void remove_stack_child (Gtk.Stack stack, Gtk.Widget child) {
+        private void remove_stack_page (Gtk.Stack stack, Gtk.Widget child) {
             var prev = child.get_prev_sibling ();
-            if (prev != null)
+            _removing_page = true;
+            if (prev != null) {
                 stack.visible_child = (!)prev;
-            if (stack.transition_type == Gtk.StackTransitionType.NONE)
+            }
+            if (stack.transition_type == Gtk.StackTransitionType.NONE) {
                 stack.remove (child);
-            else
-                run_timeout_once (stack.transition_duration, () => stack.remove (child));
+                _removing_page = false;
+            } else {
+                run_timeout_once (stack.transition_duration, () => {
+                    stack.remove (child);
+                    _removing_page = false;
+                });
+            }
             _sort_map.remove (child);
         }
 
@@ -555,7 +565,7 @@ namespace G4 {
                 child = child?.get_prev_sibling ();
                 if (mlist.update_store () == 0) {
                     stack.transition_type = Gtk.StackTransitionType.NONE;
-                    remove_stack_child (stack, mlist);
+                    remove_stack_page (stack, mlist);
                     stack.transition_type = Gtk.StackTransitionType.SLIDE_LEFT_RIGHT;
                 }
             }
