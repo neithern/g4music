@@ -257,20 +257,27 @@ namespace G4 {
         }
 
         private MusicList create_music_list (Album album, bool from_artist = false) {
-            var list_sort_mode = (album is Playlist && from_artist) ? SortMode.ALBUM : SortMode.TITLE;
+            var is_artist_playlist = album is Playlist && from_artist;
             var list = new MusicList (_app, typeof (Music), album);
             list.item_activated.connect ((position, obj) => _app.current_item = (int) position);
             list.item_binded.connect ((item) => {
                 var entry = (MusicEntry) item.child;
                 var music = (Music) item.item;
                 entry.paintable = _loading_paintable;
-                entry.set_titles (music, list_sort_mode);
+                var mode = _app.get_list_sort_mode (list.data_store);
+                if (is_artist_playlist && mode <= SortMode.ARTIST_ALBUM)
+                    mode = SortMode.ALBUM;
+                else if (from_artist && mode == SortMode.ARTIST)
+                    mode = SortMode.ALBUM;
+                else if (mode == SortMode.ALBUM)
+                    mode = SortMode.TITLE;
+                entry.set_titles (music, mode);
             });
             list.item_created.connect ((item) => {
                 var entry = (MusicEntry) item.child;
                 make_right_clickable (entry, entry.show_popover_menu);
             });
-            _app.set_list_sort_mode (list.filter_model, list_sort_mode);
+            _app.set_list_sort_mode (list.data_store, SortMode.ALBUM);
             _app.settings.bind ("compact-playlist", list, "compact-list", SettingsBindFlags.DEFAULT);
             return list;
         }

@@ -18,7 +18,7 @@
         private GstPlayer _player = new GstPlayer ();
         private Portal _portal = new Portal ();
         private Settings _settings;
-        private HashTable<unowned GLib.ListModel, uint> _sort_map = new HashTable<unowned GLib.ListModel, uint> (direct_hash, direct_equal);
+        private HashTable<unowned ListModel, uint> _sort_map = new HashTable<unowned ListModel, uint> (direct_hash, direct_equal);
         private Thumbnailer _thumbnailer = new Thumbnailer ();
 
         public signal void index_changed (int index, uint size);
@@ -431,7 +431,11 @@
                 (obj, res) => _portal.request_background_async.end (res));
         }
 
-        public void set_list_sort_mode (GLib.ListModel model, uint mode) {
+        public uint get_list_sort_mode (ListModel model) {
+            return _sort_map[model];
+        }
+
+        public void set_list_sort_mode (ListModel model, uint mode) {
             _sort_map[model] = mode;
         }
 
