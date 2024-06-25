@@ -71,7 +71,13 @@ namespace G4 {
         public Music? music = null;
 
         public MusicWidget () {
+            _playing.valign = Gtk.Align.CENTER;
+            _playing.halign = Gtk.Align.END;
+            _playing.icon_name = "media-playback-start-symbolic";
+            _playing.margin_end = 4;
+            _playing.pixel_size = 10;
             _playing.visible = false;
+            _playing.add_css_class ("dim-label");
         }
 
         public RoundPaintable cover {
@@ -140,7 +146,11 @@ namespace G4 {
             _cover.pixel_size = 160;
             _cover.paintable = _paintable;
             _paintable.queue_draw.connect (_cover.queue_draw);
-            append (_cover);
+
+            var overlay = new Gtk.Overlay ();
+            overlay.child = _cover;
+            overlay.add_overlay (_playing);
+            append (overlay);
 
             _title.halign = Gtk.Align.CENTER;
             _title.ellipsize = Pango.EllipsizeMode.MIDDLE;
@@ -208,12 +218,6 @@ namespace G4 {
             if (font_size >= 13)
                 _subtitle.add_css_class ("title-secondly");
 
-            _playing.valign = Gtk.Align.CENTER;
-            _playing.halign = Gtk.Align.END;
-            _playing.icon_name = "media-playback-start-symbolic";
-            _playing.margin_end = 4;
-            _playing.pixel_size = 10;
-            _playing.add_css_class ("dim-label");
             overlay.add_overlay (_playing);
 
             width_request = 328;

@@ -134,16 +134,16 @@ namespace G4 {
                     var mlist = _current_list = (MusicList) value;
                     if (mlist.playable) {
                         _app.music_list = mlist.filter_model;
-                        mlist.current_item = _app.current_music;
+                        mlist.current_node = _app.current_music;
                         //  Update sort menu item
                         _app.sort_mode = _app.sort_mode;
                     } else if (mlist.item_type == typeof (Artist)) {
                         var artist = _app.current_music?.artist ?? "";
-                        mlist.current_item = _library.artists[artist];
+                        mlist.current_node = _library.artists[artist];
                     } else if (mlist.item_type == typeof (Album)) {
                         var album = _app.current_music?.album_key ?? "";
-                        var artist = mlist.music_node as Artist;
-                        mlist.current_item = artist != null ? ((!)artist)[album] : _library.albums[album];
+                        var artist = mlist.parent_node as Artist;
+                        mlist.current_node = artist != null ? ((!)artist)[album] : _library.albums[album];
                     }
                     if (!_removing_page) {
                         run_idle_once (() => {
@@ -274,7 +274,6 @@ namespace G4 {
                 var entry = (MusicEntry) item.child;
                 var music = (Music) item.item;
                 entry.paintable = _loading_paintable;
-                entry.playing = music == _app.current_music;
                 entry.set_titles (music, list_sort_mode);
             });
             list.item_created.connect ((item) => {
@@ -293,7 +292,6 @@ namespace G4 {
                 var entry = (MusicEntry) item.child;
                 var music = (Music) item.item;
                 entry.paintable = _loading_paintable;
-                entry.playing = music == _app.current_music;
                 entry.set_titles (music, _sort_mode_playing);
             });
             list.item_created.connect ((item) => {
@@ -338,7 +336,7 @@ namespace G4 {
             var label = new Gtk.Label (title);
             label.ellipsize = Pango.EllipsizeMode.END;
             var icon = new Gtk.Image.from_icon_name (album_mode ? "media-optical-cd-audio-symbolic" : "avatar-default-symbolic");
-            var label_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 2);
+            var label_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6);
             label_box.append (icon);
             label_box.append (label);
 
@@ -472,7 +470,7 @@ namespace G4 {
 
         private void on_music_changed (Music? music) {
             if (_current_list.playable)
-                _current_list.current_item = music;
+                _current_list.current_node = music;
         }
 
         private void on_music_external_changed () {

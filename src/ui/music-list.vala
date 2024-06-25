@@ -3,14 +3,14 @@ namespace G4 {
     public class MusicList : Gtk.Box {
         private HashTable<Music?, MusicWidget?> _binding_items = new HashTable<Music?, MusicWidget?> (direct_hash, direct_equal);
         private bool _compact_list = false;
-        private int _current_item = -1;
+        private Music? _current_node = null;
         private ListStore _data_store = new ListStore (typeof (Music));
         private Gtk.FilterListModel _filter_model = new Gtk.FilterListModel (null, null);
         private bool _grid_mode = false;
         private Gtk.GridView _grid_view = new Gtk.GridView (null, null);
         private int _image_size = Thumbnailer.ICON_SIZE;
         private Type _item_type = typeof (Music);
-        private Music? _music_node = null;
+        private Music? _parent_node = null;
         private Gtk.ScrolledWindow _scroll_view = new Gtk.ScrolledWindow ();
         private Thumbnailer _thmbnailer;
 
@@ -23,14 +23,14 @@ namespace G4 {
         public signal void item_created (Gtk.ListItem item);
         public signal void item_binded (Gtk.ListItem item);
 
-        public MusicList (Application app, Type item_type = typeof (Music), Music? node = null) {
+        public MusicList (Application app, Type item_type = typeof (Music), Music? parent = null) {
             orientation = Gtk.Orientation.VERTICAL;
             hexpand = true;
             append (_scroll_view);
 
             _filter_model.model = _data_store;
             _item_type = item_type;
-            _music_node = node;
+            _parent_node = parent;
             _thmbnailer = app.thumbnailer;
             update_store ();
 
@@ -63,20 +63,15 @@ namespace G4 {
             }
         }
 
-        public Music? current_item {
+        public Music? current_node {
             set {
-                var cur = _filter_model.get_item (_current_item) as Music;
-                if (cur != value)
-                    _current_item = find_item_in_model (_filter_model, value);
-
-                if (playable) {
-                    var widget = _binding_items[cur];
-                    if (widget != null)
-                        ((!)widget).playing = false;
-                    widget = _binding_items[value];
-                    if (widget != null)
-                        ((!)widget).playing = true;
-                }
+                var cur = _binding_items[_current_node];
+                if (cur != null)
+                    ((!)cur).playing = false;
+                _current_node = value;
+                var widget = _binding_items[value];
+                if (widget != null)
+                    ((!)widget).playing = true;
             }
         }
 
@@ -116,9 +111,9 @@ namespace G4 {
             }
         }
 
-        public Music? music_node {
+        public Music? parent_node {
             get {
-                return _music_node;
+                return _parent_node;
             }
         }
 
@@ -143,8 +138,9 @@ namespace G4 {
         }
 
         public void scroll_to_current_item () {
-            if (_current_item != -1)
-                scroll_to_item (_current_item);
+            var item = find_item_in_model (_filter_model, _current_node);
+            if (item != -1)
+                scroll_to_item (item);
         }
 
         private Adw.Animation? _scroll_animation = null;
@@ -175,12 +171,12 @@ namespace G4 {
         }
 
         public uint update_store () {
-            if (_music_node != null) {
+            if (_parent_node != null) {
                 _data_store.remove_all ();
-                if (_music_node is Album)
-                    ((Album)_music_node).insert_to_store (_data_store);
-                else if (_music_node is Artist)
-                    ((Artist)_music_node).replace_to_store (_data_store);
+                if (_parent_node is Album)
+                    ((Album)_parent_node).insert_to_store (_data_store);
+                else if (_parent_node is Artist)
+                    ((Artist)_parent_node).replace_to_store (_data_store);
             }
             return _data_store.get_n_items ();
         }
@@ -197,12 +193,10 @@ namespace G4 {
             var item = (Gtk.ListItem) obj;
             var entry = (MusicWidget) item.child;
             var music = (Music) item.item;
+            entry.playing = music == _current_node;
             item_binded (item);
 
             _binding_items[music] = entry;
-            if (entry.playing) {
-                _current_item = (int) item.position;
-            }
 
             var paintable = _thmbnailer.find (music, _image_size);
             if (paintable != null) {
