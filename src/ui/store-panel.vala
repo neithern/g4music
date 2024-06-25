@@ -101,10 +101,10 @@ namespace G4 {
             _switch_bar.bind_property ("reveal-child", revealer, "reveal-child", BindingFlags.SYNC_CREATE | BindingFlags.INVERT_BOOLEAN);
 
             app.index_changed.connect (on_index_changed);
+            app.loader.loading_changed.connect (on_loading_changed);
             app.music_changed.connect (on_music_changed);
             app.music_external_changed.connect (on_music_external_changed);
             app.music_store_changed.connect (on_music_store_changed);
-            app.loader.loading_changed.connect (on_loading_changed);
 
             var settings = app.settings;
             settings.bind ("sort-mode", this, "sort-mode", SettingsBindFlags.DEFAULT);
@@ -131,21 +131,15 @@ namespace G4 {
                     value = ((Gtk.Stack) value).visible_child;
                 }
                 if (value is MusicList) {
-                    var mlist = _current_list = (MusicList) value;
-                    if (mlist.playable) {
-                        _app.music_list = mlist.filter_model;
-                        mlist.current_node = _app.current_music;
+                    _current_list = (MusicList) value;
+                    if (_current_list.playable) {
+                        _app.music_list = _current_list.filter_model;
                         //  Update sort menu item
                         _app.sort_mode = _app.sort_mode;
-                    } else if (mlist.item_type == typeof (Artist)) {
-                        var artist = _app.current_music?.artist ?? "";
-                        mlist.current_node = _library.artists[artist];
-                    } else if (mlist.item_type == typeof (Album)) {
-                        var album = _app.current_music?.album_key ?? "";
-                        var artist = mlist.parent_node as Artist;
-                        mlist.current_node = artist != null ? ((!)artist)[album] : _library.albums[album];
                     }
+                    on_music_changed (_app.current_music);
                     if (!_removing_page) {
+                        var mlist = _current_list;
                         run_idle_once (() => mlist.scroll_to_current_item ());
                     }
                 }
@@ -465,8 +459,16 @@ namespace G4 {
         }
 
         private void on_music_changed (Music? music) {
-            if (_current_list.playable)
+            if (_current_list.playable) {
                 _current_list.current_node = music;
+            } else if (_current_list.item_type == typeof (Artist)) {
+                var artist = music?.artist ?? "";
+                _current_list.current_node = _library.artists[artist];
+            } else if (_current_list.item_type == typeof (Album)) {
+                var album = music?.album_key ?? "";
+                var artist = _current_list.parent_node as Artist;
+                _current_list.current_node = artist != null ? ((!)artist)[album] : _library.albums[album];
+            }
         }
 
         private void on_music_external_changed () {
