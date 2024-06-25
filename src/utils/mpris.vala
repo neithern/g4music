@@ -79,7 +79,6 @@ namespace G4 {
                 } else {
                     _app.sort_mode = SortMode.TITLE;
                 }
-                _app.resort_music_list ();
             }
         }
 

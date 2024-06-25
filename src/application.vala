@@ -1,4 +1,4 @@
-namespace G4 {
+        private Settings _settings;namespace G4 {
 
     public class Application : Adw.Application {
         private ActionHandles? _actions = null;
@@ -17,8 +17,9 @@ namespace G4 {
         private StringBuilder _next_uri = new StringBuilder ();
         private GstPlayer _player = new GstPlayer ();
         private Portal _portal = new Portal ();
-        private Thumbnailer _thumbnailer = new Thumbnailer ();
         private Settings _settings;
+        private HashTable<unowned GLib.ListModel, uint> _sort_map = new HashTable<unowned GLib.ListModel, uint> (direct_hash, direct_equal);
+        private Thumbnailer _thumbnailer = new Thumbnailer ();
 
         public signal void index_changed (int index, uint size);
         public signal void music_changed (Music? music);
@@ -109,7 +110,7 @@ namespace G4 {
             delete_cover_tmp_file_async.begin ((obj, res) => delete_cover_tmp_file_async.end (res));
 
             //  save playing-list's sort mode only
-            _settings.set_uint ("sort-mode", _sort_mode_main);
+            _settings.set_uint ("sort-mode", _sort_map[_music_store]);
 
             if (_mpris_id != 0) {
                 Bus.unown_name (_mpris_id);
@@ -253,22 +254,19 @@ namespace G4 {
 
         public bool single_loop { get; set; }
 
-        private uint _sort_mode = SortMode.TITLE;
-        private uint _sort_mode_main = SortMode.TITLE;
-
         public uint sort_mode {
             get {
-                return _sort_mode;
+                return _sort_map[_music_list.model];
             }
             set {
                 var action = lookup_action (ACTION_SORT);
                 var state = new Variant.string (value.to_string ());
                 (action as SimpleAction)?.set_state (state);
 
-                if (_music_store == _music_list.model)
-                    _sort_mode_main = value;
-                _sort_mode = value;
-                //  Don't re-sort the music list here, because "sort-mode" is sync with different album's page
+                if (_sort_map[_music_list.model] != value) {
+                    _sort_map[_music_list.model] = value;
+                    sort_music_store ((ListStore) _music_list.model, value);
+                }
             }
         }
 
@@ -286,7 +284,7 @@ namespace G4 {
             }
             if (files.length > 0) {
                 var musics = new GenericArray<Music> (4096);
-                yield _loader.load_files_async (files, musics, true, !default_mode, _sort_mode);
+                yield _loader.load_files_async (files, musics, true, !default_mode, _sort_map[_music_store]);
                 _music_store.splice (0, _music_store.get_n_items (), (Object[]) musics.data);
                 _list_modified = false;
             }
@@ -433,8 +431,8 @@ namespace G4 {
                 (obj, res) => _portal.request_background_async.end (res));
         }
 
-        public void resort_music_list () {
-            sort_music_store ((ListStore) _music_list.model, _sort_mode);
+        public void set_list_sort_mode (GLib.ListModel model, uint mode) {
+            _sort_map[model] = mode;
         }
 
         public void show_uri_with_portal (string? uri) {

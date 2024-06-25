@@ -52,8 +52,7 @@ namespace G4 {
         private uint _search_mode = SearchMode.ANY;
         private string _search_text = "";
         private bool _size_allocated = false;
-        private uint _sort_mode = 0;
-        private HashTable<unowned Gtk.Widget, uint> _sort_map = new HashTable<unowned Gtk.Widget, uint> (direct_hash, direct_equal);
+        private uint _sort_mode_playing = SortMode.TITLE;
 
         public StorePanel (Application app, Window win, Adw.Leaflet leaflet) {
             _app = app;
@@ -114,17 +113,12 @@ namespace G4 {
 
         public uint sort_mode {
             get {
-                return _sort_mode;
+                return _app.sort_mode;
             }
             set {
-                if (value < SORT_MODE_ICONS.length) {
-                    sort_btn.set_icon_name (SORT_MODE_ICONS[value]);
-                    _sort_mode = value;
-                    _sort_map[_current_list] = value;
-                }
-                if (_current_list.get_height () > 0) {
-                    _current_list.create_factory ();
-                }
+                if (_current_list == _playing_list)
+                    _sort_mode_playing = value;
+                update_sort_mode (value);
             }
         }
 
@@ -141,7 +135,8 @@ namespace G4 {
                     if (mlist.playable) {
                         _app.music_list = mlist.filter_model;
                         mlist.current_item = _app.current_music;
-                        sort_mode = _sort_map[mlist];
+                        //  Update sort menu item
+                        _app.sort_mode = _app.sort_mode;
                     } else if (mlist.item_type == typeof (Artist)) {
                         var artist = _app.current_music?.artist ?? "";
                         mlist.current_item = _library.artists[artist];
@@ -272,7 +267,7 @@ namespace G4 {
         }
 
         private MusicList create_music_list (Album album, bool from_artist = false) {
-            var sort_mode = (album is Playlist && from_artist) ? SortMode.ALBUM : SortMode.TITLE;
+            var list_sort_mode = (album is Playlist && from_artist) ? SortMode.ALBUM : SortMode.TITLE;
             var list = new MusicList (_app, typeof (Music), album);
             list.item_activated.connect ((position, obj) => _app.current_item = (int) position);
             list.item_binded.connect ((item) => {
@@ -280,12 +275,13 @@ namespace G4 {
                 var music = (Music) item.item;
                 entry.paintable = _loading_paintable;
                 entry.playing = music == _app.current_music;
-                entry.set_titles (music, sort_mode);
+                entry.set_titles (music, list_sort_mode);
             });
             list.item_created.connect ((item) => {
                 var entry = (MusicEntry) item.child;
                 make_right_clickable (entry, entry.show_popover_menu);
             });
+            _app.set_list_sort_mode (list.filter_model, list_sort_mode);
             _app.settings.bind ("compact-playlist", list, "compact-list", SettingsBindFlags.DEFAULT);
             return list;
         }
@@ -298,7 +294,7 @@ namespace G4 {
                 var music = (Music) item.item;
                 entry.paintable = _loading_paintable;
                 entry.playing = music == _app.current_music;
-                entry.set_titles (music, _sort_mode);
+                entry.set_titles (music, _sort_mode_playing);
             });
             list.item_created.connect ((item) => {
                 var entry = (MusicEntry) item.child;
@@ -556,7 +552,15 @@ namespace G4 {
                     _removing_page = false;
                 });
             }
-            _sort_map.remove (child);
+        }
+
+        private void update_sort_mode (uint mode) {
+            if (mode < SORT_MODE_ICONS.length) {
+                sort_btn.set_icon_name (SORT_MODE_ICONS[mode]);
+            }
+            if (_current_list.get_height () > 0) {
+                _current_list.create_factory ();
+            }
         }
 
         private void update_stack_pages (Gtk.Stack stack) {

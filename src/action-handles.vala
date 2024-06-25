@@ -236,7 +236,6 @@ namespace G4 {
             int mode = 2;
             int.try_parse (value, out mode, null, 10);
             _app.sort_mode = mode;
-            _app.resort_music_list ();
         }
 
         public void toggle_search () {
@@ -248,7 +247,6 @@ namespace G4 {
                 _app.sort_mode = SortMode.ALBUM;
             else
                 _app.sort_mode = _app.sort_mode + 1;
-            _app.resort_music_list ();
         }
     }
 }
