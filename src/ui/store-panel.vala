@@ -146,11 +146,7 @@ namespace G4 {
                         mlist.current_node = artist != null ? ((!)artist)[album] : _library.albums[album];
                     }
                     if (!_removing_page) {
-                        run_idle_once (() => {
-                            var parent = mlist.parent;
-                            if (parent is Gtk.Stack && mlist == ((Gtk.Stack) parent).visible_child)
-                                mlist.scroll_to_current_item ();
-                        });
+                        run_idle_once (() => mlist.scroll_to_current_item ());
                     }
                 }
                 sort_btn.visible = _current_list.playable;

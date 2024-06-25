@@ -165,7 +165,7 @@ namespace G4 {
                 _scroll_animation?.pause ();
                 _scroll_animation = new Adw.TimedAnimation (_scroll_view, adj.value, scroll_to, jump ? 50 : 500, target);
                 _scroll_animation?.play ();
-            } else {
+            } else if (_binding_items.length > 0) {
                 _grid_view.activate_action_variant ("list.scroll-to-item", new Variant.uint32 (index));
             }
         }
