@@ -24,7 +24,7 @@ namespace G4 {
         private PlayBar _play_bar = new PlayBar ();
 
         private Application _app;
-        private int _cover_size = 480;
+        private int _cover_size = 360;
         private double _degrees_per_second = 360 / 20; // 20s per lap
         private CrossFadePaintable _crossfade_paintable = new CrossFadePaintable ();
         private MatrixPaintable _matrix_paintable = new MatrixPaintable ();

@@ -80,7 +80,7 @@ namespace G4 {
 
         public override void size_allocate (int width, int height, int baseline) {
             var min_width = 340;
-            var play_width = int.max (width * 3 / 8, min_width);
+            var play_width = int.max (int.min (width * 3 / 8, 480), min_width);
             var store_width = int.max (width - play_width, min_width);
             var wide = width > min_width * 2;
             _play_panel.size_to_change (wide ? play_width : width);
