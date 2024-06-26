@@ -3,6 +3,8 @@ namespace G4 {
     [GtkTemplate (ui = "/com/github/neithern/g4music/gtk/play-panel.ui")]
     public class PlayPanel : Gtk.Box {
         [GtkChild]
+        private unowned Gtk.MenuButton action_btn;
+        [GtkChild]
         private unowned Gtk.Button back_btn;
         [GtkChild]
         private unowned Gtk.Label index_label;
@@ -42,6 +44,9 @@ namespace G4 {
             append (_play_bar);
 
             leaflet.bind_property ("folded", back_btn, "visible", BindingFlags.SYNC_CREATE);
+
+            action_btn.set_create_popup_func (() => action_btn.menu_model = _app.current_music != null ? create_music_action_menu ((!)_app.current_music) : (Menu) null);
+
             back_btn.clicked.connect (() => leaflet.navigate (Adw.NavigationDirection.BACK));
 
             initial_label.activate_link.connect (on_music_folder_clicked);
@@ -117,6 +122,16 @@ namespace G4 {
             _play_bar.margin_start = margin;
             _play_bar.margin_end = margin;
             _play_bar.on_size_changed (panel_width - margin * 2);
+        }
+
+        private Menu create_music_action_menu (Music music) {
+            var menu = create_menu_for_music (music);
+            if (music.cover_uri != null) {
+                menu.append_item (create_menu_item_for_uri ((!)music.cover_uri, _("Show _Cover File"), ACTION_APP + ACTION_SHOW_FILE));
+            } else if (_app.current_cover != null) {
+                menu.append_item (create_menu_item_for_uri (music.uri, _("_Export Cover"), ACTION_APP + ACTION_EXPORT_COVER));
+            }
+            return menu;
         }
 
         private void on_index_changed (int index, uint size) {
@@ -227,13 +242,7 @@ namespace G4 {
 
         private void show_popover_menu (Gtk.Widget widget, double x, double y) {
             if (_app.current_music != null) {
-                var music = (!)_app.current_music;
-                var menu = create_menu_for_music (music);
-                if (music.cover_uri != null) {
-                    menu.append_item (create_menu_item_for_uri ((!)music.cover_uri, _("Show _Cover File"), ACTION_APP + ACTION_SHOW_FILE));
-                } else if (_app.current_cover != null) {
-                    menu.append_item (create_menu_item_for_uri (music.uri, _("_Export Cover"), ACTION_APP + ACTION_EXPORT_COVER));
-                }
+                var menu = create_music_action_menu ((!)_app.current_music);
                 var popover = create_popover_menu (menu, x, y);
                 popover.set_parent (widget);
                 popover.popup ();

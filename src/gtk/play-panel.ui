@@ -25,6 +25,11 @@
             <property name="visible">false</property>
           </object>
         </child>
+        <child type="end">
+          <object class="GtkMenuButton" id="action_btn">
+            <property name="icon_name">view-more-symbolic</property>
+          </object>
+        </child>
       </object>
     </child>
     <child>
