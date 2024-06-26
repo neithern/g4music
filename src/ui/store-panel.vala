@@ -143,7 +143,7 @@ namespace G4 {
                         run_idle_once (() => mlist.scroll_to_current_item ());
                     }
                 }
-                sort_btn.visible = _current_list.playable;
+                sort_btn.sensitive = _current_list.playable;
                 _search_mode = SearchMode.ANY;
                 on_search_btn_toggled ();
 
