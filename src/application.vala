@@ -635,9 +635,11 @@
             if (_current_music != null && strcmp (_current_music?.uri, uri) == 0) {
                 if (_current_cover == null)
                     _current_cover = tags != null ? parse_image_from_tag_list ((!)tags) : null;
-                _current_tag_parsed = tags_has_title_or_image (tags);
-                if (_current_tag_parsed)
-                    music_tag_parsed ((!)_current_music, _current_cover);
+                if (!_current_tag_parsed) {
+                    _current_tag_parsed = tags_has_title_or_image (tags);
+                    if (_current_tag_parsed)
+                        music_tag_parsed ((!)_current_music, _current_cover);
+                }
             }
         }
 
