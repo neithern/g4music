@@ -1,6 +1,6 @@
 project(
   'g4music', [ 'vala', 'c' ],
-  version: '3.7',
+  version: '3.7.1',
   license: 'GPL3'
 )
 
