@@ -51,6 +51,18 @@
     </screenshots>
 
     <releases>
+        <release version="3.7" date="2024-6-29">
+            <description>
+                <ul>
+                <li>Drag the play-panel to move the window.</li>
+                <li>Individual sort-mode for albums.</li>
+                <li>show indicator and scroll to the playing artist/album.</li>
+                <li>Save and restore window's maximized.</li>
+                <li>Many other UI improvement and fixing.</li>
+                <li>Use playbin3 if gstreamer>=1.24.</li>
+                </ul>
+            </description>
+        </release>
         <release version="3.6.2" date="2024-6-2">
             <description>
                 <ul>
