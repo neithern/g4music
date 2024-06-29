@@ -51,7 +51,7 @@
     </screenshots>
 
     <releases>
-        <release version="3.7.1" date="2024-6-29">
+        <release version="3.7.2" date="2024-6-29">
             <description>
                 <ul>
                 <li>Drag the play-panel to move the window.</li>
