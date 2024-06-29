@@ -37,7 +37,7 @@ namespace G4 {
         private LevelCalculator _peak_calculator = new LevelCalculator ();
         private Gst.State _state = Gst.State.NULL;
         private bool _seeking = false;
-        private bool _tag_parsed = false;
+        private Gst.TagList? _tag_list = null;
         private uint _timer_handle = 0;
         private unowned Thread<void> _main_thread = Thread<void>.self ();
 
@@ -122,7 +122,7 @@ namespace G4 {
                     _current_uri = value;
                     _duration = Gst.CLOCK_TIME_NONE;
                     _position = Gst.CLOCK_TIME_NONE;
-                    _tag_parsed = false;
+                    _tag_list = null;
                     ((!)_pipeline).uri = value;
                 }
             }
@@ -262,8 +262,10 @@ namespace G4 {
                 case Gst.MessageType.TAG:
                     Gst.TagList? tags = null;
                     message.parse_tag (out tags);
-                    _tag_parsed = true;
-                    tag_parsed (_current_uri, tags);
+                    if (_tag_list != null)
+                        _tag_list?.merge (tags, Gst.TagMergeMode.REPLACE);
+                    else
+                        _tag_list = tags;
                     break;
 
                 default:
@@ -274,11 +276,7 @@ namespace G4 {
         private void on_state_changed (Gst.State old, Gst.State state) {
             if (old == Gst.State.READY && state == Gst.State.PAUSED) {
                 parse_duration ();
-                if (!_tag_parsed) {
-                    //  Hack: force emit if no tag parsed for MOD files
-                    _tag_parsed = true;
-                    tag_parsed (_current_uri, null);
-                }
+                tag_parsed (_current_uri, _tag_list);
             }
             if (old != state && _state != state) {
                 _state = state;

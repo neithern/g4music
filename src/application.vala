@@ -6,7 +6,6 @@
         private Music? _current_music = null;
         private string _current_uri = "";
         private Gst.Sample? _current_cover = null;
-        private bool _current_tag_parsed = false;
         private bool _list_modified = false;
         private bool _loading = false;
         private string _music_folder = "";
@@ -144,7 +143,6 @@
                 if (_current_music != value) {
                     _current_music = value;
                     _current_cover = null;
-                    _current_tag_parsed = false;
                     music_changed (value);
                 }
                 var uri = value?.uri ?? "";
@@ -633,13 +631,8 @@
 
         private async void on_tag_parsed (string? uri, Gst.TagList? tags) {
             if (_current_music != null && strcmp (_current_music?.uri, uri) == 0) {
-                if (_current_cover == null)
-                    _current_cover = tags != null ? parse_image_from_tag_list ((!)tags) : null;
-                if (!_current_tag_parsed) {
-                    _current_tag_parsed = tags_has_title_or_image (tags);
-                    if (_current_tag_parsed)
-                        music_tag_parsed ((!)_current_music, _current_cover);
-                }
+                _current_cover = tags != null ? parse_image_from_tag_list ((!)tags) : null;
+                music_tag_parsed ((!)_current_music, _current_cover);
             }
         }
 
