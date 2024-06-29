@@ -297,6 +297,7 @@ namespace G4 {
                 next_uri_start ();
                 parse_duration ();
                 parse_position ();
+                tag_parsed (_current_uri, _tag_list);
             }
         }
 
