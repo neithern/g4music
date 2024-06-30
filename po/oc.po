@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/neithern/g4music/-/issues\n"
-"POT-Creation-Date: 2023-08-19 04:11+0000\n"
-"PO-Revision-Date: 2023-12-31 18:21+0100\n"
+"POT-Creation-Date: 2023-12-31 17:22+0000\n"
+"PO-Revision-Date: 2024-06-30 19:18+0200\n"
 "Last-Translator: Quentin PAGÈS\n"
 "Language-Team: \n"
 "Language: oc\n"
@@ -16,9 +16,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Poedit 3.4.2\n"
+"X-Generator: Poedit 3.4.3\n"
 
-#: data/app.desktop.in:3 src/application.vala:232 src/main.vala:24
+#: data/app.desktop.in:3 src/application.vala:235 src/main.vala:24
 msgid "G4Music"
 msgstr "G4Music"
 
@@ -118,7 +118,7 @@ msgstr "Vista compacta lista de lectura"
 msgid "Grid view for artists/albums"
 msgstr "Vista grasilha per artista/albums"
 
-#: src/gtk/preferences.ui:56 src/application.vala:432
+#: src/gtk/preferences.ui:56 src/application.vala:435
 msgid "Keep playing after window closed"
 msgstr "Téner de legir un còp la fenèstra tampada"
 
@@ -148,7 +148,7 @@ msgstr "Lectura"
 
 #: src/gtk/preferences.ui:115
 msgid "Show audio peak level"
-msgstr "Afichar lo nivèl àudio poncha"
+msgstr "Afichar lo nivèl àudio de poncha"
 
 #: src/gtk/preferences.ui:119
 msgid "Display characters"
@@ -196,7 +196,7 @@ msgstr "_Acorchis de clavièr"
 
 #: src/gtk/store-panel.ui:87
 msgid "_About"
-msgstr "_A prepaus de"
+msgstr "_A prepaus"
 
 #: src/gtk/store-panel.ui:96 src/ui/preferences.vala:67
 msgid "Album"
@@ -231,7 +231,7 @@ msgstr "Un lector de musica rapid e leugièr esrich en GTK4."
 msgid "translator-credits"
 msgstr "Quentin PAGÈS"
 
-#: src/application.vala:613
+#: src/application.vala:626
 msgid "Keep playing"
 msgstr "Contunhar de legir"
 
