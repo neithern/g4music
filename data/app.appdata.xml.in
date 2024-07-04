@@ -35,6 +35,11 @@
         </ul>
     </description>
 
+    <branding>
+        <color type="primary" scheme_preference="light">#c6e86f</color>
+        <color type="primary" scheme_preference="dark">#67d976</color>
+    </branding>
+
     <screenshots>
         <screenshot type="default">
             <image>https://gitlab.gnome.org/neithern/g4music/-/raw/master/shots/window.png</image>
