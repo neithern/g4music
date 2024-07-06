@@ -42,15 +42,19 @@
 
     <screenshots>
         <screenshot type="default">
+            <caption>Main window.</caption>
             <image>https://gitlab.gnome.org/neithern/g4music/-/raw/master/shots/window.png</image>
         </screenshot>
         <screenshot>
+            <caption>Albums view.</caption>
             <image>https://gitlab.gnome.org/neithern/g4music/-/raw/master/shots/albums.png</image>
         </screenshot>
         <screenshot>
+            <caption>Playing view.</caption>
             <image>https://gitlab.gnome.org/neithern/g4music/-/raw/master/shots/playing.png</image>
         </screenshot>
         <screenshot>
+            <caption>Playlist view.</caption>
             <image>https://gitlab.gnome.org/neithern/g4music/-/raw/master/shots/playlist.png</image>
         </screenshot>
     </screenshots>
