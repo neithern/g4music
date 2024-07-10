@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: g4music master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/neithern/g4music/issues\n"
 "POT-Creation-Date: 2024-07-06 05:54+0000\n"
-"PO-Revision-Date: 2024-07-10 14:14+0300\n"
+"PO-Revision-Date: 2024-07-10 14:23+0300\n"
 "Last-Translator: Yosef Or Boczko <yoseforb@gmail.com>\n"
 "Language-Team: Hebrew\n"
 "Language: he\n"
@@ -95,7 +95,7 @@ msgstr "שינוי סדר נגינה"
 #: src/gtk/help-overlay.ui:72
 msgctxt "shortcut window"
 msgid "Reload Library"
-msgstr "טעינה מחדש של הספרייה"
+msgstr "טעינה הספרייה מחדש"
 
 #: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:349
 msgid "Back"
