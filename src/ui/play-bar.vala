@@ -189,7 +189,7 @@ namespace G4 {
     public static Gtk.GestureClick make_widget_clickable (Gtk.Widget label) {
         var controller = new Gtk.GestureClick ();
         label.add_controller (controller);
-        label.set_cursor_from_name ("hand");
+        label.set_cursor_from_name ("pointer");
         return controller;
     }
 }
