@@ -1,4 +1,4 @@
-        private Settings _settings;namespace G4 {
+namespace G4 {
 
     public class Application : Adw.Application {
         private ActionHandles? _actions = null;
