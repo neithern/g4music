@@ -29,6 +29,7 @@ namespace G4 {
             }
             set {
                 _label.ellipsize = value;
+                stop_tick ();
             }
         }
 
@@ -39,7 +40,6 @@ namespace G4 {
             set {
                 _label.label = value;
                 stop_tick ();
-                queue_resize ();
             }
         }
 
@@ -48,11 +48,9 @@ namespace G4 {
                 return _marquee;
             }
             set {
-                if (_marquee != value) {
-                    _marquee = value;
-                    stop_tick ();
-                    queue_resize ();
-                }
+                _marquee = value;
+                stop_tick ();
+                queue_allocate ();
             }
         }
 
