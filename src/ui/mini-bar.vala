@@ -2,7 +2,7 @@ namespace G4 {
 
     public class MiniBar : Adw.ActionRow {
         private Gtk.Image _cover = new Gtk.Image ();
-        private Gtk.Label _title = new Gtk.Label (null);
+        private StableLabel _title = new StableLabel ();
         private Gtk.Label _time = new Gtk.Label ("0:00");
         private Gtk.Button _prev = new Gtk.Button ();
         private Gtk.Button _play = new Gtk.Button ();
@@ -40,7 +40,7 @@ namespace G4 {
             _paintable.queue_draw.connect (_cover.queue_draw);
 
             _title.halign = Gtk.Align.START;
-            _title.ellipsize = Pango.EllipsizeMode.END;
+            _title.marquee = true;
             _title.add_css_class ("title-leading");
 
             _time.halign = Gtk.Align.START;

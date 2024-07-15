@@ -66,8 +66,8 @@
                 </child>
                 <child>
                   <object class="G4StableLabel" id="music_title">
-                    <property name="ellipsize">end</property>
                     <property name="halign">center</property>
+                    <property name="marquee">true</property>
                     <style>
                       <class name="title-large"/>
                     </style>
@@ -75,9 +75,9 @@
                 </child>
                 <child>
                   <object class="G4StableLabel" id="music_artist">
-                    <property name="ellipsize">end</property>
                     <property name="halign">center</property>
                     <property name="margin_top">2</property>
+                    <property name="marquee">true</property>
                     <style>
                       <class name="dim-label"/>
                     </style>
@@ -85,8 +85,8 @@
                 </child>
                 <child>
                   <object class="G4StableLabel" id="music_album">
-                    <property name="ellipsize">end</property>
                     <property name="halign">center</property>
+                    <property name="marquee">true</property>
                     <style>
                       <class name="dim-label"/>
                     </style>

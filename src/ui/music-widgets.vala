@@ -11,6 +11,9 @@ namespace G4 {
         private static Gtk.Builder _builder = new Gtk.Builder ();
 
         private Gtk.Label _label = new Gtk.Label (null);
+        private float _label_offset = 0;
+        private int _label_width = 0;
+        private bool _marquee = false;
 
         construct {
             add_child (_builder, _label, null);
@@ -35,6 +38,21 @@ namespace G4 {
             }
             set {
                 _label.label = value;
+                stop_tick ();
+                queue_resize ();
+            }
+        }
+
+        public bool marquee {
+            get {
+                return _marquee;
+            }
+            set {
+                if (_marquee != value) {
+                    _marquee = value;
+                    stop_tick ();
+                    queue_resize ();
+                }
             }
         }
 
@@ -47,6 +65,9 @@ namespace G4 {
                 _label.label = text;
             } else {
                 _label.measure (orientation, for_size, out minimum, out natural, out minimum_baseline, out natural_baseline);
+                _label_width = natural;
+                if (_marquee && _label.ellipsize == Pango.EllipsizeMode.NONE)
+                    minimum = 0;
             }
         }
 
@@ -57,6 +78,103 @@ namespace G4 {
             allocation.width = width;
             allocation.height = height;
             _label.allocate_size (allocation, baseline);
+            update_tick_delayed ();
+        }
+
+        private static float SPACE = 48f;
+
+        public override void snapshot (Gtk.Snapshot snapshot) {
+            var width = get_width ();
+            var overflow = _marquee && width < _label_width;
+            if (overflow) {
+                var height = get_height ();
+                var mask_width = 1.25f * height;
+                var total_width = _label_width + SPACE;
+                var left_mask = _label_offset < mask_width ? _label_offset : (_label_offset + mask_width > total_width ? 0 : mask_width);
+                var rect = Graphene.Rect ();
+                rect.init (0, 0, left_mask, height);
+                Gsk.ColorStop[] stops = { { 0, color_from_uint (0xff000000u) }, { 1, color_from_uint (0x00000000u) } };
+                snapshot.push_mask(Gsk.MaskMode.INVERTED_ALPHA);
+                snapshot.append_linear_gradient (rect, rect.get_top_left (), rect.get_top_right (), stops);
+                rect.init (width - mask_width, 0, mask_width, height);
+                snapshot.append_linear_gradient (rect, rect.get_top_right (), rect.get_top_left (), stops);
+                snapshot.pop ();
+                var bounds = Graphene.Rect ();
+                bounds.init (0, 0, width, height);
+                snapshot.push_clip (bounds);
+                var point = Graphene.Point ();
+                point.init (- _label_offset, 0);
+                snapshot.translate (point);
+                base.snapshot (snapshot);
+                if (_label_offset > 0) {
+                    point.x = _label_width + SPACE;
+                    snapshot.translate (point);
+                    base.snapshot (snapshot);
+                }
+                point.x = _label_offset;
+                snapshot.translate (point);
+                snapshot.pop ();
+                snapshot.pop ();  // To avoid 'Too many gtk_snapshot_push() calls.'???
+            } else {
+                base.snapshot (snapshot);
+            }
+        }
+
+        private uint _pixels_per_second = 24;
+        private uint _tick_handler = 0;
+        private int64 _tick_last_time = 0;
+        private bool _tick_moving = false;
+
+        private bool on_tick_callback (Gtk.Widget widget, Gdk.FrameClock clock) {
+            if (_tick_moving) {
+                var now = get_monotonic_time ();
+                var elapsed = (now - _tick_last_time) / 1e6f;
+                var offset = elapsed * _pixels_per_second;
+                _tick_last_time = now;
+                _label_offset += offset;
+                if (_label_offset > _label_width + SPACE) {
+                    stop_tick ();
+                    update_tick_delayed ();
+                }
+                queue_draw ();
+            }
+            return true;
+        }
+
+        private void stop_tick () {
+            if (_tick_handler != 0) {
+                remove_tick_callback (_tick_handler);
+                _tick_handler = 0;
+            }
+            if (_timer_id != 0) {
+                Source.remove (_timer_id);
+                _timer_id = 0;
+            }
+            _label_offset = 0;
+            _tick_moving = false;
+        }
+
+        private void update_tick () {
+            var need_tick = _marquee && get_width () < _label_width;
+            if (need_tick && _tick_handler == 0) {
+                _tick_last_time = get_monotonic_time ();
+                _tick_handler = add_tick_callback (on_tick_callback);
+                _tick_moving = _tick_handler != 0;
+            } else if (!need_tick && _tick_handler != 0) {
+                stop_tick ();
+            }
+        }
+
+        private static uint TICK_WAIT = 3000;
+        private uint _timer_id = 0;
+
+        private void update_tick_delayed () {
+            if (_timer_id == 0) {
+                _timer_id = run_timeout_once (TICK_WAIT, () => {
+                    _timer_id = 0;
+                    update_tick ();
+                });
+            }
         }
     }
 
