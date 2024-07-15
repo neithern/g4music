@@ -97,6 +97,7 @@ namespace G4 {
             revealer.child = _switch_bar2;
             revealer.transition_type = Gtk.RevealerTransitionType.SLIDE_UP;
             insert_child_after (revealer, header_bar);
+            _switch_bar2.margin_start = 6;
             _switch_bar2.stack = stack_view;
             _switch_bar.bind_property ("reveal-child", revealer, "reveal-child", BindingFlags.SYNC_CREATE | BindingFlags.INVERT_BOOLEAN);
 
