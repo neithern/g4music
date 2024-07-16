@@ -7,13 +7,21 @@ namespace G4 {
         public const string PLAYLIST = "playlist";
     }
 
+    public enum EllipsizeMode {
+        NONE = Pango.EllipsizeMode.NONE,
+        START = Pango.EllipsizeMode.START,
+        MIDDLE = Pango.EllipsizeMode.MIDDLE,
+        END = Pango.EllipsizeMode.END,
+        MARQUEE
+    }
+
     public class StableLabel : Gtk.Widget {
         private static Gtk.Builder _builder = new Gtk.Builder ();
 
+        private EllipsizeMode _ellipsize = EllipsizeMode.NONE;
         private Gtk.Label _label = new Gtk.Label (null);
         private float _label_offset = 0;
         private int _label_width = 0;
-        private bool _marquee = false;
 
         construct {
             add_child (_builder, _label, null);
@@ -23,12 +31,13 @@ namespace G4 {
             _label.unparent ();
         }
 
-        public Pango.EllipsizeMode ellipsize {
+        public EllipsizeMode ellipsize {
             get {
-                return _label.ellipsize;
+                return _ellipsize;
             }
             set {
-                _label.ellipsize = value;
+                _ellipsize = value;
+                _label.ellipsize = value == EllipsizeMode.MARQUEE ? Pango.EllipsizeMode.NONE : (Pango.EllipsizeMode) value;
                 stop_tick ();
             }
         }
@@ -45,12 +54,10 @@ namespace G4 {
 
         public bool marquee {
             get {
-                return _marquee;
+                return _ellipsize == EllipsizeMode.MARQUEE;
             }
             set {
-                _marquee = value;
-                stop_tick ();
-                queue_allocate ();
+                ellipsize = value ? EllipsizeMode.MARQUEE : EllipsizeMode.NONE;
             }
         }
 
@@ -64,7 +71,7 @@ namespace G4 {
             } else {
                 _label.measure (orientation, for_size, out minimum, out natural, out minimum_baseline, out natural_baseline);
                 _label_width = natural;
-                if (_marquee && _label.ellipsize == Pango.EllipsizeMode.NONE)
+                if (marquee)
                     minimum = 0;
             }
         }
@@ -79,14 +86,14 @@ namespace G4 {
             update_tick_delayed ();
         }
 
-        private static float SPACE = 48f;
+        private static float SPACE = 40f;
 
         public override void snapshot (Gtk.Snapshot snapshot) {
             var width = get_width ();
-            var overflow = _marquee && width < _label_width;
+            var overflow = marquee && width < _label_width;
             if (overflow) {
                 var height = get_height ();
-                var mask_width = 1.25f * height;
+                var mask_width = float.min (width * 0.1f, height * 1.25f);
                 var total_width = _label_width + SPACE;
                 var left_mask = _label_offset < mask_width ? _label_offset : (_label_offset + mask_width > total_width ? 0 : mask_width);
                 var rect = Graphene.Rect ();
@@ -101,16 +108,21 @@ namespace G4 {
                 bounds.init (0, 0, width, height);
                 snapshot.push_clip (bounds);
                 var point = Graphene.Point ();
-                point.init (- _label_offset, 0);
-                snapshot.translate (point);
-                base.snapshot (snapshot);
-                if (_label_offset > 0) {
-                    point.x = _label_width + SPACE;
+                point.init (0, 0);
+                if (_label_offset < _label_width) {
+                    point.x = - _label_offset;
                     snapshot.translate (point);
                     base.snapshot (snapshot);
+                    point.x = - point.x;
+                    snapshot.translate (point);
                 }
-                point.x = _label_offset;
-                snapshot.translate (point);
+                if (_label_offset >= total_width - width) {
+                    point.x = - _label_offset + total_width;
+                    snapshot.translate (point);
+                    base.snapshot (snapshot);
+                    point.x = - point.x;
+                    snapshot.translate (point);
+                }
                 snapshot.pop ();
                 snapshot.pop ();  // To avoid 'Too many gtk_snapshot_push() calls.'???
             } else {
@@ -153,7 +165,7 @@ namespace G4 {
         }
 
         private void update_tick () {
-            var need_tick = _marquee && get_width () < _label_width;
+            var need_tick = marquee && get_width () < _label_width;
             if (need_tick && _tick_handler == 0) {
                 _tick_last_time = get_monotonic_time ();
                 _tick_handler = add_tick_callback (on_tick_callback);
@@ -269,14 +281,14 @@ namespace G4 {
             append (overlay);
 
             _title.halign = Gtk.Align.CENTER;
-            _title.ellipsize = Pango.EllipsizeMode.MIDDLE;
+            _title.ellipsize = EllipsizeMode.MIDDLE;
             _title.margin_start = 2;
             _title.margin_end = 2;
             _title.add_css_class ("title-leading");
             append (_title);
 
             _subtitle.halign = Gtk.Align.CENTER;
-            _subtitle.ellipsize = Pango.EllipsizeMode.MIDDLE;
+            _subtitle.ellipsize = EllipsizeMode.MIDDLE;
             _subtitle.margin_start = 2;
             _subtitle.margin_end = 2;
             _subtitle.visible = false;
@@ -324,11 +336,11 @@ namespace G4 {
             append (overlay);
 
             _title.halign = Gtk.Align.START;
-            _title.ellipsize = Pango.EllipsizeMode.END;
+            _title.ellipsize = EllipsizeMode.END;
             _title.add_css_class ("title-leading");
 
             _subtitle.halign = Gtk.Align.START;
-            _subtitle.ellipsize = Pango.EllipsizeMode.END;
+            _subtitle.ellipsize = EllipsizeMode.END;
             _subtitle.add_css_class ("dim-label");
             var font_size = _subtitle.get_pango_context ().get_font_description ().get_size () / Pango.SCALE;
             if (font_size >= 13)
