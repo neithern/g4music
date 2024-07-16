@@ -15,6 +15,7 @@ G4Music is a fast fluent lightweight music player written in GTK4, with a beauti
 - Fast loading and parsing thousands of music files in very few seconds, monitor local changes.
 - Low memory usage for large music collection with album covers (embedded and external), no thumbnail caches to store.
 - Group and sorts by album/artist/title, shuffle list, full-text searching.
+- Adaptive user interface for different screen (Desktop, Tablet, Mobile).
 - Gaussian blurred cover as background, follows GNOME light/dark mode.
 - Drag-drop from GNOME Files, showing music in Files.
 - Supports audio peaks visualizer.
@@ -22,7 +23,6 @@ G4Music is a fast fluent lightweight music player written in GTK4, with a beauti
 - Supports normalizing volume with ReplayGain.
 - Supports pipewire and other audio sink.
 - Supports MPRIS control.
-- Only need less than 500KB to install.
 
 ## Install from Flathub
 <a href="https://flathub.org/apps/com.github.neithern.g4music">
