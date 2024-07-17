@@ -125,16 +125,14 @@ namespace G4 {
 
         private uint _pixels_per_second = 24;
         private uint _tick_handler = 0;
-        private int64 _tick_last_time = 0;
         private bool _tick_moving = false;
+        private int64 _tick_start_time = 0;
 
         private bool on_tick_callback (Gtk.Widget widget, Gdk.FrameClock clock) {
             if (_tick_moving) {
                 var now = get_monotonic_time ();
-                var elapsed = (now - _tick_last_time) / 1e6f;
-                var offset = elapsed * _pixels_per_second;
-                _tick_last_time = now;
-                _label_offset += offset;
+                var elapsed = (now - _tick_start_time) / 1e6f;
+                _label_offset = elapsed * _pixels_per_second;
                 if (_label_offset > _label_width + SPACE) {
                     stop_tick ();
                     update_tick_delayed ();
@@ -160,9 +158,9 @@ namespace G4 {
         private void update_tick () {
             var need_tick = marquee && get_width () < _label_width;
             if (need_tick && _tick_handler == 0) {
-                _tick_last_time = get_monotonic_time ();
                 _tick_handler = add_tick_callback (on_tick_callback);
                 _tick_moving = _tick_handler != 0;
+                _tick_start_time = get_monotonic_time ();
             } else if (!need_tick && _tick_handler != 0) {
                 stop_tick ();
             }
