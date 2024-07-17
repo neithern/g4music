@@ -16,6 +16,7 @@ sources = [
   'ui/play-bar.vala',
   'ui/play-panel.vala',
   'ui/preferences.vala',
+  'ui/stable-label.vala',
   'ui/store-panel.vala',
   'ui/switch-bar.vala',
   'ui/volume-button.vala',
