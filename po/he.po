@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/neithern/g4music/issues\n"
-"POT-Creation-Date: 2024-07-06 05:54+0000\n"
-"PO-Revision-Date: 2024-07-10 14:23+0300\n"
+"POT-Creation-Date: 2024-07-10 11:30+0000\n"
+"PO-Revision-Date: 2024-07-19 17:28+0300\n"
 "Last-Translator: Yosef Or Boczko <yoseforb@gmail.com>\n"
 "Language-Team: Hebrew\n"
 "Language: he\n"
@@ -167,11 +167,11 @@ msgstr "לאפשר נגינה ללא הפסקה בין רצועות"
 
 #: src/gtk/preferences.ui:158
 msgid "Normalize volume with ReplayGain"
-msgstr "השוואת עוצמת שמע עם ReplayGain"
+msgstr "איזון עצמת שמע עם ReplayGain"
 
 #: src/gtk/preferences.ui:164
 msgid "Prefer audio sink of GStreamer"
-msgstr ""
+msgstr "העדפת יציאת שמע של GStreamer"
 
 #: src/gtk/store-panel.ui:22
 msgid "Main Menu"
