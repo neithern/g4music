@@ -60,6 +60,18 @@
     </screenshots>
 
     <releases>
+        <release version="3.8" date="2024-7-20">
+            <description>
+                <ul>
+                <li>Rename to 'Gapless' to follow GNOME HIG.</li>
+                <li>Marquee animation for long title.</li>
+                <li>Fix cursor for clickable label.</li>
+                <li>Tweak blur background.</li>
+                <li>Add Hebrew translation.</li>
+                <li>Update Occitan translation.</li>
+                </ul>
+            </description>
+        </release>
         <release version="3.7.2" date="2024-6-29">
             <description>
                 <ul>
