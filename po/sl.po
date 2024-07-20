@@ -6,9 +6,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: g4music master\n"
-"Report-Msgid-Bugs-To: https://gitlab.gnome.org/neithern/g4music/-/issues\n"
-"POT-Creation-Date: 2024-01-07 16:32+0000\n"
-"PO-Revision-Date: 2024-03-18 17:24+0100\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/neithern/g4music/issues\n"
+"POT-Creation-Date: 2024-07-20 09:24+0000\n"
+"PO-Revision-Date: 2024-07-20 12:51+0200\n"
 "Last-Translator: Martin Srebotnjak <miles@filmsi.net>\n"
 "Language-Team: Slovenian <gnome-si@googlegroups.com>\n"
 "Language: sl\n"
@@ -20,9 +20,9 @@ msgstr ""
 "X-Generator: Poedit 2.2.1\n"
 "X-Poedit-SourceCharset: ISO-8859-1\n"
 
-#: data/app.desktop.in:3 src/application.vala:235 src/main.vala:24
-msgid "G4Music"
-msgstr "G4Music"
+#: data/app.desktop.in:3 src/application.vala:237 src/main.vala:24
+msgid "Gapless"
+msgstr "Brez vrzeli"
 
 #: data/app.desktop.in:4
 msgid "Music Player"
@@ -96,7 +96,7 @@ msgctxt "shortcut window"
 msgid "Reload Library"
 msgstr "Znova naloži knjižnico"
 
-#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:340
+#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:350
 msgid "Back"
 msgstr "Nazaj"
 
@@ -120,7 +120,7 @@ msgstr "Strnjen pogled seznama predvajanja"
 msgid "Grid view for artists/albums"
 msgstr "Mrežni pogled za izvajalce/albume"
 
-#: src/gtk/preferences.ui:56 src/application.vala:435
+#: src/gtk/preferences.ui:56 src/application.vala:428
 msgid "Keep playing after window closed"
 msgstr "Nadaljuj s predvajanjem po zaprtju okna"
 
@@ -176,13 +176,13 @@ msgstr "Prednost naj ima zvočni odtok GStreamer"
 msgid "Main Menu"
 msgstr "Glavni meni"
 
-#: src/gtk/store-panel.ui:28
-msgid "Sort By"
-msgstr "Razvrsti po"
-
-#: src/gtk/store-panel.ui:35
+#: src/gtk/store-panel.ui:29
 msgid "Search"
 msgstr "Iskanje"
+
+#: src/gtk/store-panel.ui:35
+msgid "Sort By"
+msgstr "Razvrsti po"
 
 #: src/gtk/store-panel.ui:73
 msgid "_Reload Library"
@@ -233,46 +233,46 @@ msgstr "Hiter, tekoč, lahek predvajalnik glasbe, napisan v GTK4."
 msgid "translator-credits"
 msgstr "Martin Srebotnjak <miles@filmsi.net>"
 
-#: src/application.vala:626
+#: src/application.vala:625
 msgid "Keep playing"
 msgstr "Nadaljuj s predvajanjem"
 
 #. Translators: Play this music at next position of current playing music
-#: src/ui/music-widgets.vala:252 src/ui/music-widgets.vala:293
-#: src/ui/music-widgets.vala:303
+#: src/ui/music-widgets.vala:211 src/ui/music-widgets.vala:252
+#: src/ui/music-widgets.vala:262
 msgid "Play at Next"
 msgstr "Predvajaj kot naslednje"
 
-#: src/ui/music-widgets.vala:253 src/ui/music-widgets.vala:292
-#: src/ui/music-widgets.vala:302 src/ui/store-panel.vala:345
+#: src/ui/music-widgets.vala:212 src/ui/music-widgets.vala:251
+#: src/ui/music-widgets.vala:261 src/ui/store-panel.vala:355
 msgid "Play"
 msgstr "Predvajaj"
 
-#: src/ui/music-widgets.vala:256 src/ui/play-panel.vala:237
+#: src/ui/music-widgets.vala:215 src/ui/play-panel.vala:130
 msgid "Show _Cover File"
 msgstr "Pokaži datoteko _ovitka"
 
-#: src/ui/music-widgets.vala:258 src/ui/play-panel.vala:239
+#: src/ui/music-widgets.vala:217 src/ui/play-panel.vala:132
 msgid "_Export Cover"
 msgstr "_Izvozi ovitek"
 
-#: src/ui/music-widgets.vala:295
+#: src/ui/music-widgets.vala:254
 msgid "Show List File"
 msgstr "Pokaži datoteko seznama"
 
-#: src/ui/music-widgets.vala:309 src/ui/play-panel.vala:56
+#: src/ui/music-widgets.vala:268 src/ui/play-panel.vala:61
 msgid "Search Title"
 msgstr "Iskanje po naslovu"
 
-#: src/ui/music-widgets.vala:310 src/ui/play-panel.vala:54
+#: src/ui/music-widgets.vala:269 src/ui/play-panel.vala:59
 msgid "Search Album"
 msgstr "Iskanje po albumu"
 
-#: src/ui/music-widgets.vala:311 src/ui/play-panel.vala:55
+#: src/ui/music-widgets.vala:270 src/ui/play-panel.vala:60
 msgid "Search Artist"
 msgstr "Iskanje po izvajalcu"
 
-#: src/ui/music-widgets.vala:312
+#: src/ui/music-widgets.vala:271
 msgid "_Show Music File"
 msgstr "_Pokaži glasbeno datoteko"
 
@@ -294,7 +294,7 @@ msgstr "Predvajaj / premor"
 msgid "Play Next"
 msgstr "Predvajaj naslednje"
 
-#: src/ui/play-panel.vala:280
+#: src/ui/play-panel.vala:285
 msgid ""
 "Drag and drop music files here,\n"
 "or change music location: "
@@ -318,19 +318,19 @@ msgstr "Samo grafika"
 msgid "Track"
 msgstr "Skladba/posnetek"
 
-#: src/ui/store-panel.vala:74
+#: src/ui/store-panel.vala:75
 msgid "Playing"
 msgstr "Trenutno se predvaja"
 
-#: src/ui/store-panel.vala:79
+#: src/ui/store-panel.vala:80
 msgid "Artists"
 msgstr "Izvajalci"
 
-#: src/ui/store-panel.vala:84
+#: src/ui/store-panel.vala:85
 msgid "Albums"
 msgstr "Albumi"
 
-#: src/ui/store-panel.vala:374
+#: src/ui/store-panel.vala:384
 msgid "Playlists"
 msgstr "Seznami predvajanja"
 
