@@ -126,7 +126,6 @@ namespace G4 {
             //  Center crop the paintable
             var img_width = _bkgnd_paintable.get_intrinsic_width ();
             var img_height = _bkgnd_paintable.get_intrinsic_height ();
-            var ratio = _bkgnd_paintable.get_intrinsic_aspect_ratio ();
             var scale_x = (float) width / img_width;
             var scale_y = (float) height / img_height;
             var scale_max = float.max (scale_x, scale_y);
@@ -281,7 +280,7 @@ namespace G4 {
             if ((_bkgnd_blur == BlurMode.ALWAYS && paintable != null)
                 || (_bkgnd_blur == BlurMode.ART_ONLY && paintable is Gdk.Texture)) {
                 _bkgnd_paintable.paintable = create_blur_paintable (this,
-                    (!)paintable, _blur_size, _blur_size, _blur_size * 0.2, 0.25);
+                    (!)paintable, _blur_size, _blur_size * 0.2, 0.25);
             } else {
                 _bkgnd_paintable.paintable = null;
             }
