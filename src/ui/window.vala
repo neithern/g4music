@@ -122,7 +122,23 @@ namespace G4 {
         public override void snapshot (Gtk.Snapshot snapshot) {
             var width = _window_width;
             var height = _window_height;
-            _bkgnd_paintable.snapshot (snapshot, width, height);
+
+            //  Center crop the paintable
+            var img_width = _bkgnd_paintable.get_intrinsic_width ();
+            var img_height = _bkgnd_paintable.get_intrinsic_height ();
+            var ratio = _bkgnd_paintable.get_intrinsic_aspect_ratio ();
+            var scale_x = (float) width / img_width;
+            var scale_y = (float) height / img_height;
+            var scale_max = float.max (scale_x, scale_y);
+            var view_width = img_width * scale_max;
+            var view_height = img_height * scale_max;
+            var point = Graphene.Point ();
+            point.init ((width - view_width) * 0.5f, (height - view_height) * 0.5f);
+            snapshot.translate (point);
+            _bkgnd_paintable.snapshot (snapshot, view_width, view_height);
+            point.init (- point.x, - point.y);
+            snapshot.translate (point);
+
             if (!_leaflet.folded) {
                 var page = (Adw.LeafletPage) _leaflet.pages.get_item (0);
                 var size = page.child.get_width ();
@@ -265,7 +281,7 @@ namespace G4 {
             if ((_bkgnd_blur == BlurMode.ALWAYS && paintable != null)
                 || (_bkgnd_blur == BlurMode.ART_ONLY && paintable is Gdk.Texture)) {
                 _bkgnd_paintable.paintable = create_blur_paintable (this,
-                    (!)paintable, _blur_size, _blur_size, 80, 0.25);
+                    (!)paintable, _blur_size, _blur_size, _blur_size * 0.2, 0.25);
             } else {
                 _bkgnd_paintable.paintable = null;
             }
