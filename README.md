@@ -1,6 +1,6 @@
 <img align="left" alt="Project logo" src="data/icons/hicolor/scalable/apps/app.svg" />
 
-# G4Music
+# Gapless
 Play your music elegantly.
 
 <img src="./shots/window.png" width="1134"/>
@@ -8,14 +8,14 @@ Play your music elegantly.
 <img src="./shots/playing.png" width="462"/>
 <img src="./shots/playlist.png" width="466"/>
 
-G4Music is a fast fluent lightweight music player written in GTK4, with a beautiful and adaptive user interface, focuses on high performance for large music collection.
+Gapless (AKA: G4Music) is a light weight music player written in GTK4, focuses on large music collection.
 
 ## Features
 - Supports most music file types, samba and any other remote protocols (depends on GIO and GStreamer).
 - Fast loading and parsing thousands of music files in very few seconds, monitor local changes.
 - Low memory usage for large music collection with album covers (embedded and external), no thumbnail caches to store.
 - Group and sorts by album/artist/title, shuffle list, full-text searching.
-- Adaptive user interface for different screen (Desktop, Tablet, Mobile).
+- Fluent adaptive user interface for different screen (Desktop, Tablet, Mobile).
 - Gaussian blurred cover as background, follows GNOME light/dark mode.
 - Drag-drop from GNOME Files, showing music in Files.
 - Supports audio peaks visualizer.

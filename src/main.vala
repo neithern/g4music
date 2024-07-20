@@ -21,7 +21,7 @@ int main (string[] args) {
     Intl.textdomain (Config.CODE_NAME);
 
     Environment.set_prgname (Config.APP_ID);
-    Environment.set_application_name (_("G4Music"));
+    Environment.set_application_name (_("Gapless"));
     fix_gst_tag_encoding ();
 
     Random.set_seed ((uint32) get_monotonic_time ());
