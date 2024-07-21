@@ -3,10 +3,10 @@
 # Gapless
 Play your music elegantly.
 
-<img src="./shots/window.png" width="1134"/>
-<img src="./shots/albums.png" width="1134"/>
-<img src="./shots/playing.png" width="462"/>
-<img src="./shots/playlist.png" width="466"/>
+<img src="https://gitlab.gnome.org/neithern/screenshots/-/raw/main/g4music/window.png" width="1134"/>
+<img src="https://gitlab.gnome.org/neithern/screenshots/-/raw/main/g4music/albums.png" width="1134"/>
+<img src="https://gitlab.gnome.org/neithern/screenshots/-/raw/main/g4music/playing.png" width="462"/>
+<img src="https://gitlab.gnome.org/neithern/screenshots/-/raw/main/g4music/playlist.png" width="466"/>
 
 Gapless (AKA: G4Music) is a light weight music player written in GTK4, focuses on large music collection.
 
