@@ -36,25 +36,25 @@
     </description>
 
     <branding>
-        <color type="primary" scheme_preference="light">#c6e86f</color>
-        <color type="primary" scheme_preference="dark">#67d976</color>
+        <color type="primary" scheme_preference="light">#c6d6a6</color>
+        <color type="primary" scheme_preference="dark">#468636</color>
     </branding>
 
     <screenshots>
         <screenshot type="default">
-            <caption>Main window.</caption>
+            <caption>Main window</caption>
             <image>https://gitlab.gnome.org/neithern/screenshots/-/raw/main/g4music/window.png</image>
         </screenshot>
         <screenshot>
-            <caption>Albums view.</caption>
+            <caption>Albums view</caption>
             <image>https://gitlab.gnome.org/neithern/screenshots/-/raw/main/g4music/albums.png</image>
         </screenshot>
         <screenshot>
-            <caption>Playing view.</caption>
+            <caption>Playing view</caption>
             <image>https://gitlab.gnome.org/neithern/screenshots/-/raw/main/g4music/playing.png</image>
         </screenshot>
         <screenshot>
-            <caption>Playlist view.</caption>
+            <caption>Playlist view</caption>
             <image>https://gitlab.gnome.org/neithern/screenshots/-/raw/main/g4music/playlist.png</image>
         </screenshot>
     </screenshots>
