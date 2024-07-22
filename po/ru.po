@@ -6,35 +6,34 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"Report-Msgid-Bugs-To: https://gitlab.gnome.org/neithern/g4music/-/"
-"issues\n"
-"POT-Creation-Date: 2023-08-19 04:14+0000\n"
-"PO-Revision-Date: 2023-08-19 19:04+1000\n"
-"Last-Translator: Ser82-png <asvmail.as@gmail.com>\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/neithern/g4music/issues\n"
+"POT-Creation-Date: 2024-07-20 09:24+0000\n"
+"PO-Revision-Date: 2024-07-21 14:07+0300\n"
+"Last-Translator: Artur So <arturios2005@mail.ru>\n"
 "Language-Team: \n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.4.4\n"
 
-#: data/app.desktop.in:3 src/application.vala:232 src/main.vala:24
-msgid "G4Music"
-msgstr "G4Music"
+#: data/app.desktop.in:3 src/application.vala:237 src/main.vala:24
+msgid "Gapless"
+msgstr "Gapless"
 
 #: data/app.desktop.in:4
 msgid "Music Player"
-msgstr "Музыкальный Плеер"
+msgstr "Музыкальный проигрыватель"
 
 #: data/app.desktop.in:5
 msgid "Play music"
-msgstr "Проигрываете музыку"
+msgstr "Воспроизведение музыки"
 
 #: data/app.desktop.in:12
 msgid "music;sound;player;media;audio;playlist;"
 msgstr ""
-"music;sound;player;media;audio;playlist;музыка;звук;плеере;медиа;аудио;"
-"плейлист;"
+"music;sound;player;media;audio;playlist;музыка;звук;проигрыватель;медиа;"
+"аудио;список;воспроизведения;"
 
 #: src/gtk/help-overlay.ui:11
 msgctxt "shortcut window"
@@ -96,7 +95,7 @@ msgctxt "shortcut window"
 msgid "Reload Library"
 msgstr "Перезагрузить библиотеку"
 
-#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:340
+#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:350
 msgid "Back"
 msgstr "Назад"
 
@@ -120,7 +119,7 @@ msgstr "Компактный вид списка"
 msgid "Grid view for artists/albums"
 msgstr "Вид сеткой для исполнителей/альбомов"
 
-#: src/gtk/preferences.ui:56 src/application.vala:432
+#: src/gtk/preferences.ui:56 src/application.vala:428
 msgid "Keep playing after window closed"
 msgstr "Продолжать воспроизведение после закрытия окна"
 
@@ -176,17 +175,17 @@ msgstr "Отдавать предпочтение приёмнику звука 
 msgid "Main Menu"
 msgstr "Главное меню"
 
-#: src/gtk/store-panel.ui:28
-msgid "Sort By"
-msgstr "Сортировать"
-
-#: src/gtk/store-panel.ui:35
+#: src/gtk/store-panel.ui:29
 msgid "Search"
 msgstr "Поиск"
 
+#: src/gtk/store-panel.ui:35
+msgid "Sort By"
+msgstr "Сортировать"
+
 #: src/gtk/store-panel.ui:73
 msgid "_Reload Library"
-msgstr "_Перезагрузить библиотеку"
+msgstr "П_ерезагрузить библиотеку"
 
 #: src/gtk/store-panel.ui:79
 msgid "_Preferences"
@@ -234,46 +233,46 @@ msgstr ""
 msgid "translator-credits"
 msgstr "Давид Лапшин <ddaudix@gmail.com>, 2022"
 
-#: src/application.vala:613
+#: src/application.vala:625
 msgid "Keep playing"
 msgstr "Продолжать воспроизведение"
 
 #. Translators: Play this music at next position of current playing music
-#: src/ui/music-widgets.vala:252 src/ui/music-widgets.vala:293
-#: src/ui/music-widgets.vala:303
+#: src/ui/music-widgets.vala:211 src/ui/music-widgets.vala:252
+#: src/ui/music-widgets.vala:262
 msgid "Play at Next"
 msgstr "Воспроизвести следующую"
 
-#: src/ui/music-widgets.vala:253 src/ui/music-widgets.vala:292
-#: src/ui/music-widgets.vala:302 src/ui/store-panel.vala:345
+#: src/ui/music-widgets.vala:212 src/ui/music-widgets.vala:251
+#: src/ui/music-widgets.vala:261 src/ui/store-panel.vala:355
 msgid "Play"
 msgstr "Воспроизвести"
 
-#: src/ui/music-widgets.vala:256 src/ui/play-panel.vala:237
+#: src/ui/music-widgets.vala:215 src/ui/play-panel.vala:130
 msgid "Show _Cover File"
 msgstr "Показать файл _обложки"
 
-#: src/ui/music-widgets.vala:258 src/ui/play-panel.vala:239
+#: src/ui/music-widgets.vala:217 src/ui/play-panel.vala:132
 msgid "_Export Cover"
 msgstr "_Экспортировать обложку"
 
-#: src/ui/music-widgets.vala:295
+#: src/ui/music-widgets.vala:254
 msgid "Show List File"
 msgstr "Показать список файлов"
 
-#: src/ui/music-widgets.vala:309 src/ui/play-panel.vala:56
+#: src/ui/music-widgets.vala:268 src/ui/play-panel.vala:61
 msgid "Search Title"
 msgstr "Поиск названия"
 
-#: src/ui/music-widgets.vala:310 src/ui/play-panel.vala:54
+#: src/ui/music-widgets.vala:269 src/ui/play-panel.vala:59
 msgid "Search Album"
 msgstr "Поиск альбома"
 
-#: src/ui/music-widgets.vala:311 src/ui/play-panel.vala:55
+#: src/ui/music-widgets.vala:270 src/ui/play-panel.vala:60
 msgid "Search Artist"
 msgstr "Поиск исполнителя"
 
-#: src/ui/music-widgets.vala:312
+#: src/ui/music-widgets.vala:271
 msgid "_Show Music File"
 msgstr "_Показать музыкальный файл"
 
@@ -295,7 +294,7 @@ msgstr "Воспроизведение/Пауза"
 msgid "Play Next"
 msgstr "Воспроизвести следующую"
 
-#: src/ui/play-panel.vala:280
+#: src/ui/play-panel.vala:285
 msgid ""
 "Drag and drop music files here,\n"
 "or change music location: "
@@ -319,19 +318,19 @@ msgstr "Только оформление"
 msgid "Track"
 msgstr "Композиция"
 
-#: src/ui/store-panel.vala:74
+#: src/ui/store-panel.vala:75
 msgid "Playing"
-msgstr "Список воспроизведения"
+msgstr "Играет сейчас"
 
-#: src/ui/store-panel.vala:79
+#: src/ui/store-panel.vala:80
 msgid "Artists"
 msgstr "Исполнители"
 
-#: src/ui/store-panel.vala:84
+#: src/ui/store-panel.vala:85
 msgid "Albums"
 msgstr "Альбомы"
 
-#: src/ui/store-panel.vala:374
+#: src/ui/store-panel.vala:384
 msgid "Playlists"
 msgstr "Списки воспроизведения"
 
@@ -348,6 +347,9 @@ msgstr "Неизвестный альбом"
 #: src/utils/music.vala:3
 msgid "Unknown Artist"
 msgstr "Неизвестный исполнитель"
+
+#~ msgid "G4Music"
+#~ msgstr "G4Music"
 
 #~ msgid "Repeat Music"
 #~ msgstr "Повторять песню"
