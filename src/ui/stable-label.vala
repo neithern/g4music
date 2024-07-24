@@ -86,8 +86,9 @@ namespace G4 {
             var overflow = marquee && width < _label_width;
             if (overflow) {
                 var height = get_height ();
-                var mask_width = float.min (width * 0.1f, height * 1.25f);
                 var total_width = _label_width + SPACE;
+#if GTK_4_10
+                var mask_width = float.min (width * 0.1f, height * 1.25f);
                 var left_mask = _label_offset < mask_width ? _label_offset : (_label_offset + mask_width > total_width ? 0 : mask_width);
                 var rect = Graphene.Rect ();
                 rect.init (0, 0, left_mask, height);
@@ -97,6 +98,7 @@ namespace G4 {
                 rect.init (width - mask_width, 0, mask_width, height);
                 snapshot.append_linear_gradient (rect, rect.get_top_right (), rect.get_top_left (), stops);
                 snapshot.pop ();
+#endif
                 var bounds = Graphene.Rect ();
                 bounds.init (0, 0, width, height);
                 snapshot.push_clip (bounds);
@@ -117,7 +119,9 @@ namespace G4 {
                     snapshot.translate (point);
                 }
                 snapshot.pop ();
-                snapshot.pop ();  // To avoid 'Too many gtk_snapshot_push() calls.'???
+#if GTK_4_10
+                snapshot.pop ();  // Must call again if snapshot.push_mask() ???
+#endif
             } else {
                 base.snapshot (snapshot);
             }
