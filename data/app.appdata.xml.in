@@ -60,6 +60,15 @@
     </screenshots>
 
     <releases>
+        <release version="3.8.1" date="2024-7-28">
+            <description>
+                <ul>
+                <li>Fix build issue before GTK 4.10.</li>
+                <li>Remove screen shots from flatpak package.</li>
+                <li>Update translation: Russian, Slovenian, Ukrainian.</li>
+                </ul>
+            </description>
+        </release>
         <release version="3.8" date="2024-7-20">
             <description>
                 <ul>
