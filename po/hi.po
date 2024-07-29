@@ -1,17 +1,16 @@
 # Hindi translation for g4music.
 # Copyright (C) 2024 g4music's COPYRIGHT HOLDER
 # This file is distributed under the same license as the g4music package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # Scrambled777 <weblate.scrambled777@simplelogin.com>, 2024.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: g4music master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/neithern/g4music/issues\n"
-"POT-Creation-Date: 2024-03-22 01:10+0000\n"
-"PO-Revision-Date: 2024-03-29 10:37+0530\n"
+"POT-Creation-Date: 2024-07-20 09:24+0000\n"
+"PO-Revision-Date: 2024-07-21 09:56+0530\n"
 "Last-Translator: Scrambled777 <weblate.scrambled777@simplelogin.com>\n"
-"Language-Team: Hindi\n"
+"Language-Team: Hindi <indlinux-hindi@lists.sourceforge.net>\n"
 "Language: hi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,11 +21,11 @@ msgstr ""
 "X-DL-Domain: po\n"
 "X-DL-State: None\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Gtranslator 46.0\n"
+"X-Generator: Gtranslator 46.1\n"
 
-#: data/app.desktop.in:3 src/application.vala:235 src/main.vala:24
-msgid "G4Music"
-msgstr "G4Music"
+#: data/app.desktop.in:3 src/application.vala:237 src/main.vala:24
+msgid "Gapless"
+msgstr "गैपलेस"
 
 #: data/app.desktop.in:4
 msgid "Music Player"
@@ -34,7 +33,7 @@ msgstr "म्यूजिक प्लेयर"
 
 #: data/app.desktop.in:5
 msgid "Play music"
-msgstr "संगीत बजाएँ"
+msgstr "संगीत बजाएं"
 
 #: data/app.desktop.in:12
 msgid "music;sound;player;media;audio;playlist;"
@@ -43,22 +42,22 @@ msgstr "संगीत;ध्वनि;प्लेयर;मीडिया;�
 #: src/gtk/help-overlay.ui:11
 msgctxt "shortcut window"
 msgid "General"
-msgstr "जनरल"
+msgstr "सामान्य"
 
 #: src/gtk/help-overlay.ui:14
 msgctxt "shortcut window"
 msgid "Show Shortcuts"
-msgstr "शॉर्टकट दिखाएँ"
+msgstr "शॉर्टकट दिखाएं"
 
 #: src/gtk/help-overlay.ui:20
 msgctxt "shortcut window"
 msgid "Preferences"
-msgstr "प्राथमिकताएँ"
+msgstr "प्राथमिकताएं"
 
 #: src/gtk/help-overlay.ui:26
 msgctxt "shortcut window"
 msgid "Quit"
-msgstr "छोड़ें"
+msgstr "बंद करें"
 
 #: src/gtk/help-overlay.ui:34
 msgctxt "shortcut window"
@@ -68,17 +67,17 @@ msgstr "प्लेबैक"
 #: src/gtk/help-overlay.ui:37
 msgctxt "shortcut window"
 msgid "Play/Pause"
-msgstr "बजाएँ/रोकें"
+msgstr "बजाएं/रोकें"
 
 #: src/gtk/help-overlay.ui:43
 msgctxt "shortcut window"
 msgid "Play Next"
-msgstr "अगला बजाएँ"
+msgstr "अगला बजाएं"
 
 #: src/gtk/help-overlay.ui:49
 msgctxt "shortcut window"
 msgid "Play Previous"
-msgstr "पिछला बजाएँ"
+msgstr "पिछला बजाएं"
 
 #: src/gtk/help-overlay.ui:57
 msgctxt "shortcut window"
@@ -93,24 +92,24 @@ msgstr "खोजें"
 #: src/gtk/help-overlay.ui:66
 msgctxt "shortcut window"
 msgid "Toggle Sort"
-msgstr "क्रमबद्ध टॉगल करें"
+msgstr "छंटाई टॉगल करें"
 
 #: src/gtk/help-overlay.ui:72
 msgctxt "shortcut window"
 msgid "Reload Library"
 msgstr "लाइब्रेरी पुनः लोड करें"
 
-#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:340
+#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:350
 msgid "Back"
 msgstr "पीछे"
 
 #: src/gtk/preferences.ui:10
 msgid "General"
-msgstr "जनरल"
+msgstr "सामान्य"
 
 #: src/gtk/preferences.ui:14
 msgid "Prefer dark theme"
-msgstr "गहरी थीम को प्राथमिकता दें"
+msgstr "गहरी थीम को प्राथमिकता"
 
 #: src/gtk/preferences.ui:26
 msgid "Background blur mode"
@@ -124,7 +123,7 @@ msgstr "सघन प्लेलिस्ट दृश्य"
 msgid "Grid view for artists/albums"
 msgstr "कलाकारों/एल्बमों के लिए ग्रिड दृश्य"
 
-#: src/gtk/preferences.ui:56 src/application.vala:435
+#: src/gtk/preferences.ui:56 src/application.vala:428
 msgid "Keep playing after window closed"
 msgstr "विंडो बंद होने के बाद भी बजाते रहें"
 
@@ -154,15 +153,15 @@ msgstr "प्लेबैक"
 
 #: src/gtk/preferences.ui:115
 msgid "Show audio peak level"
-msgstr "ऑडियो चरम स्तर दिखाएँ"
+msgstr "ऑडियो चरम स्तर दिखाएं"
 
 #: src/gtk/preferences.ui:119
 msgid "Display characters"
-msgstr "अक्षर प्रदर्शित करें"
+msgstr "वर्ण प्रदर्शित करें"
 
 #: src/gtk/preferences.ui:134
 msgid "Rotate album cover"
-msgstr "एल्बम कवर घुमाएँ"
+msgstr "एल्बम कवर घुमाएं"
 
 #: src/gtk/preferences.ui:146
 msgid "Enable gapless playback"
@@ -170,23 +169,23 @@ msgstr "अंतराल रहित प्लेबैक सक्षम �
 
 #: src/gtk/preferences.ui:158
 msgid "Normalize volume with ReplayGain"
-msgstr "ReplayGain के साथ वॉल्यूम को सामान्य करें"
+msgstr "रीप्लेगैन के साथ वॉल्यूम सामान्य करें"
 
 #: src/gtk/preferences.ui:164
 msgid "Prefer audio sink of GStreamer"
-msgstr "GStreamer के ऑडियो सिंक को प्राथमिकता दें"
+msgstr "GStreamer ऑडियो सिंक को प्राथमिकता दें"
 
 #: src/gtk/store-panel.ui:22
 msgid "Main Menu"
-msgstr "मुख्य मेन्यू"
+msgstr "मुख्य मेनू"
 
-#: src/gtk/store-panel.ui:28
-msgid "Sort By"
-msgstr "क्रमबद्ध करें"
-
-#: src/gtk/store-panel.ui:35
+#: src/gtk/store-panel.ui:29
 msgid "Search"
 msgstr "खोजें"
+
+#: src/gtk/store-panel.ui:35
+msgid "Sort By"
+msgstr "ऐसे छांटें"
 
 #: src/gtk/store-panel.ui:73
 msgid "_Reload Library"
@@ -194,7 +193,7 @@ msgstr "लाइब्रेरी पुनः लोड करें (_R)"
 
 #: src/gtk/store-panel.ui:79
 msgid "_Preferences"
-msgstr "प्राथमिकताएँ (_P)"
+msgstr "प्राथमिकताएं (_P)"
 
 #: src/gtk/store-panel.ui:83
 msgid "_Keyboard Shortcuts"
@@ -202,7 +201,7 @@ msgstr "कीबोर्ड शॉर्टकट (_K)"
 
 #: src/gtk/store-panel.ui:87
 msgid "_About"
-msgstr "बारे में (_A)"
+msgstr "परिचय (_A)"
 
 #: src/gtk/store-panel.ui:96 src/ui/preferences.vala:67
 msgid "Album"
@@ -226,7 +225,7 @@ msgstr "हालिया"
 
 #: src/gtk/store-panel.ui:121
 msgid "Shuffle"
-msgstr "फेरबदल"
+msgstr "शफ़ल"
 
 #: src/action-handles.vala:184
 msgid "A fast, fluent, light weight music player written in GTK4."
@@ -237,48 +236,48 @@ msgstr "GTK4 में लिखा गया एक तेज़, धारा�
 msgid "translator-credits"
 msgstr "Scrambled777 <weblate.scrambled777@simplelogin.com>"
 
-#: src/application.vala:626
+#: src/application.vala:625
 msgid "Keep playing"
 msgstr "बजते रहें"
 
 #. Translators: Play this music at next position of current playing music
-#: src/ui/music-widgets.vala:257 src/ui/music-widgets.vala:298
-#: src/ui/music-widgets.vala:308
+#: src/ui/music-widgets.vala:211 src/ui/music-widgets.vala:252
+#: src/ui/music-widgets.vala:262
 msgid "Play at Next"
-msgstr "आगे यह बजाएँ"
+msgstr "आगे यह बजाएं"
 
-#: src/ui/music-widgets.vala:258 src/ui/music-widgets.vala:297
-#: src/ui/music-widgets.vala:307 src/ui/store-panel.vala:345
+#: src/ui/music-widgets.vala:212 src/ui/music-widgets.vala:251
+#: src/ui/music-widgets.vala:261 src/ui/store-panel.vala:355
 msgid "Play"
-msgstr "बजाएँ"
+msgstr "बजाएं"
 
-#: src/ui/music-widgets.vala:261 src/ui/play-panel.vala:237
+#: src/ui/music-widgets.vala:215 src/ui/play-panel.vala:130
 msgid "Show _Cover File"
-msgstr "कवर फाइल दिखाएँ (_C)"
+msgstr "कवर फाइल दिखाएं (_C)"
 
-#: src/ui/music-widgets.vala:263 src/ui/play-panel.vala:239
+#: src/ui/music-widgets.vala:217 src/ui/play-panel.vala:132
 msgid "_Export Cover"
 msgstr "कवर निर्यात (_E)"
 
-#: src/ui/music-widgets.vala:300
+#: src/ui/music-widgets.vala:254
 msgid "Show List File"
-msgstr "सूची फाइल दिखाएँ"
+msgstr "सूची फाइल दिखाएं"
 
-#: src/ui/music-widgets.vala:314 src/ui/play-panel.vala:56
+#: src/ui/music-widgets.vala:268 src/ui/play-panel.vala:61
 msgid "Search Title"
 msgstr "शीर्षक खोजें"
 
-#: src/ui/music-widgets.vala:315 src/ui/play-panel.vala:54
+#: src/ui/music-widgets.vala:269 src/ui/play-panel.vala:59
 msgid "Search Album"
 msgstr "एल्बम खोजें"
 
-#: src/ui/music-widgets.vala:316 src/ui/play-panel.vala:55
+#: src/ui/music-widgets.vala:270 src/ui/play-panel.vala:60
 msgid "Search Artist"
 msgstr "कलाकार खोजें"
 
-#: src/ui/music-widgets.vala:317
+#: src/ui/music-widgets.vala:271
 msgid "_Show Music File"
-msgstr "संगीत फाइल दिखाएँ (_S)"
+msgstr "संगीत फाइल दिखाएं (_S)"
 
 #. Translators: single loop the current music
 #: src/ui/play-bar.vala:74
@@ -287,18 +286,18 @@ msgstr "एकल लूप"
 
 #: src/ui/play-bar.vala:84
 msgid "Play Previous"
-msgstr "पिछला बजाएँ"
+msgstr "पिछला बजाएं"
 
 #. media-playback-pause-symbolic
 #: src/ui/play-bar.vala:90
 msgid "Play/Pause"
-msgstr "बजाएँ/रोकें"
+msgstr "बजाएं/रोकें"
 
 #: src/ui/play-bar.vala:97
 msgid "Play Next"
-msgstr "अगला बजाएँ"
+msgstr "अगला बजाएं"
 
-#: src/ui/play-panel.vala:280
+#: src/ui/play-panel.vala:285
 msgid ""
 "Drag and drop music files here,\n"
 "or change music location: "
@@ -322,19 +321,19 @@ msgstr "केवल कला"
 msgid "Track"
 msgstr "ट्रैक"
 
-#: src/ui/store-panel.vala:74
+#: src/ui/store-panel.vala:75
 msgid "Playing"
 msgstr "बज रहा है"
 
-#: src/ui/store-panel.vala:79
+#: src/ui/store-panel.vala:80
 msgid "Artists"
 msgstr "कलाकार"
 
-#: src/ui/store-panel.vala:84
+#: src/ui/store-panel.vala:85
 msgid "Albums"
 msgstr "एलबम"
 
-#: src/ui/store-panel.vala:374
+#: src/ui/store-panel.vala:384
 msgid "Playlists"
 msgstr "प्लेलिस्ट"
 
