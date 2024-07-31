@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/neithern/g4music/issues\n"
-"POT-Creation-Date: 2024-05-27 23:26+0000\n"
-"PO-Revision-Date: 2024-05-28 17:25+0330\n"
+"POT-Creation-Date: 2024-07-20 09:24+0000\n"
+"PO-Revision-Date: 2024-07-31 15:10+0330\n"
 "Last-Translator: Danial Behzadi <dani.behzi@ubuntu.com>\n"
 "Language-Team: Persian <kde-i18n-doc@kde.org>\n"
 "Language: fa\n"
@@ -19,9 +19,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.2.2\n"
 
-#: data/app.desktop.in:3 src/application.vala:235 src/main.vala:24
-msgid "G4Music"
-msgstr "آهنگ‌های جی‌فور"
+#: data/app.desktop.in:3 src/application.vala:237 src/main.vala:24
+msgid "Gapless"
+msgstr "بی‌وقفه"
 
 #: data/app.desktop.in:4
 msgid "Music Player"
@@ -95,7 +95,7 @@ msgctxt "shortcut window"
 msgid "Reload Library"
 msgstr "بازخوانی کتابخانه"
 
-#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:340
+#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:350
 msgid "Back"
 msgstr "بازگشت"
 
@@ -119,7 +119,7 @@ msgstr "نمای‌ سیاههٔ پخش فشرده"
 msgid "Grid view for artists/albums"
 msgstr "نمای شبکه‌ای برای هنرمند‌ها و آلبوم‌ها"
 
-#: src/gtk/preferences.ui:56 src/application.vala:432
+#: src/gtk/preferences.ui:56 src/application.vala:428
 msgid "Keep playing after window closed"
 msgstr "ادامهٔ پخش پس از بستن پنجره"
 
@@ -175,13 +175,13 @@ msgstr "ترجیح سینک صدای GStreamer"
 msgid "Main Menu"
 msgstr "فهرست اصلی"
 
-#: src/gtk/store-panel.ui:28
-msgid "Sort By"
-msgstr "چینش بر پایه"
-
-#: src/gtk/store-panel.ui:35
+#: src/gtk/store-panel.ui:29
 msgid "Search"
 msgstr "جست‌وجو"
+
+#: src/gtk/store-panel.ui:35
+msgid "Sort By"
+msgstr "چینش بر پایه"
 
 #: src/gtk/store-panel.ui:73
 msgid "_Reload Library"
@@ -225,7 +225,7 @@ msgstr "بُرزنی"
 
 #: src/action-handles.vala:184
 msgid "A fast, fluent, light weight music player written in GTK4."
-msgstr "پخش‌کنندهٔ آهنگ سریع، زیبا و سبک نوشته شده با GTK4"
+msgstr "پخش‌کنندهٔ آهنگ سریع، زیبا و سبک نوشته شده با GTK4."
 
 #. Translators: Replace "translator-credits" with your names, one name per line
 #: src/action-handles.vala:186
@@ -234,46 +234,46 @@ msgstr ""
 "سهراب بهدانی <behdanisohrab@gmail.com>\n"
 "دانیال بهزادی <dani.behzi@ubuntu.com>"
 
-#: src/application.vala:623
+#: src/application.vala:625
 msgid "Keep playing"
 msgstr "ادامهٔ پخش"
 
 #. Translators: Play this music at next position of current playing music
-#: src/ui/music-widgets.vala:257 src/ui/music-widgets.vala:298
-#: src/ui/music-widgets.vala:308
+#: src/ui/music-widgets.vala:211 src/ui/music-widgets.vala:252
+#: src/ui/music-widgets.vala:262
 msgid "Play at Next"
 msgstr "پخش در بعدی"
 
-#: src/ui/music-widgets.vala:258 src/ui/music-widgets.vala:297
-#: src/ui/music-widgets.vala:307 src/ui/store-panel.vala:345
+#: src/ui/music-widgets.vala:212 src/ui/music-widgets.vala:251
+#: src/ui/music-widgets.vala:261 src/ui/store-panel.vala:355
 msgid "Play"
 msgstr "پخش"
 
-#: src/ui/music-widgets.vala:261 src/ui/play-panel.vala:241
+#: src/ui/music-widgets.vala:215 src/ui/play-panel.vala:130
 msgid "Show _Cover File"
 msgstr "نمایش پروندهٔ _طرح جلد"
 
-#: src/ui/music-widgets.vala:263 src/ui/play-panel.vala:243
+#: src/ui/music-widgets.vala:217 src/ui/play-panel.vala:132
 msgid "_Export Cover"
 msgstr "_برون‌ریزی طرح جلد"
 
-#: src/ui/music-widgets.vala:300
+#: src/ui/music-widgets.vala:254
 msgid "Show List File"
 msgstr "نمایش پروندهٔ سیاهه"
 
-#: src/ui/music-widgets.vala:314 src/ui/play-panel.vala:56
+#: src/ui/music-widgets.vala:268 src/ui/play-panel.vala:61
 msgid "Search Title"
 msgstr "جست‌وجوی عنوان"
 
-#: src/ui/music-widgets.vala:315 src/ui/play-panel.vala:54
+#: src/ui/music-widgets.vala:269 src/ui/play-panel.vala:59
 msgid "Search Album"
 msgstr "جست‌وجوی آلبوم"
 
-#: src/ui/music-widgets.vala:316 src/ui/play-panel.vala:55
+#: src/ui/music-widgets.vala:270 src/ui/play-panel.vala:60
 msgid "Search Artist"
 msgstr "جست‌وجوی هنرمند"
 
-#: src/ui/music-widgets.vala:317
+#: src/ui/music-widgets.vala:271
 msgid "_Show Music File"
 msgstr "_نمایش پروندهٔ آهنگ"
 
@@ -295,13 +295,13 @@ msgstr "پخش یا مکث"
 msgid "Play Next"
 msgstr "پخش بعدی"
 
-#: src/ui/play-panel.vala:284
+#: src/ui/play-panel.vala:285
 msgid ""
 "Drag and drop music files here,\n"
 "or change music location: "
 msgstr ""
 "کشیدن و رها سازی پرونده‌های آهنگ‌ها در این‌جا،\n"
-"یا تغییر مکان آهنگ‌ها:"
+"یا تغییر مکان آهنگ‌ها: "
 
 #: src/ui/preferences.vala:46 src/ui/preferences.vala:67
 msgid "Never"
@@ -319,19 +319,19 @@ msgstr "فقط کار هنری"
 msgid "Track"
 msgstr "قطعه"
 
-#: src/ui/store-panel.vala:74
+#: src/ui/store-panel.vala:75
 msgid "Playing"
 msgstr "پخش کردن"
 
-#: src/ui/store-panel.vala:79
+#: src/ui/store-panel.vala:80
 msgid "Artists"
 msgstr "هنرمندان"
 
-#: src/ui/store-panel.vala:84
+#: src/ui/store-panel.vala:85
 msgid "Albums"
 msgstr "آلبوم‌ها"
 
-#: src/ui/store-panel.vala:374
+#: src/ui/store-panel.vala:384
 msgid "Playlists"
 msgstr "سیاهه‌‌های پخش"
 
@@ -348,3 +348,6 @@ msgstr "آلبوم ناشناخته"
 #: src/utils/music.vala:3
 msgid "Unknown Artist"
 msgstr "هنرمند ناشناس"
+
+#~ msgid "G4Music"
+#~ msgstr "آهنگ‌های جی‌فور"
