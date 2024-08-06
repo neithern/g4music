@@ -290,7 +290,10 @@ namespace G4 {
                 return _current_item;
             } else {
                 var uri = _current_music?.uri ?? _settings.get_string ("played-uri");
-                return uri.length > 0 ? find_music_item_by_uri ((!)uri) : -1;
+                var item = uri.length > 0 ? find_music_item_by_uri ((!)uri) : -1;
+                if (item == -1 && _music_store.get_n_items () > 0)
+                    item = 0;
+                return item;
             }
         }
 
@@ -338,7 +341,7 @@ namespace G4 {
             if (obj is Album) {
                 var album = (Album) obj;
                 var store = _music_store;
-                var insert_pos = (uint) store.get_n_items () - 1;
+                var insert_pos = (uint) store.get_n_items ();
                 album.foreach ((uri, music) => {
                     uint position = -1;
                     if (store.find (music, out position)) {
@@ -375,32 +378,29 @@ namespace G4 {
         }
 
         public void play_at_next (Object? obj) {
-            if (_current_music != null) {
-                if (obj is Album) {
-                    var album = (Album) obj;
-                    var store = _music_store;
-                    album.foreach ((uri, music) => {
-                        uint position = -1;
-                        if (store.find (music, out position)) {
-                            store.remove (position);
-                        }
-                    });
-                    uint insert_pos = store.get_n_items () - 1;
-                    store.find ((!)_current_music, out insert_pos);
-                    album.insert_to_store (store, insert_pos + 1);
+            if (obj is Album) {
+                var album = (Album) obj;
+                var store = _music_store;
+                album.foreach ((uri, music) => {
+                    uint position = -1;
+                    if (store.find (music, out position)) {
+                        store.remove (position);
+                    }
+                });
+                int insert_pos = find_music_in_store (store, _current_music);
+                album.insert_to_store (store, insert_pos + 1);
+                _list_modified = true;
+            } else if (obj is Music) {
+                var music = (Music) obj;
+                var store = (ListStore) _music_list.model;
+                if (insert_to_next (music, _music_store)) {
                     _list_modified = true;
-                } else if (obj is Music) {
-                    var music = (Music) obj;
-                    var store = (ListStore) _music_list.model;
-                    if (insert_to_next (music, _music_store)) {
-                        _list_modified = true;
-                    }
-                    if (store != _music_store) {
-                        insert_to_next (music, store);
-                    }
                 }
-                update_current_item ();
+                if (store != _music_store) {
+                    insert_to_next (music, store);
+                }
             }
+            update_current_item ();
         }
 
         public void play_next () {
@@ -420,7 +420,7 @@ namespace G4 {
         public void reload_library () {
             if (!_loading) {
                 _loader.remove_all ();
-                load_files_async.begin ({}, (obj, res) => load_files_async.end (res));
+                open ({}, "");
             }
         }
 
@@ -472,6 +472,14 @@ namespace G4 {
             }
         }
 
+        private int find_music_in_store (ListStore store, Music? music) {
+            uint pos = -1;
+            if (music != null && store.find ((!)music, out pos)) {
+                return (int) pos;
+            }
+            return -1;
+        }
+
         private int find_music_item (Music? music) {
             var index = find_item_in_model (_music_list, music);
             if (index != -1)
@@ -490,15 +498,12 @@ namespace G4 {
         }
 
         private bool insert_to_next (Music music, ListStore store) {
-            uint playing_pos = -1;
-            if (!store.find ((!)_current_music, out playing_pos)) {
-                playing_pos = -1;
-            }
-            uint music_pos = -1;
-            if (store.find ((!)music, out music_pos)
+            int playing_pos = find_music_in_store (store, _current_music);
+            int music_pos = find_music_in_store (store, music);
+            if (music_pos != -1
                     && playing_pos != music_pos
                     && playing_pos != music_pos - 1) {
-                var next_pos = (int) music_pos > (int) playing_pos ? playing_pos + 1 : playing_pos;
+                var next_pos = (int) music_pos > playing_pos ? playing_pos + 1 : playing_pos;
                 store.remove (music_pos);
                 store.insert (next_pos, music);
                 return true;
@@ -518,7 +523,7 @@ namespace G4 {
 
         private Music? get_next_music (ref int index) {
             var count = _music_list.get_n_items ();
-            index = index < count ? index : 0;
+            index = index < (int) count ? index : 0;
             return _music_list.get_item (index) as Music;
         }
 
@@ -637,7 +642,7 @@ namespace G4 {
         }
 
         private void update_current_item () {
-            if (_music_list.get_item (_current_item) != _current_music) {
+            if (_current_music == null || _current_music != _music_list.get_item (_current_item)) {
                 var item = find_music_item (_current_music);
                 change_current_item (item);
             }
