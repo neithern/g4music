@@ -1,15 +1,15 @@
 # Swedish translation for G4Music.
-# Copyright 2022, 2023 G4Music's COPYRIGHT HOLDER
+# Copyright 2022-2024 G4Music's COPYRIGHT HOLDER
 # This file is distributed under the same license as the G4Music package.
 # Åke Engelbrektson <eson@svenskasprakfiler.se>, 2022.
-# Anders Jonsson <anders.jonsson@norsjovallen.se>, 2023.
+# Anders Jonsson <anders.jonsson@norsjovallen.se>, 2023, 2024.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
-"Report-Msgid-Bugs-To: https://gitlab.gnome.org/neithern/g4music/-/issues\n"
-"POT-Creation-Date: 2023-09-03 09:31+0000\n"
-"PO-Revision-Date: 2023-08-21 12:08+0200\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/neithern/g4music/issues\n"
+"POT-Creation-Date: 2024-08-06 14:16+0000\n"
+"PO-Revision-Date: 2024-08-09 21:38+0200\n"
 "Last-Translator: Anders Jonsson <anders.jonsson@norsjovallen.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "Language: sv\n"
@@ -17,11 +17,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.3.2\n"
+"X-Generator: Poedit 3.4.4\n"
 
-#: data/app.desktop.in:3 src/application.vala:235 src/main.vala:24
-msgid "G4Music"
-msgstr "G4Music"
+# Namnet på spelaren.
+#: data/app.desktop.in:3 src/application.vala:237 src/main.vala:24
+msgid "Gapless"
+msgstr "Gapless"
 
 #: data/app.desktop.in:4
 msgid "Music Player"
@@ -95,7 +96,7 @@ msgctxt "shortcut window"
 msgid "Reload Library"
 msgstr "Uppdatera bibliotek"
 
-#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:340
+#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:350
 msgid "Back"
 msgstr "Bakåt"
 
@@ -119,7 +120,7 @@ msgstr "Kompakt spellistevy"
 msgid "Grid view for artists/albums"
 msgstr "Rutnätsvy för artister/album"
 
-#: src/gtk/preferences.ui:56 src/application.vala:435
+#: src/gtk/preferences.ui:56 src/application.vala:428
 msgid "Keep playing after window closed"
 msgstr "Fortsätt spela efter att fönstret har stängts"
 
@@ -175,13 +176,13 @@ msgstr "Föredra ljudutgång för GStreamer"
 msgid "Main Menu"
 msgstr "Huvudmeny"
 
-#: src/gtk/store-panel.ui:28
-msgid "Sort By"
-msgstr "Sortera efter"
-
-#: src/gtk/store-panel.ui:35
+#: src/gtk/store-panel.ui:29
 msgid "Search"
 msgstr "Sök"
+
+#: src/gtk/store-panel.ui:35
+msgid "Sort By"
+msgstr "Sortera efter"
 
 #: src/gtk/store-panel.ui:73
 msgid "_Reload Library"
@@ -232,46 +233,46 @@ msgstr "En snabb lättflytande musikspelare skriven i GTK4."
 msgid "translator-credits"
 msgstr "Åke Engelbrektson"
 
-#: src/application.vala:626
+#: src/application.vala:630
 msgid "Keep playing"
 msgstr "Fortsätt spela"
 
 #. Translators: Play this music at next position of current playing music
-#: src/ui/music-widgets.vala:252 src/ui/music-widgets.vala:293
-#: src/ui/music-widgets.vala:303
+#: src/ui/music-widgets.vala:211 src/ui/music-widgets.vala:252
+#: src/ui/music-widgets.vala:262
 msgid "Play at Next"
 msgstr "Spela härnäst"
 
-#: src/ui/music-widgets.vala:253 src/ui/music-widgets.vala:292
-#: src/ui/music-widgets.vala:302 src/ui/store-panel.vala:345
+#: src/ui/music-widgets.vala:212 src/ui/music-widgets.vala:251
+#: src/ui/music-widgets.vala:261 src/ui/store-panel.vala:355
 msgid "Play"
 msgstr "Spela"
 
-#: src/ui/music-widgets.vala:256 src/ui/play-panel.vala:237
+#: src/ui/music-widgets.vala:215 src/ui/play-panel.vala:129
 msgid "Show _Cover File"
 msgstr "Visa _omslagsfil"
 
-#: src/ui/music-widgets.vala:258 src/ui/play-panel.vala:239
+#: src/ui/music-widgets.vala:217 src/ui/play-panel.vala:131
 msgid "_Export Cover"
 msgstr "_Exportera omslag"
 
-#: src/ui/music-widgets.vala:295
+#: src/ui/music-widgets.vala:254
 msgid "Show List File"
 msgstr "Visa listfil"
 
-#: src/ui/music-widgets.vala:309 src/ui/play-panel.vala:56
+#: src/ui/music-widgets.vala:268 src/ui/play-panel.vala:61
 msgid "Search Title"
 msgstr "Sök titel"
 
-#: src/ui/music-widgets.vala:310 src/ui/play-panel.vala:54
+#: src/ui/music-widgets.vala:269 src/ui/play-panel.vala:59
 msgid "Search Album"
 msgstr "Sök album"
 
-#: src/ui/music-widgets.vala:311 src/ui/play-panel.vala:55
+#: src/ui/music-widgets.vala:270 src/ui/play-panel.vala:60
 msgid "Search Artist"
 msgstr "Sök artist"
 
-#: src/ui/music-widgets.vala:312
+#: src/ui/music-widgets.vala:271
 msgid "_Show Music File"
 msgstr "_Visa musikfil"
 
@@ -293,7 +294,7 @@ msgstr "Spela/Pausa"
 msgid "Play Next"
 msgstr "Spela nästa"
 
-#: src/ui/play-panel.vala:280
+#: src/ui/play-panel.vala:275
 msgid ""
 "Drag and drop music files here,\n"
 "or change music location: "
@@ -317,19 +318,19 @@ msgstr "Endast omslag"
 msgid "Track"
 msgstr "Spår"
 
-#: src/ui/store-panel.vala:74
+#: src/ui/store-panel.vala:75
 msgid "Playing"
 msgstr "Spelar"
 
-#: src/ui/store-panel.vala:79
+#: src/ui/store-panel.vala:80
 msgid "Artists"
 msgstr "Artister"
 
-#: src/ui/store-panel.vala:84
+#: src/ui/store-panel.vala:85
 msgid "Albums"
 msgstr "Album"
 
-#: src/ui/store-panel.vala:374
+#: src/ui/store-panel.vala:384
 msgid "Playlists"
 msgstr "Spellistor"
 
@@ -346,18 +347,3 @@ msgstr "Okänt album"
 #: src/utils/music.vala:3
 msgid "Unknown Artist"
 msgstr "Okänd artist"
-
-#~ msgid "Repeat Music"
-#~ msgstr "Upprepa musik"
-
-#~ msgid "Appearance"
-#~ msgstr "Utseende"
-
-#~ msgid "Music Location"
-#~ msgstr "Musikplats"
-
-#~ msgid "Experimental"
-#~ msgstr "Experimentellt"
-
-#~ msgid "Loading..."
-#~ msgstr "Hämtar..."
