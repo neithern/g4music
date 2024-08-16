@@ -60,6 +60,15 @@
     </screenshots>
 
     <releases>
+        <release version="3.8.2" date="2024-8-16">
+            <description>
+                <ul>
+                <li>Fix initial view when no music.</li>
+                <li>Fix Drag-drop when no music.</li>
+                <li>Update translation: Hindi, Occitan, Persian, Brazilian Portuguese, Hungarian, Swedish, Turkish, Belarusian.</li>
+                </ul>
+            </description>
+        </release>
         <release version="3.8.1" date="2024-7-28">
             <description>
                 <ul>
