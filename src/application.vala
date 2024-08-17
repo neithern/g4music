@@ -22,10 +22,9 @@ namespace G4 {
 
         public signal void index_changed (int index, uint size);
         public signal void music_changed (Music? music);
+        public signal void music_cover_parsed (Music music, Gdk.Pixbuf? cover, string? cover_uri);
         public signal void music_external_changed ();
         public signal void music_store_changed ();
-        public signal void music_tag_parsed (Music music, Gst.Sample? image);
-        public signal void music_cover_parsed (Music music, string? uri);
 
         public Application () {
             Object (application_id: Config.APP_ID, flags: ApplicationFlags.HANDLES_OPEN);
@@ -306,33 +305,6 @@ namespace G4 {
                     play (playlist);
                 } else {
                     play_at_next (playlist);
-                }
-            }
-        }
-
-        public async void parse_music_cover_async () {
-            if (_current_music != null) {
-                var music = (!)_current_music;
-                if (music.cover_uri != null) {
-                    music_cover_parsed (music, music.cover_uri);
-                } else {
-                    var dir = File.new_build_filename (Environment.get_user_cache_dir (), application_id);
-                    var name = Checksum.compute_for_string (ChecksumType.MD5, music.cover_key);
-                    var file = dir.get_child (name);
-                    var file_uri = file.get_uri ();
-                    if (_current_cover != null) {
-                        yield save_sample_to_file_async (file, (!)_current_cover);
-                    } else {
-                        var svg = _thumbnailer.create_music_text_svg (music);
-                        yield save_text_to_file_async (file, svg);
-                    }
-                    if (music == _current_music) {
-                        music_cover_parsed (music, file_uri);
-                        if (strcmp (file_uri, _cover_tmp_file?.get_uri ()) != 0) {
-                            yield delete_cover_tmp_file_async ();
-                            _cover_tmp_file = file;
-                        }
-                    }
                 }
             }
         }
@@ -634,10 +606,66 @@ namespace G4 {
             }
         }
 
+        private int _cover_size = 360;
+
         private async void on_tag_parsed (string? uri, Gst.TagList? tags) {
             if (_current_music != null && strcmp (_current_music?.uri, uri) == 0) {
                 _current_cover = tags != null ? parse_image_from_tag_list ((!)tags) : null;
-                music_tag_parsed ((!)_current_music, _current_cover);
+                if (_current_cover == null && uri != null) {
+                    _current_cover = yield run_async<Gst.Sample?> (() => {
+                        var file = File.new_for_uri ((!)uri);
+                        var t = parse_gst_tags (file);
+                        return t != null ? parse_image_from_tag_list ((!)t) : null;
+                    });
+                }
+
+                Gdk.Pixbuf? pixbuf = null;
+                var music = (!)_current_music;
+                var image = _current_cover;
+                if (music == _current_music) {
+                    var size = _cover_size * _thumbnailer.scale_factor;
+                    if (image != null) {
+                        pixbuf = yield run_async<Gdk.Pixbuf?> (
+                            () => load_clamp_pixbuf_from_sample ((!)image, size), true);
+                    }
+                    if (pixbuf == null) {
+                        pixbuf = yield _thumbnailer.load_directly_async (music, size);
+                    }
+                }
+
+                if (music == _current_music) {
+                    var cover_uri = music.cover_uri;
+                    if (cover_uri == null) {
+                        var dir = File.new_build_filename (Environment.get_user_cache_dir (), application_id);
+                        var name = Checksum.compute_for_string (ChecksumType.MD5, music.cover_key);
+                        var file = dir.get_child (name);
+                        cover_uri = file.get_uri ();
+                        if (image != null) {
+                            yield save_sample_to_file_async (file, (!)image);
+                        } else {
+                            var svg = _thumbnailer.create_music_text_svg (music);
+                            yield save_text_to_file_async (file, svg);
+                        }
+                        if (strcmp (cover_uri, _cover_tmp_file?.get_uri ()) != 0) {
+                            yield delete_cover_tmp_file_async ();
+                            _cover_tmp_file = file;
+                        }
+                    }
+                    if (music == _current_music) {
+                        music_cover_parsed (music, pixbuf, cover_uri);
+                    }
+                }
+
+                //  Update thumbnail cache if remote thumbnail not loaded
+                if (pixbuf != null && !(_thumbnailer.find (music) is Gdk.Texture)) {
+                    var minbuf = yield run_async<Gdk.Pixbuf?> (
+                        () => create_clamp_pixbuf ((!)pixbuf, Thumbnailer.ICON_SIZE * _thumbnailer.scale_factor)
+                    );
+                    if (minbuf != null) {
+                        var paintable = Gdk.Texture.for_pixbuf ((!)minbuf);
+                        _thumbnailer.put (music, paintable, true, Thumbnailer.ICON_SIZE);
+                    }
+                }
             }
         }
 

@@ -123,7 +123,7 @@ namespace G4 {
             return paintable;
         }
 
-        private async Gdk.Pixbuf? load_directly_async (Music music, int size) {
+        public async Gdk.Pixbuf? load_directly_async (Music music, int size) {
             var file = File.new_for_uri (music.uri);
             var is_native = file.is_native ();
             if (!_remote_thumbnail && !is_native) {
@@ -144,7 +144,8 @@ namespace G4 {
                     var album_key = album_key_ + image_size.to_string ("%x");
                     check_same_album_cover (album_key, ref args[0]);
                     pixbuf = load_clamp_pixbuf_from_sample ((!)sample, size * _scale_factor);
-                } else if ((cover_file = _cover_finder?.find (file.get_parent ())) != null) {
+                }
+                if (pixbuf == null && (cover_file = _cover_finder?.find (file.get_parent ())) != null) {
                     var album_key = (!) cover_file?.get_path ();
                     args[0] = args[1] = (!) cover_file?.get_uri ();
                     check_same_album_cover (album_key, ref args[0]);

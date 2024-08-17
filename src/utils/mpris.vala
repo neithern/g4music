@@ -136,7 +136,7 @@ namespace G4 {
             }
         }
 
-        private void on_music_cover_parsed (Music music, string? uri) {
+        private void on_music_cover_parsed (Music music, Gdk.Pixbuf? pixbuf, string? uri) {
             if (_current_music != music) {
                 on_music_changed (music);
             }

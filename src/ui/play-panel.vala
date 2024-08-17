@@ -24,7 +24,6 @@ namespace G4 {
         private PlayBar _play_bar = new PlayBar ();
 
         private Application _app;
-        private int _cover_size = 360;
         private double _degrees_per_second = 360 / 20; // 20s per lap
         private CrossFadePaintable _crossfade_paintable = new CrossFadePaintable ();
         private MatrixPaintable _matrix_paintable = new MatrixPaintable ();
@@ -69,7 +68,7 @@ namespace G4 {
 
             app.index_changed.connect (on_index_changed);
             app.music_changed.connect (on_music_changed);
-            app.music_tag_parsed.connect (on_music_tag_parsed);
+            app.music_cover_parsed.connect (on_music_cover_parsed);
             app.player.state_changed.connect (on_player_state_changed);
 
             var settings = app.settings;
@@ -176,36 +175,10 @@ namespace G4 {
             return true;
         }
 
-        private async void on_music_tag_parsed (Music music, Gst.Sample? image) {
-            Gdk.Pixbuf? pixbuf = null;
-            Gdk.Paintable? paintable = null;
-            var thumbnailer = _app.thumbnailer;
-            if (image != null) {
-                pixbuf = yield run_async<Gdk.Pixbuf?> (
-                    () => load_clamp_pixbuf_from_sample ((!)image, _cover_size * scale_factor), true);
-                if (pixbuf != null)
-                    paintable = Gdk.Texture.for_pixbuf ((!)pixbuf);
-            } else {
-                paintable = yield thumbnailer.load_async (music, _cover_size);
-            }
-            if (music == _app.current_music) {
-                //  Remote thumbnail may not loaded
-                if (pixbuf != null && !(thumbnailer.find (music) is Gdk.Texture)) {
-                    pixbuf = yield run_async<Gdk.Pixbuf?> (
-                        () => create_clamp_pixbuf ((!)pixbuf, Thumbnailer.ICON_SIZE * scale_factor)
-                    );
-                    if (pixbuf != null && music == _app.current_music) {
-                        thumbnailer.put (music, Gdk.Texture.for_pixbuf ((!)pixbuf), true);
-                    }
-                }
-
-                if (music == _app.current_music) {
-                    if (paintable == null)
-                        paintable = thumbnailer.create_music_text_paintable (music);
-                    update_cover_paintables (music, paintable);
-                    yield _app.parse_music_cover_async ();
-                }
-            }
+        private async void on_music_cover_parsed (Music music, Gdk.Pixbuf? pixbuf, string? uri) {
+            var paintable = pixbuf != null ? Gdk.Texture.for_pixbuf ((!)pixbuf)
+                            : _app.thumbnailer.create_music_text_paintable (music);
+            update_cover_paintables (music, paintable);
         }
 
         private Adw.Animation? _scale_animation = null;
