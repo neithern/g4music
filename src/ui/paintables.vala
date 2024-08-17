@@ -356,19 +356,15 @@ namespace G4 {
 
     public Gdk.Paintable? create_blur_paintable (Gtk.Widget widget, Gdk.Paintable paintable,
                                 int size, double blur = 80, double opacity = 0.25) {
-        var ratio = paintable.get_intrinsic_aspect_ratio ();
-        var width = ratio < 1 ? size : size * ratio;
-        var height  = ratio > 1 ? size : size / ratio;
-
         var snapshot = new Gtk.Snapshot ();
         snapshot.push_opacity (opacity);
         snapshot.push_blur (blur);
-        paintable.snapshot (snapshot, width, height);
+        paintable.snapshot (snapshot, size, size);
         snapshot.pop ();
         snapshot.pop ();
 
         var rect = Graphene.Rect ();
-        rect.init (0, 0, (int) (width + 0.5), (int) (height + 0.5));
+        rect.init (0, 0, size, size);
         Gdk.Paintable? result = null;
         var node = snapshot.free_to_node ();
         if (node is Gsk.RenderNode) {
