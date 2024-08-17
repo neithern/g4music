@@ -45,7 +45,7 @@ namespace G4 {
 
             leaflet.bind_property ("folded", back_btn, "visible", BindingFlags.SYNC_CREATE);
 
-            action_btn.set_create_popup_func (() => action_btn.menu_model = _app.current_music != null ? create_music_action_menu ((!)_app.current_music) : (Menu) null);
+            action_btn.set_create_popup_func (() => action_btn.menu_model = create_music_action_menu ());
 
             back_btn.clicked.connect (() => leaflet.navigate (Adw.NavigationDirection.BACK));
 
@@ -123,7 +123,8 @@ namespace G4 {
             _play_bar.on_size_changed (panel_width - margin * 2);
         }
 
-        private Menu create_music_action_menu (Music music) {
+        private Menu create_music_action_menu () {
+            var music = _app.current_music ?? new Music.empty ();
             var menu = create_menu_for_music (music);
             if (music.cover_uri != null) {
                 menu.append_item (create_menu_item_for_uri ((!)music.cover_uri, _("Show _Cover File"), ACTION_APP + ACTION_SHOW_FILE));
@@ -148,23 +149,24 @@ namespace G4 {
         private void on_music_changed (Music? music) {
             _current_music = music;
 
-            var empty = music == null;
-            initial_label.visible = empty;
-            music_album.visible = !empty;
-            music_artist.visible = !empty;
-            music_title.visible = !empty;
+            var valid = music != null;
+            initial_label.visible = !valid;
+            music_album.visible = valid;
+            music_artist.visible = valid;
+            music_title.visible = valid;
             music_album.label = music?.album ?? "";
             music_artist.label = music?.artist ?? "";
             music_title.label = music?.title ?? "";
 
-            if (_size_allocated && empty)
+            if (_size_allocated && !valid)
                 update_cover_paintables (music, _app.icon);
 
             var win = _app.active_window;
             if (win is Window)
                 ((!)win).title = music?.get_artist_and_title () ?? _app.name;
 
-            root.action_set_enabled (ACTION_APP + ACTION_PLAY_PAUSE, music != null);
+            action_btn.sensitive = valid;
+            root.action_set_enabled (ACTION_APP + ACTION_PLAY_PAUSE, valid);
         }
 
         private bool on_music_folder_clicked (string uri) {
@@ -252,7 +254,7 @@ namespace G4 {
 
         private void show_popover_menu (Gtk.Widget widget, double x, double y) {
             if (_app.current_music != null) {
-                var menu = create_music_action_menu ((!)_app.current_music);
+                var menu = create_music_action_menu ();
                 var popover = create_popover_menu (menu, x, y);
                 popover.set_parent (widget);
                 popover.popup ();
