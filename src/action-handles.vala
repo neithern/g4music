@@ -156,7 +156,7 @@ namespace G4 {
                 obj = ((Artist) obj).to_playlist ();
             }
             (_app.active_window as Window)?.open_page (strv, obj);
-            _app.current_item = 0;
+            _app.play (obj);
         }
 
         private void play_at_next (SimpleAction action, Variant? parameter) {
