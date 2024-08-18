@@ -38,9 +38,8 @@ namespace G4 {
             _app = app;
 
             _play_bar.halign = Gtk.Align.FILL;
-            _play_bar.margin_bottom = 32;
             _play_bar.position_seeked.connect (on_position_seeked);
-            append (_play_bar);
+            music_box.append (_play_bar);
 
             leaflet.bind_property ("folded", back_btn, "visible", BindingFlags.SYNC_CREATE);
 
@@ -112,14 +111,15 @@ namespace G4 {
 
         public void size_to_change (int width, int height) {
             var max_size = int.max (width * 3 / 4, music_cover.pixel_size);
-            var margin = int.max ((width - max_size) / 2, 32);
-            music_cover.margin_start = margin;
-            music_cover.margin_end = margin;
+            var margin_horz = (width - max_size) / 2;
+            var margin_cover = int.max (margin_horz, 32);
+            music_cover.margin_start = margin_cover;
+            music_cover.margin_end = margin_cover;
 
-            margin -= 8;
-            _play_bar.margin_start = margin;
-            _play_bar.margin_end = margin;
-            _play_bar.on_size_changed (width - margin * 2);
+            var margin_bar = int.max (margin_horz, 16);
+            _play_bar.margin_start = margin_bar;
+            _play_bar.margin_end = margin_bar;
+            _play_bar.on_size_changed (width - margin_bar * 2);
         }
 
         private Menu create_music_action_menu () {

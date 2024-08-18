@@ -40,6 +40,7 @@
           <object class="GtkBox" id="music_box">
             <property name="orientation">vertical</property>
             <property name="margin_top">8</property>
+            <property name="margin_bottom">32</property>
             <property name="width_request">340</property>
             <child>
               <object class="GtkImage" id="music_cover">
@@ -53,9 +54,9 @@
                 <property name="valign">end</property>
                 <property name="margin_start">16</property>
                 <property name="margin_end">16</property>
-                <property name="margin_top">22</property>
+                <property name="margin_top">16</property>
+                <property name="margin_bottom">16</property>
                 <property name="width_request">272</property>
-                <property name="height_request">80</property>
                 <child>
                   <object class="GtkLabel" id="initial_label">
                     <property name="halign">center</property>
