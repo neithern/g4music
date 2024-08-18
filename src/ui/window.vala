@@ -1,7 +1,7 @@
 namespace G4 {
 
     public class Window : Adw.ApplicationWindow {
-        private Adw.Leaflet _leaflet = new Adw.Leaflet ();
+        private Leaflet _leaflet = new Leaflet ();
         private MiniBar _mini_bar = new MiniBar ();
         private PlayPanel _play_panel;
         private StorePanel _store_panel;
@@ -10,8 +10,6 @@ namespace G4 {
         private uint _bkgnd_blur = BlurMode.ALWAYS;
         private CrossFadePaintable _bkgnd_paintable = new CrossFadePaintable ();
         private Gdk.Paintable? _cover_paintable = null;
-        private int _window_width = 0;
-        private int _window_height = 0;
 
         public Window (Application app) {
             this.application = app;
@@ -25,7 +23,7 @@ namespace G4 {
             var revealer = new Gtk.Revealer ();
             revealer.child = _mini_bar;
             revealer.transition_type = Gtk.RevealerTransitionType.SLIDE_DOWN;
-            _mini_bar.activated.connect (() => _leaflet.navigate (Adw.NavigationDirection.FORWARD));
+            _mini_bar.activated.connect (_leaflet.push);
 
             _store_panel = new StorePanel (app, this, _leaflet);
             _store_panel.append (revealer);
@@ -33,8 +31,8 @@ namespace G4 {
             _play_panel = new PlayPanel (app, this, _leaflet);
             _play_panel.cover_changed.connect (on_cover_changed);
 
-            _leaflet.append (_store_panel);
-            _leaflet.append (_play_panel);
+            _leaflet.content = _store_panel;
+            _leaflet.sidebar = _play_panel;
             _leaflet.bind_property ("folded", revealer, "reveal-child", BindingFlags.SYNC_CREATE);
 
             setup_drop_target ();
@@ -53,7 +51,7 @@ namespace G4 {
             }
             set {
                 _bkgnd_blur = value;
-                if (_window_height > 0)
+                if (get_height () > 0)
                     update_background ();
             }
         }
@@ -78,70 +76,8 @@ namespace G4 {
             }
         }
 
-        public override void size_allocate (int width, int height, int baseline) {
-            var min_width = 340;
-            var play_width = int.max (int.min (width * 3 / 8, 480), min_width);
-            var store_width = int.max (width - play_width, min_width);
-            var wide = width > min_width * 2;
-            _play_panel.size_to_change (wide ? play_width : width);
-            _store_panel.size_to_change (wide ? store_width : width);
-            _mini_bar.size_to_change (wide ? store_width : width);
-
-            base.size_allocate (width, height, baseline);
-
-            var rtl = get_direction () == Gtk.TextDirection.RTL;
-            var left_width = rtl ? play_width : store_width;
-            var right_width = rtl ? store_width : play_width;
-            var left_panel = rtl ? (Gtk.Widget) _play_panel : (Gtk.Widget) _store_panel;
-            var right_panel = rtl ? (Gtk.Widget) _store_panel : (Gtk.Widget) _play_panel;
-            var allocation = Gtk.Allocation ();
-            allocation.x = allocation.y = 0;
-            if (_leaflet.folded) {
-                allocation.width = width;
-                allocation.height = height;
-                _leaflet.get_visible_child ()?.allocate_size (allocation, baseline);
-            } else {
-                allocation.width = left_width;
-                allocation.height = height;
-                left_panel.allocate_size (allocation, baseline);
-                allocation.x = width - right_width;
-                allocation.width = right_width;
-                right_panel.allocate_size (allocation, baseline);
-            }
-
-            if (_window_width == 0 && width > 0) {
-                run_idle_once (() => {
-                    _play_panel.size_allocated ();
-                    _store_panel.size_allocated ();
-                });
-            }
-            _window_width = width;
-            _window_height = height;
-        }
-
         public override void snapshot (Gtk.Snapshot snapshot) {
-            var width = _window_width;
-            var height = _window_height;
-            _bkgnd_paintable.snapshot (snapshot, width, height);
-
-            if (!_leaflet.folded) {
-                var page = (Adw.LeafletPage) _leaflet.pages.get_item (0);
-                var size = page.child.get_width ();
-                var rtl = get_direction () == Gtk.TextDirection.RTL;
-                var line_width = scale_factor >= 2 ? 0.5f : 1;
-                var rect = Graphene.Rect ();
-                rect.init (rtl ? width - size : size, 0, line_width, height);
-                var color = Gdk.RGBA ();
-                color.red = color.green = color.blue = color.alpha = 0;
-#if GTK_4_10
-                var color2 = get_color ();
-#else
-                var color2 = get_style_context ().get_color ();
-#endif
-                color2.alpha = 0.25f;
-                Gsk.ColorStop[] stops = { { 0, color }, { 0.5f, color2 }, { 1, color } };
-                snapshot.append_linear_gradient (rect, rect.get_top_left (), rect.get_bottom_right (), stops);
-            }
+            _bkgnd_paintable.snapshot (snapshot, get_width (), get_height ());
             base.snapshot (snapshot);
         }
 
@@ -152,13 +88,13 @@ namespace G4 {
         public void start_search (string text, uint mode = SearchMode.ANY) {
             _store_panel.start_search (text, mode);
             if (_leaflet.folded) {
-                _leaflet.navigate (Adw.NavigationDirection.BACK);
+                _leaflet.pop ();
             }
         }
 
         public void toggle_search () {
             if (_store_panel.toggle_search () && _leaflet.folded) {
-                _leaflet.navigate (Adw.NavigationDirection.BACK);
+                _leaflet.pop ();
             }
         }
 

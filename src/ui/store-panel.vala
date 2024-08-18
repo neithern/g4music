@@ -17,7 +17,7 @@ namespace G4 {
     };
 
     [GtkTemplate (ui = "/com/github/neithern/g4music/gtk/store-panel.ui")]
-    public class StorePanel : Gtk.Box {
+    public class StorePanel : Gtk.Box, SizeWatcher {
         [GtkChild]
         private unowned Gtk.HeaderBar header_bar;
         [GtkChild]
@@ -54,7 +54,7 @@ namespace G4 {
         private bool _size_allocated = false;
         private uint _sort_mode_playing = SortMode.TITLE;
 
-        public StorePanel (Application app, Window win, Adw.Leaflet leaflet) {
+        public StorePanel (Application app, Window win, Leaflet leaflet) {
             _app = app;
             _library = app.loader.library;
 
@@ -155,7 +155,7 @@ namespace G4 {
             }
         }
 
-        public void size_allocated () {
+        public void first_allocated () {
             // Delay set model after the window size allocated to avoid showing slowly
             _playing_list.create_factory ();
             _playing_list.scroll_to_item (_app.current_item);
@@ -171,7 +171,7 @@ namespace G4 {
             initialize_library_view ();
         }
 
-        public void size_to_change (int panel_width) {
+        public void size_to_change (int width, int height) {
         }
 
         public void start_search (string text, uint mode = SearchMode.ANY) {

@@ -1,7 +1,7 @@
 namespace G4 {
 
     [GtkTemplate (ui = "/com/github/neithern/g4music/gtk/play-panel.ui")]
-    public class PlayPanel : Gtk.Box {
+    public class PlayPanel : Gtk.Box, SizeWatcher {
         [GtkChild]
         private unowned Gtk.MenuButton action_btn;
         [GtkChild]
@@ -34,7 +34,7 @@ namespace G4 {
 
         public signal void cover_changed (Music? music, CrossFadePaintable cover);
 
-        public PlayPanel (Application app, Window win, Adw.Leaflet leaflet) {
+        public PlayPanel (Application app, Window win, Leaflet leaflet) {
             _app = app;
 
             _play_bar.halign = Gtk.Align.FILL;
@@ -46,7 +46,7 @@ namespace G4 {
 
             action_btn.set_create_popup_func (() => action_btn.menu_model = create_music_action_menu ());
 
-            back_btn.clicked.connect (() => leaflet.navigate (Adw.NavigationDirection.BACK));
+            back_btn.clicked.connect (leaflet.pop);
 
             initial_label.activate_link.connect (on_music_folder_clicked);
 
@@ -102,7 +102,7 @@ namespace G4 {
             _play_bar.focus_to_play ();
         }
 
-        public void size_allocated () {
+        public void first_allocated () {
             // Delay update info after the window size allocated to avoid showing slowly
             _size_allocated = true;
             if (_current_music != _app.current_music) {
@@ -110,16 +110,16 @@ namespace G4 {
             }
         }
 
-        public void size_to_change (int panel_width) {
-            var max_size = int.max (panel_width * 3 / 4, music_cover.pixel_size);
-            var margin = int.max ((panel_width - max_size) / 2, 32);
+        public void size_to_change (int width, int height) {
+            var max_size = int.max (width * 3 / 4, music_cover.pixel_size);
+            var margin = int.max ((width - max_size) / 2, 32);
             music_cover.margin_start = margin;
             music_cover.margin_end = margin;
 
             margin -= 8;
             _play_bar.margin_start = margin;
             _play_bar.margin_end = margin;
-            _play_bar.on_size_changed (panel_width - margin * 2);
+            _play_bar.on_size_changed (width - margin * 2);
         }
 
         private Menu create_music_action_menu () {
