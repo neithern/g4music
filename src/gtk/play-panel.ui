@@ -63,6 +63,7 @@
                     <property name="hexpand">false</property>
                     <property name="lines">3</property>
                     <property name="single_line_mode">false</property>
+                    <property name="visible">false</property>
                   </object>
                 </child>
                 <child>
