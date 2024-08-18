@@ -71,6 +71,9 @@
       <default>3</default>
       <summary>Sort Mode</summary>
     </key>
+    <key name="leaflet-mode" type="i">
+      <default>0</default>
+    </key>
     <key name="maximized" type="b">
       <default>false</default>
     </key>
