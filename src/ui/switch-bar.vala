@@ -92,6 +92,7 @@ namespace G4 {
                     button.margin_end = 2;
                     button.name = page.name;
                     button.tooltip_text = page.title;
+                    button.add_css_class ("flat");
                     button.toggled.connect (() => {
                         if (button.active && _stack.visible_child_name != button.name)
                             _stack.set_visible_child_name (button.name);
