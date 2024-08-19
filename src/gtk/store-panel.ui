@@ -47,22 +47,8 @@
       </object>
     </child>
     <child>
-      <object class="GtkOverlay">
-        <child type="overlay">
-          <object class="GtkProgressBar" id="progress_bar">
-            <property name="hexpand">true</property>
-            <property name="valign">start</property>
-            <property name="pulse-step">0.02</property>
-            <style>
-              <class name="osd"/>
-            </style>
-          </object>
-        </child>
-        <child>
-          <object class="GtkStack" id="stack_view">
-            <property name="width_request">340</property>
-          </object>
-        </child>
+      <object class="GtkStack" id="stack_view">
+        <property name="width_request">340</property>
       </object>
     </child>
   </template>

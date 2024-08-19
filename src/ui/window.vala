@@ -3,6 +3,7 @@ namespace G4 {
     public class Window : Adw.ApplicationWindow {
         private Leaflet _leaflet = new Leaflet ();
         private MiniBar _mini_bar = new MiniBar ();
+        private Gtk.ProgressBar _progress_bar = new Gtk.ProgressBar ();
         private PlayPanel _play_panel;
         private StorePanel _store_panel;
 
@@ -16,7 +17,17 @@ namespace G4 {
             this.icon_name = app.application_id;
             this.title = app.name;
             this.close_request.connect (on_close_request);
-            this.content = _leaflet;
+
+            var overlay = new Gtk.Overlay ();
+            this.content = overlay;
+
+            _progress_bar.hexpand = true;
+            _progress_bar.margin_top = 46;  // at the bottom of the header_bar
+            _progress_bar.pulse_step = 0.02;
+            _progress_bar.add_css_class ("osd");
+            overlay.child = _leaflet;
+            overlay.add_overlay (_progress_bar);
+            app.loader.loading_changed.connect (on_loading_changed);
 
             _bkgnd_paintable.queue_draw.connect (this.queue_draw);
 
@@ -171,6 +182,30 @@ namespace G4 {
             var app = (Application) application;
             app.open_files_async.begin (files, app.current_music == null,
                 (obj, res) => app.open_files_async.end (res));
+            return true;
+        }
+
+        private uint _tick_handler = 0;
+
+        private void on_loading_changed (bool loading) {
+            root.action_set_enabled (ACTION_APP + ACTION_RELOAD, !loading);
+            _progress_bar.visible = loading;
+
+            if (loading && _tick_handler == 0) {
+                _tick_handler = add_tick_callback (on_loading_tick_callback);
+            } else if (!loading && _tick_handler != 0) {
+                remove_tick_callback (_tick_handler);
+                _tick_handler = 0;
+            }
+        }
+
+        private bool on_loading_tick_callback (Gtk.Widget widget, Gdk.FrameClock clock) {
+            var app = (Application) application;
+            var fraction = app.loader.loading_progress;
+            if (fraction > 0)
+                _progress_bar.fraction = fraction;
+            else
+                _progress_bar.pulse ();
             return true;
         }
 

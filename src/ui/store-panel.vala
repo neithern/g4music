@@ -21,8 +21,6 @@ namespace G4 {
         [GtkChild]
         private unowned Gtk.HeaderBar header_bar;
         [GtkChild]
-        private unowned Gtk.ProgressBar progress_bar;
-        [GtkChild]
         private unowned Gtk.MenuButton sort_btn;
         [GtkChild]
         private unowned Gtk.ToggleButton search_btn;
@@ -102,7 +100,6 @@ namespace G4 {
             _switch_bar.bind_property ("reveal-child", revealer, "reveal-child", BindingFlags.SYNC_CREATE | BindingFlags.INVERT_BOOLEAN);
 
             app.index_changed.connect (on_index_changed);
-            app.loader.loading_changed.connect (on_loading_changed);
             app.music_changed.connect (on_music_changed);
             app.music_external_changed.connect (on_music_external_changed);
             app.music_store_changed.connect (on_music_store_changed);
@@ -440,29 +437,6 @@ namespace G4 {
             if (_current_list.playable) {
                 _current_list.scroll_to_item (index);
             }
-        }
-
-        private uint _tick_handler = 0;
-
-        private void on_loading_changed (bool loading) {
-            root.action_set_enabled (ACTION_APP + ACTION_RELOAD, !loading);
-            progress_bar.visible = loading;
-
-            if (loading && _tick_handler == 0) {
-                _tick_handler = add_tick_callback (on_loading_tick_callback);
-            } else if (!loading && _tick_handler != 0) {
-                remove_tick_callback (_tick_handler);
-                _tick_handler = 0;
-            }
-        }
-
-        private bool on_loading_tick_callback (Gtk.Widget widget, Gdk.FrameClock clock) {
-            var fraction = _app.loader.loading_progress;
-            if (fraction > 0)
-                progress_bar.fraction = fraction;
-            else
-                progress_bar.pulse ();
-            return true;
         }
 
         private void on_music_changed (Music? music) {
