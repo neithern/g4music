@@ -167,7 +167,7 @@ namespace G4 {
 
             overlay.add_overlay (_playing);
 
-            width_request = 328;
+            width_request = 324;
         }
 
         public void set_titles (Music music, uint sort) {
