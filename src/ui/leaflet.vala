@@ -47,7 +47,10 @@ namespace G4 {
                 return _content;
             }
             set {
+                _content?.unparent ();
                 _content = value;
+                if (value != null)
+                    add_child (_builder, (!)value, null);
                 queue_allocate ();
             }
         }
@@ -57,7 +60,10 @@ namespace G4 {
                 return _sidebar;
             }
             set {
+                _sidebar?.unparent ();
                 _sidebar = value;
+                if (value != null)
+                    add_child (_builder, (!)value, null);
                 queue_allocate ();
             }
         }
