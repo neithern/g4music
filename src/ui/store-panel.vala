@@ -338,9 +338,8 @@ namespace G4 {
             label_box.append (icon);
             label_box.append (label);
 
-            var header = new Adw.HeaderBar ();
-            header.show_start_title_buttons = false;
-            header.show_end_title_buttons = false;
+            var header = new Gtk.HeaderBar ();
+            header.show_title_buttons = false;
             header.title_widget = label_box;
             header.add_css_class ("flat");
             mlist.prepend (header);
