@@ -125,7 +125,6 @@ namespace G4 {
             allocation.y = 0;
             allocation.width = width;
             allocation.height = height;
-            _stack.allocate_size (allocation, baseline);
 
             if (folded) {
                 (_content as SizeWatcher)?.size_to_change (width, height);
@@ -150,6 +149,12 @@ namespace G4 {
                 (_sidebar as SizeWatcher)?.size_to_change (side_width, height);
                 _sidebar?.allocate_size (allocation, baseline);
             }
+
+            allocation.x = 0;
+            allocation.y = 0;
+            allocation.width = width;
+            allocation.height = height;
+            _stack.allocate_size (allocation, baseline);
         }
 
         public override void measure (Gtk.Orientation orientation, int for_size, out int minimum, out int natural, out int minimum_baseline, out int natural_baseline) {
