@@ -13,8 +13,8 @@ namespace G4 {
 
     public class Leaflet : Gtk.Widget {
         private Gtk.Builder _builder = new Gtk.Builder ();
-        private Gtk.Widget? _content = null;
-        private Gtk.Widget? _sidebar = null;
+        private Gtk.Widget _content = new Gtk.Label (null);
+        private Gtk.Widget _sidebar = new Gtk.Label (null);
         private Gtk.Stack _stack = new Gtk.Stack ();
 
         private bool _folded = false;
@@ -26,13 +26,14 @@ namespace G4 {
         private int _visible_mode = LeafletMode.NONE;
 
         public Leaflet () {
+            add_child (_builder, _content, null);
             add_child (_builder, _stack, null);
+            _stack.add_child (_sidebar);
             _stack.transition_type = Gtk.StackTransitionType.OVER_LEFT_RIGHT;
         }
 
         ~Leaflet () {
-            _content?.unparent ();
-            _sidebar?.unparent ();
+            _content.unparent ();
             _stack.unparent ();
         }
 
@@ -42,28 +43,34 @@ namespace G4 {
             }
         }
 
-        public Gtk.Widget? content {
+        public Gtk.Widget content {
             get {
                 return _content;
             }
             set {
-                _content?.unparent ();
+                if (_content.parent == _stack) {
+                    _stack.remove (_content);
+                } else {
+                    _content.unparent ();
+                }
+                if (_folded) {
+                    _stack.add_child (value);
+                } else {
+                    add_child (_builder, value, null);
+                }
                 _content = value;
-                if (value != null)
-                    add_child (_builder, (!)value, null);
                 queue_allocate ();
             }
         }
 
-        public Gtk.Widget? sidebar {
+        public Gtk.Widget sidebar {
             get {
                 return _sidebar;
             }
             set {
-                _sidebar?.unparent ();
+                _stack.remove (_sidebar);
+                _stack.add_child (value);
                 _sidebar = value;
-                if (value != null)
-                    add_child (_builder, (!)value, null);
                 queue_allocate ();
             }
         }
@@ -79,23 +86,16 @@ namespace G4 {
         }
 
         public void pop () {
-            var child = _stack.get_first_child ();
-            if (child != null) {
-                _stack.visible_child = (!)child;
-                update_visible_mode ();
-            }
+            visible_mode = LeafletMode.SIDEBAR;
         }
 
         public void push () {
-            var child = _stack.get_last_child ();
-            if (child != null) {
-                _stack.visible_child = (!)child;
-                update_visible_mode ();
-            }
+            visible_mode = LeafletMode.CONTENT;
         }
 
         public override void size_allocate (int width, int height, int baseline) {
-            if (_view_width == 0 && width > 0) {
+            var first = _view_width == 0 && width > 0;
+            if (first) {
                 Idle.add (() => {
                     (_content as SizeWatcher)?.first_allocated ();
                     (_sidebar as SizeWatcher)?.first_allocated ();
@@ -106,18 +106,22 @@ namespace G4 {
             _view_height = height;
 
             var folded = width < _min_sidebar_width * 2;
-            var fold_changed = _folded != folded;
-            if (_folded != folded) {
+            if (_folded != folded || first) {
                 _folded = folded;
+                if (folded && _content.parent != _stack) {
+                    _content.unparent ();
+                    _stack.transition_type = Gtk.StackTransitionType.NONE;
+                    _stack.add_child (_content);
+                    _stack.visible_child = _visible_mode == LeafletMode.CONTENT ? _content :_sidebar;
+                    _stack.transition_type = Gtk.StackTransitionType.OVER_LEFT_RIGHT;
+                } else if (!folded && _content.parent == _stack) {
+                    _stack.transition_type = Gtk.StackTransitionType.NONE;
+                    _stack.remove (_content);
+                    _stack.visible_child = _sidebar;
+                    _stack.transition_type = Gtk.StackTransitionType.OVER_LEFT_RIGHT;
+                    add_child (_builder, _content, null);
+                }
                 notify_property ("folded");
-                update_visible_mode ();
-            }
-
-            var parent = folded ? (Gtk.Widget) _stack : (Gtk.Widget) this;
-            update_parent (parent, _content);
-            update_parent (parent, _sidebar);
-            if (fold_changed) {
-                update_visible_child ();
             }
 
             var allocation = Gtk.Allocation ();
@@ -129,48 +133,42 @@ namespace G4 {
             if (folded) {
                 (_content as SizeWatcher)?.size_to_change (width, height);
                 (_sidebar as SizeWatcher)?.size_to_change (width, height);
-                _content?.allocate_size (allocation, baseline);
-                _sidebar?.allocate_size (allocation, baseline);
+                _content.allocate_size (allocation, baseline);
+                _sidebar.allocate_size (allocation, baseline);
+                _stack.allocate_size (allocation, baseline);
             } else {
                 var rtl = get_direction () == Gtk.TextDirection.RTL;
                 var side_width = (int) (width * _sidebar_fraction);
                 side_width = side_width.clamp (_min_sidebar_width, _max_sidebar_width);
                 var content_width = width - side_width;
 
-                //  put Content at start
+                //  put sidebar at start
                 allocation.x = rtl ? side_width : 0;
                 allocation.width = content_width;
-                (_content as SizeWatcher)?.size_to_change (content_width, height);
-                _content?.allocate_size (allocation, baseline);
+                (_sidebar as SizeWatcher)?.size_to_change (content_width, height);
+                _sidebar.allocate_size (allocation, baseline);
+                _stack.allocate_size (allocation, baseline);
 
-                //  put Sidebar at end
+                //  put content at end
                 allocation.x = rtl ? 0 : content_width;
                 allocation.width = side_width;
-                (_sidebar as SizeWatcher)?.size_to_change (side_width, height);
-                _sidebar?.allocate_size (allocation, baseline);
+                (_content as SizeWatcher)?.size_to_change (side_width, height);
+                _content.allocate_size (allocation, baseline);
             }
-
-            allocation.x = 0;
-            allocation.y = 0;
-            allocation.width = width;
-            allocation.height = height;
-            _stack.allocate_size (allocation, baseline);
         }
 
         public override void measure (Gtk.Orientation orientation, int for_size, out int minimum, out int natural, out int minimum_baseline, out int natural_baseline) {
             var minimum1 = 0, minimum2 = 0;
             var natural1 = 0, natural2 = 0;
-            minimum_baseline = 0;
-            natural_baseline = 0;
-            _content?.measure (orientation, for_size, out minimum1, out natural1, out minimum_baseline, out natural_baseline);
-            _sidebar?.measure (orientation, for_size, out minimum2, out natural2, out minimum_baseline, out natural_baseline);
+            _content.measure (orientation, for_size, out minimum1, out natural1, out minimum_baseline, out natural_baseline);
+            _sidebar.measure (orientation, for_size, out minimum2, out natural2, out minimum_baseline, out natural_baseline);
             minimum = int.max (minimum1, minimum2);
             natural = int.max (natural1, natural2);
         }
 
         public override void snapshot (Gtk.Snapshot snapshot) {
             if (!_folded) {
-                var size = _content?.get_width () ?? 0;
+                var size = _sidebar.get_width ();
                 var rtl = get_direction () == Gtk.TextDirection.RTL;
                 var rect = Graphene.Rect ();
                 rect.init (rtl ? _view_width - size : size, 0, scale_factor * 0.25f, _view_height);
@@ -188,50 +186,19 @@ namespace G4 {
             base.snapshot (snapshot);
         }
 
-        private void update_parent (Gtk.Widget parent, Gtk.Widget? widget) {
-            var parent0 = widget?.parent;
-            if (widget != null && parent0 != parent) {
-                var child = (!)widget;
-                if (parent0 == _stack) {
-                    _stack.remove (child);
-                } else {
-                    child.unparent ();
-                }
-                if (_folded) {
-                    _stack.add_child (child);
-                } else {
-                    add_child (_builder, child, null);
-                }
-            }
-        }
-
         private void update_visible_child () {
-            Gtk.Widget? child = null;
-            switch (_visible_mode) {
-                case LeafletMode.CONTENT:
-                    child = _content;
-                    break;
-                case LeafletMode.SIDEBAR:
-                    child = _sidebar;
-                    break;
+            if (_visible_mode == LeafletMode.NONE && _content.parent == _stack) {
+                _stack.remove (_content);
+                add_child (_builder, _content, null);
             }
-            if (child != null && child?.parent == _stack && _stack.visible_child != child) {
-                _stack.transition_type = Gtk.StackTransitionType.NONE;
-                _stack.visible_child = (!)child;
-                _stack.transition_type = Gtk.StackTransitionType.OVER_LEFT_RIGHT;
-            }
-        }
 
-        private void update_visible_mode () {
-            var child = _stack.get_visible_child ();
-            var mode = _visible_mode;
-            if (child == _content)
-                mode = LeafletMode.CONTENT;
-            else if (child == _sidebar)
-                mode = LeafletMode.SIDEBAR;
-            if (_visible_mode != mode) {
-                _visible_mode = mode;
-                notify_property ("visible-mode");
+            var child = _visible_mode == LeafletMode.CONTENT ? _content :_sidebar;
+            if (_stack.visible_child != child) {
+                if (child.parent != _stack) {
+                    child.unparent ();
+                    _stack.add_child (child);
+                }
+                _stack.visible_child = child;
             }
         }
     }

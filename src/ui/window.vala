@@ -42,8 +42,8 @@ namespace G4 {
             _play_panel = new PlayPanel (app, this, _leaflet);
             _play_panel.cover_changed.connect (on_cover_changed);
 
-            _leaflet.content = _store_panel;
-            _leaflet.sidebar = _play_panel;
+            _leaflet.content = _play_panel;
+            _leaflet.sidebar = _store_panel;
             _leaflet.bind_property ("folded", revealer, "reveal-child", BindingFlags.SYNC_CREATE);
 
             setup_drop_target ();
