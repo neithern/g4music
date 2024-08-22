@@ -12,7 +12,6 @@ namespace G4 {
     }
 
     public class Leaflet : Gtk.Widget {
-        private Gtk.Builder _builder = new Gtk.Builder ();
         private Gtk.Widget _content = new Gtk.Label (null);
         private Gtk.Widget _sidebar = new Gtk.Label (null);
         private Gtk.Stack _stack = new Gtk.Stack ();
@@ -26,8 +25,8 @@ namespace G4 {
         private int _visible_mode = LeafletMode.NONE;
 
         public Leaflet () {
-            add_child (_builder, _content, null);
-            add_child (_builder, _stack, null);
+            _content.set_parent (this);
+            _stack.set_parent (this);
             _stack.add_child (_sidebar);
             _stack.transition_type = Gtk.StackTransitionType.OVER_LEFT_RIGHT;
         }
@@ -56,7 +55,7 @@ namespace G4 {
                 if (_folded) {
                     _stack.add_child (value);
                 } else {
-                    add_child (_builder, value, null);
+                    value.set_parent (this);
                 }
                 _content = value;
                 queue_allocate ();
@@ -119,7 +118,7 @@ namespace G4 {
                     _stack.remove (_content);
                     _stack.visible_child = _sidebar;
                     _stack.transition_type = Gtk.StackTransitionType.OVER_LEFT_RIGHT;
-                    add_child (_builder, _content, null);
+                    _content.set_parent (this);
                 }
                 notify_property ("folded");
             }
@@ -189,7 +188,7 @@ namespace G4 {
         private void update_visible_child () {
             if (_visible_mode == LeafletMode.NONE && _content.parent == _stack) {
                 _stack.remove (_content);
-                add_child (_builder, _content, null);
+                _content.set_parent (this);
             }
 
             var child = _visible_mode == LeafletMode.CONTENT ? _content :_sidebar;

@@ -10,7 +10,7 @@ namespace G4 {
             _box.hexpand = true;
             _revealer.child = _box;
             _revealer.reveal_child = true;
-            add_child (new Gtk.Builder (), _revealer, null);
+            _revealer.set_parent (this);
         }
 
         public bool reveal_child {

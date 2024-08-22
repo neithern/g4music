@@ -9,15 +9,13 @@ namespace G4 {
     }
 
     public class StableLabel : Gtk.Widget {
-        private static Gtk.Builder _builder = new Gtk.Builder ();
-
         private EllipsizeMode _ellipsize = EllipsizeMode.NONE;
         private Gtk.Label _label = new Gtk.Label (null);
         private float _label_offset = 0;
         private int _label_width = 0;
 
         construct {
-            add_child (_builder, _label, null);
+            _label.set_parent (this);
         }
 
         ~StableLabel () {
