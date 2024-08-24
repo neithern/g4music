@@ -6,30 +6,36 @@ namespace G4 {
     }
 
     namespace LeafletMode {
-        public const int NONE = 0;
-        public const int CONTENT = 1;
-        public const int SIDEBAR = 2;
+        public const int SIDEBAR = 1;
+        public const int CONTENT = 2;
     }
 
     public class Leaflet : Gtk.Widget {
         private Gtk.Widget _content_box;
         private Gtk.Widget _sidebar_box;
-        private Gtk.Widget _content = new Gtk.Label (null);
-        private Gtk.Widget _sidebar = new Gtk.Label (null);
+        private Gtk.Widget _content = new Adw.Bin ();
+        private Gtk.Widget _sidebar = new Adw.Bin ();
         private Stack _widget = new Stack (true);
 
         private bool _folded = false;
-        private int _min_sidebar_width = 340;
-        private int _max_sidebar_width = 480;
-        private float _sidebar_fraction = 3/8f;
+        private float _content_fraction = 3/8f;
+        private int _content_min_width = 340;
+        private int _content_max_width = 480;
         private int _view_width = 0;
         private int _view_height = 0;
-        private int _visible_mode = LeafletMode.NONE;
+        private int _visible_mode = LeafletMode.SIDEBAR;
 
         public Leaflet () {
             _sidebar_box = _widget.add (_sidebar, "sidebar");
             _content_box = _widget.add (_content, "content");
             _widget.widget.set_parent (this);
+            _widget.notify["visible-child"].connect (() => {
+                var mode = _widget.visible_child == _sidebar ? LeafletMode.SIDEBAR : LeafletMode.CONTENT;
+                if (_folded && _visible_mode != mode) {
+                    _visible_mode = mode;
+                    notify_property ("visible-mode");
+                }
+            });
         }
 
         ~Leaflet () {
@@ -98,14 +104,14 @@ namespace G4 {
             _view_height = height;
 
             var stack = _widget.widget;
-            var folded = width < _min_sidebar_width * 2;
+            var folded = width < _content_min_width * 2;
             if (_folded != folded || first) {
                 _folded = folded;
                 if (folded && !_content.is_ancestor (_content_box)) {
                     _content.unparent ();
                     _widget.set_child (_content_box, _content);
                 } else if (!folded && _content.is_ancestor (_content_box)) {
-                    _widget.set_child (_content_box, new Gtk.Label (null));
+                    _widget.set_child (_content_box, new Adw.Bin ());
                     _content.insert_after (this, _widget.widget);
                 }
 
@@ -130,21 +136,20 @@ namespace G4 {
                 stack.allocate_size (allocation, baseline);
             } else {
                 var rtl = get_direction () == Gtk.TextDirection.RTL;
-                var side_width = (int) (width * _sidebar_fraction);
-                side_width = side_width.clamp (_min_sidebar_width, _max_sidebar_width);
-                var content_width = width - side_width;
+                var content_width = (int) (width * _content_fraction).clamp (_content_min_width, _content_max_width);
+                var side_width = width - content_width;
 
                 //  put sidebar at start
-                allocation.x = rtl ? side_width : 0;
-                allocation.width = content_width;
-                (_sidebar as SizeWatcher)?.size_to_change (content_width, height);
+                allocation.x = rtl ? content_width : 0;
+                allocation.width = side_width;
+                (_sidebar as SizeWatcher)?.size_to_change (side_width, height);
                 _sidebar.allocate_size (allocation, baseline);
                 stack.allocate_size (allocation, baseline);
 
                 //  put content at end
-                allocation.x = rtl ? 0 : content_width;
-                allocation.width = side_width;
-                (_content as SizeWatcher)?.size_to_change (side_width, height);
+                allocation.x = rtl ? 0 : side_width;
+                allocation.width = content_width;
+                (_content as SizeWatcher)?.size_to_change (content_width, height);
                 _content.allocate_size (allocation, baseline);
             }
         }
@@ -186,14 +191,14 @@ namespace G4 {
 #if ADW_1_4
     public class Stack : Object {
         private bool _retain_last_popped = false;
-        private Adw.NavigationPage? _last_popped_page = null;
+        private Adw.NavigationPage? _last_page = null;
         private Adw.NavigationView _widget = new Adw.NavigationView ();
 
         public Stack (bool retain_last_popped = false) {
             _retain_last_popped = retain_last_popped;
             _widget = new Adw.NavigationView ();
             _widget.get_next_page.connect (() => {
-                return _widget.visible_page != _last_popped_page ? _last_popped_page : null;
+                return _widget.visible_page != _last_page ? _last_page : null;
             });
             _widget.pushed.connect(() => {
                 notify_property ("visible-child");
@@ -201,7 +206,7 @@ namespace G4 {
             _widget.popped.connect((page) => {
                 notify_property ("visible-child");
                 if (_retain_last_popped)
-                    _last_popped_page = page;
+                    _last_page = page;
             });
         }
 
@@ -226,8 +231,8 @@ namespace G4 {
             }
             set {
                 if (_widget.visible_page.child != value) {
-                    if (_last_popped_page?.child == value) {
-                        _widget.push ((!)_last_popped_page);
+                    if (_last_page?.child == value) {
+                        _widget.push ((!)_last_page);
                     } else {
                         var page = find_page (value);
                         if (page != null)
@@ -247,7 +252,7 @@ namespace G4 {
             var page = new Adw.NavigationPage (child, tag ?? "");
             page.set_tag (tag);
             if (_retain_last_popped) {
-                _last_popped_page = page;
+                _last_page = page;
                 _widget.add (page);
             } else {
                 _widget.push (page);
@@ -260,9 +265,9 @@ namespace G4 {
         }
 
         public void remove (Gtk.Widget child) {
-            if (_last_popped_page?.child == child) {
-                _widget.remove ((!)_last_popped_page);
-                _last_popped_page = null;
+            if (_last_page?.child == child) {
+                _widget.remove ((!)_last_page);
+                _last_page = null;
             } else {
                 var page = find_page (child);
                 if (page != null) {
