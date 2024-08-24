@@ -12,9 +12,11 @@ namespace G4 {
     }
 
     public class Leaflet : Gtk.Widget {
+        private Gtk.Widget _content_box;
+        private Gtk.Widget _sidebar_box;
         private Gtk.Widget _content = new Gtk.Label (null);
         private Gtk.Widget _sidebar = new Gtk.Label (null);
-        private Gtk.Stack _stack = new Gtk.Stack ();
+        private Stack _widget = new Stack (true);
 
         private bool _folded = false;
         private int _min_sidebar_width = 340;
@@ -25,15 +27,14 @@ namespace G4 {
         private int _visible_mode = LeafletMode.NONE;
 
         public Leaflet () {
-            _content.set_parent (this);
-            _stack.set_parent (this);
-            _stack.add_child (_sidebar);
-            _stack.transition_type = Gtk.StackTransitionType.OVER_LEFT_RIGHT;
+            _sidebar_box = _widget.add (_sidebar, "sidebar");
+            _content_box = _widget.add (_content, "content");
+            _widget.widget.set_parent (this);
         }
 
         ~Leaflet () {
             _content.unparent ();
-            _stack.unparent ();
+            _widget.widget.unparent ();
         }
 
         public bool folded {
@@ -47,17 +48,11 @@ namespace G4 {
                 return _content;
             }
             set {
-                if (_content.parent == _stack) {
-                    _stack.remove (_content);
-                } else {
-                    _content.unparent ();
-                }
-                if (_folded) {
-                    _stack.add_child (value);
-                } else {
-                    value.set_parent (this);
-                }
                 _content = value;
+                if (_folded)
+                    _widget.set_child (_content_box, value);
+                else
+                    _content.set_parent (this);
                 queue_allocate ();
             }
         }
@@ -67,9 +62,8 @@ namespace G4 {
                 return _sidebar;
             }
             set {
-                _stack.remove (_sidebar);
-                _stack.add_child (value);
                 _sidebar = value;
+                _widget.set_child (_sidebar_box, value);
                 queue_allocate ();
             }
         }
@@ -95,31 +89,30 @@ namespace G4 {
         public override void size_allocate (int width, int height, int baseline) {
             var first = _view_width == 0 && width > 0;
             if (first) {
-                Idle.add (() => {
+                run_idle_once (() => {
                     (_content as SizeWatcher)?.first_allocated ();
                     (_sidebar as SizeWatcher)?.first_allocated ();
-                    return false;
                 });
             }
             _view_width = width;
             _view_height = height;
 
+            var stack = _widget.widget;
             var folded = width < _min_sidebar_width * 2;
             if (_folded != folded || first) {
                 _folded = folded;
-                if (folded && _content.parent != _stack) {
+                if (folded && !_content.is_ancestor (_content_box)) {
                     _content.unparent ();
-                    _stack.transition_type = Gtk.StackTransitionType.NONE;
-                    _stack.add_child (_content);
-                    _stack.visible_child = _visible_mode == LeafletMode.CONTENT ? _content :_sidebar;
-                    _stack.transition_type = Gtk.StackTransitionType.OVER_LEFT_RIGHT;
-                } else if (!folded && _content.parent == _stack) {
-                    _stack.transition_type = Gtk.StackTransitionType.NONE;
-                    _stack.remove (_content);
-                    _stack.visible_child = _sidebar;
-                    _stack.transition_type = Gtk.StackTransitionType.OVER_LEFT_RIGHT;
-                    _content.set_parent (this);
+                    _widget.set_child (_content_box, _content);
+                } else if (!folded && _content.is_ancestor (_content_box)) {
+                    _widget.set_child (_content_box, new Gtk.Label (null));
+                    _content.insert_after (this, _widget.widget);
                 }
+
+                var animate = _widget.animate_transitions;
+                _widget.animate_transitions = false;
+                update_visible_child ();
+                _widget.animate_transitions = animate;
                 notify_property ("folded");
             }
 
@@ -134,7 +127,7 @@ namespace G4 {
                 (_sidebar as SizeWatcher)?.size_to_change (width, height);
                 _content.allocate_size (allocation, baseline);
                 _sidebar.allocate_size (allocation, baseline);
-                _stack.allocate_size (allocation, baseline);
+                stack.allocate_size (allocation, baseline);
             } else {
                 var rtl = get_direction () == Gtk.TextDirection.RTL;
                 var side_width = (int) (width * _sidebar_fraction);
@@ -146,7 +139,7 @@ namespace G4 {
                 allocation.width = content_width;
                 (_sidebar as SizeWatcher)?.size_to_change (content_width, height);
                 _sidebar.allocate_size (allocation, baseline);
-                _stack.allocate_size (allocation, baseline);
+                stack.allocate_size (allocation, baseline);
 
                 //  put content at end
                 allocation.x = rtl ? 0 : content_width;
@@ -186,19 +179,242 @@ namespace G4 {
         }
 
         private void update_visible_child () {
-            if (_visible_mode == LeafletMode.NONE && _content.parent == _stack) {
-                _stack.remove (_content);
-                _content.set_parent (this);
-            }
-
-            var child = _visible_mode == LeafletMode.CONTENT ? _content :_sidebar;
-            if (_stack.visible_child != child) {
-                if (child.parent != _stack) {
-                    child.unparent ();
-                    _stack.add_child (child);
-                }
-                _stack.visible_child = child;
-            }
+            _widget.visible_child = _folded && _visible_mode == LeafletMode.CONTENT ? _content : _sidebar;
         }
     }
+
+#if ADW_1_4
+    public class Stack : Object {
+        private bool _retain_last_popped = false;
+        private Adw.NavigationPage? _last_popped_page = null;
+        private Adw.NavigationView _widget = new Adw.NavigationView ();
+
+        public Stack (bool retain_last_popped = false) {
+            _retain_last_popped = retain_last_popped;
+            _widget = new Adw.NavigationView ();
+            _widget.get_next_page.connect (() => {
+                return _widget.visible_page != _last_popped_page ? _last_popped_page : null;
+            });
+            _widget.pushed.connect(() => {
+                notify_property ("visible-child");
+            });
+            _widget.popped.connect((page) => {
+                notify_property ("visible-child");
+                if (_retain_last_popped)
+                    _last_popped_page = page;
+            });
+        }
+
+        public bool animate_transitions {
+            get {
+                return _widget.animate_transitions;
+            }
+            set {
+                _widget.animate_transitions = value;
+            }
+        }
+
+        public Gtk.Widget parent {
+            get {
+                return _widget.parent;
+            }
+        }
+
+        public Gtk.Widget visible_child {
+            get {
+                return _widget.visible_page.child;
+            }
+            set {
+                if (_widget.visible_page.child != value) {
+                    if (_last_popped_page?.child == value) {
+                        _widget.push ((!)_last_popped_page);
+                    } else {
+                        var page = find_page (value);
+                        if (page != null)
+                            _widget.pop_to_page ((!)page);
+                    }
+                }
+            }
+        }
+
+        public Gtk.Widget widget {
+            get {
+                return _widget;
+            }
+        }
+
+        public Gtk.Widget add (Gtk.Widget child, string? tag = null) {
+            var page = new Adw.NavigationPage (child, tag ?? "");
+            page.set_tag (tag);
+            if (_retain_last_popped) {
+                _last_popped_page = page;
+                _widget.add (page);
+            } else {
+                _widget.push (page);
+            }
+            return page;
+        }
+
+        public void pop () {
+            _widget.pop ();
+        }
+
+        public void remove (Gtk.Widget child) {
+            if (_last_popped_page?.child == child) {
+                _widget.remove ((!)_last_popped_page);
+                _last_popped_page = null;
+            } else {
+                var page = find_page (child);
+                if (page != null) {
+                    _widget.remove ((!)page);
+                }
+            }
+        }
+
+        public Gtk.Widget? get_child_by_name (string name) {
+            return _widget.find_page (name)?.child;
+        }
+
+        public GenericArray<Gtk.Widget> get_children () {
+            var pages = _widget.navigation_stack;
+            var count = pages.get_n_items ();
+            var children = new GenericArray<Gtk.Widget> (count);
+            for (var i = 0; i < count; i++) {
+                var page = (Adw.NavigationPage) pages.get_item (i);
+                children.add (page.child);
+            }
+            return children;
+        }
+
+        public GenericArray<string> get_child_names () {
+            var pages = _widget.navigation_stack;
+            var count = pages.get_n_items ();
+            var children = new GenericArray<string> (count);
+            for (var i = 0; i < count; i++) {
+                var page = (Adw.NavigationPage) pages.get_item (i);
+                children.add (page.tag);
+            }
+            return children;
+        }
+
+        public void set_child (Gtk.Widget page, Gtk.Widget child) {
+            var p = page as Adw.NavigationPage;
+            p?.set_child (child);
+        }
+
+        private Adw.NavigationPage? find_page (Gtk.Widget child) {
+            var pages = _widget.navigation_stack;
+            var count = pages.get_n_items ();
+            for (var i = 0; i < count; i++) {
+                var page = (Adw.NavigationPage) pages.get_item (i);
+                if (page.child == child)
+                    return page;
+            }
+            return null;
+        }
+    }
+#else
+    public class Stack : Object {
+        private Gtk.Stack _widget = new Gtk.Stack ();
+
+        public Stack (bool retain_last_popped = false) {
+            _widget = new Gtk.Stack ();
+            animate_transitions = true;
+        }
+
+        public bool animate_transitions {
+            get {
+                return _widget.transition_type != Gtk.StackTransitionType.NONE;
+            }
+            set {
+                _widget.transition_type = value ? Gtk.StackTransitionType.SLIDE_LEFT_RIGHT : Gtk.StackTransitionType.NONE;
+            }
+        }
+
+        public Gtk.Widget parent {
+            get {
+                return _widget.parent;
+            }
+        }
+
+        public Gtk.Widget visible_child {
+            get {
+                return ((Adw.Bin) _widget.visible_child).child;
+            }
+            set {
+                _widget.visible_child = value.parent;
+            }
+        }
+
+        public Gtk.Widget widget {
+            get {
+                return _widget;
+            }
+        }
+
+        public Gtk.Widget add (Gtk.Widget child, string? tag = null) {
+            var overlay = new Adw.Bin ();
+            overlay.child = child;
+            _widget.add_named (overlay, tag);
+            return overlay;
+        }
+
+        public void pop () {
+            var child = _widget.get_visible_child ();
+            var previous = _widget.get_visible_child ()?.get_prev_sibling ();
+            if (child != null && previous != null) {
+                _widget.visible_child = (!)previous;
+                run_timeout_once (_widget.transition_duration, () => {
+                    _widget.remove ((!)child);
+                });
+            }
+        }
+
+        public void remove (Gtk.Widget child) {
+            var page = find_page (child);
+            if (page != null) {
+                _widget.remove ((!)page);
+            }
+        }
+
+        public Gtk.Widget? get_child_by_name (string name) {
+            return (_widget.get_child_by_name (name) as Adw.Bin)?.child;
+        }
+
+        public GenericArray<Gtk.Widget> get_children () {
+            var pages = _widget.pages;
+            var count = pages.get_n_items ();
+            var children = new GenericArray<Gtk.Widget> (count);
+            for (var i = 0; i < count; i++) {
+                var page = (Gtk.StackPage) pages.get_item (i);
+                children.add (((Adw.Bin) page.child).child);
+            }
+            return children;
+        }
+
+        public GenericArray<string> get_child_names () {
+            var pages = _widget.pages;
+            var count = pages.get_n_items ();
+            var children = new GenericArray<string> (count);
+            for (var i = 0; i < count; i++) {
+                var page = (Gtk.StackPage) pages.get_item (i);
+                children.add (page.name);
+            }
+            return children;
+        }
+
+        public void set_child (Gtk.Widget page, Gtk.Widget child) {
+            var p = page as Adw.Bin;
+            p?.set_child (child);
+        }
+
+        private Gtk.Widget? find_page (Gtk.Widget child) {
+            for (var page = _widget.get_first_child (); page != null; page = page?.get_next_sibling ()) {
+                if ((page as Adw.Bin)?.child == child)
+                    return page;
+            }
+            return null;
+        }
+    }
+#endif
 }
