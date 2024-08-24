@@ -113,7 +113,8 @@ namespace G4 {
         private void focus_to_play_later (int delay = 100) {
             run_timeout_once (delay, () => {
                 if (!focus_visible && !(focus_widget is Gtk.Editable)) {
-                    _play_panel.focus_to_play ();
+                    var button = find_button_by_action_name (_leaflet, ACTION_APP + ACTION_PLAY_PAUSE);
+                    button?.grab_focus ();
                 }
             });
         }
@@ -243,5 +244,22 @@ namespace G4 {
                 _bkgnd_paintable.paintable = null;
             }
         }
+    }
+
+    public Gtk.Button? find_button_by_action_name (Gtk.Widget widget, string action) {
+        for (var child = widget.get_first_child (); child != null; child = child?.get_next_sibling ()) {
+            if (!((!)child).is_drawable ()) {
+                continue;
+            } else if (child is Gtk.Button) {
+                var button = (Gtk.Button) child;
+                if (button.action_name == action)
+                    return button;
+            } else {
+                var button = find_button_by_action_name ((!)child, action);
+                if (button != null)
+                    return button;
+            }
+        }
+        return null;
     }
 }

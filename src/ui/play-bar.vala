@@ -132,10 +132,6 @@ namespace G4 {
             }
         }
 
-        public void focus_to_play () {
-            _play.grab_focus ();
-        }
-
         public void on_size_changed (int bar_width) {
             var text_width = int.max (_positive.get_width (), _negative.get_width ());
             _peak.width_request = bar_width - (text_width + _positive.margin_start + _negative.margin_end) * 2;
