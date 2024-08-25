@@ -19,6 +19,7 @@ namespace G4 {
         private uint _row_width = 0;
         private double _row_height = 0;
         private double _scroll_range = 0;
+        private int _scrolling_item = -1;
 
         public signal void item_activated (uint position, Object? obj);
         public signal void item_created (Gtk.ListItem item);
@@ -170,11 +171,9 @@ namespace G4 {
                 _scroll_animation = new Adw.TimedAnimation (_scroll_view, adj.value, scroll_to, jump ? 50 : 500, target);
                 _scroll_animation?.play ();
             } else {
-                // Hack: sometime show only first item if no child drawed, so scroll it later
-                if (_child_drawed)
-                    scroll_to_item_directly (index);
-                else
-                    run_idle_once (() => scroll_to_item_directly (index));
+                scroll_to_item_directly (index);
+                // Hack: sometime show only first item if no child drawed, so scroll it when first draw an item
+                _scrolling_item = _child_drawed ? -1 : index;
             }
         }
 
@@ -216,13 +215,17 @@ namespace G4 {
             } else {
                 entry.first_draw_handler = entry.cover.first_draw.connect (() => {
                     entry.disconnect_first_draw ();
-                    _child_drawed = true;
                     _thmbnailer.load_async.begin (music, _image_size, (obj, res) => {
                         var paintable2 = _thmbnailer.load_async.end (res);
                         if (music == (Music) item.item) {
                             entry.paintable = paintable2;
                         }
                     });
+                    _child_drawed = true;
+                    if (_scrolling_item != -1) {
+                        scroll_to_item_directly (_scrolling_item);
+                        _scrolling_item = -1;
+                    }
                 });
             }
         }
