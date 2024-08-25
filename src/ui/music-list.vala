@@ -14,6 +14,7 @@ namespace G4 {
         private Gtk.ScrolledWindow _scroll_view = new Gtk.ScrolledWindow ();
         private Thumbnailer _thmbnailer;
 
+        private bool _child_drawed = false;
         private uint _columns = 1;
         private uint _row_width = 0;
         private double _row_height = 0;
@@ -137,6 +138,7 @@ namespace G4 {
             factory.bind.connect (on_bind_item);
             factory.unbind.connect (on_unbind_item);
             _grid_view.factory = factory;
+            _child_drawed = false;
         }
 
         public void scroll_to_current_item () {
@@ -160,16 +162,24 @@ namespace G4 {
                 var jump = diff > list_height;
                 if (jump) {
                     // Jump to correct position first
-                    _grid_view.activate_action_variant ("list.scroll-to-item", new Variant.uint32 (index));
+                    scroll_to_item_directly (index);
                 }
                 //  Scroll smoothly
                 var target = new Adw.CallbackAnimationTarget (adj.set_value);
                 _scroll_animation?.pause ();
                 _scroll_animation = new Adw.TimedAnimation (_scroll_view, adj.value, scroll_to, jump ? 50 : 500, target);
                 _scroll_animation?.play ();
-            } else if (_binding_items.length > 0) {
-                _grid_view.activate_action_variant ("list.scroll-to-item", new Variant.uint32 (index));
+            } else {
+                // Hack: sometime show only first item if no child drawed, so scroll it later
+                if (_child_drawed)
+                    scroll_to_item_directly (index);
+                else
+                    run_idle_once (() => scroll_to_item_directly (index));
             }
+        }
+
+        public void scroll_to_item_directly (uint index) {
+            _grid_view.activate_action_variant ("list.scroll-to-item", new Variant.uint32 (index));
         }
 
         public uint update_store () {
@@ -206,6 +216,7 @@ namespace G4 {
             } else {
                 entry.first_draw_handler = entry.cover.first_draw.connect (() => {
                     entry.disconnect_first_draw ();
+                    _child_drawed = true;
                     _thmbnailer.load_async.begin (music, _image_size, (obj, res) => {
                         var paintable2 = _thmbnailer.load_async.end (res);
                         if (music == (Music) item.item) {
