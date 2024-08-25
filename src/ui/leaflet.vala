@@ -291,15 +291,16 @@ namespace G4 {
             return children;
         }
 
-        public GenericArray<string> get_child_names () {
+        public void get_visible_names (GenericArray<string> names) {
             var pages = _widget.navigation_stack;
             var count = pages.get_n_items ();
-            var children = new GenericArray<string> (count);
+            var visible_page = _widget.visible_page;
             for (var i = 0; i < count; i++) {
                 var page = (Adw.NavigationPage) pages.get_item (i);
-                children.add (page.tag);
+                names.add (page.tag);
+                if (page == visible_page)
+                    break;
             }
-            return children;
         }
 
         public void set_child (Gtk.Widget page, Gtk.Widget child) {
@@ -366,9 +367,10 @@ namespace G4 {
 
         public void pop () {
             var child = _widget.get_visible_child ();
-            var previous = _widget.get_visible_child ()?.get_prev_sibling ();
+            var previous = child?.get_prev_sibling ();
             if (child != null && previous != null) {
                 _widget.visible_child = (!)previous;
+                notify_property ("visible-child");
                 run_timeout_once (_widget.transition_duration, () => {
                     _widget.remove ((!)child);
                 });
@@ -397,15 +399,16 @@ namespace G4 {
             return children;
         }
 
-        public GenericArray<string> get_child_names () {
+        public void get_visible_names (GenericArray<string> names) {
             var pages = _widget.pages;
             var count = pages.get_n_items ();
-            var children = new GenericArray<string> (count);
+            var child = _widget.visible_child;
             for (var i = 0; i < count; i++) {
                 var page = (Gtk.StackPage) pages.get_item (i);
-                children.add (page.name);
+                names.add (page.name);
+                if (page.child == child)
+                    break;
             }
-            return children;
         }
 
         public void set_child (Gtk.Widget page, Gtk.Widget child) {

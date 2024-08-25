@@ -389,9 +389,7 @@ namespace G4 {
         private void get_library_paths (GenericArray<string> paths) {
             var stack = get_current_stack ();
             if (stack != null) {
-                var children = ((!)stack).get_child_names ();
-                foreach (var name in children)
-                    paths.add (name);
+                ((!)stack).get_visible_names (paths);
             } else {
                 paths.add (stack_view.get_visible_child_name () ?? "");
             }
