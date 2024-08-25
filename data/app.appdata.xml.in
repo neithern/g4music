@@ -60,6 +60,16 @@
     </screenshots>
 
     <releases>
+        <release version="3.9" date="2024-8-25">
+            <description translate="no">
+                <ul>
+                <li>Optimize UI layout and style for small screen.</li>
+                <li>Optimize loading cover of playing music.</li>
+                <li>Optimize pressing Space to toggle play/pause.</li>
+                <li>Update German translation: Chinese, German.</li>
+                </ul>
+            </description>
+        </release>
         <release version="3.8.2" date="2024-8-16">
             <description translate="no">
                 <ul>
