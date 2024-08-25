@@ -111,7 +111,7 @@ namespace G4 {
                     _content.unparent ();
                     _widget.set_child (_content_box, _content);
                 } else if (!folded && _content.is_ancestor (_content_box)) {
-                    _widget.set_child (_content_box, new Adw.Bin ());
+                    _widget.set_child (_content_box, null);
                     _content.insert_after (this, _widget.widget);
                 }
 
@@ -194,16 +194,19 @@ namespace G4 {
         private Adw.NavigationPage? _last_page = null;
         private Adw.NavigationView _widget = new Adw.NavigationView ();
 
+        public signal void popped (Gtk.Widget? child);
+
         public Stack (bool retain_last_popped = false) {
             _retain_last_popped = retain_last_popped;
             _widget = new Adw.NavigationView ();
             _widget.get_next_page.connect (() => {
-                return _widget.visible_page != _last_page ? _last_page : null;
+                return (_widget.visible_page != _last_page && _last_page?.get_child () != null) ? _last_page : null;
             });
             _widget.pushed.connect(() => {
                 notify_property ("visible-child");
             });
             _widget.popped.connect((page) => {
+                popped (page.child);
                 notify_property ("visible-child");
                 if (_retain_last_popped)
                     _last_page = page;
@@ -303,7 +306,7 @@ namespace G4 {
             }
         }
 
-        public void set_child (Gtk.Widget page, Gtk.Widget child) {
+        public void set_child (Gtk.Widget page, Gtk.Widget? child) {
             var p = page as Adw.NavigationPage;
             p?.set_child (child);
         }
@@ -322,6 +325,8 @@ namespace G4 {
 #else
     public class Stack : Object {
         private Gtk.Stack _widget = new Gtk.Stack ();
+
+        public signal void popped (Gtk.Widget? child);
 
         public Stack (bool retain_last_popped = false) {
             _widget = new Gtk.Stack ();
@@ -370,6 +375,7 @@ namespace G4 {
             var previous = child?.get_prev_sibling ();
             if (child != null && previous != null) {
                 _widget.visible_child = (!)previous;
+                popped (child);
                 notify_property ("visible-child");
                 run_timeout_once (_widget.transition_duration, () => {
                     _widget.remove ((!)child);
@@ -411,7 +417,7 @@ namespace G4 {
             }
         }
 
-        public void set_child (Gtk.Widget page, Gtk.Widget child) {
+        public void set_child (Gtk.Widget page, Gtk.Widget? child) {
             var p = page as Adw.Bin;
             p?.set_child (child);
         }

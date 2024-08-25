@@ -47,6 +47,7 @@ namespace G4 {
         private MusicLibrary _library;
         private string[]? _library_path = null;
         private Gdk.Paintable _loading_paintable;
+        private Gtk.Widget? _popped_child = null;
         private uint _search_mode = SearchMode.ANY;
         private string _search_text = "";
         private bool _size_allocated = false;
@@ -72,13 +73,16 @@ namespace G4 {
 
             _artist_list = create_artist_list ();
             _artist_stack.add (_artist_list, PageName.ARTIST);
+            _artist_stack.popped.connect (on_page_popped);
             stack_view.add_titled (_artist_stack.widget, PageName.ARTIST, _("Artists")).icon_name = "system-users-symbolic";
 
             _album_list = create_album_list ();
             _album_stack.add (_album_list, PageName.ALBUM);
+            _album_stack.popped.connect (on_page_popped);
             stack_view.add_titled (_album_stack.widget, PageName.ALBUM, _("Albums")).icon_name = "drive-multidisk-symbolic";
 
             _playlist_list = create_playlist_list ();
+            _playlist_stack.popped.connect (on_page_popped);
             _playlist_stack.add (_playlist_list, PageName.PLAYLIST);
             //  stack_view.add_titled (_playlist_stack, PageName.PLAYLIST, _("Playlists")).icon_name = "view-list-symbolic";
 
@@ -145,8 +149,12 @@ namespace G4 {
                     }
                     on_music_changed (_app.current_music);
 
-                    var mlist = _current_list;
-                    run_idle_once (() => mlist.scroll_to_current_item ());
+                    if (_popped_child != null) {
+                        _popped_child = null;
+                    } else {
+                        var mlist = _current_list;
+                        run_idle_once (() => mlist.scroll_to_current_item ());
+                    }
                 }
                 sort_btn.sensitive = _current_list.playable;
                 _search_mode = SearchMode.ANY;
@@ -486,6 +494,10 @@ namespace G4 {
                 update_visible_store ();
                 initialize_library_view ();
             }
+        }
+
+        private void on_page_popped (Gtk.Widget? child) {
+            _popped_child = child;
         }
 
         private void on_search_btn_toggled () {
