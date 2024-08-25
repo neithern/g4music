@@ -1,3 +1,4 @@
+data/app.appdata.xml.in
 data/app.desktop.in
 src/gtk/help-overlay.ui
 src/gtk/play-panel.ui

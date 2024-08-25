@@ -11,7 +11,7 @@ Play your music elegantly.
 Gapless (AKA: G4Music) is a light weight music player written in GTK4, focuses on large music collection.
 
 ## Features
-- Supports most music file types, samba and any other remote protocols (depends on GIO and GStreamer).
+- Supports most music file types, Samba and any other remote protocols (depends on GIO and GStreamer).
 - Fast loading and parsing thousands of music files in very few seconds, monitor local changes.
 - Low memory usage for large music collection with album covers (embedded and external), no thumbnail caches to store.
 - Group and sorts by album/artist/title, shuffle list, full-text searching.
@@ -21,7 +21,7 @@ Gapless (AKA: G4Music) is a light weight music player written in GTK4, focuses o
 - Supports audio peaks visualizer.
 - Supports gapless playback.
 - Supports normalizing volume with ReplayGain.
-- Supports pipewire and other audio sink.
+- Supports PipeWire and other audio sink.
 - Supports MPRIS control.
 
 ## Install from Flathub

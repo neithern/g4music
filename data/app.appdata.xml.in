@@ -6,7 +6,7 @@
     <project_license>GPL-3.0-or-later</project_license>
     <summary>Play your music elegantly</summary>
 
-    <developer_name>Nanling</developer_name>
+    <developer_name translate="no">Nanling</developer_name>
     <update_contact>neithern@outlook.com</update_contact>
 
     <url type="homepage">https://gitlab.gnome.org/neithern/g4music</url>
@@ -20,7 +20,7 @@
       	<p>Gapless (AKA: G4Music) is a light weight music player written in GTK4, focuses on large music collection.</p>
         <p>Features</p>
         <ul>
-        <li>Supports most music file types, samba and any other remote protocols (depends on GIO and GStreamer).</li>
+        <li>Supports most music file types, Samba and any other remote protocols (depends on GIO and GStreamer).</li>
         <li>Fast loading and parsing thousands of music files in very few seconds, monitor local changes.</li>
         <li>Low memory usage for large music collection with album covers (embedded and external), no thumbnail caches to store.</li>
         <li>Group and sorts by album/artist/title, shuffle list, full-text searching.</li>
@@ -30,7 +30,7 @@
         <li>Supports audio peaks visualizer.</li>
         <li>Supports gapless playback.</li>
         <li>Supports normalizing volume with ReplayGain.</li>
-        <li>Supports pipewire and other audio sink.</li>
+        <li>Supports PipeWire and other audio sink.</li>
         <li>Supports MPRIS control.</li>
         </ul>
     </description>
@@ -61,7 +61,7 @@
 
     <releases>
         <release version="3.8.2" date="2024-8-16">
-            <description>
+            <description translate="no">
                 <ul>
                 <li>Fix initial view when no music.</li>
                 <li>Fix Drag-drop when no music.</li>
@@ -70,7 +70,7 @@
             </description>
         </release>
         <release version="3.8.1" date="2024-7-28">
-            <description>
+            <description translate="no">
                 <ul>
                 <li>Fix build issue before GTK 4.10.</li>
                 <li>Remove screen shots from flatpak package.</li>
@@ -79,7 +79,7 @@
             </description>
         </release>
         <release version="3.8" date="2024-7-20">
-            <description>
+            <description translate="no">
                 <ul>
                 <li>Rename to 'Gapless' to follow GNOME HIG.</li>
                 <li>Marquee animation for long title.</li>
@@ -91,7 +91,7 @@
             </description>
         </release>
         <release version="3.7.2" date="2024-6-29">
-            <description>
+            <description translate="no">
                 <ul>
                 <li>Drag the play-panel to move the window.</li>
                 <li>Individual sort-mode for albums.</li>
@@ -103,7 +103,7 @@
             </description>
         </release>
         <release version="3.6.2" date="2024-6-2">
-            <description>
+            <description translate="no">
                 <ul>
                 <li>Optimize pressing Space to play/pause.</li>
                 <li>Add translation: Persian.</li>
@@ -111,7 +111,7 @@
             </description>
         </release>
         <release version="3.6" date="2024-5-25">
-            <description>
+            <description translate="no">
                 <ul>
                 <li>Press Space to toggle play/pause.</li>
                 <li>Add Position property for MPRIS.</li>
@@ -120,7 +120,7 @@
             </description>
         </release>
         <release version="3.5.2" date="2024-4-25">
-            <description>
+            <description translate="no">
                 <ul>
                 <li>Update current item when items changed.</li>
                 <li>Free memory when music be removed.</li>
@@ -130,7 +130,7 @@
             </description>
         </release>
         <release version="3.5.1" date="2024-1-14">
-            <description>
+            <description translate="no">
                 <ul>
                 <li>Fix "playing" state for music entries.</li>
                 <li>Use Overlay to avoid changing list's width.</li>
@@ -141,7 +141,7 @@
             </description>
         </release>
         <release version="3.4" date="2023-10-15">
-            <description>
+            <description translate="no">
                 <ul>
                 <li>Build flatpak with GNOME 45.</li>
                 <li>Fix style of switch bar.</li>
@@ -152,7 +152,7 @@
             </description>
         </release>
         <release version="3.3" date="2023-9-3">
-            <description>
+            <description translate="no">
                 <ul>
                 <li>Make seek_bar auto width.</li>
                 <li>UI improvement and fixing.</li>
@@ -162,7 +162,7 @@
             </description>
         </release>
         <release version="3.2" date="2023-8-13">
-            <description>
+            <description translate="no">
                 <ul>
                 <li>Option: Grid view for artists/albums.</li>
                 <li>Bigger image size and column width for grid view.</li>
@@ -171,7 +171,7 @@
             </description>
         </release>
         <release version="3.1" date="2023-8-5">
-            <description>
+            <description translate="no">
                 <ul>
                 <li>Group by album-artist, sort albums by year.</li>
                 <li>Save and restore the last library view.</li>
@@ -184,7 +184,7 @@
             </description>
         </release>
         <release version="3.0" date="2023-7-29">
-            <description>
+            <description translate="no">
                 <ul>
                 <li>Group artists/albums as library.</li>
                 <li>Optimize layout for landscape view.</li>
@@ -196,7 +196,7 @@
             </description>
         </release>
         <release version="2.4" date="2023-7-7">
-            <description>
+            <description translate="no">
                 <ul>
                 <li>App icon refresh from @ddaudix.</li>
                 <li>Add a sort mode by: Artist/Album</li>
@@ -208,7 +208,7 @@
             </description>
         </release>
         <release version="2.3" date="2023-7-1">
-            <description>
+            <description translate="no">
                 <ul>
                 <li>Support .m3u/.pls playlist from command line.</li>
                 <li>Modeless preferences window.</li>
@@ -218,7 +218,7 @@
             </description>
         </release>
         <release version="2.2" date="2023-6-23">
-            <description>
+            <description translate="no">
                 <ul>
                 <li>Option: rotate cover when playing.</li>
                 <li>Click music title to search.</li>
@@ -230,7 +230,7 @@
             </description>
         </release>
         <release version="2.1" date="2023-6-18">
-            <description>
+            <description translate="no">
                 <ul>
                 <li>App startup acceleration.</li>
                 <li>Option: Prefer audio sink.</li>
@@ -240,7 +240,7 @@
             </description>
         </release>
         <release version="2.0" date="2023-6-11">
-            <description>
+            <description translate="no">
                 <ul>
                 <li>Option: Monitor local file changes.</li>
                 <li>Right click or long press to show popover menu.</li>
@@ -253,7 +253,7 @@
             </description>
         </release>
         <release version="1.13" date="2023-5-25">
-            <description>
+            <description translate="no">
                 <ul>
                 <li>Option: compact playlist view.</li>
                 <li>Option: custom characters for audio peaks.</li>
@@ -263,7 +263,7 @@
             </description>
         </release>
         <release version="1.12" date="2023-5-18">
-            <description>
+            <description translate="no">
                 <ul>
                 <li>Save memory and CPU usage.</li>
                 <li>New style for no-cover images.</li>
@@ -272,7 +272,7 @@
             </description>
         </release>
         <release version="1.11" date="2023-5-8">
-            <description>
+            <description translate="no">
                 <ul>
                 <li>MPRIS improvement.</li>
                 <li>UI improvement and fixing.</li>
@@ -280,7 +280,7 @@
             </description>
         </release>
         <release version="1.10" date="2023-5-6">
-            <description>
+            <description translate="no">
                 <ul>
                 <li>Build flatpak with GNOME 44.</li>
                 <li>MPRIS improvement.</li>
@@ -290,7 +290,7 @@
             </description>
         </release>
         <release version="1.9.2" date="2023-4-2">
-            <description>
+            <description translate="no">
                 <ul>
                 <li>Fix wrong icon name of repeat-song.</li>
                 <li>Fix wrong state of Switch buttons.</li>
@@ -298,7 +298,7 @@
             </description>
         </release>
         <release version="1.9.1" date="2023-3-25">
-            <description>
+            <description translate="no">
                 <ul>
                 <li>Optimize loading thumbnails.</li>
                 <li>UI improvement and fixing.</li>
@@ -307,7 +307,7 @@
             </description>
         </release>
         <release version="1.9" date="2023-3-17">
-            <description>
+            <description translate="no">
                 <ul>
                 <li>Select a music file to "Play at Next".</li>
                 <li>Lazy load thumbnails to faster startup and saving memory.</li>
@@ -317,7 +317,7 @@
             </description>
         </release>
         <release version="1.8" date="2022-10-19">
-            <description>
+            <description translate="no">
                 <ul>
                 <li>Build flatpak with GNOME 43.</li>
                 <li>Cache directories for faster loading.</li>
@@ -328,7 +328,7 @@
             </description>
         </release>
         <release version="1.7" date="2022-10-02">
-            <description>
+            <description translate="no">
                 <ul>
                 <li>Start to play when music changed.</li>
                 <li>Optimize audio peaks visualizer.</li>
@@ -338,7 +338,7 @@
             </description>
         </release>
         <release version="1.6" date="2022-08-06">
-            <description>
+            <description translate="no">
                 <ul>
                 <li>Option: Background blur mode.</li>
                 <li>Shortcut key for toggle sort.</li>
@@ -350,7 +350,7 @@
             </description>
         </release>
         <release version="1.5" date="2022-07-31">
-            <description>
+            <description translate="no">
                 <ul>
                 <li>Show loading songs progress with percent.</li>
                 <li>Add sort by recently added, thanks to Mek101.</li>
@@ -360,7 +360,7 @@
             </description>
         </release>
         <release version="1.4" date="2022-07-23">
-            <description>
+            <description translate="no">
                 <ul>
                 <li>Popover menu for song entry.</li>
                 <li>Show initial status if no sound found.</li>
@@ -370,7 +370,7 @@
             </description>
         </release>
         <release version="1.3" date="2022-07-17">
-            <description>
+            <description translate="no">
                 <ul>
                 <li>App inhibit suspend to keep playing.</li>
                 <li>Performance improvement and memory saving.</li>
@@ -381,7 +381,7 @@
             </description>
         </release>
         <release version="1.2" date="2022-07-01">
-            <description>
+            <description translate="no">
                 <ul>
                 <li>Faster parsing OGG and MP4 tags.</li>
                 <li>Faster drawing texts using pango.</li>
@@ -391,7 +391,7 @@
             </description>
         </release>
         <release version="1.1" date="2022-06-25">
-            <description>
+            <description translate="no">
                 <ul>
                 <li>Option: Gapless playback.</li>
                 <li>Make label clickable instead of hypelinks.</li>
@@ -402,7 +402,7 @@
             </description>
         </release>
         <release version="1.0" date="2022-06-23">
-            <description>
+            <description translate="no">
                 <ul>
                 <li>Support ReplayGain to normalize volume.</li>
                 <li>Option: Keep playing after window closed.</li>
@@ -414,7 +414,7 @@
             </description>
         </release>
         <release version="0.9" date="2022-06-20">
-            <description>
+            <description translate="no">
                 <ul>
                 <li>Scale album cover to fix large window.</li>
                 <li>Navigate back if start search and folded.</li>
@@ -424,7 +424,7 @@
             </description>
         </release>
         <release version="0.8" date="2022-06-18">
-            <description>
+            <description translate="no">
                 <ul>
                 <li>Show current song in Files.</li>
                 <li>Sort by track number in an album.</li>
@@ -435,7 +435,7 @@
             </description>
         </release>
         <release version="0.7" date="2022-06-16">
-            <description>
+            <description translate="no">
                 <ul>
                 <li>Parallel parsing tags to make loading songs even faster.</li>
                 <li>Merge all kinds of tags as possible.</li>
@@ -444,7 +444,7 @@
             </description>
         </release>
         <release version="0.6" date="2022-06-15">
-            <description>
+            <description translate="no">
                 <ul>
                 <li>Use Adw.Leaflet to adapt to PC and phone screens.</li>
                 <li>Show a mini play bar when only the playlist on the window.</li>
@@ -456,7 +456,7 @@
             </description>
         </release>
         <release version="0.5" date="2022-06-13">
-            <description>
+            <description translate="no">
                 <ul>
                 <li>Detect music file type to fix incorrect parsing.</li>
                 <li>Update app icon to follow GNOME HIG, thanks to @daudix-UFO.</li>
@@ -466,7 +466,7 @@
             </description>
         </release>
         <release version="0.4" date="2022-06-12">
-            <description>
+            <description translate="no">
                 <ul>
                 <li>Recognize external images as cover art, supports transparency.</li>
                 <li>Showing peak now works with pipewire in flatpak.</li>
@@ -475,7 +475,7 @@
             </description>
         </release>
         <release version="0.3" date="2022-06-11">
-            <description>
+            <description translate="no">
                 <ul>
                 <li>Sort songs by Album/Artist/Title.</li>
                 <li>Option: Force dark theme.</li>
@@ -484,7 +484,7 @@
             </description>
         </release>
         <release version="0.2" date="2022-06-10">
-            <description>
+            <description translate="no">
                 <ul>
                 <li>Add volume button.</li>
                 <li>Repeat single song mode.</li>
@@ -496,7 +496,7 @@
             </description>
         </release>
         <release version="0.1" date="2022-06-06">
-            <description>
+            <description translate="no">
                 <p>First release.</p>
             </description>
         </release>
