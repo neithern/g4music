@@ -15,21 +15,21 @@
             <property name="visible">false</property>
           </object>
         </child>
-        <child type="end">
+        <child type="start">
           <object class="GtkMenuButton">
             <property name="icon_name">open-menu-symbolic</property>
             <property name="menu_model">primary_menu</property>
             <property name="tooltip-text" translatable="yes">Main Menu</property>
           </object>
         </child>
-        <child type="end">
+        <child type="start">
           <object class="GtkToggleButton" id="search_btn">
             <property name="icon_name">edit-find-symbolic</property>
             <property name="active" bind-source="search_bar" bind-property="search_mode_enabled" bind-flags="bidirectional"/>
             <property name="tooltip-text" translatable="yes">Search</property>
           </object>
         </child>
-        <child type="end">
+        <child type="start">
           <object class="GtkMenuButton" id="sort_btn">
             <property name="menu_model">sort_menu</property>
             <property name="tooltip-text" translatable="yes">Sort By</property>

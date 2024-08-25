@@ -10,8 +10,8 @@ namespace G4 {
         private int _duration = 0;
         private int _position = 0;
 
-        private CrossFadePaintable _paintable = new CrossFadePaintable ();
         private Adw.Animation? _fade_animation = null;
+        private CrossFadePaintable _paintable = new CrossFadePaintable ();
 
         construct {
             halign = Gtk.Align.FILL;
@@ -111,16 +111,16 @@ namespace G4 {
 
         public override void snapshot (Gtk.Snapshot snapshot) {
             base.snapshot (snapshot);
-#if GTK_4_10
-            var color = get_color ();
-#else
-            var color = get_style_context ().get_color ();
-#endif
-            color.alpha = 0.25f;
-            var line_width = scale_factor >= 2 ? 0.5f : 1;
+
+            var color = Gdk.RGBA ();
+            color.alpha = 0.2f;
+            color.red = color.green = color.blue = 0;
             var rect = Graphene.Rect ();
-            rect.init (0, 0, get_width (), line_width);
-            snapshot.append_color (color, rect);
+            rect.init (0, 0, get_width (), get_height ());
+            rect.inset (6, 6);
+            var outline = Gsk.RoundedRect ();
+            outline.init_from_rect (rect, 6);
+            snapshot.append_outset_shadow (outline, color, 1, 1, 1, 5);
         }
 
         private void on_duration_changed (Gst.ClockTime duration) {

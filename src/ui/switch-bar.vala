@@ -1,7 +1,7 @@
 namespace G4 {
 
     public class SwitchBar : Gtk.Widget {
-        private Gtk.Box _box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
+        private Gtk.Box _box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 4);
         private Gtk.Revealer _revealer = new Gtk.Revealer ();
         private int _minimum_width = 0;
         private Gtk.Stack _stack = (Gtk.Stack) null;
@@ -28,7 +28,7 @@ namespace G4 {
             }
             set {
                 _stack = value;
-                _stack.bind_property ("visible-child-name", this, "visible-child-name", BindingFlags.SYNC_CREATE);
+                _stack.bind_property ("visible-child-name", this, "visible-child-name");
                 update_buttons ();
             }
         }
@@ -87,11 +87,11 @@ namespace G4 {
                 if (find_child_by_name (page.name) == null) {
                     var button = new Gtk.ToggleButton ();
                     button.active = page.child == visible_child;
+                    button.hexpand = true;
                     button.icon_name = page.icon_name;
-                    button.margin_start = 2;
-                    button.margin_end = 2;
                     button.name = page.name;
                     button.tooltip_text = page.title;
+                    button.width_request = 48;
                     button.add_css_class ("flat");
                     button.toggled.connect (() => {
                         if (button.active && _stack.visible_child_name != button.name)

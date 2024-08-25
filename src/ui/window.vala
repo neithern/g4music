@@ -2,7 +2,6 @@ namespace G4 {
 
     public class Window : Adw.ApplicationWindow {
         private Leaflet _leaflet = new Leaflet ();
-        private MiniBar _mini_bar = new MiniBar ();
         private Gtk.ProgressBar _progress_bar = new Gtk.ProgressBar ();
         private PlayPanel _play_panel;
         private StorePanel _store_panel;
@@ -31,20 +30,13 @@ namespace G4 {
 
             _bkgnd_paintable.queue_draw.connect (this.queue_draw);
 
-            var revealer = new Gtk.Revealer ();
-            revealer.child = _mini_bar;
-            revealer.transition_type = Gtk.RevealerTransitionType.SLIDE_DOWN;
-            _mini_bar.activated.connect (_leaflet.push);
-
             _store_panel = new StorePanel (app, this, _leaflet);
-            _store_panel.append (revealer);
 
             _play_panel = new PlayPanel (app, this, _leaflet);
             _play_panel.cover_changed.connect (on_cover_changed);
 
             _leaflet.content = _play_panel;
             _leaflet.sidebar = _store_panel;
-            _leaflet.bind_property ("folded", revealer, "reveal-child", BindingFlags.SYNC_CREATE);
 
             setup_drop_target ();
             setup_focus_controller ();
@@ -139,8 +131,8 @@ namespace G4 {
             _cover_paintable = paintable;
 
             var app = (Application) application;
-            _mini_bar.cover = music != null ? (app.thumbnailer.find ((!)music)  ?? _cover_paintable) : app.icon;
-            _mini_bar.title = music?.title ?? "";
+            var mini_cover = music != null ? (app.thumbnailer.find ((!)music) ?? _cover_paintable) : app.icon;
+            _store_panel.set_mini_cover_and_title (mini_cover, music?.title ?? "");
             update_background ();
 
             var target = new Adw.CallbackAnimationTarget ((value) => {
@@ -230,8 +222,8 @@ namespace G4 {
             var controller = new Gtk.EventControllerFocus ();
             controller.enter.connect (() => focused_visible = false);
             this.content.add_controller (controller);
-            this.bind_property ("focus_visible", this, "focused_visible", BindingFlags.SYNC_CREATE);
-            this.bind_property ("focus_widget", this, "focused_widget", BindingFlags.SYNC_CREATE);
+            this.bind_property ("focus_visible", this, "focused_visible");
+            this.bind_property ("focus_widget", this, "focused_widget");
         }
 
         private void update_background () {

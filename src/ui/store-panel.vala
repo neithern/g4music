@@ -34,6 +34,7 @@ namespace G4 {
         private Stack _album_stack = new Stack ();
         private Stack _artist_stack = new Stack ();
         private Stack _playlist_stack = new Stack ();
+        public MiniBar _mini_bar = new MiniBar ();
         private SwitchBar _switch_bar = new SwitchBar ();
         private SwitchBar _switch_bar2 = new SwitchBar ();
 
@@ -60,8 +61,6 @@ namespace G4 {
             thumbnailer.scale_factor = this.scale_factor;
             _loading_paintable = thumbnailer.create_simple_text_paintable ("...", Thumbnailer.ICON_SIZE);
 
-            leaflet.bind_property ("folded", header_bar, "show-title-buttons", BindingFlags.SYNC_CREATE);
-
             search_btn.toggled.connect (on_search_btn_toggled);
             search_bar.key_capture_widget = win.content;
             search_entry.search_changed.connect (on_search_text_changed);
@@ -69,7 +68,7 @@ namespace G4 {
             _current_list = _playing_list = create_playing_music_list ();
             _playing_list.data_store = _app.music_store;
             _app.music_list = _playing_list.filter_model;
-            stack_view.add_titled (_playing_list, PageName.PLAYING, _("Playing")).icon_name = "media-playback-start-symbolic";
+            stack_view.add_titled (_playing_list, PageName.PLAYING, _("Playing")).icon_name = "user-home-symbolic";
 
             _artist_list = create_artist_list ();
             _artist_stack.add (_artist_list, PageName.ARTIST);
@@ -83,17 +82,28 @@ namespace G4 {
             _playlist_stack.add (_playlist_list, PageName.PLAYLIST);
             //  stack_view.add_titled (_playlist_stack, PageName.PLAYLIST, _("Playlists")).icon_name = "view-list-symbolic";
 
+            var mini_revealer = new Gtk.Revealer ();
+            mini_revealer.child = _mini_bar;
+            mini_revealer.transition_type = Gtk.RevealerTransitionType.SLIDE_UP;
+            _mini_bar.activated.connect (leaflet.push);
+            append (mini_revealer);
+            leaflet.bind_property ("folded", mini_revealer, "reveal-child");
+
             _switch_bar.stack = stack_view;
-            _switch_bar.transition_type = Gtk.RevealerTransitionType.SLIDE_RIGHT;
-            header_bar.pack_start (_switch_bar);
+            _switch_bar.transition_type = Gtk.RevealerTransitionType.NONE;
+            header_bar.pack_end (_switch_bar);
+            leaflet.bind_property ("folded", header_bar, "show-title-buttons");
 
             var revealer = new Gtk.Revealer ();
             revealer.child = _switch_bar2;
             revealer.transition_type = Gtk.RevealerTransitionType.SLIDE_UP;
-            insert_child_after (revealer, header_bar);
-            _switch_bar2.margin_start = 6;
+            append (revealer);
+            _switch_bar2.margin_start = 4;
+            _switch_bar2.margin_end = 4;
+            _switch_bar2.margin_top = 4;
+            _switch_bar2.margin_bottom = 4;
             _switch_bar2.stack = stack_view;
-            _switch_bar.bind_property ("reveal-child", revealer, "reveal-child", BindingFlags.SYNC_CREATE | BindingFlags.INVERT_BOOLEAN);
+            _switch_bar.bind_property ("reveal-child", revealer, "reveal-child", BindingFlags.INVERT_BOOLEAN);
 
             app.index_changed.connect (on_index_changed);
             app.music_changed.connect (on_music_changed);
@@ -156,13 +166,18 @@ namespace G4 {
             _album_list.create_factory ();
             _artist_list.create_factory ();
             _playlist_list.create_factory ();
-            _album_stack.bind_property ("visible-child", this, "visible-child", BindingFlags.DEFAULT);
-            _artist_stack.bind_property ("visible-child", this, "visible-child", BindingFlags.DEFAULT);
-            _playlist_stack.bind_property ("visible-child", this, "visible-child", BindingFlags.DEFAULT);
+            _album_stack.bind_property ("visible-child", this, "visible-child");
+            _artist_stack.bind_property ("visible-child", this, "visible-child");
+            _playlist_stack.bind_property ("visible-child", this, "visible-child");
             stack_view.transition_type = Gtk.StackTransitionType.SLIDE_LEFT_RIGHT;
-            stack_view.bind_property ("visible-child", this, "visible-child", BindingFlags.DEFAULT);
+            stack_view.bind_property ("visible-child", this, "visible-child");
             _size_allocated = true;
             initialize_library_view ();
+        }
+
+        public void set_mini_cover_and_title (Gdk.Paintable? cover, string title) {
+            _mini_bar.cover = cover;
+            _mini_bar.title = title;
         }
 
         public void size_to_change (int width, int height) {
