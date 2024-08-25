@@ -15,6 +15,7 @@
 
     <launchable type="desktop-id">@app_id@.desktop</launchable>
     <content_rating type="oars-1.1"/>
+    <translation type="gettext">g4music</translation>
 
     <description>
       	<p>Gapless (AKA: G4Music) is a light weight music player written in GTK4, focuses on large music collection.</p>
@@ -514,8 +515,19 @@
 
     <kudos>
         <kudo>HiDpiIcon</kudo>
+        <kudo>HighContrast</kudo>
         <kudo>ModernToolkit</kudo>
         <kudo>Notifications</kudo>
     </kudos>
+
+    <requires>
+        <display_length compare="ge">360</display_length>
+    </requires>
+
+    <supports>
+        <control>keyboard</control>
+        <control>pointing</control>
+        <control>touch</control>
+    </supports>
 
 </component>
