@@ -1,25 +1,17 @@
 namespace G4 {
 
-    public class SwitchBar : Gtk.Widget {
-        private Gtk.Box _box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 4);
-        private Gtk.Revealer _revealer = new Gtk.Revealer ();
-        private int _minimum_width = 0;
-        private Gtk.Stack _stack = (Gtk.Stack) null;
-
-        public SwitchBar () {
-            _box.hexpand = true;
-            _revealer.child = _box;
-            _revealer.reveal_child = true;
-            _revealer.set_parent (this);
+    public class Switcher : Gtk.Widget {
+        static construct {
+            set_layout_manager_type (typeof (Gtk.BoxLayout));
         }
 
-        public bool reveal_child {
-            get {
-                return _revealer.reveal_child;
-            }
-            set {
-                _revealer.reveal_child = value;
-            }
+        private Gtk.Stack _stack = (Gtk.Stack) null;
+
+        public Switcher (bool narrow, uint spacing = 4) {
+            var layout = get_layout_manager () as Gtk.BoxLayout;
+            layout?.set_homogeneous (true);
+            layout?.set_spacing (spacing);
+            add_css_class (narrow ? "narrow" : "wide");
         }
 
         public Gtk.Stack stack {
@@ -33,53 +25,31 @@ namespace G4 {
             }
         }
 
-        public Gtk.RevealerTransitionType transition_type {
-            get {
-                return _revealer.transition_type;
-            }
-            set {
-                _revealer.transition_type = value;
-            }
-        }
-
         public string visible_child_name {
             set {
-                for (var child = _box.get_first_child (); child != null; child = child?.get_next_sibling ()) {
+                for (var child = get_first_child (); child != null; child = child?.get_next_sibling ()) {
                     var button = (Gtk.ToggleButton) child;
                     button.active = button.name == value;
                 }
             }
         }
 
-        public override void measure (Gtk.Orientation orientation, int for_size, out int minimum, out int natural, out int minimum_baseline, out int natural_baseline) {
-            var horizontal = orientation == Gtk.Orientation.HORIZONTAL;
-            if (for_size < 0) {
-                var parent = get_parent ();
-                for_size = (horizontal ? parent?.get_width () : parent?.get_height ()) ?? 1000;
+        public int get_min_width () {
+            var layout = get_layout_manager () as Gtk.BoxLayout;
+            var spacing = layout?.get_spacing () ?? 0;
+            uint width = 0;
+            for (var child = get_last_child (); child != null; child = child?.get_prev_sibling ()) {
+                width += ((!)child).width_request + spacing;
             }
-            _box.measure (orientation, for_size, out minimum, out natural, out minimum_baseline, out natural_baseline);
-            if (horizontal) {
-                minimum = 0;
-                _minimum_width = natural;
-            }
-        }
-
-        public override void size_allocate (int width, int height, int baseline) {
-            var allocation = Gtk.Allocation ();
-            allocation.x = 0;
-            allocation.y = 0;
-            allocation.width = width;
-            allocation.height = height;
-            _revealer.allocate_size (allocation, baseline);
-            reveal_child = width >= _minimum_width - 4; // -4 to avoid size_allocate() be called continuously when (_minimum_width - width) == 1
+            return width > spacing ? (int) (width - spacing) : 0;
         }
 
         public void update_buttons () {
             var pages = _stack.pages;
             var n_items = pages.get_n_items ();
-            for (var child = _box.get_last_child (); child != null; child = child?.get_prev_sibling ()) {
-                if (_stack.get_child_by_name (child?.name ?? "") == null)
-                    _box.remove((!)child);
+            for (var child = get_last_child (); child != null; child = child?.get_prev_sibling ()) {
+                if (_stack.get_child_by_name (((!)child).name) == null)
+                    ((!)child).unparent ();
             }
             var visible_child = _stack.visible_child;
             for (var i = 0; i < n_items; i++) {
@@ -99,17 +69,70 @@ namespace G4 {
                         else if (!button.active && _stack.visible_child_name == button.name)
                             run_idle_once (() => button.active = true);
                     });
-                    _box.append (button);
+                    button.insert_before (this, null);
                 }
             }
+            queue_resize ();
         }
 
         private Gtk.Widget? find_child_by_name (string name) {
-            for (var child = _box.get_first_child (); child != null; child = child?.get_next_sibling ()) {
-                if (strcmp (child?.name, name) == 0)
+            for (var child = get_first_child (); child != null; child = child?.get_next_sibling ()) {
+                if (((!)child).name == name)
                     return child;
             }
             return null;
+        }
+    }
+
+    public class SwitchBar : Gtk.Widget {
+        private int _minimum_width = 0;
+        private bool _reveal = true;
+        private Switcher _switcher;
+
+        public SwitchBar (bool narrow, uint spacing = 4) {
+            _switcher = new Switcher (narrow, spacing);
+            _switcher.set_parent (this);
+        }
+
+        public bool reveal {
+            get {
+                return _reveal;
+            }
+            set {
+                _reveal = value;
+                queue_resize ();
+            }
+        }
+
+        public Switcher switcher {
+            get {
+                return _switcher;
+            }
+        }
+
+        public override void measure (Gtk.Orientation orientation, int for_size, out int minimum, out int natural, out int minimum_baseline, out int natural_baseline) {
+            _switcher.measure (orientation, for_size, out minimum, out natural, out minimum_baseline, out natural_baseline);
+            if (orientation == Gtk.Orientation.HORIZONTAL) {
+                _minimum_width = _switcher.get_min_width ();
+                minimum = _minimum_width / 2;
+            }
+        }
+
+        public override void size_allocate (int width, int height, int baseline) {
+            _reveal = width >= _minimum_width;
+            notify_property ("reveal");
+
+            var allocation = Gtk.Allocation ();
+            allocation.x = 0;
+            allocation.y = 0;
+            allocation.width = width;
+            allocation.height = height;
+            _switcher.allocate_size (allocation, baseline);
+        }
+
+        public override void snapshot (Gtk.Snapshot snapshot) {
+            if (_reveal)
+                base.snapshot (snapshot);
         }
     }
 }

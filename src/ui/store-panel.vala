@@ -35,8 +35,8 @@ namespace G4 {
         private Stack _artist_stack = new Stack ();
         private Stack _playlist_stack = new Stack ();
         public MiniBar _mini_bar = new MiniBar ();
-        private SwitchBar _switch_bar = new SwitchBar ();
-        private SwitchBar _switch_bar2 = new SwitchBar ();
+        private SwitchBar _switch_bar = new SwitchBar (true);
+        private Switcher _switcher = new Switcher (false);
 
         private Application _app;
         private MusicList _album_list;
@@ -91,23 +91,23 @@ namespace G4 {
             mini_revealer.transition_type = Gtk.RevealerTransitionType.SLIDE_UP;
             _mini_bar.activated.connect (leaflet.push);
             append (mini_revealer);
-            leaflet.bind_property ("folded", mini_revealer, "reveal-child");
-
-            _switch_bar.stack = stack_view;
-            _switch_bar.transition_type = Gtk.RevealerTransitionType.NONE;
-            header_bar.pack_end (_switch_bar);
+            leaflet.bind_property ("folded", mini_revealer, "reveal-child", BindingFlags.SYNC_CREATE);
             leaflet.bind_property ("folded", header_bar, "show-title-buttons");
 
+            _switch_bar.switcher.stack = stack_view;
+            header_bar.pack_end (_switch_bar);
+
             var revealer = new Gtk.Revealer ();
-            revealer.child = _switch_bar2;
+            revealer.child = _switcher;
             revealer.transition_type = Gtk.RevealerTransitionType.SLIDE_UP;
             append (revealer);
-            _switch_bar2.margin_start = 4;
-            _switch_bar2.margin_end = 4;
-            _switch_bar2.margin_top = 4;
-            _switch_bar2.margin_bottom = 4;
-            _switch_bar2.stack = stack_view;
-            _switch_bar.bind_property ("reveal-child", revealer, "reveal-child", BindingFlags.INVERT_BOOLEAN);
+            _switch_bar.bind_property ("reveal", revealer, "reveal-child", BindingFlags.INVERT_BOOLEAN);
+
+            _switcher.margin_start = 4;
+            _switcher.margin_end = 4;
+            _switcher.margin_top = 4;
+            _switcher.margin_bottom = 4;
+            _switcher.stack = stack_view;
 
             app.index_changed.connect (on_index_changed);
             app.music_changed.connect (on_music_changed);
@@ -406,12 +406,12 @@ namespace G4 {
         private void initialize_library_view () {
             if (_library.playlists.length > 0 && _playlist_stack.parent == (Gtk.Widget) null) {
                 stack_view.add_titled (_playlist_stack.widget, PageName.PLAYLIST, _("Playlists")).icon_name = "view-list-symbolic";
-                _switch_bar.update_buttons ();
-                _switch_bar2.update_buttons ();
+                _switch_bar.switcher.update_buttons ();
+                _switcher.update_buttons ();
             } else if (_library.playlists.length == 0 && _playlist_stack.parent != (Gtk.Widget) null) {
                 stack_view.remove (_playlist_stack.widget);
-                _switch_bar.update_buttons ();
-                _switch_bar2.update_buttons ();
+                _switch_bar.switcher.update_buttons ();
+                _switcher.update_buttons ();
             }
             if (_library_path != null && _library.albums.length > 0) {
                 locate_to_path ((!)_library_path, null, true);
