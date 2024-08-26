@@ -4,20 +4,21 @@
 # This file is distributed under the same license as the g package.
 # Alen <neithern@outlook.com>, 2022.
 # Nanling <neithern@outlook.com>, 2023-2024.
+# lumingzh <lumingzh@qq.com>, 2024.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-25 18:03+0800\n"
-"PO-Revision-Date: 2024-08-25 17:55+0800\n"
-"Last-Translator: Nanling <neithern@outlook.com>\n"
-"Language-Team: Chinese - China <i18n-zh@googlegroups.com>\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/neithern/g4music/issues\n"
+"POT-Creation-Date: 2024-08-25 10:54+0000\n"
+"PO-Revision-Date: 2024-08-26 19:15+0800\n"
+"Last-Translator: lumingzh <lumingzh@qq.com>\n"
+"Language-Team: Chinese (China) <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Gtranslator 46.1\n"
 
 #: data/app.appdata.xml.in:4 data/app.desktop.in:3 src/application.vala:236
@@ -28,6 +29,10 @@ msgstr "无缺音乐"
 #: data/app.appdata.xml.in:7
 msgid "Play your music elegantly"
 msgstr "优雅地播放您的音乐"
+
+#: data/app.appdata.xml.in:9
+msgid "Nanling"
+msgstr "Nanling"
 
 #: data/app.appdata.xml.in:20
 msgid ""
@@ -325,7 +330,7 @@ msgstr "一个快速、流畅、轻量的，基于GTK4的音乐播放软件。"
 #. Translators: Replace "translator-credits" with your names, one name per line
 #: src/action-handles.vala:186
 msgid "translator-credits"
-msgstr "Nanling"
+msgstr "Nanling <neithern@outlook.com>, 2022-2024."
 
 #: src/application.vala:602
 msgid "Keep playing"
