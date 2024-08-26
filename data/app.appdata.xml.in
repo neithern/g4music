@@ -14,6 +14,7 @@
     <url type="translate">https://l10n.gnome.org/module/g4music</url>
 
     <launchable type="desktop-id">@app_id@.desktop</launchable>
+    <provides>@app_id@.desktop</provides>
     <content_rating type="oars-1.1"/>
     <translation type="gettext">g4music</translation>
 
@@ -512,6 +513,11 @@
             </description>
         </release>
     </releases>
+
+    <custom>
+        <value key="Purism::form_factor">workstation</value>
+        <value key="Purism::form_factor">mobile</value>
+    </custom>
 
     <kudos>
         <kudo>HiDpiIcon</kudo>
