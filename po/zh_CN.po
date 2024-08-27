@@ -2,23 +2,22 @@
 # g 软件包的简体中文翻译.
 # Copyright (C) 2022 THE g4music'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the g package.
-# Alen <neithern@outlook.com>, 2022.
-# Nanling <neithern@outlook.com>, 2023-2024.
 # lumingzh <lumingzh@qq.com>, 2024.
+# Nanling <neithern@outlook.com>, 2022-2024.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
-"Report-Msgid-Bugs-To: https://gitlab.gnome.org/neithern/g4music/issues\n"
-"POT-Creation-Date: 2024-08-25 10:54+0000\n"
-"PO-Revision-Date: 2024-08-26 19:15+0800\n"
-"Last-Translator: lumingzh <lumingzh@qq.com>\n"
-"Language-Team: Chinese (China) <i18n-zh@googlegroups.com>\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-08-28 07:20+0800\n"
+"PO-Revision-Date: 2024-08-28 07:22+0800\n"
+"Last-Translator: Nanling <neithern@outlook.com>\n"
+"Language-Team: Chinese - China <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Plural-Forms: nplurals=1; plural=0\n"
 "X-Generator: Gtranslator 46.1\n"
 
 #: data/app.appdata.xml.in:4 data/app.desktop.in:3 src/application.vala:236
@@ -30,11 +29,7 @@ msgstr "无缺音乐"
 msgid "Play your music elegantly"
 msgstr "优雅地播放您的音乐"
 
-#: data/app.appdata.xml.in:9
-msgid "Nanling"
-msgstr "Nanling"
-
-#: data/app.appdata.xml.in:20
+#: data/app.appdata.xml.in:22
 msgid ""
 "Gapless (AKA: G4Music) is a light weight music player written in GTK4, "
 "focuses on large music collection."
@@ -42,24 +37,24 @@ msgstr ""
 "无缺音乐 (又名：G4Music) 是一款用 GTK4 编写的轻量级音乐播放器，专注于大型音乐"
 "收藏。"
 
-#: data/app.appdata.xml.in:21
+#: data/app.appdata.xml.in:23
 msgid "Features"
 msgstr "特点"
 
-#: data/app.appdata.xml.in:23
+#: data/app.appdata.xml.in:25
 msgid ""
 "Supports most music file types, Samba and any other remote protocols "
 "(depends on GIO and GStreamer)."
 msgstr ""
 "支持大多数音乐文件类型、Samba 和任何其他远程协议（取决于 GIO 和 GStreamer）。"
 
-#: data/app.appdata.xml.in:24
+#: data/app.appdata.xml.in:26
 msgid ""
 "Fast loading and parsing thousands of music files in very few seconds, "
 "monitor local changes."
 msgstr "在数秒内快速加载和解析数千个音乐文件，监控本地变化。"
 
-#: data/app.appdata.xml.in:25
+#: data/app.appdata.xml.in:27
 msgid ""
 "Low memory usage for large music collection with album covers (embedded and "
 "external), no thumbnail caches to store."
@@ -67,58 +62,58 @@ msgstr ""
 "对于带有专辑封面（嵌入式和外置式）的大型音乐收藏，内存使用率低，无需存储缩略"
 "图缓存。"
 
-#: data/app.appdata.xml.in:26
+#: data/app.appdata.xml.in:28
 msgid ""
 "Group and sorts by album/artist/title, shuffle list, full-text searching."
 msgstr "按专辑/艺术家/标题分组和排序、随机播放列表、全文搜索。"
 
-#: data/app.appdata.xml.in:27
+#: data/app.appdata.xml.in:29
 msgid ""
 "Fluent adaptive user interface for different screen (Desktop, Tablet, "
 "Mobile)."
 msgstr "针对不同屏幕（台式机、平板电脑、手机）的流畅自适应用户界面。"
 
-#: data/app.appdata.xml.in:28
+#: data/app.appdata.xml.in:30
 msgid "Gaussian blurred cover as background, follows GNOME light/dark mode."
 msgstr "高斯模糊封面作为背景，遵循 GNOME 明暗模式。"
 
-#: data/app.appdata.xml.in:29
+#: data/app.appdata.xml.in:31
 msgid "Drag-drop from GNOME Files, showing music in Files."
 msgstr "从 GNOME 文件中拖放、显示文件中的音乐。"
 
-#: data/app.appdata.xml.in:30
+#: data/app.appdata.xml.in:32
 msgid "Supports audio peaks visualizer."
 msgstr "支持音频峰值可视化。"
 
-#: data/app.appdata.xml.in:31
+#: data/app.appdata.xml.in:33
 msgid "Supports gapless playback."
 msgstr "支持无间隙播放。"
 
-#: data/app.appdata.xml.in:32
+#: data/app.appdata.xml.in:34
 msgid "Supports normalizing volume with ReplayGain."
 msgstr "支持通过 ReplayGain 实现音量平衡。"
 
-#: data/app.appdata.xml.in:33
+#: data/app.appdata.xml.in:35
 msgid "Supports PipeWire and other audio sink."
 msgstr "支持 "
 
-#: data/app.appdata.xml.in:34
+#: data/app.appdata.xml.in:36
 msgid "Supports MPRIS control."
 msgstr "支持 MPRIS 控制。"
 
-#: data/app.appdata.xml.in:45
+#: data/app.appdata.xml.in:47
 msgid "Main window"
 msgstr "主窗口"
 
-#: data/app.appdata.xml.in:49
+#: data/app.appdata.xml.in:51
 msgid "Albums view"
 msgstr "专辑视图"
 
-#: data/app.appdata.xml.in:53
+#: data/app.appdata.xml.in:55
 msgid "Playing view"
 msgstr "正在播放视图"
 
-#: data/app.appdata.xml.in:57
+#: data/app.appdata.xml.in:59
 msgid "Playlist view"
 msgstr "播放列表视图"
 
@@ -195,7 +190,7 @@ msgctxt "shortcut window"
 msgid "Reload Library"
 msgstr "重载曲库"
 
-#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:358
+#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:368
 msgid "Back"
 msgstr "返回"
 
@@ -343,7 +338,7 @@ msgid "Play at Next"
 msgstr "插播"
 
 #: src/ui/music-widgets.vala:212 src/ui/music-widgets.vala:251
-#: src/ui/music-widgets.vala:261 src/ui/store-panel.vala:363
+#: src/ui/music-widgets.vala:261 src/ui/store-panel.vala:373
 msgid "Play"
 msgstr "播放"
 
@@ -417,21 +412,25 @@ msgstr "仅封面"
 msgid "Track"
 msgstr "曲目"
 
-#: src/ui/store-panel.vala:71
+#: src/ui/store-panel.vala:72
 msgid "Playing"
 msgstr "正在播放"
 
-#: src/ui/store-panel.vala:75
+#: src/ui/store-panel.vala:77
 msgid "Artists"
 msgstr "艺术家"
 
-#: src/ui/store-panel.vala:79
+#: src/ui/store-panel.vala:82
 msgid "Albums"
 msgstr "专辑"
 
-#: src/ui/store-panel.vala:402
+#: src/ui/store-panel.vala:87
 msgid "Playlists"
 msgstr "播放列表"
+
+#: src/ui/store-panel.vala:570
+msgid "No playlist found"
+msgstr "未找到播放列表"
 
 #. Translators: Current volume percent: 0~100%
 #: src/ui/volume-button.vala:33
@@ -446,3 +445,6 @@ msgstr "未知专辑"
 #: src/utils/music.vala:3
 msgid "Unknown Artist"
 msgstr "未知艺术家"
+
+#~ msgid "Nanling"
+#~ msgstr "Nanling"

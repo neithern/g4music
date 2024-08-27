@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-25 18:03+0800\n"
+"POT-Creation-Date: 2024-08-28 07:20+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,86 +26,86 @@ msgstr ""
 msgid "Play your music elegantly"
 msgstr ""
 
-#: data/app.appdata.xml.in:20
+#: data/app.appdata.xml.in:22
 msgid ""
 "Gapless (AKA: G4Music) is a light weight music player written in GTK4, "
 "focuses on large music collection."
 msgstr ""
 
-#: data/app.appdata.xml.in:21
+#: data/app.appdata.xml.in:23
 msgid "Features"
 msgstr ""
 
-#: data/app.appdata.xml.in:23
+#: data/app.appdata.xml.in:25
 msgid ""
 "Supports most music file types, Samba and any other remote protocols "
 "(depends on GIO and GStreamer)."
 msgstr ""
 
-#: data/app.appdata.xml.in:24
+#: data/app.appdata.xml.in:26
 msgid ""
 "Fast loading and parsing thousands of music files in very few seconds, "
 "monitor local changes."
 msgstr ""
 
-#: data/app.appdata.xml.in:25
+#: data/app.appdata.xml.in:27
 msgid ""
 "Low memory usage for large music collection with album covers (embedded and "
 "external), no thumbnail caches to store."
 msgstr ""
 
-#: data/app.appdata.xml.in:26
+#: data/app.appdata.xml.in:28
 msgid ""
 "Group and sorts by album/artist/title, shuffle list, full-text searching."
 msgstr ""
 
-#: data/app.appdata.xml.in:27
+#: data/app.appdata.xml.in:29
 msgid ""
 "Fluent adaptive user interface for different screen (Desktop, Tablet, "
 "Mobile)."
 msgstr ""
 
-#: data/app.appdata.xml.in:28
+#: data/app.appdata.xml.in:30
 msgid "Gaussian blurred cover as background, follows GNOME light/dark mode."
 msgstr ""
 
-#: data/app.appdata.xml.in:29
+#: data/app.appdata.xml.in:31
 msgid "Drag-drop from GNOME Files, showing music in Files."
 msgstr ""
 
-#: data/app.appdata.xml.in:30
+#: data/app.appdata.xml.in:32
 msgid "Supports audio peaks visualizer."
 msgstr ""
 
-#: data/app.appdata.xml.in:31
+#: data/app.appdata.xml.in:33
 msgid "Supports gapless playback."
 msgstr ""
 
-#: data/app.appdata.xml.in:32
+#: data/app.appdata.xml.in:34
 msgid "Supports normalizing volume with ReplayGain."
 msgstr ""
 
-#: data/app.appdata.xml.in:33
+#: data/app.appdata.xml.in:35
 msgid "Supports PipeWire and other audio sink."
 msgstr ""
 
-#: data/app.appdata.xml.in:34
+#: data/app.appdata.xml.in:36
 msgid "Supports MPRIS control."
 msgstr ""
 
-#: data/app.appdata.xml.in:45
+#: data/app.appdata.xml.in:47
 msgid "Main window"
 msgstr ""
 
-#: data/app.appdata.xml.in:49
+#: data/app.appdata.xml.in:51
 msgid "Albums view"
 msgstr ""
 
-#: data/app.appdata.xml.in:53
+#: data/app.appdata.xml.in:55
 msgid "Playing view"
 msgstr ""
 
-#: data/app.appdata.xml.in:57
+#: data/app.appdata.xml.in:59
 msgid "Playlist view"
 msgstr ""
 
@@ -181,7 +181,7 @@ msgctxt "shortcut window"
 msgid "Reload Library"
 msgstr ""
 
-#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:358
+#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:368
 msgid "Back"
 msgstr ""
 
@@ -329,7 +329,7 @@ msgid "Play at Next"
 msgstr ""
 
 #: src/ui/music-widgets.vala:212 src/ui/music-widgets.vala:251
-#: src/ui/music-widgets.vala:261 src/ui/store-panel.vala:363
+#: src/ui/music-widgets.vala:261 src/ui/store-panel.vala:373
 msgid "Play"
 msgstr ""
 
@@ -401,20 +401,24 @@ msgstr ""
 msgid "Track"
 msgstr ""
 
-#: src/ui/store-panel.vala:71
+#: src/ui/store-panel.vala:72
 msgid "Playing"
 msgstr ""
 
-#: src/ui/store-panel.vala:75
+#: src/ui/store-panel.vala:77
 msgid "Artists"
 msgstr ""
 
-#: src/ui/store-panel.vala:79
+#: src/ui/store-panel.vala:82
 msgid "Albums"
 msgstr ""
 
-#: src/ui/store-panel.vala:402
+#: src/ui/store-panel.vala:87
 msgid "Playlists"
+msgstr ""
+
+#: src/ui/store-panel.vala:570
+msgid "No playlist found"
 msgstr ""
 
 #. Translators: Current volume percent: 0~100%

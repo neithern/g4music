@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-25 18:03+0800\n"
-"PO-Revision-Date: 2024-08-25 18:02+0800\n"
+"POT-Creation-Date: 2024-08-28 07:20+0800\n"
+"PO-Revision-Date: 2024-08-28 07:22+0800\n"
 "Last-Translator: Nanling <neithern@outlook.com>\n"
 "Language-Team: Chinese - China <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
@@ -29,7 +29,7 @@ msgstr "無缺音樂"
 msgid "Play your music elegantly"
 msgstr "優雅地播放您的音樂"
 
-#: data/app.appdata.xml.in:20
+#: data/app.appdata.xml.in:22
 msgid ""
 "Gapless (AKA: G4Music) is a light weight music player written in GTK4, "
 "focuses on large music collection."
@@ -37,11 +37,11 @@ msgstr ""
 "無缺音樂 (又名: G4Music) 是以 GTK4 寫成的輕量級音樂播放器，專注於大型音樂收"
 "藏。"
 
-#: data/app.appdata.xml.in:21
+#: data/app.appdata.xml.in:23
 msgid "Features"
 msgstr "特點"
 
-#: data/app.appdata.xml.in:23
+#: data/app.appdata.xml.in:25
 msgid ""
 "Supports most music file types, Samba and any other remote protocols "
 "(depends on GIO and GStreamer)."
@@ -49,13 +49,13 @@ msgstr ""
 "支援大多數音樂檔案類型、Samba 及任何其他遠端通訊協定 (取決於 GIO 及 "
 "GStreamer)。"
 
-#: data/app.appdata.xml.in:24
+#: data/app.appdata.xml.in:26
 msgid ""
 "Fast loading and parsing thousands of music files in very few seconds, "
 "monitor local changes."
 msgstr "在幾秒鐘內快速載入和解析數以千計的音樂檔案，監控本機變更。"
 
-#: data/app.appdata.xml.in:25
+#: data/app.appdata.xml.in:27
 msgid ""
 "Low memory usage for large music collection with album covers (embedded and "
 "external), no thumbnail caches to store."
@@ -63,59 +63,59 @@ msgstr ""
 "對於包含專輯封面 (內嵌與外接) 的大型音樂收藏，記憶體使用量低，無須儲存縮圖快"
 "取。"
 
-#: data/app.appdata.xml.in:26
+#: data/app.appdata.xml.in:28
 msgid ""
 "Group and sorts by album/artist/title, shuffle list, full-text searching."
 msgstr "依專輯/歌手/標題分類與排序、隨機播放清單、全文檢索。"
 
-#: data/app.appdata.xml.in:27
+#: data/app.appdata.xml.in:29
 msgid ""
 "Fluent adaptive user interface for different screen (Desktop, Tablet, "
 "Mobile)."
 msgstr ""
 "適用於不同螢幕 (桌上型電腦、平板電腦、行動裝置) 的流暢自適應使用者介面。"
 
-#: data/app.appdata.xml.in:28
+#: data/app.appdata.xml.in:30
 msgid "Gaussian blurred cover as background, follows GNOME light/dark mode."
 msgstr "高斯模糊封面作為背景，遵循 GNOME 明暗模式。"
 
-#: data/app.appdata.xml.in:29
+#: data/app.appdata.xml.in:31
 msgid "Drag-drop from GNOME Files, showing music in Files."
 msgstr "從 GNOME 檔案拖放、顯示檔案中的音樂。"
 
-#: data/app.appdata.xml.in:30
+#: data/app.appdata.xml.in:32
 msgid "Supports audio peaks visualizer."
 msgstr "支援音訊峰值顯示器。"
 
-#: data/app.appdata.xml.in:31
+#: data/app.appdata.xml.in:33
 msgid "Supports gapless playback."
 msgstr "支援無間隙播放。"
 
-#: data/app.appdata.xml.in:32
+#: data/app.appdata.xml.in:34
 msgid "Supports normalizing volume with ReplayGain."
 msgstr "支援使用 ReplayGain 將音量正常化。"
 
-#: data/app.appdata.xml.in:33
+#: data/app.appdata.xml.in:35
 msgid "Supports PipeWire and other audio sink."
 msgstr "支援 PipeWire 和其它音訊匯流排。"
 
-#: data/app.appdata.xml.in:34
+#: data/app.appdata.xml.in:36
 msgid "Supports MPRIS control."
 msgstr "支援 MPRIS 控制。"
 
-#: data/app.appdata.xml.in:45
+#: data/app.appdata.xml.in:47
 msgid "Main window"
 msgstr "主視窗"
 
-#: data/app.appdata.xml.in:49
+#: data/app.appdata.xml.in:51
 msgid "Albums view"
 msgstr "專輯檢視"
 
-#: data/app.appdata.xml.in:53
+#: data/app.appdata.xml.in:55
 msgid "Playing view"
 msgstr "正在播放檢視"
 
-#: data/app.appdata.xml.in:57
+#: data/app.appdata.xml.in:59
 msgid "Playlist view"
 msgstr "播放清單檢視"
 
@@ -192,7 +192,7 @@ msgctxt "shortcut window"
 msgid "Reload Library"
 msgstr "更新音樂庫"
 
-#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:358
+#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:368
 msgid "Back"
 msgstr "返回"
 
@@ -342,7 +342,7 @@ msgid "Play at Next"
 msgstr "插播"
 
 #: src/ui/music-widgets.vala:212 src/ui/music-widgets.vala:251
-#: src/ui/music-widgets.vala:261 src/ui/store-panel.vala:363
+#: src/ui/music-widgets.vala:261 src/ui/store-panel.vala:373
 msgid "Play"
 msgstr "播放"
 
@@ -416,21 +416,25 @@ msgstr "僅封面"
 msgid "Track"
 msgstr "曲目"
 
-#: src/ui/store-panel.vala:71
+#: src/ui/store-panel.vala:72
 msgid "Playing"
 msgstr "正在播放"
 
-#: src/ui/store-panel.vala:75
+#: src/ui/store-panel.vala:77
 msgid "Artists"
 msgstr "藝術家"
 
-#: src/ui/store-panel.vala:79
+#: src/ui/store-panel.vala:82
 msgid "Albums"
 msgstr "專輯"
 
-#: src/ui/store-panel.vala:402
+#: src/ui/store-panel.vala:87
 msgid "Playlists"
 msgstr "播放清單"
+
+#: src/ui/store-panel.vala:570
+msgid "No playlist found"
+msgstr "未找到播放清單"
 
 #. Translators: Current volume percent: 0~100%
 #: src/ui/volume-button.vala:33
