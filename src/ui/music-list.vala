@@ -181,6 +181,19 @@ namespace G4 {
             _grid_view.activate_action_variant ("list.scroll-to-item", new Variant.uint32 (index));
         }
 
+        private Gtk.Label? _empty_label = null;
+
+        public void set_empty_text (string? text) {
+            if (_data_store.get_n_items () > 0 && _empty_label != null) {
+                remove ((!)_empty_label);
+                _empty_label = null;
+            } else if (_data_store.get_n_items () == 0 && _empty_label == null) {
+                _empty_label = new Gtk.Label (text);
+                ((!)_empty_label).margin_top = 8;
+                prepend ((!)_empty_label);
+            }
+        }
+
         public uint update_store () {
             if (_parent_node != null) {
                 _data_store.remove_all ();

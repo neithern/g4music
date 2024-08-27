@@ -84,7 +84,7 @@ namespace G4 {
             _playlist_list = create_playlist_list ();
             _playlist_stack.popped.connect (on_page_popped);
             _playlist_stack.add (_playlist_list, PageName.PLAYLIST);
-            //  stack_view.add_titled (_playlist_stack, PageName.PLAYLIST, _("Playlists")).icon_name = "view-list-symbolic";
+            stack_view.add_titled (_playlist_stack.widget, PageName.PLAYLIST, _("Playlists")).icon_name = "view-list-symbolic";
 
             var mini_revealer = new Gtk.Revealer ();
             mini_revealer.child = _mini_bar;
@@ -406,15 +406,6 @@ namespace G4 {
         }
 
         private void initialize_library_view () {
-            if (_library.playlists.length > 0 && _playlist_stack.parent == (Gtk.Widget) null) {
-                stack_view.add_titled (_playlist_stack.widget, PageName.PLAYLIST, _("Playlists")).icon_name = "view-list-symbolic";
-                _switcher_top.update_buttons ();
-                _switcher_btm.update_buttons ();
-            } else if (_library.playlists.length == 0 && _playlist_stack.parent != (Gtk.Widget) null) {
-                stack_view.remove (_playlist_stack.widget);
-                _switcher_top.update_buttons ();
-                _switcher_btm.update_buttons ();
-            }
             if (_library_path != null && _library.albums.length > 0) {
                 locate_to_path ((!)_library_path, null, true);
                 _library_path = null;
@@ -576,6 +567,7 @@ namespace G4 {
                 _library.get_sorted_artists (_artist_list.data_store);
             } else if (visible_child == _playlist_stack.widget && _playlist_list.data_store.get_n_items () == 0) {
                 _library.get_sorted_playlists (_playlist_list.data_store);
+                _playlist_list.set_empty_text (_("No playlist found"));
             }
         }
     }
