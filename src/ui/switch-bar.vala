@@ -84,14 +84,21 @@ namespace G4 {
         }
     }
 
-    public class SwitchBar : Gtk.Widget {
+    public class NarrowBar : Gtk.Widget {
+        private Gtk.Widget? _child = null;
         private int _minimum_width = 0;
         private bool _reveal = true;
-        private Switcher _switcher;
 
-        public SwitchBar (bool narrow, uint spacing = 4) {
-            _switcher = new Switcher (narrow, spacing);
-            _switcher.set_parent (this);
+        public Gtk.Widget? child {
+            get {
+                return _child;
+            }
+            set {
+                _child?.unparent ();
+                _child = value;
+                _child?.set_parent (this);
+                queue_allocate ();
+            }
         }
 
         public bool reveal {
@@ -100,34 +107,38 @@ namespace G4 {
             }
             set {
                 _reveal = value;
-                queue_resize ();
-            }
-        }
-
-        public Switcher switcher {
-            get {
-                return _switcher;
+                queue_allocate ();
             }
         }
 
         public override void measure (Gtk.Orientation orientation, int for_size, out int minimum, out int natural, out int minimum_baseline, out int natural_baseline) {
-            _switcher.measure (orientation, for_size, out minimum, out natural, out minimum_baseline, out natural_baseline);
+            if (_child != null) {
+                ((!)_child).measure (orientation, for_size, out minimum, out natural, out minimum_baseline, out natural_baseline);
+            } else {
+                minimum = natural = minimum_baseline = natural_baseline = 0;
+            }
             if (orientation == Gtk.Orientation.HORIZONTAL) {
-                _minimum_width = _switcher.get_min_width ();
+                _minimum_width = minimum;
                 minimum = _minimum_width / 2;
             }
         }
 
         public override void size_allocate (int width, int height, int baseline) {
-            _reveal = width >= _minimum_width;
-            notify_property ("reveal");
+            var wide = width >= _minimum_width;
+            if (_reveal != wide) {
+                _reveal = wide;
+                notify_property ("reveal");
+            }
 
-            var allocation = Gtk.Allocation ();
-            allocation.x = 0;
-            allocation.y = 0;
-            allocation.width = width;
-            allocation.height = height;
-            _switcher.allocate_size (allocation, baseline);
+            if (_child != null) {
+                var allocation = Gtk.Allocation ();
+                allocation.x = 0;
+                allocation.y = 0;
+                allocation.width = width;
+                allocation.height = height;
+                ((!)_child).allocate_size (allocation, baseline);
+                ((!)_child).set_sensitive (wide);
+            }
         }
 
         public override void snapshot (Gtk.Snapshot snapshot) {
