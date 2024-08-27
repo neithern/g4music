@@ -23,7 +23,7 @@ namespace G4 {
             add_controller (controller);
             activatable_widget = this;
 
-            var vbox = new Gtk.Box (Gtk.Orientation.VERTICAL, 6);
+            var vbox = new Gtk.Box (Gtk.Orientation.VERTICAL, 2);
             vbox.halign = Gtk.Align.START;
             vbox.hexpand = true;
             vbox.valign = Gtk.Align.CENTER;
@@ -46,6 +46,9 @@ namespace G4 {
             _time.halign = Gtk.Align.START;
             _time.add_css_class ("dim-label");
             _time.add_css_class ("numeric");
+            var font_size = _time.get_pango_context ().get_font_description ().get_size () / Pango.SCALE;
+            if (font_size >= 13)
+                _time.add_css_class ("title-secondly");
 
             var hbox = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 4);
             hbox.valign = Gtk.Align.CENTER;
