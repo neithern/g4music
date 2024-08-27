@@ -55,10 +55,12 @@ namespace G4 {
             }
             set {
                 _content = value;
-                if (_folded)
+                if (_folded) {
                     _widget.set_child (_content_box, value);
-                else
+                } else {
+                    _widget.set_child (_content_box, null);
                     _content.set_parent (this);
+                }
                 queue_allocate ();
             }
         }
