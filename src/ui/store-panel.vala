@@ -164,7 +164,7 @@ namespace G4 {
 
                 var paths = new GenericArray<string> (4);
                 get_library_paths (paths);
-                paths.add ((string) null); // Must be null terminated 
+                paths.add ((string) null); // Must be null terminated
                 _app.settings.set_strv ("library-path", paths.data);
             }
         }
@@ -403,12 +403,19 @@ namespace G4 {
             } else {
                 paths.add (stack_view.get_visible_child_name () ?? "");
             }
+            for (var i = 0; i < paths.length; i++) {
+                paths[i] = Uri.escape_string (paths[i]);
+            }
         }
 
         private void initialize_library_view () {
             if (_library_path != null && _library.albums.length > 0) {
-                locate_to_path ((!)_library_path, null, true);
+                var paths = (!)_library_path;
                 _library_path = null;
+                for (var i = 0; i < paths.length; i++) {
+                    paths[i] = Uri.unescape_string (paths[i]) ?? paths[i];
+                }
+                locate_to_path (paths, null, true);
             }
         }
 
