@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-28 07:20+0800\n"
-"PO-Revision-Date: 2024-08-28 07:22+0800\n"
+"PO-Revision-Date: 2024-08-28 11:24+0800\n"
 "Last-Translator: Nanling <neithern@outlook.com>\n"
 "Language-Team: Chinese - China <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
@@ -23,7 +23,7 @@ msgstr ""
 #: data/app.appdata.xml.in:4 data/app.desktop.in:3 src/application.vala:236
 #: src/main.vala:24
 msgid "Gapless"
-msgstr "無缺音樂"
+msgstr "無暇"
 
 #: data/app.appdata.xml.in:7
 msgid "Play your music elegantly"
