@@ -56,6 +56,7 @@ namespace G4 {
         public StorePanel (Application app, Window win, Leaflet leaflet) {
             _app = app;
             _library = app.loader.library;
+            margin_bottom = 6;
 
             var thumbnailer = app.thumbnailer;
             thumbnailer.pango_context = get_pango_context ();
@@ -105,10 +106,9 @@ namespace G4 {
             append (btm_revealer);
             top_revealer.bind_property ("reveal", btm_revealer, "reveal-child", BindingFlags.INVERT_BOOLEAN);
 
-            _switcher_btm.margin_start = 4;
-            _switcher_btm.margin_end = 4;
-            _switcher_btm.margin_top = 4;
-            _switcher_btm.margin_bottom = 4;
+            _switcher_btm.margin_top = 2;
+            _switcher_btm.margin_start = 6;
+            _switcher_btm.margin_end = 6;
             _switcher_btm.stack = stack_view;
 
             app.index_changed.connect (on_index_changed);
