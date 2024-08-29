@@ -34,16 +34,6 @@ namespace G4 {
             }
         }
 
-        public int get_min_width () {
-            var layout = get_layout_manager () as Gtk.BoxLayout;
-            var spacing = layout?.get_spacing () ?? 0;
-            uint width = 0;
-            for (var child = get_last_child (); child != null; child = child?.get_prev_sibling ()) {
-                width += ((!)child).width_request + spacing;
-            }
-            return width > spacing ? (int) (width - spacing) : 0;
-        }
-
         public void update_buttons () {
             var pages = _stack.pages;
             var n_items = pages.get_n_items ();
@@ -128,6 +118,12 @@ namespace G4 {
             if (_reveal != wide) {
                 _reveal = wide;
                 notify_property ("reveal");
+
+                if (wide && _child?.parent == null) {
+                    _child?.set_parent (this);
+                } else if (!wide && _child?.parent != null) {
+                    _child?.unparent ();
+                }
             }
 
             if (_child != null) {
@@ -137,13 +133,7 @@ namespace G4 {
                 allocation.width = width;
                 allocation.height = height;
                 ((!)_child).allocate_size (allocation, baseline);
-                ((!)_child).set_sensitive (wide);
             }
-        }
-
-        public override void snapshot (Gtk.Snapshot snapshot) {
-            if (_reveal)
-                base.snapshot (snapshot);
         }
     }
 }
