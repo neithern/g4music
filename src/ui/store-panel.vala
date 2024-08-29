@@ -459,8 +459,6 @@ namespace G4 {
         }
 
         private void on_index_changed (int index, uint size) {
-            root.action_set_enabled (ACTION_APP + ACTION_PREV, index > 0);
-            root.action_set_enabled (ACTION_APP + ACTION_NEXT, index < (int) size - 1);
             if (_current_list.playable) {
                 _current_list.scroll_to_item (index);
             }
