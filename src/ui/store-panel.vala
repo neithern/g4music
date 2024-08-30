@@ -111,6 +111,7 @@ namespace G4 {
             _switcher_btm.margin_end = 6;
             _switcher_btm.stack = stack_view;
 
+            app.end_of_playlist.connect (on_end_of_playlist);
             app.index_changed.connect (on_index_changed);
             app.music_changed.connect (on_music_changed);
             app.music_external_changed.connect (on_music_external_changed);
@@ -151,12 +152,10 @@ namespace G4 {
                     }
                     on_music_changed (_app.current_music);
 
-                    if (_popped_child != null) {
-                        _popped_child = null;
-                    } else {
-                        var mlist = _current_list;
-                        run_idle_once (() => mlist.scroll_to_current_item ());
-                    }
+                    var removing = _popped_child != null;
+                    _popped_child = null;
+                    var mlist = _current_list;
+                    run_idle_once (() => mlist.set_to_current_item (!removing));
                 }
                 sort_btn.sensitive = _current_list.playable;
                 _search_mode = SearchMode.ANY;
@@ -458,6 +457,28 @@ namespace G4 {
             }
         }
 
+        private void on_end_of_playlist () {
+            var stk = get_current_stack ();
+            if (stk != null) {
+                var stack = (!)stk;
+                if (_current_list.playable) {
+                    stack.animate_transitions = false;
+                    stack.pop ();
+                    stack.animate_transitions = true;
+                }
+                var item = _current_list.set_to_current_item (false);
+                if (item >= (int) _current_list.visible_count - 1) {
+                    stack.animate_transitions = false;
+                    stack.pop ();
+                    stack.animate_transitions = true;
+                    item = _current_list.set_to_current_item (false);
+                }
+                _current_list.activate_item (item + 1);
+                if (!_current_list.playable)
+                    _current_list.activate_item (0);
+            }
+        }
+
         private void on_index_changed (int index, uint size) {
             if (_current_list.playable) {
                 _current_list.scroll_to_item (index);
@@ -472,7 +493,7 @@ namespace G4 {
                 _current_list.current_node = _library.artists[artist];
             } else if (_current_list.item_type == typeof (Album)) {
                 var album = music?.album_key ?? "";
-                var artist = _current_list.parent_node as Artist;
+                var artist = _current_list.music_node as Artist;
                 _current_list.current_node = artist != null ? ((!)artist)[album] : _library.albums[album];
             }
         }

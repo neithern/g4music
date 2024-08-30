@@ -10,7 +10,7 @@ namespace G4 {
         private Gtk.GridView _grid_view = new Gtk.GridView (null, null);
         private int _image_size = Thumbnailer.ICON_SIZE;
         private Type _item_type = typeof (Music);
-        private Music? _parent_node = null;
+        private Music? _music_node = null;
         private Gtk.ScrolledWindow _scroll_view = new Gtk.ScrolledWindow ();
         private Thumbnailer _thmbnailer;
 
@@ -25,14 +25,14 @@ namespace G4 {
         public signal void item_created (Gtk.ListItem item);
         public signal void item_binded (Gtk.ListItem item);
 
-        public MusicList (Application app, Type item_type = typeof (Music), Music? parent = null) {
+        public MusicList (Application app, Type item_type = typeof (Music), Music? node = null) {
             orientation = Gtk.Orientation.VERTICAL;
             hexpand = true;
             append (_scroll_view);
 
             _filter_model.model = _data_store;
             _item_type = item_type;
-            _parent_node = parent;
+            _music_node = node;
             _thmbnailer = app.thumbnailer;
             update_store ();
 
@@ -113,9 +113,9 @@ namespace G4 {
             }
         }
 
-        public Music? parent_node {
+        public Music? music_node {
             get {
-                return _parent_node;
+                return _music_node;
             }
         }
 
@@ -131,6 +131,10 @@ namespace G4 {
             }
         }
 
+        public void activate_item (int item) {
+            _grid_view.activate (item);
+        }
+
         public void create_factory () {
             var factory = new Gtk.SignalListItemFactory ();
             factory.setup.connect (on_create_item);
@@ -138,12 +142,6 @@ namespace G4 {
             factory.unbind.connect (on_unbind_item);
             _grid_view.factory = factory;
             _child_drawed = false;
-        }
-
-        public void scroll_to_current_item () {
-            var item = find_item_in_model (_filter_model, _current_node);
-            if (item != -1)
-                scroll_to_item (item);
         }
 
         private Adw.Animation? _scroll_animation = null;
@@ -192,13 +190,20 @@ namespace G4 {
             }
         }
 
+        public int set_to_current_item (bool scroll = true) {
+            var item = find_item_in_model (_filter_model, _current_node);
+            if (item != -1 && scroll)
+                scroll_to_item (item);
+            return item;
+        }
+
         public uint update_store () {
-            if (_parent_node != null) {
+            if (_music_node != null) {
                 _data_store.remove_all ();
-                if (_parent_node is Album)
-                    ((Album)_parent_node).insert_to_store (_data_store);
-                else if (_parent_node is Artist)
-                    ((Artist)_parent_node).replace_to_store (_data_store);
+                if (_music_node is Album)
+                    ((Album)_music_node).insert_to_store (_data_store);
+                else if (_music_node is Artist)
+                    ((Artist)_music_node).replace_to_store (_data_store);
             }
             return _data_store.get_n_items ();
         }

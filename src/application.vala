@@ -20,6 +20,7 @@ namespace G4 {
         private HashTable<unowned ListModel, uint> _sort_map = new HashTable<unowned ListModel, uint> (direct_hash, direct_equal);
         private Thumbnailer _thumbnailer = new Thumbnailer ();
 
+        public signal void end_of_playlist ();
         public signal void index_changed (int index, uint size);
         public signal void music_changed (Music? music);
         public signal void music_cover_parsed (Music music, Gdk.Pixbuf? cover, string? cover_uri);
@@ -128,8 +129,13 @@ namespace G4 {
                 return _current_item;
             }
             set {
-                current_music = get_next_music (ref value);
-                change_current_item (value);
+                var item = value;
+                if (item >= (int) _music_list.get_n_items ()) {
+                    end_of_playlist ();
+                    item = 0;
+                }
+                current_music =  _music_list.get_item (item) as Music;
+                change_current_item (item);
             }
         }
 
@@ -422,11 +428,12 @@ namespace G4 {
 
         private void change_current_item (int item) {
             //  update _current_item but don't change current music
+            var count = _music_list.get_n_items ();
             _current_item = item;
-            index_changed (item, _music_list.get_n_items ());
+            index_changed (item, count);
 
             var next = item + 1;
-            var next_music = get_next_music (ref next);
+            var next_music = next < (int) count ? (Music) _music_list.get_item (next) : (Music?) null;
             lock (_next_uri) {
                 _next_uri.assign (next_music?.uri ?? "");
             }
@@ -491,12 +498,6 @@ namespace G4 {
                     return (int) i;
             }
             return -1;
-        }
-
-        private Music? get_next_music (ref int index) {
-            var count = _music_list.get_n_items ();
-            index = index < (int) count ? index : 0;
-            return _music_list.get_item (index) as Music;
         }
 
         private void on_bus_acquired (DBusConnection connection, string name) {
