@@ -112,10 +112,13 @@ namespace G4 {
             music_cover.margin_start = margin_cover;
             music_cover.margin_end = margin_cover;
 
-            var margin_bar = int.max (margin_horz, 16);
+            var margin_bar = int.max (margin_horz / 2, 16);
+            var spacing = (height - 520).clamp (8, 16);
             _play_bar.margin_start = margin_bar;
             _play_bar.margin_end = margin_bar;
-            _play_bar.on_size_changed (width - margin_bar * 2);
+            _play_bar.margin_top = spacing;
+            _play_bar.margin_bottom = spacing * 2;
+            _play_bar.on_size_changed (width - margin_bar * 2, spacing);
         }
 
         private Menu create_music_action_menu () {

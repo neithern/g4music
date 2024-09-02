@@ -132,9 +132,10 @@ namespace G4 {
             }
         }
 
-        public void on_size_changed (int bar_width) {
+        public void on_size_changed (int bar_width, int bar_spacing) {
             var text_width = int.max (_positive.get_width (), _negative.get_width ());
             _peak.width_request = bar_width - (text_width + _positive.margin_start + _negative.margin_end) * 2;
+            get_last_child ()?.set_margin_top (bar_spacing);
         }
 
         private void on_duration_changed (Gst.ClockTime duration) {

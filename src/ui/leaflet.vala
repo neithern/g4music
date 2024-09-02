@@ -161,8 +161,13 @@ namespace G4 {
             var natural1 = 0, natural2 = 0;
             _content.measure (orientation, for_size, out minimum1, out natural1, out minimum_baseline, out natural_baseline);
             _sidebar.measure (orientation, for_size, out minimum2, out natural2, out minimum_baseline, out natural_baseline);
-            minimum = int.max (minimum1, minimum2);
-            natural = int.max (natural1, natural2);
+            if (orientation == Gtk.Orientation.HORIZONTAL) {
+                minimum = int.max (int.min (minimum1, minimum2), _content_min_width);
+                natural = int.min (natural1, natural2);
+            } else {
+                minimum = int.max (minimum1, minimum2);
+                natural = int.max (natural1, natural2);
+            }
         }
 
         public override void snapshot (Gtk.Snapshot snapshot) {
