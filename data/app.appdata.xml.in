@@ -68,7 +68,7 @@
                 <li>Play the next album after end of an album.</li>
                 <li>Optimize UI layout, shrink the window.</li>
                 <li>Fix crash when open an album with invalid utf-8 name.</li>
-                <li>Update German translation: Ukrainian, Slovenian, German, Slovenian, Belarusian, Chinese.</li>
+                <li>Update translation: Ukrainian, Slovenian, German, Slovenian, Belarusian, Chinese.</li>
                 </ul>
             </description>
         </release>
@@ -78,7 +78,7 @@
                 <li>Optimize UI layout and style for small screen.</li>
                 <li>Optimize loading cover of playing music.</li>
                 <li>Optimize pressing Space to toggle play/pause.</li>
-                <li>Update German translation: Chinese, German.</li>
+                <li>Update translation: Chinese, German.</li>
                 </ul>
             </description>
         </release>
