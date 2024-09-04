@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-28 07:20+0800\n"
-"PO-Revision-Date: 2024-08-28 23:17+0800\n"
+"PO-Revision-Date: 2024-09-04 22:26+0800\n"
 "Last-Translator: Nanling <neithern@outlook.com>\n"
 "Language-Team: Chinese - China <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
@@ -52,7 +52,7 @@ msgstr ""
 msgid ""
 "Fast loading and parsing thousands of music files in very few seconds, "
 "monitor local changes."
-msgstr "在数秒内快速加载和解析数千个音乐文件，监控本地变化。"
+msgstr "在数秒内快速加载和解析数千个音乐文件，监控本地文件变化。"
 
 #: data/app.appdata.xml.in:27
 msgid ""
@@ -87,7 +87,7 @@ msgstr "支持音频峰值可视化。"
 
 #: data/app.appdata.xml.in:33
 msgid "Supports gapless playback."
-msgstr "支持无间隙播放。"
+msgstr "支持 Gapless 无间隙播放。"
 
 #: data/app.appdata.xml.in:34
 msgid "Supports normalizing volume with ReplayGain."
@@ -95,7 +95,7 @@ msgstr "支持通过 ReplayGain 实现音量平衡。"
 
 #: data/app.appdata.xml.in:35
 msgid "Supports PipeWire and other audio sink."
-msgstr "支持 "
+msgstr "支持 PipeWire 和其它音频输出。"
 
 #: data/app.appdata.xml.in:36
 msgid "Supports MPRIS control."
