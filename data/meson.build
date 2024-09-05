@@ -50,10 +50,11 @@ appstream_file = i18n.merge_file(
   install_dir: get_option('datadir') / 'metainfo'
 )
 
-appstream_util = find_program('appstream-util', required: false)
-if appstream_util.found()
-  test('Validate appstream file', appstream_util,
-    args: ['validate', '--nonet', appstream_file]
+appstreamcli = find_program('appstreamcli', required: false)
+if appstreamcli.found()
+  test('Validate appstream file', appstreamcli,
+    args: ['validate', '--no-net', '--explain', appstream_file],
+    suite: ['lint'],
   )
 endif
 
