@@ -176,7 +176,7 @@ namespace G4 {
             get {
                 if (_icon == null) {
                     var theme = Gtk.IconTheme.get_for_display (active_window.display);
-                    _icon = theme.lookup_icon (application_id, null, 512,
+                    _icon = theme.lookup_icon (application_id, null, _cover_size,
                         active_window.scale_factor, Gtk.TextDirection.NONE, Gtk.IconLookupFlags.FORCE_REGULAR);
                 }
                 return _icon;

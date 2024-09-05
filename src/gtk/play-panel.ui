@@ -44,7 +44,7 @@
             <property name="orientation">vertical</property>
             <child>
               <object class="GtkImage" id="music_cover">
-                <property name="pixel_size">240</property>
+                <property name="pixel_size">256</property>
                 <property name="vexpand">true</property>
               </object>
             </child>
