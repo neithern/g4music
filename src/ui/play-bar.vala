@@ -13,6 +13,7 @@ namespace G4 {
         private int _duration = 0;
         private int _position = 0;
         private bool _remain_progress = false;
+        private bool _seeking = false;
 
         public signal void position_seeked (double position);
 
@@ -25,9 +26,28 @@ namespace G4 {
             _seek.set_range (0, _duration);
             _seek.halign = Gtk.Align.FILL;
             _seek.adjust_bounds.connect ((value) => {
-                player.seek (GstPlayer.from_second (value));
                 position_seeked (value);
+                change_position (GstPlayer.from_second (value));
             });
+            // Hack that grabs the click gesture controller as mouse released event doesn't work otherwise
+            // Bug: https://gitlab.gnome.org/GNOME/gtk/-/issues/4939
+            var click_gesture = new Gtk.GestureClick ();
+            var controllers = _seek.observe_controllers ();
+            for (int i = 0; i < controllers.get_n_items (); i++){
+                var controller = controllers.get_item (i);
+                if (controller is Gtk.GestureClick){
+                    click_gesture = (Gtk.GestureClick)controller;
+                }
+            }
+            click_gesture.set_button (0);
+            click_gesture.pressed.connect(() => {
+                _seeking = true;
+            });
+            click_gesture.released.connect(() => {
+                _seeking = false;
+                player.seek(GstPlayer.from_second (_seek.get_value ()));
+            });
+            _seek.add_controller (click_gesture);
             append (_seek);
 
             var times = new Gtk.CenterBox ();
@@ -146,6 +166,12 @@ namespace G4 {
         }
 
         private void on_position_changed (Gst.ClockTime position) {
+            if (!_seeking){
+                change_position(position);
+            }
+        }
+
+        private void change_position(Gst.ClockTime position){
             var value = GstPlayer.to_second (position);
             if (_position != (int) value) {
                 _position = (int) value;
