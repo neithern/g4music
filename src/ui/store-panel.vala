@@ -114,7 +114,6 @@ namespace G4 {
             app.end_of_playlist.connect (on_end_of_playlist);
             app.index_changed.connect (on_index_changed);
             app.music_changed.connect (on_music_changed);
-            app.music_external_changed.connect (on_music_external_changed);
             app.music_store_changed.connect (on_music_store_changed);
 
             var settings = app.settings;
@@ -498,19 +497,15 @@ namespace G4 {
             }
         }
 
-        private void on_music_external_changed () {
+        private void on_music_store_changed () {
             _album_list.data_store.remove_all ();
             _artist_list.data_store.remove_all ();
             _playlist_list.data_store.remove_all ();
-            update_visible_store ();
-            update_stack_pages (_artist_stack);
-            update_stack_pages (_album_stack);
-            update_stack_pages (_playlist_stack);
-        }
-
-        private void on_music_store_changed () {
             if (_size_allocated) {
                 update_visible_store ();
+                update_stack_pages (_artist_stack);
+                update_stack_pages (_album_stack);
+                update_stack_pages (_playlist_stack);
                 initialize_library_view ();
             }
         }

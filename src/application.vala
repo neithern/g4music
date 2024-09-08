@@ -24,7 +24,6 @@ namespace G4 {
         public signal void index_changed (int index, uint size);
         public signal void music_changed (Music? music);
         public signal void music_cover_parsed (Music music, Gdk.Pixbuf? cover, string? cover_uri);
-        public signal void music_external_changed ();
         public signal void music_store_changed ();
 
         public Application () {
@@ -516,7 +515,6 @@ namespace G4 {
             } else {
                 _music_store.items_changed (0, n_items, n_items);
             }
-            music_external_changed ();
         }
 
         private uint _pending_mic_handler = 0;
@@ -562,7 +560,6 @@ namespace G4 {
             } else {
                 _music_store.items_changed (0, n_items, n_items);
             }
-            music_external_changed ();
         }
 
         private void on_player_end () {
