@@ -12,6 +12,11 @@
     font-size: 92.5%;
 }
 
+gridview child {
+    margin: 0px;
+    padding: 3px 2px;
+}
+
 searchbar revealer box {
     box-shadow: none;
     background-color: transparent;
