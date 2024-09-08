@@ -34,9 +34,9 @@ namespace G4 {
         private Stack _album_stack = new Stack ();
         private Stack _artist_stack = new Stack ();
         private Stack _playlist_stack = new Stack ();
-        public MiniBar _mini_bar = new MiniBar ();
-        private Switcher _switcher_top = new Switcher (true);
-        private Switcher _switcher_btm = new Switcher (false);
+        private MiniBar _mini_bar = new MiniBar ();
+        private Gtk.StackSwitcher _switcher_top = new Gtk.StackSwitcher ();
+        private Gtk.StackSwitcher _switcher_btm = new Gtk.StackSwitcher ();
 
         private Application _app;
         private MusicList _album_list;
@@ -98,6 +98,7 @@ namespace G4 {
             var top_revealer = new NarrowBar ();
             top_revealer.child = _switcher_top;
             _switcher_top.stack = stack_view;
+            fix_switcher_style (_switcher_top);
             header_bar.pack_end (top_revealer);
 
             var btm_revealer = new Gtk.Revealer ();
@@ -110,6 +111,7 @@ namespace G4 {
             _switcher_btm.margin_start = 6;
             _switcher_btm.margin_end = 6;
             _switcher_btm.stack = stack_view;
+            fix_switcher_style (_switcher_btm);
 
             app.end_of_playlist.connect (on_end_of_playlist);
             app.index_changed.connect (on_index_changed);
@@ -590,6 +592,16 @@ namespace G4 {
                 _library.get_sorted_playlists (_playlist_list.data_store);
                 _playlist_list.set_empty_text (_("No playlist found"));
             }
+        }
+    }
+
+    public void fix_switcher_style (Gtk.StackSwitcher switcher) {
+        var layout = switcher.get_layout_manager () as Gtk.BoxLayout;
+        layout?.set_spacing (4);
+        switcher.remove_css_class ("linked");
+        for (var child = switcher.get_first_child (); child != null; child = child?.get_next_sibling ()) {
+            child?.add_css_class ("flat");
+            ((!)child).width_request = 48;
         }
     }
 
