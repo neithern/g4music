@@ -155,13 +155,13 @@ namespace G4 {
         }
 
         private void setup_seek_bar (GstPlayer player) {
-            _seek.adjust_bounds.connect ((value) => {
+            _seek.change_value.connect ((type, value) => {
                 if (_seeking) {
                     position_seeked (value);
                     update_position (GstPlayer.from_second (value));
-                } else {
-                    update_position (player.position);
+                    return true;
                 }
+                return false;
             });
 
             // Hack that grabs the click gesture controller as mouse released event doesn't work otherwise
