@@ -154,7 +154,7 @@ namespace G4 {
                     _player.state = Gst.State.READY;
                     _player.uri = _current_uri = uri;
                 }
-                _player.state = playing ? Gst.State.PLAYING : Gst.State.PAUSED;
+                _player.state = (uri.length > 0) ? (playing ? Gst.State.PLAYING : Gst.State.PAUSED) : Gst.State.NULL;
                 _settings.set_string ("played-uri", uri);
             }
         }
