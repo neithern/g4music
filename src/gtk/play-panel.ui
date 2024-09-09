@@ -49,46 +49,47 @@
               </object>
             </child>
             <child>
-              <object class="GtkBox">
-                <property name="orientation">vertical</property>
+              <object class="GtkOverlay">
                 <property name="margin_start">16</property>
                 <property name="margin_end">16</property>
                 <property name="margin_top">8</property>
-                <child>
+                <child type="overlay">
                   <object class="GtkLabel" id="initial_label">
                     <property name="halign">center</property>
-                    <property name="hexpand">false</property>
-                    <property name="lines">3</property>
-                    <property name="single_line_mode">false</property>
                     <property name="visible">false</property>
                   </object>
                 </child>
                 <child>
-                  <object class="G4StableLabel" id="music_title">
-                    <property name="halign">center</property>
-                    <property name="marquee">true</property>
-                    <style>
-                      <class name="title-large"/>
-                    </style>
-                  </object>
-                </child>
-                <child>
-                  <object class="G4StableLabel" id="music_artist">
-                    <property name="halign">center</property>
-                    <property name="margin_top">2</property>
-                    <property name="marquee">true</property>
-                    <style>
-                      <class name="dim-label"/>
-                    </style>
-                  </object>
-                </child>
-                <child>
-                  <object class="G4StableLabel" id="music_album">
-                    <property name="halign">center</property>
-                    <property name="marquee">true</property>
-                    <style>
-                      <class name="dim-label"/>
-                    </style>
+                  <object class="GtkBox">
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <object class="G4StableLabel" id="music_title">
+                        <property name="halign">center</property>
+                        <property name="marquee">true</property>
+                        <style>
+                          <class name="title-large"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="G4StableLabel" id="music_artist">
+                        <property name="halign">center</property>
+                        <property name="margin_top">2</property>
+                        <property name="marquee">true</property>
+                        <style>
+                          <class name="dim-label"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="G4StableLabel" id="music_album">
+                        <property name="halign">center</property>
+                        <property name="marquee">true</property>
+                        <style>
+                          <class name="dim-label"/>
+                        </style>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>

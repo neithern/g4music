@@ -149,9 +149,6 @@ namespace G4 {
 
             var valid = music != null;
             initial_label.visible = !valid;
-            music_album.visible = valid;
-            music_artist.visible = valid;
-            music_title.visible = valid;
             music_album.label = music?.album ?? "";
             music_artist.label = music?.artist ?? "";
             music_title.label = music?.title ?? "";
