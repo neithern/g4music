@@ -53,7 +53,7 @@ namespace G4 {
             _player.next_uri_request.connect (on_player_next_uri_request);
             _player.next_uri_start.connect (on_player_next_uri_start);
             _player.state_changed.connect (on_player_state_changed);
-            _player.tag_parsed.connect (on_tag_parsed);
+            _player.tag_parsed.connect (on_player_tag_parsed);
 
             _mpris_id = Bus.own_name (BusType.SESSION,
                 "org.mpris.MediaPlayer2.Gapless",
@@ -90,15 +90,10 @@ namespace G4 {
             var window = (active_window as Window) ?? new Window (this);
             window.present ();
 
-            var has_files = files.length > 0;
-            if (has_files && _music_store.get_n_items () > 0) {
+            if (files.length > 0 && _music_store.get_n_items () > 0) {
                 open_files_async.begin (files, true, (obj, res) => open_files_async.end (res));
             } else {
-                load_files_async.begin (files, (obj, res) => {
-                    current_item = load_files_async.end (res);
-                    if (has_files)
-                        _player.play ();
-                });
+                load_files_async.begin (files, (obj, res) => load_files_async.end (res));
             }
         }
 
@@ -153,9 +148,9 @@ namespace G4 {
                 if (strcmp (_current_uri, uri) != 0) {
                     _player.state = Gst.State.READY;
                     _player.uri = _current_uri = uri;
+                    _player.state = (uri.length > 0) ? (playing ? Gst.State.PLAYING : Gst.State.PAUSED) : Gst.State.NULL;
+                    _settings.set_string ("played-uri", uri);
                 }
-                _player.state = (uri.length > 0) ? (playing ? Gst.State.PLAYING : Gst.State.PAUSED) : Gst.State.NULL;
-                _settings.set_string ("played-uri", uri);
             }
         }
 
@@ -278,26 +273,27 @@ namespace G4 {
             }
         }
 
-        public async int load_files_async (owned File[] files) {
+        public async void load_files_async (owned File[] files) {
+            var last_uri = _current_music?.uri ?? _settings.get_string ("played-uri");
             var default_mode = files.length == 0;
             if (default_mode) {
                 files.resize (1);
                 files[0] = File.new_for_uri (music_folder);
+                if (_current_music == null && last_uri.has_prefix (music_folder)) {
+                    // Load last uri when open window without files
+                    current_music = new Music (last_uri, "", 0);
+                }
             }
-            if (files.length > 0) {
-                var musics = new GenericArray<Music> (4096);
-                yield _loader.load_files_async (files, musics, true, !default_mode, _sort_map[_music_store]);
-                _music_store.splice (0, _music_store.get_n_items (), (Object[]) musics.data);
-                _list_modified = false;
-            }
-            if (_current_music != null && _current_music == _music_list.get_item (_current_item)) {
-                return _current_item;
-            } else {
-                var uri = _current_music?.uri ?? _settings.get_string ("played-uri");
-                var item = uri.length > 0 ? find_music_item_by_uri ((!)uri) : -1;
-                if (item == -1 && _music_store.get_n_items () > 0)
-                    item = 0;
-                return item;
+
+            var musics = new GenericArray<Music> (4096);
+            yield _loader.load_files_async (files, musics, !default_mode, !default_mode, _sort_map[_music_store]);
+            _music_store.splice (0, _music_store.get_n_items (), (Object[]) musics.data);
+            _list_modified = false;
+
+            var item = last_uri.length > 0 ? find_music_item_by_uri (last_uri) : -1;
+            current_item = (item == -1 && _music_store.get_n_items () > 0) ? 0 : item;
+            if (!default_mode) {
+                _player.play ();
             }
         }
 
@@ -606,8 +602,13 @@ namespace G4 {
 
         private int _cover_size = 360;
 
-        private async void on_tag_parsed (string? uri, Gst.TagList? tags) {
-            if (_current_music != null && strcmp (_current_music?.uri, uri) == 0) {
+        private async void on_player_tag_parsed (string? uri, Gst.TagList? tags) {
+            if (_current_music != null && strcmp (_current_uri, uri) == 0) {
+                var music = (!)_current_music;
+                if (music.title.length == 0 && tags != null && music.from_gst_tags ((!)tags)) {
+                    music_changed (music);
+                }
+
                 _current_cover = tags != null ? parse_image_from_tag_list ((!)tags) : null;
                 if (_current_cover == null && uri != null) {
                     _current_cover = yield run_async<Gst.Sample?> (() => {
@@ -618,9 +619,8 @@ namespace G4 {
                 }
 
                 Gdk.Pixbuf? pixbuf = null;
-                var music = (!)_current_music;
                 var image = _current_cover;
-                if (music == _current_music) {
+                if (strcmp (_current_uri, uri) == 0) {
                     var size = _cover_size * _thumbnailer.scale_factor;
                     if (image != null) {
                         pixbuf = yield run_async<Gdk.Pixbuf?> (
@@ -631,7 +631,7 @@ namespace G4 {
                     }
                 }
 
-                if (music == _current_music) {
+                if (strcmp (_current_uri, uri) == 0) {
                     var cover_uri = music.cover_uri;
                     if (cover_uri == null) {
                         var dir = File.new_build_filename (Environment.get_user_cache_dir (), application_id);
@@ -649,7 +649,7 @@ namespace G4 {
                             _cover_tmp_file = file;
                         }
                     }
-                    if (music == _current_music) {
+                    if (strcmp (_current_uri, uri) == 0) {
                         music_cover_parsed (music, pixbuf, cover_uri);
                     }
                 }
