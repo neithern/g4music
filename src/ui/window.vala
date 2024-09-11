@@ -23,6 +23,8 @@ namespace G4 {
             _progress_bar.hexpand = true;
             _progress_bar.margin_top = 46;  // at the bottom of the header_bar
             _progress_bar.pulse_step = 0.02;
+            _progress_bar.sensitive = false;
+            _progress_bar.visible = false;
             _progress_bar.add_css_class ("osd");
             overlay.child = _leaflet;
             overlay.add_overlay (_progress_bar);
@@ -178,11 +180,18 @@ namespace G4 {
             return true;
         }
 
+        private bool _loading = false;
         private uint _tick_handler = 0;
 
         private void on_loading_changed (bool loading) {
             root.action_set_enabled (ACTION_APP + ACTION_RELOAD, !loading);
-            _progress_bar.visible = loading;
+
+            _loading = loading;
+            if (loading) {
+                run_timeout_once (100, () => _progress_bar.visible = _loading);
+            } else {
+                _progress_bar.visible = _loading;
+            }
 
             if (loading && _tick_handler == 0) {
                 _tick_handler = add_tick_callback (on_loading_tick_callback);
