@@ -1,5 +1,5 @@
-data/app.appdata.xml.in
 data/app.desktop.in
+data/app.metainfo.xml.in
 src/gtk/help-overlay.ui
 src/gtk/play-panel.ui
 src/gtk/preferences.ui

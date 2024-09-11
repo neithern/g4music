@@ -37,14 +37,14 @@ install_data(
 )
 
 appstream_conf = configure_file(
-  input: 'app.appdata.xml.in',
-  output: '@0@.appdata.xml.in'.format(app_id),
+  input: 'app.metainfo.xml.in',
+  output: '@0@.metainfo.xml.in'.format(app_id),
   configuration: conf
 )
 
 appstream_file = i18n.merge_file(
   input: appstream_conf,
-  output: '@0@.appdata.xml'.format(app_id),
+  output: '@0@.metainfo.xml'.format(app_id),
   po_dir: '../po',
   install: true,
   install_dir: get_option('datadir') / 'metainfo'
