@@ -18,8 +18,8 @@ namespace G4 {
         public Music? music = null;
 
         public MusicWidget () {
-            _playing.valign = Gtk.Align.CENTER;
             _playing.halign = Gtk.Align.END;
+            _playing.valign = Gtk.Align.CENTER;
             _playing.icon_name = "media-playback-start-symbolic";
             _playing.margin_end = 4;
             _playing.pixel_size = 10;
@@ -81,11 +81,11 @@ namespace G4 {
     }
 
     public class MusicCell : MusicWidget {
-
         public MusicCell () {
             orientation = Gtk.Orientation.VERTICAL;
             margin_top = 10;
             margin_bottom = 10;
+            width_request = 200;
 
             _cover.margin_start = 8;
             _cover.margin_end = 8;
@@ -116,8 +116,6 @@ namespace G4 {
             if (font_size >= 13)
                 _subtitle.add_css_class ("title-secondly");
             append (_subtitle);
-
-            width_request = 200;
         }
 
         public override Menu create_item_menu () {
@@ -132,6 +130,8 @@ namespace G4 {
 
     public class MusicEntry : MusicWidget {
         public MusicEntry (bool compact = true) {
+            width_request = 324;
+
             var cover_margin = compact ? 3 : 4;
             var cover_size = compact ? 36 : 48;
             _cover.margin_top = cover_margin;
@@ -152,6 +152,7 @@ namespace G4 {
             vbox.append (_title);
             vbox.append (_subtitle);
             overlay.child = vbox;
+            overlay.add_overlay (_playing);
             append (overlay);
 
             _title.halign = Gtk.Align.START;
@@ -164,10 +165,6 @@ namespace G4 {
             var font_size = _subtitle.get_pango_context ().get_font_description ().get_size () / Pango.SCALE;
             if (font_size >= 13)
                 _subtitle.add_css_class ("title-secondly");
-
-            overlay.add_overlay (_playing);
-
-            width_request = 324;
         }
 
         public void set_titles (Music music, uint sort) {
