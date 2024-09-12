@@ -458,7 +458,7 @@ namespace G4 {
             }
         }
 
-        private void on_end_of_playlist () {
+        private void on_end_of_playlist (bool forward) {
             var stk = get_current_stack ();
             if (stk != null) {
                 var stack = (!)stk;
@@ -468,13 +468,14 @@ namespace G4 {
                     stack.animate_transitions = true;
                 }
                 var item = _current_list.set_to_current_item (false);
-                if (item >= (int) _current_list.visible_count - 1) {
+                if ((forward && item >= (int) _current_list.visible_count - 1)
+                    || (!forward && item <= 0)) {
                     stack.animate_transitions = false;
                     stack.pop ();
                     stack.animate_transitions = true;
                     item = _current_list.set_to_current_item (false);
                 }
-                _current_list.activate_item (item + 1);
+                _current_list.activate_item (forward ? item + 1 : item - 1);
                 if (!_current_list.playable)
                     _current_list.activate_item (0);
             }

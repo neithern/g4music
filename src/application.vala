@@ -20,7 +20,7 @@ namespace G4 {
         private HashTable<unowned ListModel, uint> _sort_map = new HashTable<unowned ListModel, uint> (direct_hash, direct_equal);
         private Thumbnailer _thumbnailer = new Thumbnailer ();
 
-        public signal void end_of_playlist ();
+        public signal void end_of_playlist (bool forward);
         public signal void index_changed (int index, uint size);
         public signal void music_changed (Music? music);
         public signal void music_cover_parsed (Music music, Gdk.Pixbuf? cover, string? cover_uri);
@@ -125,8 +125,11 @@ namespace G4 {
             set {
                 var item = value;
                 if (item >= (int) _music_list.get_n_items ()) {
-                    end_of_playlist ();
+                    end_of_playlist (true);
                     item = 0;
+                } else if (item < 0) {
+                    end_of_playlist (false);
+                    item = (int) _music_list.get_n_items () - 1;
                 }
                 current_music =  _music_list.get_item (item) as Music;
                 change_current_item (item);
