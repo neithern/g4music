@@ -279,9 +279,14 @@ namespace G4 {
             if (default_mode) {
                 files.resize (1);
                 files[0] = File.new_for_uri (music_folder);
-                if (_current_music == null && last_uri.has_prefix (music_folder)) {
-                    // Load last uri when open window without files
-                    current_music = new Music (last_uri, "", 0);
+            }
+            foreach (var file in files) {
+                if (_current_music == null && last_uri.has_prefix (file.get_uri ())) {
+                    // Load last played uri before load files
+                    _current_music = new Music (last_uri, "", 0);
+                    _player.uri = _current_uri = last_uri;
+                    _player.state = Gst.State.PAUSED;
+                    break;
                 }
             }
 
