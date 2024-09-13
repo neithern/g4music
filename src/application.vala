@@ -432,8 +432,10 @@ namespace G4 {
         private void change_current_item (int item) {
             //  update _current_item but don't change current music
             var count = _music_list.get_n_items ();
-            _current_item = item;
-            index_changed (item, count);
+            if (_current_item != item) {
+                _current_item = item;
+                index_changed (item, count);
+            }
 
             var next = item + 1;
             var next_music = next < (int) count ? (Music) _music_list.get_item (next) : (Music?) null;
@@ -542,6 +544,7 @@ namespace G4 {
                 _pending_msc_handler = run_idle_once (() => {
                     _pending_msc_handler = 0;
                     music_store_changed ();
+                    index_changed (_current_item, _music_list.get_n_items ());
                 });
             }
         }
