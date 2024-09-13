@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/neithern/g4music/issues\n"
-"POT-Creation-Date: 2024-03-18 16:24+0000\n"
-"PO-Revision-Date: 2024-03-22 02:09+0100\n"
+"POT-Creation-Date: 2024-08-27 15:12+0000\n"
+"PO-Revision-Date: 2024-09-13 04:52+0200\n"
 "Last-Translator: Ekaterine Papava <papava.e@gtu.ge>\n"
 "Language-Team: Georgian <ka@li.org>\n"
 "Language: ka\n"
@@ -17,9 +17,101 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.3.2\n"
 
-#: data/app.desktop.in:3 src/application.vala:235 src/main.vala:24
-msgid "G4Music"
-msgstr "G4Music"
+#: data/app.appdata.xml.in:4 data/app.desktop.in:3 src/application.vala:236
+#: src/main.vala:24
+msgid "Gapless"
+msgstr ""
+
+#: data/app.appdata.xml.in:7
+msgid "Play your music elegantly"
+msgstr ""
+
+#: data/app.appdata.xml.in:9
+msgid "Nanling"
+msgstr ""
+
+#: data/app.appdata.xml.in:22
+msgid ""
+"Gapless (AKA: G4Music) is a light weight music player written in GTK4, "
+"focuses on large music collection."
+msgstr ""
+
+#: data/app.appdata.xml.in:23
+msgid "Features"
+msgstr "მახასიათებლები"
+
+#: data/app.appdata.xml.in:25
+msgid ""
+"Supports most music file types, Samba and any other remote protocols "
+"(depends on GIO and GStreamer)."
+msgstr ""
+
+#: data/app.appdata.xml.in:26
+msgid ""
+"Fast loading and parsing thousands of music files in very few seconds, "
+"monitor local changes."
+msgstr ""
+
+#: data/app.appdata.xml.in:27
+msgid ""
+"Low memory usage for large music collection with album covers (embedded and "
+"external), no thumbnail caches to store."
+msgstr ""
+
+#: data/app.appdata.xml.in:28
+msgid ""
+"Group and sorts by album/artist/title, shuffle list, full-text searching."
+msgstr ""
+
+#: data/app.appdata.xml.in:29
+msgid ""
+"Fluent adaptive user interface for different screen (Desktop, Tablet, "
+"Mobile)."
+msgstr ""
+
+#: data/app.appdata.xml.in:30
+msgid "Gaussian blurred cover as background, follows GNOME light/dark mode."
+msgstr ""
+
+#: data/app.appdata.xml.in:31
+msgid "Drag-drop from GNOME Files, showing music in Files."
+msgstr ""
+
+#: data/app.appdata.xml.in:32
+msgid "Supports audio peaks visualizer."
+msgstr "აუდიოს პიკების დონის ჩვენება."
+
+#: data/app.appdata.xml.in:33
+msgid "Supports gapless playback."
+msgstr "პაუზის-გარეშე დაკვრის ჩართვა."
+
+#: data/app.appdata.xml.in:34
+msgid "Supports normalizing volume with ReplayGain."
+msgstr "ხმის ნორმალიზაცია ReplayGain-ით."
+
+#: data/app.appdata.xml.in:35
+msgid "Supports PipeWire and other audio sink."
+msgstr ""
+
+#: data/app.appdata.xml.in:36
+msgid "Supports MPRIS control."
+msgstr ""
+
+#: data/app.appdata.xml.in:47
+msgid "Main window"
+msgstr "მთავარი ფანჯარა"
+
+#: data/app.appdata.xml.in:51
+msgid "Albums view"
+msgstr "ალბომების ხედი"
+
+#: data/app.appdata.xml.in:55
+msgid "Playing view"
+msgstr "დაკვრის ხედი"
+
+#: data/app.appdata.xml.in:59
+msgid "Playlist view"
+msgstr "დასაკრავი სიის ხედი"
 
 #: data/app.desktop.in:4
 msgid "Music Player"
@@ -93,7 +185,7 @@ msgctxt "shortcut window"
 msgid "Reload Library"
 msgstr "ბიბლიოთეკის თავიდან ჩატვირთვა"
 
-#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:340
+#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:368
 msgid "Back"
 msgstr "უკან"
 
@@ -117,7 +209,7 @@ msgstr "კომპაქტური დასაკრავი სიის 
 msgid "Grid view for artists/albums"
 msgstr "ბადის ხედი შემსრულებლებისთვის/ალბომებისთვის"
 
-#: src/gtk/preferences.ui:56 src/application.vala:435
+#: src/gtk/preferences.ui:56 src/application.vala:400
 msgid "Keep playing after window closed"
 msgstr "დაკვრის გაგრძელება ფანჯრის დახურვის შემდეგ"
 
@@ -173,51 +265,51 @@ msgstr "GStreamer-ის აუდიო კოდეკის გამოყ�
 msgid "Main Menu"
 msgstr "მთავარი მენიუ"
 
-#: src/gtk/store-panel.ui:28
-msgid "Sort By"
-msgstr "დახარისხება"
-
-#: src/gtk/store-panel.ui:35
+#: src/gtk/store-panel.ui:29
 msgid "Search"
 msgstr "ძებნა"
 
-#: src/gtk/store-panel.ui:73
+#: src/gtk/store-panel.ui:35
+msgid "Sort By"
+msgstr "დახარისხება"
+
+#: src/gtk/store-panel.ui:59
 msgid "_Reload Library"
 msgstr "ბიბლიოთეკის თავიდან ჩატვი_რთვა"
 
-#: src/gtk/store-panel.ui:79
+#: src/gtk/store-panel.ui:65
 msgid "_Preferences"
 msgstr "გამართვა"
 
-#: src/gtk/store-panel.ui:83
+#: src/gtk/store-panel.ui:69
 msgid "_Keyboard Shortcuts"
 msgstr "_კლავიატურის მალსახმობები"
 
-#: src/gtk/store-panel.ui:87
+#: src/gtk/store-panel.ui:73
 msgid "_About"
 msgstr "შესახებ"
 
-#: src/gtk/store-panel.ui:96 src/ui/preferences.vala:67
+#: src/gtk/store-panel.ui:82 src/ui/preferences.vala:67
 msgid "Album"
 msgstr "ალბომი"
 
-#: src/gtk/store-panel.ui:101
+#: src/gtk/store-panel.ui:87
 msgid "Artist"
 msgstr "შემსრულებელი"
 
-#: src/gtk/store-panel.ui:106
+#: src/gtk/store-panel.ui:92
 msgid "Artist/Album"
 msgstr "შემსრულებელი/ალბომი"
 
-#: src/gtk/store-panel.ui:111
+#: src/gtk/store-panel.ui:97
 msgid "Title"
 msgstr "სათაური"
 
-#: src/gtk/store-panel.ui:116
+#: src/gtk/store-panel.ui:102
 msgid "Recent"
 msgstr "Ბოლო"
 
-#: src/gtk/store-panel.ui:121
+#: src/gtk/store-panel.ui:107
 msgid "Shuffle"
 msgstr "შემთხვევით"
 
@@ -230,46 +322,46 @@ msgstr "სწრაფი, წმინდა, მსუბუქი მუს�
 msgid "translator-credits"
 msgstr "თარგმანი-შესრულებულია"
 
-#: src/application.vala:626
+#: src/application.vala:602
 msgid "Keep playing"
 msgstr "დაკვრის გაგრძელება"
 
 #. Translators: Play this music at next position of current playing music
-#: src/ui/music-widgets.vala:257 src/ui/music-widgets.vala:298
-#: src/ui/music-widgets.vala:308
+#: src/ui/music-widgets.vala:211 src/ui/music-widgets.vala:252
+#: src/ui/music-widgets.vala:262
 msgid "Play at Next"
 msgstr "შემდეგზე დაკვრა"
 
-#: src/ui/music-widgets.vala:258 src/ui/music-widgets.vala:297
-#: src/ui/music-widgets.vala:307 src/ui/store-panel.vala:345
+#: src/ui/music-widgets.vala:212 src/ui/music-widgets.vala:251
+#: src/ui/music-widgets.vala:261 src/ui/store-panel.vala:373
 msgid "Play"
 msgstr "თამაში"
 
-#: src/ui/music-widgets.vala:261 src/ui/play-panel.vala:237
+#: src/ui/music-widgets.vala:215 src/ui/play-panel.vala:125
 msgid "Show _Cover File"
 msgstr "ყდის _ფაილის ჩვენება"
 
-#: src/ui/music-widgets.vala:263 src/ui/play-panel.vala:239
+#: src/ui/music-widgets.vala:217 src/ui/play-panel.vala:127
 msgid "_Export Cover"
 msgstr "ყდის _ფაილის გატანა"
 
-#: src/ui/music-widgets.vala:300
+#: src/ui/music-widgets.vala:254
 msgid "Show List File"
 msgstr "სიის ფაილის ჩვენება"
 
-#: src/ui/music-widgets.vala:314 src/ui/play-panel.vala:56
+#: src/ui/music-widgets.vala:268 src/ui/play-panel.vala:59
 msgid "Search Title"
 msgstr "სათაურის ძებნა"
 
-#: src/ui/music-widgets.vala:315 src/ui/play-panel.vala:54
+#: src/ui/music-widgets.vala:269 src/ui/play-panel.vala:57
 msgid "Search Album"
 msgstr "ალბომის ძებნა"
 
-#: src/ui/music-widgets.vala:316 src/ui/play-panel.vala:55
+#: src/ui/music-widgets.vala:270 src/ui/play-panel.vala:58
 msgid "Search Artist"
 msgstr "შემსრულებლის ძებნა"
 
-#: src/ui/music-widgets.vala:317
+#: src/ui/music-widgets.vala:271
 msgid "_Show Music File"
 msgstr "მ_უსიკის ფაილის ჩვენება"
 
@@ -291,7 +383,7 @@ msgstr "დაკვრა/პაუზა"
 msgid "Play Next"
 msgstr "შემდეგის დაკვრა"
 
-#: src/ui/play-panel.vala:280
+#: src/ui/play-panel.vala:246
 msgid ""
 "Drag and drop music files here,\n"
 "or change music location: "
@@ -315,21 +407,25 @@ msgstr "მხოლოდ ყდა"
 msgid "Track"
 msgstr "ტრეკი"
 
-#: src/ui/store-panel.vala:74
+#: src/ui/store-panel.vala:72
 msgid "Playing"
 msgstr "მიმდინარეობს დაკვრა"
 
-#: src/ui/store-panel.vala:79
+#: src/ui/store-panel.vala:77
 msgid "Artists"
 msgstr "შემსრულებლები"
 
-#: src/ui/store-panel.vala:84
+#: src/ui/store-panel.vala:82
 msgid "Albums"
 msgstr "ალბომები"
 
-#: src/ui/store-panel.vala:374
+#: src/ui/store-panel.vala:87
 msgid "Playlists"
 msgstr "დასაკრავი სიები"
+
+#: src/ui/store-panel.vala:570
+msgid "No playlist found"
+msgstr ""
 
 #. Translators: Current volume percent: 0~100%
 #: src/ui/volume-button.vala:33
@@ -344,3 +440,6 @@ msgstr "უცნობი ალბომი"
 #: src/utils/music.vala:3
 msgid "Unknown Artist"
 msgstr "უცნობი შემსრულებელი"
+
+#~ msgid "G4Music"
+#~ msgstr "G4Music"
