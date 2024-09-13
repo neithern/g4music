@@ -126,12 +126,12 @@ namespace G4 {
                 var item = value;
                 if (item >= (int) _music_list.get_n_items ()) {
                     end_of_playlist (true);
-                    item = 0;
+                    item = _music_list.get_n_items () > 0 ? 0 : -1;
                 } else if (item < 0) {
                     end_of_playlist (false);
                     item = (int) _music_list.get_n_items () - 1;
                 }
-                current_music =  _music_list.get_item (item) as Music;
+                current_music = _music_list.get_item (item) as Music;
                 change_current_item (item);
             }
         }
@@ -142,7 +142,7 @@ namespace G4 {
             }
             set {
                 var playing = _current_music != null || _player.state == Gst.State.PLAYING;
-                if (_current_music != value) {
+                if (_current_music != value || value == null) {
                     _current_music = value;
                     music_changed (value);
                 }
@@ -151,9 +151,10 @@ namespace G4 {
                     _current_cover = null;
                     _player.state = Gst.State.READY;
                     _player.uri = _current_uri = uri;
-                    _player.state = (uri.length > 0) ? (playing ? Gst.State.PLAYING : Gst.State.PAUSED) : Gst.State.NULL;
-                    _settings.set_string ("played-uri", uri);
+                    if (uri.length > 0)
+                        _player.state = playing ? Gst.State.PLAYING : Gst.State.PAUSED;
                 }
+                _settings.set_string ("played-uri", uri);
             }
         }
 

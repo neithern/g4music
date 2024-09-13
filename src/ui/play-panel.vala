@@ -100,7 +100,7 @@ namespace G4 {
         public void first_allocated () {
             // Delay update info after the window size allocated to avoid showing slowly
             _size_allocated = true;
-            if (_current_music != _app.current_music) {
+            if (_app.current_music != _current_music || _current_music == null) {
                 on_music_changed (_app.current_music);
             }
         }
@@ -136,32 +136,25 @@ namespace G4 {
             root.action_set_enabled (ACTION_APP + ACTION_PREV, index > 0);
             root.action_set_enabled (ACTION_APP + ACTION_NEXT, index < (int) size - 1);
             index_label.label = size > 0 ? @"$(index+1)/$(size)" : "";
-
-            if (index < 0 && size == 0) {
-                update_initial_label (_app.music_folder);
-            }
         }
 
-        private Music? _current_music = new Music.empty ();
+        private Music? _current_music = null;
 
         private void on_music_changed (Music? music) {
-            _current_music = music;
-
-            var valid = music != null;
-            initial_label.visible = !valid;
             music_album.label = music?.album ?? "";
             music_artist.label = music?.artist ?? "";
             music_title.label = music?.title ?? "";
 
-            if (_size_allocated && !valid)
+            var empty = music == null;
+            initial_label.visible = empty;
+            if (empty) {
                 update_cover_paintables (music, _app.icon);
+                update_initial_label (_app.music_folder);
+            }
 
-            var win = _app.active_window;
-            if (win is Window)
-                ((!)win).title = music?.get_artist_and_title () ?? _app.name;
-
-            action_btn.sensitive = valid;
-            root.action_set_enabled (ACTION_APP + ACTION_PLAY_PAUSE, valid);
+            action_btn.sensitive = !empty;
+            root.action_set_enabled (ACTION_APP + ACTION_PLAY_PAUSE, !empty);
+            (_app.active_window as Window)?.set_title (music?.get_artist_and_title () ?? _app.name);
         }
 
         private bool on_music_folder_clicked (string uri) {
