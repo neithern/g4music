@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/neithern/g4music/issues\n"
-"POT-Creation-Date: 2024-09-04 04:31+0000\n"
-"PO-Revision-Date: 2024-09-04 12:47+0200\n"
+"POT-Creation-Date: 2024-09-04 10:47+0000\n"
+"PO-Revision-Date: 2024-09-14 13:22+0200\n"
 "Last-Translator: Quentin PAGÈS\n"
 "Language-Team: \n"
 "Language: oc\n"
@@ -16,12 +16,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Poedit 3.4.3\n"
+"X-Generator: Poedit 3.5\n"
 
 #: data/app.appdata.xml.in:4 data/app.desktop.in:3 src/application.vala:242
 #: src/main.vala:24
 msgid "Gapless"
-msgstr "De contunh"
+msgstr "Gapless"
 
 #: data/app.appdata.xml.in:7
 msgid "Play your music elegantly"
@@ -36,8 +36,8 @@ msgid ""
 "Gapless (AKA: G4Music) is a light weight music player written in GTK4, "
 "focuses on large music collection."
 msgstr ""
-"Gapless (tanben conegut coma G4Music) es un lector de musica leugièr "
-"escrich en GTK4, se concentra sus las grandas colleccions musicalas."
+"Gapless (tanben conegut coma G4Music) es un lector de musica leugièr escrich "
+"en GTK4, se concentra sus las grandas colleccions musicalas."
 
 #: data/app.appdata.xml.in:23
 msgid "Features"
