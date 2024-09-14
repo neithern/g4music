@@ -202,17 +202,16 @@ namespace G4 {
         public string music_folder {
             get {
                 if (_music_folder.length == 0) {
-                    var path = Environment.get_user_special_dir (UserDirectory.MUSIC);
-                    if (path == (string) null)
-                        path = "Music";
+                    var path = ((string?) Environment.get_user_special_dir (UserDirectory.MUSIC)) ?? "Music";
                     _music_folder = File.new_build_filename (path).get_uri ();
                 }
                 return _music_folder;
             }
             set {
-                _music_folder = value;
-                if (active_window is Window) {
-                    reload_library ();
+                if (strcmp (_music_folder, value) != 0) {
+                    _music_folder = value;
+                    if (active_window is Window)
+                        reload_library ();
                 }
             }
         }
@@ -299,9 +298,10 @@ namespace G4 {
             _music_store.splice (0, _music_store.get_n_items (), (Object[]) musics.data);
             _list_modified = false;
 
-            var item = last_uri.length > 0 ? find_music_item_by_uri (last_uri) : -1;
-            current_item = (item == -1 && _music_store.get_n_items () > 0) ? 0 : item;
-            if (!default_mode) {
+            var count = _music_store.get_n_items ();
+            var item = (count > 0 && last_uri.length > 0) ? find_music_item_by_uri (last_uri) : -1;
+            current_item = (count > 0 && item == -1) ? 0 : item;
+            if (_current_music != null && !default_mode) {
                 _player.play ();
             }
         }
@@ -402,7 +402,7 @@ namespace G4 {
         public void reload_library () {
             if (!_loading) {
                 _loader.remove_all ();
-                open ({}, "");
+                load_files_async.begin ({}, (obj, res) => load_files_async.end (res));
             }
         }
 
