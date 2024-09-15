@@ -62,6 +62,17 @@
     </screenshots>
 
     <releases>
+        <release version="3.9.2" date="2024-9-15">
+            <description translate="no">
+                <ul>
+                <li>Fix audio seeking stutter, thanks to @dov-vai.</li>
+                <li>Load last played file first before load other files.</li>
+                <li>Update the library pages when file changes.</li>
+                <li>Many UI optimizations.</li>
+                <li>Update translation: Occitan, Persian, Hebrew, Russian, Georgian.</li>
+                </ul>
+            </description>
+        </release>
         <release version="3.9.1" date="2024-9-3">
             <description translate="no">
                 <ul>
