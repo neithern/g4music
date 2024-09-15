@@ -52,6 +52,7 @@ namespace G4 {
         private string _search_text = "";
         private bool _size_allocated = false;
         private uint _sort_mode_playing = SortMode.TITLE;
+        private bool _updating_store = false;
 
         public StorePanel (Application app, Window win, Leaflet leaflet) {
             _app = app;
@@ -460,7 +461,7 @@ namespace G4 {
 
         private void on_end_of_playlist (bool forward) {
             var stk = get_current_stack ();
-            if (stk != null) {
+            if (stk != null && !_updating_store) {
                 var stack = (!)stk;
                 if (_current_list.playable) {
                     stack.animate_transitions = false;
@@ -501,6 +502,7 @@ namespace G4 {
         }
 
         private void on_music_store_changed () {
+            _updating_store = true;
             _album_list.data_store.remove_all ();
             _artist_list.data_store.remove_all ();
             _playlist_list.data_store.remove_all ();
@@ -511,6 +513,7 @@ namespace G4 {
                 update_stack_pages (_playlist_stack);
                 initialize_library_view ();
             }
+            _updating_store = false;
         }
 
         private void on_page_popped (Gtk.Widget? child) {
@@ -578,7 +581,7 @@ namespace G4 {
             for (var i = children.length - 1; i >= 0; i--) {
                 var mlist = (MusicList) children[i];
                 if (mlist.update_store () == 0)
-                    stack.pop ();
+                    stack.remove (mlist);
             }
             stack.animate_transitions = animate;
         }
