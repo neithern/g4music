@@ -581,7 +581,7 @@ namespace G4 {
             for (var i = children.length - 1; i >= 0; i--) {
                 var mlist = (MusicList) children[i];
                 if (mlist.update_store () == 0)
-                    stack.remove (mlist);
+                    stack.pop ();
             }
             stack.animate_transitions = animate;
         }

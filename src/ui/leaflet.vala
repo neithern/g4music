@@ -94,6 +94,19 @@ namespace G4 {
             visible_mode = LeafletMode.CONTENT;
         }
 
+        public override void measure (Gtk.Orientation orientation, int for_size, out int minimum, out int natural, out int minimum_baseline, out int natural_baseline) {
+            var minimum1 = 0, minimum2 = 0;
+            var natural1 = 0, natural2 = 0;
+            _content.measure (orientation, for_size, out minimum1, out natural1, out minimum_baseline, out natural_baseline);
+            _sidebar.measure (orientation, for_size, out minimum2, out natural2, out minimum_baseline, out natural_baseline);
+            if (orientation == Gtk.Orientation.HORIZONTAL) {
+                minimum = int.max (int.min (minimum1, minimum2), _content_min_width);
+            } else {
+                minimum = int.max (minimum1, minimum2);
+            }
+            natural = int.max (natural1, natural2);
+        }
+
         public override void size_allocate (int width, int height, int baseline) {
             var first = _view_width == 0 && width > 0;
             if (first) {
@@ -154,19 +167,6 @@ namespace G4 {
                 (_content as SizeWatcher)?.size_to_change (content_width, height);
                 _content.allocate_size (allocation, baseline);
             }
-        }
-
-        public override void measure (Gtk.Orientation orientation, int for_size, out int minimum, out int natural, out int minimum_baseline, out int natural_baseline) {
-            var minimum1 = 0, minimum2 = 0;
-            var natural1 = 0, natural2 = 0;
-            _content.measure (orientation, for_size, out minimum1, out natural1, out minimum_baseline, out natural_baseline);
-            _sidebar.measure (orientation, for_size, out minimum2, out natural2, out minimum_baseline, out natural_baseline);
-            if (orientation == Gtk.Orientation.HORIZONTAL) {
-                minimum = int.max (int.min (minimum1, minimum2), _content_min_width);
-            } else {
-                minimum = int.max (minimum1, minimum2);
-            }
-            natural = int.max (natural1, natural2);
         }
 
         public override void snapshot (Gtk.Snapshot snapshot) {
@@ -273,18 +273,6 @@ namespace G4 {
             _widget.pop ();
         }
 
-        public void remove (Gtk.Widget child) {
-            if (_last_page?.child == child) {
-                _widget.remove ((!)_last_page);
-                _last_page = null;
-            } else {
-                var page = find_page (child);
-                if (page != null) {
-                    _widget.remove ((!)page);
-                }
-            }
-        }
-
         public Gtk.Widget? get_child_by_name (string name) {
             return _widget.find_page (name)?.child;
         }
@@ -389,13 +377,6 @@ namespace G4 {
             }
         }
 
-        public void remove (Gtk.Widget child) {
-            var page = find_page (child);
-            if (page != null) {
-                _widget.remove ((!)page);
-            }
-        }
-
         public Gtk.Widget? get_child_by_name (string name) {
             return (_widget.get_child_by_name (name) as Adw.Bin)?.child;
         }
@@ -424,16 +405,7 @@ namespace G4 {
         }
 
         public void set_child (Gtk.Widget page, Gtk.Widget? child) {
-            var p = page as Adw.Bin;
-            p?.set_child (child);
-        }
-
-        private Gtk.Widget? find_page (Gtk.Widget child) {
-            for (var page = _widget.get_first_child (); page != null; page = page?.get_next_sibling ()) {
-                if ((page as Adw.Bin)?.child == child)
-                    return page;
-            }
-            return null;
+            (page as Adw.Bin)?.set_child (child);
         }
     }
 #endif
