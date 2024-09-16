@@ -186,9 +186,8 @@ namespace G4 {
             initialize_library_view ();
         }
 
-        public void set_mini_cover_and_title (Gdk.Paintable? cover, string title) {
+        public void set_mini_cover (Gdk.Paintable? cover) {
             _mini_bar.cover = cover;
-            _mini_bar.title = title;
         }
 
         public void size_to_change (int width, int height) {
@@ -499,6 +498,7 @@ namespace G4 {
                 var artist = _current_list.music_node as Artist;
                 _current_list.current_node = artist != null ? ((!)artist)[album] : _library.albums[album];
             }
+            _mini_bar.title = music?.title ?? "";
         }
 
         private void on_music_store_changed () {
