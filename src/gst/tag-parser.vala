@@ -296,13 +296,12 @@ namespace G4 {
 
     private static void parse_mp4_date_value (uint8[] data, string tag, Gst.TagList tags) throws Error {
         var str = parse_mp4_string (data);
-        int year = 0;
-        if (str != null && int.try_parse ((!)str, out year, null, 10)) {
-            var date = new Gst.DateTime.local_time (year, 0, 0, 0, 0, 0);
+        if (str != null) {
+            var date = new Gst.DateTime.from_iso8601_string ((!)str);
             tags.add (Gst.TagMergeMode.REPLACE, tag, date);
-            //  print (@"Tag: $tag=$year\n");
+            //  print (@"Tag: $tag=$(date.get_year ())\n");
         } else {
-            print ("MP4: unknown date type\n");
+            print ("MP4: unknown date type: %s\n", str ?? "");
         }
     }
 
