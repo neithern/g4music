@@ -306,11 +306,11 @@ namespace G4 {
             _peak_calculator.clear ();
             _tag_list = null;
             _tag_parsed = false;
-            parse_duration ();
-            parse_position ();
             if (AtomicInt.compare_and_exchange (ref _next_uri_requested, 1, 0)) {
                 next_uri_start ();
             }
+            parse_duration ();
+            parse_position ();
         }
 
         private void on_stream_to_finish () {
