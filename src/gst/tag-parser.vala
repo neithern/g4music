@@ -60,7 +60,7 @@ namespace G4 {
             }
         }
 
-        if (tags_has_title_or_image (tags)) {
+        if (tags_has_text (tags) || tags_has_image (tags)) {
             return tags;
         }
 
@@ -90,13 +90,20 @@ namespace G4 {
         return tags;
     }
 
-    public static bool tags_has_title_or_image (Gst.TagList? tags) {
+    public static bool tags_has_image (Gst.TagList? tags) {
+        if (tags == null)
+            return false;
+        var t = (!)tags;
+        return t.get_tag_size (Gst.Tags.IMAGE) > 0
+            || t.get_tag_size (Gst.Tags.PREVIEW_IMAGE) > 0;
+    }
+
+    public static bool tags_has_text (Gst.TagList? tags) {
         if (tags == null)
             return false;
         var t = (!)tags;
         return t.get_tag_size (Gst.Tags.ARTIST) > 0
-            || t.get_tag_size (Gst.Tags.TITLE) > 0
-            || t.get_tag_size (Gst.Tags.IMAGE) > 0;
+            || t.get_tag_size (Gst.Tags.TITLE) > 0;
     }
 
     public inline uint8[] new_uint8_array (uint size) throws Error {
@@ -551,7 +558,7 @@ namespace G4 {
                     } else {
                         msg.parse_tag (out tags);
                     }
-                    if (tags_has_title_or_image (tags)) {
+                    if (tags_has_text (tags) || tags_has_image (tags)) {
                         quit = true;
                     }
                     break;

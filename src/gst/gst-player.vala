@@ -38,6 +38,8 @@ namespace G4 {
         private Gst.State _state = Gst.State.NULL;
         private bool _seeking = false;
         private Gst.TagList? _tag_list = null;
+        private uint _tag_handle = 0;
+        private bool _tag_parsed = false;
         private uint _timer_handle = 0;
         private unowned Thread<void> _main_thread = Thread<void>.self ();
 
@@ -73,6 +75,10 @@ namespace G4 {
         }
 
         ~GstPlayer () {
+            if (_tag_handle != 0)
+                Source.remove (_tag_handle);
+            if (_timer_handle != 0)
+                Source.remove (_timer_handle);
             _peak_calculator.clear ();
             _pipeline?.set_state (Gst.State.NULL);
         }
@@ -118,13 +124,9 @@ namespace G4 {
                 return _current_uri;
             }
             set {
-                if (_pipeline != null) lock (_pipeline) {
-                    _current_uri = value;
-                    _duration = Gst.CLOCK_TIME_NONE;
-                    _position = Gst.CLOCK_TIME_NONE;
-                    _tag_list = null;
+                _current_uri = value;
+                if (_pipeline != null)
                     ((!)_pipeline).uri = value;
-                }
             }
         }
 
@@ -209,6 +211,16 @@ namespace G4 {
             }
         }
 
+        private void emit_tag_parsed (uint delay = 0) {
+            if (_tag_handle != 0)
+                Source.remove (_tag_handle);
+            _tag_handle = run_timeout_once (delay, () => {
+                _tag_handle = 0;
+                _tag_parsed = true;
+                tag_parsed (_current_uri, _tag_list);
+            });
+        }
+
         private bool bus_callback (Gst.Bus bus, Gst.Message message) {
             unowned Thread<void> thread = Thread<void>.self ();
             if (thread == _main_thread) {
@@ -257,15 +269,18 @@ namespace G4 {
 
                 case Gst.MessageType.STREAM_START:
                     on_stream_start ();
+                    if (!_tag_parsed) {
+                        emit_tag_parsed (50);
+                    }
                     break;
 
                 case Gst.MessageType.TAG:
                     Gst.TagList? tags = null;
                     message.parse_tag (out tags);
-                    if (_tag_list != null)
-                        _tag_list?.merge (tags, Gst.TagMergeMode.REPLACE);
-                    else
-                        _tag_list = tags;
+                    _tag_list = merge_tags (_tag_list, tags);
+                    if (!_tag_parsed) {
+                        emit_tag_parsed (tags_has_image (_tag_list) ? 0 : 50);
+                    }
                     break;
 
                 default:
@@ -274,10 +289,6 @@ namespace G4 {
         }
 
         private void on_state_changed (Gst.State old, Gst.State state) {
-            if (old == Gst.State.READY && state == Gst.State.PAUSED) {
-                parse_duration ();
-                tag_parsed (_current_uri, _tag_list);
-            }
             if (old != state && _state != state) {
                 _state = state;
                 state_changed (state);
@@ -292,12 +303,13 @@ namespace G4 {
         }
 
         private void on_stream_start () {
+            _peak_calculator.clear ();
+            _tag_list = null;
+            _tag_parsed = false;
+            parse_duration ();
+            parse_position ();
             if (AtomicInt.compare_and_exchange (ref _next_uri_requested, 1, 0)) {
-                _peak_calculator.clear ();
                 next_uri_start ();
-                parse_duration ();
-                parse_position ();
-                tag_parsed (_current_uri, _tag_list);
             }
         }
 
@@ -312,12 +324,16 @@ namespace G4 {
         private void parse_duration () {
             if (((!)_pipeline).query_duration (Gst.Format.TIME, out _duration)) {
                 duration_changed (_duration);
+            } else {
+                _duration = Gst.CLOCK_TIME_NONE;
             }
         }
 
         private bool parse_position () {
             if (((!)_pipeline).query_position (Gst.Format.TIME, out _position)) {
                 position_updated (_position);
+            } else {
+                _position = Gst.CLOCK_TIME_NONE;
             }
             return true;
         }
