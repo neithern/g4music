@@ -294,6 +294,18 @@ namespace G4 {
         return tags;
     }
 
+    private static void parse_mp4_date_value (uint8[] data, string tag, Gst.TagList tags) throws Error {
+        var str = parse_mp4_string (data);
+        int year = 0;
+        if (str != null && int.try_parse ((!)str, out year, null, 10)) {
+            var date = new Gst.DateTime.local_time (year, 0, 0, 0, 0, 0);
+            tags.add (Gst.TagMergeMode.REPLACE, tag, date);
+            //  print (@"Tag: $tag=$year\n");
+        } else {
+            print ("MP4: unknown date type\n");
+        }
+    }
+
     private static void parse_mp4_image_value (uint8[] data, string tag, Gst.TagList tags) throws Error {
         var len = data.length;
         if (len > 16) {
@@ -344,18 +356,24 @@ namespace G4 {
         (string) null
     };
 
-    private static void parse_mp4_string_value (uint8[] data, string tag, Gst.TagList tags) throws Error {
+    private static string? parse_mp4_string (uint8[] data) throws Error {
         var len = data.length;
         if (len > 16) {
             var type = read_uint32_be (data, 8);
             if (type == 0x00000001) {
                 var str_data = data[16:len];
-                var value = Gst.Tag.freeform_string_to_utf8 ((char[]) str_data, MP4_TAG_ENCODINGS);
-                if (value != (string)null && value.length > 0) {
-                    tags.add (Gst.TagMergeMode.REPLACE, (!)tag, value);
-                    //  print (@"Tag: $tag=$value\n");
-                }
+                return (string?) Gst.Tag.freeform_string_to_utf8 ((char[]) str_data, MP4_TAG_ENCODINGS);
             }
+        }
+        return null;
+    }
+
+    private static void parse_mp4_string_value (uint8[] data, string tag, Gst.TagList tags) throws Error {
+        var str = parse_mp4_string (data);
+        if (str != null && ((!)str).length > 0) {
+            var value = (!)str;
+            tags.add (Gst.TagMergeMode.REPLACE, tag, value);
+            //  print (@"Tag: $tag=$value\n");
         } else {
             print ("MP4: unknown string type\n");
         }
@@ -397,11 +415,17 @@ namespace G4 {
                     case 0x616c626du: // alum
                         parse_mp4_string_value (data, Gst.Tags.ALBUM, tags);
                         break;
-                    case 0x74726b6eu: // trkn
-                        parse_mp4_number_value (data, Gst.Tags.TRACK_NUMBER, Gst.Tags.TRACK_COUNT, tags);
+                    case 0xa9646179u: // _day
+                        parse_mp4_date_value (data, Gst.Tags.DATE_TIME, tags);
                         break;
                     case 0x636f7672u: // covr
                         parse_mp4_image_value (data, Gst.Tags.IMAGE, tags);
+                        break;
+                    case 0x6469736bu: // disk
+                        parse_mp4_number_value (data, Gst.Tags.ALBUM_VOLUME_NUMBER, Gst.Tags.ALBUM_VOLUME_COUNT, tags);
+                        break;
+                    case 0x74726b6eu: // trkn
+                        parse_mp4_number_value (data, Gst.Tags.TRACK_NUMBER, Gst.Tags.TRACK_COUNT, tags);
                         break;
                     default:
                         break;
