@@ -616,7 +616,7 @@ namespace G4 {
 
         private async void on_player_tag_parsed (string? uri, Gst.TagList? tags) {
             if (_current_music != null && strcmp (_current_uri, uri) == 0) {
-                var music = (!)_current_music;
+                var music = _loader.find_cache (_current_uri) ?? (!)_current_music;
                 if (music.title.length == 0 && tags != null && music.from_gst_tags ((!)tags)) {
                     music_changed (music);
                 }
