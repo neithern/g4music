@@ -64,6 +64,7 @@ namespace G4 {
             make_widget_clickable (music_title).released.connect (
                 () => win.start_search (music_title.label, SearchMode.TITLE));
             make_right_clickable (music_box, show_popover_menu);
+            make_long_pressable (music_box, show_popover_menu);
 
             app.index_changed.connect (on_index_changed);
             app.music_changed.connect (on_music_changed);

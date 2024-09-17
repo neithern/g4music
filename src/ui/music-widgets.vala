@@ -285,13 +285,18 @@ namespace G4 {
 
     public delegate void Pressed (Gtk.Widget widget, double x, double y);
 
-    public void make_right_clickable (Gtk.Widget widget, Pressed pressed) {
-        var long_press = new Gtk.GestureLongPress ();
-        long_press.pressed.connect ((x, y) => pressed (widget, x, y));
-        var right_click = new Gtk.GestureClick ();
-        right_click.button = Gdk.BUTTON_SECONDARY;
-        right_click.pressed.connect ((n, x, y) => pressed (widget, x, y));
-        widget.add_controller (long_press);
-        widget.add_controller (right_click);
+    public Gtk.GestureLongPress make_long_pressable (Gtk.Widget widget, Pressed pressed) {
+        var gesture = new Gtk.GestureLongPress ();
+        gesture.pressed.connect ((x, y) => pressed (widget, x, y));
+        widget.add_controller (gesture);
+        return gesture;
+    }
+
+    public Gtk.GestureClick make_right_clickable (Gtk.Widget widget, Pressed pressed) {
+        var gesture = new Gtk.GestureClick ();
+        gesture.button = Gdk.BUTTON_SECONDARY;
+        gesture.pressed.connect ((n, x, y) => pressed (widget, x, y));
+        widget.add_controller (gesture);
+        return gesture;
     }
 }
