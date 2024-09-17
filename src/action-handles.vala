@@ -77,7 +77,10 @@ namespace G4 {
                 var pos = itype?.index_of_char ('/') ?? -1;
                 var ext = itype?.substring (pos + 1) ?? "";
                 var name = music.get_artist_and_title ().replace ("/", "&") + "." + ext;
-                var file = yield show_save_file_dialog (_app.active_window, name, {"image/*"});
+                var filter = new Gtk.FileFilter ();
+                filter.name = _("Image Files");
+                filter.add_mime_type ("image/*");
+                var file = yield show_save_file_dialog (_app.active_window, name, {filter});
                 if (file != null) {
                     var saved = yield save_sample_to_file_async ((!)file, sample);
                     if (saved)
@@ -230,17 +233,19 @@ namespace G4 {
         }
     }
 
-    public async File? show_save_file_dialog (Gtk.Window? parent, string? name, string[]? mime_types) {
-        var filter = new Gtk.FileFilter ();
-        if (mime_types != null) {
-            foreach (var type in (!)mime_types)
-                filter.add_mime_type (type);
-        }
+    public async File? show_save_file_dialog (Gtk.Window? parent, string? name, Gtk.FileFilter[]? filters = null) {
+        Gtk.FileFilter? default_filter = filters != null && ((!)filters).length > 0 ? ((!)filters)[0] : (Gtk.FileFilter?) null;
 #if GTK_4_10
+        var filter_list = new ListStore (typeof (Gtk.FileFilter));
+        if (filters != null) {
+            foreach (var filter in (!)filters) 
+                filter_list.append (filter);
+        }
         var dialog = new Gtk.FileDialog ();
-        dialog.set_initial_name (name);
-        dialog.set_default_filter (filter);
+        dialog.filters = filter_list;
         dialog.modal = true;
+        dialog.set_default_filter (default_filter);
+        dialog.set_initial_name (name);
         try {
             return yield dialog.save (parent, null);
         } catch (Error e) {
@@ -249,9 +254,14 @@ namespace G4 {
 #else
         var result = new File?[] { (File?) null };
         var chooser = new Gtk.FileChooserNative (null, parent, Gtk.FileChooserAction.SAVE, null, null);
-        chooser.set_current_name (name ?? "");
-        chooser.set_filter (filter);
         chooser.modal = true;
+        chooser.set_current_name (name ?? "");
+        if (filters != null) {
+            foreach (var filter in (!)filters) 
+                chooser.add_filter (filter);
+            if (default_filter != null)
+                chooser.set_filter ((!)default_filter);
+        }
         chooser.response.connect ((id) => {
             var file = chooser.get_file ();
             if (id == Gtk.ResponseType.ACCEPT && file is File) {
