@@ -14,7 +14,7 @@ namespace G4 {
         protected HashTable<unowned string, Music> _musics = new HashTable<unowned string, Music> (str_hash, str_equal);
 
         public Album (Music music) {
-            base.titled (music.title, music.uri);
+            base.titled (music.album, music.uri);
             base.album = music.album;
             base.artist = music.artist;
             base._album_key = music._album_key;
@@ -73,19 +73,15 @@ namespace G4 {
     }
 
     public class Artist : Music {
-        public string name;
         protected HashTable<unowned string, Album> _albums = new HashTable<unowned string, Album> (str_hash, str_equal);
 
         public Artist (Music music, string artist_name) {
-            base.titled (music.title, music.uri);
-            base.album = music.album;
-            base.artist = music.artist;
+            base.titled (artist_name, music.uri);
+            base.artist = artist_name;
             base.album_artist = music.album_artist;
-            base._album_key = music._album_key;
             base._artist_key = artist_name.collate_key_for_filename ();
             base.date = music.date;
             base.uri = music.uri;
-            name = artist_name;
         }
 
         public uint length {
@@ -95,7 +91,7 @@ namespace G4 {
         }
 
         public override string get_abbreviation () {
-            return parse_abbreviation (name);
+            return parse_abbreviation (artist);
         }
 
         public bool add_music (Music music) {
@@ -108,7 +104,7 @@ namespace G4 {
             Album album;
             if (!_albums.lookup_extended (album_key, out key, out album)) {
                 album = new Album (music);
-                album.album_artist = name;
+                album.album_artist = artist;
                 _albums[album_key] = album;
             }
             return album.add_music (music);
@@ -158,7 +154,7 @@ namespace G4 {
                 album.get_sorted_items (musics);
                 items.extend (musics, (src) => src);
             }
-            return new Playlist (name, "", items);
+            return new Playlist (artist, "", items);
         }
 
         private static int compare_album (Music m1, Music m2) {

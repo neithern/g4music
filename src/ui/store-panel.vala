@@ -267,7 +267,7 @@ namespace G4 {
                 var artist = (Artist) item.item;
                 cell.music = artist;
                 cell.paintable = _loading_paintable;
-                cell.title = artist.name;
+                cell.title = artist.artist;
                 cell.subtitle = "";
             });
             _app.settings.bind ("compact-playlist", list, "compact-list", SettingsBindFlags.DEFAULT);
@@ -348,7 +348,7 @@ namespace G4 {
             var mlist = album_mode ? create_music_list ((!)album, artist_mode) : create_album_list (artist);
             mlist.create_factory ();
 
-            var title = album_mode ? album?.album : artist?.name;
+            var title = album_mode ? album?.album : artist?.artist;
             var label = new Gtk.Label (title);
             label.ellipsize = Pango.EllipsizeMode.END;
             var icon = new Gtk.Image.from_icon_name (album_mode ? "media-optical-cd-audio-symbolic" : "avatar-default-symbolic");
@@ -374,13 +374,13 @@ namespace G4 {
                 if (album_mode) {
                     _app.current_item = 0;
                 } else {
-                    string[] strv = { PageName.ARTIST, artist?.name ?? "" };
+                    string[] strv = { PageName.ARTIST, artist?.artist ?? "" };
                     _app.activate_action (ACTION_PLAY, new Variant.bytestring_array (strv));
                 }
             });
             header.pack_end (button);
 
-            stack.add (mlist, album_mode ? album?.album_key : artist?.name);
+            stack.add (mlist, album_mode ? album?.album_key : artist?.artist);
             stack.visible_child = mlist;
         }
 
@@ -433,7 +433,7 @@ namespace G4 {
                     if (paths[0] == PageName.ARTIST) {
                         artist = _library.artists[paths[1]];
                         if (artist is Artist) {
-                            if (stack?.get_child_by_name (((!)artist).name) == null) {
+                            if (stack?.get_child_by_name (((!)artist).artist) == null) {
                                 create_sub_stack_page (artist);
                             }
                             if (paths.length > 2) {
