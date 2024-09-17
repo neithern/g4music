@@ -38,11 +38,7 @@ namespace G4 {
             update_store ();
 
             _selection = new Gtk.MultiSelection (_filter_model);
-            _selection.selection_changed.connect ((position, removed, added) => {
-                var enabled = !_selection.get_selection ().is_empty ();
-                foreach (var button in _action_buttons)
-                    button.sensitive = enabled;
-            });
+            _selection.selection_changed.connect (on_selection_changed);
 
             _grid_view.enable_rubberband = false;
             _grid_view.max_columns = 5;
@@ -120,6 +116,7 @@ namespace G4 {
         private GenericArray<Gtk.Button> _action_buttons = new GenericArray<Gtk.Button> (4);
         private Gtk.HeaderBar? _header_bar = null;
         private Gtk.Widget? _header_bar_hided = null;
+        private Gtk.Label? _header_title = null;
         private bool _multi_selection = false;
 
         public bool multi_selection {
@@ -131,6 +128,8 @@ namespace G4 {
                     _multi_selection = value;
                     _grid_view.enable_rubberband = value;
                     _grid_view.single_click_activate = !value;
+                    if (!value)
+                        _selection.unselect_all ();
                     if (_grid_view.get_factory () != null)
                         create_factory ();
                 }
@@ -141,9 +140,6 @@ namespace G4 {
                         remove ((!)child);
                     }
                     var header = new Gtk.HeaderBar ();
-                    header.show_title_buttons = false;
-                    header.title_widget = new Gtk.Label (null);
-                    header.add_css_class ("flat");
                     prepend (header);
                     _header_bar = header;
                     setup_selection_header_bar (header);
@@ -316,6 +312,14 @@ namespace G4 {
             }
         }
 
+        private void on_selection_changed (uint position, uint n_items) {
+            var bits = _selection.get_selection ();
+            _header_title?.set_label (@"$(bits.get_size ())/$(_filter_model.get_n_items ())");
+            var enabled = !bits.is_empty ();
+            foreach (var button in _action_buttons)
+                button.sensitive = enabled;
+        }
+
         private Playlist playlist_for_selection () {
             var count = _filter_model.get_n_items ();
             var items = new GenericArray<Music> (count);
@@ -338,6 +342,14 @@ namespace G4 {
         }
 
         private void setup_selection_header_bar (Gtk.HeaderBar header) {
+            header.show_title_buttons = false;
+            header.add_css_class ("flat");
+
+            var title = new Gtk.Label (null);
+            title.add_css_class ("dim-label");
+            header.title_widget = title;
+            _header_title = title;
+
             var back_btn = new Gtk.Button.from_icon_name ("go-previous-symbolic");
             back_btn.clicked.connect (() => multi_selection = false);
             back_btn.tooltip_text = _("Back");
@@ -365,6 +377,7 @@ namespace G4 {
                             _data_store.remove (position);
                     }
                 }
+                on_selection_changed (0, 0);
             });
             header.pack_end (remove_btn);
             _action_buttons.add (remove_btn);
