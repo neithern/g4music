@@ -345,7 +345,19 @@ namespace G4 {
                     }
                 }
             }
-            return new Playlist ("", "", items);
+            return new Playlist (_music_node?.title ?? "Untitled", "", items);
+        }
+
+        private async void save_to_playlist_file_async (Playlist playlist) {
+            var app = (Application) GLib.Application.get_default ();
+            var filter = new Gtk.FileFilter ();
+            filter.name = _("Playlist Files");
+            filter.add_mime_type ("audio/x-mpegurl");
+            filter.add_mime_type ("audio/x-scpls");
+            var file = yield show_save_file_dialog (app.active_window, playlist.title + ".m3u", {filter});
+            if (file != null) {
+                yield app.add_playlist_to_file_async (playlist, (!)file);
+            }
         }
 
         private void setup_selection_header_bar (Gtk.HeaderBar header) {
@@ -406,16 +418,25 @@ namespace G4 {
 
             var store = ((Application) GLib.Application.get_default ()).music_store;
             if (store != _data_store) {
-                var queue_btn = new Gtk.Button.from_icon_name ("document-send-symbolic");
-                queue_btn.tooltip_text = _("Add to Playing");
-                queue_btn.clicked.connect (() => {
+                var send_btn = new Gtk.Button.from_icon_name ("document-send-symbolic");
+                send_btn.tooltip_text = _("Add to Playing");
+                send_btn.clicked.connect (() => {
                     var app = (Application) GLib.Application.get_default ();
                     var playlist = playlist_for_selection ();
                     app.play (playlist, false);
                 });
-                header.pack_end (queue_btn);
-                _action_buttons.add (queue_btn);
+                header.pack_end (send_btn);
+                _action_buttons.add (send_btn);
             }
+
+            var add_to_btn = new Gtk.Button.from_icon_name ("document-new-symbolic");
+            add_to_btn.tooltip_text = _("Add to Playlist");
+            add_to_btn.clicked.connect (() => {
+                var playlist = playlist_for_selection ();
+                save_to_playlist_file_async.begin (playlist, (obj, res) => save_to_playlist_file_async.end (res));
+            });
+            header.pack_end (add_to_btn);
+            _action_buttons.add (add_to_btn);
         }
     }
 }

@@ -182,6 +182,11 @@ namespace G4 {
             });
         }
 
+        public void set_title (string name) {
+            this.title = name;
+            _title_key = name.collate_key_for_filename ();
+        }
+
         protected override void sort (GenericArray<Music> arr) {
             Music.original_order (items);
             arr.sort (Music.compare_by_order);

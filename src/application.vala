@@ -25,6 +25,7 @@ namespace G4 {
         public signal void music_changed (Music? music);
         public signal void music_cover_parsed (Music music, Gdk.Pixbuf? cover, string? cover_uri);
         public signal void music_store_changed ();
+        public signal void playlist_added (Playlist playlist);
 
         public Application () {
             Object (application_id: Config.APP_ID, flags: ApplicationFlags.HANDLES_OPEN);
@@ -273,6 +274,36 @@ namespace G4 {
         public Thumbnailer thumbnailer {
             get {
                 return _thumbnailer;
+            }
+        }
+
+        public async void add_playlist_to_file_async (Playlist playlist, File file) {
+            var names = new string?[1] { null };
+            var uris = new GenericArray<string> (1024);
+            var saved = yield run_async <bool> (() => {
+                names[0] = load_playlist_file (file, uris);
+                var map = new GenericSet<string> (str_hash, str_equal);
+                uris.foreach ((uri) => map.add (uri));
+                playlist.foreach ((uri, music) => {
+                    if (!map.contains (uri))
+                        uris.add (uri);
+                });
+                return save_playlist_file (file, uris, names[0] ?? playlist.title);
+            });
+            if (saved) {
+                if (names[0] != null) {
+                    //  Replace items if loaded from exitsing file
+                    playlist.items.length = 0;
+                    foreach (var uri in uris) {
+                        var music = _loader.find_cache (uri);
+                        if (music != null)
+                            playlist.add_music ((!)music);
+                    }
+                    playlist.set_title ((!)names[0]);
+                }
+                playlist.list_uri = file.get_uri ();
+                _loader.library.add_playlist (playlist);
+                playlist_added (playlist);
             }
         }
 

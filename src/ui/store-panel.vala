@@ -118,6 +118,7 @@ namespace G4 {
             app.index_changed.connect (on_index_changed);
             app.music_changed.connect (on_music_changed);
             app.music_store_changed.connect (on_music_store_changed);
+            app.playlist_added.connect (on_playlist_added);
 
             var settings = app.settings;
             settings.bind ("sort-mode", this, "sort-mode", SettingsBindFlags.DEFAULT);
@@ -518,6 +519,11 @@ namespace G4 {
 
         private void on_page_popped (Gtk.Widget? child) {
             _popped_child = child;
+        }
+
+        private void on_playlist_added (Playlist playlist) {
+            _playlist_list.data_store.remove_all ();
+            _library.get_sorted_playlists (_playlist_list.data_store);
         }
 
         private void on_search_btn_toggled () {

@@ -101,4 +101,69 @@ namespace G4 {
         }
         return parent?.resolve_relative_path (uri)?.get_uri ();
     }
+
+    public bool save_line_to_file (BufferedOutputStream bos, string str) throws Error {
+        var cn = "\n";
+        var cn_data = ((uint8[]) cn) [0:1];
+        var data = ((uint8[]) str) [0:str.length];
+        size_t written = 0;
+        return bos.write_all (data, out written)
+            && bos.write_all (cn_data, out written);
+    }
+
+    public bool save_m3u8_file (File file, GenericArray<string> uris) throws Error {
+        var fos = file.replace (null, false, FileCreateFlags.NONE);
+        var bos = new BufferedOutputStream (fos);
+        var extm3u = ((uint8[]) "#EXTM3U\n") [0:8];
+        size_t written = 0;
+        if (!bos.write_all (extm3u, out written))
+            return false;
+        var extinf = ((uint8[]) "#EXTINF:,\n") [0:10];
+        var parent = file.get_parent ();
+        foreach (var uri in uris) {
+            if (!bos.write_all (extinf, out written))
+                return false;
+            var f = File.new_for_uri (uri);
+            var path = parent?.get_relative_path (f) ?? f.get_path () ?? "";
+            if (!save_line_to_file (bos, path))
+                return false;
+        }
+        return true;
+    }
+
+    public bool save_pls_file (File file, GenericArray<string> uris, string? name = null) throws Error {
+        var fos = file.replace (null, false, FileCreateFlags.NONE);
+        var bos = new BufferedOutputStream (fos);
+        var section = ((uint8[]) "[playlist]\n") [0:11];
+        size_t written = 0;
+        if (!bos.write_all (section, out written))
+            return false;
+        var count = uris.length;
+        if (!save_line_to_file (bos, @"NumberOfEntries=$count"))
+            return false;
+        for (var i = 0; i < count; i++) {
+            var f = File.new_for_uri (uris[i]);
+            var path = f.get_path () ?? "";
+            var title = get_file_display_name (f);
+            var n = i + 1;
+            if (!save_line_to_file (bos, @"File$n=$path\nTitle$n=$title"))
+                break;
+        }
+        return true;
+    }
+
+    public bool save_playlist_file (File file, GenericArray<string> uris, string? name = null) {
+        var bname = file.get_basename () ?? "";
+        var title = bname.substring (0, bname.index_of_char ('.'));
+        var ext = bname.substring (bname.index_of_char ('.') + 1);
+        try {
+            if (ext.ascii_ncasecmp ("pls", 3) == 0) {
+                return save_pls_file (file, uris, name ?? title);
+            } else {
+                return save_m3u8_file (file, uris);
+            }
+        } catch (Error e) {
+        }
+        return false;
+    }
 }
