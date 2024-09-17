@@ -173,7 +173,6 @@ namespace G4 {
         public void first_allocated () {
             // Delay set model after the window size allocated to avoid showing slowly
             _playing_list.create_factory ();
-            _playing_list.scroll_to_item (_app.current_item);
             _album_list.create_factory ();
             _artist_list.create_factory ();
             _playlist_list.create_factory ();
