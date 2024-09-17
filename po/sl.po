@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/neithern/g4music/issues\n"
-"POT-Creation-Date: 2024-08-27 15:12+0000\n"
-"PO-Revision-Date: 2024-08-27 22:02+0200\n"
+"POT-Creation-Date: 2024-09-17 15:06+0000\n"
+"PO-Revision-Date: 2024-09-17 17:23+0200\n"
 "Last-Translator: Martin Srebotnjak <miles@filmsi.net>\n"
 "Language-Team: Slovenian <gnome-si@googlegroups.com>\n"
 "Language: sl\n"
@@ -20,115 +20,10 @@ msgstr ""
 "X-Generator: Poedit 2.2.1\n"
 "X-Poedit-SourceCharset: ISO-8859-1\n"
 
-#: data/app.appdata.xml.in:4 data/app.desktop.in:3 src/application.vala:236
+#: data/app.desktop.in:3 data/app.metainfo.xml.in:4 src/application.vala:239
 #: src/main.vala:24
 msgid "Gapless"
 msgstr "Brez vrzeli"
-
-#: data/app.appdata.xml.in:7
-msgid "Play your music elegantly"
-msgstr "Elegantno predvajajte glasbo"
-
-#: data/app.appdata.xml.in:9
-msgid "Nanling"
-msgstr "Nanling"
-
-#: data/app.appdata.xml.in:22
-msgid ""
-"Gapless (AKA: G4Music) is a light weight music player written in GTK4, "
-"focuses on large music collection."
-msgstr ""
-"Brez vrzeli (AKA: G4Music) je lahek glasbeni predvajalnik, napisan v GTK4, "
-"ki se osredotoča na veliko glasbeno zbirko."
-
-#: data/app.appdata.xml.in:23
-msgid "Features"
-msgstr "Zmožnosti"
-
-#: data/app.appdata.xml.in:25
-msgid ""
-"Supports most music file types, Samba and any other remote protocols "
-"(depends on GIO and GStreamer)."
-msgstr ""
-"Podpira večino vrst glasbenih datotek, Sambo in vse druge oddaljene "
-"protokole (odvisno od GIO in GStreamer)."
-
-#: data/app.appdata.xml.in:26
-msgid ""
-"Fast loading and parsing thousands of music files in very few seconds, "
-"monitor local changes."
-msgstr ""
-"Hitro nalaganje in razčlenjevanje na tisoče glasbenih datotek v zelo nekaj "
-"sekundah, spremljajte krajevne spremembe."
-
-#: data/app.appdata.xml.in:27
-msgid ""
-"Low memory usage for large music collection with album covers (embedded and "
-"external), no thumbnail caches to store."
-msgstr ""
-"Nizka poraba pomnilnika za veliko glasbeno zbirko z naslovnicami albumov "
-"(vdelanimi in zunanjimi), brez predpomnilnikov sličic za shranjevanje."
-
-#: data/app.appdata.xml.in:28
-msgid ""
-"Group and sorts by album/artist/title, shuffle list, full-text searching."
-msgstr ""
-"Združevanje in razvrščanje po albumu/izvajalcu/naslovu, naključni seznami, "
-"iskanju po celotnem besedilu."
-
-#: data/app.appdata.xml.in:29
-msgid ""
-"Fluent adaptive user interface for different screen (Desktop, Tablet, "
-"Mobile)."
-msgstr ""
-"Tekoč prilagodljiv uporabniški vmesnik za različne zaslone (namizje, "
-"tablični računalnik, mobilnik)."
-
-#: data/app.appdata.xml.in:30
-msgid "Gaussian blurred cover as background, follows GNOME light/dark mode."
-msgstr ""
-"Gaussova zabrisana naslovnica kot ozadje, sledi svetlemu/temnemu načinu "
-"GNOME."
-
-#: data/app.appdata.xml.in:31
-msgid "Drag-drop from GNOME Files, showing music in Files."
-msgstr "Povlecite in spustite iz Datotek GNOME, ki prikazuje glasbo v mapah."
-
-#: data/app.appdata.xml.in:32
-msgid "Supports audio peaks visualizer."
-msgstr "Podpira vizualizacijo najvišjih ravni zvoka."
-
-#: data/app.appdata.xml.in:33
-msgid "Supports gapless playback."
-msgstr "Podpira predvajanje brez premorov."
-
-#: data/app.appdata.xml.in:34
-msgid "Supports normalizing volume with ReplayGain."
-msgstr "Podpira normaliziranje glasnosti s funkcijo ReplayGain."
-
-#: data/app.appdata.xml.in:35
-msgid "Supports PipeWire and other audio sink."
-msgstr "Podpira PipeWire in druge zvokovne ponore."
-
-#: data/app.appdata.xml.in:36
-msgid "Supports MPRIS control."
-msgstr "Podpira nadzor MPRIS."
-
-#: data/app.appdata.xml.in:47
-msgid "Main window"
-msgstr "Glavno okno"
-
-#: data/app.appdata.xml.in:51
-msgid "Albums view"
-msgstr "Pogled albumov"
-
-#: data/app.appdata.xml.in:55
-msgid "Playing view"
-msgstr "Predvajalni pogled"
-
-#: data/app.appdata.xml.in:59
-msgid "Playlist view"
-msgstr "Pogled seznama predvajanja"
 
 #: data/app.desktop.in:4
 msgid "Music Player"
@@ -141,6 +36,111 @@ msgstr "Predvajajte glasbo"
 #: data/app.desktop.in:12
 msgid "music;sound;player;media;audio;playlist;"
 msgstr "glasba;zvok;predvajalnik;medij;avdio;seznam predvajanja;"
+
+#: data/app.metainfo.xml.in:7
+msgid "Play your music elegantly"
+msgstr "Elegantno predvajajte glasbo"
+
+#: data/app.metainfo.xml.in:9
+msgid "Nanling"
+msgstr "Nanling"
+
+#: data/app.metainfo.xml.in:22
+msgid ""
+"Gapless (AKA: G4Music) is a light weight music player written in GTK4, "
+"focuses on large music collection."
+msgstr ""
+"Brez vrzeli (AKA: G4Music) je lahek glasbeni predvajalnik, napisan v GTK4, "
+"ki se osredotoča na veliko glasbeno zbirko."
+
+#: data/app.metainfo.xml.in:23
+msgid "Features"
+msgstr "Zmožnosti"
+
+#: data/app.metainfo.xml.in:25
+msgid ""
+"Supports most music file types, Samba and any other remote protocols "
+"(depends on GIO and GStreamer)."
+msgstr ""
+"Podpira večino vrst glasbenih datotek, Sambo in vse druge oddaljene "
+"protokole (odvisno od GIO in GStreamer)."
+
+#: data/app.metainfo.xml.in:26
+msgid ""
+"Fast loading and parsing thousands of music files in very few seconds, "
+"monitor local changes."
+msgstr ""
+"Hitro nalaganje in razčlenjevanje na tisoče glasbenih datotek v zelo nekaj "
+"sekundah, spremljajte krajevne spremembe."
+
+#: data/app.metainfo.xml.in:27
+msgid ""
+"Low memory usage for large music collection with album covers (embedded and "
+"external), no thumbnail caches to store."
+msgstr ""
+"Nizka poraba pomnilnika za veliko glasbeno zbirko z naslovnicami albumov "
+"(vdelanimi in zunanjimi), brez predpomnilnikov sličic za shranjevanje."
+
+#: data/app.metainfo.xml.in:28
+msgid ""
+"Group and sorts by album/artist/title, shuffle list, full-text searching."
+msgstr ""
+"Združevanje in razvrščanje po albumu/izvajalcu/naslovu, naključni seznami, "
+"iskanju po celotnem besedilu."
+
+#: data/app.metainfo.xml.in:29
+msgid ""
+"Fluent adaptive user interface for different screen (Desktop, Tablet, "
+"Mobile)."
+msgstr ""
+"Tekoč prilagodljiv uporabniški vmesnik za različne zaslone (namizje, "
+"tablični računalnik, mobilnik)."
+
+#: data/app.metainfo.xml.in:30
+msgid "Gaussian blurred cover as background, follows GNOME light/dark mode."
+msgstr ""
+"Gaussova zabrisana naslovnica kot ozadje, sledi svetlemu/temnemu načinu "
+"GNOME."
+
+#: data/app.metainfo.xml.in:31
+msgid "Drag-drop from GNOME Files, showing music in Files."
+msgstr "Povlecite in spustite iz Datotek GNOME, ki prikazuje glasbo v mapah."
+
+#: data/app.metainfo.xml.in:32
+msgid "Supports audio peaks visualizer."
+msgstr "Podpira vizualizacijo najvišjih ravni zvoka."
+
+#: data/app.metainfo.xml.in:33
+msgid "Supports gapless playback."
+msgstr "Podpira predvajanje brez premorov."
+
+#: data/app.metainfo.xml.in:34
+msgid "Supports normalizing volume with ReplayGain."
+msgstr "Podpira normaliziranje glasnosti s funkcijo ReplayGain."
+
+#: data/app.metainfo.xml.in:35
+msgid "Supports PipeWire and other audio sink."
+msgstr "Podpira PipeWire in druge zvokovne ponore."
+
+#: data/app.metainfo.xml.in:36
+msgid "Supports MPRIS control."
+msgstr "Podpira nadzor MPRIS."
+
+#: data/app.metainfo.xml.in:47
+msgid "Main window"
+msgstr "Glavno okno"
+
+#: data/app.metainfo.xml.in:51
+msgid "Albums view"
+msgstr "Pogled albumov"
+
+#: data/app.metainfo.xml.in:55
+msgid "Playing view"
+msgstr "Predvajalni pogled"
+
+#: data/app.metainfo.xml.in:59
+msgid "Playlist view"
+msgstr "Pogled seznama predvajanja"
 
 #: src/gtk/help-overlay.ui:11
 msgctxt "shortcut window"
@@ -202,7 +202,7 @@ msgctxt "shortcut window"
 msgid "Reload Library"
 msgstr "Znova naloži knjižnico"
 
-#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:368
+#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:367
 msgid "Back"
 msgstr "Nazaj"
 
@@ -226,7 +226,7 @@ msgstr "Strnjen pogled seznama predvajanja"
 msgid "Grid view for artists/albums"
 msgstr "Mrežni pogled za izvajalce/albume"
 
-#: src/gtk/preferences.ui:56 src/application.vala:400
+#: src/gtk/preferences.ui:56 src/application.vala:410
 msgid "Keep playing after window closed"
 msgstr "Nadaljuj s predvajanjem po zaprtju okna"
 
@@ -330,77 +330,81 @@ msgstr "Nedavno"
 msgid "Shuffle"
 msgstr "Premešaj"
 
-#: src/action-handles.vala:184
+#: src/action-handles.vala:81
+msgid "Image Files"
+msgstr "Slikovne datoteke"
+
+#: src/action-handles.vala:167
 msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr "Hiter, tekoč, lahek predvajalnik glasbe, napisan v GTK4."
 
 #. Translators: Replace "translator-credits" with your names, one name per line
-#: src/action-handles.vala:186
+#: src/action-handles.vala:169
 msgid "translator-credits"
 msgstr "Martin Srebotnjak <miles@filmsi.net>"
 
-#: src/application.vala:602
+#: src/application.vala:608
 msgid "Keep playing"
 msgstr "Nadaljuj s predvajanjem"
 
 #. Translators: Play this music at next position of current playing music
-#: src/ui/music-widgets.vala:211 src/ui/music-widgets.vala:252
-#: src/ui/music-widgets.vala:262
+#: src/ui/music-widgets.vala:208 src/ui/music-widgets.vala:249
+#: src/ui/music-widgets.vala:259
 msgid "Play at Next"
 msgstr "Predvajaj kot naslednje"
 
-#: src/ui/music-widgets.vala:212 src/ui/music-widgets.vala:251
-#: src/ui/music-widgets.vala:261 src/ui/store-panel.vala:373
+#: src/ui/music-widgets.vala:209 src/ui/music-widgets.vala:248
+#: src/ui/music-widgets.vala:258 src/ui/store-panel.vala:372
 msgid "Play"
 msgstr "Predvajaj"
 
-#: src/ui/music-widgets.vala:215 src/ui/play-panel.vala:125
+#: src/ui/music-widgets.vala:212 src/ui/play-panel.vala:128
 msgid "Show _Cover File"
 msgstr "Pokaži datoteko _ovitka"
 
-#: src/ui/music-widgets.vala:217 src/ui/play-panel.vala:127
+#: src/ui/music-widgets.vala:214 src/ui/play-panel.vala:130
 msgid "_Export Cover"
 msgstr "_Izvozi ovitek"
 
-#: src/ui/music-widgets.vala:254
+#: src/ui/music-widgets.vala:251
 msgid "Show List File"
 msgstr "Pokaži datoteko seznama"
 
-#: src/ui/music-widgets.vala:268 src/ui/play-panel.vala:59
+#: src/ui/music-widgets.vala:265 src/ui/play-panel.vala:59
 msgid "Search Title"
 msgstr "Iskanje po naslovu"
 
-#: src/ui/music-widgets.vala:269 src/ui/play-panel.vala:57
+#: src/ui/music-widgets.vala:266 src/ui/play-panel.vala:57
 msgid "Search Album"
 msgstr "Iskanje po albumu"
 
-#: src/ui/music-widgets.vala:270 src/ui/play-panel.vala:58
+#: src/ui/music-widgets.vala:267 src/ui/play-panel.vala:58
 msgid "Search Artist"
 msgstr "Iskanje po izvajalcu"
 
-#: src/ui/music-widgets.vala:271
+#: src/ui/music-widgets.vala:268
 msgid "_Show Music File"
 msgstr "_Pokaži glasbeno datoteko"
 
 #. Translators: single loop the current music
-#: src/ui/play-bar.vala:74
+#: src/ui/play-bar.vala:72
 msgid "Single Loop"
 msgstr "Enojna zanka"
 
-#: src/ui/play-bar.vala:84
+#: src/ui/play-bar.vala:82
 msgid "Play Previous"
 msgstr "Predvajaj prejšnje"
 
 #. media-playback-pause-symbolic
-#: src/ui/play-bar.vala:90
+#: src/ui/play-bar.vala:88
 msgid "Play/Pause"
 msgstr "Predvajaj / premor"
 
-#: src/ui/play-bar.vala:97
+#: src/ui/play-bar.vala:95
 msgid "Play Next"
 msgstr "Predvajaj naslednje"
 
-#: src/ui/play-panel.vala:246
+#: src/ui/play-panel.vala:239
 msgid ""
 "Drag and drop music files here,\n"
 "or change music location: "
@@ -424,23 +428,23 @@ msgstr "Samo grafika"
 msgid "Track"
 msgstr "Skladba/posnetek"
 
-#: src/ui/store-panel.vala:72
+#: src/ui/store-panel.vala:74
 msgid "Playing"
 msgstr "Trenutno se predvaja"
 
-#: src/ui/store-panel.vala:77
+#: src/ui/store-panel.vala:79
 msgid "Artists"
 msgstr "Izvajalci"
 
-#: src/ui/store-panel.vala:82
+#: src/ui/store-panel.vala:84
 msgid "Albums"
 msgstr "Albumi"
 
-#: src/ui/store-panel.vala:87
+#: src/ui/store-panel.vala:89
 msgid "Playlists"
 msgstr "Seznami predvajanja"
 
-#: src/ui/store-panel.vala:570
+#: src/ui/store-panel.vala:596
 msgid "No playlist found"
 msgstr "Seznam predvajanja ni bil najden"
 
