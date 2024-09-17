@@ -363,7 +363,7 @@ namespace G4 {
                 else
                     _selection.select_all ();
             });
-            header.pack_end (all_btn);
+            header.pack_start (all_btn);
 
             var remove_btn = new Gtk.Button.from_icon_name ("list-remove");
             remove_btn.tooltip_text = _("Remove");
@@ -387,10 +387,26 @@ namespace G4 {
             insert_btn.clicked.connect (() => {
                 var app = (Application) GLib.Application.get_default ();
                 var playlist = playlist_for_selection ();
+                var current = app.current_music;
+                if (current != null)
+                    playlist.foreach_remove ((uri, music) => music == (!)current);
                 app.play_at_next (playlist);
             });
             header.pack_end (insert_btn);
             _action_buttons.add (insert_btn);
+
+            var store = ((Application) GLib.Application.get_default ()).music_store;
+            if (store != _data_store) {
+                var queue_btn = new Gtk.Button.from_icon_name ("document-new");
+                queue_btn.tooltip_text = _("Add to Playing");
+                queue_btn.clicked.connect (() => {
+                    var app = (Application) GLib.Application.get_default ();
+                    var playlist = playlist_for_selection ();
+                    app.play (playlist, false);
+                });
+                header.pack_end (queue_btn);
+                _action_buttons.add (queue_btn);
+            }
         }
     }
 }
