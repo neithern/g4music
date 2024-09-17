@@ -12,6 +12,7 @@ namespace G4 {
         private Type _item_type = typeof (Music);
         private Music? _music_node = null;
         private Gtk.ScrolledWindow _scroll_view = new Gtk.ScrolledWindow ();
+        private Gtk.MultiSelection _selection;
         private Thumbnailer _thmbnailer;
 
         private bool _child_drawed = false;
@@ -36,13 +37,20 @@ namespace G4 {
             _thmbnailer = app.thumbnailer;
             update_store ();
 
+            _selection = new Gtk.MultiSelection (_filter_model);
+            _selection.selection_changed.connect ((position, removed, added) => {
+                var enabled = !_selection.get_selection ().is_empty ();
+                foreach (var button in _action_buttons)
+                    button.sensitive = enabled;
+            });
+
             _grid_view.enable_rubberband = false;
             _grid_view.max_columns = 5;
             _grid_view.margin_start = 6;
             _grid_view.margin_end = 6;
+            _grid_view.model = _selection;
             _grid_view.single_click_activate = true;
             _grid_view.activate.connect ((position) => item_activated (position, _filter_model.get_item (position)));
-            _grid_view.model = new Gtk.NoSelection (_filter_model);
             _grid_view.add_css_class ("navigation-sidebar");
 
             _scroll_view.child = _grid_view;
@@ -57,11 +65,9 @@ namespace G4 {
                 return _compact_list;
             }
             set {
-                var factory = _grid_view.get_factory ();
                 _compact_list = value;
-                if (factory != null) {
+                if (_grid_view.get_factory () != null)
                     create_factory ();
-                }
             }
         }
 
@@ -98,18 +104,58 @@ namespace G4 {
                 return _grid_mode;
             }
             set {
-                var factory = _grid_view.get_factory ();
                 _grid_mode = value;
                 _image_size = value ? Thumbnailer.GRID_SIZE : Thumbnailer.ICON_SIZE;
-                if (factory != null) {
+                if (_grid_view.get_factory () != null)
                     create_factory ();
-                }
             }
         }
 
         public Type item_type {
             get {
                 return _item_type;
+            }
+        }
+
+        private GenericArray<Gtk.Button> _action_buttons = new GenericArray<Gtk.Button> (4);
+        private Gtk.HeaderBar? _header_bar = null;
+        private Gtk.Widget? _header_bar_hided = null;
+        private bool _multi_selection = false;
+
+        public bool multi_selection {
+            get {
+                return _multi_selection;
+            }
+            set {
+                if (_multi_selection != value) {
+                    _multi_selection = value;
+                    _grid_view.enable_rubberband = value;
+                    _grid_view.single_click_activate = !value;
+                    if (_grid_view.get_factory () != null)
+                        create_factory ();
+                }
+                if (value && _header_bar == null) {
+                    var child = get_first_child ();
+                    if (child is Gtk.HeaderBar) {
+                        _header_bar_hided = child;
+                        remove ((!)child);
+                    }
+                    var header = new Gtk.HeaderBar ();
+                    header.show_title_buttons = false;
+                    header.title_widget = new Gtk.Label (null);
+                    header.add_css_class ("flat");
+                    prepend (header);
+                    _header_bar = header;
+                    setup_selection_header_bar (header);
+                } else if (!value && _header_bar != null) {
+                    remove ((!)_header_bar);
+                    _header_bar = null;
+                    if (_header_bar_hided != null) {
+                        prepend ((!)_header_bar_hided);
+                        _header_bar_hided = null;
+                    }
+                    _action_buttons.length = 0;
+                }
             }
         }
 
@@ -209,11 +255,13 @@ namespace G4 {
         }
 
         private void on_create_item (Object obj) {
+            var child = _grid_mode ? (MusicWidget) new MusicCell () : (MusicWidget) new MusicEntry (_compact_list);
             var item = (Gtk.ListItem) obj;
-            item.child = _grid_mode ? (MusicWidget) new MusicCell () : (MusicWidget) new MusicEntry (_compact_list);
-            item.selectable = false;
+            item.child = child;
+            item.selectable = _multi_selection;
             item_created (item);
             _row_width = item.child.width_request;
+            make_long_pressable (child, (widget, x, y) => multi_selection = true);
         }
 
         private void on_bind_item (Object obj) {
@@ -266,6 +314,70 @@ namespace G4 {
                 _row_height = range / ((count + _columns - 1) / _columns);
                 _scroll_range = range;
             }
+        }
+
+        private Playlist playlist_for_selection () {
+            var count = _filter_model.get_n_items ();
+            var items = new GenericArray<Music> (count);
+            for (var i = 0; i < count; i++) {
+                if (_selection.is_selected (i)) {
+                    var node = _filter_model.get_item (i);
+                    if (node is Artist) {
+                        var artist = (Artist) node;
+                        var playlist = artist.to_playlist ();
+                        items.extend (playlist.items, (src) => src);
+                    } else if (node is Album) {
+                        var album = (Album) node;
+                        album.foreach ((uri, music) => items.add (music));
+                    } else {
+                        items.add ((Music) node);
+                    }
+                }
+            }
+            return new Playlist ("", "", items);
+        }
+
+        private void setup_selection_header_bar (Gtk.HeaderBar header) {
+            var back_btn = new Gtk.Button.from_icon_name ("go-previous-symbolic");
+            back_btn.clicked.connect (() => multi_selection = false);
+            back_btn.tooltip_text = _("Back");
+            header.pack_start (back_btn);
+
+            var all_btn = new Gtk.Button.from_icon_name ("edit-select-all");
+            all_btn.tooltip_text = _("Select All");
+            all_btn.clicked.connect (() => {
+                if (_selection.get_selection ().get_size () == visible_count)
+                    _selection.unselect_all ();
+                else
+                    _selection.select_all ();
+            });
+            header.pack_end (all_btn);
+
+            var remove_btn = new Gtk.Button.from_icon_name ("list-remove");
+            remove_btn.tooltip_text = _("Remove");
+            remove_btn.clicked.connect (() => {
+                var count = (int) _filter_model.get_n_items ();
+                for (var i = count - 1; i >= 0; i--) {
+                    if (_selection.is_selected (i)) {
+                        var node = _filter_model.get_item (i);
+                        uint position = -1;
+                        if (_data_store.find ((!)node, out position))
+                            _data_store.remove (position);
+                    }
+                }
+            });
+            header.pack_end (remove_btn);
+            _action_buttons.add (remove_btn);
+
+            var insert_btn = new Gtk.Button.from_icon_name ("format-indent-more");
+            insert_btn.tooltip_text = _("Play at Next");
+            insert_btn.clicked.connect (() => {
+                var app = (Application) GLib.Application.get_default ();
+                var playlist = playlist_for_selection ();
+                app.play_at_next (playlist);
+            });
+            header.pack_end (insert_btn);
+            _action_buttons.add (insert_btn);
         }
     }
 }
