@@ -114,8 +114,8 @@ namespace G4 {
         }
 
         private GenericArray<Gtk.Button> _action_buttons = new GenericArray<Gtk.Button> (4);
-        private Gtk.HeaderBar? _header_bar = null;
         private Gtk.Widget? _header_bar_hided = null;
+        private Gtk.Revealer? _header_revealer = null;
         private Gtk.Label? _header_title = null;
         private bool _multi_selection = false;
 
@@ -133,25 +133,24 @@ namespace G4 {
                     if (_grid_view.get_factory () != null)
                         create_factory ();
                 }
-                if (value && _header_bar == null) {
+                if (value && _header_revealer == null) {
                     var child = get_first_child ();
                     if (child is Gtk.HeaderBar) {
                         _header_bar_hided = child;
                         remove ((!)child);
                     }
                     var header = new Gtk.HeaderBar ();
-                    prepend (header);
-                    _header_bar = header;
                     setup_selection_header_bar (header);
-                } else if (!value && _header_bar != null) {
-                    remove ((!)_header_bar);
-                    _header_bar = null;
-                    if (_header_bar_hided != null) {
-                        prepend ((!)_header_bar_hided);
-                        _header_bar_hided = null;
-                    }
-                    _action_buttons.length = 0;
+                    var revealer = new Gtk.Revealer ();
+                    revealer.child = header;
+                    revealer.transition_type = Gtk.RevealerTransitionType.SLIDE_DOWN;
+                    prepend (revealer);
+                    _header_revealer = revealer;
+                } else if (!value && _header_bar_hided != null) {
+                    prepend ((!)_header_bar_hided);
+                    _header_bar_hided = null;
                 }
+                _header_revealer?.set_reveal_child (value);
             }
         }
 
@@ -355,7 +354,7 @@ namespace G4 {
             back_btn.tooltip_text = _("Back");
             header.pack_start (back_btn);
 
-            var all_btn = new Gtk.Button.from_icon_name ("edit-select-all");
+            var all_btn = new Gtk.Button.from_icon_name ("edit-select-all-symbolic");
             all_btn.tooltip_text = _("Select All");
             all_btn.clicked.connect (() => {
                 if (_selection.get_selection ().get_size () == visible_count)
@@ -365,7 +364,7 @@ namespace G4 {
             });
             header.pack_start (all_btn);
 
-            var remove_btn = new Gtk.Button.from_icon_name ("list-remove");
+            var remove_btn = new Gtk.Button.from_icon_name ("user-trash-symbolic");
             remove_btn.tooltip_text = _("Remove");
             remove_btn.clicked.connect (() => {
                 var count = (int) _filter_model.get_n_items ();
@@ -382,7 +381,7 @@ namespace G4 {
             header.pack_end (remove_btn);
             _action_buttons.add (remove_btn);
 
-            var insert_btn = new Gtk.Button.from_icon_name ("format-indent-more");
+            var insert_btn = new Gtk.Button.from_icon_name ("format-indent-more-symbolic");
             insert_btn.tooltip_text = _("Play at Next");
             insert_btn.clicked.connect (() => {
                 var app = (Application) GLib.Application.get_default ();
