@@ -62,48 +62,27 @@ namespace G4 {
             }
         }
 
-        private async void _export_cover_async (Music? music) {
-            Gst.Sample? sample = _app.current_cover;
-            if (music != null && music != _app.current_music) {
-                var file = File.new_for_uri (music?.uri ?? "");
-                sample = yield run_async<Gst.Sample?> (() => {
+        private async void _export_cover_async (Music music) {
+            var cover = _app.current_cover;
+            if (cover == null || music != _app.current_music) {
+                var file = File.new_for_uri (music.uri);
+                cover = yield run_async<Gst.Sample?> (() => {
                     var tags = parse_gst_tags (file);
                     return tags != null ? parse_image_from_tag_list ((!)tags) : null;
                 });
             }
-            if (music != null && sample != null && _app.active_window is Window) {
-                var itype = sample?.get_caps ()?.get_structure (0)?.get_name ();
+            if (cover != null) {
+                var sample = (!)cover;
+                var itype = sample.get_caps ()?.get_structure (0)?.get_name ();
                 var pos = itype?.index_of_char ('/') ?? -1;
                 var ext = itype?.substring (pos + 1) ?? "";
-                var name = ((!)music).get_artist_and_title ().replace ("/", "&") + "." + ext;
-                var filter = new Gtk.FileFilter ();
-                filter.add_mime_type (itype ??  "image/*");
-#if GTK_4_10
-                var dialog = new Gtk.FileDialog ();
-                dialog.set_initial_name (name);
-                dialog.set_default_filter (filter);
-                dialog.modal = true;
-                try {
-                    var file = yield dialog.save (_app.active_window, null);
-                    if (file != null) {
-                        yield save_sample_to_file_async ((!)file, (!)sample);
-                    }
-                } catch (Error e) {
+                var name = music.get_artist_and_title ().replace ("/", "&") + "." + ext;
+                var file = yield show_save_file_dialog (_app.active_window, name, {"image/*"});
+                if (file != null) {
+                    var saved = yield save_sample_to_file_async ((!)file, sample);
+                    if (saved)
+                        _app.show_uri_with_portal (((!)file).get_uri ());
                 }
-#else
-                var chooser = new Gtk.FileChooserNative (null, _app.active_window, Gtk.FileChooserAction.SAVE, null, null);
-                chooser.set_current_name (name);
-                chooser.set_filter (filter);
-                chooser.modal = true;
-                chooser.response.connect ((id) => {
-                    var file = chooser.get_file ();
-                    if (id == Gtk.ResponseType.ACCEPT && file is File) {
-                        save_sample_to_file_async.begin ((!)file, (!)sample,
-                            (obj, res) => save_sample_to_file_async.end (res));
-                    }
-                });
-                chooser.show ();
-#endif
             }
         }
 
@@ -114,7 +93,8 @@ namespace G4 {
 
         private void export_cover (SimpleAction action, Variant? parameter) {
             var music = _get_music_from_parameter (parameter);
-            _export_cover_async.begin (music, (obj, res) => _export_cover_async.end (res));
+            if (music != null)
+                _export_cover_async.begin ((!)music, (obj, res) => _export_cover_async.end (res));
         }
 
         private unowned string? _parse_uri_form_parameter (Variant? parameter) {
@@ -248,5 +228,40 @@ namespace G4 {
             else
                 _app.sort_mode = _app.sort_mode + 1;
         }
+    }
+
+    public async File? show_save_file_dialog (Gtk.Window? parent, string? name, string[]? mime_types) {
+        var filter = new Gtk.FileFilter ();
+        if (mime_types != null) {
+            foreach (var type in (!)mime_types)
+                filter.add_mime_type (type);
+        }
+#if GTK_4_10
+        var dialog = new Gtk.FileDialog ();
+        dialog.set_initial_name (name);
+        dialog.set_default_filter (filter);
+        dialog.modal = true;
+        try {
+            return yield dialog.save (parent, null);
+        } catch (Error e) {
+        }
+        return null;
+#else
+        var result = new File?[] { (File?) null };
+        var chooser = new Gtk.FileChooserNative (null, parent, Gtk.FileChooserAction.SAVE, null, null);
+        chooser.set_current_name (name ?? "");
+        chooser.set_filter (filter);
+        chooser.modal = true;
+        chooser.response.connect ((id) => {
+            var file = chooser.get_file ();
+            if (id == Gtk.ResponseType.ACCEPT && file is File) {
+                result[0] = file;
+                Idle.add (show_save_file_dialog.callback);
+            }
+        });
+        chooser.show ();
+        yield;
+        return result[0];
+#endif
     }
 }
