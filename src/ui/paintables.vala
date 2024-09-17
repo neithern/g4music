@@ -372,5 +372,17 @@ namespace G4 {
         }
         return result ?? snapshot.free_to_paintable (rect.size);
     }
+
+    public void draw_outset_shadow (Gtk.Snapshot snapshot, float x, float y, float width, float height, float radius = 5) {
+        var color = Gdk.RGBA ();
+        color.alpha = 0.2f;
+        color.red = color.green = color.blue = 0;
+        var rect = Graphene.Rect ();
+        rect.init (x, y, width, height);
+        rect.inset (radius, radius);
+        var outline = Gsk.RoundedRect ();
+        outline.init_from_rect (rect, radius);
+        snapshot.append_outset_shadow (outline, color, 1, 1, 1, float.max (radius - 1, 0));
+    }
 }
 

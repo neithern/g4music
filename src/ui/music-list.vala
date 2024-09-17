@@ -218,6 +218,14 @@ namespace G4 {
             _grid_view.activate_action_variant ("list.scroll-to-item", new Variant.uint32 (index));
         }
 
+        public override void snapshot (Gtk.Snapshot snapshot) {
+            if (_header_revealer?.reveal_child ?? false) {
+                var child = (!)_header_revealer;
+                draw_outset_shadow (snapshot, 0, 0, child.get_width (), child.get_height ());
+            }
+            base.snapshot (snapshot);
+        }
+
         private Gtk.Label? _empty_label = null;
 
         public void set_empty_text (string? text) {
@@ -364,22 +372,24 @@ namespace G4 {
             });
             header.pack_start (all_btn);
 
-            var remove_btn = new Gtk.Button.from_icon_name ("user-trash-symbolic");
-            remove_btn.tooltip_text = _("Remove");
-            remove_btn.clicked.connect (() => {
-                var count = (int) _filter_model.get_n_items ();
-                for (var i = count - 1; i >= 0; i--) {
-                    if (_selection.is_selected (i)) {
-                        var node = _filter_model.get_item (i);
-                        uint position = -1;
-                        if (_data_store.find ((!)node, out position))
-                            _data_store.remove (position);
+            if (_item_type == typeof (Music)) {
+                var remove_btn = new Gtk.Button.from_icon_name ("user-trash-symbolic");
+                remove_btn.tooltip_text = _("Remove");
+                remove_btn.clicked.connect (() => {
+                    var count = (int) _filter_model.get_n_items ();
+                    for (var i = count - 1; i >= 0; i--) {
+                        if (_selection.is_selected (i)) {
+                            var node = _filter_model.get_item (i);
+                            uint position = -1;
+                            if (_data_store.find ((!)node, out position))
+                                _data_store.remove (position);
+                        }
                     }
-                }
-                on_selection_changed (0, 0);
-            });
-            header.pack_end (remove_btn);
-            _action_buttons.add (remove_btn);
+                    on_selection_changed (0, 0);
+                });
+                header.pack_end (remove_btn);
+                _action_buttons.add (remove_btn);
+            }
 
             var insert_btn = new Gtk.Button.from_icon_name ("format-indent-more-symbolic");
             insert_btn.tooltip_text = _("Play at Next");
