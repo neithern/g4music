@@ -406,7 +406,7 @@ namespace G4 {
 
             var store = ((Application) GLib.Application.get_default ()).music_store;
             if (store != _data_store) {
-                var queue_btn = new Gtk.Button.from_icon_name ("document-new");
+                var queue_btn = new Gtk.Button.from_icon_name ("document-send-symbolic");
                 queue_btn.tooltip_text = _("Add to Playing");
                 queue_btn.clicked.connect (() => {
                     var app = (Application) GLib.Application.get_default ();
