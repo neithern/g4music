@@ -167,9 +167,8 @@ namespace G4 {
         public string list_uri;
 
         public Playlist (string name, string uri, GenericArray<Music> items) {
-            base (items.length > 0 ? items[0] : new Music.empty ());
+            base.titled (name, "");
             base.album = name;
-            base.title = name;
             base._album_key = uri;
             this.items = items;
             this.list_uri = uri;
