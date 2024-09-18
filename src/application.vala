@@ -454,7 +454,8 @@ namespace G4 {
                 filter.add_mime_type ("audio/x-mpegurl");
                 filter.add_mime_type ("audio/x-scpls");
                 filter.add_mime_type ("public.m3u-playlist");
-                var file = yield show_save_file_dialog (active_window, playlist.title + ".m3u", {filter});
+                var initial = File.new_for_uri (music_folder).get_child (playlist.title + ".m3u");
+                var file = yield show_save_file_dialog (active_window, initial, {filter});
                 if (file == null)
                     return;
                 playlist.list_uri = ((!)file).get_uri ();

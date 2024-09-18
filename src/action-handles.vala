@@ -80,7 +80,8 @@ namespace G4 {
                 var filter = new Gtk.FileFilter ();
                 filter.name = _("Image Files");
                 filter.add_mime_type ("image/*");
-                var file = yield show_save_file_dialog (_app.active_window, name, {filter});
+                var initial = File.new_build_filename (name);
+                var file = yield show_save_file_dialog (_app.active_window, initial, {filter});
                 if (file != null) {
                     var saved = yield save_sample_to_file_async ((!)file, sample);
                     if (saved)
@@ -233,7 +234,7 @@ namespace G4 {
         }
     }
 
-    public async File? show_save_file_dialog (Gtk.Window? parent, string? name, Gtk.FileFilter[]? filters = null) {
+    public async File? show_save_file_dialog (Gtk.Window? parent, File? initial = null, Gtk.FileFilter[]? filters = null) {
         Gtk.FileFilter? default_filter = filters != null && ((!)filters).length > 0 ? ((!)filters)[0] : (Gtk.FileFilter?) null;
 #if GTK_4_10
         var filter_list = new ListStore (typeof (Gtk.FileFilter));
@@ -245,7 +246,7 @@ namespace G4 {
         dialog.filters = filter_list;
         dialog.modal = true;
         dialog.set_default_filter (default_filter);
-        dialog.set_initial_name (name);
+        dialog.set_initial_file (initial);
         try {
             return yield dialog.save (parent, null);
         } catch (Error e) {
@@ -255,7 +256,11 @@ namespace G4 {
         var result = new File?[] { (File?) null };
         var chooser = new Gtk.FileChooserNative (null, parent, Gtk.FileChooserAction.SAVE, null, null);
         chooser.modal = true;
-        chooser.set_current_name (name ?? "");
+        try {
+            chooser.set_current_folder (initial?.get_parent ());
+            chooser.set_current_name (initial?.get_basename () ?? "");
+        } catch (Error e) {
+        }
         if (filters != null) {
             foreach (var filter in (!)filters) 
                 chooser.add_filter (filter);
