@@ -350,8 +350,9 @@ namespace G4 {
 
             var title = album_mode ? album?.album : artist?.artist;
             var label = new Gtk.Label (title);
-            label.ellipsize = Pango.EllipsizeMode.END;
-            var icon = new Gtk.Image.from_icon_name (album_mode ? "media-optical-cd-audio-symbolic" : "avatar-default-symbolic");
+            label.ellipsize = Pango.EllipsizeMode.MIDDLE;
+            var icon_name = (album is Playlist) ? "emblem-documents-symbolic" : (album_mode ? "media-optical-cd-audio-symbolic" : "avatar-default-symbolic");
+            var icon = new Gtk.Image.from_icon_name (icon_name);
             var label_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6);
             label_box.append (icon);
             label_box.append (label);
