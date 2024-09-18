@@ -268,7 +268,7 @@ namespace G4 {
                             var playlist = new Playlist ((!)name, file.get_uri (), arr);
                             _library.add_playlist (playlist);
                             if (merge_lists)
-                                musics.extend (playlist.items, (src) => src);
+                                playlist.foreach ((music) => musics.add (music));
                         }
                     }
                 }

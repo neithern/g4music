@@ -336,7 +336,7 @@ namespace G4 {
                     if (node is Artist) {
                         var artist = (Artist) node;
                         var playlist = artist.to_playlist ();
-                        items.extend (playlist.items, (src) => src);
+                        playlist.foreach ((music) => items.add (music));
                     } else if (node is Album) {
                         var album = (Album) node;
                         album.foreach ((uri, music) => items.add (music));
@@ -346,19 +346,6 @@ namespace G4 {
                 }
             }
             return new Playlist (_music_node?.title ?? "Untitled", "", items);
-        }
-
-        private async void save_to_playlist_file_async (Playlist playlist) {
-            var app = (Application) GLib.Application.get_default ();
-            var filter = new Gtk.FileFilter ();
-            filter.name = _("Playlist Files");
-            filter.add_mime_type ("audio/x-mpegurl");
-            filter.add_mime_type ("audio/x-scpls");
-            filter.add_mime_type ("public.m3u-playlist");
-            var file = yield show_save_file_dialog (app.active_window, playlist.title + ".m3u", {filter});
-            if (file != null) {
-                yield app.add_playlist_to_file_async (playlist, (!)file);
-            }
         }
 
         private void setup_selection_header_bar (Gtk.HeaderBar header) {
@@ -433,8 +420,9 @@ namespace G4 {
             var add_to_btn = new Gtk.Button.from_icon_name ("document-new-symbolic");
             add_to_btn.tooltip_text = _("Add to Playlist");
             add_to_btn.clicked.connect (() => {
+                var app = (Application) GLib.Application.get_default ();
                 var playlist = playlist_for_selection ();
-                save_to_playlist_file_async.begin (playlist, (obj, res) => save_to_playlist_file_async.end (res));
+                app.save_to_playlist_file_async.begin (playlist, (obj, res) => app.save_to_playlist_file_async.end (res));
             });
             header.pack_end (add_to_btn);
             _action_buttons.add (add_to_btn);

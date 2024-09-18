@@ -164,6 +164,7 @@ namespace G4 {
                 return save_m3u8_file (file, uris);
             }
         } catch (Error e) {
+            print ("Save playlist %s: %s\n", file.get_parse_name (), e.message);
         }
         return false;
     }

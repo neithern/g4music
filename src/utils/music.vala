@@ -23,7 +23,7 @@ namespace G4 {
         protected string _artist_key = "";
         protected string _title_key = "";
         private string? _cover_key = null;
-        private int _order = 0;
+        protected int _order = 0;
 
         public Music (string uri, string title, int64 time) {
             this.title = title;

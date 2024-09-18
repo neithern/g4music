@@ -277,23 +277,27 @@ namespace G4 {
             }
         }
 
-        public async void add_playlist_to_file_async (Playlist playlist, File file) {
+        public async void add_playlist_to_file_async (Playlist playlist, bool append) {
+            var file = File.new_for_uri (playlist.list_uri);
             var names = new string?[1] { null };
             var uris = new GenericArray<string> (1024);
             var saved = yield run_async <bool> (() => {
-                names[0] = load_playlist_file (file, uris);
                 var map = new GenericSet<string> (str_hash, str_equal);
-                uris.foreach ((uri) => map.add (uri));
-                playlist.foreach ((uri, music) => {
+                if (append) {
+                    names[0] = load_playlist_file (file, uris);
+                    uris.foreach ((uri) => map.add (uri));
+                }
+                playlist.foreach ((music) => {
+                    var uri = music.uri;
                     if (!map.contains (uri))
                         uris.add (uri);
                 });
                 return save_playlist_file (file, uris, names[0] ?? playlist.title);
             });
             if (saved) {
-                if (names[0] != null) {
-                    //  Replace items if loaded from exitsing file
-                    playlist.items.length = 0;
+                if (append && names[0] != null) {
+                    //  Replace items if loaded from existing file
+                    playlist.clear ();
                     foreach (var uri in uris) {
                         var music = _loader.find_cache (uri);
                         if (music != null)
@@ -301,7 +305,6 @@ namespace G4 {
                     }
                     playlist.set_title ((!)names[0]);
                 }
-                playlist.list_uri = file.get_uri ();
                 _loader.library.add_playlist (playlist);
                 playlist_added (playlist);
             }
@@ -440,6 +443,24 @@ namespace G4 {
         public void request_background () {
             _portal.request_background_async.begin (_("Keep playing after window closed"),
                 (obj, res) => _portal.request_background_async.end (res));
+        }
+
+        public async void save_to_playlist_file_async (Playlist playlist) {
+            var uri = playlist.list_uri;
+            var append = uri.length == 0;
+            if (append) {
+                var filter = new Gtk.FileFilter ();
+                filter.name = _("Playlist Files");
+                filter.add_mime_type ("audio/x-mpegurl");
+                filter.add_mime_type ("audio/x-scpls");
+                filter.add_mime_type ("public.m3u-playlist");
+                var file = yield show_save_file_dialog (active_window, playlist.title + ".m3u", {filter});
+                if (file == null)
+                    return;
+                playlist.list_uri = ((!)file).get_uri ();
+                playlist.set_title (get_file_display_name ((!)file));
+            }
+            yield add_playlist_to_file_async (playlist, append);
         }
 
         public uint get_list_sort_mode (ListModel model) {

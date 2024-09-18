@@ -35,6 +35,10 @@ namespace G4 {
                 // For cover
                 uri = music.uri;
             }
+            return insert_music (music);
+        }
+
+        protected bool insert_music (Music music) {
             var count = _musics.length;
             _musics.insert (music.uri, music);
             return _musics.length > count;
@@ -163,23 +167,39 @@ namespace G4 {
     }
 
     public class Playlist : Album {
-        public GenericArray<Music> items;
+        private GenericArray<Music> _items;
         public string list_uri;
 
         public Playlist (string name, string uri, GenericArray<Music> items) {
             base.titled (name, "");
             base.album = name;
             base._album_key = uri;
-            this.items = items;
             this.list_uri = uri;
-            Music.original_order (items);
-            items.foreach ((music) => {
-                _musics.insert (music.uri, music);
-                if (!has_cover && music.has_cover) {
-                    has_cover = true;
-                    this.uri = music.uri;
-                }
-            });
+            this._items = new GenericArray<Music> (items.length);
+            items.foreach ((music) => add_music (music));
+        }
+
+        public new bool add_music (Music music) {
+            if (!has_cover && music.has_cover) {
+                has_cover = true;
+                this.uri = music.uri;
+            }
+            if (insert_music (music)) {
+                var count = _items.length;
+                _items.add (music);
+                _items[count]._order = count;
+                return true;
+            }
+            return false;
+        }
+
+        public void clear () {
+            _musics.remove_all ();
+            _items.length = 0;
+        }
+
+        public new void @foreach (Func<Music> func) {
+            _items.foreach (func);
         }
 
         public void set_title (string name) {
@@ -188,7 +208,7 @@ namespace G4 {
         }
 
         protected override void sort (GenericArray<Music> arr) {
-            Music.original_order (items);
+            Music.original_order (_items);
             arr.sort (Music.compare_by_order);
         }
     }
