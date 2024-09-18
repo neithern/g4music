@@ -146,7 +146,8 @@ namespace G4 {
                 if (sort_mode <= SortMode.MAX) {
                     sort_music_array (musics, sort_mode);
                 }
-                print ("Group %u artists %u albums in %lld ms\n", _library.artists.length, _library.albums.length,
+                print ("Group %u artists %u albums %u playlists in %lld ms\n",
+                    _library.artists.length, _library.albums.length, _library.playlists.length,
                     stop_watch.lap () / 1000);
             });
             loading_changed (false);
@@ -196,8 +197,7 @@ namespace G4 {
                     } else if (is_playlist_file (ctype)) {
                         if (load_lists)
                             load_playlist (file, musics);
-                        else
-                            playlists?.add (file);
+                        playlists?.add (file);
                     } else if (is_cover_file (ctype, name)) {
                         var parent = file.get_parent ();
                         if (parent != null)
