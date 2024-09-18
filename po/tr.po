@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/neithern/g4music/issues\n"
-"POT-Creation-Date: 2024-09-18 07:16+0000\n"
+"POT-Creation-Date: 2024-09-18 14:39+0000\n"
 "PO-Revision-Date: 2024-09-18 08:00+0300\n"
 "Last-Translator: Emin Tufan Çetin <etcetin@gmail.com>\n"
 "Language-Team: Turkish <takim@gnome.org.tr>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Poedit 3.5\n"
 
-#: data/app.desktop.in:3 data/app.metainfo.xml.in:4 src/application.vala:239
+#: data/app.desktop.in:3 data/app.metainfo.xml.in:4 src/application.vala:240
 #: src/main.vala:24
 msgid "Gapless"
 msgstr "Aralıksız"
@@ -202,7 +202,7 @@ msgctxt "shortcut window"
 msgid "Reload Library"
 msgstr "Kitaplığı Yeniden Yükle"
 
-#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:368
+#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:369
 msgid "Back"
 msgstr "Geri"
 
@@ -226,7 +226,7 @@ msgstr "Sıkışık çalma listesi görünümü"
 msgid "Grid view for artists/albums"
 msgstr "Sanatçılar/albümler için ızgara görünümü"
 
-#: src/gtk/preferences.ui:56 src/application.vala:410
+#: src/gtk/preferences.ui:56 src/application.vala:444
 msgid "Keep playing after window closed"
 msgstr "Pencere kapatıldıktan sonra çalışmayı sürdür"
 
@@ -343,7 +343,11 @@ msgstr "GTK4 ile yazılmış hızlı, akıcı, hafif bir müzik çalar."
 msgid "translator-credits"
 msgstr "Sabri Ünal <libreajans@gmail.com>"
 
-#: src/application.vala:608
+#: src/application.vala:453
+msgid "Playlist Files"
+msgstr "Çalma Listesi Dosyaları"
+
+#: src/application.vala:660
 msgid "Keep playing"
 msgstr "Oynamayı sürdür"
 
@@ -354,15 +358,15 @@ msgid "Play at Next"
 msgstr "Sonra Çal"
 
 #: src/ui/music-widgets.vala:209 src/ui/music-widgets.vala:248
-#: src/ui/music-widgets.vala:258 src/ui/store-panel.vala:373
+#: src/ui/music-widgets.vala:258 src/ui/store-panel.vala:374
 msgid "Play"
 msgstr "Çal"
 
-#: src/ui/music-widgets.vala:212 src/ui/play-panel.vala:128
+#: src/ui/music-widgets.vala:212 src/ui/play-panel.vala:129
 msgid "Show _Cover File"
 msgstr "_Kapak Dosyalasını Göster"
 
-#: src/ui/music-widgets.vala:214 src/ui/play-panel.vala:130
+#: src/ui/music-widgets.vala:214 src/ui/play-panel.vala:131
 msgid "_Export Cover"
 msgstr "_Kapağı Dışa Aktar"
 
@@ -404,7 +408,7 @@ msgstr "Çal/Duraklat"
 msgid "Play Next"
 msgstr "Sonrakini Çal"
 
-#: src/ui/play-panel.vala:239
+#: src/ui/play-panel.vala:240
 msgid ""
 "Drag and drop music files here,\n"
 "or change music location: "
@@ -444,7 +448,7 @@ msgstr "Albümler"
 msgid "Playlists"
 msgstr "Çalma Listesi"
 
-#: src/ui/store-panel.vala:597
+#: src/ui/store-panel.vala:603
 msgid "No playlist found"
 msgstr "Çalma listesi bulunamadı"
 
