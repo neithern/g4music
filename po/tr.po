@@ -9,18 +9,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/neithern/g4music/issues\n"
-"POT-Creation-Date: 2024-07-20 09:24+0000\n"
-"PO-Revision-Date: 2024-08-11 04:04+0300\n"
-"Last-Translator: Sabri Ünal <yakushabb@gmail.com>\n"
+"POT-Creation-Date: 2024-09-18 07:16+0000\n"
+"PO-Revision-Date: 2024-09-18 08:00+0300\n"
+"Last-Translator: Emin Tufan Çetin <etcetin@gmail.com>\n"
 "Language-Team: Turkish <takim@gnome.org.tr>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 3.4.3\n"
+"X-Generator: Poedit 3.5\n"
 
-#: data/app.desktop.in:3 src/application.vala:237 src/main.vala:24
+#: data/app.desktop.in:3 data/app.metainfo.xml.in:4 src/application.vala:239
+#: src/main.vala:24
 msgid "Gapless"
 msgstr "Aralıksız"
 
@@ -34,7 +35,112 @@ msgstr "Müzik çal"
 
 #: data/app.desktop.in:12
 msgid "music;sound;player;media;audio;playlist;"
-msgstr "müzik;ses;çalıcı;medya;çalma listesi;oynatma listesi;"
+msgstr ""
+"music;sound;player;media;audio;playlist;müzik;ses;çalıcı;medya;ortam;çalma "
+"listesi;oynatma listesi;"
+
+#: data/app.metainfo.xml.in:7
+msgid "Play your music elegantly"
+msgstr "Müziğinizi zarifçe çalın"
+
+#: data/app.metainfo.xml.in:9
+msgid "Nanling"
+msgstr "Nanling"
+
+#: data/app.metainfo.xml.in:22
+msgid ""
+"Gapless (AKA: G4Music) is a light weight music player written in GTK4, "
+"focuses on large music collection."
+msgstr ""
+"Gapless (Yani: G4Music), GTK4 ile yazılmış hafif bir müzik oynatıcıdır ve "
+"büyük müzik derlemelerine odaklanır."
+
+#: data/app.metainfo.xml.in:23
+msgid "Features"
+msgstr "Özellikler"
+
+#: data/app.metainfo.xml.in:25
+msgid ""
+"Supports most music file types, Samba and any other remote protocols "
+"(depends on GIO and GStreamer)."
+msgstr ""
+"Çoğu müzik dosyası türününün yanında Samba ve diğer uzak iletişim "
+"kurallarını destekler (GIO ve GStreamerʼa bağlıdır)."
+
+#: data/app.metainfo.xml.in:26
+msgid ""
+"Fast loading and parsing thousands of music files in very few seconds, "
+"monitor local changes."
+msgstr ""
+"Binlerce müzik dosyasını birkaç saniyede yükleme ve ayrıştırma, yerel "
+"değişiklikleri izleme."
+
+#: data/app.metainfo.xml.in:27
+msgid ""
+"Low memory usage for large music collection with album covers (embedded and "
+"external), no thumbnail caches to store."
+msgstr ""
+"Albüm kapakları (gömülü ve harici) içeren büyük müzik derlemeleri için düşük "
+"bellek kullanımı, küçük resim önbellekleri depolanmaz."
+
+#: data/app.metainfo.xml.in:28
+msgid ""
+"Group and sorts by album/artist/title, shuffle list, full-text searching."
+msgstr ""
+"Albüme/sanatçıya/başlığa göre gruplama ve sıralama, liste karıştırma, tam "
+"metin arama."
+
+#: data/app.metainfo.xml.in:29
+msgid ""
+"Fluent adaptive user interface for different screen (Desktop, Tablet, "
+"Mobile)."
+msgstr ""
+"Farklı ekranlar (Masaüstü, Tablet, Cep Telefonu) için akıcı uyarlanabilir "
+"kullanıcı arayüzü."
+
+#: data/app.metainfo.xml.in:30
+msgid "Gaussian blurred cover as background, follows GNOME light/dark mode."
+msgstr "Arka plan için bulanıklaştırılmış kapak, GNOME açık/koyu kipini takip."
+
+#: data/app.metainfo.xml.in:31
+msgid "Drag-drop from GNOME Files, showing music in Files."
+msgstr "GNOME Dosyalarʼdan sürükleyip bırakma, Dosyalarʼda müzik gösterme."
+
+#: data/app.metainfo.xml.in:32
+msgid "Supports audio peaks visualizer."
+msgstr "Ses tepe seviyesi görselleyiciyi destekler."
+
+#: data/app.metainfo.xml.in:33
+msgid "Supports gapless playback."
+msgstr "Aralıksız çalmayı destekler."
+
+#: data/app.metainfo.xml.in:34
+msgid "Supports normalizing volume with ReplayGain."
+msgstr "ReplayGain ile sesi normalleştirmeyi destekler."
+
+#: data/app.metainfo.xml.in:35
+msgid "Supports PipeWire and other audio sink."
+msgstr "PipeWire ve diğer ses alıcılarını destekler."
+
+#: data/app.metainfo.xml.in:36
+msgid "Supports MPRIS control."
+msgstr "MPRIS denetimini destekler."
+
+#: data/app.metainfo.xml.in:47
+msgid "Main window"
+msgstr "Ana pencere"
+
+#: data/app.metainfo.xml.in:51
+msgid "Albums view"
+msgstr "Albümler görünümü"
+
+#: data/app.metainfo.xml.in:55
+msgid "Playing view"
+msgstr "Çalıyor görünümü"
+
+#: data/app.metainfo.xml.in:59
+msgid "Playlist view"
+msgstr "Çalma listesi görünümü"
 
 #: src/gtk/help-overlay.ui:11
 msgctxt "shortcut window"
@@ -96,7 +202,7 @@ msgctxt "shortcut window"
 msgid "Reload Library"
 msgstr "Kitaplığı Yeniden Yükle"
 
-#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:350
+#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:368
 msgid "Back"
 msgstr "Geri"
 
@@ -120,7 +226,7 @@ msgstr "Sıkışık çalma listesi görünümü"
 msgid "Grid view for artists/albums"
 msgstr "Sanatçılar/albümler için ızgara görünümü"
 
-#: src/gtk/preferences.ui:56 src/application.vala:428
+#: src/gtk/preferences.ui:56 src/application.vala:410
 msgid "Keep playing after window closed"
 msgstr "Pencere kapatıldıktan sonra çalışmayı sürdür"
 
@@ -184,117 +290,121 @@ msgstr "Ara"
 msgid "Sort By"
 msgstr "Sıralama"
 
-#: src/gtk/store-panel.ui:73
+#: src/gtk/store-panel.ui:59
 msgid "_Reload Library"
 msgstr "Kitaplığı _Yeniden Yükle"
 
-#: src/gtk/store-panel.ui:79
+#: src/gtk/store-panel.ui:65
 msgid "_Preferences"
 msgstr "_Tercihler"
 
-#: src/gtk/store-panel.ui:83
+#: src/gtk/store-panel.ui:69
 msgid "_Keyboard Shortcuts"
 msgstr "_Klavye Kısayolları"
 
-#: src/gtk/store-panel.ui:87
+#: src/gtk/store-panel.ui:73
 msgid "_About"
 msgstr "_Hakkında"
 
-#: src/gtk/store-panel.ui:96 src/ui/preferences.vala:67
+#: src/gtk/store-panel.ui:82 src/ui/preferences.vala:67
 msgid "Album"
 msgstr "Albüm"
 
-#: src/gtk/store-panel.ui:101
+#: src/gtk/store-panel.ui:87
 msgid "Artist"
 msgstr "Sanatçı"
 
-#: src/gtk/store-panel.ui:106
+#: src/gtk/store-panel.ui:92
 msgid "Artist/Album"
 msgstr "Sanatçı/Albüm"
 
-#: src/gtk/store-panel.ui:111
+#: src/gtk/store-panel.ui:97
 msgid "Title"
 msgstr "Başlık"
 
-#: src/gtk/store-panel.ui:116
+#: src/gtk/store-panel.ui:102
 msgid "Recent"
 msgstr "Son"
 
-#: src/gtk/store-panel.ui:121
+#: src/gtk/store-panel.ui:107
 msgid "Shuffle"
 msgstr "Karıştır"
 
-#: src/action-handles.vala:184
+#: src/action-handles.vala:81
+msgid "Image Files"
+msgstr "Görüntü Dosyaları"
+
+#: src/action-handles.vala:167
 msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr "GTK4 ile yazılmış hızlı, akıcı, hafif bir müzik çalar."
 
 #. Translators: Replace "translator-credits" with your names, one name per line
-#: src/action-handles.vala:186
+#: src/action-handles.vala:169
 msgid "translator-credits"
 msgstr "Sabri Ünal <libreajans@gmail.com>"
 
-#: src/application.vala:625
+#: src/application.vala:608
 msgid "Keep playing"
 msgstr "Oynamayı sürdür"
 
 #. Translators: Play this music at next position of current playing music
-#: src/ui/music-widgets.vala:211 src/ui/music-widgets.vala:252
-#: src/ui/music-widgets.vala:262
+#: src/ui/music-widgets.vala:208 src/ui/music-widgets.vala:249
+#: src/ui/music-widgets.vala:259
 msgid "Play at Next"
 msgstr "Sonra Çal"
 
-#: src/ui/music-widgets.vala:212 src/ui/music-widgets.vala:251
-#: src/ui/music-widgets.vala:261 src/ui/store-panel.vala:355
+#: src/ui/music-widgets.vala:209 src/ui/music-widgets.vala:248
+#: src/ui/music-widgets.vala:258 src/ui/store-panel.vala:373
 msgid "Play"
 msgstr "Çal"
 
-#: src/ui/music-widgets.vala:215 src/ui/play-panel.vala:130
+#: src/ui/music-widgets.vala:212 src/ui/play-panel.vala:128
 msgid "Show _Cover File"
 msgstr "_Kapak Dosyalasını Göster"
 
-#: src/ui/music-widgets.vala:217 src/ui/play-panel.vala:132
+#: src/ui/music-widgets.vala:214 src/ui/play-panel.vala:130
 msgid "_Export Cover"
 msgstr "_Kapağı Dışa Aktar"
 
-#: src/ui/music-widgets.vala:254
+#: src/ui/music-widgets.vala:251
 msgid "Show List File"
 msgstr "Liste Dosyasını Göster"
 
-#: src/ui/music-widgets.vala:268 src/ui/play-panel.vala:61
+#: src/ui/music-widgets.vala:265 src/ui/play-panel.vala:59
 msgid "Search Title"
 msgstr "Başlığı Göster"
 
-#: src/ui/music-widgets.vala:269 src/ui/play-panel.vala:59
+#: src/ui/music-widgets.vala:266 src/ui/play-panel.vala:57
 msgid "Search Album"
 msgstr "Albüm Ara"
 
-#: src/ui/music-widgets.vala:270 src/ui/play-panel.vala:60
+#: src/ui/music-widgets.vala:267 src/ui/play-panel.vala:58
 msgid "Search Artist"
 msgstr "Sanatçı Ara"
 
-#: src/ui/music-widgets.vala:271
+#: src/ui/music-widgets.vala:268
 msgid "_Show Music File"
 msgstr "Müzik Dosyasını _Göster"
 
 #. Translators: single loop the current music
-#: src/ui/play-bar.vala:74
+#: src/ui/play-bar.vala:72
 msgid "Single Loop"
 msgstr "Tek Döngü"
 
-#: src/ui/play-bar.vala:84
+#: src/ui/play-bar.vala:82
 msgid "Play Previous"
 msgstr "Öncekini Çal"
 
 #. media-playback-pause-symbolic
-#: src/ui/play-bar.vala:90
+#: src/ui/play-bar.vala:88
 msgid "Play/Pause"
 msgstr "Çal/Duraklat"
 
-#: src/ui/play-bar.vala:97
+#: src/ui/play-bar.vala:95
 msgid "Play Next"
 msgstr "Sonrakini Çal"
 
-#: src/ui/play-panel.vala:285
+#: src/ui/play-panel.vala:239
 msgid ""
 "Drag and drop music files here,\n"
 "or change music location: "
@@ -318,21 +428,25 @@ msgstr "Yalnızca Kapak"
 msgid "Track"
 msgstr "Parça"
 
-#: src/ui/store-panel.vala:75
+#: src/ui/store-panel.vala:74
 msgid "Playing"
 msgstr "Çalıyor"
 
-#: src/ui/store-panel.vala:80
+#: src/ui/store-panel.vala:79
 msgid "Artists"
 msgstr "Sanatçılar"
 
-#: src/ui/store-panel.vala:85
+#: src/ui/store-panel.vala:84
 msgid "Albums"
 msgstr "Albümler"
 
-#: src/ui/store-panel.vala:384
+#: src/ui/store-panel.vala:89
 msgid "Playlists"
 msgstr "Çalma Listesi"
+
+#: src/ui/store-panel.vala:597
+msgid "No playlist found"
+msgstr "Çalma listesi bulunamadı"
 
 #. Translators: Current volume percent: 0~100%
 #: src/ui/volume-button.vala:33
