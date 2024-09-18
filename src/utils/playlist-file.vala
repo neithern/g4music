@@ -9,6 +9,7 @@ namespace G4 {
     public uint get_playlist_type (string mimetype) {
         switch (mimetype) {
             case "audio/x-mpegurl":
+            case "public.m3u-playlist":
                 return PlayListType.M3U;
             case "audio/x-scpls":
                 return PlayListType.PLS;

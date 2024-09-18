@@ -354,6 +354,7 @@ namespace G4 {
             filter.name = _("Playlist Files");
             filter.add_mime_type ("audio/x-mpegurl");
             filter.add_mime_type ("audio/x-scpls");
+            filter.add_mime_type ("public.m3u-playlist");
             var file = yield show_save_file_dialog (app.active_window, playlist.title + ".m3u", {filter});
             if (file != null) {
                 yield app.add_playlist_to_file_async (playlist, (!)file);
