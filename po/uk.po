@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/neithern/g4music/issues\n"
-"POT-Creation-Date: 2024-08-27 15:12+0000\n"
-"PO-Revision-Date: 2024-08-27 21:09+0300\n"
+"POT-Creation-Date: 2024-09-17 15:06+0000\n"
+"PO-Revision-Date: 2024-09-18 11:41+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -19,117 +19,10 @@ msgstr ""
 "%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Generator: Lokalize 23.04.3\n"
 
-#: data/app.appdata.xml.in:4 data/app.desktop.in:3 src/application.vala:236
+#: data/app.desktop.in:3 data/app.metainfo.xml.in:4 src/application.vala:239
 #: src/main.vala:24
 msgid "Gapless"
 msgstr "Неперервний"
-
-#: data/app.appdata.xml.in:7
-msgid "Play your music elegantly"
-msgstr "Елегантне відтворення вашої музики"
-
-#: data/app.appdata.xml.in:9
-msgid "Nanling"
-msgstr "Nanling"
-
-#: data/app.appdata.xml.in:22
-msgid ""
-"Gapless (AKA: G4Music) is a light weight music player written in GTK4, "
-"focuses on large music collection."
-msgstr ""
-"Gapless (або G4Music) — невибагливий до ресурсів засіб відтворення музики, "
-"який написано на GTK4 і акцент у якому зроблено на великих музичних збірках."
-
-#: data/app.appdata.xml.in:23
-msgid "Features"
-msgstr "Можливості"
-
-#: data/app.appdata.xml.in:25
-msgid ""
-"Supports most music file types, Samba and any other remote protocols "
-"(depends on GIO and GStreamer)."
-msgstr ""
-"Підтримка більшості типів музичних файлів, Samba та усіх інших протоколів "
-"віддаленої роботи (залежить від GIO і GStreamer)."
-
-#: data/app.appdata.xml.in:26
-msgid ""
-"Fast loading and parsing thousands of music files in very few seconds, "
-"monitor local changes."
-msgstr ""
-"Швидке завантаження і обробка тисяч музичних файлів за декілька секунд, "
-"спостереження за змінами у локальному каталозі."
-
-#: data/app.appdata.xml.in:27
-msgid ""
-"Low memory usage for large music collection with album covers (embedded and "
-"external), no thumbnail caches to store."
-msgstr ""
-"Незначне споживання пам'яті для великих музичних збірок із обкладинками "
-"альбомів (вбудованими або зовнішніми), у сховищі даних не кешуються "
-"мініатюри."
-
-#: data/app.appdata.xml.in:28
-msgid ""
-"Group and sorts by album/artist/title, shuffle list, full-text searching."
-msgstr ""
-"Групування та упорядкування за альбомом, виконавцем та назвою, перемішування "
-"списку, повнотекстовий пошук."
-
-#: data/app.appdata.xml.in:29
-msgid ""
-"Fluent adaptive user interface for different screen (Desktop, Tablet, "
-"Mobile)."
-msgstr ""
-"Гнучкий інтерфейс для різних розмірів екрана (робоча станція, планшет, "
-"мобільний телефон)."
-
-#: data/app.appdata.xml.in:30
-msgid "Gaussian blurred cover as background, follows GNOME light/dark mode."
-msgstr ""
-"Тло у вигляді обкладинки із гаусовим розмиванням, використання світлого або "
-"темного режиму GNOME."
-
-#: data/app.appdata.xml.in:31
-msgid "Drag-drop from GNOME Files, showing music in Files."
-msgstr ""
-"Перетягування зі скиданням з «Файлів GNOME», показ музичних даних у «Файлах»."
-
-#: data/app.appdata.xml.in:32
-msgid "Supports audio peaks visualizer."
-msgstr "Підтримка візуалізації піків звукового сигналу."
-
-#: data/app.appdata.xml.in:33
-msgid "Supports gapless playback."
-msgstr "Підтримка неперервного відтворення."
-
-#: data/app.appdata.xml.in:34
-msgid "Supports normalizing volume with ReplayGain."
-msgstr "Підтримка нормалізації гучності за допомогою ReplayGain."
-
-#: data/app.appdata.xml.in:35
-msgid "Supports PipeWire and other audio sink."
-msgstr "Підтримка PipeWire та інших приймачів звуку."
-
-#: data/app.appdata.xml.in:36
-msgid "Supports MPRIS control."
-msgstr "Підтримка керування за допомогою MPRIS."
-
-#: data/app.appdata.xml.in:47
-msgid "Main window"
-msgstr "Головне вікно"
-
-#: data/app.appdata.xml.in:51
-msgid "Albums view"
-msgstr "Перегляд «Альбоми»"
-
-#: data/app.appdata.xml.in:55
-msgid "Playing view"
-msgstr "Перегляд «Відтворення»"
-
-#: data/app.appdata.xml.in:59
-msgid "Playlist view"
-msgstr "Перегляд «Список відтворення»"
 
 #: data/app.desktop.in:4
 msgid "Music Player"
@@ -144,6 +37,113 @@ msgid "music;sound;player;media;audio;playlist;"
 msgstr ""
 "music;sound;player;media;audio;playlist;музика;звук;програвач;мультимедіа;"
 "звук;список відтворення;відтворення;"
+
+#: data/app.metainfo.xml.in:7
+msgid "Play your music elegantly"
+msgstr "Елегантне відтворення вашої музики"
+
+#: data/app.metainfo.xml.in:9
+msgid "Nanling"
+msgstr "Nanling"
+
+#: data/app.metainfo.xml.in:22
+msgid ""
+"Gapless (AKA: G4Music) is a light weight music player written in GTK4, "
+"focuses on large music collection."
+msgstr ""
+"Gapless (або G4Music) — невибагливий до ресурсів засіб відтворення музики, "
+"який написано на GTK4 і акцент у якому зроблено на великих музичних збірках."
+
+#: data/app.metainfo.xml.in:23
+msgid "Features"
+msgstr "Можливості"
+
+#: data/app.metainfo.xml.in:25
+msgid ""
+"Supports most music file types, Samba and any other remote protocols "
+"(depends on GIO and GStreamer)."
+msgstr ""
+"Підтримка більшості типів музичних файлів, Samba та усіх інших протоколів "
+"віддаленої роботи (залежить від GIO і GStreamer)."
+
+#: data/app.metainfo.xml.in:26
+msgid ""
+"Fast loading and parsing thousands of music files in very few seconds, "
+"monitor local changes."
+msgstr ""
+"Швидке завантаження і обробка тисяч музичних файлів за декілька секунд, "
+"спостереження за змінами у локальному каталозі."
+
+#: data/app.metainfo.xml.in:27
+msgid ""
+"Low memory usage for large music collection with album covers (embedded and "
+"external), no thumbnail caches to store."
+msgstr ""
+"Незначне споживання пам'яті для великих музичних збірок із обкладинками "
+"альбомів (вбудованими або зовнішніми), у сховищі даних не кешуються "
+"мініатюри."
+
+#: data/app.metainfo.xml.in:28
+msgid ""
+"Group and sorts by album/artist/title, shuffle list, full-text searching."
+msgstr ""
+"Групування та упорядкування за альбомом, виконавцем та назвою, перемішування "
+"списку, повнотекстовий пошук."
+
+#: data/app.metainfo.xml.in:29
+msgid ""
+"Fluent adaptive user interface for different screen (Desktop, Tablet, "
+"Mobile)."
+msgstr ""
+"Гнучкий інтерфейс для різних розмірів екрана (робоча станція, планшет, "
+"мобільний телефон)."
+
+#: data/app.metainfo.xml.in:30
+msgid "Gaussian blurred cover as background, follows GNOME light/dark mode."
+msgstr ""
+"Тло у вигляді обкладинки із гаусовим розмиванням, використання світлого або "
+"темного режиму GNOME."
+
+#: data/app.metainfo.xml.in:31
+msgid "Drag-drop from GNOME Files, showing music in Files."
+msgstr ""
+"Перетягування зі скиданням з «Файлів GNOME», показ музичних даних у «Файлах»."
+
+#: data/app.metainfo.xml.in:32
+msgid "Supports audio peaks visualizer."
+msgstr "Підтримка візуалізації піків звукового сигналу."
+
+#: data/app.metainfo.xml.in:33
+msgid "Supports gapless playback."
+msgstr "Підтримка неперервного відтворення."
+
+#: data/app.metainfo.xml.in:34
+msgid "Supports normalizing volume with ReplayGain."
+msgstr "Підтримка нормалізації гучності за допомогою ReplayGain."
+
+#: data/app.metainfo.xml.in:35
+msgid "Supports PipeWire and other audio sink."
+msgstr "Підтримка PipeWire та інших приймачів звуку."
+
+#: data/app.metainfo.xml.in:36
+msgid "Supports MPRIS control."
+msgstr "Підтримка керування за допомогою MPRIS."
+
+#: data/app.metainfo.xml.in:47
+msgid "Main window"
+msgstr "Головне вікно"
+
+#: data/app.metainfo.xml.in:51
+msgid "Albums view"
+msgstr "Перегляд «Альбоми»"
+
+#: data/app.metainfo.xml.in:55
+msgid "Playing view"
+msgstr "Перегляд «Відтворення»"
+
+#: data/app.metainfo.xml.in:59
+msgid "Playlist view"
+msgstr "Перегляд «Список відтворення»"
 
 #: src/gtk/help-overlay.ui:11
 msgctxt "shortcut window"
@@ -205,7 +205,7 @@ msgctxt "shortcut window"
 msgid "Reload Library"
 msgstr "Перезавантажити бібліотеку"
 
-#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:368
+#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:367
 msgid "Back"
 msgstr "Назад"
 
@@ -229,7 +229,7 @@ msgstr "Стислий перегляд списку"
 msgid "Grid view for artists/albums"
 msgstr "Таблиця для виконавців/альбомів"
 
-#: src/gtk/preferences.ui:56 src/application.vala:400
+#: src/gtk/preferences.ui:56 src/application.vala:410
 msgid "Keep playing after window closed"
 msgstr "Продовжити відтворення після закриття вікна"
 
@@ -333,78 +333,82 @@ msgstr "Нещодавні"
 msgid "Shuffle"
 msgstr "Перемішати"
 
-#: src/action-handles.vala:184
+#: src/action-handles.vala:81
+msgid "Image Files"
+msgstr "файли зображень"
+
+#: src/action-handles.vala:167
 msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr ""
 "Швидкий, плавний, невибагливий програвач музики, який засновано на GTK4."
 
 #. Translators: Replace "translator-credits" with your names, one name per line
-#: src/action-handles.vala:186
+#: src/action-handles.vala:169
 msgid "translator-credits"
 msgstr "Юрій Чорноіван <yurchor@ukr.net>, 2023"
 
-#: src/application.vala:602
+#: src/application.vala:608
 msgid "Keep playing"
 msgstr "Продовжувати відтворення"
 
 #. Translators: Play this music at next position of current playing music
-#: src/ui/music-widgets.vala:211 src/ui/music-widgets.vala:252
-#: src/ui/music-widgets.vala:262
+#: src/ui/music-widgets.vala:208 src/ui/music-widgets.vala:249
+#: src/ui/music-widgets.vala:259
 msgid "Play at Next"
 msgstr "Відтворити наступною"
 
-#: src/ui/music-widgets.vala:212 src/ui/music-widgets.vala:251
-#: src/ui/music-widgets.vala:261 src/ui/store-panel.vala:373
+#: src/ui/music-widgets.vala:209 src/ui/music-widgets.vala:248
+#: src/ui/music-widgets.vala:258 src/ui/store-panel.vala:372
 msgid "Play"
 msgstr "Відтворити"
 
-#: src/ui/music-widgets.vala:215 src/ui/play-panel.vala:125
+#: src/ui/music-widgets.vala:212 src/ui/play-panel.vala:128
 msgid "Show _Cover File"
 msgstr "Показати файл _обкладинки"
 
-#: src/ui/music-widgets.vala:217 src/ui/play-panel.vala:127
+#: src/ui/music-widgets.vala:214 src/ui/play-panel.vala:130
 msgid "_Export Cover"
 msgstr "_Експортувати обкладинку"
 
-#: src/ui/music-widgets.vala:254
+#: src/ui/music-widgets.vala:251
 msgid "Show List File"
 msgstr "Показати файл списку"
 
-#: src/ui/music-widgets.vala:268 src/ui/play-panel.vala:59
+#: src/ui/music-widgets.vala:265 src/ui/play-panel.vala:59
 msgid "Search Title"
 msgstr "Шукати за назвою"
 
-#: src/ui/music-widgets.vala:269 src/ui/play-panel.vala:57
+#: src/ui/music-widgets.vala:266 src/ui/play-panel.vala:57
 msgid "Search Album"
 msgstr "Шукати альбом"
 
-#: src/ui/music-widgets.vala:270 src/ui/play-panel.vala:58
+#: src/ui/music-widgets.vala:267 src/ui/play-panel.vala:58
 msgid "Search Artist"
 msgstr "Шукати виконавця"
 
-#: src/ui/music-widgets.vala:271
+#: src/ui/music-widgets.vala:268
 msgid "_Show Music File"
 msgstr "_Показати файл музики"
 
 #. Translators: single loop the current music
-#: src/ui/play-bar.vala:74
+#: src/ui/play-bar.vala:72
 msgid "Single Loop"
 msgstr "Одне повторення"
 
-#: src/ui/play-bar.vala:84
+#: src/ui/play-bar.vala:82
 msgid "Play Previous"
 msgstr "Відтворити попередній"
 
 #. media-playback-pause-symbolic
-#: src/ui/play-bar.vala:90
+#: src/ui/play-bar.vala:88
 msgid "Play/Pause"
 msgstr "Пуск/Пауза"
 
-#: src/ui/play-bar.vala:97
+#: src/ui/play-bar.vala:95
 msgid "Play Next"
 msgstr "Відтворити наступну"
 
-#: src/ui/play-panel.vala:246
+#: src/ui/play-panel.vala:239
 msgid ""
 "Drag and drop music files here,\n"
 "or change music location: "
@@ -428,23 +432,23 @@ msgstr "Лише оформлення"
 msgid "Track"
 msgstr "Композиція"
 
-#: src/ui/store-panel.vala:72
+#: src/ui/store-panel.vala:74
 msgid "Playing"
 msgstr "Відтворення"
 
-#: src/ui/store-panel.vala:77
+#: src/ui/store-panel.vala:79
 msgid "Artists"
 msgstr "Виконавці"
 
-#: src/ui/store-panel.vala:82
+#: src/ui/store-panel.vala:84
 msgid "Albums"
 msgstr "Альбоми"
 
-#: src/ui/store-panel.vala:87
+#: src/ui/store-panel.vala:89
 msgid "Playlists"
 msgstr "Списки відтворення"
 
-#: src/ui/store-panel.vala:570
+#: src/ui/store-panel.vala:596
 msgid "No playlist found"
 msgstr "Списків відтворення не знайдено"
 
