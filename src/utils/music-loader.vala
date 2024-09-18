@@ -125,7 +125,7 @@ namespace G4 {
             }
         }
 
-        public async void load_files_async (owned File[] files, GenericArray<Music> musics, bool ignore_exists = false, bool load_lists = true, uint sort_mode = -1) {
+        public async void load_files_async (owned File[] files, GenericArray<Music> musics, bool ignore_exists = false, bool merge_lists = true, uint sort_mode = -1) {
             var dirs = new GenericArray<File> (128);
 
             _progress.reset ();
@@ -134,7 +134,7 @@ namespace G4 {
                 var playlists = new GenericArray<File> (128);
                 var stop_watch = new StopWatch ();
                 foreach (var file in files) {
-                    add_file (file, musics, dirs, playlists, load_lists);
+                    add_file (file, musics, dirs, playlists);
                 }
                 print ("Find %u files in %d folders in %lld ms\n", musics.length, dirs.length,
                     stop_watch.lap () / 1000);
@@ -142,7 +142,7 @@ namespace G4 {
                 load_tags_in_threads (musics);
                 print ("Load %u musics in %lld ms\n", musics.length,
                     stop_watch.lap () / 1000);
-                add_musics_to_library (musics, playlists, ignore_exists);
+                add_musics_to_library (musics, playlists, ignore_exists, merge_lists);
                 if (sort_mode <= SortMode.MAX) {
                     sort_music_array (musics, sort_mode);
                 }
@@ -176,7 +176,7 @@ namespace G4 {
                                         + FileAttribute.STANDARD_TYPE + ","
                                         + FileAttribute.TIME_MODIFIED;
 
-        private void add_file (File file, GenericArray<Music> musics, GenericArray<File>? dirs = null, GenericArray<File>? playlists = null, bool load_lists = false) {
+        private void add_file (File file, GenericArray<Music> musics, GenericArray<File>? dirs = null, GenericArray<File>? playlists = null) {
             try {
                 var info = file.query_info (ATTRIBUTES, FileQueryInfoFlags.NONE);
                 if (info.get_file_type () == FileType.DIRECTORY) {
@@ -195,8 +195,6 @@ namespace G4 {
                         var music = new Music (file.get_uri (), name, time);
                         musics.add (music);
                     } else if (is_playlist_file (ctype)) {
-                        if (load_lists)
-                            load_playlist (file, musics);
                         playlists?.add (file);
                     } else if (is_cover_file (ctype, name)) {
                         var parent = file.get_parent ();
@@ -237,9 +235,9 @@ namespace G4 {
                             var music = new Music (file.get_uri (), name, time);
                             musics.add (music);
                             cache.add_child (info, ChildType.MUSIC);
-                        } else if (playlists != null && is_playlist_file (ctype)) {
+                        } else if (is_playlist_file (ctype)) {
                             var child = dir.get_child (info.get_name ());
-                            ((!)playlists).add (child);
+                            playlists?.add (child);
                             cache.add_child (info, ChildType.PLAYLIST);
                         } else if (cover_name == null && is_cover_file (ctype, name)) {
                             cover_name = name;
@@ -260,14 +258,8 @@ namespace G4 {
             }
         }
 
-        private void add_musics_to_library (GenericArray<Music> musics, GenericArray<File> playlists, bool ignore_exists) {
+        private void add_musics_to_library (GenericArray<Music> musics, GenericArray<File> playlists, bool ignore_exists, bool merge_lists) {
             lock (_library) {
-                for (var i = musics.length - 1; i >= 0; i--) {
-                    var music = musics[i];
-                    if (!_library.add_music (music) && ignore_exists)
-                        musics.remove_index_fast (i);
-                }
-
                 foreach (var file in playlists) {
                     if (file.is_native ()) {
                         var arr = new GenericArray<Music> (128);
@@ -275,8 +267,15 @@ namespace G4 {
                         if (name != null && arr.length > 0) {
                             var playlist = new Playlist ((!)name, file.get_uri (), arr);
                             _library.add_playlist (playlist);
+                            if (merge_lists)
+                                musics.extend (playlist.items, (src) => src);
                         }
                     }
+                }
+                for (var i = musics.length - 1; i >= 0; i--) {
+                    var music = musics[i];
+                    if (!_library.add_music (music) && ignore_exists)
+                        musics.remove_index_fast (i);
                 }
             }
         }
