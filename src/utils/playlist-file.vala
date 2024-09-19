@@ -104,29 +104,22 @@ namespace G4 {
     }
 
     public bool save_line_to_file (BufferedOutputStream bos, string str) throws Error {
-        var cn = "\n";
-        var cn_data = ((uint8[]) cn) [0:1];
         var data = ((uint8[]) str) [0:str.length];
         size_t written = 0;
-        return bos.write_all (data, out written)
-            && bos.write_all (cn_data, out written);
+        return bos.write_all (data, out written) && data.length == written;
     }
 
     public bool save_m3u8_file (File file, GenericArray<string> uris) throws Error {
         var fos = file.replace (null, false, FileCreateFlags.NONE);
         var bos = new BufferedOutputStream (fos);
-        var extm3u = ((uint8[]) "#EXTM3U\n") [0:8];
-        size_t written = 0;
-        if (!bos.write_all (extm3u, out written))
+        if (!save_line_to_file (bos, "#EXTM3U\n"))
             return false;
-        var extinf = ((uint8[]) "#EXTINF:,\n") [0:10];
         var parent = file.get_parent ();
         foreach (var uri in uris) {
-            if (!bos.write_all (extinf, out written))
-                return false;
             var f = File.new_for_uri (uri);
             var path = parent?.get_relative_path (f) ?? f.get_path () ?? "";
-            if (!save_line_to_file (bos, path))
+            var title = get_file_display_name (f);
+            if (!save_line_to_file (bos, @"#EXTINF:,$title\n$path\n"))
                 return false;
         }
         return true;
@@ -135,19 +128,20 @@ namespace G4 {
     public bool save_pls_file (File file, GenericArray<string> uris, string? name = null) throws Error {
         var fos = file.replace (null, false, FileCreateFlags.NONE);
         var bos = new BufferedOutputStream (fos);
-        var section = ((uint8[]) "[playlist]\n") [0:11];
-        size_t written = 0;
-        if (!bos.write_all (section, out written))
+        if (!save_line_to_file (bos, "[playlist]\n"))
+            return false;
+        if (name != null && !save_line_to_file (bos, @"X-GNOME-Title=$((!)name)\n"))
             return false;
         var count = uris.length;
-        if (!save_line_to_file (bos, @"NumberOfEntries=$count"))
+        if (!save_line_to_file (bos, @"NumberOfEntries=$count\n"))
             return false;
+        var parent = file.get_parent ();
         for (var i = 0; i < count; i++) {
             var f = File.new_for_uri (uris[i]);
-            var path = f.get_path () ?? "";
+            var path = parent?.get_relative_path (f) ?? f.get_path () ?? "";
             var title = get_file_display_name (f);
             var n = i + 1;
-            if (!save_line_to_file (bos, @"File$n=$path\nTitle$n=$title"))
+            if (!save_line_to_file (bos, @"Title$n=$title\nFile$n=$path\n"))
                 break;
         }
         return true;
