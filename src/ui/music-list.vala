@@ -249,6 +249,7 @@ namespace G4 {
         public uint update_store () {
             if (_music_node != null) {
                 _data_store.remove_all ();
+                _selection.unselect_all ();
                 if (_music_node is Album)
                     ((Album)_music_node).insert_to_store (_data_store);
                 else if (_music_node is Artist)
@@ -345,7 +346,13 @@ namespace G4 {
                     }
                 }
             }
-            return new Playlist (_music_node?.title ?? "Untitled", "", items);
+            var title = _music_node?.title;
+            var bits = _selection.get_selection ();
+            if (bits.get_size () == 1) {
+                var node = _filter_model.get_item (bits.get_minimum ());
+                title = (node as Music)?.title;
+            }
+            return new Playlist (title ?? "Untitled", "", items);
         }
 
         private void setup_selection_header_bar (Gtk.HeaderBar header) {
