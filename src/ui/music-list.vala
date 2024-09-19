@@ -1,7 +1,7 @@
 namespace G4 {
 
     public class MusicList : Gtk.Box {
-        private HashTable<Music?, MusicWidget?> _binding_items = new HashTable<Music?, MusicWidget?> (direct_hash, direct_equal);
+        private HashTable<Music, Gtk.ListItem> _binding_items = new HashTable<Music, Gtk.ListItem> (direct_hash, direct_equal);
         private bool _compact_list = false;
         private Music? _current_node = null;
         private ListStore _data_store = new ListStore (typeof (Music));
@@ -69,11 +69,11 @@ namespace G4 {
 
         public Music? current_node {
             set {
-                var cur = _binding_items[_current_node];
+                var cur = get_binding_widget (_current_node);
                 if (cur != null)
                     ((!)cur).playing = false;
                 _current_node = value;
-                var widget = _binding_items[value];
+                var widget = get_binding_widget (value);
                 if (widget != null)
                     ((!)widget).playing = true;
             }
@@ -128,10 +128,9 @@ namespace G4 {
                     _multi_selection = value;
                     _grid_view.enable_rubberband = value;
                     _grid_view.single_click_activate = !value;
+                    _binding_items.foreach ((music, item) => item.selectable = value);
                     if (!value)
                         _selection.unselect_all ();
-                    if (_grid_view.get_factory () != null)
-                        create_factory ();
                 }
                 if (value && _header_revealer == null) {
                     var child = get_first_child ();
@@ -258,6 +257,11 @@ namespace G4 {
             return _data_store.get_n_items ();
         }
 
+        private MusicWidget? get_binding_widget (Music? music) {
+            var item = music != null ? _binding_items[(!)music] : (Gtk.ListItem?) null;
+            return item?.child as MusicWidget;
+        }
+
         private void on_create_item (Object obj) {
             var child = _grid_mode ? (MusicWidget) new MusicCell () : (MusicWidget) new MusicEntry (_compact_list);
             var item = (Gtk.ListItem) obj;
@@ -274,8 +278,7 @@ namespace G4 {
             var music = (Music) item.item;
             entry.playing = music == _current_node;
             item_binded (item);
-
-            _binding_items[music] = entry;
+            _binding_items[music] = item;
 
             var paintable = _thmbnailer.find (music, _image_size);
             if (paintable != null) {
@@ -303,7 +306,7 @@ namespace G4 {
             var entry = (MusicWidget) item.child;
             entry.disconnect_first_draw ();
             entry.paintable = null;
-            _binding_items.remove (item.item as Music);
+            _binding_items.remove ((Music) item.item);
         }
 
         private void on_vadjustment_changed () {
