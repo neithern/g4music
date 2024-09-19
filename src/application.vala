@@ -277,7 +277,7 @@ namespace G4 {
             }
         }
 
-        public async void add_playlist_to_file_async (Playlist playlist, bool append) {
+        public async bool add_playlist_to_file_async (Playlist playlist, bool append) {
             var file = File.new_for_uri (playlist.list_uri);
             var names = new string?[1] { null };
             var uris = new GenericArray<string> (1024);
@@ -308,6 +308,7 @@ namespace G4 {
                 _loader.library.add_playlist (playlist);
                 playlist_added (playlist);
             }
+            return saved;
         }
 
         public async void load_files_async (owned File[] files) {
@@ -461,7 +462,9 @@ namespace G4 {
                 playlist.list_uri = ((!)file).get_uri ();
                 playlist.set_title (get_file_display_name ((!)file));
             }
-            yield add_playlist_to_file_async (playlist, append);
+            var saved = yield add_playlist_to_file_async (playlist, append);
+            if (saved)
+                show_uri_with_portal (playlist.list_uri);
         }
 
         public uint get_list_sort_mode (ListModel model) {

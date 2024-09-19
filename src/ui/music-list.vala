@@ -333,29 +333,12 @@ namespace G4 {
 
         private Playlist playlist_for_selection () {
             var count = _filter_model.get_n_items ();
-            var items = new GenericArray<Music> (count);
+            var musics = new GenericArray<Music> (count);
             for (var i = 0; i < count; i++) {
-                if (_selection.is_selected (i)) {
-                    var node = _filter_model.get_item (i);
-                    if (node is Artist) {
-                        var artist = (Artist) node;
-                        var playlist = artist.to_playlist ();
-                        playlist.foreach ((music) => items.add (music));
-                    } else if (node is Album) {
-                        var album = (Album) node;
-                        album.foreach ((uri, music) => items.add (music));
-                    } else {
-                        items.add ((Music) node);
-                    }
-                }
+                if (_selection.is_selected (i))
+                    musics.add ((Music) _filter_model.get_item (i));
             }
-            var title = _music_node?.title;
-            var bits = _selection.get_selection ();
-            if (bits.get_size () == 1) {
-                var node = _filter_model.get_item (bits.get_minimum ());
-                title = (node as Music)?.title;
-            }
-            return new Playlist (title ?? "Untitled", "", items);
+            return to_playlist (musics.data, _music_node?.title);
         }
 
         private void setup_selection_header_bar (Gtk.HeaderBar header) {

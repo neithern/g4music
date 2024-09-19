@@ -366,4 +366,25 @@ namespace G4 {
         sort_music_array (arr, sort_mode);
         store.splice (0, count, (Object[]) arr.data);
     }
+
+    public Playlist to_playlist (Music[] musics, string? title = null) {
+        var count = musics.length;
+        var items = new GenericArray<Music> (count);
+        foreach (var music in musics) {
+            if (music is Artist) {
+                var artist = (Artist) music;
+                var playlist = artist.to_playlist ();
+                playlist.foreach ((music) => items.add (music));
+            } else if (music is Album) {
+                var album = (Album) music;
+                album.foreach ((uri, music) => items.add (music));
+            } else {
+                items.add (music);
+            }
+        }
+        if (title == null && count == 1) {
+            title = musics[0].title;
+        }
+        return new Playlist (title ?? "Untitled", "", items);
+    }
 }

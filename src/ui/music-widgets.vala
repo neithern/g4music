@@ -247,6 +247,7 @@ namespace G4 {
         var menu = new Menu ();
         menu.append_item (create_menu_item_for_strv (strv, _("Play"), ACTION_APP + ACTION_PLAY));
         menu.append_item (create_menu_item_for_strv (strv, _("Play at Next"), ACTION_APP + ACTION_PLAY_AT_NEXT));
+        menu.append_item (create_menu_item_for_strv (strv, _("_Add to Playlist…"), ACTION_APP + ACTION_ADD_TO_PLAYLIST));
         if (is_playlist)
             menu.append_item (create_menu_item_for_uri (((Playlist) album).list_uri, _("Show List File"), ACTION_APP + ACTION_SHOW_FILE));
         return menu;
@@ -257,6 +258,7 @@ namespace G4 {
         var menu = new Menu ();
         menu.append_item (create_menu_item_for_strv (strv, _("Play"), ACTION_APP + ACTION_PLAY));
         menu.append_item (create_menu_item_for_strv (strv, _("Play at Next"), ACTION_APP + ACTION_PLAY_AT_NEXT));
+        menu.append_item (create_menu_item_for_strv (strv, _("_Add to Playlist…"), ACTION_APP + ACTION_ADD_TO_PLAYLIST));
         return menu;
     }
 
@@ -265,6 +267,7 @@ namespace G4 {
         menu.append_item (create_menu_item_for_strv ({"title", music.title}, _("Search Title"), ACTION_APP + ACTION_SEARCH));
         menu.append_item (create_menu_item_for_strv ({"album", music.album}, _("Search Album"), ACTION_APP + ACTION_SEARCH));
         menu.append_item (create_menu_item_for_strv ({"artist", music.artist}, _("Search Artist"), ACTION_APP + ACTION_SEARCH));
+        menu.append_item (create_menu_item_for_uri (music.uri, _("_Add to Playlist…"), ACTION_APP + ACTION_ADD_TO_PLAYLIST));
         menu.append_item (create_menu_item_for_uri (music.uri, _("_Show Music File"), ACTION_APP + ACTION_SHOW_FILE));
         return menu;
     }

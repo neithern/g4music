@@ -3,6 +3,7 @@ namespace G4 {
     public const string ACTION_APP = "app.";
     public const string ACTION_ABOUT = "about";
     public const string ACTION_PREFS = "preferences";
+    public const string ACTION_ADD_TO_PLAYLIST = "add-to-playlist";
     public const string ACTION_EXPORT_COVER = "export-cover";
     public const string ACTION_PLAY = "play";
     public const string ACTION_PLAY_AT_NEXT = "play-at-next";
@@ -30,6 +31,7 @@ namespace G4 {
 
             ActionEntry[] action_entries = {
                 { ACTION_ABOUT, show_about },
+                { ACTION_ADD_TO_PLAYLIST, add_to_playlist, "aay" },
                 { ACTION_EXPORT_COVER, export_cover, "aay" },
                 { ACTION_NEXT, () => _app.play_next () },
                 { ACTION_PLAY, play, "aay" },
@@ -93,6 +95,15 @@ namespace G4 {
         private Music? _get_music_from_parameter (Variant? parameter) {
             var uri = _parse_uri_form_parameter (parameter);
             return uri != null ? _app.loader.find_cache ((!)uri) : null;
+        }
+
+        private void add_to_playlist (SimpleAction action, Variant? parameter) {
+            var strv = parameter?.get_bytestring_array ();
+            var obj = _parse_music_node_form_strv (strv);
+            if (obj is Music) {
+                var playlist = to_playlist ({(Music) obj});
+                _app.save_to_playlist_file_async.begin (playlist, (obj, res) => _app.save_to_playlist_file_async.end (res));
+            }
         }
 
         private void export_cover (SimpleAction action, Variant? parameter) {
