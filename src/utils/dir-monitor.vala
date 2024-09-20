@@ -42,7 +42,7 @@ namespace G4 {
 
         private void monitor_func (File file, File? other_file, FileMonitorEvent event) {
             switch (event) {
-                case FileMonitorEvent.CHANGES_DONE_HINT:
+                case FileMonitorEvent.CHANGED:
                     remove_file (file);
                     add_file (file);
                     break;
