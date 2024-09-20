@@ -170,13 +170,13 @@ namespace G4 {
         private GenericArray<Music> _items;
         public string list_uri;
 
-        public Playlist (string name, string uri, GenericArray<Music> items) {
+        public Playlist (string name, string uri, GenericArray<Music>? items = null) {
             base.titled (name, "");
             base.album = name;
             base._album_key = uri;
             this.list_uri = uri;
-            this._items = new GenericArray<Music> (items.length);
-            items.foreach ((music) => add_music (music));
+            this._items = new GenericArray<Music> (items?.length ?? 128);
+            items?.foreach ((music) => add_music (music));
         }
 
         public new bool add_music (Music music) {
@@ -200,6 +200,10 @@ namespace G4 {
 
         public new void @foreach (Func<Music> func) {
             _items.foreach (func);
+        }
+
+        public void reset_original_order () {
+            Music.original_order (_items);
         }
 
         public void set_title (string name) {
@@ -233,6 +237,12 @@ namespace G4 {
         public unowned HashTable<unowned string, Playlist> playlists {
             get {
                 return _playlists;
+            }
+        }
+
+        public bool empty {
+            get {
+                return _albums.length == 0 && _artists.length == 0 && _playlists.length == 0;
             }
         }
 

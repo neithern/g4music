@@ -330,6 +330,13 @@ namespace G4 {
 
             var musics = new GenericArray<Music> (4096);
             yield _loader.load_files_async (files, musics, !default_mode, !default_mode, _sort_map[_music_store]);
+            if (default_mode) {
+                var arr = new GenericArray<Music> (4096);
+                var file = get_playing_list_file ();
+                var name = yield run_async<string?> (() => { return _loader.load_playlist (file, arr); });
+                if (name != null)
+                    musics = arr;
+            }
             _music_store.splice (0, _music_store.get_n_items (), (Object[]) musics.data);
             _list_modified = false;
 
@@ -750,6 +757,11 @@ namespace G4 {
                 return (int) i;
         }
         return -1;
+    }
+
+    public File get_playing_list_file () {
+        var cache_dir = Environment.get_user_cache_dir ();
+        return File.new_build_filename (cache_dir, Config.APP_ID, "playing.m3u");
     }
 
     public async bool save_sample_to_file_async (File file, Gst.Sample sample) {

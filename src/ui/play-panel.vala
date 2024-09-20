@@ -146,15 +146,18 @@ namespace G4 {
             music_artist.label = music?.artist ?? "";
             music_title.label = music?.title ?? "";
 
-            var empty = music == null;
+            var empty = _app.loader.library.empty;
             initial_label.visible = empty;
             if (empty) {
-                update_cover_paintables (music, _app.icon);
                 update_initial_label (_app.music_folder);
             }
 
-            action_btn.sensitive = !empty;
-            root.action_set_enabled (ACTION_APP + ACTION_PLAY_PAUSE, !empty);
+            var enabled = music != null;
+            if (!enabled) {
+                update_cover_paintables (music, _app.icon);
+            }
+            action_btn.sensitive = enabled;
+            root.action_set_enabled (ACTION_APP + ACTION_PLAY_PAUSE, enabled);
             (_app.active_window as Window)?.set_title (music?.get_artist_and_title () ?? _app.name);
         }
 

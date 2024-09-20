@@ -5,19 +5,22 @@ namespace G4 {
         private bool _compact_list = false;
         private Music? _current_node = null;
         private ListStore _data_store = new ListStore (typeof (Music));
+        private bool _editable = false;
         private Gtk.FilterListModel _filter_model = new Gtk.FilterListModel (null, null);
         private bool _grid_mode = false;
         private Gtk.GridView _grid_view = new Gtk.GridView (null, null);
         private int _image_size = Thumbnailer.ICON_SIZE;
         private Type _item_type = typeof (Music);
+        private bool _modified = false;
         private Music? _music_node = null;
+
         private Gtk.ScrolledWindow _scroll_view = new Gtk.ScrolledWindow ();
         private Gtk.MultiSelection _selection;
         private Thumbnailer _thmbnailer;
 
         private bool _child_drawed = false;
         private uint _columns = 1;
-        private uint _row_width = 0;
+        private uint _row_min_width = 0;
         private double _row_height = 0;
         private double _scroll_range = 0;
         private int _scrolling_item = -1;
@@ -26,16 +29,16 @@ namespace G4 {
         public signal void item_created (Gtk.ListItem item);
         public signal void item_binded (Gtk.ListItem item);
 
-        public MusicList (Application app, Type item_type = typeof (Music), Music? node = null) {
+        public MusicList (Application app, Type item_type = typeof (Music), Music? node = null, bool editable = false) {
             orientation = Gtk.Orientation.VERTICAL;
             hexpand = true;
             append (_scroll_view);
 
+            _editable = editable;
             _filter_model.model = _data_store;
             _item_type = item_type;
             _music_node = node;
             _thmbnailer = app.thumbnailer;
-            update_store ();
 
             _selection = new Gtk.MultiSelection (_filter_model);
             _selection.selection_changed.connect (on_selection_changed);
@@ -54,6 +57,8 @@ namespace G4 {
             _scroll_view.vscrollbar_policy = Gtk.PolicyType.AUTOMATIC;
             _scroll_view.vexpand = true;
             _scroll_view.vadjustment.changed.connect (on_vadjustment_changed);
+
+            update_store ();
         }
 
         public bool compact_list {
@@ -71,11 +76,11 @@ namespace G4 {
             set {
                 var cur = get_binding_widget (_current_node);
                 if (cur != null)
-                    ((!)cur).playing = false;
+                    ((!)cur).playing.visible = false;
                 _current_node = value;
                 var widget = get_binding_widget (value);
                 if (widget != null)
-                    ((!)widget).playing = true;
+                    ((!)widget).playing.visible = true;
             }
         }
 
@@ -128,27 +133,32 @@ namespace G4 {
                     _multi_selection = value;
                     _grid_view.enable_rubberband = value;
                     _grid_view.single_click_activate = !value;
-                    _binding_items.foreach ((music, item) => item.selectable = value);
+                    var movable = _editable && value;
+                    _binding_items.foreach ((music, item) => {
+                        item.selectable = value;
+                        ((MusicWidget) item.child).handle.visible = movable;
+                    });
                     if (!value)
                         _selection.unselect_all ();
                 }
                 if (value && _header_revealer == null) {
-                    var child = get_first_child ();
-                    if (child is Gtk.HeaderBar) {
-                        _header_bar_hided = child;
-                        remove ((!)child);
-                    }
+                    _header_bar_hided = get_first_child () as Gtk.HeaderBar;
                     var header = new Gtk.HeaderBar ();
                     setup_selection_header_bar (header);
                     var revealer = new Gtk.Revealer ();
                     revealer.child = header;
                     revealer.transition_type = Gtk.RevealerTransitionType.SLIDE_DOWN;
-                    prepend (revealer);
+                    revealer.insert_after (this, _header_bar_hided);
                     _header_revealer = revealer;
-                } else if (!value && _header_bar_hided != null) {
-                    prepend ((!)_header_bar_hided);
-                    _header_bar_hided = null;
                 }
+                if (value && _editable && _drop_target == null) {
+                    _drop_target = create_drop_target ();
+                    _grid_view.add_controller ((!)_drop_target);
+                } else if (!value && _drop_target != null) {
+                    _grid_view.remove_controller ((!)_drop_target);
+                    _drop_target = null;
+                }
+                _header_bar_hided?.set_visible (!value);
                 _header_revealer?.set_reveal_child (value);
             }
         }
@@ -220,7 +230,24 @@ namespace G4 {
         public override void snapshot (Gtk.Snapshot snapshot) {
             if (_header_revealer?.reveal_child ?? false) {
                 var child = (!)_header_revealer;
-                draw_outset_shadow (snapshot, 0, 0, child.get_width (), child.get_height ());
+                var allocation = Gtk.Allocation ();
+                get_widget_bounds (child, ref allocation);
+                draw_outset_shadow (snapshot, allocation.x, allocation.y, allocation.width, allocation.height);
+            }
+            if (_dropping_item >= 0) {
+                var allocation = Gtk.Allocation ();
+                get_widget_bounds (_scroll_view, ref allocation);
+                var row_width = (float) _grid_view.get_width () / _columns;
+                var col = _dropping_item % _columns;
+                var row = _dropping_item / _columns;
+                var x = row_width * col + allocation.x + _grid_view.margin_start;
+                var y = _row_height * row + allocation.y + _grid_view.margin_top - _scroll_view.vadjustment.value;
+                var rect = Graphene.Rect ();
+                rect.init (x, (float) y, row_width, scale_factor * 0.5f);
+                var color = Gdk.RGBA ();
+                color.alpha = 1f;
+                color.red = color.green = color.blue = 0.5f;
+                snapshot.append_color (color, rect);
             }
             base.snapshot (snapshot);
         }
@@ -248,7 +275,6 @@ namespace G4 {
         public uint update_store () {
             if (_music_node != null) {
                 _data_store.remove_all ();
-                _selection.unselect_all ();
                 if (_music_node is Album)
                     ((Album)_music_node).insert_to_store (_data_store);
                 else if (_music_node is Artist)
@@ -257,26 +283,24 @@ namespace G4 {
             return _data_store.get_n_items ();
         }
 
-        private MusicWidget? get_binding_widget (Music? music) {
-            var item = music != null ? _binding_items[(!)music] : (Gtk.ListItem?) null;
-            return item?.child as MusicWidget;
-        }
-
         private void on_create_item (Object obj) {
             var child = _grid_mode ? (MusicWidget) new MusicCell () : (MusicWidget) new MusicEntry (_compact_list);
             var item = (Gtk.ListItem) obj;
             item.child = child;
             item.selectable = _multi_selection;
             item_created (item);
-            _row_width = item.child.width_request;
+            _row_min_width = item.child.width_request;
             make_long_pressable (child, (widget, x, y) => multi_selection = true);
+            if (_editable)
+                make_draggable (child.handle, child, item);
         }
 
         private void on_bind_item (Object obj) {
             var item = (Gtk.ListItem) obj;
             var entry = (MusicWidget) item.child;
             var music = (Music) item.item;
-            entry.playing = music == _current_node;
+            entry.handle.visible = _multi_selection && _editable;
+            entry.playing.visible = music == _current_node;
             item_binded (item);
             _binding_items[music] = item;
 
@@ -313,14 +337,96 @@ namespace G4 {
             var adj = _scroll_view.vadjustment;
             var range = adj.upper - adj.lower;
             var count = visible_count;
-            if (count > 0 && _row_width > 0 && _scroll_range != range && range > _grid_view.get_height ()) {
+            if (count > 0 && _row_min_width > 0 && _scroll_range != range && range > _grid_view.get_height ()) {
                 var max_columns = _grid_view.get_max_columns ();
                 var min_columns = _grid_view.get_min_columns ();
-                var columns = _grid_view.get_width () / _row_width;
+                var columns = _grid_view.get_width () / _row_min_width;
                 _columns = uint.min (uint.max (columns, min_columns), max_columns);
                 _row_height = range / ((count + _columns - 1) / _columns);
                 _scroll_range = range;
             }
+        }
+
+        private int _dropping_item = -1;
+
+        private bool on_drag_dropped (Value value, double x, double y) {
+            var item = value.get_object () as Gtk.ListItem;
+            uint src_pos = item?.position ?? -1;
+            uint dst_pos = _dropping_item;
+            if (src_pos != -1 && dst_pos != -1 && src_pos != dst_pos) {
+                var selected = _selection.is_selected (src_pos);
+                var src_obj = _filter_model.get_item (src_pos);
+                var dst_obj = _filter_model.get_item (dst_pos);
+                if (src_obj != null && _data_store.find ((!)src_obj, out src_pos)) {
+                    if (dst_obj == null || !_data_store.find ((!)dst_obj, out dst_pos))
+                        dst_pos = _data_store.get_n_items ();
+                    _data_store.remove (src_pos);
+                    if (dst_pos >= src_pos)
+                        dst_pos--;
+                    _data_store.insert (dst_pos, (!)src_obj);
+                    _modified = true;
+                }
+                if (selected)
+                    _selection.select_item (_dropping_item, false);
+            }
+            set_dropping_item (-1);
+            return true;
+        }
+
+        private Gdk.DragAction on_drag_motion (double x, double y) {
+            var row_width = (double) _grid_view.get_width () / _columns;
+            var col = (int) (x / row_width);
+            var row = (int) ((_scroll_view.vadjustment.value + y) / _row_height);
+            var item = (int) _columns * row + col;
+            set_dropping_item (item);
+            return Gdk.DragAction.MOVE;
+        }
+
+        private MusicWidget? get_binding_widget (Music? music) {
+            var item = music != null ? _binding_items[(!)music] : (Gtk.ListItem?) null;
+            return item?.child as MusicWidget;
+        }
+
+        private void make_draggable (Gtk.Widget handle, Gtk.Widget icon, Gtk.ListItem item) {
+            var drag_source = new Gtk.DragSource ();
+            drag_source.actions = Gdk.DragAction.MOVE;
+            drag_source.prepare.connect ((x, y) => {
+                if (item.selectable) {
+                    var val = Value (item.get_type ());
+                    val.set_object (item);
+                    return new Gdk.ContentProvider.for_value (val);
+                }
+                return null;
+            });
+            drag_source.drag_begin.connect ((drag) => {
+                var allocation = Gtk.Allocation ();
+                var paintable = new Gtk.WidgetPaintable (icon);
+                get_widget_bounds (handle, ref allocation);
+                drag_source.set_icon (paintable, allocation.x, allocation.y);
+            });
+            handle.add_controller (drag_source);
+        }
+
+        private void set_dropping_item (int item) {
+            if (_dropping_item != item) {
+                _dropping_item = item;
+                queue_draw ();
+            }
+        }
+
+        private Gtk.DropTarget? _drop_target = null;
+
+        private Gtk.DropTarget create_drop_target () {
+            var target = new Gtk.DropTarget (typeof (Gtk.ListItem), Gdk.DragAction.MOVE);
+            target.accept.connect ((drop) => drop.formats.contain_gtype (typeof (Gtk.ListItem)));
+            target.motion.connect (on_drag_motion);
+            target.leave.connect (() => set_dropping_item (-1));
+#if GTK_4_10
+            target.drop.connect (on_drag_dropped);
+#else
+            target.on_drop.connect (on_drag_dropped);
+#endif
+            return target;
         }
 
         private void on_selection_changed (uint position, uint n_items) {
@@ -331,7 +437,7 @@ namespace G4 {
                 button.sensitive = enabled;
         }
 
-        private Playlist playlist_for_selection () {
+        private Playlist create_playlist_for_selection () {
             var count = _filter_model.get_n_items ();
             var musics = new GenericArray<Music> (count);
             for (var i = 0; i < count; i++) {
@@ -339,6 +445,28 @@ namespace G4 {
                     musics.add ((Music) _filter_model.get_item (i));
             }
             return to_playlist (musics.data, _music_node?.title);
+        }
+
+        private async bool show_dialog_to_save_playlist () {
+            var playlist = new Playlist (_music_node?.title ?? "playing", "");
+            if (_music_node is Playlist) {
+                playlist.list_uri = ((Playlist)_music_node).list_uri;
+                ((Playlist)_music_node).reset_original_order ();
+            } else {
+                var file = get_playing_list_file ();
+                playlist.list_uri = file.get_uri ();
+            }
+            var count = _data_store.get_n_items ();
+            for (var i = 0; i < count; i++) {
+                var music = (Music) _data_store.get_item (i);
+                playlist.add_music (music);
+            }
+            var ret = yield show_alert_dialog (_("Playlist is modified, save it?"), root as Gtk.Window);
+            if (ret) {
+                var app = (Application) GLib.Application.get_default ();
+                ret |= yield app.add_playlist_to_file_async (playlist, false);
+            }
+            return ret;
         }
 
         private void setup_selection_header_bar (Gtk.HeaderBar header) {
@@ -351,7 +479,17 @@ namespace G4 {
             _header_title = title;
 
             var back_btn = new Gtk.Button.from_icon_name ("go-previous-symbolic");
-            back_btn.clicked.connect (() => multi_selection = false);
+            back_btn.clicked.connect (() => {
+                if (_modified) {
+                    show_dialog_to_save_playlist.begin ((obj, res) => {
+                        if (show_dialog_to_save_playlist.end (res))
+                            _modified = false;
+                        multi_selection = false;
+                    });
+                } else {
+                    multi_selection = false;
+                }
+            });
             back_btn.tooltip_text = _("Back");
             header.pack_start (back_btn);
 
@@ -365,22 +503,25 @@ namespace G4 {
             });
             header.pack_start (all_btn);
 
-            if (_item_type == typeof (Music)) {
+            if (_editable) {
                 var remove_btn = new Gtk.Button.from_icon_name ("user-trash-symbolic");
                 remove_btn.tooltip_text = _("Remove");
                 remove_btn.clicked.connect (() => {
                     var count = (int) _filter_model.get_n_items ();
+                    var removed = false;
                     for (var i = count - 1; i >= 0; i--) {
                         if (_selection.is_selected (i)) {
                             var node = _filter_model.get_item (i);
                             uint position = -1;
-                            if (_data_store.find ((!)node, out position))
+                            if (_data_store.find ((!)node, out position)) {
                                 _data_store.remove (position);
+                                removed = true;
+                            }
                         }
                     }
+                    _modified |= removed;
                     on_selection_changed (0, 0);
                 });
-                header.pack_end (remove_btn);
                 _action_buttons.add (remove_btn);
             }
 
@@ -388,13 +529,12 @@ namespace G4 {
             insert_btn.tooltip_text = _("Play at Next");
             insert_btn.clicked.connect (() => {
                 var app = (Application) GLib.Application.get_default ();
-                var playlist = playlist_for_selection ();
+                var playlist = create_playlist_for_selection ();
                 var current = app.current_music;
                 if (current != null)
                     playlist.foreach_remove ((uri, music) => music == (!)current);
                 app.play_at_next (playlist);
             });
-            header.pack_end (insert_btn);
             _action_buttons.add (insert_btn);
 
             var store = ((Application) GLib.Application.get_default ()).music_store;
@@ -403,10 +543,9 @@ namespace G4 {
                 send_btn.tooltip_text = _("Add to Playing");
                 send_btn.clicked.connect (() => {
                     var app = (Application) GLib.Application.get_default ();
-                    var playlist = playlist_for_selection ();
+                    var playlist = create_playlist_for_selection ();
                     app.play (playlist, false);
                 });
-                header.pack_end (send_btn);
                 _action_buttons.add (send_btn);
             }
 
@@ -414,11 +553,48 @@ namespace G4 {
             add_to_btn.tooltip_text = _("Add to Playlist");
             add_to_btn.clicked.connect (() => {
                 var app = (Application) GLib.Application.get_default ();
-                var playlist = playlist_for_selection ();
+                var playlist = create_playlist_for_selection ();
                 app.save_to_playlist_file_async.begin (playlist, (obj, res) => app.save_to_playlist_file_async.end (res));
             });
-            header.pack_end (add_to_btn);
             _action_buttons.add (add_to_btn);
+
+            _action_buttons.foreach (header.pack_end);
         }
+    }
+
+    public void get_widget_bounds (Gtk.Widget widget, ref Gtk.Allocation allocation) {
+#if GTK_4_10
+        widget.get_bounds (out allocation.x, out allocation.y, out allocation.width, out allocation.height);
+#else
+        widget.get_allocation (out allocation);
+#endif
+    }
+
+    public async bool show_alert_dialog (string text, Gtk.Window? parent = null) {
+#if GTK_4_10
+        var dialog = new Gtk.AlertDialog (text);
+        dialog.buttons = { _("No"), _("Yes") };
+        dialog.cancel_button = 0;
+        dialog.default_button = 1;
+        dialog.modal = true;
+        try {
+            var btn = yield dialog.choose (parent, null);
+            return btn == 1;
+        } catch (Error e) {
+        }
+        return false;
+#else
+        var result = new int[] { -1 };
+        var dialog = new Gtk.MessageDialog (parent, Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                            Gtk.MessageType.QUESTION, Gtk.ButtonsType.YES_NO, text);
+        dialog.response.connect ((id) => {
+            dialog.destroy ();
+            result[0] = id;
+            Idle.add (show_alert_dialog.callback);
+        });
+        dialog.present ();
+        yield;
+        return result[0] == Gtk.ResponseType.YES;
+#endif
     }
 }

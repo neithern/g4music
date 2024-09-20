@@ -277,8 +277,9 @@ namespace G4 {
         }
 
         private MusicList create_music_list (Album album, bool from_artist = false) {
-            var is_artist_playlist = album is Playlist && from_artist;
-            var list = new MusicList (_app, typeof (Music), album);
+            var is_playlist = album is Playlist;
+            var is_artist_playlist = is_playlist && from_artist;
+            var list = new MusicList (_app, typeof (Music), album, is_playlist);
             list.item_activated.connect ((position, obj) => _app.current_item = (int) position);
             list.item_binded.connect ((item) => {
                 var entry = (MusicEntry) item.child;
@@ -303,7 +304,7 @@ namespace G4 {
         }
 
         private MusicList create_playing_music_list () {
-            var list = new MusicList (_app, typeof (Music));
+            var list = new MusicList (_app, typeof (Music), null, true);
             list.item_activated.connect ((position, obj) => _app.current_item = (int) position);
             list.item_binded.connect ((item) => {
                 var entry = (MusicEntry) item.child;
@@ -483,7 +484,7 @@ namespace G4 {
         }
 
         private void on_index_changed (int index, uint size) {
-            if (_current_list.playable) {
+            if (_current_list.playable && !_current_list.multi_selection) {
                 _current_list.scroll_to_item (index);
             }
         }

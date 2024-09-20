@@ -9,6 +9,7 @@ namespace G4 {
 
     public class MusicWidget : Gtk.Box {
         protected Gtk.Image _cover = new Gtk.Image ();
+        protected Gtk.Image _handle = new Gtk.Image ();
         protected StableLabel _title = new StableLabel ();
         protected StableLabel _subtitle = new StableLabel ();
         protected RoundPaintable _paintable = new RoundPaintable ();
@@ -33,18 +34,21 @@ namespace G4 {
             }
         }
 
+        public Gtk.Image handle {
+            get {
+                return _handle;
+            }
+        }
+
         public Gdk.Paintable? paintable {
             set {
                 _paintable.paintable = value;
             }
         }
 
-        public bool playing {
+        public Gtk.Image playing {
             get {
-                return _playing.visible;
-            }
-            set {
-                _playing.visible = value;
+                return _playing;
             }
         }
 
@@ -142,7 +146,6 @@ namespace G4 {
             _paintable.queue_draw.connect (_cover.queue_draw);
             append (_cover);
 
-            var overlay = new Gtk.Overlay ();
             var spacing = compact ? 2 : 6;
             var vbox = new Gtk.Box (Gtk.Orientation.VERTICAL, spacing);
             vbox.hexpand = true;
@@ -151,9 +154,7 @@ namespace G4 {
             vbox.margin_end = 4;
             vbox.append (_title);
             vbox.append (_subtitle);
-            overlay.child = vbox;
-            overlay.add_overlay (_playing);
-            append (overlay);
+            append (vbox);
 
             _title.halign = Gtk.Align.START;
             _title.ellipsize = EllipsizeMode.END;
@@ -165,6 +166,16 @@ namespace G4 {
             var font_size = _subtitle.get_pango_context ().get_font_description ().get_size () / Pango.SCALE;
             if (font_size >= 13)
                 _subtitle.add_css_class ("title-secondly");
+
+            append (_playing);
+
+            _handle.halign = Gtk.Align.END;
+            _handle.valign = Gtk.Align.CENTER;
+            _handle.icon_name = "view-continuous-symbolic";
+            _handle.margin_end = 4;
+            _handle.visible = false;
+            _handle.width_request = 32;
+            append (_handle);
         }
 
         public void set_titles (Music music, uint sort) {
