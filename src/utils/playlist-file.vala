@@ -47,9 +47,10 @@ namespace G4 {
                     name = load_pls_file (dis, parent, uris);
                     break;
             }
+            return name ?? get_file_display_name (file);
         } catch (Error e) {
         }
-        return name ?? get_file_display_name (file);
+        return null;
     }
 
     public string? load_m3u_file (DataInputStream dis, File? parent, GenericArray<string> uris) throws Error {
