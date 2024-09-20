@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/neithern/g4music/issues\n"
-"POT-Creation-Date: 2024-09-17 15:06+0000\n"
-"PO-Revision-Date: 2024-09-18 11:41+0300\n"
+"POT-Creation-Date: 2024-09-19 06:06+0000\n"
+"PO-Revision-Date: 2024-09-20 22:08+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -19,7 +19,7 @@ msgstr ""
 "%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Generator: Lokalize 23.04.3\n"
 
-#: data/app.desktop.in:3 data/app.metainfo.xml.in:4 src/application.vala:239
+#: data/app.desktop.in:3 data/app.metainfo.xml.in:4 src/application.vala:240
 #: src/main.vala:24
 msgid "Gapless"
 msgstr "Неперервний"
@@ -205,7 +205,7 @@ msgctxt "shortcut window"
 msgid "Reload Library"
 msgstr "Перезавантажити бібліотеку"
 
-#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:367
+#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:369
 msgid "Back"
 msgstr "Назад"
 
@@ -229,7 +229,7 @@ msgstr "Стислий перегляд списку"
 msgid "Grid view for artists/albums"
 msgstr "Таблиця для виконавців/альбомів"
 
-#: src/gtk/preferences.ui:56 src/application.vala:410
+#: src/gtk/preferences.ui:56 src/application.vala:445
 msgid "Keep playing after window closed"
 msgstr "Продовжити відтворення після закриття вікна"
 
@@ -333,60 +333,70 @@ msgstr "Нещодавні"
 msgid "Shuffle"
 msgstr "Перемішати"
 
-#: src/action-handles.vala:81
+#: src/action-handles.vala:83
 msgid "Image Files"
 msgstr "файли зображень"
 
-#: src/action-handles.vala:167
+#: src/action-handles.vala:179
 msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr ""
 "Швидкий, плавний, невибагливий програвач музики, який засновано на GTK4."
 
 #. Translators: Replace "translator-credits" with your names, one name per line
-#: src/action-handles.vala:169
+#: src/action-handles.vala:181
 msgid "translator-credits"
 msgstr "Юрій Чорноіван <yurchor@ukr.net>, 2023"
 
-#: src/application.vala:608
+#: src/application.vala:454
+#| msgid "Playlist view"
+msgid "Playlist Files"
+msgstr "файли списків відтворення"
+
+#: src/application.vala:664
 msgid "Keep playing"
 msgstr "Продовжувати відтворення"
 
 #. Translators: Play this music at next position of current playing music
 #: src/ui/music-widgets.vala:208 src/ui/music-widgets.vala:249
-#: src/ui/music-widgets.vala:259
+#: src/ui/music-widgets.vala:260
 msgid "Play at Next"
 msgstr "Відтворити наступною"
 
 #: src/ui/music-widgets.vala:209 src/ui/music-widgets.vala:248
-#: src/ui/music-widgets.vala:258 src/ui/store-panel.vala:372
+#: src/ui/music-widgets.vala:259 src/ui/store-panel.vala:374
 msgid "Play"
 msgstr "Відтворити"
 
-#: src/ui/music-widgets.vala:212 src/ui/play-panel.vala:128
+#: src/ui/music-widgets.vala:212 src/ui/play-panel.vala:129
 msgid "Show _Cover File"
 msgstr "Показати файл _обкладинки"
 
-#: src/ui/music-widgets.vala:214 src/ui/play-panel.vala:130
+#: src/ui/music-widgets.vala:214 src/ui/play-panel.vala:131
 msgid "_Export Cover"
 msgstr "_Експортувати обкладинку"
 
-#: src/ui/music-widgets.vala:251
+#: src/ui/music-widgets.vala:250 src/ui/music-widgets.vala:261
+#: src/ui/music-widgets.vala:270
+msgid "_Add to Playlist…"
+msgstr "_Додати до списку відтворення…"
+
+#: src/ui/music-widgets.vala:252
 msgid "Show List File"
 msgstr "Показати файл списку"
 
-#: src/ui/music-widgets.vala:265 src/ui/play-panel.vala:59
+#: src/ui/music-widgets.vala:267 src/ui/play-panel.vala:59
 msgid "Search Title"
 msgstr "Шукати за назвою"
 
-#: src/ui/music-widgets.vala:266 src/ui/play-panel.vala:57
+#: src/ui/music-widgets.vala:268 src/ui/play-panel.vala:57
 msgid "Search Album"
 msgstr "Шукати альбом"
 
-#: src/ui/music-widgets.vala:267 src/ui/play-panel.vala:58
+#: src/ui/music-widgets.vala:269 src/ui/play-panel.vala:58
 msgid "Search Artist"
 msgstr "Шукати виконавця"
 
-#: src/ui/music-widgets.vala:268
+#: src/ui/music-widgets.vala:271
 msgid "_Show Music File"
 msgstr "_Показати файл музики"
 
@@ -408,7 +418,7 @@ msgstr "Пуск/Пауза"
 msgid "Play Next"
 msgstr "Відтворити наступну"
 
-#: src/ui/play-panel.vala:239
+#: src/ui/play-panel.vala:240
 msgid ""
 "Drag and drop music files here,\n"
 "or change music location: "
@@ -448,7 +458,7 @@ msgstr "Альбоми"
 msgid "Playlists"
 msgstr "Списки відтворення"
 
-#: src/ui/store-panel.vala:596
+#: src/ui/store-panel.vala:603
 msgid "No playlist found"
 msgstr "Списків відтворення не знайдено"
 
