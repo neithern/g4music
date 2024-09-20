@@ -333,8 +333,8 @@ namespace G4 {
             if (default_mode) {
                 var arr = new GenericArray<Music> (4096);
                 var file = get_playing_list_file ();
-                var name = yield run_async<string?> (() => { return _loader.load_playlist (file, arr); });
-                if (name != null)
+                yield run_void_async (() => _loader.load_playlist (file, arr));
+                if (arr.length > 0)
                     musics = arr;
             }
             _music_store.splice (0, _music_store.get_n_items (), (Object[]) musics.data);
