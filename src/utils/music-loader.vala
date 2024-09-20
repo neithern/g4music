@@ -280,7 +280,7 @@ namespace G4 {
             }
         }
 
-        private string? load_playlist (File file, GenericArray<Music> musics) {
+        public string? load_playlist (File file, GenericArray<Music> musics) {
             var uris = new GenericArray<string> (1024);
             var name = load_playlist_file (file, uris);
             foreach (var uri in uris) {
@@ -323,21 +323,26 @@ namespace G4 {
             }
         }
 
-        private void on_file_added (File file) {
+        private async void on_file_added (File file) {
+            try {
+                var info = yield file.query_info_async (FileAttribute.STANDARD_IS_HIDDEN, FileQueryInfoFlags.NONE);
+                if (info.get_is_hidden ())
+                    return;
+            } catch (Error e) {
+            }
+
             var arr = new GenericArray<Music> (1024);
             var n_playlists = 0;
             lock (_library) {
                 n_playlists = (int) _library.playlists.length;
             }
-            load_files_async.begin ({file}, arr, true, false, -1, (obj, res) => {
-                load_files_async.end (res);
-                lock (_library) {
-                    n_playlists -= (int) _library.playlists.length;
-                }
-                if (arr.length > 0 || n_playlists != 0) {
-                    music_found (arr);
-                }
-            });
+            yield load_files_async ({file}, arr, true, false, -1);
+            lock (_library) {
+                n_playlists -= (int) _library.playlists.length;
+            }
+            if (arr.length > 0 || n_playlists != 0) {
+                music_found (arr);
+            }
         }
 
         private void on_file_removed (File file) {
