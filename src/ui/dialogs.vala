@@ -65,7 +65,6 @@ namespace G4 {
             if (parent != null) {
                 modal = true;
                 transient_for = (!)parent;
-                set_parent ((!)parent);
             }
 
             _callback = choose.callback;
@@ -107,31 +106,31 @@ namespace G4 {
     }
 
     public async bool show_alert_dialog (string text, Gtk.Window? parent = null) {
-        #if GTK_4_10
-                var dialog = new Gtk.AlertDialog (text);
-                dialog.buttons = { _("No"), _("Yes") };
-                dialog.cancel_button = 0;
-                dialog.default_button = 1;
-                dialog.modal = true;
-                try {
-                    var btn = yield dialog.choose (parent, null);
-                    return btn == 1;
-                } catch (Error e) {
-                }
-                return false;
-        #else
-                var result = new int[] { -1 };
-                var dialog = new Gtk.MessageDialog (parent, Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                                    Gtk.MessageType.QUESTION, Gtk.ButtonsType.YES_NO, text);
-                dialog.response.connect ((id) => {
-                    dialog.destroy ();
-                    result[0] = id;
-                    Idle.add (show_alert_dialog.callback);
-                });
-                dialog.present ();
-                yield;
-                return result[0] == Gtk.ResponseType.YES;
-        #endif
+#if GTK_4_10
+        var dialog = new Gtk.AlertDialog (text);
+        dialog.buttons = { _("No"), _("Yes") };
+        dialog.cancel_button = 0;
+        dialog.default_button = 1;
+        dialog.modal = true;
+        try {
+            var btn = yield dialog.choose (parent, null);
+            return btn == 1;
+        } catch (Error e) {
+        }
+        return false;
+#else
+        var result = new int[] { -1 };
+        var dialog = new Gtk.MessageDialog (parent, Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                            Gtk.MessageType.QUESTION, Gtk.ButtonsType.YES_NO, text);
+        dialog.response.connect ((id) => {
+            dialog.destroy ();
+            result[0] = id;
+            Idle.add (show_alert_dialog.callback);
+        });
+        dialog.present ();
+        yield;
+        return result[0] == Gtk.ResponseType.YES;
+#endif
     }
 
     public async File? show_save_file_dialog (Gtk.Window? parent, File? initial = null, Gtk.FileFilter[]? filters = null) {
