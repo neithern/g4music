@@ -120,6 +120,7 @@ namespace G4 {
                 this.visible = false;
                 return true;
             }
+            _store_panel.save_main_list_if_modified ();
             return false;
         }
 

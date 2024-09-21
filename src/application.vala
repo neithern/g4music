@@ -302,7 +302,8 @@ namespace G4 {
                             playlist.add_music ((!)music, true);
                     }
                     playlist.set_cover_uri ();
-                    playlist.set_title ((!)name);
+                    if (name != null)
+                        playlist.set_title ((!)name);
                 }
                 return ret;
             });

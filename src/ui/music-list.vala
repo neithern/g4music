@@ -1,6 +1,7 @@
 namespace G4 {
 
     public class MusicList : Gtk.Box {
+        protected Application _app;
         private HashTable<Music, Gtk.ListItem> _binding_items = new HashTable<Music, Gtk.ListItem> (direct_hash, direct_equal);
         private bool _compact_list = false;
         private Music? _current_node = null;
@@ -11,7 +12,7 @@ namespace G4 {
         private Gtk.GridView _grid_view = new Gtk.GridView (null, null);
         private int _image_size = Thumbnailer.ICON_SIZE;
         private Type _item_type = typeof (Music);
-        private bool _modified = false;
+        protected bool _modified = false;
         private Music? _music_node = null;
 
         private Gtk.ScrolledWindow _scroll_view = new Gtk.ScrolledWindow ();
@@ -34,6 +35,7 @@ namespace G4 {
             hexpand = true;
             append (_scroll_view);
 
+            _app = app;
             _editable = editable;
             _filter_model.model = _data_store;
             _item_type = item_type;
@@ -118,6 +120,17 @@ namespace G4 {
             }
         }
 
+        public bool modified {
+            get {
+                return _modified;
+            }
+            set {
+                _modified = value;
+            }
+        }
+
+        protected bool _has_send_button = true;
+        protected bool _prompt_to_save = true;
         private GenericArray<Gtk.Button> _action_buttons = new GenericArray<Gtk.Button> (4);
         private Gtk.Widget? _header_bar_hided = null;
         private Gtk.Revealer? _header_revealer = null;
@@ -437,7 +450,7 @@ namespace G4 {
                 button.sensitive = enabled;
         }
 
-        private Playlist create_playlist_for_selection () {
+        protected Playlist create_playlist_for_selection () {
             var count = _filter_model.get_n_items ();
             var musics = new GenericArray<Music> (count);
             for (var i = 0; i < count; i++) {
@@ -447,26 +460,24 @@ namespace G4 {
             return to_playlist (musics.data, _music_node?.title);
         }
 
-        private async bool show_dialog_to_save_playlist () {
-            var playlist = new Playlist (_music_node?.title ?? "playing", "");
+        private async bool prompt_to_save_playlist () {
             if (_music_node is Playlist) {
+                var playlist = new Playlist (_music_node?.title ?? "Untitled");
                 playlist.list_uri = ((Playlist)_music_node).list_uri;
-                ((Playlist)_music_node).reset_original_order ();
-            } else {
-                var file = get_playing_list_file ();
-                playlist.list_uri = file.get_uri ();
+
+                var count = _data_store.get_n_items ();
+                for (var i = 0; i < count; i++) {
+                    var music = (Music) _data_store.get_item (i);
+                    playlist.add_music (music);
+                }
+
+                var ret = yield show_alert_dialog (_("Playlist is modified, save it?"), root as Gtk.Window);
+                if (ret) {
+                    ret |= yield _app.add_playlist_to_file_async (playlist, false);
+                }
+                return ret;
             }
-            var count = _data_store.get_n_items ();
-            for (var i = 0; i < count; i++) {
-                var music = (Music) _data_store.get_item (i);
-                playlist.add_music (music);
-            }
-            var ret = yield show_alert_dialog (_("Playlist is modified, save it?"), root as Gtk.Window);
-            if (ret) {
-                var app = (Application) GLib.Application.get_default ();
-                ret |= yield app.add_playlist_to_file_async (playlist, false);
-            }
-            return ret;
+            return false;
         }
 
         private void setup_selection_header_bar (Gtk.HeaderBar header) {
@@ -480,9 +491,9 @@ namespace G4 {
 
             var back_btn = new Gtk.Button.from_icon_name ("go-previous-symbolic");
             back_btn.clicked.connect (() => {
-                if (_modified) {
-                    show_dialog_to_save_playlist.begin ((obj, res) => {
-                        if (show_dialog_to_save_playlist.end (res))
+                if (_modified && _prompt_to_save) {
+                    prompt_to_save_playlist.begin ((obj, res) => {
+                        if (prompt_to_save_playlist.end (res))
                             _modified = false;
                         multi_selection = false;
                     });
@@ -528,17 +539,15 @@ namespace G4 {
             var insert_btn = new Gtk.Button.from_icon_name ("format-indent-more-symbolic");
             insert_btn.tooltip_text = _("Play at Next");
             insert_btn.clicked.connect (() => {
-                var app = (Application) GLib.Application.get_default ();
                 var playlist = create_playlist_for_selection ();
-                var current = app.current_music;
+                var current = _app.current_music;
                 if (current != null)
                     playlist.foreach_remove ((uri, music) => music == (!)current);
-                app.play_at_next (playlist);
+                    _app.play_at_next (playlist);
             });
             _action_buttons.add (insert_btn);
 
-            var store = ((Application) GLib.Application.get_default ()).music_store;
-            if (store != _data_store) {
+            if (_has_send_button) {
                 var send_btn = new Gtk.Button.from_icon_name ("document-send-symbolic");
                 send_btn.tooltip_text = _("Add to Playing");
                 send_btn.clicked.connect (() => {
@@ -552,13 +561,39 @@ namespace G4 {
             var add_to_btn = new Gtk.Button.from_icon_name ("document-new-symbolic");
             add_to_btn.tooltip_text = _("Add to Playlist");
             add_to_btn.clicked.connect (() => {
-                var app = (Application) GLib.Application.get_default ();
                 var playlist = create_playlist_for_selection ();
-                app.save_to_playlist_file_async.begin (playlist, (obj, res) => app.save_to_playlist_file_async.end (res));
+                _app.save_to_playlist_file_async.begin (playlist, (obj, res) => _app.save_to_playlist_file_async.end (res));
             });
             _action_buttons.add (add_to_btn);
 
             _action_buttons.foreach (header.pack_end);
+        }
+    }
+
+    public class MainMusicList : MusicList {
+        public MainMusicList (Application app) {
+            base (app, typeof (Music), null, true);
+            _has_send_button = false;
+            _prompt_to_save = false;
+        }
+
+        public async bool save_if_modified () {
+            if (_modified) {
+                var file = get_playing_list_file ();
+                var playlist = new Playlist (":laying");
+                playlist.list_uri = file.get_uri ();
+
+                var store = data_store;
+                var count = store.get_n_items ();
+                for (var i = 0; i < count; i++) {
+                    var music = (Music) store.get_item (i);
+                    playlist.add_music (music);
+                }
+                var ret = yield _app.add_playlist_to_file_async (playlist, false);
+                if (ret)
+                    _modified = false;
+            }
+            return !_modified;
         }
     }
 
