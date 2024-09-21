@@ -546,18 +546,27 @@ namespace G4 {
                 remove_btn.tooltip_text = _("Remove");
                 remove_btn.clicked.connect (() => {
                     var count = (int) _filter_model.get_n_items ();
-                    var removed = false;
-                    for (var i = count - 1; i >= 0; i--) {
+                    var to_removed = new GenericSet<uint> (null, null);
+                    for (var i = 0; i < count; i++) {
                         if (_selection.is_selected (i)) {
                             var node = _filter_model.get_item (i);
                             uint position = -1;
-                            if (_data_store.find ((!)node, out position)) {
-                                _data_store.remove (position);
-                                removed = true;
-                            }
+                            if (_data_store.find ((!)node, out position))
+                                to_removed.add (position);
                         }
                     }
-                    _modified |= removed;
+                    if (to_removed.length > 0) {
+                        var size = (int) _data_store.get_n_items ();
+                        var items = new GenericArray<Music> (size);
+                        for (var i = 0; i < size; i++) {
+                            if (!to_removed.contains (i)) {
+                                var node = _data_store.get_item (i);
+                                items.add ((Music) node);
+                            }
+                        }
+                        _data_store.splice (0, size, items.data);
+                        _modified = true;
+                    }
                     on_selection_changed (0, 0);
                 });
                 _action_buttons.add (remove_btn);
