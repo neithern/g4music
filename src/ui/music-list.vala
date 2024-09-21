@@ -582,14 +582,14 @@ namespace G4 {
         public async bool save_if_modified () {
             if (_modified) {
                 var file = get_playing_list_file ();
-                var playlist = new Playlist (":laying");
+                var playlist = new Playlist ("playing");
                 playlist.list_uri = file.get_uri ();
 
                 var store = data_store;
                 var count = store.get_n_items ();
                 for (var i = 0; i < count; i++) {
                     var music = (Music) store.get_item (i);
-                    playlist.add_music (music);
+                    playlist.items.add (music);
                 }
                 var ret = yield _app.add_playlist_to_file_async (playlist, false);
                 if (ret)

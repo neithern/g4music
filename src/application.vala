@@ -6,6 +6,7 @@ namespace G4 {
         private Music? _current_music = null;
         private string _current_uri = "";
         private Gst.Sample? _current_cover = null;
+        private bool _list_modified = false;
         private bool _loading = false;
         private string _music_folder = "";
         private uint _mpris_id = 0;
@@ -178,6 +179,15 @@ namespace G4 {
                         active_window.scale_factor, Gtk.TextDirection.NONE, Gtk.IconLookupFlags.FORCE_REGULAR);
                 }
                 return _icon;
+            }
+        }
+
+        public bool list_modified {
+            get {
+                return _list_modified;
+            }
+            set {
+                _list_modified = value;
             }
         }
 
@@ -369,6 +379,7 @@ namespace G4 {
                         }
                     }
                 }
+                _list_modified = true;
                 playlist.insert_to_store (store, insert_pos);
                 if (play) {
                     current_music = store.get_item (insert_pos) as Music;
@@ -378,6 +389,7 @@ namespace G4 {
                 var music = (Music) node;
                 int position = find_item_in_model (store, music);
                 if (position == -1) {
+                    _list_modified = true;
                     store.append (music);
                     position = find_item_in_model (_music_list, music);
                 }
@@ -399,6 +411,7 @@ namespace G4 {
                         store.remove (position);
                     }
                 }
+                _list_modified = true;
                 int insert_pos = find_music_in_store (store, _current_music);
                 playlist.insert_to_store (store, insert_pos + 1);
             } else if (node is Music) {
@@ -407,6 +420,7 @@ namespace G4 {
                 if (store.find (music, out position)) {
                     store.remove (position);
                 }
+                _list_modified = true;
                 int playing_pos = find_music_in_store (store, _current_music);
                 store.insert (playing_pos + 1, music);
             }

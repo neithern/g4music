@@ -482,7 +482,7 @@ namespace G4 {
 
         private void on_music_store_changed () {
             _updating_store = true;
-            _main_list.modified = true;
+            _main_list.modified |= _app.list_modified;
             _album_list.data_store.remove_all ();
             _artist_list.data_store.remove_all ();
             _playlist_list.data_store.remove_all ();
