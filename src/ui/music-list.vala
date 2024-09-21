@@ -299,6 +299,7 @@ namespace G4 {
         }
 
         private Menu? on_create_music_menu (Music? node) {
+            select_one_item (node);
             if (node is Album) {
                 return create_menu_for_album ((Album) node);
             } else if (node is Artist) {
@@ -433,6 +434,7 @@ namespace G4 {
             var drag_source = new Gtk.DragSource ();
             drag_source.actions = Gdk.DragAction.MOVE;
             drag_source.prepare.connect ((x, y) => {
+                select_one_item (((MusicWidget) item.child).music);
                 if (item.selectable) {
                     var val = Value (item.get_type ());
                     val.set_object (item);
@@ -507,6 +509,12 @@ namespace G4 {
                 return ret;
             }
             return false;
+        }
+
+        private void select_one_item (Music? node) {
+            var item = find_item_in_model (_filter_model, node);
+            if (item != -1)
+                _selection.select_item (item, true);
         }
 
         private void setup_selection_header_bar (Gtk.HeaderBar header) {
