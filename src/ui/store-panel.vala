@@ -231,10 +231,6 @@ namespace G4 {
         private MusicList create_album_list (Artist? artist = null) {
             var list = new MusicList (_app, typeof (Album), artist);
             list.item_activated.connect ((position, obj) => create_stack_page (artist, obj as Album));
-            list.item_created.connect ((item) => {
-                var cell = (MusicWidget) item.child;
-                make_right_clickable (cell, cell.show_popover_menu);
-            });
             list.item_binded.connect ((item) => {
                 var cell = (MusicWidget) item.child;
                 var album = (Album) item.item;
@@ -259,7 +255,6 @@ namespace G4 {
             list.item_created.connect ((item) => {
                 var cell = (MusicWidget) item.child;
                 cell.cover.ratio = 0.5;
-                make_right_clickable (cell, cell.show_popover_menu);
             });
             list.item_binded.connect ((item) => {
                 var cell = (MusicWidget) item.child;
@@ -292,10 +287,6 @@ namespace G4 {
                     mode = SortMode.TITLE;
                 entry.set_titles (music, mode);
             });
-            list.item_created.connect ((item) => {
-                var entry = (MusicEntry) item.child;
-                make_right_clickable (entry, entry.show_popover_menu);
-            });
             _app.set_list_sort_mode (list.data_store, SortMode.ALBUM);
             _app.settings.bind ("compact-playlist", list, "compact-list", SettingsBindFlags.DEFAULT);
             return list;
@@ -310,10 +301,6 @@ namespace G4 {
                 entry.paintable = _loading_paintable;
                 entry.set_titles (music, _main_sort_mode);
             });
-            list.item_created.connect ((item) => {
-                var entry = (MusicEntry) item.child;
-                make_right_clickable (entry, entry.show_popover_menu);
-            });
             _app.settings.bind ("compact-playlist", list, "compact-list", SettingsBindFlags.DEFAULT);
             return list;
         }
@@ -321,10 +308,6 @@ namespace G4 {
         private MusicList create_playlist_list () {
             var list = new MusicList (_app, typeof (Playlist));
             list.item_activated.connect ((position, obj) => create_stack_page (null, obj as Playlist));
-            list.item_created.connect ((item) => {
-                var cell = (MusicWidget) item.child;
-                make_right_clickable (cell, cell.show_popover_menu);
-            });
             list.item_binded.connect ((item) => {
                 var cell = (MusicWidget) item.child;
                 var playlist = (Playlist) item.item;

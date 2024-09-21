@@ -48,10 +48,6 @@ namespace G4 {
             return _musics.contains (uri);
         }
 
-        public void @foreach (HFunc<unowned string, Music> func) {
-            _musics.foreach (func);
-        }
-
         public uint foreach_remove (HRFunc<unowned string, Music> func) {
             return _musics.foreach_remove (func);
         }
@@ -62,9 +58,9 @@ namespace G4 {
         }
 
         public void insert_to_store (ListStore store, uint insert_pos = 0) {
-            var arr = new GenericArray<Music> (_musics.length);
-            get_sorted_items (arr);
-            store.splice (insert_pos, 0, (Object[]) arr.data);
+            var musics = new GenericArray<Music> (_musics.length);
+            get_sorted_items (musics);
+            store.splice (insert_pos, 0, (Object[]) musics.data);
         }
 
         public bool remove_music (Music music) {
@@ -116,10 +112,6 @@ namespace G4 {
 
         public Album? find_by_partial_artist (string artist) {
             return _albums.find ((name, album) => artist.match_string (album.artist, true)) as Album;
-        }
-
-        public void @foreach (HFunc<unowned string, Album> func) {
-            _albums.foreach (func);
         }
 
         public new Album? @get (string name) {
@@ -201,10 +193,6 @@ namespace G4 {
         public void clear () {
             _musics.remove_all ();
             items.length = 0;
-        }
-
-        public new void @foreach (Func<Music> func) {
-            items.foreach (func);
         }
 
         public override void get_sorted_items (GenericArray<Music> musics) {

@@ -27,8 +27,8 @@ namespace G4 {
         private int _scrolling_item = -1;
 
         public signal void item_activated (uint position, Object? obj);
-        public signal void item_created (Gtk.ListItem item);
         public signal void item_binded (Gtk.ListItem item);
+        public signal void item_created (Gtk.ListItem item);
 
         public MusicList (Application app, Type item_type = typeof (Music), Music? node = null, bool editable = false) {
             orientation = Gtk.Orientation.VERTICAL;
@@ -129,7 +129,7 @@ namespace G4 {
             }
         }
 
-        protected bool _has_send_button = true;
+        protected bool _has_add_to_quque = true;
         protected bool _prompt_to_save = true;
         private GenericArray<Gtk.Button> _action_buttons = new GenericArray<Gtk.Button> (4);
         private Gtk.Widget? _header_bar_hided = null;
@@ -303,6 +303,8 @@ namespace G4 {
             item.selectable = _multi_selection;
             item_created (item);
             _row_min_width = item.child.width_request;
+
+            make_right_clickable (child, child.show_popover_menu);
             make_long_pressable (child, (widget, x, y) => multi_selection = true);
             if (_editable)
                 make_draggable (child.handle, child, item);
@@ -547,13 +549,13 @@ namespace G4 {
             });
             _action_buttons.add (insert_btn);
 
-            if (_has_send_button) {
+            if (_has_add_to_quque) {
                 var send_btn = new Gtk.Button.from_icon_name ("document-send-symbolic");
-                send_btn.tooltip_text = _("Add to Playing");
+                send_btn.tooltip_text = _("Add to Queue");
                 send_btn.clicked.connect (() => {
                     var app = (Application) GLib.Application.get_default ();
                     var playlist = create_playlist_for_selection ();
-                    app.play (playlist, false);
+                    app.queue (playlist, false);
                 });
                 _action_buttons.add (send_btn);
             }
@@ -573,7 +575,7 @@ namespace G4 {
     public class MainMusicList : MusicList {
         public MainMusicList (Application app) {
             base (app, typeof (Music), null, true);
-            _has_send_button = false;
+            _has_add_to_quque = false;
             _prompt_to_save = false;
         }
 

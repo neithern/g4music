@@ -4,6 +4,7 @@ namespace G4 {
     public const string ACTION_ABOUT = "about";
     public const string ACTION_PREFS = "preferences";
     public const string ACTION_ADD_TO_PLAYLIST = "add-to-playlist";
+    public const string ACTION_ADD_TO_QUEUE = "add-to-queue";
     public const string ACTION_EXPORT_COVER = "export-cover";
     public const string ACTION_PLAY = "play";
     public const string ACTION_PLAY_AT_NEXT = "play-at-next";
@@ -32,9 +33,10 @@ namespace G4 {
             ActionEntry[] action_entries = {
                 { ACTION_ABOUT, show_about },
                 { ACTION_ADD_TO_PLAYLIST, add_to_playlist, "aay" },
+                { ACTION_ADD_TO_QUEUE, play_or_queue, "aay" },
                 { ACTION_EXPORT_COVER, export_cover, "aay" },
                 { ACTION_NEXT, () => _app.play_next () },
-                { ACTION_PLAY, play, "aay" },
+                { ACTION_PLAY, play_or_queue, "aay" },
                 { ACTION_PLAY_AT_NEXT, play_at_next, "aay" },
                 { ACTION_PLAY_PAUSE, () => _app.play_pause () },
                 { ACTION_PREV, () => _app.play_previous () },
@@ -99,9 +101,9 @@ namespace G4 {
 
         private void add_to_playlist (SimpleAction action, Variant? parameter) {
             var strv = parameter?.get_bytestring_array ();
-            var obj = _parse_music_node_form_strv (strv);
-            if (obj is Music) {
-                var playlist = to_playlist ({(Music) obj});
+            var node = _parse_music_node_form_strv (strv);
+            if (node is Playlist) {
+                var playlist = (Playlist) node;
                 _app.save_to_playlist_file_async.begin (playlist, (obj, res) => _app.save_to_playlist_file_async.end (res));
             }
         }
@@ -121,7 +123,8 @@ namespace G4 {
             return null;
         }
 
-        private Object? _parse_music_node_form_strv (string[]? strv) {
+        private Music? _parse_music_node_form_strv (string[]? strv) {
+            Music? music = null;
             if (strv != null && ((!)strv).length > 1) {
                 var arr = (!)strv;
                 var loader = _app.loader;
@@ -129,38 +132,39 @@ namespace G4 {
                 unowned var key = arr[1];
                 switch (arr[0]) {
                     case PageName.ALBUM:
-                        return library.albums[key];
+                        music = library.albums[key];
+                        break;
                     case PageName.ARTIST:
                         var artist = library.artists[key];
                         if ((artist is Artist) && arr.length > 2)
-                            return ((Artist) artist)[arr[2]];
-                        return artist;
+                            music = ((Artist) artist)[arr[2]];
+                        else
+                            music = artist;
+                        break;
                     case PageName.PLAYLIST:
                         return library.playlists[key];
                     default:
                         return loader.find_cache (key);
                 }
             }
-            return null;
+            return music != null ? to_playlist ({ (!)music }) : (Music?) null;
         }
 
-        private void play (SimpleAction action, Variant? parameter) {
+        private void play_or_queue (SimpleAction action, Variant? parameter) {
             var strv = parameter?.get_bytestring_array ();
-            var obj = _parse_music_node_form_strv (strv);
-            if (obj is Artist) {
-                obj = ((Artist) obj).to_playlist ();
+            var node = _parse_music_node_form_strv (strv);
+            if (action.name.has_suffix (ACTION_ADD_TO_QUEUE)) {
+                _app.queue (node, false);
+            } else {
+                (_app.active_window as Window)?.open_page (strv, node);
+                _app.current_item = 0;
             }
-            (_app.active_window as Window)?.open_page (strv, obj);
-            _app.play (obj);
         }
 
         private void play_at_next (SimpleAction action, Variant? parameter) {
             var strv = parameter?.get_bytestring_array ();
-            var obj = _parse_music_node_form_strv (strv);
-            if (obj is Artist) {
-                obj = ((Artist) obj).to_playlist ();
-            }
-            _app.play_at_next (obj);
+            var node = _parse_music_node_form_strv (strv);
+            _app.play_at_next (node);
         }
 
         private void search_by (SimpleAction action, Variant? parameter) {

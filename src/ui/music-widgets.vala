@@ -215,9 +215,9 @@ namespace G4 {
                 var music = (!) this.music;
                 var menu = create_menu_for_music (music);
                 if (music != app.current_music) {
+                    menu.prepend_item (create_menu_item_for_uri (music.uri, _("Add to Queue"), ACTION_APP + ACTION_ADD_TO_QUEUE));
                     /* Translators: Play this music at next position of current playing music */
                     menu.prepend_item (create_menu_item_for_uri (music.uri, _("Play at Next"), ACTION_APP + ACTION_PLAY_AT_NEXT));
-                    menu.prepend_item (create_menu_item_for_uri (music.uri, _("Play"), ACTION_APP + ACTION_PLAY));
                 }
                 if (music.cover_uri != null) {
                     menu.append_item (create_menu_item_for_uri ((!)music.cover_uri, _("Show _Cover File"), ACTION_APP + ACTION_SHOW_FILE));
@@ -253,13 +253,12 @@ namespace G4 {
     }
 
     public Menu create_menu_for_album (Album album) {
-        var is_playlist = album is Playlist;
         var strv = build_action_target_for_album (album);
         var menu = new Menu ();
-        menu.append_item (create_menu_item_for_strv (strv, _("Play"), ACTION_APP + ACTION_PLAY));
         menu.append_item (create_menu_item_for_strv (strv, _("Play at Next"), ACTION_APP + ACTION_PLAY_AT_NEXT));
-        menu.append_item (create_menu_item_for_strv (strv, _("_Add to Playlist…"), ACTION_APP + ACTION_ADD_TO_PLAYLIST));
-        if (is_playlist)
+        menu.append_item (create_menu_item_for_strv (strv, _("Add to Queue"), ACTION_APP + ACTION_ADD_TO_QUEUE));
+        menu.append_item (create_menu_item_for_strv (strv, _("Add to Playlist…"), ACTION_APP + ACTION_ADD_TO_PLAYLIST));
+        if (album is Playlist)
             menu.append_item (create_menu_item_for_uri (((Playlist) album).list_uri, _("Show List File"), ACTION_APP + ACTION_SHOW_FILE));
         return menu;
     }
@@ -267,18 +266,18 @@ namespace G4 {
     public Menu create_menu_for_artist (Artist artist) {
         string[] strv = { PageName.ARTIST, artist.artist };
         var menu = new Menu ();
-        menu.append_item (create_menu_item_for_strv (strv, _("Play"), ACTION_APP + ACTION_PLAY));
         menu.append_item (create_menu_item_for_strv (strv, _("Play at Next"), ACTION_APP + ACTION_PLAY_AT_NEXT));
-        menu.append_item (create_menu_item_for_strv (strv, _("_Add to Playlist…"), ACTION_APP + ACTION_ADD_TO_PLAYLIST));
+        menu.append_item (create_menu_item_for_strv (strv, _("Add to Queue"), ACTION_APP + ACTION_ADD_TO_QUEUE));
+        menu.append_item (create_menu_item_for_strv (strv, _("Add to Playlist…"), ACTION_APP + ACTION_ADD_TO_PLAYLIST));
         return menu;
     }
 
     public Menu create_menu_for_music (Music music) {
         var menu = new Menu ();
+        menu.append_item (create_menu_item_for_uri (music.uri, _("_Add to Playlist…"), ACTION_APP + ACTION_ADD_TO_PLAYLIST));
         menu.append_item (create_menu_item_for_strv ({"title", music.title}, _("Search Title"), ACTION_APP + ACTION_SEARCH));
         menu.append_item (create_menu_item_for_strv ({"album", music.album}, _("Search Album"), ACTION_APP + ACTION_SEARCH));
         menu.append_item (create_menu_item_for_strv ({"artist", music.artist}, _("Search Artist"), ACTION_APP + ACTION_SEARCH));
-        menu.append_item (create_menu_item_for_uri (music.uri, _("_Add to Playlist…"), ACTION_APP + ACTION_ADD_TO_PLAYLIST));
         menu.append_item (create_menu_item_for_uri (music.uri, _("_Show Music File"), ACTION_APP + ACTION_SHOW_FILE));
         return menu;
     }
