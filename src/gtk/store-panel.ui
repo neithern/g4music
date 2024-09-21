@@ -59,6 +59,10 @@
         <attribute name="label" translatable="yes">_Reload Library</attribute>
         <attribute name="action">app.reload</attribute>
       </item>
+      <item>
+        <attribute name="label" translatable="yes">_Select</attribute>
+        <attribute name="action">app.select</attribute>
+      </item>
     </section>
     <section>
       <item>

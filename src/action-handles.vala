@@ -13,6 +13,7 @@ namespace G4 {
     public const string ACTION_NEXT = "next";
     public const string ACTION_RELOAD = "reload";
     public const string ACTION_SEARCH = "search";
+    public const string ACTION_SELECT = "select";
     public const string ACTION_SHOW_FILE = "show-file";
     public const string ACTION_SORT = "sort";
     public const string ACTION_TOGGLE_SEARCH = "toggle-search";
@@ -43,6 +44,7 @@ namespace G4 {
                 { ACTION_PREFS, show_preferences },
                 { ACTION_RELOAD, () => _app.reload_library () },
                 { ACTION_SEARCH, search_by, "aay" },
+                { ACTION_SELECT, select },
                 { ACTION_SHOW_FILE, show_file, "aay" },
                 { ACTION_SORT, sort_by, "s", "'2'" },
                 { ACTION_TOGGLE_SEARCH, toggle_search },
@@ -179,6 +181,10 @@ namespace G4 {
                 parse_search_mode (ref text, ref mode);
                 (_app.active_window as Window)?.start_search (arr[1], mode);
             }
+        }
+
+        private void select (SimpleAction action, Variant? parameter) {
+            (_app.active_window as Window)?.start_select ();
         }
 
         private void show_about () {

@@ -98,6 +98,13 @@ namespace G4 {
             }
         }
 
+        public void start_select () {
+            _store_panel.start_select ();
+            if (_leaflet.folded) {
+                _leaflet.pop ();
+            }
+        }
+
         public void toggle_search () {
             if (_store_panel.toggle_search () && _leaflet.folded) {
                 _leaflet.pop ();

@@ -223,6 +223,10 @@ namespace G4 {
             _search_mode = mode;
         }
 
+        public void start_select () {
+            _current_list.multi_selection = true;
+        }
+
         public bool toggle_search () {
             search_btn.active = ! search_btn.active;
             return search_btn.active;

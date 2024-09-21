@@ -173,6 +173,8 @@ namespace G4 {
                 }
                 _header_bar_hided?.set_visible (!value);
                 _header_revealer?.set_reveal_child (value);
+                if (value)
+                    on_selection_changed (0, 0);
             }
         }
 
