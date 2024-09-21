@@ -296,6 +296,30 @@ namespace G4 {
             return _data_store.get_n_items ();
         }
 
+        private Menu? on_create_music_menu (Music? node) {
+            if (node is Album) {
+                return create_menu_for_album ((Album) node);
+            } else if (node is Artist) {
+                return create_menu_for_artist ((Artist) node);
+            } else if (node is Music) {
+                var music = (Music) node;
+                var menu = create_menu_for_music (music);
+                if (music != _app.current_music) {
+                    if (_has_add_to_quque)
+                        menu.prepend_item (create_menu_item_for_uri (music.uri, _("Add to Queue"), ACTION_APP + ACTION_ADD_TO_QUEUE));
+                    /* Translators: Play this music at next position of current playing music */
+                    menu.prepend_item (create_menu_item_for_uri (music.uri, _("Play at Next"), ACTION_APP + ACTION_PLAY_AT_NEXT));
+                }
+                if (music.cover_uri != null) {
+                    menu.append_item (create_menu_item_for_uri ((!)music.cover_uri, _("Show _Cover File"), ACTION_APP + ACTION_SHOW_FILE));
+                } else if (_app.thumbnailer.find (music) is Gdk.Texture) {
+                    menu.append_item (create_menu_item_for_uri (music.uri, _("_Export Cover"), ACTION_APP + ACTION_EXPORT_COVER));
+                }
+                return menu;
+            }
+            return null;
+        }
+
         private void on_create_item (Object obj) {
             var child = _grid_mode ? (MusicWidget) new MusicCell () : (MusicWidget) new MusicEntry (_compact_list);
             var item = (Gtk.ListItem) obj;
@@ -304,6 +328,7 @@ namespace G4 {
             item_created (item);
             _row_min_width = item.child.width_request;
 
+            child.create_music_menu.connect (on_create_music_menu);
             make_right_clickable (child, child.show_popover_menu);
             make_long_pressable (child, (widget, x, y) => multi_selection = true);
             if (_editable)

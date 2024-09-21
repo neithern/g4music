@@ -18,6 +18,8 @@ namespace G4 {
         public ulong first_draw_handler = 0;
         public Music? music = null;
 
+        public signal Menu? create_music_menu (Music? node);
+
         public MusicWidget () {
             _playing.halign = Gtk.Align.END;
             _playing.valign = Gtk.Align.CENTER;
@@ -73,14 +75,12 @@ namespace G4 {
         }
 
         public void show_popover_menu (Gtk.Widget widget, double x, double y) {
-            var menu = create_item_menu ();
-            var popover = create_popover_menu (menu, x, y);
-            popover.set_parent (widget);
-            popover.popup ();
-        }
-
-        public virtual Menu create_item_menu () {
-            return new Menu ();
+            var menu = create_music_menu (music);
+            if (menu != null) {
+                var popover = create_popover_menu ((!)menu, x, y);
+                popover.set_parent (widget);
+                popover.popup ();
+            }
         }
     }
 
@@ -120,15 +120,6 @@ namespace G4 {
             if (font_size >= 13)
                 _subtitle.add_css_class ("title-secondly");
             append (_subtitle);
-        }
-
-        public override Menu create_item_menu () {
-            if (music is Album) {
-                return create_menu_for_album ((Album) music);
-            } else if (music is Artist) {
-                return create_menu_for_artist ((Artist) music);
-            }
-            return base.create_item_menu ();
         }
     }
 
@@ -207,26 +198,6 @@ namespace G4 {
                     _subtitle.label = music.artist;
                     break;
             }
-        }
-
-        public override Menu create_item_menu () {
-            if (this.music != null) {
-                var app = (Application) GLib.Application.get_default ();
-                var music = (!) this.music;
-                var menu = create_menu_for_music (music);
-                if (music != app.current_music) {
-                    menu.prepend_item (create_menu_item_for_uri (music.uri, _("Add to Queue"), ACTION_APP + ACTION_ADD_TO_QUEUE));
-                    /* Translators: Play this music at next position of current playing music */
-                    menu.prepend_item (create_menu_item_for_uri (music.uri, _("Play at Next"), ACTION_APP + ACTION_PLAY_AT_NEXT));
-                }
-                if (music.cover_uri != null) {
-                    menu.append_item (create_menu_item_for_uri ((!)music.cover_uri, _("Show _Cover File"), ACTION_APP + ACTION_SHOW_FILE));
-                } else if (app.thumbnailer.find (music) is Gdk.Texture) {
-                    menu.append_item (create_menu_item_for_uri (music.uri, _("_Export Cover"), ACTION_APP + ACTION_EXPORT_COVER));
-                }
-                return menu;
-            }
-            return base.create_item_menu ();
         }
     }
 
