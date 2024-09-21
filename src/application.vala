@@ -443,6 +443,13 @@ namespace G4 {
 
         public void reload_library () {
             if (!_loading) {
+                var file = get_playing_list_file ();
+                file.delete_async.begin (Priority.DEFAULT, null, (obj, res) => {
+                    try {
+                        file.delete_async.end (res);
+                    } catch (Error e) {
+                    }
+                });
                 _loader.remove_all ();
                 load_files_async.begin ({}, (obj, res) => load_files_async.end (res));
             }
