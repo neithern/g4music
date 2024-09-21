@@ -102,10 +102,13 @@ namespace G4 {
         private void add_to_playlist (SimpleAction action, Variant? parameter) {
             var strv = parameter?.get_bytestring_array ();
             var node = _parse_music_node_form_strv (strv);
-            if (node is Playlist) {
-                var playlist = (Playlist) node;
-                _app.save_to_playlist_file_async.begin (playlist, (obj, res) => _app.save_to_playlist_file_async.end (res));
-            }
+            Playlist? playlist = null;
+            if (node is Playlist)
+                playlist = (Playlist) node;
+            else if (node is Music)
+                playlist = to_playlist ({ (Music) node });
+            if (playlist != null)
+                _app.save_to_playlist_file_async.begin ((!)playlist, (obj, res) => _app.save_to_playlist_file_async.end (res));
         }
 
         private void export_cover (SimpleAction action, Variant? parameter) {
