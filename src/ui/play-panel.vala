@@ -146,10 +146,13 @@ namespace G4 {
             music_artist.label = music?.artist ?? "";
             music_title.label = music?.title ?? "";
 
-            var empty = _app.loader.library.empty;
+            var empty = _app.music_list.get_n_items () == 0;
             initial_label.visible = empty;
             if (empty) {
-                update_initial_label (_app.music_folder);
+                if (_app.loading)
+                    initial_label.label = "";
+                else
+                    update_initial_label (_app.music_folder);
             }
 
             var enabled = music != null;
