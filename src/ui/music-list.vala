@@ -600,7 +600,7 @@ namespace G4 {
             add_to_btn.tooltip_text = _("Add to Playlist");
             add_to_btn.clicked.connect (() => {
                 var playlist = create_playlist_for_selection ();
-                _app.save_to_playlist_file_async.begin (playlist, (obj, res) => _app.save_to_playlist_file_async.end (res));
+                _app.show_add_playlist_dialog.begin (playlist, (obj, res) => _app.show_add_playlist_dialog.end (res));
             });
             _action_buttons.add (add_to_btn);
 
@@ -638,34 +638,6 @@ namespace G4 {
         widget.get_bounds (out allocation.x, out allocation.y, out allocation.width, out allocation.height);
 #else
         widget.get_allocation (out allocation);
-#endif
-    }
-
-    public async bool show_alert_dialog (string text, Gtk.Window? parent = null) {
-#if GTK_4_10
-        var dialog = new Gtk.AlertDialog (text);
-        dialog.buttons = { _("No"), _("Yes") };
-        dialog.cancel_button = 0;
-        dialog.default_button = 1;
-        dialog.modal = true;
-        try {
-            var btn = yield dialog.choose (parent, null);
-            return btn == 1;
-        } catch (Error e) {
-        }
-        return false;
-#else
-        var result = new int[] { -1 };
-        var dialog = new Gtk.MessageDialog (parent, Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                            Gtk.MessageType.QUESTION, Gtk.ButtonsType.YES_NO, text);
-        dialog.response.connect ((id) => {
-            dialog.destroy ();
-            result[0] = id;
-            Idle.add (show_alert_dialog.callback);
-        });
-        dialog.present ();
-        yield;
-        return result[0] == Gtk.ResponseType.YES;
 #endif
     }
 }

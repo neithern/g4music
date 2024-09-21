@@ -4,6 +4,7 @@
     <file alias="style.css">gtk/style.css</file>
     <file>gtk/help-overlay.ui</file>
     <file>gtk/play-panel.ui</file>
+    <file>gtk/playlist-dialog.ui</file>
     <file>gtk/preferences.ui</file>
     <file>gtk/store-panel.ui</file>
   </gresource>

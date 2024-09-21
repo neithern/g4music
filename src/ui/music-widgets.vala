@@ -251,7 +251,7 @@ namespace G4 {
         var section2 = new Menu ();
         section2.append_item (create_menu_item_for_uri (music.uri, _("_Show Music File"), ACTION_APP + ACTION_SHOW_FILE));
         var menu = new Menu ();
-        menu.append_item (create_menu_item_for_uri (music.uri, _("_Add to Playlist…"), ACTION_APP + ACTION_ADD_TO_PLAYLIST));
+        menu.append_item (create_menu_item_for_uri (music.uri, _("Add to Playlist…"), ACTION_APP + ACTION_ADD_TO_PLAYLIST));
         menu.append_section (null, section);
         menu.append_section (null, section2);
         return menu;

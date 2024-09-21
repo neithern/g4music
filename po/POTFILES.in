@@ -7,6 +7,7 @@ src/gtk/store-panel.ui
 src/action-handles.vala
 src/application.vala
 src/main.vala
+src/ui/dialogs.vala
 src/ui/music-list.vala
 src/ui/music-widgets.vala
 src/ui/play-bar.vala

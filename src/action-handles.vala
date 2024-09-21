@@ -110,7 +110,7 @@ namespace G4 {
             else if (node is Music)
                 playlist = to_playlist ({ (Music) node });
             if (playlist != null)
-                _app.save_to_playlist_file_async.begin ((!)playlist, (obj, res) => _app.save_to_playlist_file_async.end (res));
+                _app.show_add_playlist_dialog.begin ((!)playlist, (obj, res) => _app.show_add_playlist_dialog.end (res));
         }
 
         private void export_cover (SimpleAction action, Variant? parameter) {
@@ -256,51 +256,5 @@ namespace G4 {
             else
                 _app.sort_mode = _app.sort_mode + 1;
         }
-    }
-
-    public async File? show_save_file_dialog (Gtk.Window? parent, File? initial = null, Gtk.FileFilter[]? filters = null) {
-        Gtk.FileFilter? default_filter = filters != null && ((!)filters).length > 0 ? ((!)filters)[0] : (Gtk.FileFilter?) null;
-#if GTK_4_10
-        var filter_list = new ListStore (typeof (Gtk.FileFilter));
-        if (filters != null) {
-            foreach (var filter in (!)filters) 
-                filter_list.append (filter);
-        }
-        var dialog = new Gtk.FileDialog ();
-        dialog.filters = filter_list;
-        dialog.modal = true;
-        dialog.set_default_filter (default_filter);
-        dialog.set_initial_file (initial);
-        try {
-            return yield dialog.save (parent, null);
-        } catch (Error e) {
-        }
-        return null;
-#else
-        var result = new File?[] { (File?) null };
-        var chooser = new Gtk.FileChooserNative (null, parent, Gtk.FileChooserAction.SAVE, null, null);
-        chooser.modal = true;
-        try {
-            chooser.set_current_folder (initial?.get_parent ());
-            chooser.set_current_name (initial?.get_basename () ?? "");
-        } catch (Error e) {
-        }
-        if (filters != null) {
-            foreach (var filter in (!)filters) 
-                chooser.add_filter (filter);
-            if (default_filter != null)
-                chooser.set_filter ((!)default_filter);
-        }
-        chooser.response.connect ((id) => {
-            var file = chooser.get_file ();
-            if (id == Gtk.ResponseType.ACCEPT && file is File) {
-                result[0] = file;
-                Idle.add (show_save_file_dialog.callback);
-            }
-        });
-        chooser.show ();
-        yield;
-        return result[0];
-#endif
     }
 }

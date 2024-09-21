@@ -482,6 +482,20 @@ namespace G4 {
             _sort_map[model] = mode;
         }
 
+        public async void show_add_playlist_dialog (Playlist playlist) {
+            var dialog = new PlaylistDialog (this);
+            var result = yield dialog.choose (active_window);
+            if (result) {
+                var pls = dialog.playlist;
+                if (pls != null) {
+                    playlist.list_uri = ((!)pls).list_uri;
+                    yield add_playlist_to_file_async (playlist, true);
+                } else {
+                    yield save_to_playlist_file_async (playlist);
+                }
+            }
+        }
+    
         public void show_uri_with_portal (string? uri) {
             if (uri != null) {
                 _portal.open_directory_async.begin ((!)uri,
