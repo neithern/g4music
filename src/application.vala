@@ -279,12 +279,12 @@ namespace G4 {
 
         public async bool add_playlist_to_file_async (Playlist playlist, bool append) {
             var file = File.new_for_uri (playlist.list_uri);
-            var names = new string?[1] { null };
             var uris = new GenericArray<string> (1024);
             var saved = yield run_async <bool> (() => {
+                string? name = null;
                 var map = new GenericSet<string> (str_hash, str_equal);
                 if (append) {
-                    names[0] = load_playlist_file (file, uris);
+                    name = load_playlist_file (file, uris);
                     uris.foreach ((uri) => map.add (uri));
                 }
                 playlist.foreach ((music) => {
@@ -292,19 +292,21 @@ namespace G4 {
                     if (!map.contains (uri))
                         uris.add (uri);
                 });
-                return save_playlist_file (file, uris, names[0] ?? playlist.title);
-            });
-            if (saved) {
-                if (append && names[0] != null) {
+                var ret = save_playlist_file (file, uris, name ?? playlist.title);
+                if (ret) {
                     //  Replace items if loaded from existing file
                     playlist.clear ();
                     foreach (var uri in uris) {
                         var music = _loader.find_cache (uri);
                         if (music != null)
-                            playlist.add_music ((!)music);
+                            playlist.add_music ((!)music, true);
                     }
-                    playlist.set_title ((!)names[0]);
+                    playlist.set_cover_uri ();
+                    playlist.set_title ((!)name);
                 }
+                return ret;
+            });
+            if (saved) {
                 _loader.library.add_playlist (playlist);
                 playlist_added (playlist);
             }
@@ -349,10 +351,9 @@ namespace G4 {
         }
 
         public async void open_files_async (File[] files, bool play_now = false) {
-            var musics = new GenericArray<Music> (4096);
-            yield _loader.load_files_async (files, musics);
-            if (musics.length > 0) {
-                var playlist = new Playlist ("", "", musics);
+            var playlist = new Playlist ("");
+            yield _loader.load_files_async (files, playlist.items);
+            if (playlist.length > 0) {
                 if (play_now) {
                     play (playlist);
                 } else {

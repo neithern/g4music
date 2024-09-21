@@ -262,13 +262,14 @@ namespace G4 {
             lock (_library) {
                 foreach (var file in playlists) {
                     if (file.is_native ()) {
-                        var arr = new GenericArray<Music> (128);
-                        var name = load_playlist (file, arr);
-                        if (name != null && arr.length > 0) {
-                            var playlist = new Playlist ((!)name, file.get_uri (), arr);
+                        var playlist = new Playlist ("", file.get_uri ());
+                        var name = load_playlist (file, playlist.items);
+                        if (name != null && playlist.length > 0) {
+                            playlist.set_cover_uri ();
+                            playlist.set_title ((!)name);
                             _library.add_playlist (playlist);
                             if (merge_lists)
-                                playlist.foreach ((music) => musics.add (music));
+                                musics.extend (playlist.items, (src) => src);
                         }
                     }
                 }

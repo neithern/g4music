@@ -224,11 +224,7 @@ namespace G4 {
 
         private MusicList create_album_list (Artist? artist = null) {
             var list = new MusicList (_app, typeof (Album), artist);
-            list.item_activated.connect ((position, obj) => {
-                if (obj is Album) {
-                    create_sub_stack_page (artist, (Album) obj);
-                }
-            });
+            list.item_activated.connect ((position, obj) => create_sub_stack_page (artist, obj as Album));
             list.item_created.connect ((item) => {
                 var cell = (MusicWidget) item.child;
                 make_right_clickable (cell, cell.show_popover_menu);
@@ -253,11 +249,7 @@ namespace G4 {
 
         private MusicList create_artist_list () {
             var list = new MusicList (_app, typeof (Artist));
-            list.item_activated.connect ((position, obj) => {
-                if (obj is Artist) {
-                    create_sub_stack_page ((Artist) obj);
-                }
-            });
+            list.item_activated.connect ((position, obj) => create_sub_stack_page (obj as Artist));
             list.item_created.connect ((item) => {
                 var cell = (MusicWidget) item.child;
                 cell.cover.ratio = 0.5;
@@ -322,11 +314,7 @@ namespace G4 {
 
         private MusicList create_playlist_list () {
             var list = new MusicList (_app, typeof (Playlist));
-            list.item_activated.connect ((position, obj) => {
-                if (obj is Playlist) {
-                    create_sub_stack_page (null, (Playlist) obj);
-                }
-            });
+            list.item_activated.connect ((position, obj) => create_sub_stack_page (null, obj as Playlist));
             list.item_created.connect ((item) => {
                 var cell = (MusicWidget) item.child;
                 make_right_clickable (cell, cell.show_popover_menu);
@@ -350,7 +338,7 @@ namespace G4 {
             var mlist = album_mode ? create_music_list ((!)album, artist_mode) : create_album_list (artist);
             mlist.create_factory ();
 
-            var title = album_mode ? album?.album : artist?.artist;
+            var title = album_mode ? album?.title : artist?.title;
             var label = new Gtk.Label (title);
             label.ellipsize = Pango.EllipsizeMode.MIDDLE;
             var icon_name = (album is Playlist) ? "emblem-documents-symbolic" : (album_mode ? "media-optical-cd-audio-symbolic" : "avatar-default-symbolic");
@@ -525,6 +513,7 @@ namespace G4 {
         private void on_playlist_added (Playlist playlist) {
             _playlist_list.data_store.remove_all ();
             _library.get_sorted_playlists (_playlist_list.data_store);
+            update_stack_pages (_playlist_stack);
         }
 
         private void on_search_btn_toggled () {
