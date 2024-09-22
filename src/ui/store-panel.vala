@@ -195,9 +195,9 @@ namespace G4 {
         }
 
         public bool prompt_to_save_if_modified () {
-            if (_current_list != _main_list) {
+            if (_current_list != _main_list && _current_list.modified) {
                 _current_list.prompt_save_if_modified.begin ((obj, res) => _current_list.prompt_save_if_modified.end (res));
-                return _current_list.modified;
+                return true;
             }
             return false;
         }

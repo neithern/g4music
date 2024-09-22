@@ -230,12 +230,11 @@ namespace G4 {
 
                 var ret = yield show_alert_dialog (_("Playlist is modified, save it?"), root as Gtk.Window);
                 if (ret) {
-                    ret |= yield _app.add_playlist_to_file_async (playlist, false);
+                    ret = yield _app.add_playlist_to_file_async (playlist, false);
                 }
-                _modified = false;
-                return ret;
+                _modified = !ret;
             }
-            return false;
+            return !_modified;
         }
 
         private Adw.Animation? _scroll_animation = null;
@@ -564,6 +563,7 @@ namespace G4 {
                 if (_modified && _prompt_to_save) {
                     prompt_save_if_modified.begin ((obj, res) => {
                         prompt_save_if_modified.end (res);
+                        _modified = false;
                         multi_selection = false;
                     });
                 } else {
@@ -670,8 +670,7 @@ namespace G4 {
                     uris.add (music.uri);
                 }
                 var ret = yield run_async<bool> (() => save_playlist_file (file, uris), false, true);
-                if (ret)
-                    _modified = false;
+                _modified = !ret;
             }
             return !_modified;
         }
