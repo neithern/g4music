@@ -8,8 +8,7 @@ namespace G4 {
     }
 
     public class MusicWidget : Gtk.Box {
-        protected Gtk.Image _cover = new Gtk.Image ();
-        protected Gtk.Image _handle = new Gtk.Image ();
+        protected Gtk.Image _image = new Gtk.Image ();
         protected StableLabel _title = new StableLabel ();
         protected StableLabel _subtitle = new StableLabel ();
         protected RoundPaintable _paintable = new RoundPaintable ();
@@ -36,9 +35,9 @@ namespace G4 {
             }
         }
 
-        public Gtk.Image handle {
+        public Gtk.Image image {
             get {
-                return _handle;
+                return _image;
             }
         }
 
@@ -91,15 +90,15 @@ namespace G4 {
             margin_bottom = 10;
             width_request = 200;
 
-            _cover.margin_start = 8;
-            _cover.margin_end = 8;
-            _cover.margin_bottom = 8;
-            _cover.pixel_size = 160;
-            _cover.paintable = _paintable;
-            _paintable.queue_draw.connect (_cover.queue_draw);
+            _image.margin_start = 8;
+            _image.margin_end = 8;
+            _image.margin_bottom = 8;
+            _image.pixel_size = 160;
+            _image.paintable = _paintable;
+            _paintable.queue_draw.connect (_image.queue_draw);
 
             var overlay = new Gtk.Overlay ();
-            overlay.child = _cover;
+            overlay.child = _image;
             overlay.add_overlay (_playing);
             append (overlay);
 
@@ -129,13 +128,13 @@ namespace G4 {
 
             var cover_margin = compact ? 3 : 4;
             var cover_size = compact ? 36 : 48;
-            _cover.margin_top = cover_margin;
-            _cover.margin_bottom = cover_margin;
-            _cover.margin_start = 4;
-            _cover.pixel_size = cover_size;
-            _cover.paintable = _paintable;
-            _paintable.queue_draw.connect (_cover.queue_draw);
-            append (_cover);
+            _image.margin_top = cover_margin;
+            _image.margin_bottom = cover_margin;
+            _image.margin_start = 4;
+            _image.pixel_size = cover_size;
+            _image.paintable = _paintable;
+            _paintable.queue_draw.connect (_image.queue_draw);
+            append (_image);
 
             var spacing = compact ? 2 : 6;
             var vbox = new Gtk.Box (Gtk.Orientation.VERTICAL, spacing);
@@ -159,14 +158,6 @@ namespace G4 {
                 _subtitle.add_css_class ("title-secondly");
 
             append (_playing);
-
-            _handle.halign = Gtk.Align.END;
-            _handle.valign = Gtk.Align.CENTER;
-            _handle.icon_name = "view-continuous-symbolic";
-            _handle.margin_end = 4;
-            _handle.visible = false;
-            _handle.width_request = 32;
-            append (_handle);
         }
 
         public void set_titles (Music music, uint sort) {

@@ -148,11 +148,7 @@ namespace G4 {
                     _multi_selection = value;
                     _grid_view.enable_rubberband = value;
                     _grid_view.single_click_activate = !value;
-                    var movable = _editable && value;
-                    _binding_items.foreach ((music, item) => {
-                        item.selectable = value;
-                        ((MusicWidget) item.child).handle.visible = movable;
-                    });
+                    _binding_items.foreach ((music, item) => item.selectable = value);
                     if (!value)
                         _selection.unselect_all ();
                 }
@@ -334,7 +330,7 @@ namespace G4 {
             _row_min_width = item.child.width_request;
 
             if (_editable) {
-                make_draggable (child.handle, child, item);
+                make_draggable (child.image, item);
             }
             if (_selectable) {
                 child.create_music_menu.connect (on_create_music_menu);
@@ -347,7 +343,6 @@ namespace G4 {
             var item = (Gtk.ListItem) obj;
             var entry = (MusicWidget) item.child;
             var music = (Music) item.item;
-            entry.handle.visible = _multi_selection && _editable;
             entry.playing.visible = music == _current_node;
             item_binded (item);
             _binding_items[music] = item;
@@ -435,25 +430,25 @@ namespace G4 {
             return item?.child as MusicWidget;
         }
 
-        private void make_draggable (Gtk.Widget handle, Gtk.Widget icon, Gtk.ListItem item) {
-            var drag_source = new Gtk.DragSource ();
-            drag_source.actions = Gdk.DragAction.MOVE;
-            drag_source.prepare.connect ((x, y) => {
-                select_one_item (((MusicWidget) item.child).music);
+        private void make_draggable (Gtk.Widget widget, Gtk.ListItem item) {
+            var source = new Gtk.DragSource ();
+            source.actions = Gdk.DragAction.MOVE;
+            source.prepare.connect ((x, y) => {
                 if (item.selectable) {
                     var val = Value (item.get_type ());
                     val.set_object (item);
+                    select_one_item (((MusicWidget) item.child).music);
                     return new Gdk.ContentProvider.for_value (val);
                 }
                 return null;
             });
-            drag_source.drag_begin.connect ((drag) => {
+            source.drag_begin.connect ((drag) => {
                 var allocation = Gtk.Allocation ();
-                var paintable = new Gtk.WidgetPaintable (icon);
-                get_widget_bounds (handle, ref allocation);
-                drag_source.set_icon (paintable, allocation.x, allocation.y);
+                var paintable = new Gtk.WidgetPaintable (widget);
+                get_widget_bounds (widget, ref allocation);
+                source.set_icon (paintable, allocation.x, allocation.y);
             });
-            handle.add_controller (drag_source);
+            widget.add_controller (source);
         }
 
         private void set_dropping_item (int item) {
