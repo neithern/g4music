@@ -217,6 +217,27 @@ namespace G4 {
             _child_drawed = false;
         }
 
+        public async bool prompt_save_if_modified () {
+            if (_modified && _music_node is Playlist) {
+                var playlist = new Playlist (_music_node?.title ?? "Untitled");
+                playlist.list_uri = ((Playlist)_music_node).list_uri;
+
+                var count = _data_store.get_n_items ();
+                for (var i = 0; i < count; i++) {
+                    var music = (Music) _data_store.get_item (i);
+                    playlist.add_music (music);
+                }
+
+                var ret = yield show_alert_dialog (_("Playlist is modified, save it?"), root as Gtk.Window);
+                if (ret) {
+                    ret |= yield _app.add_playlist_to_file_async (playlist, false);
+                }
+                _modified = false;
+                return ret;
+            }
+            return false;
+        }
+
         private Adw.Animation? _scroll_animation = null;
 
         public void scroll_to_item (int index, bool smoothly = true) {
@@ -523,26 +544,6 @@ namespace G4 {
             return to_playlist (musics.data, _music_node?.title);
         }
 
-        private async bool prompt_to_save_playlist () {
-            if (_music_node is Playlist) {
-                var playlist = new Playlist (_music_node?.title ?? "Untitled");
-                playlist.list_uri = ((Playlist)_music_node).list_uri;
-
-                var count = _data_store.get_n_items ();
-                for (var i = 0; i < count; i++) {
-                    var music = (Music) _data_store.get_item (i);
-                    playlist.add_music (music);
-                }
-
-                var ret = yield show_alert_dialog (_("Playlist is modified, save it?"), root as Gtk.Window);
-                if (ret) {
-                    ret |= yield _app.add_playlist_to_file_async (playlist, false);
-                }
-                return ret;
-            }
-            return false;
-        }
-
         private void select_one_item (Music? node) {
             var item = find_item_in_model (_filter_model, node);
             if (item != -1)
@@ -561,9 +562,8 @@ namespace G4 {
             var back_btn = new Gtk.Button.from_icon_name ("go-previous-symbolic");
             back_btn.clicked.connect (() => {
                 if (_modified && _prompt_to_save) {
-                    prompt_to_save_playlist.begin ((obj, res) => {
-                        if (prompt_to_save_playlist.end (res))
-                            _modified = false;
+                    prompt_save_if_modified.begin ((obj, res) => {
+                        prompt_save_if_modified.end (res);
                         multi_selection = false;
                     });
                 } else {
@@ -669,7 +669,7 @@ namespace G4 {
                     var music = (Music) store.get_item (i);
                     uris.add (music.uri);
                 }
-                var ret = yield run_async<bool> (() => save_playlist_file (file, uris));
+                var ret = yield run_async<bool> (() => save_playlist_file (file, uris), false, true);
                 if (ret)
                     _modified = false;
             }

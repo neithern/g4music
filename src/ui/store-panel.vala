@@ -194,6 +194,14 @@ namespace G4 {
             initialize_library_view ();
         }
 
+        public bool prompt_to_save_if_modified () {
+            if (_current_list != _main_list) {
+                _current_list.prompt_save_if_modified.begin ((obj, res) => _current_list.prompt_save_if_modified.end (res));
+                return _current_list.modified;
+            }
+            return false;
+        }
+
         public void save_main_list_if_modified () {
             _main_list.save_if_modified.begin ((obj, res)
                 => _main_list.save_if_modified.end (res));

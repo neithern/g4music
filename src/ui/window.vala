@@ -123,6 +123,10 @@ namespace G4 {
                 this.visible = false;
                 return true;
             }
+            if (_store_panel.prompt_to_save_if_modified ()) {
+                present ();
+                return true;
+            }
             _store_panel.save_main_list_if_modified ();
             return false;
         }
