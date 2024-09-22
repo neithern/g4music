@@ -113,7 +113,9 @@ namespace G4 {
         }
 
         public override void snapshot (Gtk.Snapshot snapshot) {
-            draw_outset_shadow (snapshot, 0, 0, get_width (), get_height ());
+            var rect = Graphene.Rect ();
+            rect.init (0, 0, get_width (), get_height ());
+            draw_outset_shadow (snapshot, rect);
             base.snapshot (snapshot);
         }
 

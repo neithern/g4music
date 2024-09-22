@@ -252,24 +252,22 @@ namespace G4 {
         public override void snapshot (Gtk.Snapshot snapshot) {
             if (_header_revealer?.reveal_child ?? false) {
                 var child = (!)_header_revealer;
-                var allocation = Gtk.Allocation ();
-                get_widget_bounds (child, ref allocation);
-                draw_outset_shadow (snapshot, allocation.x, allocation.y, allocation.width, allocation.height);
-            }
-            if (_dropping_item >= 0) {
-                var allocation = Gtk.Allocation ();
-                get_widget_bounds (_scroll_view, ref allocation);
-                var row_width = (float) _grid_view.get_width () / _columns;
-                var col = _dropping_item % _columns;
-                var row = _dropping_item / _columns;
-                var x = row_width * col + allocation.x + _grid_view.margin_start;
-                var y = _row_height * row + allocation.y + _grid_view.margin_top - _scroll_view.vadjustment.value;
                 var rect = Graphene.Rect ();
-                rect.init (x, (float) y, row_width, scale_factor * 0.5f);
-                var color = Gdk.RGBA ();
-                color.alpha = 1f;
-                color.red = color.green = color.blue = 0.5f;
-                snapshot.append_color (color, rect);
+                child.compute_bounds (this, out rect);
+                draw_outset_shadow (snapshot, rect);
+            }
+            Object? obj = null;
+            if (_dropping_item >= 0 && (obj = _filter_model.get_item (_dropping_item)) is Music) {
+                var item = _binding_items[(Music) obj];
+                if (item is Gtk.ListItem) {
+                    var rect = Graphene.Rect ();
+                    item.child.compute_bounds (this, out rect);
+                    rect.size.height = scale_factor * 0.5f;
+                    var color = Gdk.RGBA ();
+                    color.alpha = 1f;
+                    color.red = color.green = color.blue = 0.5f;
+                    snapshot.append_color (color, rect);
+                }
             }
             base.snapshot (snapshot);
         }
@@ -478,10 +476,8 @@ namespace G4 {
                 return null;
             });
             source.drag_begin.connect ((drag) => {
-                var allocation = Gtk.Allocation ();
                 var paintable = new Gtk.WidgetPaintable (widget);
-                get_widget_bounds (widget, ref allocation);
-                source.set_icon (paintable, allocation.x, allocation.y);
+                source.set_icon (paintable, 0, 0);
             });
             widget.add_controller (source);
         }
@@ -689,13 +685,5 @@ namespace G4 {
         var item = new MenuItem (label, null);
         item.set_action_and_target_value (action, new Variant.string (button_name));
         return item;
-    }
-
-    public void get_widget_bounds (Gtk.Widget widget, ref Gtk.Allocation allocation) {
-#if GTK_4_10
-        widget.get_bounds (out allocation.x, out allocation.y, out allocation.width, out allocation.height);
-#else
-        widget.get_allocation (out allocation);
-#endif
     }
 }
