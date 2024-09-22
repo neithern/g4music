@@ -78,6 +78,15 @@ namespace G4 {
             return _result;
         }
 
+        public override void measure (Gtk.Orientation orientation, int for_size, out int minimum, out int natural, out int minimum_baseline, out int natural_baseline) {
+            base.measure (orientation, for_size, out minimum, out natural, out minimum_baseline, out natural_baseline);
+            if (orientation == Gtk.Orientation.VERTICAL) {
+                var height = transient_for.get_height ();
+                if (natural > height && height > 0)
+                    natural = height;
+            }
+        }
+
         private void on_music_library_changed (bool external) {
             if (external) {
                 unowned var store = _list.data_store;
