@@ -14,6 +14,7 @@ namespace G4 {
         private Type _item_type = typeof (Music);
         protected bool _modified = false;
         private Music? _music_node = null;
+        private bool _selectable = false;
 
         private Gtk.ScrolledWindow _scroll_view = new Gtk.ScrolledWindow ();
         private Gtk.MultiSelection _selection;
@@ -30,7 +31,7 @@ namespace G4 {
         public signal void item_binded (Gtk.ListItem item);
         public signal void item_created (Gtk.ListItem item);
 
-        public MusicList (Application app, Type item_type = typeof (Music), Music? node = null, bool editable = false) {
+        public MusicList (Application app, Type item_type = typeof (Music), Music? node = null, bool editable = false, bool selectable = true) {
             orientation = Gtk.Orientation.VERTICAL;
             hexpand = true;
             append (_scroll_view);
@@ -40,6 +41,7 @@ namespace G4 {
             _filter_model.model = _data_store;
             _item_type = item_type;
             _music_node = node;
+            _selectable = selectable;
             _thmbnailer = app.thumbnailer;
 
             _selection = new Gtk.MultiSelection (_filter_model);
@@ -331,11 +333,14 @@ namespace G4 {
             item_created (item);
             _row_min_width = item.child.width_request;
 
-            child.create_music_menu.connect (on_create_music_menu);
-            make_right_clickable (child, child.show_popover_menu);
-            make_long_pressable (child, (widget, x, y) => multi_selection = true);
-            if (_editable)
+            if (_editable) {
                 make_draggable (child.handle, child, item);
+            }
+            if (_selectable) {
+                child.create_music_menu.connect (on_create_music_menu);
+                make_right_clickable (child, child.show_popover_menu);
+                make_long_pressable (child, (widget, x, y) => multi_selection = true);
+            }
         }
 
         private void on_bind_item (Object obj) {

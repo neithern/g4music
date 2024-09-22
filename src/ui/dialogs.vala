@@ -33,7 +33,7 @@ namespace G4 {
             });
 
             var loading_paintable = app.thumbnailer.create_simple_text_paintable ("...", Thumbnailer.ICON_SIZE);
-            var list = _list = new MusicList (app, typeof (Playlist));
+            var list = _list = new MusicList (app, typeof (Playlist), null, false, false);
             list.hexpand = true;
             list.vexpand = true;
             list.item_activated.connect ((position, obj) => {
