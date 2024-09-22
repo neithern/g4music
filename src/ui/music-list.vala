@@ -406,11 +406,9 @@ namespace G4 {
             var adj = _scroll_view.vadjustment;
             var range = adj.upper - adj.lower;
             var count = visible_count;
-            if (count > 0 && _row_min_width > 0 && _scroll_range != range && range > _grid_view.get_height ()) {
-                var max_columns = _grid_view.get_max_columns ();
-                var min_columns = _grid_view.get_min_columns ();
+            if (count > 0 && _row_min_width > 0 && _scroll_range != range) {
                 var columns = _grid_view.get_width () / _row_min_width;
-                _columns = uint.min (uint.max (columns, min_columns), max_columns);
+                _columns = columns.clamp (_grid_view.get_min_columns (), _grid_view.get_max_columns ());
                 _row_height = range / ((count + _columns - 1) / _columns);
                 _scroll_range = range;
             }
