@@ -50,8 +50,8 @@ namespace G4 {
             });
             list.create_factory ();
 
-            app.music_store_changed.connect (on_music_store_changed);
-            on_music_store_changed (true);
+            app.music_library_changed.connect (on_music_library_changed);
+            on_music_library_changed (true);
 
             search_btn.toggled.connect (on_search_btn_toggled);
             search_bar.key_capture_widget = content;
@@ -78,7 +78,7 @@ namespace G4 {
             return _result;
         }
 
-        private void on_music_store_changed (bool external) {
+        private void on_music_library_changed (bool external) {
             if (external) {
                 unowned var store = _list.data_store;
                 _app.loader.library.overwrite_playlists_to (store);
@@ -113,7 +113,7 @@ namespace G4 {
         }
 
         private void set_result (bool result) {
-            _app.music_store_changed.disconnect (on_music_store_changed);
+            _app.music_library_changed.disconnect (on_music_library_changed);
             _result = result;
             if (_callback != null)
                 Idle.add ((!)_callback);

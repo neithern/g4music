@@ -12,7 +12,7 @@ namespace G4 {
         private uint _mpris_id = 0;
         private MusicLoader _loader = new MusicLoader ();
         private Gtk.FilterListModel _music_list = new Gtk.FilterListModel (null, null);
-        private ListStore _music_store = new ListStore (typeof (Music));
+        private ListStore _music_queue = new ListStore (typeof (Music));
         private StringBuilder _next_uri = new StringBuilder ();
         private GstPlayer _player = new GstPlayer ();
         private Portal _portal = new Portal ();
@@ -25,7 +25,7 @@ namespace G4 {
         public signal void index_changed (int index, uint size);
         public signal void music_changed (Music? music);
         public signal void music_cover_parsed (Music music, Gdk.Pixbuf? cover, string? cover_uri);
-        public signal void music_store_changed (bool external);
+        public signal void music_library_changed (bool external);
         public signal void playlist_added (Playlist playlist);
 
         public Application () {
@@ -40,9 +40,9 @@ namespace G4 {
 
             _actions = new ActionHandles (this);
 
-            _music_list.model = _music_store;
+            _music_list.model = _music_queue;
             _music_list.items_changed.connect (on_music_list_changed);
-            _music_store.items_changed.connect (on_music_store_changed);
+            _music_queue.items_changed.connect (on_music_library_changed);
             _loader.loading_changed.connect ((loading) => _loading = loading);
             _loader.music_found.connect (on_music_found);
             _loader.music_lost.connect (on_music_lost);
@@ -92,7 +92,7 @@ namespace G4 {
             var window = (active_window as Window) ?? new Window (this);
             window.present ();
 
-            if (files.length > 0 && _music_store.get_n_items () > 0) {
+            if (files.length > 0 && _music_queue.get_n_items () > 0) {
                 open_files_async.begin (files, true, (obj, res) => open_files_async.end (res));
             } else {
                 load_files_async.begin (files, (obj, res) => load_files_async.end (res));
@@ -105,7 +105,7 @@ namespace G4 {
             delete_cover_tmp_file_async.begin ((obj, res) => delete_cover_tmp_file_async.end (res));
 
             //  save playing-list's sort mode only
-            _settings.set_uint ("sort-mode", _sort_map[_music_store]);
+            _settings.set_uint ("sort-mode", _sort_map[_music_queue]);
 
             if (_mpris_id != 0) {
                 Bus.unown_name (_mpris_id);
@@ -233,9 +233,9 @@ namespace G4 {
             }
         }
 
-        public ListStore music_store {
+        public ListStore music_queue {
             get {
-                return _music_store;
+                return _music_queue;
             }
         }
 
@@ -336,7 +336,7 @@ namespace G4 {
             }
 
             var musics = new GenericArray<Music> (4096);
-            yield _loader.load_files_async (files, musics, !default_mode, !default_mode, _sort_map[_music_store]);
+            yield _loader.load_files_async (files, musics, !default_mode, !default_mode, _sort_map[_music_queue]);
             if (default_mode) {
                 var arr = new GenericArray<Music> (4096);
                 var file = get_playing_list_file ();
@@ -345,9 +345,9 @@ namespace G4 {
                     musics = arr;
             }
             _store_external_changed = true;
-            _music_store.splice (0, _music_store.get_n_items (), (Object[]) musics.data);
+            _music_queue.splice (0, _music_queue.get_n_items (), (Object[]) musics.data);
 
-            var count = _music_store.get_n_items ();
+            var count = _music_queue.get_n_items ();
             var item = (count > 0 && last_uri.length > 0) ? find_music_item_by_uri (last_uri) : -1;
             current_item = (count > 0 && item == -1) ? 0 : item;
             if (_current_music != null && !default_mode) {
@@ -368,7 +368,7 @@ namespace G4 {
         }
 
         public void queue (Music? node, bool play = true) {
-            var store = _music_store;
+            var store = _music_queue;
             if (node is Playlist) {
                 var playlist = (Playlist) node;
                 var insert_pos = (uint) store.get_n_items ();
@@ -404,7 +404,7 @@ namespace G4 {
         }
 
         public void play_at_next (Music? node) {
-            var store = _music_store;
+            var store = _music_queue;
             if (node is Playlist) {
                 var playlist = (Playlist) node;
                 foreach (var music in playlist.items) {
@@ -584,13 +584,13 @@ namespace G4 {
         }
 
         private void on_music_found (GenericArray<Music> arr) {
-            var n_items = _music_store.get_n_items ();
+            var n_items = _music_queue.get_n_items ();
             if (arr.length > 0) {
                 _store_external_changed = true;
-                _music_store.splice (n_items, 0, (Object[]) arr.data);
+                _music_queue.splice (n_items, 0, (Object[]) arr.data);
             } else {
                 _store_external_changed = true;
-                _music_store.items_changed (0, n_items, n_items);
+                _music_queue.items_changed (0, n_items, n_items);
             }
         }
 
@@ -608,13 +608,13 @@ namespace G4 {
             }
         }
 
-        private void on_music_store_changed (uint position, uint removed, uint added) {
+        private void on_music_library_changed (uint position, uint removed, uint added) {
             if (removed != 0 || added != 0) {
                 if (_pending_msc_handler != 0)
                     Source.remove (_pending_msc_handler);
                 _pending_msc_handler = run_idle_once (() => {
                     _pending_msc_handler = 0;
-                    music_store_changed (_store_external_changed);
+                    music_library_changed (_store_external_changed);
                     _store_external_changed = false;
                     index_changed (_current_item, _music_list.get_n_items ());
                 });
@@ -622,11 +622,11 @@ namespace G4 {
         }
 
         private void on_music_lost (GenericSet<Music> removed) {
-            var n_items = _music_store.get_n_items ();
+            var n_items = _music_queue.get_n_items ();
             if (removed.length > 0) {
                 var remain = new GenericArray<Music> (n_items);
                 for (var i = 0; i < n_items; i++) {
-                    var music = (Music) _music_store.get_item (i);
+                    var music = (Music) _music_queue.get_item (i);
                     if (removed.contains (music)) {
                         if (_current_item > i)
                             _current_item--;
@@ -635,11 +635,11 @@ namespace G4 {
                     }
                 }
                 _store_external_changed = true;
-                _music_store.splice (0, n_items, (Object[]) remain.data);
+                _music_queue.splice (0, n_items, (Object[]) remain.data);
                 current_item = _current_item;
             } else {
                 _store_external_changed = true;
-                _music_store.items_changed (0, n_items, n_items);
+                _music_queue.items_changed (0, n_items, n_items);
             }
         }
 

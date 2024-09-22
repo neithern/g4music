@@ -69,7 +69,7 @@ namespace G4 {
             search_entry.search_changed.connect (on_search_text_changed);
 
             _main_list = create_main_music_list ();
-            _main_list.data_store = _app.music_store;
+            _main_list.data_store = _app.music_queue;
             _app.music_list = _main_list.filter_model;
             _current_list = _main_list;
             stack_view.add_titled (_main_list, PageName.PLAYING, _("Playing")).icon_name = "user-home-symbolic";
@@ -118,7 +118,7 @@ namespace G4 {
             app.end_of_playlist.connect (on_end_of_playlist);
             app.index_changed.connect (on_index_changed);
             app.music_changed.connect (on_music_changed);
-            app.music_store_changed.connect (on_music_store_changed);
+            app.music_library_changed.connect (on_music_library_changed);
             app.playlist_added.connect (on_playlist_added);
 
             var settings = app.settings;
@@ -488,7 +488,7 @@ namespace G4 {
 
         private GenericSet<unowned Stack> _changing_stacks = new GenericSet<unowned Stack> (direct_hash, direct_equal);
 
-        private void on_music_store_changed (bool external) {
+        private void on_music_library_changed (bool external) {
             if (external) {
                 _updating_store = true;
                 _main_list.modified |= _app.list_modified;
