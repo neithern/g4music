@@ -589,6 +589,7 @@ namespace G4 {
                 _store_external_changed = true;
                 _music_store.splice (n_items, 0, (Object[]) arr.data);
             } else {
+                _store_external_changed = true;
                 _music_store.items_changed (0, n_items, n_items);
             }
         }
@@ -637,6 +638,7 @@ namespace G4 {
                 _music_store.splice (0, n_items, (Object[]) remain.data);
                 current_item = _current_item;
             } else {
+                _store_external_changed = true;
                 _music_store.items_changed (0, n_items, n_items);
             }
         }

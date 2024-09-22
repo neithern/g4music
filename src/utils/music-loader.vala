@@ -330,6 +330,7 @@ namespace G4 {
                 if (info.get_is_hidden ())
                     return;
             } catch (Error e) {
+                return;
             }
 
             var arr = new GenericArray<Music> (1024);
@@ -348,9 +349,9 @@ namespace G4 {
 
         private void on_file_removed (File file) {
             var uri = file.get_uri ();
-            var n_playlists = 0;
             var music = _tag_cache.remove (uri);
             var removed = new GenericSet<Music> (direct_hash, direct_equal);
+            var result = false;
             if (music != null) {
                 lock (_library) {
                     _library.remove_music ((!)music);
@@ -358,13 +359,11 @@ namespace G4 {
                 removed.add ((!)music);
             } else {
                 lock (_library) {
-                    n_playlists = (int) _library.playlists.length;
-                    _library.remove_uri (uri, removed);
-                    n_playlists -= (int) _library.playlists.length;
+                    result = _library.remove_uri (uri, removed);
                 }
                 new DirCache (file).delete ();
             }
-            if (removed.length > 0 || n_playlists != 0) {
+            if (removed.length > 0 || result) {
                 music_lost (removed);
             }
         }

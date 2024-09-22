@@ -295,11 +295,12 @@ namespace G4 {
         }
 
         public uint update_store () {
-            if (_music_node != null) {
-                if (_music_node is Album)
-                    ((Album) _music_node).overwrite_to (_data_store);
-                else if (_music_node is Artist)
-                    ((Artist) _music_node).overwrite_store (_data_store);
+            if (_music_node is Playlist) {
+                ((Playlist) _music_node).overwrite_to (_data_store);
+            } else if (_music_node is Album) {
+                ((Album) _music_node).overwrite_to (_data_store);
+            } else if (_music_node is Artist) {
+                ((Artist) _music_node).overwrite_store (_data_store);
             }
             return _data_store.get_n_items ();
         }

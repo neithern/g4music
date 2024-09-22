@@ -339,7 +339,7 @@ namespace G4 {
             }
         }
 
-        public void remove_uri (string uri, GenericSet<Music> removed) {
+        public bool remove_uri (string uri, GenericSet<Music> removed) {
             var prefix = uri + "/";
             var n_removed = _albums.foreach_remove ((name, album) => {
                 album.foreach_remove ((uri, music) => {
@@ -356,8 +356,9 @@ namespace G4 {
                 _artists.foreach_remove ((name, artist) => artist.remove_music (music) && artist.length == 0);
             });
             if (n_removed == 0) {
-                _playlists.remove (uri);
+                n_removed += _playlists.remove (uri) ? 1 : 0;
             }
+            return n_removed != 0;
         }
 
         public void remove_all () {
