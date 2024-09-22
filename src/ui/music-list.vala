@@ -294,6 +294,17 @@ namespace G4 {
             return item;
         }
 
+        public void update_item_cover (Music music, Gdk.Paintable paintable) {
+            var item = _binding_items[music];
+            if (item is Gtk.ListItem) {
+                item_unbinded (item);
+                item_binded (item);
+                var widget = item.child as MusicWidget;
+                if (widget != null)
+                    ((!)widget).paintable = paintable;
+            }
+        }
+
         public uint update_store () {
             if (_music_node is Playlist) {
                 ((Playlist) _music_node).overwrite_to (_data_store);

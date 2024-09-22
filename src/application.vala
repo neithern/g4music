@@ -27,6 +27,7 @@ namespace G4 {
         public signal void music_cover_parsed (Music music, Gdk.Pixbuf? cover, string? cover_uri);
         public signal void music_library_changed (bool external);
         public signal void playlist_added (Playlist playlist);
+        public signal void thumbnail_changed (Music music, Gdk.Paintable paintable);
 
         public Application () {
             Object (application_id: Config.APP_ID, flags: ApplicationFlags.HANDLES_OPEN);
@@ -690,7 +691,8 @@ namespace G4 {
         private async void on_player_tag_parsed (string? uri, Gst.TagList? tags) {
             if (_current_music != null && strcmp (_current_uri, uri) == 0) {
                 var music = _loader.find_cache (_current_uri) ?? (!)_current_music;
-                if (music.title.length == 0 && tags != null && music.from_gst_tags ((!)tags)) {
+                if (music.has_unknown () && tags != null && music.from_gst_tags ((!)tags)) {
+                    _loader.add_to_cache (music);
                     music_changed (music);
                 }
 
@@ -747,6 +749,7 @@ namespace G4 {
                     if (minbuf != null) {
                         var paintable = Gdk.Texture.for_pixbuf ((!)minbuf);
                         _thumbnailer.put (music, paintable, true, Thumbnailer.ICON_SIZE);
+                        thumbnail_changed (music, paintable);
                     }
                 }
             }

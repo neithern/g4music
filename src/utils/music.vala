@@ -134,6 +134,10 @@ namespace G4 {
             return changed;
         }
 
+        public bool has_unknown () {
+            return title.length == 0 || artist == UNKNOWN_ARTIST || album == UNKNOWN_ALBUM;
+        }
+
         public Music.deserialize (DataInputBytes dis) throws IOError {
             album = dis.read_string ();
             artist = dis.read_string ();
@@ -188,10 +192,10 @@ namespace G4 {
 
                 int track_index = 0;
                 var pos = name.index_of_char ('.');
-                if (pos > 0) {
+                if (pos > 0 && pos < name.length - 1) {
                     // assume prefix number as track index
-                    int.try_parse (name.substring (0, pos), out track_index, null, 10);
-                    name = name.substring (pos + 1);
+                    if (int.try_parse (name.substring (0, pos), out track_index, null, 10))
+                        name = name.substring (pos + 1);
                 }
 
                 //  split the file name by '-'

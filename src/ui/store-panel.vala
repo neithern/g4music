@@ -120,6 +120,7 @@ namespace G4 {
             app.music_changed.connect (on_music_changed);
             app.music_library_changed.connect (on_music_library_changed);
             app.playlist_added.connect (on_playlist_added);
+            app.thumbnail_changed.connect (on_thumbnail_changed);
 
             var settings = app.settings;
             settings.bind ("sort-mode", this, "sort-mode", SettingsBindFlags.DEFAULT);
@@ -559,6 +560,10 @@ namespace G4 {
                 model.set_filter (null);
             }
             model.get_filter ()?.changed (Gtk.FilterChange.DIFFERENT);
+        }
+
+        private void on_thumbnail_changed (Music music, Gdk.Paintable paintable) {
+            _current_list.update_item_cover (music, paintable);
         }
 
         private void update_sort_mode (uint mode) {
