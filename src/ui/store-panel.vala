@@ -19,7 +19,7 @@ namespace G4 {
     [GtkTemplate (ui = "/com/github/neithern/g4music/gtk/store-panel.ui")]
     public class StorePanel : Gtk.Box, SizeWatcher {
         [GtkChild]
-        private unowned Gtk.HeaderBar header_bar;
+        public unowned Gtk.HeaderBar header_bar;
         [GtkChild]
         private unowned Gtk.MenuButton sort_btn;
         [GtkChild]

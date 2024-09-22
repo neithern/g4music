@@ -29,13 +29,13 @@ namespace G4 {
             add_action_entries (action_entries, this);
 
             _progress_bar.hexpand = true;
-            _progress_bar.margin_top = 46;  // at the bottom of the header_bar
             _progress_bar.pulse_step = 0.02;
             _progress_bar.sensitive = false;
             _progress_bar.visible = false;
             _progress_bar.add_css_class ("osd");
             overlay.child = _leaflet;
             overlay.add_overlay (_progress_bar);
+            overlay.get_child_position.connect (on_overlay_child_position);
             app.loader.loading_changed.connect (on_loading_changed);
 
             _bkgnd_paintable.queue_draw.connect (this.queue_draw);
@@ -212,6 +212,16 @@ namespace G4 {
                 _progress_bar.fraction = fraction;
             else
                 _progress_bar.pulse ();
+            return true;
+        }
+
+        private bool on_overlay_child_position (Gtk.Widget widget, out Gdk.Rectangle rect) {
+            rect = Gdk.Rectangle ();
+            rect.x = rect.y = rect.width = rect.height = 0;
+            if (widget == _progress_bar) {
+                rect.y = _store_panel.header_bar.get_height ();
+                rect.width = _store_panel.get_width ();
+            }
             return true;
         }
 
