@@ -59,6 +59,7 @@ namespace G4 {
             _scroll_view.child = _grid_view;
             _scroll_view.hscrollbar_policy = Gtk.PolicyType.NEVER;
             _scroll_view.vscrollbar_policy = Gtk.PolicyType.AUTOMATIC;
+            _scroll_view.propagate_natural_height = true;
             _scroll_view.vexpand = true;
             _scroll_view.vadjustment.changed.connect (on_vadjustment_changed);
 

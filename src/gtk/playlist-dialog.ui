@@ -2,11 +2,12 @@
 <interface>
   <requires lib="gtk" version="4.0"/>
   <template class="G4PlaylistDialog" parent="GtkWindow">
-    <property name="default-width">360</property>
-    <property name="default-height">480</property>
     <child type="titlebar">
       <object class="GtkHeaderBar" id="header_bar">
         <property name="hexpand">true</property>
+        <style>
+          <class name="flat"/>
+        </style>
         <child type="title">
           <object class="GtkLabel">
             <property name="label" translatable="yes">Add to Playlist</property>
