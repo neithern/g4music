@@ -486,20 +486,24 @@ namespace G4 {
             _mini_bar.title = music?.title ?? "";
         }
 
-        private void on_music_store_changed () {
-            _updating_store = true;
-            _main_list.modified |= _app.list_modified;
-            _album_list.data_store.remove_all ();
-            _artist_list.data_store.remove_all ();
-            _playlist_list.data_store.remove_all ();
-            if (_size_allocated) {
-                update_visible_store ();
-                update_stack_pages (_artist_stack);
-                update_stack_pages (_album_stack);
-                update_stack_pages (_playlist_stack);
-                initialize_library_view ();
+        private GenericSet<unowned Stack> _changing_stacks = new GenericSet<unowned Stack> (direct_hash, direct_equal);
+
+        private void on_music_store_changed (bool external) {
+            if (external) {
+                _updating_store = true;
+                _main_list.modified |= _app.list_modified;
+                if (_size_allocated) {
+                    _changing_stacks.add (_artist_stack);
+                    _changing_stacks.add (_album_stack);
+                    _changing_stacks.add (_playlist_stack);
+                    update_visible_store ();
+                    update_stack_pages (_artist_stack);
+                    update_stack_pages (_album_stack);
+                    update_stack_pages (_playlist_stack);
+                    initialize_library_view ();
+                }
+                _updating_store = false;
             }
-            _updating_store = false;
         }
 
         private void on_page_popped (Gtk.Widget? child) {
@@ -507,8 +511,8 @@ namespace G4 {
         }
 
         private void on_playlist_added (Playlist playlist) {
-            _playlist_list.data_store.remove_all ();
-            _library.get_sorted_playlists (_playlist_list.data_store);
+            _changing_stacks.add (_playlist_stack);
+            update_visible_store ();
             update_stack_pages (_playlist_stack);
         }
 
@@ -579,13 +583,13 @@ namespace G4 {
         }
 
         private void update_visible_store () {
-            var visible_child = stack_view.visible_child;
-            if (visible_child == _album_stack.widget && _album_list.data_store.get_n_items () == 0) {
-                _library.get_sorted_albums (_album_list.data_store);
-            } else if (visible_child == _artist_stack.widget && _artist_list.data_store.get_n_items () == 0) {
-                _library.get_sorted_artists (_artist_list.data_store);
-            } else if (visible_child == _playlist_stack.widget && _playlist_list.data_store.get_n_items () == 0) {
-                _library.get_sorted_playlists (_playlist_list.data_store);
+            var child = stack_view.visible_child;
+            if (child == _album_stack.widget && _changing_stacks.remove (_album_stack)) {
+                _library.overwrite_albums_to (_album_list.data_store);
+            } else if (child == _artist_stack.widget && _changing_stacks.remove (_artist_stack)) {
+                _library.overwrite_artists_to (_artist_list.data_store);
+            } else if (child == _playlist_stack.widget && _changing_stacks.remove (_playlist_stack)) {
+                _library.overwrite_playlists_to (_playlist_list.data_store);
                 _playlist_list.set_empty_text (_("No playlist found"));
             }
         }

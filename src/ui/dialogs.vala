@@ -51,7 +51,7 @@ namespace G4 {
             list.create_factory ();
 
             app.music_store_changed.connect (on_music_store_changed);
-            on_music_store_changed ();
+            on_music_store_changed (true);
 
             search_btn.toggled.connect (on_search_btn_toggled);
             search_bar.key_capture_widget = content;
@@ -78,12 +78,13 @@ namespace G4 {
             return _result;
         }
 
-        private void on_music_store_changed () {
-            unowned var store = _list.data_store;
-            store.remove_all ();
-            _app.loader.library.get_sorted_playlists (store);
-            if (store.get_n_items () == 0)
-                _list.set_empty_text (_("No playlist found"));
+        private void on_music_store_changed (bool external) {
+            if (external) {
+                unowned var store = _list.data_store;
+                _app.loader.library.overwrite_playlists_to (store);
+                if (store.get_n_items () == 0)
+                    _list.set_empty_text (_("No playlist found"));
+            }
         }
 
         private void on_search_btn_toggled () {

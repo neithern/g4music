@@ -17,6 +17,7 @@ namespace G4 {
         private GstPlayer _player = new GstPlayer ();
         private Portal _portal = new Portal ();
         private Settings _settings;
+        private bool _store_external_changed = false;
         private HashTable<unowned ListModel, uint> _sort_map = new HashTable<unowned ListModel, uint> (direct_hash, direct_equal);
         private Thumbnailer _thumbnailer = new Thumbnailer ();
 
@@ -24,7 +25,7 @@ namespace G4 {
         public signal void index_changed (int index, uint size);
         public signal void music_changed (Music? music);
         public signal void music_cover_parsed (Music music, Gdk.Pixbuf? cover, string? cover_uri);
-        public signal void music_store_changed ();
+        public signal void music_store_changed (bool external);
         public signal void playlist_added (Playlist playlist);
 
         public Application () {
@@ -343,6 +344,7 @@ namespace G4 {
                 if (arr.length > 0)
                     musics = arr;
             }
+            _store_external_changed = true;
             _music_store.splice (0, _music_store.get_n_items (), (Object[]) musics.data);
 
             var count = _music_store.get_n_items ();
@@ -380,7 +382,7 @@ namespace G4 {
                     }
                 }
                 _list_modified = true;
-                playlist.insert_to_store (store, insert_pos);
+                playlist.insert_to (store, insert_pos);
                 if (play) {
                     current_music = store.get_item (insert_pos) as Music;
                     update_current_item ();
@@ -413,7 +415,7 @@ namespace G4 {
                 }
                 _list_modified = true;
                 int insert_pos = find_music_in_store (store, _current_music);
-                playlist.insert_to_store (store, insert_pos + 1);
+                playlist.insert_to (store, insert_pos + 1);
             } else if (node is Music) {
                 var music = (Music) node;
                 uint position = -1;
@@ -584,6 +586,7 @@ namespace G4 {
         private void on_music_found (GenericArray<Music> arr) {
             var n_items = _music_store.get_n_items ();
             if (arr.length > 0) {
+                _store_external_changed = true;
                 _music_store.splice (n_items, 0, (Object[]) arr.data);
             } else {
                 _music_store.items_changed (0, n_items, n_items);
@@ -610,7 +613,8 @@ namespace G4 {
                     Source.remove (_pending_msc_handler);
                 _pending_msc_handler = run_idle_once (() => {
                     _pending_msc_handler = 0;
-                    music_store_changed ();
+                    music_store_changed (_store_external_changed);
+                    _store_external_changed = false;
                     index_changed (_current_item, _music_list.get_n_items ());
                 });
             }
@@ -629,6 +633,7 @@ namespace G4 {
                         remain.add (music);
                     }
                 }
+                _store_external_changed = true;
                 _music_store.splice (0, n_items, (Object[]) remain.data);
                 current_item = _current_item;
             } else {
