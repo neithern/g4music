@@ -278,4 +278,12 @@ namespace G4 {
         widget.add_controller (gesture);
         return gesture;
     }
+
+    public void remove_controllers (Gtk.Widget widget) {
+        var controllers = widget.observe_controllers ();
+        for (var i = (int) controllers.get_n_items () - 1; i >= 0; i--) {
+            var controller = (Gtk.EventController) controllers.get_item (i);
+            widget.remove_controller (controller);
+        }
+    }
 }

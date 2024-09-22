@@ -14,9 +14,8 @@ namespace G4 {
         private Type _item_type = typeof (Music);
         protected bool _modified = false;
         private Music? _music_node = null;
-        private bool _selectable = false;
-
         private Gtk.ScrolledWindow _scroll_view = new Gtk.ScrolledWindow ();
+        private bool _selectable = false;
         private Gtk.MultiSelection _selection;
         private Thumbnailer _thmbnailer;
 
@@ -30,6 +29,7 @@ namespace G4 {
         public signal void item_activated (uint position, Object? obj);
         public signal void item_binded (Gtk.ListItem item);
         public signal void item_created (Gtk.ListItem item);
+        public signal void item_unbinded (Gtk.ListItem item);
 
         public MusicList (Application app, Type item_type = typeof (Music), Music? node = null, bool editable = false, bool selectable = true) {
             orientation = Gtk.Orientation.VERTICAL;
@@ -350,6 +350,35 @@ namespace G4 {
             item.selectable = _multi_selection;
             item_created (item);
             _row_min_width = item.child.width_request;
+        }
+
+        private void on_bind_item (Object obj) {
+            var item = (Gtk.ListItem) obj;
+            var child = (MusicWidget) item.child;
+            var music = (Music) item.item;
+            child.playing.visible = music == _current_node;
+            item_binded (item);
+            _binding_items[music] = item;
+
+            var paintable = _thmbnailer.find (music, _image_size);
+            if (paintable != null) {
+                child.paintable = paintable;
+            } else {
+                child.first_draw_handler = child.cover.first_draw.connect (() => {
+                    child.disconnect_first_draw ();
+                    _thmbnailer.load_async.begin (music, _image_size, (obj, res) => {
+                        var paintable2 = _thmbnailer.load_async.end (res);
+                        if (music == (Music) item.item) {
+                            child.paintable = paintable2;
+                        }
+                    });
+                    _child_drawed = true;
+                    if (_scrolling_item != -1) {
+                        scroll_to_item_directly (_scrolling_item);
+                        _scrolling_item = -1;
+                    }
+                });
+            }
 
             if (_editable) {
                 make_draggable (child.image, item);
@@ -361,41 +390,16 @@ namespace G4 {
             }
         }
 
-        private void on_bind_item (Object obj) {
-            var item = (Gtk.ListItem) obj;
-            var entry = (MusicWidget) item.child;
-            var music = (Music) item.item;
-            entry.playing.visible = music == _current_node;
-            item_binded (item);
-            _binding_items[music] = item;
-
-            var paintable = _thmbnailer.find (music, _image_size);
-            if (paintable != null) {
-                entry.paintable = paintable;
-            } else {
-                entry.first_draw_handler = entry.cover.first_draw.connect (() => {
-                    entry.disconnect_first_draw ();
-                    _thmbnailer.load_async.begin (music, _image_size, (obj, res) => {
-                        var paintable2 = _thmbnailer.load_async.end (res);
-                        if (music == (Music) item.item) {
-                            entry.paintable = paintable2;
-                        }
-                    });
-                    _child_drawed = true;
-                    if (_scrolling_item != -1) {
-                        scroll_to_item_directly (_scrolling_item);
-                        _scrolling_item = -1;
-                    }
-                });
-            }
-        }
-
         private void on_unbind_item (Object obj) {
             var item = (Gtk.ListItem) obj;
-            var entry = (MusicWidget) item.child;
-            entry.disconnect_first_draw ();
-            entry.paintable = null;
+            var child = (MusicWidget) item.child;
+            child.paintable = null;
+            child.disconnect_first_draw ();
+            item_unbinded (item);
             _binding_items.remove ((Music) item.item);
+
+            remove_controllers (child);
+            remove_controllers (child.image);
         }
 
         private void on_vadjustment_changed () {
