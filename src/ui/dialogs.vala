@@ -13,12 +13,15 @@ namespace G4 {
         [GtkChild]
         private unowned Gtk.SearchEntry search_entry;
 
-        private SourceFunc? _callback;
+        private Application _app;
+        private SourceFunc? _callback = null;
         private MusicList _list;
-        private Playlist? _playlist;
+        private Playlist? _playlist = null;
         private bool _result = false;
 
         public PlaylistDialog (Application app) {
+            _app = app;
+
             new_btn.clicked.connect (() => {
                 destroy ();
                 set_result (true);
@@ -46,7 +49,9 @@ namespace G4 {
                 cell.title = playlist.title;
             });
             list.create_factory ();
-            app.loader.library.get_sorted_playlists (list.data_store);
+
+            app.music_store_changed.connect (on_music_store_changed);
+            on_music_store_changed ();
 
             search_btn.toggled.connect (on_search_btn_toggled);
             search_bar.key_capture_widget = content;
@@ -71,6 +76,14 @@ namespace G4 {
             present ();
             yield;
             return _result;
+        }
+
+        private void on_music_store_changed () {
+            unowned var store = _list.data_store;
+            store.remove_all ();
+            _app.loader.library.get_sorted_playlists (store);
+            if (store.get_n_items () == 0)
+                _list.set_empty_text (_("No playlist found"));
         }
 
         private void on_search_btn_toggled () {
@@ -99,6 +112,7 @@ namespace G4 {
         }
 
         private void set_result (bool result) {
+            _app.music_store_changed.disconnect (on_music_store_changed);
             _result = result;
             if (_callback != null)
                 Idle.add ((!)_callback);
