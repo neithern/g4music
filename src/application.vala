@@ -510,10 +510,6 @@ namespace G4 {
             }
         }
 
-        public void toggle_search () {
-            (active_window as Window)?.toggle_search ();
-        }
-
         private void change_current_item (int item) {
             //  update _current_item but don't change current music
             var count = _music_list.get_n_items ();

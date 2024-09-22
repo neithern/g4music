@@ -61,7 +61,7 @@
       </item>
       <item>
         <attribute name="label" translatable="yes">_Select</attribute>
-        <attribute name="action">app.select</attribute>
+        <attribute name="action">win.select</attribute>
       </item>
     </section>
     <section>

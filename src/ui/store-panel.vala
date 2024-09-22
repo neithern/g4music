@@ -126,6 +126,12 @@ namespace G4 {
             _library_path = settings.get_strv ("library-path");
         }
 
+        public MusicList current_list {
+            get {
+                return _current_list;
+            }
+        }
+
         public uint sort_mode {
             get {
                 return _app.sort_mode;
@@ -221,10 +227,6 @@ namespace G4 {
             search_entry.select_region (0, -1);
             search_btn.active = true;
             _search_mode = mode;
-        }
-
-        public void start_select () {
-            _current_list.multi_selection = true;
         }
 
         public bool toggle_search () {

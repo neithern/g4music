@@ -20,6 +20,14 @@ namespace G4 {
             var overlay = new Gtk.Overlay ();
             this.content = overlay;
 
+            ActionEntry[] action_entries = {
+                { ACTION_BUTTON, button_command, "s" },
+                { ACTION_SEARCH, search_by, "aay" },
+                { ACTION_SELECT, start_select },
+                { ACTION_TOGGLE_SEARCH, toggle_search },
+            };
+            add_action_entries (action_entries, this);
+
             _progress_bar.hexpand = true;
             _progress_bar.margin_top = 46;  // at the bottom of the header_bar
             _progress_bar.pulse_step = 0.02;
@@ -98,18 +106,6 @@ namespace G4 {
             }
         }
 
-        public void start_select () {
-            _store_panel.start_select ();
-            if (_leaflet.folded) {
-                _leaflet.pop ();
-            }
-        }
-
-        public void toggle_search () {
-            if (_store_panel.toggle_search () && _leaflet.folded) {
-                _leaflet.pop ();
-            }
-        }
 
         private void focus_to_play_later (int delay = 100) {
             run_timeout_once (delay, () => {
@@ -241,6 +237,37 @@ namespace G4 {
             this.content.add_controller (controller);
             this.bind_property ("focus_visible", this, "focused_visible");
             this.bind_property ("focus_widget", this, "focused_widget");
+        }
+
+        private void button_command (SimpleAction action, Variant? parameter) {
+            var name = parameter?.get_string ();
+            if (name != null) {
+                _store_panel.current_list.button_command ((!)name);
+            }
+        }
+
+        private void search_by (SimpleAction action, Variant? parameter) {
+            var strv = parameter?.get_bytestring_array ();
+            if (strv != null && ((!)strv).length > 1) {
+                var arr = (!)strv;
+                var text = arr[0] + ":";
+                var mode = SearchMode.ANY;
+                parse_search_mode (ref text, ref mode);
+                start_search (arr[1], mode);
+            }
+        }
+
+        private void start_select () {
+            _store_panel.current_list.multi_selection = true;
+            if (_leaflet.folded) {
+                _leaflet.pop ();
+            }
+        }
+
+        private void toggle_search () {
+            if (_store_panel.toggle_search () && _leaflet.folded) {
+                _leaflet.pop ();
+            }
         }
 
         private void update_background () {

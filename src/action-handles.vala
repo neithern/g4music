@@ -12,13 +12,16 @@ namespace G4 {
     public const string ACTION_PREV = "prev";
     public const string ACTION_NEXT = "next";
     public const string ACTION_RELOAD = "reload";
-    public const string ACTION_SEARCH = "search";
-    public const string ACTION_SELECT = "select";
     public const string ACTION_SHOW_FILE = "show-file";
     public const string ACTION_SORT = "sort";
-    public const string ACTION_TOGGLE_SEARCH = "toggle-search";
     public const string ACTION_TOGGLE_SORT = "toggle-sort";
     public const string ACTION_QUIT = "quit";
+
+    public const string ACTION_WIN = "win.";
+    public const string ACTION_BUTTON = "button";
+    public const string ACTION_SEARCH = "search";
+    public const string ACTION_SELECT = "select";
+    public const string ACTION_TOGGLE_SEARCH = "toggle-search";
 
     struct ActionShortKey {
         public unowned string name;
@@ -43,28 +46,31 @@ namespace G4 {
                 { ACTION_PREV, () => _app.play_previous () },
                 { ACTION_PREFS, show_preferences },
                 { ACTION_RELOAD, () => _app.reload_library () },
-                { ACTION_SEARCH, search_by, "aay" },
-                { ACTION_SELECT, select },
                 { ACTION_SHOW_FILE, show_file, "aay" },
                 { ACTION_SORT, sort_by, "s", "'2'" },
-                { ACTION_TOGGLE_SEARCH, toggle_search },
                 { ACTION_TOGGLE_SORT, toggle_sort },
                 { ACTION_QUIT, () => _app.quit () }
             };
             app.add_action_entries (action_entries, this);
 
-            ActionShortKey[] action_keys = {
+            ActionShortKey[] app_keys = {
                 { ACTION_PREFS, "<primary>comma" },
                 { ACTION_PLAY_PAUSE, "<primary>p" },
                 { ACTION_PREV, "<primary>Left" },
                 { ACTION_NEXT, "<primary>Right" },
                 { ACTION_RELOAD, "<primary>r" },
-                { ACTION_TOGGLE_SEARCH, "<primary>f" },
                 { ACTION_TOGGLE_SORT, "<primary>s" },
                 { ACTION_QUIT, "<primary>q" }
             };
-            foreach (var item in action_keys) {
+            foreach (var item in app_keys) {
                 app.set_accels_for_action (ACTION_APP + item.name, {item.key});
+            }
+
+            ActionShortKey[] win_keys = {
+                { ACTION_TOGGLE_SEARCH, "<primary>f" },
+            };
+            foreach (var item in win_keys) {
+                app.set_accels_for_action (ACTION_WIN + item.name, {item.key});
             }
         }
 
@@ -172,21 +178,6 @@ namespace G4 {
             _app.play_at_next (node);
         }
 
-        private void search_by (SimpleAction action, Variant? parameter) {
-            var strv = parameter?.get_bytestring_array ();
-            if (strv != null && ((!)strv).length > 1) {
-                var arr = (!)strv;
-                var text = arr[0] + ":";
-                var mode = SearchMode.ANY;
-                parse_search_mode (ref text, ref mode);
-                (_app.active_window as Window)?.start_search (arr[1], mode);
-            }
-        }
-
-        private void select (SimpleAction action, Variant? parameter) {
-            (_app.active_window as Window)?.start_select ();
-        }
-
         private void show_about () {
             string[] authors = { "Nanling" };
             var comments = _("A fast, fluent, light weight music player written in GTK4.");
@@ -244,10 +235,6 @@ namespace G4 {
             int mode = 2;
             int.try_parse (value, out mode, null, 10);
             _app.sort_mode = mode;
-        }
-
-        public void toggle_search () {
-            (_app.active_window as Window)?.toggle_search ();
         }
 
         private void toggle_sort () {

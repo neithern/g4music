@@ -131,7 +131,7 @@ namespace G4 {
             }
         }
 
-        protected bool _has_add_to_quque = true;
+        protected bool _has_add_to_queque = true;
         protected bool _prompt_to_save = true;
         private GenericArray<Gtk.Button> _action_buttons = new GenericArray<Gtk.Button> (4);
         private Gtk.Widget? _header_bar_hided = null;
@@ -196,6 +196,15 @@ namespace G4 {
 
         public void activate_item (int item) {
             _grid_view.activate (item);
+        }
+
+        public void button_command (string name) {
+            foreach (var button in _action_buttons) {
+                if (button.name == name) {
+                    button.clicked ();
+                    break;
+                }
+            }
         }
 
         public void create_factory () {
@@ -297,7 +306,20 @@ namespace G4 {
         }
 
         private Menu? on_create_music_menu (Music? node) {
-            select_one_item (node);
+            if (_multi_selection) {
+                int position = find_item_in_model (_filter_model, node);
+                if (!_selection.is_selected (position)) {
+                    return null;
+                } else if (_selection.get_selection ().get_size () > 1) {
+                    var menu = new Menu ();
+                    menu.append_item (create_menu_item_for_button (BUTTON_INSERT, _("Play at Next"), ACTION_WIN + ACTION_BUTTON));
+                    if (_has_add_to_queque)
+                        menu.append_item (create_menu_item_for_button (BUTTON_ADDTO, _("Add to Queue"), ACTION_WIN + ACTION_BUTTON));
+                    menu.append_item (create_menu_item_for_button (BUTTON_ADDTO, _("Add to Playlist…"), ACTION_WIN + ACTION_BUTTON));
+                    menu.append_item (create_menu_item_for_button (BUTTON_REMOVE, _("Remove"), ACTION_WIN + ACTION_BUTTON));
+                    return menu;
+                }
+            }
             if (node is Album) {
                 return create_menu_for_album ((Album) node);
             } else if (node is Artist) {
@@ -306,7 +328,7 @@ namespace G4 {
                 var music = (Music) node;
                 var menu = create_menu_for_music (music);
                 if (music != _app.current_music) {
-                    if (_has_add_to_quque)
+                    if (_has_add_to_queque)
                         menu.prepend_item (create_menu_item_for_uri (music.uri, _("Add to Queue"), ACTION_APP + ACTION_ADD_TO_QUEUE));
                     /* Translators: Play this music at next position of current playing music */
                     menu.prepend_item (create_menu_item_for_uri (music.uri, _("Play at Next"), ACTION_APP + ACTION_PLAY_AT_NEXT));
@@ -579,6 +601,7 @@ namespace G4 {
                     }
                     on_selection_changed (0, 0);
                 });
+                remove_btn.name = BUTTON_REMOVE;
                 _action_buttons.add (remove_btn);
             }
 
@@ -591,17 +614,19 @@ namespace G4 {
                     playlist.foreach_remove ((uri, music) => music == (!)current);
                     _app.play_at_next (playlist);
             });
+            insert_btn.name = BUTTON_INSERT;
             _action_buttons.add (insert_btn);
 
-            if (_has_add_to_quque) {
-                var send_btn = new Gtk.Button.from_icon_name ("document-send-symbolic");
-                send_btn.tooltip_text = _("Add to Queue");
-                send_btn.clicked.connect (() => {
+            if (_has_add_to_queque) {
+                var queue_btn = new Gtk.Button.from_icon_name ("document-send-symbolic");
+                queue_btn.tooltip_text = _("Add to Queue");
+                queue_btn.clicked.connect (() => {
                     var app = (Application) GLib.Application.get_default ();
                     var playlist = create_playlist_for_selection ();
                     app.queue (playlist, false);
                 });
-                _action_buttons.add (send_btn);
+                queue_btn.name = BUTTON_QUEUE;
+                _action_buttons.add (queue_btn);
             }
 
             var add_to_btn = new Gtk.Button.from_icon_name ("document-new-symbolic");
@@ -610,6 +635,7 @@ namespace G4 {
                 var playlist = create_playlist_for_selection ();
                 _app.show_add_playlist_dialog.begin (playlist, (obj, res) => _app.show_add_playlist_dialog.end (res));
             });
+            add_to_btn.name = BUTTON_ADDTO;
             _action_buttons.add (add_to_btn);
 
             _action_buttons.foreach (header.pack_end);
@@ -619,7 +645,7 @@ namespace G4 {
     public class MainMusicList : MusicList {
         public MainMusicList (Application app) {
             base (app, typeof (Music), null, true);
-            _has_add_to_quque = false;
+            _has_add_to_queque = false;
             _prompt_to_save = false;
         }
 
@@ -639,6 +665,17 @@ namespace G4 {
             }
             return !_modified;
         }
+    }
+
+    public const string BUTTON_ADDTO = "add";
+    public const string BUTTON_INSERT = "insert";
+    public const string BUTTON_QUEUE = "queue";
+    public const string BUTTON_REMOVE = "remove";
+
+    public MenuItem create_menu_item_for_button (string button_name, string label, string action) {
+        var item = new MenuItem (label, null);
+        item.set_action_and_target_value (action, new Variant.string (button_name));
+        return item;
     }
 
     public void get_widget_bounds (Gtk.Widget widget, ref Gtk.Allocation allocation) {
