@@ -110,13 +110,10 @@ namespace G4 {
         private void add_to_playlist (SimpleAction action, Variant? parameter) {
             var strv = parameter?.get_bytestring_array ();
             var node = _parse_music_node_form_strv (strv);
-            Playlist? playlist = null;
-            if (node is Playlist)
-                playlist = (Playlist) node;
-            else if (node is Music)
-                playlist = to_playlist ({ (Music) node });
-            if (playlist != null)
+            if (node != null) {
+                var playlist = to_playlist ({ (!)node });
                 _app.show_add_playlist_dialog.begin ((!)playlist, (obj, res) => _app.show_add_playlist_dialog.end (res));
+            }
         }
 
         private void export_cover (SimpleAction action, Variant? parameter) {

@@ -383,7 +383,7 @@ namespace G4 {
                     }
                 }
                 _list_modified = true;
-                playlist.insert_to (store, insert_pos);
+                playlist.insert_to_store (store, insert_pos);
                 if (play) {
                     current_music = store.get_item (insert_pos) as Music;
                     update_current_item ();
@@ -416,7 +416,7 @@ namespace G4 {
                 }
                 _list_modified = true;
                 int insert_pos = find_music_in_store (store, _current_music);
-                playlist.insert_to (store, insert_pos + 1);
+                playlist.insert_to_store (store, insert_pos + 1);
             } else if (node is Music) {
                 var music = (Music) node;
                 uint position = -1;

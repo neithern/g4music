@@ -52,14 +52,14 @@ namespace G4 {
             return _musics.foreach_remove (func);
         }
 
-        public virtual void get_sorted (GenericArray<Music> musics) {
+        public virtual void get_sorted_musics (GenericArray<Music> musics) {
             _musics.foreach ((name, music) => musics.add (music));
             sort (musics);
         }
 
         public void overwrite_to (ListStore store) {
             var musics = new GenericArray<Music> (_musics.length);
-            get_sorted (musics);
+            get_sorted_musics (musics);
             store.splice (0, store.get_n_items (), (Object[]) musics.data);
         }
 
@@ -126,7 +126,7 @@ namespace G4 {
         public void get_sorted_musics (GenericArray<Music> musics) {
             var arr = new GenericArray<Album> (_albums.length);
             get_sorted_albums (arr);
-            arr.foreach ((album) => album.get_sorted (musics));
+            arr.foreach ((album) => album.get_sorted_musics (musics));
         }
 
         public void overwrite_store (ListStore store) {
@@ -199,11 +199,11 @@ namespace G4 {
             items.extend (musics, (src) => src);
         }
 
-        public override void get_sorted (GenericArray<Music> musics) {
+        public override void get_sorted_musics (GenericArray<Music> musics) {
             musics.extend (items, (src) => src);
         }
 
-        public void insert_to (ListStore store, uint insert_pos = 0) {
+        public void insert_to_store (ListStore store, uint insert_pos = 0) {
             store.splice (insert_pos, 0, (Object[]) items.data);
         }
 
@@ -408,7 +408,7 @@ namespace G4 {
             if (music is Artist) {
                 ((Artist) music).get_sorted_musics (playlist.items);
             } else if (music is Album) {
-                ((Album) music).get_sorted (playlist.items);
+                ((Album) music).get_sorted_musics (playlist.items);
             } else {
                 playlist.items.add (music);
             }
