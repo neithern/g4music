@@ -1,5 +1,11 @@
 namespace G4 {
 
+    public enum Result {
+        CANCEL = -1,
+        FAILED = 0,
+        OK = 1
+    }
+
     public class MusicList : Gtk.Box {
         protected Application _app;
         private HashTable<Music, Gtk.ListItem> _binding_items = new HashTable<Music, Gtk.ListItem> (direct_hash, direct_equal);
@@ -217,7 +223,7 @@ namespace G4 {
             _child_drawed = false;
         }
 
-        public async bool prompt_save_if_modified () {
+        public async Result prompt_save_if_modified () {
             if (_modified && _music_node is Playlist) {
                 var playlist = new Playlist (_music_node?.title ?? "Untitled");
                 playlist.list_uri = ((Playlist)_music_node).list_uri;
@@ -231,10 +237,11 @@ namespace G4 {
                 var ret = yield show_alert_dialog (_("Playlist is modified, save it?"), root as Gtk.Window);
                 if (ret) {
                     ret = yield _app.add_playlist_to_file_async (playlist, false);
+                    _modified = !ret;
+                    return ret ? Result.OK : Result.FAILED;
                 }
-                _modified = !ret;
             }
-            return !_modified;
+            return _modified ? Result.CANCEL : Result.OK;
         }
 
         private Adw.Animation? _scroll_animation = null;
@@ -342,11 +349,11 @@ namespace G4 {
                     return null;
                 } else if (_selection.get_selection ().get_size () > 1) {
                     var menu = new Menu ();
-                    menu.append_item (create_menu_item_for_button (BUTTON_INSERT, _("Play at Next"), ACTION_WIN + ACTION_BUTTON));
+                    menu.append_item (create_menu_item_for_button (Button.INSERT, _("Play at Next"), ACTION_WIN + ACTION_BUTTON));
                     if (_has_add_to_queque)
-                        menu.append_item (create_menu_item_for_button (BUTTON_ADDTO, _("Add to Queue"), ACTION_WIN + ACTION_BUTTON));
-                    menu.append_item (create_menu_item_for_button (BUTTON_ADDTO, _("Add to Playlist…"), ACTION_WIN + ACTION_BUTTON));
-                    menu.append_item (create_menu_item_for_button (BUTTON_REMOVE, _("Remove"), ACTION_WIN + ACTION_BUTTON));
+                        menu.append_item (create_menu_item_for_button (Button.ADDTO, _("Add to Queue"), ACTION_WIN + ACTION_BUTTON));
+                    menu.append_item (create_menu_item_for_button (Button.ADDTO, _("Add to Playlist…"), ACTION_WIN + ACTION_BUTTON));
+                    menu.append_item (create_menu_item_for_button (Button.REMOVE, _("Remove"), ACTION_WIN + ACTION_BUTTON));
                     return menu;
                 }
             }
@@ -562,9 +569,11 @@ namespace G4 {
             back_btn.clicked.connect (() => {
                 if (_modified && _prompt_to_save) {
                     prompt_save_if_modified.begin ((obj, res) => {
-                        prompt_save_if_modified.end (res);
-                        _modified = false;
-                        multi_selection = false;
+                        var ret = prompt_save_if_modified.end (res);
+                        if (ret != Result.FAILED) {
+                            _modified = false;
+                            multi_selection = false;
+                        }
                     });
                 } else {
                     multi_selection = false;
@@ -611,7 +620,7 @@ namespace G4 {
                     }
                     on_selection_changed (0, 0);
                 });
-                remove_btn.name = BUTTON_REMOVE;
+                remove_btn.name = Button.REMOVE;
                 _action_buttons.add (remove_btn);
             }
 
@@ -624,7 +633,7 @@ namespace G4 {
                     playlist.foreach_remove ((uri, music) => music == (!)current);
                     _app.play_at_next (playlist);
             });
-            insert_btn.name = BUTTON_INSERT;
+            insert_btn.name = Button.INSERT;
             _action_buttons.add (insert_btn);
 
             if (_has_add_to_queque) {
@@ -635,7 +644,7 @@ namespace G4 {
                     var playlist = create_playlist_for_selection ();
                     app.queue (playlist, false);
                 });
-                queue_btn.name = BUTTON_QUEUE;
+                queue_btn.name = Button.QUEUE;
                 _action_buttons.add (queue_btn);
             }
 
@@ -645,7 +654,7 @@ namespace G4 {
                 var playlist = create_playlist_for_selection ();
                 _app.show_add_playlist_dialog.begin (playlist, (obj, res) => _app.show_add_playlist_dialog.end (res));
             });
-            add_to_btn.name = BUTTON_ADDTO;
+            add_to_btn.name = Button.ADDTO;
             _action_buttons.add (add_to_btn);
 
             _action_buttons.foreach (header.pack_end);
@@ -676,10 +685,12 @@ namespace G4 {
         }
     }
 
-    public const string BUTTON_ADDTO = "add";
-    public const string BUTTON_INSERT = "insert";
-    public const string BUTTON_QUEUE = "queue";
-    public const string BUTTON_REMOVE = "remove";
+    namespace Button {
+        public const string ADDTO = "add";
+        public const string INSERT = "insert";
+        public const string QUEUE = "queue";
+        public const string REMOVE = "remove";
+    }
 
     public MenuItem create_menu_item_for_button (string button_name, string label, string action) {
         var item = new MenuItem (label, null);

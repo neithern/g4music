@@ -194,9 +194,16 @@ namespace G4 {
             initialize_library_view ();
         }
 
-        public bool prompt_to_save_if_modified () {
-            if (_current_list != _main_list && _current_list.modified) {
-                _current_list.prompt_save_if_modified.begin ((obj, res) => _current_list.prompt_save_if_modified.end (res));
+        public bool prompt_to_save_if_modified (VoidFunc? done) {
+            if (_current_list.modified && _current_list != _main_list) {
+                _current_list.prompt_save_if_modified.begin ((obj, res) => {
+                    var ret = _current_list.prompt_save_if_modified.end (res);
+                    if (ret != Result.FAILED) {
+                        _current_list.modified = false;
+                        if (done != null)
+                            ((!)done) ();
+                    }
+                });
                 return true;
             }
             return false;
