@@ -184,8 +184,12 @@ namespace G4 {
             /* Translators: Replace "translator-credits" with your names, one name per line */
             var translator_credits = _("translator-credits");
             var website = "https://gitlab.gnome.org/neithern/g4music";
-#if ADW_1_2
+#if ADW_1_6
+            var win = new Adw.AboutDialog ();
+#elif ADW_1_2
             var win = new Adw.AboutWindow ();
+#endif
+#if ADW_1_2
             win.application_icon = _app.application_id;
             win.application_name = _app.name;
             win.version = Config.VERSION;
@@ -195,8 +199,12 @@ namespace G4 {
             win.website = website;
             win.issue_url = "https://gitlab.gnome.org/neithern/g4music/issues";
             win.translator_credits = translator_credits;
+#if ADW_1_6
+            win.present ( _app.active_window);
+#else
             win.transient_for = _app.active_window;
             win.present ();
+#endif
 #else
             Gtk.show_about_dialog (_app.active_window,
                                    "logo-icon-name", _app.application_id,

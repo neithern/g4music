@@ -1,17 +1,12 @@
 namespace G4 {
 
-    [GtkTemplate (ui = "/com/github/neithern/g4music/gtk/playlist-dialog.ui")]
+#if ADW_1_5
+    public class PlaylistDialog : Adw.Dialog {
+#else
     public class PlaylistDialog : Gtk.Window {
-        [GtkChild]
-        private unowned Gtk.Box content;
-        [GtkChild]
-        private unowned Gtk.Button new_btn;
-        [GtkChild]
-        private unowned Gtk.ToggleButton search_btn;
-        [GtkChild]
-        private unowned Gtk.SearchBar search_bar;
-        [GtkChild]
-        private unowned Gtk.SearchEntry search_entry;
+#endif
+        private Gtk.ToggleButton search_btn = new Gtk.ToggleButton ();
+        private Gtk.SearchEntry search_entry = new Gtk.SearchEntry ();
 
         private Application _app;
         private SourceFunc? _callback = null;
@@ -22,24 +17,50 @@ namespace G4 {
         public PlaylistDialog (Application app) {
             _app = app;
 
-            new_btn.clicked.connect (() => {
-                destroy ();
-                set_result (true);
-            });
+            var content = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
+            this.child = content;
 
-            close_request.connect (() => {
-                set_result (false);
-                return false;
+            var header = new Gtk.HeaderBar ();
+            header.show_title_buttons = false;
+            header.title_widget = new Gtk.Label (_("Add to Playlist"));
+            header.add_css_class ("flat");
+            content.append (header);
+
+            var new_btn = new Gtk.Button.from_icon_name ("folder-new-symbolic");
+            new_btn.tooltip_text = _("New Playlist");
+            new_btn.clicked.connect (() => {
+                close_with_result (true);
             });
+            header.pack_start (new_btn);
+
+            var close_btn = new Gtk.Button.from_icon_name ("window-close-symbolic");
+            close_btn.tooltip_text = _("Close");
+            close_btn.clicked.connect (() => {
+                close_with_result (false);
+            });
+            header.pack_end (close_btn);
+            header.pack_end (search_btn);
+
+            var search_bar = new Gtk.SearchBar ();
+            search_bar.child = search_entry;
+            search_bar.key_capture_widget = content;
+            content.append (search_bar);
+
+            search_btn.icon_name = "edit-find-symbolic";
+            search_btn.tooltip_text = _("Search");
+            search_btn.toggled.connect (on_search_btn_toggled);
+            search_btn.bind_property ("active", search_bar, "search-mode-enabled", BindingFlags.BIDIRECTIONAL);
+            search_entry.hexpand = true;
+            search_entry.search_changed.connect (on_search_text_changed);
 
             var loading_paintable = app.thumbnailer.create_simple_text_paintable ("...", Thumbnailer.ICON_SIZE);
             var list = _list = new MusicList (app, typeof (Playlist), null, false, false);
             list.hexpand = true;
             list.vexpand = true;
+            list.margin_bottom = 2;
             list.item_activated.connect ((position, obj) => {
                 _playlist = obj as Playlist;
-                destroy ();
-                set_result (true);
+                close_with_result (true);
             });
             list.item_binded.connect ((item) => {
                 var cell = (MusicWidget) item.child;
@@ -48,15 +69,10 @@ namespace G4 {
                 cell.paintable = loading_paintable;
                 cell.title = playlist.title;
             });
+            content.append (list);
 
             app.music_library_changed.connect (on_music_library_changed);
             on_music_library_changed (true);
-
-            search_btn.toggled.connect (on_search_btn_toggled);
-            search_bar.key_capture_widget = content;
-            search_entry.search_changed.connect (on_search_text_changed);
-
-            content.append (list);
         }
 
         public Playlist? playlist {
@@ -66,24 +82,43 @@ namespace G4 {
         }
 
         public async bool choose (Gtk.Window? parent = null) {
+            _callback = choose.callback;
+#if ADW_1_5
+            present (parent);
+#else
             if (parent != null) {
                 modal = true;
                 transient_for = (!)parent;
             }
-
-            _callback = choose.callback;
+            set_titlebar (new Adw.Bin ());
             present ();
+#endif
             yield;
             return _result;
         }
 
+#if ADW_1_5
+#else
         public override void measure (Gtk.Orientation orientation, int for_size, out int minimum, out int natural, out int minimum_baseline, out int natural_baseline) {
-            base.measure (orientation, for_size, out minimum, out natural, out minimum_baseline, out natural_baseline);
+            child.measure (orientation, for_size, out minimum, out natural, out minimum_baseline, out natural_baseline);
             if (orientation == Gtk.Orientation.VERTICAL) {
                 var height = transient_for.get_height ();
                 if (natural > height && height > 0)
                     natural = height;
             }
+        }
+#endif
+
+        private void close_with_result (bool result) {
+            _app.music_library_changed.disconnect (on_music_library_changed);
+            _result = result;
+            if (_callback != null)
+                Idle.add ((!)_callback);
+#if ADW_1_5
+            close ();
+#else
+            destroy ();
+#endif
         }
 
         private void on_music_library_changed (bool external) {
@@ -119,17 +154,23 @@ namespace G4 {
             }
             model.get_filter ()?.changed (Gtk.FilterChange.DIFFERENT);
         }
-
-        private void set_result (bool result) {
-            _app.music_library_changed.disconnect (on_music_library_changed);
-            _result = result;
-            if (_callback != null)
-                Idle.add ((!)_callback);
-        }
     }
 
     public async bool show_alert_dialog (string text, Gtk.Window? parent = null) {
-#if GTK_4_10
+#if ADW_1_5
+        var result = new bool[] { false };
+        var dialog = new Adw.AlertDialog (null, text);
+        dialog.add_response ("no", _("No"));
+        dialog.add_response ("yes", _("Yes"));
+        dialog.default_response = "yes";
+        dialog.response.connect ((id) => {
+            result[0] = id == "yes";
+            Idle.add (show_alert_dialog.callback);
+        });
+        dialog.present (parent);
+        yield;
+        return result[0];
+#elif GTK_4_10
         var dialog = new Gtk.AlertDialog (text);
         dialog.buttons = { _("No"), _("Yes") };
         dialog.cancel_button = 0;
@@ -150,6 +191,7 @@ namespace G4 {
             result[0] = id;
             Idle.add (show_alert_dialog.callback);
         });
+        dialog.set_titlebar (new Adw.Bin ());
         dialog.present ();
         yield;
         return result[0] == Gtk.ResponseType.YES;
