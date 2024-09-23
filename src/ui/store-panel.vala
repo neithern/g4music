@@ -16,6 +16,14 @@ namespace G4 {
         "media-playlist-shuffle-symbolic",  // SHUFFLE
     };
 
+    namespace StackFlags {
+        public const uint FIRST = 1;
+        public const uint ARTISTS = 1;
+        public const uint ALBUMS = 2;
+        public const uint PLAYLISTS = 3;
+        public const uint LAST = 3;
+    }
+
     [GtkTemplate (ui = "/com/github/neithern/g4music/gtk/store-panel.ui")]
     public class StorePanel : Gtk.Box, SizeWatcher {
         [GtkChild]
@@ -143,7 +151,7 @@ namespace G4 {
         public Gtk.Widget visible_child {
             set {
                 if (_size_allocated) {
-                    update_visible_store ();
+                    update_visible_stack ();
                 }
                 if (value == stack_view.visible_child) {
                     var stack = get_current_stack ();
@@ -181,6 +189,7 @@ namespace G4 {
             stack_view.transition_type = Gtk.StackTransitionType.SLIDE_LEFT_RIGHT;
             stack_view.bind_property ("visible-child", this, "visible-child");
             _size_allocated = true;
+            //  update_visible_stack ();
             initialize_library_view ();
         }
 
@@ -493,30 +502,27 @@ namespace G4 {
             _mini_bar.title = music?.title ?? "";
         }
 
-        private GenericSet<unowned Stack> _changing_stacks = new GenericSet<unowned Stack> (direct_hash, direct_equal);
+        private Gtk.Bitset _changing_stacks = new Gtk.Bitset.empty ();
 
         private void on_music_library_changed (bool external) {
             if (external) {
-                _updating_store = true;
                 _main_list.modified |= _app.list_modified;
+                for (var flag = StackFlags.FIRST; flag <= StackFlags.LAST; flag++)
+                    _changing_stacks.add (flag);
                 if (_size_allocated) {
-                    _changing_stacks.add (_artist_stack);
-                    _changing_stacks.add (_album_stack);
-                    _changing_stacks.add (_playlist_stack);
-                    update_visible_store ();
+                    update_visible_stack ();
                     update_stack_pages (_artist_stack);
                     update_stack_pages (_album_stack);
                     update_stack_pages (_playlist_stack);
                     initialize_library_view ();
                 }
-                _updating_store = false;
             }
         }
 
         private void on_playlist_added (Playlist playlist) {
-            _changing_stacks.add (_playlist_stack);
+            _changing_stacks.add (StackFlags.PLAYLISTS);
             update_stack_pages (_playlist_stack);
-            update_visible_store ();
+            update_visible_stack ();
         }
 
         private void on_search_btn_toggled () {
@@ -589,16 +595,18 @@ namespace G4 {
             stack.animate_transitions = animate;
         }
 
-        private void update_visible_store () {
+        private void update_visible_stack () {
+            _updating_store = true;
             var child = stack_view.visible_child;
-            if (child == _album_stack.widget && _changing_stacks.remove (_album_stack)) {
+            if (child == _album_stack.widget && _changing_stacks.remove (StackFlags.ALBUMS)) {
                 _library.overwrite_albums_to (_album_list.data_store);
-            } else if (child == _artist_stack.widget && _changing_stacks.remove (_artist_stack)) {
+            } else if (child == _artist_stack.widget && _changing_stacks.remove (StackFlags.ARTISTS)) {
                 _library.overwrite_artists_to (_artist_list.data_store);
-            } else if (child == _playlist_stack.widget && _changing_stacks.remove (_playlist_stack)) {
+            } else if (child == _playlist_stack.widget && _changing_stacks.remove (StackFlags.PLAYLISTS)) {
                 _library.overwrite_playlists_to (_playlist_list.data_store);
                 _playlist_list.set_empty_text (_("No playlist found"));
             }
+            _updating_store = false;
         }
     }
 
