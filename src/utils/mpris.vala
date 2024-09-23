@@ -29,7 +29,7 @@ namespace G4 {
 
         public bool can_go_next {
             get {
-                return _app.current_item < (int) _app.music_list.get_n_items () - 1;
+                return _app.current_item < (int) _app.current_list.get_n_items () - 1;
             }
         }
 

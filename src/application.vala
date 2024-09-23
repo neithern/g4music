@@ -11,7 +11,7 @@ namespace G4 {
         private string _music_folder = "";
         private uint _mpris_id = 0;
         private MusicLoader _loader = new MusicLoader ();
-        private Gtk.FilterListModel _music_list = new Gtk.FilterListModel (null, null);
+        private Gtk.FilterListModel _current_list = new Gtk.FilterListModel (null, null);
         private ListStore _music_queue = new ListStore (typeof (Music));
         private StringBuilder _next_uri = new StringBuilder ();
         private GstPlayer _player = new GstPlayer ();
@@ -41,8 +41,8 @@ namespace G4 {
 
             _actions = new ActionHandles (this);
 
-            _music_list.model = _music_queue;
-            _music_list.items_changed.connect (on_music_list_changed);
+            _current_list.model = _music_queue;
+            _current_list.items_changed.connect (on_music_list_changed);
             _music_queue.items_changed.connect (on_music_library_changed);
             _loader.loading_changed.connect ((loading) => _loading = loading);
             _loader.music_found.connect (on_music_found);
@@ -127,15 +127,27 @@ namespace G4 {
             }
             set {
                 var item = value;
-                if (item >= (int) _music_list.get_n_items ()) {
+                if (item >= (int) _current_list.get_n_items ()) {
                     end_of_playlist (true);
-                    item = _music_list.get_n_items () > 0 ? 0 : -1;
+                    item = _current_list.get_n_items () > 0 ? 0 : -1;
                 } else if (item < 0) {
                     end_of_playlist (false);
-                    item = (int) _music_list.get_n_items () - 1;
+                    item = (int) _current_list.get_n_items () - 1;
                 }
-                current_music = _music_list.get_item (item) as Music;
+                current_music = _current_list.get_item (item) as Music;
                 change_current_item (item);
+            }
+        }
+
+        public Gtk.FilterListModel current_list {
+            get {
+                return _current_list;
+            }
+            set {
+                _current_list.items_changed.disconnect (on_music_list_changed);
+                _current_list = value;
+                _current_list.items_changed.connect (on_music_list_changed);
+                update_current_item ();
             }
         }
 
@@ -222,18 +234,6 @@ namespace G4 {
             }
         }
 
-        public Gtk.FilterListModel music_list {
-            get {
-                return _music_list;
-            }
-            set {
-                _music_list.items_changed.disconnect (on_music_list_changed);
-                _music_list = value;
-                _music_list.items_changed.connect (on_music_list_changed);
-                update_current_item ();
-            }
-        }
-
         public ListStore music_queue {
             get {
                 return _music_queue;
@@ -262,16 +262,16 @@ namespace G4 {
 
         public uint sort_mode {
             get {
-                return _sort_map[_music_list.model];
+                return _sort_map[_current_list.model];
             }
             set {
                 var action = lookup_action (ACTION_SORT);
                 var state = new Variant.string (value.to_string ());
                 (action as SimpleAction)?.set_state (state);
 
-                if (_sort_map[_music_list.model] != value) {
-                    _sort_map[_music_list.model] = value;
-                    sort_music_store ((ListStore) _music_list.model, value);
+                if (_sort_map[_current_list.model] != value) {
+                    _sort_map[_current_list.model] = value;
+                    sort_music_store ((ListStore) _current_list.model, value);
                 }
             }
         }
@@ -394,7 +394,7 @@ namespace G4 {
                 if (position == -1) {
                     _list_modified = true;
                     store.append (music);
-                    position = find_item_in_model (_music_list, music);
+                    position = find_item_in_model (_current_list, music);
                 }
                 if (play) {
                     current_item = position;
@@ -515,14 +515,14 @@ namespace G4 {
 
         private void change_current_item (int item) {
             //  update _current_item but don't change current music
-            var count = _music_list.get_n_items ();
+            var count = _current_list.get_n_items ();
             if (_current_item != item) {
                 _current_item = item;
                 index_changed (item, count);
             }
 
             var next = item + 1;
-            var next_music = next < (int) count ? (Music) _music_list.get_item (next) : (Music?) null;
+            var next_music = next < (int) count ? (Music) _current_list.get_item (next) : (Music?) null;
             lock (_next_uri) {
                 _next_uri.assign (next_music?.uri ?? "");
             }
@@ -549,7 +549,7 @@ namespace G4 {
         }
 
         private int find_music_item (Music? music) {
-            var index = find_item_in_model (_music_list, music);
+            var index = find_item_in_model (_current_list, music);
             if (index != -1)
                 return index;
             return music != null ? locate_music_item_by_uri (((!)music).uri) : -1;
@@ -566,9 +566,9 @@ namespace G4 {
         }
 
         private int locate_music_item_by_uri (string uri) {
-            var count = _music_list.get_n_items ();
+            var count = _current_list.get_n_items ();
             for (var i = 0; i < count; i++) {
-                var music = _music_list.get_item (i) as Music;
+                var music = _current_list.get_item (i) as Music;
                 if (strcmp (uri, music?.uri) == 0)
                     return (int) i;
             }
@@ -617,7 +617,7 @@ namespace G4 {
                     _pending_msc_handler = 0;
                     music_library_changed (_store_external_changed);
                     _store_external_changed = false;
-                    index_changed (_current_item, _music_list.get_n_items ());
+                    index_changed (_current_item, _current_list.get_n_items ());
                 });
             }
         }
@@ -756,7 +756,7 @@ namespace G4 {
         }
 
         private void update_current_item () {
-            if (_current_music == null || _current_music != _music_list.get_item (_current_item)) {
+            if (_current_music == null || _current_music != _current_list.get_item (_current_item)) {
                 var item = find_music_item (_current_music);
                 change_current_item (item);
             }

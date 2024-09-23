@@ -48,7 +48,6 @@ namespace G4 {
         private string[]? _library_path = null;
         private Gdk.Paintable _loading_paintable;
         private uint _main_sort_mode = SortMode.TITLE;
-        private Gtk.Widget? _popped_child = null;
         private uint _search_mode = SearchMode.ANY;
         private string _search_text = "";
         private bool _size_allocated = false;
@@ -70,22 +69,19 @@ namespace G4 {
 
             _main_list = create_main_music_list ();
             _main_list.data_store = _app.music_queue;
-            _app.music_list = _main_list.filter_model;
+            _app.current_list = _main_list.filter_model;
             _current_list = _main_list;
             stack_view.add_titled (_main_list, PageName.PLAYING, _("Playing")).icon_name = "user-home-symbolic";
 
             _artist_list = create_artist_list ();
             _artist_stack.add (_artist_list, PageName.ARTIST);
-            _artist_stack.popped.connect (on_page_popped);
             stack_view.add_titled (_artist_stack.widget, PageName.ARTIST, _("Artists")).icon_name = "system-users-symbolic";
 
             _album_list = create_album_list ();
             _album_stack.add (_album_list, PageName.ALBUM);
-            _album_stack.popped.connect (on_page_popped);
             stack_view.add_titled (_album_stack.widget, PageName.ALBUM, _("Albums")).icon_name = "drive-multidisk-symbolic";
 
             _playlist_list = create_playlist_list ();
-            _playlist_stack.popped.connect (on_page_popped);
             _playlist_stack.add (_playlist_list, PageName.PLAYLIST);
             stack_view.add_titled (_playlist_stack.widget, PageName.PLAYLIST, _("Playlists")).icon_name = "view-list-symbolic";
 
@@ -155,18 +151,16 @@ namespace G4 {
                         value = ((!)stack).visible_child;
                 }
                 if (value is MusicList) {
-                    _current_list = (MusicList) value;
-                    if (_current_list.playable) {
-                        _app.music_list = _current_list.filter_model;
+                    var list = _current_list = (MusicList) value;
+                    if (list.playable) {
+                        _app.current_list = list.filter_model;
                         //  Update sort menu item
-                        _app.sort_mode = _app.sort_mode;
+                        this.sort_mode = _app.sort_mode;
                     }
                     on_music_changed (_app.current_music);
 
-                    var removing = _popped_child != null;
-                    _popped_child = null;
-                    var mlist = _current_list;
-                    run_idle_once (() => mlist.set_to_current_item (!removing));
+                    var scroll = !_overlayed_lists.remove (list);
+                    run_idle_once (() => list.set_to_current_item (scroll));
                 }
                 sort_btn.sensitive = _current_list.playable;
                 _search_mode = SearchMode.ANY;
@@ -342,6 +336,8 @@ namespace G4 {
             return list;
         }
 
+        private GenericSet<unowned MusicList> _overlayed_lists = new GenericSet<unowned MusicList> (direct_hash, direct_equal);
+
         private void create_stack_page (Artist? artist, Album? album = null) {
             var album_mode = album != null;
             var artist_mode = artist != null;
@@ -382,6 +378,8 @@ namespace G4 {
             });
             header.pack_end (button);
 
+            if (stack.visible_child == _current_list)
+                _overlayed_lists.add (_current_list);
             stack.add (mlist, album_mode ? album?.album_key : artist?.artist);
             stack.visible_child = mlist;
         }
@@ -520,10 +518,6 @@ namespace G4 {
                 }
                 _updating_store = false;
             }
-        }
-
-        private void on_page_popped (Gtk.Widget? child) {
-            _popped_child = child;
         }
 
         private void on_playlist_added (Playlist playlist) {
