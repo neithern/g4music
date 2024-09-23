@@ -184,7 +184,7 @@ namespace G4 {
             /* Translators: Replace "translator-credits" with your names, one name per line */
             var translator_credits = _("translator-credits");
             var website = "https://gitlab.gnome.org/neithern/g4music";
-#if ADW_1_6
+#if ADW_1_5
             var win = new Adw.AboutDialog ();
 #elif ADW_1_2
             var win = new Adw.AboutWindow ();
@@ -199,7 +199,7 @@ namespace G4 {
             win.website = website;
             win.issue_url = "https://gitlab.gnome.org/neithern/g4music/issues";
             win.translator_credits = translator_credits;
-#if ADW_1_6
+#if ADW_1_5
             win.present ( _app.active_window);
 #else
             win.transient_for = _app.active_window;
