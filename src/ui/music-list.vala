@@ -150,14 +150,6 @@ namespace G4 {
                 return _multi_selection;
             }
             set {
-                if (_multi_selection != value) {
-                    _multi_selection = value;
-                    _grid_view.enable_rubberband = value;
-                    _grid_view.single_click_activate = !value;
-                    _binding_items.foreach ((music, item) => item.selectable = value);
-                    if (!value)
-                        _selection.unselect_all ();
-                }
                 if (value && _header_revealer == null) {
                     _header_bar_hided = get_first_child () as Gtk.HeaderBar;
                     var header = new Gtk.HeaderBar ();
@@ -177,8 +169,17 @@ namespace G4 {
                 }
                 _header_bar_hided?.set_visible (!value);
                 _header_revealer?.set_reveal_child (value);
-                if (value)
-                    on_selection_changed (0, 0);
+
+                if (_multi_selection != value) {
+                    _multi_selection = value;
+                    _grid_view.enable_rubberband = value;
+                    _grid_view.single_click_activate = !value;
+                    _binding_items.foreach ((music, item) => item.selectable = value);
+                    if (value)
+                        on_selection_changed (0, 0);
+                    else
+                        _selection.unselect_all ();
+                }
             }
         }
 
@@ -347,22 +348,16 @@ namespace G4 {
         }
 
         private Menu? on_create_music_menu (Music? node) {
-            if (_multi_selection) {
-                int position = find_item_in_model (_filter_model, node);
-                if (!_selection.is_selected (position)) {
-                    return null;
-                } else if (_selection.get_selection ().get_size () > 1) {
-                    var action = ACTION_WIN + ACTION_BUTTON;
-                    var menu = new Menu ();
-                    menu.append_item (create_menu_item_for_button (Button.INSERT, _("Play at Next"), action));
-                    if (_has_add_to_queque)
-                        menu.append_item (create_menu_item_for_button (Button.QUEUE, _("Add to Queue"), action));
-                    menu.append_item (create_menu_item_for_button (Button.ADDTO, _("Add to Playlist…"), action));
-                    menu.append_item (create_menu_item_for_button (Button.REMOVE, _("Remove"), action));
-                    return menu;
-                }
-            }
-            if (node is Album) {
+            if (_selection.get_selection ().get_size () > 1) {
+                var action = ACTION_WIN + ACTION_BUTTON;
+                var menu = new Menu ();
+                menu.append_item (create_menu_item_for_button (Button.INSERT, _("Play at Next"), action));
+                if (_has_add_to_queque)
+                    menu.append_item (create_menu_item_for_button (Button.QUEUE, _("Add to Queue"), action));
+                menu.append_item (create_menu_item_for_button (Button.ADDTO, _("Add to Playlist…"), action));
+                menu.append_item (create_menu_item_for_button (Button.REMOVE, _("Remove"), action));
+                return menu;
+            } else if (node is Album) {
                 return create_menu_for_album ((Album) node);
             } else if (node is Artist) {
                 return create_menu_for_artist ((Artist) node);
@@ -456,17 +451,15 @@ namespace G4 {
         private int _dropping_item = -1;
 
         private bool on_drag_accept (Gdk.Drop drop) {
-            if (drop.formats.contain_gtype (typeof (Music))) {
-                try {
-                    var value = Value (typeof (Music));
-                    if (drop.drag.content.get_value (ref value)) {
-                        var item = find_item_in_model (_filter_model, value.get_object () as Music);
-                        if (item != -1)
-                            _selection.select_item (item, true);
-                    }
-                } catch (Error e) {
+            if (drop.formats.contain_gtype (typeof (Music))) try {
+                var value = Value (typeof (Music));
+                if (drop.drag.content.get_value (ref value)) {
+                    var item = find_item_in_model (_filter_model, value.get_object () as Music);
+                    if (item != -1)
+                        _selection.select_item (item, true);
                 }
                 return true;
+            } catch (Error e) {
             }
             return false;
         }
@@ -533,8 +526,12 @@ namespace G4 {
 
         private void on_selection_changed (uint position, uint n_items) {
             var bits = _selection.get_selection ();
-            _header_title?.set_label (@"$(bits.get_size ())/$(_filter_model.get_n_items ())");
-            var enabled = !bits.is_empty ();
+            var selected = bits.get_size ();
+            if (selected > 1)
+                multi_selection = true;
+            _header_title?.set_label (@"$selected/$visible_count");
+
+            var enabled = selected > 0;
             foreach (var button in _action_buttons)
                 button.sensitive = enabled;
         }
