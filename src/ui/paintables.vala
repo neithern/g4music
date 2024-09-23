@@ -16,8 +16,11 @@ namespace G4 {
                 return _paintable;
             }
             set {
-                on_change (_paintable, value);
-                queue_draw ();
+                if (_paintable != value) {
+                    on_change (_paintable, value);
+                    _paintable = value;
+                    queue_draw ();
+                }
             }
         }
 
@@ -50,8 +53,7 @@ namespace G4 {
         }
 
         protected virtual void on_change (Gdk.Paintable? previous, Gdk.Paintable? paintable) {
-            _first_draw = _paintable != paintable;
-            _paintable = paintable;
+            _first_draw = previous != paintable;
         }
 
         protected virtual void on_snapshot (Gtk.Snapshot snapshot, double width, double height) {
@@ -72,8 +74,10 @@ namespace G4 {
                 return _ratio;
             }
             set {
-                _ratio = value;
-                queue_draw ();
+                if (_ratio != value) {
+                    _ratio = value;
+                    queue_draw ();
+                }
             }
         }
 
@@ -123,8 +127,10 @@ namespace G4 {
                 return _fade;
             }
             set {
-                _fade = value;
-                queue_draw ();
+                if (_fade != value) {
+                    _fade = value;
+                    queue_draw ();
+                }
             }
         }
 
@@ -133,8 +139,10 @@ namespace G4 {
                 return _previous;
             }
             set {
-                _previous = previous;
-                queue_draw ();
+                if (_previous != value) {
+                    _previous = value;
+                    queue_draw ();
+                }
             }
         }
 
@@ -197,8 +205,10 @@ namespace G4 {
                 return _rotation;
             }
             set {
-                _rotation = value;
-                queue_draw ();
+                if (_rotation != value) {
+                    _rotation = value;
+                    queue_draw ();
+                }
             }
         }
 
@@ -207,8 +217,10 @@ namespace G4 {
                 return _scale;
             }
             set {
-                _scale = value;
-                queue_draw ();
+                if (_scale != value) {
+                    _scale = value;
+                    queue_draw ();
+                }
             }
         }
 

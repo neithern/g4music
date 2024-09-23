@@ -175,10 +175,6 @@ namespace G4 {
 
         public void first_allocated () {
             // Delay set model after the window size allocated to avoid showing slowly
-            _main_list.create_factory ();
-            _album_list.create_factory ();
-            _artist_list.create_factory ();
-            _playlist_list.create_factory ();
             _album_stack.bind_property ("visible-child", this, "visible-child");
             _artist_stack.bind_property ("visible-child", this, "visible-child");
             _playlist_stack.bind_property ("visible-child", this, "visible-child");
@@ -268,13 +264,10 @@ namespace G4 {
         private MusicList create_artist_list () {
             var list = new MusicList (_app, typeof (Artist));
             list.item_activated.connect ((position, obj) => create_stack_page (obj as Artist));
-            list.item_created.connect ((item) => {
-                var cell = (MusicWidget) item.child;
-                cell.cover.ratio = 0.5;
-            });
             list.item_binded.connect ((item) => {
                 var cell = (MusicWidget) item.child;
                 var artist = (Artist) item.item;
+                cell.cover.ratio = 0.5;
                 cell.music = artist;
                 cell.paintable = _loading_paintable;
                 cell.title = artist.artist;
@@ -289,12 +282,13 @@ namespace G4 {
             var is_playlist = album is Playlist;
             var is_artist_playlist = is_playlist && from_artist;
             var list = new MusicList (_app, typeof (Music), album, is_playlist);
+            var store = list.data_store;
             list.item_activated.connect ((position, obj) => _app.current_item = (int) position);
             list.item_binded.connect ((item) => {
                 var entry = (MusicEntry) item.child;
                 var music = (Music) item.item;
                 entry.paintable = _loading_paintable;
-                var mode = _app.get_list_sort_mode (list.data_store);
+                var mode = _app.get_list_sort_mode (store);
                 if (is_artist_playlist && mode <= SortMode.ARTIST_ALBUM)
                     mode = SortMode.ALBUM;
                 else if (from_artist && mode == SortMode.ARTIST)
@@ -303,7 +297,7 @@ namespace G4 {
                     mode = SortMode.TITLE;
                 entry.set_titles (music, mode);
             });
-            _app.set_list_sort_mode (list.data_store, SortMode.ALBUM);
+            _app.set_list_sort_mode (store, SortMode.ALBUM);
             _app.settings.bind ("compact-playlist", list, "compact-list", SettingsBindFlags.DEFAULT);
             return list;
         }
@@ -343,7 +337,6 @@ namespace G4 {
             var artist_mode = artist != null;
             var playlist_mode = album is Playlist;
             var mlist = album_mode ? create_music_list ((!)album, artist_mode) : create_album_list (artist);
-            mlist.create_factory ();
             mlist.update_store ();
 
             var title = album_mode ? album?.title : artist?.title;
@@ -382,7 +375,6 @@ namespace G4 {
             if (stack.visible_child == _current_list)
                 _overlayed_lists.add (_current_list);
             stack.add (mlist, album_mode ? album?.album_key : artist?.artist);
-            stack.visible_child = mlist;
         }
 
         private Stack? get_current_stack () {
@@ -523,8 +515,8 @@ namespace G4 {
 
         private void on_playlist_added (Playlist playlist) {
             _changing_stacks.add (_playlist_stack);
-            update_visible_store ();
             update_stack_pages (_playlist_stack);
+            update_visible_store ();
         }
 
         private void on_search_btn_toggled () {

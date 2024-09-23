@@ -358,10 +358,11 @@ namespace G4 {
         }
 
         public Gtk.Widget add (Gtk.Widget child, string? tag = null) {
-            var overlay = new Adw.Bin ();
-            overlay.child = child;
-            _widget.add_named (overlay, tag);
-            return overlay;
+            var bin = new Adw.Bin ();
+            bin.child = child;
+            _widget.add_named (bin, tag);
+            _widget.visible_child = bin;
+            return bin;
         }
 
         public void pop () {

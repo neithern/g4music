@@ -48,7 +48,6 @@ namespace G4 {
                 cell.paintable = loading_paintable;
                 cell.title = playlist.title;
             });
-            list.create_factory ();
 
             app.music_library_changed.connect (on_music_library_changed);
             on_music_library_changed (true);
