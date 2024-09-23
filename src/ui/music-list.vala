@@ -671,7 +671,7 @@ namespace G4 {
                     var music = (Music) store.get_item (i);
                     uris.add (music.uri);
                 }
-                var ret = yield run_async<bool> (() => save_playlist_file (file, uris), false, true);
+                var ret = yield run_async<bool> (() => save_playlist_file (file, uris, null, false), false, true);
                 _modified = !ret;
             }
             return !_modified;

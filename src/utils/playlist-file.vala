@@ -58,9 +58,9 @@ namespace G4 {
         size_t length = 0;
         string? str = null;
         while ((str = dis.read_line_utf8 (out length)) != null) {
-            var uri = (!)str;
-            if (length > 0 && uri[0] != '#') {
-                var abs_uri = parse_relative_uri (uri.replace("\r", ""), parent);
+            var line = (!)str;
+            if (length > 0 && line[0] != '#') {
+                var abs_uri = parse_relative_uri (line.strip (), parent);
                 if (abs_uri != null)
                     uris.add ((!)abs_uri);
             }
@@ -103,20 +103,24 @@ namespace G4 {
         return parent?.resolve_relative_path (uri)?.get_uri ();
     }
 
-    public bool save_m3u8_file (DataOutputStream dos, File? parent, GenericArray<string> uris) throws Error {
+    public bool save_m3u8_file (DataOutputStream dos, File? parent, GenericArray<string> uris, bool with_titles) throws Error {
         if (!dos.put_string ("#EXTM3U\n"))
             return false;
         foreach (var uri in uris) {
             var f = File.new_for_uri (uri);
             var path = parent?.get_relative_path (f) ?? f.get_path () ?? "";
-            var title = get_file_display_name (f);
-            if (!dos.put_string (@"#EXTINF:,$title\n$path\n"))
+            if (with_titles) {
+                var title = get_file_display_name (f);
+                if (!dos.put_string (@"#EXTINF:,$title\n"))
+                    return false;
+            }
+            if (!dos.put_string (@"$path\n"))
                 return false;
         }
         return true;
     }
 
-    public bool save_pls_file (DataOutputStream dos, File? parent, GenericArray<string> uris, string? name = null) throws Error {
+    public bool save_pls_file (DataOutputStream dos, File? parent, GenericArray<string> uris, string? name, bool with_titles) throws Error {
         if (!dos.put_string ("[playlist]\n"))
             return false;
         if (name != null && !dos.put_string (@"X-GNOME-Title=$((!)name)\n"))
@@ -127,15 +131,19 @@ namespace G4 {
         for (var i = 0; i < count; i++) {
             var f = File.new_for_uri (uris[i]);
             var path = parent?.get_relative_path (f) ?? f.get_path () ?? "";
-            var title = get_file_display_name (f);
             var n = i + 1;
-            if (!dos.put_string (@"Title$n=$title\nFile$n=$path\n"))
-                break;
+            if (with_titles) {
+                var title = get_file_display_name (f);
+                if (!dos.put_string (@"Title$n=$title\n"))
+                    return false;
+            }
+            if (!dos.put_string (@"File$n=$path\n"))
+                return false;
         }
         return true;
     }
 
-    public bool save_playlist_file (File file, GenericArray<string> uris, string? name = null) {
+    public bool save_playlist_file (File file, GenericArray<string> uris, string? name = null, bool with_titles = true) {
         var bname = file.get_basename () ?? "";
         var title = bname.substring (0, bname.index_of_char ('.'));
         var ext = bname.substring (bname.index_of_char ('.') + 1);
@@ -145,9 +153,9 @@ namespace G4 {
             var dos = new DataOutputStream (bos);
             var parent = file.get_parent ();
             if (ext.ascii_ncasecmp ("pls", 3) == 0) {
-                return save_pls_file (dos, parent, uris, name ?? title);
+                return save_pls_file (dos, parent, uris, name ?? title, with_titles);
             } else {
-                return save_m3u8_file (dos, parent, uris);
+                return save_m3u8_file (dos, parent, uris, with_titles);
             }
         } catch (Error e) {
             print ("Save playlist %s: %s\n", file.get_parse_name (), e.message);
