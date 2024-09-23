@@ -291,9 +291,14 @@ namespace G4 {
                 var rect = Graphene.Rect ();
                 ((!)child).compute_bounds (this, out rect);
                 rect.size.height = scale_factor * 0.5f;
+#if ADW_1_6
+                var ac = Adw.StyleManager.get_for_display (get_display ()).get_accent_color ();
+                var color = ac.to_rgba ();
+#else
                 var color = Gdk.RGBA ();
-                color.alpha = 1f;
+                color.alpha = 1;
                 color.red = color.green = color.blue = 0.5f;
+#endif
                 snapshot.append_color (color, rect);
             }
             base.snapshot (snapshot);
