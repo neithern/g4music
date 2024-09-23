@@ -348,6 +348,10 @@ namespace G4 {
         }
 
         private Menu? on_create_music_menu (Music? node) {
+            int position = -1;
+            if (_multi_selection && (position = find_item_in_model (_filter_model, node)) != -1) {
+                _selection.select_item (position, false);
+            }
             if (_selection.get_selection ().get_size () > 1) {
                 var action = ACTION_WIN + ACTION_BUTTON;
                 var menu = new Menu ();
