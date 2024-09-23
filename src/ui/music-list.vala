@@ -68,8 +68,6 @@ namespace G4 {
             _scroll_view.propagate_natural_height = true;
             _scroll_view.vexpand = true;
             _scroll_view.vadjustment.changed.connect (on_vadjustment_changed);
-
-            update_store ();
         }
 
         public bool compact_list {

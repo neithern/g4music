@@ -344,6 +344,7 @@ namespace G4 {
             var playlist_mode = album is Playlist;
             var mlist = album_mode ? create_music_list ((!)album, artist_mode) : create_album_list (artist);
             mlist.create_factory ();
+            mlist.update_store ();
 
             var title = album_mode ? album?.title : artist?.title;
             var label = new Gtk.Label (title);
