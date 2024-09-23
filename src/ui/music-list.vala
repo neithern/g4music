@@ -348,12 +348,13 @@ namespace G4 {
                 if (!_selection.is_selected (position)) {
                     return null;
                 } else if (_selection.get_selection ().get_size () > 1) {
+                    var action = ACTION_WIN + ACTION_BUTTON;
                     var menu = new Menu ();
-                    menu.append_item (create_menu_item_for_button (Button.INSERT, _("Play at Next"), ACTION_WIN + ACTION_BUTTON));
+                    menu.append_item (create_menu_item_for_button (Button.INSERT, _("Play at Next"), action));
                     if (_has_add_to_queque)
-                        menu.append_item (create_menu_item_for_button (Button.ADDTO, _("Add to Queue"), ACTION_WIN + ACTION_BUTTON));
-                    menu.append_item (create_menu_item_for_button (Button.ADDTO, _("Add to Playlist…"), ACTION_WIN + ACTION_BUTTON));
-                    menu.append_item (create_menu_item_for_button (Button.REMOVE, _("Remove"), ACTION_WIN + ACTION_BUTTON));
+                        menu.append_item (create_menu_item_for_button (Button.QUEUE, _("Add to Queue"), action));
+                    menu.append_item (create_menu_item_for_button (Button.ADDTO, _("Add to Playlist…"), action));
+                    menu.append_item (create_menu_item_for_button (Button.REMOVE, _("Remove"), action));
                     return menu;
                 }
             }
