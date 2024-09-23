@@ -12,6 +12,7 @@ namespace G4 {
             case "public.m3u-playlist":
                 return PlayListType.M3U;
             case "audio/x-scpls":
+            case "public.pls-playlist":
                 return PlayListType.PLS;
             default:
                 return PlayListType.NONE;
