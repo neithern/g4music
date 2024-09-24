@@ -355,11 +355,13 @@ namespace G4 {
                 entry.icon_release.connect ((icon_pos) => {
                     entry.visible = false;
                     label.visible = true;
-                    _app.rename_playlist_async.begin (playlist, entry.text, (obj, res) => {
-                        var ret = _app.rename_playlist_async.end (res);
-                        if (ret)
-                            label.label = playlist.title;
-                    });
+                    var text = entry.text;
+                    if (text.length > 0 && text != title)
+                        _app.rename_playlist_async.begin (playlist, text, (obj, res) => {
+                            var ret = _app.rename_playlist_async.end (res);
+                            if (ret)
+                                label.label = playlist.title;
+                        });
                 });
                 make_widget_clickable (label).released.connect (() => {
                     entry.text = label.label;
