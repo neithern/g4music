@@ -356,7 +356,7 @@ namespace G4 {
                     entry.visible = false;
                     label.visible = true;
                     var text = entry.text;
-                    if (text.length > 0 && text != title)
+                    if (text.length > 0 && text != playlist.title)
                         _app.rename_playlist_async.begin (playlist, text, (obj, res) => {
                             var ret = _app.rename_playlist_async.end (res);
                             if (ret)
