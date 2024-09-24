@@ -80,7 +80,7 @@ namespace G4 {
             int pos = -1;
             var line = ((!)str).strip ();
             if (line.length > 1 && line[0] == '[') {
-                list_found = strcmp (line, "[playlist]") == 0;
+                list_found = line == "[playlist]";
             } else if (list_found && (pos = line.index_of_char ('=')) > 0) {
                 if (line.has_prefix ("File")) {
                     var uri = line.substring (pos + 1).strip ();

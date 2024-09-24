@@ -162,7 +162,7 @@ namespace G4 {
                     music_changed (value);
                 }
                 var uri = value?.uri ?? "";
-                if (strcmp (_current_uri, uri) != 0) {
+                if (_current_uri != uri) {
                     _current_cover = null;
                     _player.state = Gst.State.READY;
                     _player.uri = _current_uri = uri;
@@ -226,7 +226,7 @@ namespace G4 {
                 return _music_folder;
             }
             set {
-                if (strcmp (_music_folder, value) != 0) {
+                if (_music_folder != value) {
                     _music_folder = value;
                     if (active_window is Window)
                         reload_library ();
@@ -510,8 +510,8 @@ namespace G4 {
             }
             var count = _current_list.get_n_items ();
             for (var i = 0; i < count; i++) {
-                var m = _current_list.get_item (i) as Music;
-                if (strcmp (uri, m?.uri) == 0)
+                var m = (Music) _current_list.get_item (i);
+                if (m.uri == uri)
                     return (int) i;
             }
             return -1;
@@ -630,8 +630,9 @@ namespace G4 {
 
         private int _cover_size = 360;
 
-        private async void on_player_tag_parsed (string? uri, Gst.TagList? tags) {
-            if (_current_music != null && strcmp (_current_uri, uri) == 0) {
+        private async void on_player_tag_parsed (string? u, Gst.TagList? tags) {
+            var uri = u ?? "";
+            if (_current_music != null && _current_uri == uri) {
                 var music = _loader.find_cache (_current_uri) ?? (!)_current_music;
                 if (music.has_unknown () && tags != null && music.from_gst_tags ((!)tags)) {
                     _loader.add_to_cache (music);
@@ -639,7 +640,7 @@ namespace G4 {
                 }
 
                 _current_cover = tags != null ? parse_image_from_tag_list ((!)tags) : null;
-                if (_current_cover == null && uri != null) {
+                if (_current_cover == null && u != null) {
                     _current_cover = yield run_async<Gst.Sample?> (() => {
                         var file = File.new_for_uri ((!)uri);
                         var t = parse_gst_tags (file);
@@ -649,7 +650,7 @@ namespace G4 {
 
                 Gdk.Pixbuf? pixbuf = null;
                 var image = _current_cover;
-                if (strcmp (_current_uri, uri) == 0) {
+                if (_current_uri == uri) {
                     var size = _cover_size * _thumbnailer.scale_factor;
                     if (image != null) {
                         pixbuf = yield run_async<Gdk.Pixbuf?> (
@@ -660,7 +661,7 @@ namespace G4 {
                     }
                 }
 
-                if (strcmp (_current_uri, uri) == 0) {
+                if (_current_uri == uri) {
                     var cover_uri = music.cover_uri;
                     if (cover_uri == null) {
                         var dir = File.new_build_filename (Environment.get_user_cache_dir (), application_id);
@@ -678,7 +679,7 @@ namespace G4 {
                             _cover_tmp_file = file;
                         }
                     }
-                    if (strcmp (_current_uri, uri) == 0) {
+                    if (_current_uri == uri) {
                         music_cover_parsed (music, pixbuf, cover_uri);
                     }
                 }
