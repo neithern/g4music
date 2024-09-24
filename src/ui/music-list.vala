@@ -67,6 +67,11 @@ namespace G4 {
             _scroll_view.vexpand = true;
             _scroll_view.vadjustment.changed.connect (on_vadjustment_changed);
             append (_scroll_view);
+
+            if (_editable) {
+                var target = create_drop_target ();
+                _grid_view.add_controller (target);
+            }
         }
 
         public bool compact_list {
@@ -100,6 +105,18 @@ namespace G4 {
             set {
                 _data_store = value;
                 _filter_model.model = value;
+            }
+        }
+
+        public int dropping_item {
+            get {
+                return _dropping_item;
+            }
+            set {
+                if (_dropping_item != value) {
+                    _dropping_item = value;
+                    queue_draw ();
+                }
             }
         }
 
@@ -159,13 +176,6 @@ namespace G4 {
                     revealer.transition_type = Gtk.RevealerTransitionType.SLIDE_DOWN;
                     revealer.insert_after (this, _header_bar_hided);
                     _header_revealer = revealer;
-                }
-                if (value && _editable && _drop_target == null) {
-                    _drop_target = create_drop_target ();
-                    _grid_view.add_controller ((!)_drop_target);
-                } else if (!value && _drop_target != null) {
-                    _grid_view.remove_controller ((!)_drop_target);
-                    _drop_target = null;
                 }
                 _header_bar_hided?.set_visible (!value);
                 _header_revealer?.set_reveal_child (value);
@@ -454,7 +464,7 @@ namespace G4 {
 
         private int _dropping_item = -1;
 
-        private bool on_drag_accept (Gdk.Drop drop) {
+        private bool on_drop_accept (Gdk.Drop drop) {
             if (drop.formats.contain_gtype (typeof (Music))) try {
                 var value = Value (typeof (Music));
                 if (drop.drag.content.get_value (ref value)) {
@@ -468,36 +478,32 @@ namespace G4 {
             return false;
         }
 
-        private bool on_drag_dropped (Value value, double x, double y) {
-            var music = value.get_object () as Music;
-            uint src_pos = find_item_in_model (_filter_model, music);
+        private bool on_dropp_done (Value value, double x, double y) {
+            var src_obj = value.get_object () as Music;
+            uint src_pos = find_item_in_model (_filter_model, src_obj);
             uint dst_pos = _dropping_item;
-            if (src_pos != -1 && dst_pos != -1 && src_pos != dst_pos) {
-                var selected = _selection.is_selected (src_pos);
-                var src_obj = _filter_model.get_item (src_pos);
-                var dst_obj = _filter_model.get_item (dst_pos);
-                if (src_obj != null && _data_store.find ((!)src_obj, out src_pos)) {
-                    if (dst_obj == null || !_data_store.find ((!)dst_obj, out dst_pos))
-                        dst_pos = _data_store.get_n_items ();
+            if (src_obj != null && src_pos != dst_pos) {
+                if (_data_store.find ((!)src_obj, out src_pos)) {
                     _data_store.remove (src_pos);
                     if (dst_pos >= src_pos)
                         dst_pos--;
-                    _data_store.insert (dst_pos, (!)src_obj);
-                    _modified = true;
                 }
-                if (selected)
-                    _selection.select_item (_dropping_item, false);
+                var dst_obj = _filter_model.get_item (dst_pos);
+                if (dst_obj == null || !_data_store.find ((!)dst_obj, out dst_pos)) {
+                    dst_pos = _data_store.get_n_items ();
+                }
+                _data_store.insert (dst_pos, (!)src_obj);
+                _modified = true;
             }
-            set_dropping_item (-1);
+            dropping_item = -1;
             return true;
         }
 
-        private Gdk.DragAction on_drag_motion (double x, double y) {
+        private Gdk.DragAction on_drop_motion (double x, double y) {
             var row_width = (double) _grid_view.get_width () / _columns;
             var col = (int) (x / row_width);
             var row = (int) ((_scroll_view.vadjustment.value + y) / _row_height);
-            var item = (int) _columns * row + col;
-            set_dropping_item (item);
+            dropping_item = (int) _columns * row + col;
             return Gdk.DragAction.MOVE;
         }
 
@@ -506,24 +512,15 @@ namespace G4 {
             return item?.child as MusicWidget;
         }
 
-        private void set_dropping_item (int item) {
-            if (_dropping_item != item) {
-                _dropping_item = item;
-                queue_draw ();
-            }
-        }
-
-        private Gtk.DropTarget? _drop_target = null;
-
         private Gtk.DropTarget create_drop_target () {
             var target = new Gtk.DropTarget (typeof (Music), Gdk.DragAction.MOVE);
-            target.accept.connect (on_drag_accept);
-            target.motion.connect (on_drag_motion);
-            target.leave.connect (() => set_dropping_item (-1));
+            target.accept.connect (on_drop_accept);
+            target.motion.connect (on_drop_motion);
+            target.leave.connect (() => dropping_item = -1);
 #if GTK_4_10
-            target.drop.connect (on_drag_dropped);
+            target.drop.connect (on_dropp_done);
 #else
-            target.on_drop.connect (on_drag_dropped);
+            target.on_drop.connect (on_dropp_done);
 #endif
             return target;
         }

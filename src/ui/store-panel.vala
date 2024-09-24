@@ -366,7 +366,10 @@ namespace G4 {
             var stack = artist_mode ? _artist_stack : playlist_mode ? _playlist_stack : _album_stack;
             var back_btn = new Gtk.Button.from_icon_name ("go-previous-symbolic");
             back_btn.tooltip_text = _("Back");
-            back_btn.clicked.connect (stack.pop);
+            back_btn.clicked.connect (() => {
+                if (!prompt_to_save_if_modified (stack.pop))
+                    stack.pop ();
+            });
             header.pack_start (back_btn);
 
             var button = new Gtk.Button.from_icon_name ("media-playback-start-symbolic");
@@ -483,7 +486,7 @@ namespace G4 {
         }
 
         private void on_index_changed (int index, uint size) {
-            if (_current_list.playable && !_current_list.multi_selection) {
+            if (_current_list.playable && _current_list.dropping_item != -1 && !_current_list.multi_selection) {
                 _current_list.scroll_to_item (index);
             }
         }
