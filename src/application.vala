@@ -326,13 +326,12 @@ namespace G4 {
 
         public void insert_after_current (Playlist playlist) {
             uint position = _current_item;
-            if (_current_music != null)
+            if (_current_music != null) {
+                if (!_music_queue.find ((!)_current_music, out position))
+                    position = -1;
                 playlist.remove_music ((!)_current_music);
-            _list_modified |= remove_items_from_store (_music_queue, playlist.items);
-            if (_current_music != null)
-                _music_queue.find ((!)_current_music, out position);
-            playlist.insert_to_store (_music_queue, position + 1);
-            _list_modified |= playlist.length > 0;
+            }
+            _list_modified |= move_items_in_store (_music_queue, position + 1, playlist.items);
             update_current_item ();
         }
 
@@ -699,10 +698,8 @@ namespace G4 {
         }
 
         private void update_current_item () {
-            if (_current_music == null) {
-                var item = find_item_in_model (_current_list, _current_music, _current_item);
-                change_current_item (item);
-            }
+            var item = _current_music != null ? find_item_in_model (_current_list, _current_music, _current_item) : -1;
+            change_current_item (item);
         }
     }
 

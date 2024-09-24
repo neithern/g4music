@@ -508,7 +508,7 @@ namespace G4 {
                 _data_store.insert (dst_pos, (!)src_obj);
                 _modified = true;
                 if (_multi_selection) {
-                    dst_pos = find_item_in_model (_filter_model, src_obj, dst_pos);
+                    dst_pos = find_item_in_model (_filter_model, src_obj, (int) dst_pos);
                     _selection.select_item (dst_pos, true);
                 }
             }

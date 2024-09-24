@@ -384,7 +384,7 @@ namespace G4 {
         }
     }
 
-    public int find_item_in_model (ListModel model, Object? obj, uint start_pos = 0) {
+    public int find_item_in_model (ListModel model, Object? obj, int start_pos = 0) {
         var count = model.get_n_items ();
         for (var i = start_pos; i < count; i++) {
             if (model.get_item (i) == obj)
@@ -424,14 +424,25 @@ namespace G4 {
         return remain.length > 0;
     }
 
-    public bool remove_items_from_store (ListStore store, GenericArray<Music> arr) {
+    public bool move_items_in_store (ListStore store, uint position, GenericArray<Music> arr) {
+        var obj = store.get_item (position) as Music;
+        var removed = remove_items_from_store (store, arr, obj);
+        if (removed && obj != null)
+            store.find ((!)obj, out position);
+        var size = store.get_n_items ();
+        store.splice (uint.min (position, size), 0, arr.data);
+        return true;
+    }
+
+    public bool remove_items_from_store (ListStore store, GenericArray<Music> arr, Music? exclude = null) {
         var map = new GenericSet<Object?> (direct_hash, direct_equal);
         arr.foreach ((obj) => map.add (obj));
         var size = (int) store.get_n_items ();
         if (arr.length < size / 4) {
             var removed = false;
             for (var i = size - 1; i >= 0; i--) {
-                if (map.contains (store.get_item (i))) {
+                var obj = store.get_item (i);
+                if (obj != exclude && map.contains (obj)) {
                     store.remove (i);
                     removed = true;
                 }
@@ -441,7 +452,7 @@ namespace G4 {
             var remain = new GenericArray<Music> (size);
             for (var i = 0; i < size; i++) {
                 var obj = store.get_item (i);
-                if (!map.contains (obj))
+                if (obj == exclude || !map.contains (obj))
                     remain.add ((Music) obj);
             }
             store.splice (0, size, remain.data);
