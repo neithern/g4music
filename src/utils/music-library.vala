@@ -176,12 +176,12 @@ namespace G4 {
             }
         }
 
-        public new bool add_music (Music music, bool ignore_exists = false) {
+        public new bool add_music (Music music, bool unique = false) {
             if (!has_cover && music.has_cover) {
                 has_cover = true;
                 this.uri = music.uri;
             }
-            if (!ignore_exists || insert_music (music)) {
+            if (!unique || insert_music (music)) {
                 var count = items.length;
                 items.add (music);
                 items[count]._order = count;
@@ -476,22 +476,23 @@ namespace G4 {
         store.splice (0, count, (Object[]) arr.data);
     }
 
-    public Playlist to_playlist (Music[] musics, string? title = null) {
+    public Playlist to_playlist (Music[] musics, string? title = null, bool unique = true) {
         var count = musics.length;
-        var playlist = new Playlist (title ?? "Untitled");
+        var arr = new GenericArray<Music> (count);
         foreach (var music in musics) {
             if (music is Artist) {
-                ((Artist) music).get_sorted_musics (playlist.items);
+                ((Artist) music).get_sorted_musics (arr);
             } else if (music is Album) {
-                ((Album) music).get_sorted_musics (playlist.items);
+                ((Album) music).get_sorted_musics (arr);
             } else {
-                playlist.items.add (music);
+                arr.add (music);
             }
         }
-        playlist.set_cover_uri ();
         if (title == null && count == 1) {
-            playlist.set_title (musics[0].title);
+            title = musics[0].title;
         }
+        var playlist = new Playlist (title ?? _("Untitled"));
+        arr.foreach ((music) => playlist.add_music (music, unique));
         return playlist;
     }
 }
