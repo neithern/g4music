@@ -216,11 +216,24 @@ namespace G4 {
         }
 
         public void button_command (string name) {
-            foreach (var button in _action_buttons) {
-                if (button.name == name) {
-                    button.clicked ();
+            var playlist = create_playlist_for_selection ();
+            switch (name) {
+                case Button.ADDTO:
+                    _app.show_add_playlist_dialog.begin (playlist, (obj, res) => _app.show_add_playlist_dialog.end (res));
                     break;
-                }
+
+                case Button.INSERT:
+                    _app.insert_after_current (playlist);
+                    break;
+
+                case Button.QUEUE:
+                    _app.append_to_queue (playlist, false);
+                    break;
+
+                case Button.REMOVE:
+                    _modified |= remove_items_from_store (_data_store, playlist.items);
+                    on_selection_changed (0, 0);
+                    break;
             }
         }
 
@@ -303,8 +316,8 @@ namespace G4 {
                 ((!)child).compute_bounds (this, out rect);
                 rect.size.height = scale_factor * 0.5f;
 #if ADW_1_6
-                var ac = Adw.StyleManager.get_for_display (get_display ()).get_accent_color ();
-                var color = ac.to_rgba ();
+                var color = Adw.StyleManager.get_for_display (get_display ())
+                                        .get_accent_color ().to_rgba ();
 #else
                 var color = Gdk.RGBA ();
                 color.alpha = 1;
@@ -468,7 +481,7 @@ namespace G4 {
             if (drop.formats.contain_gtype (typeof (Music))) try {
                 var value = Value (typeof (Music));
                 if (drop.drag.content.get_value (ref value)) {
-                    var item = find_item_in_model (_filter_model, value.get_object () as Music);
+                    var item = find_item_in_model (_filter_model, value.get_object ());
                     if (item != -1)
                         _selection.select_item (item, true);
                 }
@@ -494,6 +507,10 @@ namespace G4 {
                 }
                 _data_store.insert (dst_pos, (!)src_obj);
                 _modified = true;
+                if (_multi_selection) {
+                    dst_pos = find_item_in_model (_filter_model, src_obj, dst_pos);
+                    _selection.select_item (dst_pos, true);
+                }
             }
             dropping_item = -1;
             return true;
@@ -586,67 +603,30 @@ namespace G4 {
             if (_editable) {
                 var remove_btn = new Gtk.Button.from_icon_name ("user-trash-symbolic");
                 remove_btn.tooltip_text = _("Remove");
-                remove_btn.clicked.connect (() => {
-                    var count = (int) _filter_model.get_n_items ();
-                    var to_removed = new GenericSet<uint> (null, null);
-                    for (var i = 0; i < count; i++) {
-                        if (_selection.is_selected (i)) {
-                            var node = _filter_model.get_item (i);
-                            uint position = -1;
-                            if (_data_store.find ((!)node, out position))
-                                to_removed.add (position);
-                        }
-                    }
-                    if (to_removed.length > 0) {
-                        var size = (int) _data_store.get_n_items ();
-                        var items = new GenericArray<Music> (size);
-                        for (var i = 0; i < size; i++) {
-                            if (!to_removed.contains (i)) {
-                                var node = _data_store.get_item (i);
-                                items.add ((Music) node);
-                            }
-                        }
-                        _data_store.splice (0, size, items.data);
-                        _modified = true;
-                    }
-                    on_selection_changed (0, 0);
-                });
+                remove_btn.clicked.connect (() => button_command (Button.REMOVE));
                 remove_btn.name = Button.REMOVE;
                 _action_buttons.add (remove_btn);
             }
 
             var insert_btn = new Gtk.Button.from_icon_name ("format-indent-more-symbolic");
             insert_btn.tooltip_text = _("Play at Next");
-            insert_btn.clicked.connect (() => {
-                var playlist = create_playlist_for_selection ();
-                var current = _app.current_music;
-                if (current != null)
-                    playlist.foreach_remove ((uri, music) => music == (!)current);
-                    _app.play_at_next (playlist);
-            });
+            insert_btn.clicked.connect (() => button_command (Button.INSERT));
             insert_btn.name = Button.INSERT;
             _action_buttons.add (insert_btn);
 
             if (_has_add_to_queque) {
                 var queue_btn = new Gtk.Button.from_icon_name ("document-send-symbolic");
                 queue_btn.tooltip_text = _("Add to Queue");
-                queue_btn.clicked.connect (() => {
-                    var app = (Application) GLib.Application.get_default ();
-                    var playlist = create_playlist_for_selection ();
-                    app.queue (playlist, false);
-                });
+                queue_btn.clicked.connect (() => button_command (Button.QUEUE));
                 queue_btn.name = Button.QUEUE;
                 _action_buttons.add (queue_btn);
             }
 
-            var add_to_btn = new Gtk.Button.from_icon_name ("document-new-symbolic");
-            add_to_btn.tooltip_text = _("Add to Playlist");
-            add_to_btn.clicked.connect (() => {
-                var playlist = create_playlist_for_selection ();
-                _app.show_add_playlist_dialog.begin (playlist, (obj, res) => _app.show_add_playlist_dialog.end (res));
-            });
-            add_to_btn.name = Button.ADDTO;
-            _action_buttons.add (add_to_btn);
+            var addto_btn = new Gtk.Button.from_icon_name ("document-new-symbolic");
+            addto_btn.tooltip_text = _("Add to Playlist");
+            addto_btn.clicked.connect (() => button_command (Button.ADDTO));
+            addto_btn.name = Button.ADDTO;
+            _action_buttons.add (addto_btn);
 
             _action_buttons.foreach (header.pack_end);
         }

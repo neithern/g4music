@@ -199,12 +199,18 @@ namespace G4 {
             items.extend (musics, (src) => src);
         }
 
+        public new bool remove_music (Music music) {
+            base.remove_music (music);
+            return items.remove (music);
+        }
+
         public override void get_sorted_musics (GenericArray<Music> musics) {
             musics.extend (items, (src) => src);
         }
 
-        public void insert_to_store (ListStore store, uint insert_pos = 0) {
-            store.splice (insert_pos, 0, (Object[]) items.data);
+        public void insert_to_store (ListStore store, uint position = uint.MAX) {
+            var size = store.get_n_items ();
+            store.splice (uint.min (position, size), 0, (Object[]) items.data);
         }
 
         public void reset_original_order () {
@@ -368,6 +374,19 @@ namespace G4 {
         }
     }
 
+    public int find_item_in_model (ListModel model, Object? obj, uint start_pos = 0) {
+        var count = model.get_n_items ();
+        for (var i = start_pos; i < count; i++) {
+            if (model.get_item (i) == obj)
+                return (int) i;
+        }
+        for (var i = 0; i < start_pos; i++) {
+            if (model.get_item (i) == obj)
+                return (int) i;
+        }
+        return -1;
+    }
+
     public CompareFunc<Music> get_sort_compare (uint sort_mode) {
         switch (sort_mode) {
             case SortMode.ALBUM:
@@ -382,6 +401,41 @@ namespace G4 {
                 return Music.compare_by_recent;
             default:
                 return Music.compare_by_order;
+        }
+    }
+
+    public bool merge_items_to_store (ListStore store, GenericArray<Music> arr) {
+        var remain = new GenericArray<Music> (arr.length);
+        foreach (var music in arr) {
+            if (!store.find (music, null))
+                remain.add (music);
+        }
+        store.splice (store.get_n_items (), 0, remain.data);
+        return remain.length > 0;
+    }
+
+    public bool remove_items_from_store (ListStore store, GenericArray<Music> arr) {
+        var map = new GenericSet<Object?> (direct_hash, direct_equal);
+        arr.foreach ((obj) => map.add (obj));
+        var size = (int) store.get_n_items ();
+        if (arr.length < size / 4) {
+            var removed = false;
+            for (var i = size - 1; i >= 0; i--) {
+                if (map.contains (store.get_item (i))) {
+                    store.remove (i);
+                    removed = true;
+                }
+            }
+            return removed;
+        } else {
+            var remain = new GenericArray<Music> (size);
+            for (var i = 0; i < size; i++) {
+                var obj = store.get_item (i);
+                if (!map.contains (obj))
+                    remain.add ((Music) obj);
+            }
+            store.splice (0, size, remain.data);
+            return remain.length != size;
         }
     }
 

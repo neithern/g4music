@@ -319,6 +319,25 @@ namespace G4 {
             return saved;
         }
 
+        public void append_to_queue (Playlist playlist, bool play = true) {
+            var merged = merge_items_to_store (_music_queue, playlist.items);
+            _list_modified |= merged;
+            if (merged)
+                update_current_item ();
+        }
+
+        public void insert_after_current (Playlist playlist) {
+            uint position = _current_item;
+            if (_current_music != null)
+                playlist.remove_music ((!)_current_music);
+            _list_modified |= remove_items_from_store (_music_queue, playlist.items);
+            if (_current_music != null)
+                _music_queue.find ((!)_current_music, out position);
+            playlist.insert_to_store (_music_queue, position + 1);
+            _list_modified |= playlist.length > 0;
+            update_current_item ();
+        }
+
         public async void load_files_async (owned File[] files) {
             var last_uri = _current_music?.uri ?? _settings.get_string ("played-uri");
             var default_mode = files.length == 0;
@@ -360,74 +379,8 @@ namespace G4 {
             var playlist = new Playlist ("");
             yield _loader.load_files_async (files, playlist.items);
             if (playlist.length > 0) {
-                if (play_now) {
-                    queue (playlist);
-                } else {
-                    play_at_next (playlist);
-                }
+                append_to_queue (playlist, play_now);
             }
-        }
-
-        public void queue (Music? node, bool play = true) {
-            var store = _music_queue;
-            if (node is Playlist) {
-                var playlist = (Playlist) node;
-                var insert_pos = (uint) store.get_n_items ();
-                foreach (var music in playlist.items) {
-                    uint position = -1;
-                    if (store.find (music, out position)) {
-                        store.remove (position);
-                        if (insert_pos > position) {
-                            insert_pos = position;
-                        }
-                    }
-                }
-                _list_modified = true;
-                playlist.insert_to_store (store, insert_pos);
-                if (play) {
-                    current_music = store.get_item (insert_pos) as Music;
-                    update_current_item ();
-                }
-            } else if (node is Music) {
-                var music = (Music) node;
-                int position = find_item_in_model (store, music);
-                if (position == -1) {
-                    _list_modified = true;
-                    store.append (music);
-                    position = find_item_in_model (_current_list, music);
-                }
-                if (play) {
-                    current_item = position;
-                    if (position == -1)
-                        current_music = music;
-                }
-            }
-        }
-
-        public void play_at_next (Music? node) {
-            var store = _music_queue;
-            if (node is Playlist) {
-                var playlist = (Playlist) node;
-                foreach (var music in playlist.items) {
-                    uint position = -1;
-                    if (store.find (music, out position)) {
-                        store.remove (position);
-                    }
-                }
-                _list_modified = true;
-                int insert_pos = find_music_in_store (store, _current_music);
-                playlist.insert_to_store (store, insert_pos + 1);
-            } else if (node is Music) {
-                var music = (Music) node;
-                uint position = -1;
-                if (store.find (music, out position)) {
-                    store.remove (position);
-                }
-                _list_modified = true;
-                int playing_pos = find_music_in_store (store, _current_music);
-                store.insert (playing_pos + 1, music);
-            }
-            update_current_item ();
         }
 
         public void play_next () {
@@ -540,36 +493,17 @@ namespace G4 {
             }
         }
 
-        private int find_music_in_store (ListStore store, Music? music) {
-            uint pos = -1;
-            if (music != null && store.find ((!)music, out pos)) {
-                return (int) pos;
-            }
-            return -1;
-        }
-
-        private int find_music_item (Music? music) {
-            var index = find_item_in_model (_current_list, music);
-            if (index != -1)
-                return index;
-            return music != null ? locate_music_item_by_uri (((!)music).uri) : -1;
-        }
-
         private int find_music_item_by_uri (string uri) {
             var music = _loader.find_cache (uri);
             if (music != null) {
-                var item = find_music_item (music);
+                var item = find_item_in_model (_current_list, music, _current_item);
                 if (item != -1)
                     return item;
             }
-            return locate_music_item_by_uri (uri);
-        }
-
-        private int locate_music_item_by_uri (string uri) {
             var count = _current_list.get_n_items ();
             for (var i = 0; i < count; i++) {
-                var music = _current_list.get_item (i) as Music;
-                if (strcmp (uri, music?.uri) == 0)
+                var m = _current_list.get_item (i) as Music;
+                if (strcmp (uri, m?.uri) == 0)
                     return (int) i;
             }
             return -1;
@@ -756,20 +690,11 @@ namespace G4 {
         }
 
         private void update_current_item () {
-            if (_current_music == null || _current_music != _current_list.get_item (_current_item)) {
-                var item = find_music_item (_current_music);
+            if (_current_music == null) {
+                var item = find_item_in_model (_current_list, _current_music, _current_item);
                 change_current_item (item);
             }
         }
-    }
-
-    public int find_item_in_model (ListModel model, Object? obj) {
-        var count = model.get_n_items ();
-        for (var i = 0; i < count; i++) {
-            if (model.get_item (i) == obj)
-                return (int) i;
-        }
-        return -1;
     }
 
     public File get_playing_list_file () {

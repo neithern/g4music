@@ -109,9 +109,8 @@ namespace G4 {
 
         private void add_to_playlist (SimpleAction action, Variant? parameter) {
             var strv = parameter?.get_bytestring_array ();
-            var node = _parse_music_node_form_strv (strv);
-            if (node != null) {
-                var playlist = to_playlist ({ (!)node });
+            var playlist = _parse_playist_form_strv (strv);
+            if (playlist != null) {
                 _app.show_add_playlist_dialog.begin ((!)playlist, (obj, res) => _app.show_add_playlist_dialog.end (res));
             }
         }
@@ -131,8 +130,8 @@ namespace G4 {
             return null;
         }
 
-        private Music? _parse_music_node_form_strv (string[]? strv) {
-            Music? music = null;
+        private Playlist? _parse_playist_form_strv (string[]? strv) {
+            Music? node = null;
             if (strv != null && ((!)strv).length > 1) {
                 var arr = (!)strv;
                 var loader = _app.loader;
@@ -140,39 +139,44 @@ namespace G4 {
                 unowned var key = arr[1];
                 switch (arr[0]) {
                     case PageName.ALBUM:
-                        music = library.albums[key];
+                        node = library.albums[key];
                         break;
                     case PageName.ARTIST:
                         var artist = library.artists[key];
                         if ((artist is Artist) && arr.length > 2)
-                            music = ((Artist) artist)[arr[2]];
+                            node = ((Artist) artist)[arr[2]];
                         else
-                            music = artist;
+                            node = artist;
                         break;
                     case PageName.PLAYLIST:
-                        return library.playlists[key];
+                        node = library.playlists[key];
+                        break;
                     default:
-                        return loader.find_cache (key);
+                        node = loader.find_cache (key);
+                        break;
                 }
             }
-            return music != null ? to_playlist ({ (!)music }) : (Music?) null;
+            return node != null ? to_playlist ({(!)node}) : (Playlist?) null;
         }
 
         private void play_or_queue (SimpleAction action, Variant? parameter) {
             var strv = parameter?.get_bytestring_array ();
-            var node = _parse_music_node_form_strv (strv);
-            if (action.name.has_suffix (ACTION_ADD_TO_QUEUE)) {
-                _app.queue (node, false);
-            } else {
-                (_app.active_window as Window)?.open_page (strv, node);
-                _app.current_item = 0;
+            var playlist = _parse_playist_form_strv (strv);
+            if (playlist != null) {
+                if (action.name.has_suffix (ACTION_ADD_TO_QUEUE)) {
+                    _app.append_to_queue ((!)playlist, false);
+                } else {
+                    (_app.active_window as Window)?.open_page (strv, (!)playlist);
+                    _app.current_item = 0;
+                }
             }
         }
 
         private void play_at_next (SimpleAction action, Variant? parameter) {
             var strv = parameter?.get_bytestring_array ();
-            var node = _parse_music_node_form_strv (strv);
-            _app.play_at_next (node);
+            var playlist = _parse_playist_form_strv (strv);
+            if (playlist != null)
+                _app.insert_after_current ((!)playlist);
         }
 
         private void show_about () {

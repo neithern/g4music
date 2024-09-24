@@ -486,7 +486,7 @@ namespace G4 {
         }
 
         private void on_index_changed (int index, uint size) {
-            if (_current_list.playable && _current_list.dropping_item != -1 && !_current_list.multi_selection) {
+            if (_current_list.playable && _current_list.dropping_item == -1 && !_current_list.multi_selection) {
                 _current_list.scroll_to_item (index);
             }
         }
@@ -508,8 +508,8 @@ namespace G4 {
         private Gtk.Bitset _changing_stacks = new Gtk.Bitset.empty ();
 
         private void on_music_library_changed (bool external) {
+            _main_list.modified |= _app.list_modified;
             if (external) {
-                _main_list.modified |= _app.list_modified;
                 for (var flag = StackFlags.FIRST; flag <= StackFlags.LAST; flag++)
                     _changing_stacks.add (flag);
                 if (_size_allocated) {
