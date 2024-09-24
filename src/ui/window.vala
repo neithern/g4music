@@ -236,7 +236,8 @@ namespace G4 {
             //  so use STRING type to get the file/folder path.
             var target = new Gtk.DropTarget (Type.INVALID, Gdk.DragAction.COPY);
             target.set_gtypes ({ Type.STRING, typeof (Gdk.FileList) });
-            target.accept.connect ((drop) => drop.formats.contain_gtype (typeof (Gdk.FileList)));
+            target.accept.connect ((drop) => drop.formats.contain_gtype (typeof (Gdk.FileList))
+                && !drop.formats.contain_gtype (typeof (Playlist)));
 #if GTK_4_10
             target.drop.connect (on_file_dropped);
 #else

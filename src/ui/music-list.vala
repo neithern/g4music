@@ -69,9 +69,14 @@ namespace G4 {
             append (_scroll_view);
 
             if (_editable) {
-                var target = create_drop_target ();
-                _grid_view.add_controller (target);
+                create_drop_target (_grid_view);
             }
+
+            print (@"MusicList created: $(++_instance_count)\n");
+        }
+        private static int _instance_count = 0;
+        ~MusicList () {
+            print (@"MusicList destroyed: $(--_instance_count)\n");
         }
 
         public bool compact_list {
@@ -415,10 +420,8 @@ namespace G4 {
             item_created (item);
             _row_min_width = item.child.width_request;
 
-            if (_editable) {
-                make_draggable (child.image, item);
-            }
             if (_selectable) {
+                create_drag_source (child.image, item);
                 child.create_music_menu.connect (on_create_music_menu);
                 make_right_clickable (child, child.show_popover_menu);
                 make_long_pressable (child, (widget, x, y) => multi_selection = true);
@@ -475,42 +478,39 @@ namespace G4 {
             }
         }
 
-        private int _dropping_item = -1;
+        private Gdk.ContentProvider? on_drag_prepare (Music? music) {
+            var position = find_item_in_model (_filter_model, music);
+            if (position != -1)
+                _selection.select_item (position, false);
 
-        private bool on_drop_accept (Gdk.Drop drop) {
-            if (drop.formats.contain_gtype (typeof (Music))) try {
-                var value = Value (typeof (Music));
-                if (drop.drag.content.get_value (ref value)) {
-                    var item = find_item_in_model (_filter_model, value.get_object ());
-                    if (item != -1)
-                        _selection.select_item (item, true);
-                }
-                return true;
-            } catch (Error e) {
-            }
-            return false;
+            var playlist = create_playlist_for_selection ();
+            var val = Value (typeof (Playlist));
+            val.set_object (playlist);
+#if GTK_4_10
+            var files = new GenericArray<File> (playlist.length);
+            playlist.items.foreach ((music) => files.add (File.new_for_uri (music.uri)));
+            var val2 = Value (typeof (Gdk.FileList));
+            val2.set_boxed (new Gdk.FileList.from_array (files.data));
+            return new Gdk.ContentProvider.union ({
+                new Gdk.ContentProvider.for_value (val),
+                new Gdk.ContentProvider.for_value (val2),
+            });
+#else
+            return new Gdk.ContentProvider.for_value (val);
+#endif
         }
 
-        private bool on_dropp_done (Value value, double x, double y) {
-            var src_obj = value.get_object () as Music;
-            uint src_pos = find_item_in_model (_filter_model, src_obj);
-            uint dst_pos = _dropping_item;
-            if (src_obj != null && src_pos != dst_pos) {
-                if (_data_store.find ((!)src_obj, out src_pos)) {
-                    _data_store.remove (src_pos);
-                    if (dst_pos >= src_pos)
-                        dst_pos--;
-                }
-                var dst_obj = _filter_model.get_item (dst_pos);
-                if (dst_obj == null || !_data_store.find ((!)dst_obj, out dst_pos)) {
-                    dst_pos = _data_store.get_n_items ();
-                }
-                _data_store.insert (dst_pos, (!)src_obj);
-                _modified = true;
-                if (_multi_selection) {
-                    dst_pos = find_item_in_model (_filter_model, src_obj, (int) dst_pos);
-                    _selection.select_item (dst_pos, true);
-                }
+        private int _dropping_item = -1;
+
+        private bool on_drop_done (Value value, double x, double y) {
+            var obj = value.get_object ();
+            if (obj is Playlist) {
+                uint position = _dropping_item;
+                var dst_obj = _filter_model.get_item (position);
+                if (dst_obj == null || !_data_store.find ((!)dst_obj, out position))
+                    position = _data_store.get_n_items ();
+                var playlist = (Playlist) obj;
+                _modified |= move_items_in_store (_data_store, position, playlist.items);
             }
             dropping_item = -1;
             return true;
@@ -521,7 +521,7 @@ namespace G4 {
             var col = (int) (x / row_width);
             var row = (int) ((_scroll_view.vadjustment.value + y) / _row_height);
             dropping_item = (int) _columns * row + col;
-            return Gdk.DragAction.MOVE;
+            return Gdk.DragAction.LINK;
         }
 
         private MusicWidget? get_binding_widget (Music? music) {
@@ -529,17 +529,39 @@ namespace G4 {
             return item?.child as MusicWidget;
         }
 
-        private Gtk.DropTarget create_drop_target () {
-            var target = new Gtk.DropTarget (typeof (Music), Gdk.DragAction.MOVE);
-            target.accept.connect (on_drop_accept);
+        private static void create_drag_source (Gtk.Widget widget, Gtk.ListItem item) {
+            var source = new Gtk.DragSource ();
+            source.actions = Gdk.DragAction.LINK;
+            source.drag_begin.connect ((drag) => source.set_icon (new Gtk.WidgetPaintable (widget), 0, 0));
+            source.prepare.connect ((x, y) => {
+                //  Hack: don't use `this` directly, because it will not be destroyed when detach???
+                var list = find_ancestry_by_type (widget, typeof (MusicList));
+                return (list as MusicList)?.on_drag_prepare (item.item as Music);
+            });
+            widget.add_controller (source);
+        }
+
+        private void create_drop_target (Gtk.Widget widget) {
+            var target = new Gtk.DropTarget (typeof (Playlist), Gdk.DragAction.LINK);
+            target.accept.connect ((drop) => drop.formats.contain_gtype (typeof (Playlist)));
             target.motion.connect (on_drop_motion);
             target.leave.connect (() => dropping_item = -1);
 #if GTK_4_10
-            target.drop.connect (on_dropp_done);
+            target.drop.connect (on_drop_done);
 #else
-            target.on_drop.connect (on_dropp_done);
+            target.on_drop.connect (on_drop_done);
 #endif
-            return target;
+            widget.add_controller (target);
+        }
+
+        private Playlist create_playlist_for_selection () {
+            var count = _filter_model.get_n_items ();
+            var musics = new GenericArray<Music> (count);
+            for (var i = 0; i < count; i++) {
+                if (_selection.is_selected (i))
+                    musics.add ((Music) _filter_model.get_item (i));
+            }
+            return to_playlist (musics.data, _music_node?.title);
         }
 
         private void on_selection_changed (uint position, uint n_items) {
@@ -552,16 +574,6 @@ namespace G4 {
             var enabled = selected > 0;
             foreach (var button in _action_buttons)
                 button.sensitive = enabled;
-        }
-
-        protected Playlist create_playlist_for_selection () {
-            var count = _filter_model.get_n_items ();
-            var musics = new GenericArray<Music> (count);
-            for (var i = 0; i < count; i++) {
-                if (_selection.is_selected (i))
-                    musics.add ((Music) _filter_model.get_item (i));
-            }
-            return to_playlist (musics.data, _music_node?.title);
         }
 
         private void setup_selection_header_bar (Gtk.HeaderBar header) {
@@ -669,19 +681,12 @@ namespace G4 {
         return item;
     }
 
-    public Gtk.DragSource make_draggable (Gtk.Widget widget, Gtk.ListItem item) {
-        var source = new Gtk.DragSource ();
-        source.actions = Gdk.DragAction.MOVE;
-        source.prepare.connect ((x, y) => {
-            var val = Value (typeof (Music));
-            val.set_object (item.item);
-            return new Gdk.ContentProvider.for_value (val);
-        });
-        source.drag_begin.connect ((drag) => {
-            var paintable = new Gtk.WidgetPaintable (widget);
-            source.set_icon (paintable, 0, 0);
-        });
-        widget.add_controller (source);
-        return source;
+    public Gtk.Widget? find_ancestry_by_type (Gtk.Widget widget, Type type) {
+        var parent = widget.get_parent ();
+        if (parent?.get_type () == type)
+            return parent as MusicList;
+        else if (parent != null)
+            return find_ancestry_by_type ((!)parent, type);
+        return null;
     }
 }
