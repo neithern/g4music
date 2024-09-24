@@ -339,6 +339,40 @@ namespace G4 {
             return list;
         }
 
+        private Gtk.Box create_title_box (string icon_name, string title, Playlist? plist) {
+            var label = new Gtk.Label (title);
+            label.ellipsize = Pango.EllipsizeMode.MIDDLE;
+            var icon = new Gtk.Image.from_icon_name (icon_name);
+            var box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6);
+            box.append (icon);
+            box.append (label);
+            if (plist != null) {
+                var playlist = (!)plist;
+                var entry = new Gtk.Entry ();
+                entry.max_width_chars = 1024;
+                entry.text = title;
+                entry.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY, "emblem-ok-symbolic");
+                entry.icon_release.connect ((icon_pos) => {
+                    entry.visible = false;
+                    label.visible = true;
+                    _app.rename_playlist_async.begin (playlist, entry.text, (obj, res) => {
+                        var ret = _app.rename_playlist_async.end (res);
+                        if (ret)
+                            label.label = playlist.title;
+                    });
+                });
+                make_widget_clickable (label).released.connect (() => {
+                    entry.text = label.label;
+                    entry.visible = true;
+                    entry.grab_focus ();
+                    label.visible = false;
+                });
+                entry.visible = false;
+                box.append (entry);
+            }
+            return box;
+        }
+
         private GenericSet<unowned MusicList> _overlayed_lists = new GenericSet<unowned MusicList> (direct_hash, direct_equal);
 
         private void create_stack_page (Artist? artist, Album? album = null) {
@@ -348,15 +382,10 @@ namespace G4 {
             var mlist = album_mode ? create_music_list ((!)album, artist_mode) : create_album_list (artist);
             mlist.update_store ();
 
-            var title = album_mode ? album?.title : artist?.title;
-            var label = new Gtk.Label (title);
-            label.ellipsize = Pango.EllipsizeMode.MIDDLE;
+            var real_playlist = (!artist_mode && playlist_mode) ? (album as Playlist) : (Playlist?) null;
             var icon_name = (album is Playlist) ? "emblem-documents-symbolic" : (album_mode ? "media-optical-cd-audio-symbolic" : "avatar-default-symbolic");
-            var icon = new Gtk.Image.from_icon_name (icon_name);
-            var label_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6);
-            label_box.append (icon);
-            label_box.append (label);
-
+            var title = (album_mode ? album?.title : artist?.title) ?? "";
+            var label_box = create_title_box (icon_name, title, real_playlist);
             var header = new Gtk.HeaderBar ();
             header.show_title_buttons = false;
             header.title_widget = label_box;

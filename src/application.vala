@@ -286,10 +286,10 @@ namespace G4 {
             var file = File.new_for_uri (playlist.list_uri);
             var uris = new GenericArray<string> (1024);
             var saved = yield run_async <bool> (() => {
-                string? name = null;
+                string? title = null;
                 var map = new GenericSet<string> (str_hash, str_equal);
                 if (append) {
-                    name = load_playlist_file (file, uris);
+                    title = load_playlist_file (file, uris);
                     uris.foreach ((uri) => map.add (uri));
                 }
                 foreach (var music in playlist.items) {
@@ -297,7 +297,7 @@ namespace G4 {
                     if (!map.contains (uri))
                         uris.add (uri);
                 }
-                var ret = save_playlist_file (file, uris, name ?? playlist.title);
+                var ret = save_playlist_file (file, uris, title ?? playlist.title);
                 if (ret) {
                     //  Replace items if loaded from existing file
                     playlist.clear ();
@@ -307,15 +307,13 @@ namespace G4 {
                             playlist.add_music ((!)music, true);
                     }
                     playlist.set_cover_uri ();
-                    if (name != null)
-                        playlist.set_title ((!)name);
+                    if (title != null)
+                        playlist.set_title ((!)title);
                 }
                 return ret;
             });
-            if (saved) {
-                _loader.library.add_playlist (playlist);
-                playlist_added (playlist);
-            }
+            if (saved)
+                playlist_added (_loader.library.add_playlist (playlist));
             return saved;
         }
 
@@ -416,7 +414,19 @@ namespace G4 {
                 (obj, res) => _portal.request_background_async.end (res));
         }
 
-        public async void save_to_playlist_file_async (Playlist playlist) {
+        public async bool rename_playlist_async (Playlist playlist, string title) {
+            var file = File.new_for_uri (playlist.list_uri);
+            var uris = new GenericArray<string> (playlist.length);
+            playlist.items.foreach ((music) => uris.add (music.uri));
+            var saved = yield run_async<bool> (() => save_playlist_file (file, uris, title));
+            if (saved) {
+                playlist.set_title (title);
+                playlist_added (_loader.library.add_playlist (playlist));
+            }
+            return saved;
+        }
+
+        public async bool save_to_playlist_file_async (Playlist playlist) {
             var uri = playlist.list_uri;
             var append = uri.length == 0;
             if (append) {
@@ -428,13 +438,11 @@ namespace G4 {
                 var initial = File.new_for_uri (music_folder).get_child (playlist.title + ".m3u");
                 var file = yield show_save_file_dialog (active_window, initial, {filter});
                 if (file == null)
-                    return;
+                    return false;
                 playlist.list_uri = ((!)file).get_uri ();
                 playlist.set_title (get_file_display_name ((!)file));
             }
-            var saved = yield add_playlist_to_file_async (playlist, append);
-            if (saved)
-                show_uri_with_portal (playlist.list_uri);
+            return yield add_playlist_to_file_async (playlist, append);
         }
 
         public uint get_list_sort_mode (ListModel model) {

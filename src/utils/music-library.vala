@@ -192,7 +192,14 @@ namespace G4 {
 
         public void clear () {
             _musics.remove_all ();
-            items.length = 0;
+            items.remove_range (0, items.length);
+        }
+
+        public void copy_from (Playlist playlist) {
+            clear ();
+            extend (playlist.items);
+            set_cover_uri ();
+            set_title (playlist.title);
         }
 
         public void extend (GenericArray<Music> musics) {
@@ -228,9 +235,10 @@ namespace G4 {
             }
         }
 
-        public void set_title (string name) {
-            this.title = name;
-            _title_key = name.collate_key_for_filename ();
+        public void set_title (string title) {
+            this.album = title;
+            this.title = title;
+            _title_key = title.collate_key_for_filename ();
         }
 
         protected override void sort (GenericArray<Music> arr) {
@@ -290,15 +298,17 @@ namespace G4 {
             return added;
         }
 
-        public void add_playlist (Playlist playlist) {
+        public Playlist add_playlist (Playlist playlist) {
             unowned string key;
             Playlist oldlist;
             if (_playlists.lookup_extended (playlist.list_uri, out key, out oldlist)) {
-                oldlist.clear ();
-                oldlist.extend (playlist.items);
+                if (oldlist != playlist)
+                    oldlist.copy_from (playlist);
+                return oldlist;
             } else {
                 _playlists.insert (playlist.list_uri, playlist);
             }
+            return playlist;
         }
 
         public void overwrite_albums_to (ListStore store) {
