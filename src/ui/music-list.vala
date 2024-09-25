@@ -478,6 +478,12 @@ namespace G4 {
             }
         }
 
+        private void on_drag_begin (Gtk.DragSource source, Gdk.Drag drag, Gtk.Widget widget, Graphene.Point point) {
+            var size = _selection.get_selection ().get_size ();
+            var title = size > 1 ? size.to_string () : (string) null;
+            source.set_icon (create_widget_paintable (widget, ref point, title), (int) point.x, (int) point.y);
+        }
+
         private Gdk.ContentProvider? on_drag_prepare (Music? music) {
             var position = find_item_in_model (_filter_model, music);
             if (position != -1)
@@ -521,13 +527,16 @@ namespace G4 {
         }
 
         private static void create_drag_source (Gtk.Widget widget, Gtk.ListItem item) {
+            //  Hack: don't use `this` directly, because it will not be destroyed when detach???
             var point = Graphene.Point ();
             var source = new Gtk.DragSource ();
             source.actions = Gdk.DragAction.LINK;
-            source.drag_begin.connect ((drag) => source.set_icon (new Gtk.WidgetPaintable (widget), (int) point.x, (int) point.y));
+            source.drag_begin.connect ((drag) => {
+                var list = find_ancestry_with_type (widget, typeof (MusicList));
+                (list as MusicList)?.on_drag_begin (source, drag, widget, point);
+            });
             source.prepare.connect ((x, y) => {
                 point.init ((float) x, (float) y);
-                //  Hack: don't use `this` directly, because it will not be destroyed when detach???
                 var list = find_ancestry_with_type (widget, typeof (MusicList));
                 return (list as MusicList)?.on_drag_prepare (item.item as Music);
             });

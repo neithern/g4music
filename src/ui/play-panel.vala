@@ -126,7 +126,7 @@ namespace G4 {
             var point = Graphene.Point ();
             var source = new Gtk.DragSource ();
             source.actions = Gdk.DragAction.LINK;
-            source.drag_begin.connect ((drag) => source.set_icon (new Gtk.WidgetPaintable (music_cover), (int) point.x, (int) point.y));
+            source.drag_begin.connect ((drag) => source.set_icon (create_widget_paintable (music_cover, ref point), (int) point.x, (int) point.y));
             source.prepare.connect ((x, y) => {
                 point.init ((float) x, (float) y);
                 if (_current_music != null) {

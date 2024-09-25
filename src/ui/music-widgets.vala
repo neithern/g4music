@@ -91,8 +91,6 @@ namespace G4 {
             width_request = 200;
 
             var overlay = new Gtk.Overlay ();
-            overlay.margin_start = 8;
-            overlay.margin_end = 8;
             overlay.margin_bottom = 8;
             overlay.child = _image;
             overlay.add_overlay (_playing);
