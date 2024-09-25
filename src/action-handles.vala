@@ -164,7 +164,7 @@ namespace G4 {
             var playlist = _parse_playist_form_strv (strv);
             if (playlist != null) {
                 if (action.name.has_suffix (ACTION_ADD_TO_QUEUE)) {
-                    _app.append_to_queue ((!)playlist, false);
+                    _app.insert_to_queue ((!)playlist, -1, false);
                 } else {
                     (_app.active_window as Window)?.open_page (strv, (!)playlist);
                     _app.current_item = 0;

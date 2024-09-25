@@ -232,7 +232,7 @@ namespace G4 {
                     break;
 
                 case Button.QUEUE:
-                    _app.append_to_queue (playlist, false);
+                    _app.insert_to_queue (playlist);
                     break;
 
                 case Button.REMOVE:
@@ -510,7 +510,10 @@ namespace G4 {
                 if (dst_obj == null || !_data_store.find ((!)dst_obj, out position))
                     position = _data_store.get_n_items ();
                 var playlist = (Playlist) obj;
-                _modified |= move_items_in_store (_data_store, position, playlist.items);
+                var changed = merge_items_to_store (_data_store, playlist.items, ref position);
+                _modified |= changed;
+                if (changed)
+                    on_selection_changed (0, 0);
             }
             dropping_item = -1;
             return true;

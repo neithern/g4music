@@ -317,13 +317,6 @@ namespace G4 {
             return saved;
         }
 
-        public void append_to_queue (Playlist playlist, bool play = true) {
-            var merged = merge_items_to_store (_music_queue, playlist.items);
-            _list_modified |= merged;
-            if (merged)
-                update_current_item ();
-        }
-
         public void insert_after_current (Playlist playlist) {
             uint position = _current_item;
             if (_current_music != null) {
@@ -331,8 +324,16 @@ namespace G4 {
                     position = -1;
                 playlist.remove_music ((!)_current_music);
             }
-            _list_modified |= move_items_in_store (_music_queue, position + 1, playlist.items);
-            update_current_item ();
+            insert_to_queue ( playlist, position + 1);
+        }
+
+        public void insert_to_queue (Playlist playlist, uint position = -1, bool play_now = false) {
+            var changed = merge_items_to_store (_music_queue, playlist.items, ref position);
+            _list_modified |= changed;
+            if (play_now)
+                current_item = (int) position;
+            else if (changed)
+                update_current_item ();
         }
 
         public async void load_files_async (owned File[] files) {
@@ -376,7 +377,7 @@ namespace G4 {
             var playlist = new Playlist ("");
             yield _loader.load_files_async (files, playlist.items);
             if (playlist.length > 0) {
-                append_to_queue (playlist, play_now);
+                insert_to_queue (playlist, -1, play_now);
             }
         }
 

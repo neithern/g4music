@@ -397,40 +397,15 @@ namespace G4 {
         return -1;
     }
 
-    public CompareFunc<Music> get_sort_compare (uint sort_mode) {
-        switch (sort_mode) {
-            case SortMode.ALBUM:
-                return Music.compare_by_album;
-            case SortMode.ARTIST:
-                return Music.compare_by_artist;
-            case SortMode.ARTIST_ALBUM:
-                return Music.compare_by_artist_album;
-            case SortMode.TITLE:
-                return Music.compare_by_title;
-            case SortMode.RECENT:
-                return Music.compare_by_recent;
-            default:
-                return Music.compare_by_order;
-        }
-    }
-
-    public bool merge_items_to_store (ListStore store, GenericArray<Music> arr) {
-        var remain = new GenericArray<Music> (arr.length);
-        foreach (var music in arr) {
-            if (!store.find (music, null))
-                remain.add (music);
-        }
-        store.splice (store.get_n_items (), 0, remain.data);
-        return remain.length > 0;
-    }
-
-    public bool move_items_in_store (ListStore store, uint position, GenericArray<Music> arr) {
+    public bool merge_items_to_store (ListStore store, GenericArray<Music> arr, ref uint position) {
         var obj = store.get_item (position) as Music;
         var removed = remove_items_from_store (store, arr, obj);
         if (removed && obj != null)
             store.find ((!)obj, out position);
-        var size = store.get_n_items ();
-        store.splice (uint.min (position, size), 0, arr.data);
+        if (arr.length == 1 && arr[0] == store.get_item (position))
+            return false;
+        position = uint.min (position, store.get_n_items ());
+        store.splice (position, 0, arr.data);
         return true;
     }
 
@@ -463,7 +438,21 @@ namespace G4 {
     public void sort_music_array (GenericArray<Music> arr, uint sort_mode) {
         if (sort_mode == SortMode.SHUFFLE)
             Music.shuffle_order (arr);
-        arr.sort (get_sort_compare (sort_mode));
+
+        CompareFunc<Music> compare = Music.compare_by_order;
+        switch (sort_mode) {
+            case SortMode.ALBUM:
+                compare = Music.compare_by_album; break;
+            case SortMode.ARTIST:
+                compare = Music.compare_by_artist; break;
+            case SortMode.ARTIST_ALBUM:
+                compare = Music.compare_by_artist_album; break;
+            case SortMode.TITLE:
+                compare = Music.compare_by_title; break;
+            case SortMode.RECENT:
+                compare = Music.compare_by_recent; break;
+        }
+        arr.sort (compare);
     }
 
     public void sort_music_store (ListStore store, uint sort_mode) {
