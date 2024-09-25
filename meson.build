@@ -17,6 +17,9 @@ add_project_arguments('-DGETTEXT_PACKAGE="' + meson.project_name() + '"', langua
 add_project_arguments('--enable-experimental-non-null', language: 'vala')
 
 gtk_dep = dependency('gtk4')
+if gtk_dep.version().version_compare('>=4.8') and vala_compiler.version().version_compare('>=0.56.6')
+  add_project_arguments('--define=GTK_4_8', language: 'vala')
+endif
 if gtk_dep.version().version_compare('>=4.10') and vala_compiler.version().version_compare('>=0.56.6')
   add_project_arguments('--define=GTK_4_10', language: 'vala')
 endif

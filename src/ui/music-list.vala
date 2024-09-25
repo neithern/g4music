@@ -486,7 +486,7 @@ namespace G4 {
             var playlist = create_playlist_for_selection ();
             var val = Value (typeof (Playlist));
             val.set_object (playlist);
-#if GTK_4_10
+#if GTK_4_8
             var files = new GenericArray<File> (playlist.length);
             playlist.items.foreach ((music) => files.add (File.new_for_uri (music.uri)));
             var val2 = Value (typeof (Gdk.FileList));
@@ -535,7 +535,7 @@ namespace G4 {
             source.drag_begin.connect ((drag) => source.set_icon (new Gtk.WidgetPaintable (widget), 0, 0));
             source.prepare.connect ((x, y) => {
                 //  Hack: don't use `this` directly, because it will not be destroyed when detach???
-                var list = find_ancestry_by_type (widget, typeof (MusicList));
+                var list = find_ancestry_with_type (widget, typeof (MusicList));
                 return (list as MusicList)?.on_drag_prepare (item.item as Music);
             });
             widget.add_controller (source);
@@ -681,12 +681,12 @@ namespace G4 {
         return item;
     }
 
-    public Gtk.Widget? find_ancestry_by_type (Gtk.Widget widget, Type type) {
+    public Gtk.Widget? find_ancestry_with_type (Gtk.Widget widget, Type type) {
         var parent = widget.get_parent ();
-        if (parent?.get_type () == type)
+        if (parent?.get_type ()?.is_a (type) ?? false)
             return parent as MusicList;
         else if (parent != null)
-            return find_ancestry_by_type ((!)parent, type);
+            return find_ancestry_with_type ((!)parent, type);
         return null;
     }
 }
