@@ -213,7 +213,7 @@ namespace G4 {
             //  the value is claimed as GdkFileList in accept(),
             //  but the value can't be convert as GdkFileList in drop(),
             //  so use STRING type to get the file/folder path.
-            var target = new Gtk.DropTarget (Type.INVALID, Gdk.DragAction.LINK);
+            var target = new Gtk.DropTarget (Type.INVALID, Gdk.DragAction.COPY | Gdk.DragAction.LINK);
             target.set_gtypes ({ Type.STRING, typeof (Gdk.FileList) });
             target.accept.connect ((drop) => drop.formats.contain_gtype (typeof (Gdk.FileList))
                                 && !drop.formats.contain_gtype (typeof (Playlist)));

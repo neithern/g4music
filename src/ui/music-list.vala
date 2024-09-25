@@ -544,7 +544,7 @@ namespace G4 {
         }
 
         private void create_drop_target (Gtk.Widget widget) {
-            var target = new Gtk.DropTarget (Type.INVALID, Gdk.DragAction.LINK);
+            var target = new Gtk.DropTarget (Type.INVALID, Gdk.DragAction.COPY | Gdk.DragAction.LINK);
             target.set_gtypes ({ typeof (Playlist), typeof (Gdk.FileList) });
             target.accept.connect ((drop) => drop.formats.contain_gtype (typeof (Playlist))
                                 || drop.formats.contain_gtype (typeof (Gdk.FileList)));
