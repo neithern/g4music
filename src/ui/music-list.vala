@@ -484,36 +484,24 @@ namespace G4 {
                 _selection.select_item (position, false);
 
             var playlist = create_playlist_for_selection ();
-            var val = Value (typeof (Playlist));
-            val.set_object (playlist);
-#if GTK_4_8
-            var files = new GenericArray<File> (playlist.length);
-            playlist.items.foreach ((music) => files.add (File.new_for_uri (music.uri)));
-            var val2 = Value (typeof (Gdk.FileList));
-            val2.set_boxed (new Gdk.FileList.from_array (files.data));
-            return new Gdk.ContentProvider.union ({
-                new Gdk.ContentProvider.for_value (val),
-                new Gdk.ContentProvider.for_value (val2),
-            });
-#else
-            return new Gdk.ContentProvider.for_value (val);
-#endif
+            return create_content_provider (playlist);
         }
 
         private int _dropping_item = -1;
 
         private bool on_drop_done (Value value, double x, double y) {
-            var obj = value.get_object ();
-            if (obj is Playlist) {
-                uint position = _dropping_item;
+            uint position = _dropping_item;
+            if (value.type () == typeof (Playlist)) {
+                var obj = value.get_object ();
                 var dst_obj = _filter_model.get_item (position);
                 if (dst_obj == null || !_data_store.find ((!)dst_obj, out position))
                     position = _data_store.get_n_items ();
                 var playlist = (Playlist) obj;
-                var changed = merge_items_to_store (_data_store, playlist.items, ref position);
-                _modified |= changed;
-                if (changed)
-                    on_selection_changed (0, 0);
+                _modified |= merge_items_to_store (_data_store, playlist.items, ref position);
+            } else {
+                var files = get_dropped_files (value);
+                _app.open_files_async.begin (files, position, false,
+                                            (obj, res) => _modified |= _app.open_files_async.end (res));
             }
             dropping_item = -1;
             return true;
@@ -547,10 +535,12 @@ namespace G4 {
         }
 
         private void create_drop_target (Gtk.Widget widget) {
-            var target = new Gtk.DropTarget (typeof (Playlist), Gdk.DragAction.LINK);
-            target.accept.connect ((drop) => drop.formats.contain_gtype (typeof (Playlist)));
+            var target = new Gtk.DropTarget (Type.INVALID, Gdk.DragAction.LINK);
+            target.set_gtypes ({ typeof (Playlist), typeof (Gdk.FileList) });
+            target.accept.connect ((drop) => drop.formats.contain_gtype (typeof (Playlist))
+                                || drop.formats.contain_gtype (typeof (Gdk.FileList)));
             target.motion.connect (on_drop_motion);
-            target.leave.connect (() => dropping_item = -1);
+            target.leave.connect (() => run_timeout_once (100, () => dropping_item = -1));
 #if GTK_4_10
             target.drop.connect (on_drop_done);
 #else
@@ -671,6 +661,23 @@ namespace G4 {
             }
             return !_modified;
         }
+    }
+
+    public Gdk.ContentProvider create_content_provider (Playlist playlist) {
+        var val = Value (typeof (Playlist));
+        val.set_object (playlist);
+#if GTK_4_8
+        var files = new GenericArray<File> (playlist.length);
+        playlist.items.foreach ((music) => files.add (File.new_for_uri (music.uri)));
+        var val2 = Value (typeof (Gdk.FileList));
+        val2.set_boxed (new Gdk.FileList.from_array (files.data));
+        return new Gdk.ContentProvider.union ({
+            new Gdk.ContentProvider.for_value (val),
+            new Gdk.ContentProvider.for_value (val2),
+        });
+#else
+        return new Gdk.ContentProvider.for_value (val);
+#endif
     }
 
     namespace Button {

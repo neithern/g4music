@@ -94,7 +94,7 @@ namespace G4 {
             window.present ();
 
             if (files.length > 0 && _music_queue.get_n_items () > 0) {
-                open_files_async.begin (files, true, (obj, res) => open_files_async.end (res));
+                open_files_async.begin (files, -1, true, (obj, res) => open_files_async.end (res));
             } else {
                 load_files_async.begin (files, (obj, res) => load_files_async.end (res));
             }
@@ -317,23 +317,24 @@ namespace G4 {
             return saved;
         }
 
-        public void insert_after_current (Playlist playlist) {
+        public bool insert_after_current (Playlist playlist) {
             uint position = _current_item;
             if (_current_music != null) {
                 if (!_music_queue.find ((!)_current_music, out position))
                     position = -1;
                 playlist.remove_music ((!)_current_music);
             }
-            insert_to_queue ( playlist, position + 1);
+            return insert_to_queue (playlist, position + 1);
         }
 
-        public void insert_to_queue (Playlist playlist, uint position = -1, bool play_now = false) {
+        public bool insert_to_queue (Playlist playlist, uint position = -1, bool play_now = false) {
             var changed = merge_items_to_store (_music_queue, playlist.items, ref position);
             _list_modified |= changed;
             if (play_now)
                 current_item = (int) position;
             else if (changed)
                 update_current_item ();
+            return changed;
         }
 
         public async void load_files_async (owned File[] files) {
@@ -373,12 +374,10 @@ namespace G4 {
             }
         }
 
-        public async void open_files_async (File[] files, bool play_now = false) {
+        public async bool open_files_async (File[] files, uint position = -1, bool play_now = false) {
             var playlist = new Playlist ("");
             yield _loader.load_files_async (files, playlist.items);
-            if (playlist.length > 0) {
-                insert_to_queue (playlist, -1, play_now);
-            }
+            return playlist.length > 0 && insert_to_queue (playlist, position, play_now);
         }
 
         public void play_next () {

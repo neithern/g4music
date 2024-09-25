@@ -160,30 +160,9 @@ namespace G4 {
         }
 
         private bool on_file_dropped (Value value, double x, double y) {
-            File[] files = {};
-            var type = value.type ();
-            if (type == Type.STRING) {
-                var text = value.get_string ();
-                var list = text.split_set ("\n");
-                files = new File[list.length];
-                var index = 0;
-                foreach (var path in list) {
-                    files[index++] = File.new_for_path (path);
-                }
-            } else if (type == typeof (Gdk.FileList)) {
-                var list = ((Gdk.FileList) value).get_files ();
-                files = new File[list.length ()];
-                var index = 0;
-                foreach (var file in list) {
-                    files[index++] = file;
-                }
-            } else {
-                print ("Uknown type: %s\n", value.type_name ());
-                return false;
-            }
-
+            var files = get_dropped_files (value);
             var app = (Application) application;
-            app.open_files_async.begin (files, app.current_music == null,
+            app.open_files_async.begin (files, -1, app.current_music == null,
                 (obj, res) => app.open_files_async.end (res));
             return true;
         }
@@ -234,10 +213,10 @@ namespace G4 {
             //  the value is claimed as GdkFileList in accept(),
             //  but the value can't be convert as GdkFileList in drop(),
             //  so use STRING type to get the file/folder path.
-            var target = new Gtk.DropTarget (Type.INVALID, Gdk.DragAction.COPY);
+            var target = new Gtk.DropTarget (Type.INVALID, Gdk.DragAction.LINK);
             target.set_gtypes ({ Type.STRING, typeof (Gdk.FileList) });
             target.accept.connect ((drop) => drop.formats.contain_gtype (typeof (Gdk.FileList))
-                && !drop.formats.contain_gtype (typeof (Playlist)));
+                                && !drop.formats.contain_gtype (typeof (Playlist)));
 #if GTK_4_10
             target.drop.connect (on_file_dropped);
 #else
@@ -312,5 +291,27 @@ namespace G4 {
             }
         }
         return null;
+    }
+
+    public File[] get_dropped_files (Value value) {
+        File[] files = {};
+        var type = value.type ();
+        if (type == Type.STRING) {
+            var text = value.get_string ();
+            var list = text.split_set ("\n");
+            files = new File[list.length];
+            var index = 0;
+            foreach (var path in list) {
+                files[index++] = File.new_for_path (path);
+            }
+        } else if (type == typeof (Gdk.FileList)) {
+            var list = ((Gdk.FileList) value).get_files ();
+            files = new File[list.length ()];
+            var index = 0;
+            foreach (var file in list) {
+                files[index++] = file;
+            }
+        }
+        return files;
     }
 }

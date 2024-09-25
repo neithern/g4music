@@ -53,6 +53,7 @@ namespace G4 {
             _crossfade_paintable.paintable = _matrix_paintable;
             _crossfade_paintable.queue_draw.connect (music_cover.queue_draw);
             music_cover.paintable = _crossfade_paintable;
+            create_drag_source ();
 
             music_album.tooltip_text = _("Search Album");
             music_artist.tooltip_text = _("Search Artist");
@@ -121,6 +122,22 @@ namespace G4 {
             _play_bar.on_size_changed (width - margin_bar * 2, spacing);
         }
 
+        private void create_drag_source () {
+            var point = Graphene.Point ();
+            var source = new Gtk.DragSource ();
+            source.actions = Gdk.DragAction.LINK;
+            source.drag_begin.connect ((drag) => source.set_icon (new Gtk.WidgetPaintable (music_cover), (int) point.x, (int) point.y));
+            source.prepare.connect ((x, y) => {
+                point.init ((float) x, (float) y);
+                if (_current_music != null) {
+                    var playlist = to_playlist ({ (!)_current_music });
+                    return create_content_provider (playlist);
+                }
+                return null;
+            });
+            music_cover.add_controller (source);
+        }
+
         private Menu create_music_action_menu () {
             var music = _app.current_music ?? new Music.empty ();
             var menu = create_menu_for_music (music);
@@ -141,6 +158,8 @@ namespace G4 {
         private Music? _current_music = null;
 
         private void on_music_changed (Music? music) {
+            _current_music = music;
+
             music_album.label = music?.album ?? "";
             music_artist.label = music?.artist ?? "";
             music_title.label = music?.title ?? "";
