@@ -90,17 +90,18 @@ namespace G4 {
             margin_bottom = 10;
             width_request = 200;
 
-            _image.margin_start = 8;
-            _image.margin_end = 8;
-            _image.margin_bottom = 8;
-            _image.pixel_size = 160;
-            _image.paintable = _paintable;
-            _paintable.queue_draw.connect (_image.queue_draw);
-
             var overlay = new Gtk.Overlay ();
+            overlay.margin_start = 8;
+            overlay.margin_end = 8;
+            overlay.margin_bottom = 8;
             overlay.child = _image;
             overlay.add_overlay (_playing);
             append (overlay);
+
+            _image.halign = Gtk.Align.CENTER;
+            _image.pixel_size = 160;
+            _image.paintable = _paintable;
+            _paintable.queue_draw.connect (_image.queue_draw);
 
             _title.halign = Gtk.Align.CENTER;
             _title.ellipsize = EllipsizeMode.MIDDLE;
