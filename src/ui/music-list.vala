@@ -319,10 +319,15 @@ namespace G4 {
 
             Object? obj = null;
             Gtk.Widget? child = null;
-            if (_editable && _dropping_item >= 0 && (obj = _filter_model.get_item (_dropping_item)) is Music
+            var position = _dropping_item;
+            if (position >= (int) visible_count)
+                position -= (int) _columns;
+            if (_editable && position >= 0 && (obj = _filter_model.get_item (position)) is Music
                     && (child = get_binding_widget ((Music) obj)) != null) {
                 var rect = Graphene.Rect ();
                 ((!)child).compute_bounds (this, out rect);
+                if (position < _dropping_item)
+                    rect.offset (0, rect.get_height ());
                 rect.size.height = scale_factor * 0.5f;
 #if ADW_1_6
                 var color = Adw.StyleManager.get_for_display (get_display ())
@@ -439,6 +444,7 @@ namespace G4 {
             child.playing.visible = music == _current_node;
             item_binded (item);
             _binding_items[music] = item;
+            _row_min_width = child.width_request;
 
             var paintable = _thmbnailer.find (music, _image_size);
             if (paintable != null) {
@@ -500,8 +506,8 @@ namespace G4 {
         private int _dropping_item = -1;
 
         private bool on_drop_done (Value value, double x, double y) {
-            uint position = _dropping_item;
             if (_editable) {
+                uint position = uint.min (_dropping_item, visible_count);
                 if (value.holds (typeof (Playlist))) {
                     var obj = value.get_object ();
                     var dst_obj = _filter_model.get_item (position);
@@ -535,7 +541,7 @@ namespace G4 {
                         _grid_view.activate (index);
                 });
             }
-            dropping_item = index;
+            dropping_item = int.min (index, (int) visible_count);
             return Gdk.DragAction.LINK;
         }
 
