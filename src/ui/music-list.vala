@@ -236,7 +236,7 @@ namespace G4 {
                     break;
 
                 case Button.REMOVE:
-                    _modified |= remove_items_from_store (_data_store, playlist.items);
+                    _modified |= remove_items_from_store (_data_store, playlist.items) != 0;
                     on_selection_changed (0, 0);
                     break;
             }

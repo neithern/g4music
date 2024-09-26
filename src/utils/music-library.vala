@@ -399,40 +399,48 @@ namespace G4 {
 
     public bool merge_items_to_store (ListStore store, GenericArray<Music> arr, ref uint position) {
         var obj = store.get_item (position) as Music;
-        var removed = remove_items_from_store (store, arr, obj);
-        if (removed && obj != null)
+        var first_pos = -1;
+        var removed = remove_items_from_store (store, arr, obj, out first_pos);
+        if (removed != 0 && obj != null)
             store.find ((!)obj, out position);
         if (arr.length == 1 && arr[0] == store.get_item (position))
             return false;
         position = uint.min (position, store.get_n_items ());
         store.splice (position, 0, arr.data);
-        return true;
+        return !(arr.length == 1 && arr[0] == store.get_item (first_pos));
     }
 
-    public bool remove_items_from_store (ListStore store, GenericArray<Music> arr, Music? exclude = null) {
+    public int remove_items_from_store (ListStore store, GenericArray<Music> arr, Music? exclude = null, out int first_pos = null) {
         var map = new GenericSet<Object?> (direct_hash, direct_equal);
         arr.foreach ((obj) => map.add (obj));
+        var removed = 0;
+        var first_removed = -1;
         var size = (int) store.get_n_items ();
         if (arr.length < size / 4) {
-            var removed = false;
             for (var i = size - 1; i >= 0; i--) {
                 var obj = store.get_item (i);
                 if (obj != exclude && map.contains (obj)) {
                     store.remove (i);
-                    removed = true;
+                    removed++;
+                    first_removed = i;
                 }
             }
-            return removed;
         } else {
             var remain = new GenericArray<Music> (size);
             for (var i = 0; i < size; i++) {
                 var obj = store.get_item (i);
-                if (obj == exclude || !map.contains (obj))
+                if (obj == exclude || !map.contains (obj)) {
                     remain.add ((Music) obj);
+                } else {
+                    removed++;
+                    if (first_removed == -1)
+                        first_removed = i;
+                }
             }
             store.splice (0, size, remain.data);
-            return remain.length != size;
         }
+        first_pos = first_removed;
+        return removed;
     }
 
     public void sort_music_array (GenericArray<Music> arr, uint sort_mode) {
