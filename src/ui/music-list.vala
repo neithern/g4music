@@ -68,7 +68,7 @@ namespace G4 {
             _scroll_view.vadjustment.changed.connect (on_vadjustment_changed);
             append (_scroll_view);
 
-            if (_editable) {
+            if (editable || item_type == typeof (Playlist)) {
                 create_drop_target (_grid_view);
             }
 
@@ -319,7 +319,7 @@ namespace G4 {
 
             Object? obj = null;
             Gtk.Widget? child = null;
-            if (_dropping_item >= 0 && (obj = _filter_model.get_item (_dropping_item)) is Music
+            if (_editable && _dropping_item >= 0 && (obj = _filter_model.get_item (_dropping_item)) is Music
                     && (child = get_binding_widget ((Music) obj)) != null) {
                 var rect = Graphene.Rect ();
                 ((!)child).compute_bounds (this, out rect);
@@ -501,27 +501,41 @@ namespace G4 {
 
         private bool on_drop_done (Value value, double x, double y) {
             uint position = _dropping_item;
-            if (value.type () == typeof (Playlist)) {
-                var obj = value.get_object ();
-                var dst_obj = _filter_model.get_item (position);
-                if (dst_obj == null || !_data_store.find ((!)dst_obj, out position))
-                    position = _data_store.get_n_items ();
-                var playlist = (Playlist) obj;
-                _modified |= merge_items_to_store (_data_store, playlist.items, ref position);
-            } else {
-                var files = get_dropped_files (value);
-                _app.open_files_async.begin (files, position, false,
-                                            (obj, res) => _modified |= _app.open_files_async.end (res));
+            if (_editable) {
+                if (value.holds (typeof (Playlist))) {
+                    var obj = value.get_object ();
+                    var dst_obj = _filter_model.get_item (position);
+                    if (dst_obj == null || !_data_store.find ((!)dst_obj, out position))
+                        position = _data_store.get_n_items ();
+                    var playlist = (Playlist) obj;
+                    _modified |= merge_items_to_store (_data_store, playlist.items, ref position);
+                } else {
+                    var files = get_dropped_files (value);
+                    _app.open_files_async.begin (files, position, false,
+                                                (obj, res) => _modified |= _app.open_files_async.end (res));
+                }
             }
             dropping_item = -1;
             return true;
         }
 
+        private uint _activate_handle = 0;
+
         private Gdk.DragAction on_drop_motion (double x, double y) {
             var row_width = (double) _grid_view.get_width () / _columns;
             var col = (int) (x / row_width);
             var row = (int) ((_scroll_view.vadjustment.value + y) / _row_height);
-            dropping_item = (int) _columns * row + col;
+            var index = (int) _columns * row + col;
+            if (_dropping_item != index) {
+                if (_activate_handle != 0)
+                    Source.remove (_activate_handle);
+                _activate_handle = run_timeout_once (1000, () => {
+                    _activate_handle = 0;
+                    if (_dropping_item == index && _filter_model.get_item (index) is Playlist)
+                        _grid_view.activate (index);
+                });
+            }
+            dropping_item = index;
             return Gdk.DragAction.LINK;
         }
 
