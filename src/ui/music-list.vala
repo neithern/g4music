@@ -287,7 +287,7 @@ namespace G4 {
                 var jump = diff > list_height;
                 if (jump) {
                     // Jump to correct position first
-                    scroll_to_item_directly (index);
+                    scroll_to_directly (index);
                 }
                 //  Scroll smoothly
                 var target = new Adw.CallbackAnimationTarget (adj.set_value);
@@ -295,14 +295,18 @@ namespace G4 {
                 _scroll_animation = new Adw.TimedAnimation (_scroll_view, adj.value, scroll_to, jump ? 50 : 500, target);
                 _scroll_animation?.play ();
             } else {
-                scroll_to_item_directly (index);
+                scroll_to_directly (index);
                 // Hack: sometime show only first item if no child drawed, so scroll it when first draw an item
                 _scrolling_item = _child_drawed ? -1 : index;
             }
         }
 
-        public void scroll_to_item_directly (uint index) {
+        public void scroll_to_directly (uint index) {
+#if GTK_4_12
+            _grid_view.scroll_to (index, Gtk.ListScrollFlags.NONE, null);
+#else
             _grid_view.activate_action_variant ("list.scroll-to-item", new Variant.uint32 (index));
+#endif
         }
 
         public override void snapshot (Gtk.Snapshot snapshot) {
@@ -450,7 +454,7 @@ namespace G4 {
                     });
                     _child_drawed = true;
                     if (_scrolling_item != -1) {
-                        scroll_to_item_directly (_scrolling_item);
+                        scroll_to_directly (_scrolling_item);
                         _scrolling_item = -1;
                     }
                 });
