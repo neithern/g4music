@@ -168,7 +168,7 @@ namespace G4 {
                     on_music_changed (_app.current_music);
 
                     var scroll = !_overlayed_lists.remove (list);
-                    run_idle_once (() => list.set_to_current_item (scroll));
+                    run_idle_once (() => list.set_to_current_item (scroll), Priority.LOW);
                 }
                 sort_btn.sensitive = _current_list.playable;
                 _search_mode = SearchMode.ANY;
@@ -415,7 +415,7 @@ namespace G4 {
             });
             header.pack_end (button);
 
-            if (stack.visible_child == _current_list)
+            if (stack.animate_transitions && stack.visible_child == _current_list)
                 _overlayed_lists.add (_current_list);
             stack.add (mlist, album_mode ? album?.album_key : artist?.artist);
         }

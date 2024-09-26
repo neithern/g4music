@@ -84,11 +84,11 @@ namespace G4 {
         return worker.result;
     }
 
-    public uint run_idle_once (owned VoidFunc func) {
+    public uint run_idle_once (owned VoidFunc func, int priority = Priority.DEFAULT_IDLE) {
         return Idle.add (() => {
             func ();
             return false;
-        });
+        }, priority);
     }
 
     public uint run_timeout_once (uint interval, owned VoidFunc func) {
