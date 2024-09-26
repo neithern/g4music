@@ -303,7 +303,9 @@ namespace G4 {
                 var row = new Adw.ActionRow ();
                 row.title = ti.tag;
                 row.subtitle = ti.value;
-                row.use_markup = Uri.unescape_string (ti.value) == null;
+#if ADW_1_2
+                row.use_markup = false;
+#endif
 #if ADW_1_3
                 row.subtitle_selectable = true;
 #endif
