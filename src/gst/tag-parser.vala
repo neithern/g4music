@@ -603,6 +603,28 @@ namespace G4 {
         return null;
     }
 
+    public static void get_one_tag (Gst.TagList tags, string tag, GenericArray<string> values) {
+        var size = tags.get_tag_size (tag);
+        for (var i = 0; i < size; i++) {
+            var val = tags.get_value_index (tag, i);
+            if (val != null) {
+                var value = (!)val;
+                if (value.holds (typeof (string))) {
+                    values.add (value.get_string ());
+                } else if (value.holds (typeof (uint))) {
+                    values.add (value.get_uint ().to_string ());
+                } else if (value.holds (typeof (double))) {
+                    values.add (value.get_double ().to_string ());
+                } else if (value.holds (typeof (bool))) {
+                    values.add (value.get_boolean ().to_string ());
+                } else if (value.holds (typeof (Gst.DateTime))) {
+                    var date = (Gst.DateTime) value.get_boxed ();
+                    values.add (date.to_iso8601_string () ?? "");
+                }
+            }
+        }
+    }
+
     public static Gst.Sample? parse_image_from_tag_list (Gst.TagList tags) {
         Gst.Sample? sample = null;
         if (tags.get_sample (Gst.Tags.IMAGE, out sample)) {

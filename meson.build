@@ -28,6 +28,9 @@ adw_dep = dependency('libadwaita-1')
 if adw_dep.version().version_compare('>=1.2')
   add_project_arguments('--define=ADW_1_2', language: 'vala')
 endif
+if adw_dep.version().version_compare('>=1.3')
+  add_project_arguments('--define=ADW_1_3', language: 'vala')
+endif
 if adw_dep.version().version_compare('>=1.4')
   add_project_arguments('--define=ADW_1_4', language: 'vala')
 endif

@@ -13,6 +13,7 @@ namespace G4 {
     public const string ACTION_NEXT = "next";
     public const string ACTION_RELOAD = "reload";
     public const string ACTION_SHOW_FILE = "show-file";
+    public const string ACTION_SHOW_TAGS = "show-tags";
     public const string ACTION_SORT = "sort";
     public const string ACTION_TOGGLE_SORT = "toggle-sort";
     public const string ACTION_QUIT = "quit";
@@ -47,6 +48,7 @@ namespace G4 {
                 { ACTION_PREFS, show_preferences },
                 { ACTION_RELOAD, () => _app.reload_library () },
                 { ACTION_SHOW_FILE, show_file, "aay" },
+                { ACTION_SHOW_TAGS, show_tags, "aay" },
                 { ACTION_SORT, sort_by, "s", "'2'" },
                 { ACTION_TOGGLE_SORT, toggle_sort },
                 { ACTION_QUIT, () => _app.quit () }
@@ -223,6 +225,15 @@ namespace G4 {
         private void show_file (SimpleAction action, Variant? parameter) {
             var uri = _parse_uri_form_parameter (parameter);
             _app.show_uri_with_portal (uri);
+        }
+
+        private void show_tags (SimpleAction action, Variant? parameter) {
+            var uri = _parse_uri_form_parameter (parameter);
+            if (uri != null) {
+                var tags = strcmp (_app.current_music?.uri, uri) == 0 ? _app.player.tag_list : (Gst.TagList?) null;
+                var dialog = new TagListDialog ((!)uri, tags);
+                dialog.present (_app.active_window);
+            }
         }
 
         private PreferencesWindow? _pref_window = null;

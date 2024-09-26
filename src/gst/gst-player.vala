@@ -194,6 +194,12 @@ namespace G4 {
             }
         }
 
+        public Gst.TagList? tag_list {
+            get {
+                return _tag_list;
+            }
+        }
+
         public double volume { get; set; }
 
         public void play () {
