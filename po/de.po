@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/neithern/g4music/issues\n"
-"POT-Creation-Date: 2024-09-24 16:02+0000\n"
-"PO-Revision-Date: 2024-09-24 19:32+0200\n"
+"POT-Creation-Date: 2024-09-26 04:21+0000\n"
+"PO-Revision-Date: 2024-09-26 18:54+0200\n"
 "Last-Translator: Jürgen Benvenuti <gastornis@posteo.org>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "Language: de\n"
@@ -202,7 +202,7 @@ msgctxt "shortcut window"
 msgid "Reload Library"
 msgstr "Bibliothek neu laden"
 
-#: src/gtk/play-panel.ui:16 src/ui/music-list.vala:590
+#: src/gtk/play-panel.ui:16 src/ui/music-list.vala:606
 #: src/ui/store-panel.vala:399
 msgid "Back"
 msgstr "Zurück"
@@ -283,7 +283,7 @@ msgstr "Bevorzugter GStreamer-Audio-Ausgang"
 msgid "Main Menu"
 msgstr "Hauptmenü"
 
-#: src/gtk/store-panel.ui:29 src/ui/dialogs.vala:50
+#: src/gtk/store-panel.ui:29 src/ui/dialogs.vala:75
 msgid "Search"
 msgstr "Suchen"
 
@@ -335,18 +335,18 @@ msgstr "Zuletzt gespielt"
 msgid "Shuffle"
 msgstr "Durchmischen"
 
-#: src/action-handles.vala:93
+#: src/action-handles.vala:95
 msgid "Image Files"
 msgstr "Bilddateien"
 
-#: src/action-handles.vala:184
+#: src/action-handles.vala:186
 msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr ""
 "Eine schnelle, geschmeidige, leichtgewichtige Musikwiedergabe, geschrieben "
 "in GTK4."
 
 #. Translators: Replace "translator-credits" with your names, one name per line
-#: src/action-handles.vala:186
+#: src/action-handles.vala:188
 msgid "translator-credits"
 msgstr "Jürgen Benvenuti <gastornis@posteo.org>, 2022-2024"
 
@@ -358,15 +358,15 @@ msgstr "Wiedergabelistendateien"
 msgid "Keep playing"
 msgstr "Musik weiterspielen"
 
-#: src/ui/dialogs.vala:25 src/ui/music-list.vala:626
+#: src/ui/dialogs.vala:50 src/ui/music-list.vala:642
 msgid "Add to Playlist"
 msgstr "Zur Wiedergabeliste hinzufügen"
 
-#: src/ui/dialogs.vala:30
+#: src/ui/dialogs.vala:55
 msgid "New Playlist"
 msgstr "Neue Wiedergabeliste"
 
-#: src/ui/dialogs.vala:37
+#: src/ui/dialogs.vala:62
 msgid "Close"
 msgstr "Schließen"
 
@@ -374,67 +374,71 @@ msgstr "Schließen"
 msgid "No playlist found"
 msgstr "Keine Wiedergabeliste gefunden"
 
-#: src/ui/dialogs.vala:163 src/ui/dialogs.vala:175
+#: src/ui/dialogs.vala:320 src/ui/dialogs.vala:332
 msgid "No"
 msgstr "Nein"
 
-#: src/ui/dialogs.vala:164 src/ui/dialogs.vala:175
+#: src/ui/dialogs.vala:321 src/ui/dialogs.vala:332
 msgid "Yes"
 msgstr "Ja"
 
-#: src/ui/music-list.vala:260
+#: src/ui/music-list.vala:265
 msgid "Playlist is modified, save it?"
 msgstr "Wiedergabeliste wurde geändert, soll sie gespeichert werden?"
 
 #. Translators: Play this music at next position of current playing music
-#: src/ui/music-list.vala:381 src/ui/music-list.vala:398
-#: src/ui/music-list.vala:612 src/ui/music-widgets.vala:220
-#: src/ui/music-widgets.vala:231
+#: src/ui/music-list.vala:386 src/ui/music-list.vala:403
+#: src/ui/music-list.vala:628 src/ui/music-widgets.vala:219
+#: src/ui/music-widgets.vala:230
 msgid "Play at Next"
 msgstr "Als Nächstes wiedergeben"
 
-#: src/ui/music-list.vala:383 src/ui/music-list.vala:396
-#: src/ui/music-list.vala:619 src/ui/music-widgets.vala:221
-#: src/ui/music-widgets.vala:232
+#: src/ui/music-list.vala:388 src/ui/music-list.vala:401
+#: src/ui/music-list.vala:635 src/ui/music-widgets.vala:220
+#: src/ui/music-widgets.vala:231
 msgid "Add to Queue"
 msgstr "Zur Warteschlange hinzufügen"
 
-#: src/ui/music-list.vala:384 src/ui/music-widgets.vala:222
-#: src/ui/music-widgets.vala:233 src/ui/music-widgets.vala:245
+#: src/ui/music-list.vala:389 src/ui/music-widgets.vala:221
+#: src/ui/music-widgets.vala:232 src/ui/music-widgets.vala:245
 msgid "Add to Playlist…"
 msgstr "Zur Wiedergabeliste hinzufügen …"
 
-#: src/ui/music-list.vala:385 src/ui/music-list.vala:605
+#: src/ui/music-list.vala:390 src/ui/music-list.vala:621
 msgid "Remove"
 msgstr "Entfernen"
 
-#: src/ui/music-list.vala:401 src/ui/play-panel.vala:128
+#: src/ui/music-list.vala:406 src/ui/play-panel.vala:145
 msgid "Show _Cover File"
 msgstr "Album_bild-Datei anzeigen"
 
-#: src/ui/music-list.vala:403 src/ui/play-panel.vala:130
+#: src/ui/music-list.vala:408 src/ui/play-panel.vala:147
 msgid "_Export Cover"
 msgstr "Albumbild expo_rtieren"
 
-#: src/ui/music-list.vala:594
+#: src/ui/music-list.vala:610
 msgid "Select All"
 msgstr "Alle auswählen"
 
-#: src/ui/music-widgets.vala:224
+#: src/ui/music-widgets.vala:223
 msgid "Show List File"
 msgstr "Listendatei anzeigen"
 
-#: src/ui/music-widgets.vala:239 src/ui/play-panel.vala:59
+#: src/ui/music-widgets.vala:238 src/ui/play-panel.vala:60
 msgid "Search Title"
 msgstr "Titel suchen"
 
-#: src/ui/music-widgets.vala:240 src/ui/play-panel.vala:57
+#: src/ui/music-widgets.vala:239 src/ui/play-panel.vala:58
 msgid "Search Album"
 msgstr "Album suchen"
 
-#: src/ui/music-widgets.vala:241 src/ui/play-panel.vala:58
+#: src/ui/music-widgets.vala:240 src/ui/play-panel.vala:59
 msgid "Search Artist"
 msgstr "Interpret suchen"
+
+#: src/ui/music-widgets.vala:242
+msgid "Show _Tags…"
+msgstr "_Schlagwörter anzeigen …"
 
 #: src/ui/music-widgets.vala:243
 msgid "_Show Music File"
@@ -458,7 +462,7 @@ msgstr "Wiedergabe/Pause"
 msgid "Play Next"
 msgstr "Den nächsten Titel wiedergeben"
 
-#: src/ui/play-panel.vala:245
+#: src/ui/play-panel.vala:264
 msgid ""
 "Drag and drop music files here,\n"
 "or change music location: "
