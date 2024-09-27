@@ -151,8 +151,9 @@ namespace G4 {
 
     public bool save_playlist_file (File file, GenericArray<string> uris, string? title = null, bool with_titles = true) {
         var bname = file.get_basename () ?? "";
-        var name = bname.substring (0, bname.index_of_char ('.'));
-        var ext = bname.substring (bname.index_of_char ('.') + 1);
+        var pos = bname.last_index_of_char ('.');
+        var name = bname.substring (0, pos);
+        var ext = bname.substring (pos + 1);
         try {
             var fos = file.replace (null, false, FileCreateFlags.NONE);
             var bos = new BufferedOutputStream (fos);
