@@ -554,9 +554,17 @@ namespace G4 {
         }
 
         private void on_playlist_added (Playlist playlist) {
-            _changing_stacks.add (StackFlags.PLAYLISTS);
-            update_stack_pages (_playlist_stack);
-            update_visible_stack ();
+            var list = _playlist_stack.visible_child as MusicList;
+            var node = list?.music_node;
+            if (strcmp (playlist.list_uri, (node as Playlist)?.list_uri) == 0) {
+                playlist.overwrite_to (((!)list).data_store);
+            }
+
+            var arr = new GenericArray<Music> (1);
+            arr.add (playlist);
+            uint position = -1;
+            merge_items_to_store (_playlist_list.data_store, arr, ref position);
+            sort_music_store (_playlist_list.data_store, SortMode.TITLE);
         }
 
         private void on_search_btn_toggled () {
