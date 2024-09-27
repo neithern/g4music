@@ -322,7 +322,7 @@ namespace G4 {
                 rc_cell.init (_cell_size.width * col, _cell_size.height * row, _cell_size.width, _cell_size.height);
                 rc_cell.offset (rc_grid.origin.x, rc_grid.origin.y);
                 rc_cell.origin.y -= (float) _scroll_view.vadjustment.value;
-                rc_cell.size.height = scale_factor;
+                rc_cell.size.height = 2;
 #if ADW_1_6
                 var color = Adw.StyleManager.get_for_display (get_display ())
                                         .get_accent_color ().to_rgba ();

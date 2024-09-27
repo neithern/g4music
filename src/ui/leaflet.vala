@@ -174,7 +174,7 @@ namespace G4 {
                 var size = _sidebar.get_width ();
                 var rtl = get_direction () == Gtk.TextDirection.RTL;
                 var rect = Graphene.Rect ();
-                rect.init (rtl ? _view_width - size : size, 0, scale_factor * 0.25f, _view_height);
+                rect.init (rtl ? _view_width - size : size, 0, 0.5f, _view_height);
                 var color = Gdk.RGBA ();
                 color.red = color.green = color.blue = color.alpha = 0;
 #if GTK_4_10
