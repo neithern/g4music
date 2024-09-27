@@ -25,11 +25,9 @@ namespace G4 {
         private Gtk.MultiSelection _selection;
         private Thumbnailer _thmbnailer;
 
-        private bool _child_drawed = false;
-        private uint _columns = 1;
-        private uint _row_min_width = 0;
-        private double _row_height = 0;
-        private double _scroll_range = 0;
+        private uint _columns = 0;
+        private Graphene.Size _cell_size = Graphene.Size ();
+        private Graphene.Size _item_size = Graphene.Size ();
         private int _scrolling_item = -1;
 
         public signal void item_activated (uint position, Object? obj);
@@ -65,7 +63,6 @@ namespace G4 {
             _scroll_view.vscrollbar_policy = Gtk.PolicyType.AUTOMATIC;
             _scroll_view.propagate_natural_height = true;
             _scroll_view.vexpand = true;
-            _scroll_view.vadjustment.changed.connect (on_vadjustment_changed);
             append (_scroll_view);
 
             if (editable || item_type == typeof (Playlist)) {
@@ -248,7 +245,6 @@ namespace G4 {
             factory.bind.connect (on_bind_item);
             factory.unbind.connect (on_unbind_item);
             _grid_view.factory = factory;
-            _child_drawed = false;
         }
 
         public async Result prompt_save_if_modified () {
@@ -277,11 +273,12 @@ namespace G4 {
         public void scroll_to_item (int index, bool smoothly = true) {
             var adj = _scroll_view.vadjustment;
             var list_height = _grid_view.get_height ();
-            if (smoothly && _columns > 0 && _row_height > 0 && adj.upper - adj.lower > list_height) {
+            _columns = get_grid_view_item_size (_grid_view, ref _item_size, ref _cell_size);
+            if (smoothly && _columns > 0 && _cell_size.height > 0 && adj.upper - adj.lower > list_height) {
                 var from = adj.value;
                 var row = index / _columns;
-                var max_to = double.max ((row + 1) * _row_height - list_height, 0);
-                var min_to = double.max (row * _row_height, 0);
+                var max_to = double.max ((row + 1) * _cell_size.height - list_height, 0);
+                var min_to = double.max (row * _cell_size.height, 0);
                 var scroll_to =  from < max_to ? max_to : (from > min_to ? min_to : from);
                 var diff = (scroll_to - from).abs ();
                 var jump = diff > list_height;
@@ -297,7 +294,7 @@ namespace G4 {
             } else {
                 scroll_to_directly (index);
                 // Hack: sometime show only first item if no child drawed, so scroll it when first draw an item
-                _scrolling_item = _child_drawed ? -1 : index;
+                _scrolling_item = _columns > 0 ? -1 : index;
             }
         }
 
@@ -317,18 +314,15 @@ namespace G4 {
                 draw_outset_shadow (snapshot, rect);
             }
 
-            Object? obj = null;
-            Gtk.Widget? child = null;
-            var position = _dropping_item;
-            if (position >= (int) visible_count)
-                position -= (int) _columns;
-            if (_editable && position >= 0 && (obj = _filter_model.get_item (position)) is Music
-                    && (child = get_binding_widget ((Music) obj)) != null) {
-                var rect = Graphene.Rect ();
-                ((!)child).compute_bounds (this, out rect);
-                if (position < _dropping_item)
-                    rect.offset (0, rect.get_height ());
-                rect.size.height = scale_factor * 0.5f;
+            var rc_grid = Graphene.Rect ();
+            if (_editable && _columns > 0 && _dropping_item >= 0 && _grid_view.compute_bounds (this, out rc_grid)) {
+                var row = _dropping_item / _columns;
+                var col = _dropping_item - _columns * row;
+                var rc_cell = Graphene.Rect ();
+                rc_cell.init (_cell_size.width * col, _cell_size.height * row, _cell_size.width, _cell_size.height);
+                rc_cell.offset (rc_grid.origin.x, rc_grid.origin.y);
+                rc_cell.origin.y -= (float) _scroll_view.vadjustment.value;
+                rc_cell.size.height = scale_factor;
 #if ADW_1_6
                 var color = Adw.StyleManager.get_for_display (get_display ())
                                         .get_accent_color ().to_rgba ();
@@ -337,7 +331,7 @@ namespace G4 {
                 color.alpha = 1;
                 color.red = color.green = color.blue = 0.5f;
 #endif
-                snapshot.append_color (color, rect);
+                snapshot.append_color (color, rc_cell);
             }
             base.snapshot (snapshot);
         }
@@ -427,7 +421,6 @@ namespace G4 {
             item.child = child;
             item.selectable = _multi_selection;
             item_created (item);
-            _row_min_width = item.child.width_request;
 
             if (_selectable) {
                 create_drag_source (child.image, item);
@@ -444,7 +437,6 @@ namespace G4 {
             child.playing.visible = music == _current_node;
             item_binded (item);
             _binding_items[music] = item;
-            _row_min_width = child.width_request;
 
             var paintable = _thmbnailer.find (music, _image_size);
             if (paintable != null) {
@@ -458,7 +450,6 @@ namespace G4 {
                             child.paintable = paintable2;
                         }
                     });
-                    _child_drawed = true;
                     if (_scrolling_item != -1) {
                         scroll_to_directly (_scrolling_item);
                         _scrolling_item = -1;
@@ -474,18 +465,6 @@ namespace G4 {
             child.disconnect_first_draw ();
             item_unbinded (item);
             _binding_items.remove ((Music) item.item);
-        }
-
-        private void on_vadjustment_changed () {
-            var adj = _scroll_view.vadjustment;
-            var range = adj.upper - adj.lower;
-            var count = visible_count;
-            if (count > 0 && _row_min_width > 0 && _scroll_range != range) {
-                var columns = _grid_view.get_width () / _row_min_width;
-                _columns = columns.clamp (_grid_view.get_min_columns (), _grid_view.get_max_columns ());
-                _row_height = range / ((count + _columns - 1) / _columns);
-                _scroll_range = range;
-            }
         }
 
         private void on_drag_begin (Gtk.DragSource source, Gdk.Drag drag, Gtk.Widget widget, Graphene.Point point) {
@@ -528,16 +507,16 @@ namespace G4 {
         private uint _activate_handle = 0;
 
         private Gdk.DragAction on_drop_motion (double x, double y) {
-            var row_width = (double) _grid_view.get_width () / _columns;
-            var col = (int) (x / row_width);
-            var row = (int) ((_scroll_view.vadjustment.value + y) / _row_height);
+            _columns = get_grid_view_item_size (_grid_view, ref _item_size, ref _cell_size);
+            var col = (int) (x / _cell_size.width);
+            var row = (int) ((y + _scroll_view.vadjustment.value) / _cell_size.height);
             var index = (int) _columns * row + col;
-            if (_dropping_item != index) {
+            if (_dropping_item != index && _filter_model.get_item (index) is Playlist) {
                 if (_activate_handle != 0)
                     Source.remove (_activate_handle);
                 _activate_handle = run_timeout_once (1000, () => {
                     _activate_handle = 0;
-                    if (_dropping_item == index && _filter_model.get_item (index) is Playlist)
+                    if (_dropping_item == index)
                         _grid_view.activate (index);
                 });
             }
@@ -733,5 +712,68 @@ namespace G4 {
         else if (parent != null)
             return find_ancestry_with_type ((!)parent, type);
         return null;
+    }
+
+    public struct CountedRect {
+        public int count;
+        public int index;
+        public Graphene.Rect rect;
+
+        public CountedRect (int c = 0, int i = 0, Graphene.Rect? rc = null) {
+            count = c;
+            index = i;
+            if (rc != null)
+                rect = (!)rc;
+            else
+                rect.init (0, 0, 0, 0);
+        }
+    }
+
+    public uint get_grid_view_item_size (Gtk.GridView grid_view, ref Graphene.Size inner_size, ref Graphene.Size outer_size) {
+        var arr = new GenericArray<Graphene.Rect?> ();
+        var w_map = new HashTable<int, CountedRect?> (null, null);
+        var x_set = new GenericSet<int> (null, null);
+        for (var c = grid_view.get_first_child (); c != null; c = c?.get_next_sibling ()) {
+            var child = (!)c;
+            var rect = Graphene.Rect ();
+            if (child.is_drawable () && child.compute_bounds (grid_view, out rect)
+                    && rect.origin.x >= 0 && rect.origin.y >= 0
+                    && rect.size.width > 0 && rect.size.height > 0) {
+                var width = (int) rect.size.width;
+                var count = 1, index = arr.length;
+                var cr0 = w_map[width];
+                if (cr0 != null) {
+                    count = ((!)cr0).count + 1;
+                    index = ((!)cr0).index;
+                }
+                var cr = CountedRect (count, index, rect);
+                w_map[width] = cr;
+                x_set.add ((int) rect.origin.x);
+                arr.add (rect);
+            }
+        }
+        var columns = x_set.length.clamp (grid_view.min_columns, grid_view.max_columns);
+
+        var best_rect = CountedRect ();
+        best_rect.index = -1;
+        w_map.foreach ((w, rect) => {
+            var cr = (!)rect;
+            if (best_rect.count < cr.count) {
+                best_rect.count = cr.count;
+                if (best_rect.index == -1)
+                    best_rect.index = cr.index;
+                best_rect.rect = cr.rect;
+            }
+        });
+        inner_size.init_from_size (best_rect.rect.size);
+        outer_size.init_from_size (inner_size);
+
+        var index = best_rect.index;
+        if (index >= 0 && index + 1 < arr.length) {
+            outer_size.width = columns > 1 ? ((!)arr[index + 1]).origin.x - ((!)arr[index]).origin.x : grid_view.get_width () / int.max (1, (int) columns);
+            if (index + columns < arr.length)
+                outer_size.height = ((!)arr[index + columns]).origin.y - ((!)arr[index]).origin.y;
+        }
+        return columns;
     }
 }
