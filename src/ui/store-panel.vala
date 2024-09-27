@@ -351,25 +351,35 @@ namespace G4 {
                 var entry = new Gtk.Entry ();
                 entry.max_width_chars = 1024;
                 entry.text = title;
-                entry.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY, "emblem-ok-symbolic");
-                entry.icon_release.connect ((icon_pos) => {
+                entry.visible = false;
+                entry.activate.connect (() => {
                     entry.visible = false;
                     label.visible = true;
                     var text = entry.text;
-                    if (text.length > 0 && text != playlist.title)
+                    if (text.length > 0 && text != playlist.title) {
                         _app.rename_playlist_async.begin (playlist, text, (obj, res) => {
                             var ret = _app.rename_playlist_async.end (res);
                             if (ret)
                                 label.label = playlist.title;
                         });
+                    }
                 });
+                var event = new Gtk.EventControllerKey ();
+                event.key_pressed.connect ((keyval, keycode, state) => {
+                    if (keyval == Gdk.Key.Escape) {
+                        entry.visible = false;
+                        label.visible = true;
+                        return true;
+                    }
+                    return false;
+                });
+                entry.add_controller (event);
                 make_widget_clickable (label).released.connect (() => {
                     entry.text = label.label;
                     entry.visible = true;
                     entry.grab_focus ();
                     label.visible = false;
                 });
-                entry.visible = false;
                 box.append (entry);
             }
             return box;
@@ -387,11 +397,15 @@ namespace G4 {
             var real_playlist = (!artist_mode && playlist_mode) ? (album as Playlist) : (Playlist?) null;
             var icon_name = (album is Playlist) ? "emblem-documents-symbolic" : (album_mode ? "media-optical-cd-audio-symbolic" : "avatar-default-symbolic");
             var title = (album_mode ? album?.title : artist?.title) ?? "";
-            var label_box = create_title_box (icon_name, title, real_playlist);
-            var header = new Gtk.HeaderBar ();
-            header.show_title_buttons = false;
-            header.title_widget = label_box;
+            var title_box = create_title_box (icon_name, title, real_playlist);
+            title_box.halign = Gtk.Align.CENTER;
+            title_box.hexpand = true;
+
+            var header = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
+            header.hexpand = true;
             header.add_css_class ("flat");
+            header.add_css_class ("toolbar");
+            header.append (title_box);
             mlist.prepend (header);
 
             var stack = artist_mode ? _artist_stack : playlist_mode ? _playlist_stack : _album_stack;
@@ -401,7 +415,7 @@ namespace G4 {
                 if (!prompt_to_save_if_modified (stack.pop))
                     stack.pop ();
             });
-            header.pack_start (back_btn);
+            header.prepend (back_btn);
 
             var button = new Gtk.Button.from_icon_name ("media-playback-start-symbolic");
             button.tooltip_text = _("Play");
@@ -413,7 +427,7 @@ namespace G4 {
                     _app.activate_action (ACTION_PLAY, new Variant.bytestring_array (strv));
                 }
             });
-            header.pack_end (button);
+            header.append (button);
 
             if (stack.animate_transitions && stack.visible_child == _current_list)
                 _overlayed_lists.add (_current_list);
