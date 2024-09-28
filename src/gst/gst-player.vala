@@ -53,6 +53,25 @@ namespace G4 {
         public signal void tag_parsed (string? uri, Gst.TagList? tags);
 
         public GstPlayer () {
+            uint major = 0, minor = 0, micro = 0, nano = 0;
+            Gst.version (out major, out minor, out micro, out nano);
+            if (major > 1 || (major == 1 && minor >= 24)) {
+                _pipeline = Gst.ElementFactory.make ("playbin3", "player") as Gst.Pipeline;
+                if (_pipeline != null) {
+                    print (@"Use playbin3\n");
+            }
+            } if (_pipeline == null) {
+                _pipeline = Gst.ElementFactory.make ("playbin", "player") as Gst.Pipeline;
+            }
+            if (_pipeline != null) {
+                var pipeline = (!)_pipeline;
+                pipeline.async_handling = true;
+                pipeline.flags = 0x0022; // audio | native audio
+                pipeline.bind_property ("volume", this, "volume", BindingFlags.SYNC_CREATE | BindingFlags.BIDIRECTIONAL);
+                pipeline.get_bus ().add_watch (Priority.DEFAULT, bus_callback);
+            } else {
+                critical ("Create playbin failed\n");
+            }
         }
 
         ~GstPlayer () {
@@ -182,30 +201,6 @@ namespace G4 {
         }
 
         public double volume { get; set; }
-
-        public bool initialize () {
-            uint major = 0, minor = 0, micro = 0, nano = 0;
-            Gst.version (out major, out minor, out micro, out nano);
-            if (major > 1 || (major == 1 && minor >= 24)) {
-                _pipeline = Gst.ElementFactory.make ("playbin3", "player") as Gst.Pipeline;
-                if (_pipeline != null) {
-                    print (@"Use playbin3\n");
-            }
-            } if (_pipeline == null) {
-                _pipeline = Gst.ElementFactory.make ("playbin", "player") as Gst.Pipeline;
-            }
-            if (_pipeline != null) {
-                var pipeline = (!)_pipeline;
-                pipeline.async_handling = true;
-                pipeline.flags = 0x0022; // audio | native audio
-                pipeline.bind_property ("volume", this, "volume", BindingFlags.SYNC_CREATE | BindingFlags.BIDIRECTIONAL);
-                pipeline.get_bus ().add_watch (Priority.DEFAULT, bus_callback);
-                return true;
-            } else {
-                critical ("Create playbin failed\n");
-                return false;
-            }
-        }
 
         public void play () {
             _pipeline?.set_state (Gst.State.PLAYING);
