@@ -1,6 +1,7 @@
 namespace G4 {
 
     public class Window : Adw.ApplicationWindow {
+        private Adw.ToastOverlay _toast = new Adw.ToastOverlay ();
         private Leaflet _leaflet = new Leaflet ();
         private Gtk.ProgressBar _progress_bar = new Gtk.ProgressBar ();
         private PlayPanel _play_panel;
@@ -19,6 +20,8 @@ namespace G4 {
 
             var overlay = new Gtk.Overlay ();
             this.content = overlay;
+            overlay.child = _toast;
+            _toast.child = _leaflet;
 
             ActionEntry[] action_entries = {
                 { ACTION_BUTTON, button_command, "s" },
@@ -33,7 +36,6 @@ namespace G4 {
             _progress_bar.sensitive = false;
             _progress_bar.visible = false;
             _progress_bar.add_css_class ("osd");
-            overlay.child = _leaflet;
             overlay.add_overlay (_progress_bar);
             overlay.get_child_position.connect (on_overlay_child_position);
             app.loader.loading_changed.connect (on_loading_changed);
@@ -99,13 +101,24 @@ namespace G4 {
             _store_panel.locate_to_path (paths, obj);
         }
 
+        public void show_toast (string message, File? file = null) {
+            var toast = new Adw.Toast (message);
+            if (file != null) {
+                var uri = ((!)file).get_uri ();
+                toast.action_name = ACTION_APP + ACTION_SHOW_FILE;
+                toast.action_target = new Variant.bytestring_array ({"uri", uri});
+                toast.button_label = _("Show");
+            }
+            toast.timeout = 3;
+            _toast.add_toast (toast);
+        }
+
         public void start_search (string text, uint mode = SearchMode.ANY) {
             _store_panel.start_search (text, mode);
             if (_leaflet.folded) {
                 _leaflet.pop ();
             }
         }
-
 
         private void focus_to_play_later (int delay = 100) {
             run_timeout_once (delay, () => {

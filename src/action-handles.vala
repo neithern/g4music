@@ -98,8 +98,8 @@ namespace G4 {
                 var file = yield show_save_file_dialog (_app.active_window, initial, {filter});
                 if (file != null) {
                     var saved = yield save_sample_to_file_async ((!)file, sample);
-                    if (saved)
-                        _app.show_uri_with_portal (((!)file).get_uri ());
+                    (_app.active_window as Window)?.show_toast (
+                        saved ? _("Export cover successfully") : _("Export cover failed"), saved ? file : (File?) null);
                 }
             }
         }

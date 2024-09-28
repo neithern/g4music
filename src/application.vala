@@ -314,6 +314,8 @@ namespace G4 {
             });
             if (saved)
                 playlist_added (_loader.library.add_playlist (playlist));
+            else
+                (active_window as Window)?.show_toast (_("Save playlist failed"));
             return saved;
         }
 
@@ -425,8 +427,9 @@ namespace G4 {
             return saved;
         }
 
-        public async bool save_to_playlist_file_async (Playlist playlist) {
+        public async void save_to_playlist_file_async (Playlist playlist) {
             var uri = playlist.list_uri;
+            var file = File.new_for_uri (uri);
             var append = uri.length == 0;
             if (append) {
                 var filter = new Gtk.FileFilter ();
@@ -435,13 +438,16 @@ namespace G4 {
                 filter.add_mime_type ("audio/x-scpls");
                 filter.add_mime_type ("public.m3u-playlist");
                 var initial = File.new_for_uri (music_folder).get_child (playlist.title + ".m3u");
-                var file = yield show_save_file_dialog (active_window, initial, {filter});
-                if (file == null)
-                    return false;
-                playlist.list_uri = ((!)file).get_uri ();
-                playlist.set_title (get_file_display_name ((!)file));
+                var file_new = yield show_save_file_dialog (active_window, initial, {filter});
+                if (file_new == null)
+                    return;
+                file = (!)file_new;
+                playlist.list_uri = file.get_uri ();
+                playlist.set_title (get_file_display_name (file));
             }
-            return yield add_playlist_to_file_async (playlist, append);
+            var saved = yield add_playlist_to_file_async (playlist, append);
+            if (saved && append)
+                (active_window as Window)?.show_toast (_("Save playlist successfully"), file);
         }
 
         public uint get_list_sort_mode (ListModel model) {
