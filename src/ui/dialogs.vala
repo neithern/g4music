@@ -124,9 +124,9 @@ namespace G4 {
         private void on_music_library_changed (bool external) {
             if (external) {
                 unowned var store = _list.data_store;
+                var text = _("No playlist found in %s").printf (get_display_name (_app.music_folder));
                 _app.loader.library.overwrite_playlists_to (store);
-                if (store.get_n_items () == 0)
-                    _list.set_empty_text (_("No playlist found"));
+                _list.set_empty_text (text);
             }
         }
 

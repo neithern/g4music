@@ -659,8 +659,9 @@ namespace G4 {
             } else if (child == _artist_stack.widget && _changing_stacks.remove (StackFlags.ARTISTS)) {
                 _library.overwrite_artists_to (_artist_list.data_store);
             } else if (child == _playlist_stack.widget && _changing_stacks.remove (StackFlags.PLAYLISTS)) {
+                var text = _("No playlist found in: %s").printf (get_display_name (_app.music_folder));
                 _library.overwrite_playlists_to (_playlist_list.data_store);
-                _playlist_list.set_empty_text (_("No playlist found"));
+                _playlist_list.set_empty_text (text);
             }
             _updating_store = false;
         }
