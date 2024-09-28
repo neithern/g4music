@@ -68,7 +68,6 @@ namespace G4 {
                 warning ("Initialize MPRIS session failed\n");
 
             var settings = _settings = new Settings (application_id); 
-            settings.bind ("dark-theme", this, "dark-theme", SettingsBindFlags.DEFAULT);
             settings.bind ("music-dir", this, "music-folder", SettingsBindFlags.DEFAULT);
             settings.bind ("sort-mode", this, "sort-mode", SettingsBindFlags.DEFAULT);
             settings.bind ("monitor-changes", _loader, "monitor-changes", SettingsBindFlags.DEFAULT);
@@ -170,16 +169,6 @@ namespace G4 {
                         _player.state = playing ? Gst.State.PLAYING : Gst.State.PAUSED;
                 }
                 _settings.set_string ("played-uri", uri);
-            }
-        }
-
-        public bool dark_theme {
-            get {
-                var scheme = style_manager.color_scheme;
-                return scheme == Adw.ColorScheme.FORCE_DARK || scheme ==  Adw.ColorScheme.PREFER_DARK;
-            }
-            set {
-                style_manager.color_scheme = value ? Adw.ColorScheme.PREFER_DARK : Adw.ColorScheme.DEFAULT;
             }
         }
 

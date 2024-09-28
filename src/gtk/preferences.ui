@@ -9,18 +9,6 @@
           <object class="AdwPreferencesGroup">
             <property name="title" translatable="yes">General</property>
             <child>
-              <object class="AdwActionRow" id="dark_theme">
-                <property name="icon-name">night-light-symbolic</property>
-                <property name="title" translatable="yes">Prefer dark theme</property>
-                <property name="activatable_widget">dark_btn</property>
-                <child>
-                  <object class="GtkSwitch" id="dark_btn">
-                    <property name="valign">center</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
               <object class="AdwComboRow" id="blur_row">
                 <property name="icon-name">view-dual-symbolic</property>
                 <property name="title" translatable="yes">Background blur mode</property>

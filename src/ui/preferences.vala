@@ -8,8 +8,6 @@ namespace G4 {
     [GtkTemplate (ui = "/com/github/neithern/g4music/gtk/preferences.ui")]
     public class PreferencesWindow : Adw.PreferencesWindow {
         [GtkChild]
-        unowned Gtk.Switch dark_btn;
-        [GtkChild]
         unowned Adw.ComboRow blur_row;
         [GtkChild]
         unowned Gtk.Switch compact_btn;
@@ -40,8 +38,6 @@ namespace G4 {
 
         public PreferencesWindow (Application app) {
             var settings = app.settings;
-
-            settings.bind ("dark-theme", dark_btn, "active", SettingsBindFlags.DEFAULT);
 
             blur_row.model = new Gtk.StringList ({_("Never"), _("Always"), _("Art Only")});
             settings.bind ("blur-mode", blur_row, "selected", SettingsBindFlags.DEFAULT);

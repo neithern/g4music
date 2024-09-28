@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist gettext-domain="g4music">
   <schema id="@app_id@" path="/com/github/neithern/g4music/">
-    <key name="dark-theme" type="b">
-      <default>false</default>
-      <summary>Prefer dark theme</summary>
-    </key>
     <key name="blur-mode" type="u">
       <range min="0" max="2"/>
       <default>1</default>
       <summary>Background blur mode</summary>
+    </key>
+    <key name="color-scheme" type="u">
+      <range min="0" max="4"/>
+      <default>0</default>
+      <summary>Prefer color scheme</summary>
     </key>
     <key name="compact-playlist" type="b">
       <default>false</default>

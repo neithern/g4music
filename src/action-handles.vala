@@ -12,6 +12,7 @@ namespace G4 {
     public const string ACTION_PREV = "prev";
     public const string ACTION_NEXT = "next";
     public const string ACTION_RELOAD = "reload";
+    public const string ACTION_SCHEME = "scheme";
     public const string ACTION_SHOW_FILE = "show-file";
     public const string ACTION_SHOW_TAGS = "show-tags";
     public const string ACTION_SORT = "sort";
@@ -47,6 +48,7 @@ namespace G4 {
                 { ACTION_PREV, () => _app.play_previous () },
                 { ACTION_PREFS, show_preferences },
                 { ACTION_RELOAD, () => _app.reload_library () },
+                { ACTION_SCHEME, scheme, "s", "'0'" },
                 { ACTION_SHOW_FILE, show_file, "aay" },
                 { ACTION_SHOW_TAGS, show_tags, "aay" },
                 { ACTION_SORT, sort_by, "s", "'2'" },
@@ -181,6 +183,14 @@ namespace G4 {
                 _app.insert_after_current ((!)playlist);
         }
 
+        private void scheme (SimpleAction action, Variant? state) {
+            unowned var value = state?.get_string () ?? "";
+            action.set_state (value);
+            int scheme = 0;
+            if (int.try_parse (value, out scheme))
+                _app.style_manager.color_scheme = (Adw.ColorScheme) scheme;
+        }
+
         private void show_about () {
             string[] authors = { "Nanling" };
             var comments = _("A fast, fluent, light weight music player written in GTK4.");
@@ -253,8 +263,8 @@ namespace G4 {
         private void sort_by (SimpleAction action, Variant? state) {
             unowned var value = state?.get_string () ?? "";
             int mode = 2;
-            int.try_parse (value, out mode, null, 10);
-            _app.sort_mode = mode;
+            if (int.try_parse (value, out mode))
+                _app.sort_mode = mode;
         }
 
         private void toggle_sort () {
