@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/neithern/g4music/issues\n"
-"POT-Creation-Date: 2024-09-26 04:21+0000\n"
-"PO-Revision-Date: 2024-09-26 11:39+0200\n"
+"POT-Creation-Date: 2024-09-28 04:26+0000\n"
+"PO-Revision-Date: 2024-09-28 09:38+0200\n"
 "Last-Translator: Martin Srebotnjak <miles@filmsi.net>\n"
 "Language-Team: Slovenian <gnome-si@googlegroups.com>\n"
 "Language: sl\n"
@@ -202,8 +202,8 @@ msgctxt "shortcut window"
 msgid "Reload Library"
 msgstr "Znova naloži knjižnico"
 
-#: src/gtk/play-panel.ui:16 src/ui/music-list.vala:606
-#: src/ui/store-panel.vala:399
+#: src/gtk/play-panel.ui:16 src/ui/music-list.vala:610
+#: src/ui/store-panel.vala:413
 msgid "Back"
 msgstr "Nazaj"
 
@@ -227,7 +227,7 @@ msgstr "Strnjen pogled seznama predvajanja"
 msgid "Grid view for artists/albums"
 msgstr "Mrežni pogled za izvajalce/albume"
 
-#: src/gtk/preferences.ui:56 src/application.vala:412
+#: src/gtk/preferences.ui:56 src/application.vala:414
 msgid "Keep playing after window closed"
 msgstr "Nadaljuj s predvajanjem po zaprtju okna"
 
@@ -339,6 +339,14 @@ msgstr "Premešaj"
 msgid "Image Files"
 msgstr "Slikovne datoteke"
 
+#: src/action-handles.vala:102
+msgid "Export cover successfully"
+msgstr "Izvoz ovitka je uspešno zaključen"
+
+#: src/action-handles.vala:102
+msgid "Export cover failed"
+msgstr "Izvoz ovitka je spodletel"
+
 #: src/action-handles.vala:186
 msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr "Hiter, tekoč, lahek predvajalnik glasbe, napisan v GTK4."
@@ -348,15 +356,23 @@ msgstr "Hiter, tekoč, lahek predvajalnik glasbe, napisan v GTK4."
 msgid "translator-credits"
 msgstr "Martin Srebotnjak <miles@filmsi.net>"
 
-#: src/application.vala:433
+#: src/application.vala:318
+msgid "Save playlist failed"
+msgstr "Shranjevanje seznama predvajanja je spodletelo"
+
+#: src/application.vala:436
 msgid "Playlist Files"
 msgstr "Datoteke seznama predvajanja"
 
-#: src/application.vala:623
+#: src/application.vala:450
+msgid "Save playlist successfully"
+msgstr "Seznam predvajanja uspešno shranjen"
+
+#: src/application.vala:629
 msgid "Keep playing"
 msgstr "Nadaljuj s predvajanjem"
 
-#: src/ui/dialogs.vala:50 src/ui/music-list.vala:642
+#: src/ui/dialogs.vala:50 src/ui/music-list.vala:646
 msgid "Add to Playlist"
 msgstr "Dodaj na seznam predvajanja"
 
@@ -368,53 +384,54 @@ msgstr "Nov seznam predvajanja"
 msgid "Close"
 msgstr "Zapri"
 
-#: src/ui/dialogs.vala:129 src/ui/store-panel.vala:641
-msgid "No playlist found"
-msgstr "Seznam predvajanja ni bil najden"
+#: src/ui/dialogs.vala:127 src/ui/store-panel.vala:662
+#, c-format
+msgid "No playlist found in %s"
+msgstr "V %s ni mogoče najti seznama predvajanja"
 
-#: src/ui/dialogs.vala:320 src/ui/dialogs.vala:332
+#: src/ui/dialogs.vala:322 src/ui/dialogs.vala:334
 msgid "No"
 msgstr "Ne"
 
-#: src/ui/dialogs.vala:321 src/ui/dialogs.vala:332
+#: src/ui/dialogs.vala:323 src/ui/dialogs.vala:334
 msgid "Yes"
 msgstr "Da"
 
-#: src/ui/music-list.vala:265
+#: src/ui/music-list.vala:262
 msgid "Playlist is modified, save it?"
 msgstr "Seznam predvajanja je spremenjen, ga želite shraniti?"
 
 #. Translators: Play this music at next position of current playing music
-#: src/ui/music-list.vala:386 src/ui/music-list.vala:403
-#: src/ui/music-list.vala:628 src/ui/music-widgets.vala:219
+#: src/ui/music-list.vala:390 src/ui/music-list.vala:407
+#: src/ui/music-list.vala:632 src/ui/music-widgets.vala:219
 #: src/ui/music-widgets.vala:230
 msgid "Play at Next"
 msgstr "Predvajaj kot naslednje"
 
-#: src/ui/music-list.vala:388 src/ui/music-list.vala:401
-#: src/ui/music-list.vala:635 src/ui/music-widgets.vala:220
+#: src/ui/music-list.vala:392 src/ui/music-list.vala:405
+#: src/ui/music-list.vala:639 src/ui/music-widgets.vala:220
 #: src/ui/music-widgets.vala:231
 msgid "Add to Queue"
 msgstr "Dodaj v čakalno vrsto"
 
-#: src/ui/music-list.vala:389 src/ui/music-widgets.vala:221
+#: src/ui/music-list.vala:393 src/ui/music-widgets.vala:221
 #: src/ui/music-widgets.vala:232 src/ui/music-widgets.vala:245
 msgid "Add to Playlist…"
 msgstr "Dodaj na seznam predvajanja …"
 
-#: src/ui/music-list.vala:390 src/ui/music-list.vala:621
+#: src/ui/music-list.vala:394 src/ui/music-list.vala:625
 msgid "Remove"
 msgstr "Odstrani"
 
-#: src/ui/music-list.vala:406 src/ui/play-panel.vala:145
+#: src/ui/music-list.vala:410 src/ui/play-panel.vala:145
 msgid "Show _Cover File"
 msgstr "Pokaži datoteko _ovitka"
 
-#: src/ui/music-list.vala:408 src/ui/play-panel.vala:147
+#: src/ui/music-list.vala:412 src/ui/play-panel.vala:147
 msgid "_Export Cover"
 msgstr "_Izvozi ovitek"
 
-#: src/ui/music-list.vala:610
+#: src/ui/music-list.vala:614
 msgid "Select All"
 msgstr "Izberi vse"
 
@@ -500,7 +517,7 @@ msgstr "Albumi"
 msgid "Playlists"
 msgstr "Seznami predvajanja"
 
-#: src/ui/store-panel.vala:407
+#: src/ui/store-panel.vala:421
 msgid "Play"
 msgstr "Predvajaj"
 
@@ -509,6 +526,10 @@ msgstr "Predvajaj"
 #, c-format
 msgid "Volume %d%%"
 msgstr "Glasnost %d %%"
+
+#: src/ui/window.vala:110
+msgid "Show"
+msgstr "Pokaži"
 
 #: src/utils/music.vala:2
 msgid "Unknown Album"
