@@ -172,7 +172,7 @@ namespace G4 {
                 if (value && _header_revealer == null) {
                     var child = get_first_child ();
                     _header_bar_hided = child != _scroll_view ? child : null;
-                    var header = new Gtk.HeaderBar ();
+                    var header = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
                     setup_selection_header_bar (header);
                     var revealer = new Gtk.Revealer ();
                     revealer.child = header;
@@ -584,14 +584,10 @@ namespace G4 {
                 button.sensitive = enabled;
         }
 
-        private void setup_selection_header_bar (Gtk.HeaderBar header) {
-            header.show_title_buttons = false;
+        private void setup_selection_header_bar (Gtk.Box header) {
+            header.hexpand = true;
             header.add_css_class ("flat");
-
-            var title = new Gtk.Label (null);
-            title.add_css_class ("dim-label");
-            header.title_widget = title;
-            _header_title = title;
+            header.add_css_class ("toolbar");
 
             var back_btn = new Gtk.Button.from_icon_name ("go-previous-symbolic");
             back_btn.clicked.connect (() => {
@@ -608,7 +604,7 @@ namespace G4 {
                 }
             });
             back_btn.tooltip_text = _("Back");
-            header.pack_start (back_btn);
+            header.append (back_btn);
 
             var all_btn = new Gtk.Button.from_icon_name ("edit-select-all-symbolic");
             all_btn.tooltip_text = _("Select All");
@@ -618,15 +614,14 @@ namespace G4 {
                 else
                     _selection.select_all ();
             });
-            header.pack_start (all_btn);
+            header.append (all_btn);
 
-            if (_editable) {
-                var remove_btn = new Gtk.Button.from_icon_name ("user-trash-symbolic");
-                remove_btn.tooltip_text = _("Remove");
-                remove_btn.clicked.connect (() => button_command (Button.REMOVE));
-                remove_btn.name = Button.REMOVE;
-                _action_buttons.add (remove_btn);
-            }
+            var title = new Gtk.Label (null);
+            title.add_css_class ("dim-label");
+            title.halign = Gtk.Align.CENTER;
+            title.hexpand = true;
+            header.append (title);
+            _header_title = title;
 
             var insert_btn = new Gtk.Button.from_icon_name ("format-indent-more-symbolic");
             insert_btn.tooltip_text = _("Play at Next");
@@ -648,7 +643,15 @@ namespace G4 {
             addto_btn.name = Button.ADDTO;
             _action_buttons.add (addto_btn);
 
-            _action_buttons.foreach (header.pack_end);
+            if (_editable) {
+                var remove_btn = new Gtk.Button.from_icon_name ("user-trash-symbolic");
+                remove_btn.tooltip_text = _("Remove");
+                remove_btn.clicked.connect (() => button_command (Button.REMOVE));
+                remove_btn.name = Button.REMOVE;
+                _action_buttons.add (remove_btn);
+            }
+
+            _action_buttons.foreach (header.append);
         }
     }
 
