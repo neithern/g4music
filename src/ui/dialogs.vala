@@ -209,9 +209,9 @@ namespace G4 {
         }
 
         public static string embellish_tag_name (string name) {
-            var text = dgettext (GST_DOMAIN, name);
+            var text = dgettext (GST_DOMAIN, Gst.Tags.get_nick (name) ?? name);
             var sb = new StringBuilder ();
-            foreach (var str in text.split ("-")) {
+            foreach (var str in text.split (" ")) {
                 var first = true;
                 var next = 0;
                 unichar c = 0;
