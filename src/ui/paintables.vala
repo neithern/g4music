@@ -428,12 +428,24 @@ namespace G4 {
     }
 
     public void draw_outset_shadow (Gtk.Snapshot snapshot, Graphene.Rect rect, float radius = 5) {
-        var color = Gdk.RGBA ();
-        color.alpha = 0.2f;
-        color.red = color.green = color.blue = 0;
-        rect.inset (radius, radius);
+        var app = GLib.Application.get_default () as Application;
+        var high_contrast = app?.style_manager?.high_contrast ?? false;
+
+        var bounds = rect;
+        bounds.inset (radius, radius);
         var outline = Gsk.RoundedRect ();
-        outline.init_from_rect (rect, radius);
-        snapshot.append_outset_shadow (outline, color, 1, 1, 1, float.max (radius - 1, 0));
+        outline.init_from_rect (bounds, radius);
+
+        var color = Gdk.RGBA ();
+        color.red = color.green = color.blue = 0;
+        if (high_contrast) {
+            color.alpha = 0.5f;
+            float[] border_width = {1,1,1,1};
+            Gdk.RGBA[] border_color = {color,color,color,color};
+            snapshot.append_border (outline, border_width, border_color);
+        } else {
+            color.alpha = 0.2f;
+            snapshot.append_outset_shadow (outline, color, 1, 1, 1, float.max (radius - 1, 0));
+        }
     }
 }
