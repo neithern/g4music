@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-28 12:17+0800\n"
-"PO-Revision-Date: 2024-09-28 12:17+0800\n"
+"POT-Creation-Date: 2024-09-28 20:24+0800\n"
+"PO-Revision-Date: 2024-09-28 20:27+0800\n"
 "Last-Translator: Nanling <neithern@outlook.com>\n"
 "Language-Team: Chinese - China <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0\n"
 "X-Generator: Gtranslator 46.1\n"
 
-#: data/app.desktop.in:3 data/app.metainfo.xml.in:4 src/application.vala:245
+#: data/app.desktop.in:3 data/app.metainfo.xml.in:4 src/application.vala:234
 #: src/main.vala:24
 msgid "Gapless"
 msgstr "无暇"
@@ -189,7 +189,7 @@ msgctxt "shortcut window"
 msgid "Reload Library"
 msgstr "重载曲库"
 
-#: src/gtk/play-panel.ui:16 src/ui/music-list.vala:610
+#: src/gtk/play-panel.ui:16 src/ui/music-list.vala:606
 #: src/ui/store-panel.vala:413
 msgid "Back"
 msgstr "返回"
@@ -199,70 +199,66 @@ msgid "General"
 msgstr "常规"
 
 #: src/gtk/preferences.ui:14
-msgid "Prefer dark theme"
-msgstr "首选深色主题"
-
-#: src/gtk/preferences.ui:26
 msgid "Background blur mode"
 msgstr "背景模糊模式"
 
-#: src/gtk/preferences.ui:32
+#: src/gtk/preferences.ui:20
 msgid "Compact playlist view"
 msgstr "紧凑播放列表"
 
-#: src/gtk/preferences.ui:44
+#: src/gtk/preferences.ui:32
 msgid "Grid view for artists/albums"
 msgstr "艺术家/专辑使用网格视图"
 
-#: src/gtk/preferences.ui:56 src/application.vala:414
+#: src/gtk/preferences.ui:44 src/application.vala:403
 msgid "Keep playing after window closed"
 msgstr "关闭窗口后继续播放"
 
-#: src/gtk/preferences.ui:69
+#: src/gtk/preferences.ui:57
 msgid "Library"
 msgstr "曲库"
 
-#: src/gtk/preferences.ui:73
+#: src/gtk/preferences.ui:61
 msgid "Load music from folder"
 msgstr "从文件夹加载音乐"
 
-#: src/gtk/preferences.ui:85
+#: src/gtk/preferences.ui:73
 msgid "Monitor local file changes"
 msgstr "监控本地文件变化"
 
-#: src/gtk/preferences.ui:97
+#: src/gtk/preferences.ui:85
 msgid "Load thumbnails for non-local files"
 msgstr "加载非本地文件的缩略图"
 
-#: src/gtk/preferences.ui:98
+#: src/gtk/preferences.ui:86
 msgid "May cause slowdowns and excess network usage"
 msgstr "可能会导致速度减慢和过多的网络使用"
 
-#: src/gtk/preferences.ui:111
+#: src/gtk/preferences.ui:99
 msgid "Playback"
 msgstr "播放"
 
-#: src/gtk/preferences.ui:115
+#: src/gtk/preferences.ui:103
 msgid "Show audio peak level"
 msgstr "显示音频峰值"
 
-#: src/gtk/preferences.ui:119
+#: src/gtk/preferences.ui:107
 msgid "Display characters"
 msgstr "显示的字符"
 
-#: src/gtk/preferences.ui:134
+#: src/gtk/preferences.ui:122
 msgid "Rotate album cover"
 msgstr "旋转专辑封面"
 
-#: src/gtk/preferences.ui:146
+#: src/gtk/preferences.ui:134
 msgid "Enable gapless playback"
 msgstr "启用无缝续播"
 
-#: src/gtk/preferences.ui:158
+#: src/gtk/preferences.ui:146
 msgid "Normalize volume with ReplayGain"
 msgstr "自动音量平衡"
 
-#: src/gtk/preferences.ui:164
+#: src/gtk/preferences.ui:152
 msgid "Prefer audio sink of GStreamer"
 msgstr "首选音频输出"
 
@@ -278,90 +274,106 @@ msgstr "搜索"
 msgid "Sort By"
 msgstr "排序"
 
-#: src/gtk/store-panel.ui:59
+#: src/gtk/store-panel.ui:58
+msgid "_Color Scheme"
+msgstr "配色方案(_C)"
+
+#: src/gtk/store-panel.ui:60
+msgid "_System"
+msgstr "系统(_S)"
+
+#: src/gtk/store-panel.ui:65
+msgid "_Light"
+msgstr "亮色(_L)"
+
+#: src/gtk/store-panel.ui:70
+msgid "_Dark"
+msgstr "暗色(_D)"
+
+#: src/gtk/store-panel.ui:77
 msgid "_Reload Library"
 msgstr "重载曲库(_R)"
 
-#: src/gtk/store-panel.ui:63
+#: src/gtk/store-panel.ui:81
 msgid "_Select"
 msgstr "选择(_S)"
 
-#: src/gtk/store-panel.ui:69
+#: src/gtk/store-panel.ui:87
 msgid "_Preferences"
 msgstr "首选项(_P)"
 
-#: src/gtk/store-panel.ui:73
+#: src/gtk/store-panel.ui:91
 msgid "_Keyboard Shortcuts"
 msgstr "键盘快捷键(_K)"
 
-#: src/gtk/store-panel.ui:77
+#: src/gtk/store-panel.ui:95
 msgid "_About"
 msgstr "关于(_A)"
 
-#: src/gtk/store-panel.ui:86 src/ui/preferences.vala:67
+#: src/gtk/store-panel.ui:104 src/ui/preferences.vala:63
 msgid "Album"
 msgstr "专辑"
 
-#: src/gtk/store-panel.ui:91
+#: src/gtk/store-panel.ui:109
 msgid "Artist"
 msgstr "艺术家"
 
-#: src/gtk/store-panel.ui:96
+#: src/gtk/store-panel.ui:114
 msgid "Artist/Album"
 msgstr "艺术家/专辑"
 
-#: src/gtk/store-panel.ui:101
+#: src/gtk/store-panel.ui:119
 msgid "Title"
 msgstr "标题"
 
-#: src/gtk/store-panel.ui:106
+#: src/gtk/store-panel.ui:124
 msgid "Recent"
 msgstr "最近"
 
-#: src/gtk/store-panel.ui:111
+#: src/gtk/store-panel.ui:129
 msgid "Shuffle"
 msgstr "乱序"
 
-#: src/action-handles.vala:95
+#: src/action-handles.vala:97
 msgid "Image Files"
 msgstr "图像文件"
 
-#: src/action-handles.vala:102
+#: src/action-handles.vala:104
 msgid "Export cover successfully"
 msgstr "导出封面成功"
 
-#: src/action-handles.vala:102
+#: src/action-handles.vala:104
 msgid "Export cover failed"
 msgstr "导出封面失败"
 
-#: src/action-handles.vala:186
+#: src/action-handles.vala:196
 msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr "一个快速、流畅、轻量的，基于 GTK4 的音乐播放器。"
 
 #. Translators: Replace "translator-credits" with your names, one name per line
-#: src/action-handles.vala:188
+#: src/action-handles.vala:198
 msgid "translator-credits"
 msgstr ""
 "Nanling <neithern@outlook.com>, 2022-2024.\n"
 "lumingzh <lumingzh@qq.com>, 2024."
 
-#: src/application.vala:318
+#: src/application.vala:307
 msgid "Save playlist failed"
 msgstr "保存播放列表失败"
 
-#: src/application.vala:436
+#: src/application.vala:425
 msgid "Playlist Files"
 msgstr "播放列表文件"
 
-#: src/application.vala:450
+#: src/application.vala:439
 msgid "Save playlist successfully"
 msgstr "保存播放列表成功"
 
-#: src/application.vala:629
+#: src/application.vala:618
 msgid "Keep playing"
 msgstr "持续播放"
 
-#: src/ui/dialogs.vala:50 src/ui/music-list.vala:646
+#: src/ui/dialogs.vala:50 src/ui/music-list.vala:641
 msgid "Add to Playlist"
 msgstr "添加到播放列表"
 
@@ -392,13 +404,13 @@ msgstr "播放列表已修改，是否保存？"
 
 #. Translators: Play this music at next position of current playing music
 #: src/ui/music-list.vala:390 src/ui/music-list.vala:407
-#: src/ui/music-list.vala:632 src/ui/music-widgets.vala:219
+#: src/ui/music-list.vala:627 src/ui/music-widgets.vala:219
 #: src/ui/music-widgets.vala:230
 msgid "Play at Next"
 msgstr "插播"
 
 #: src/ui/music-list.vala:392 src/ui/music-list.vala:405
-#: src/ui/music-list.vala:639 src/ui/music-widgets.vala:220
+#: src/ui/music-list.vala:634 src/ui/music-widgets.vala:220
 #: src/ui/music-widgets.vala:231
 msgid "Add to Queue"
 msgstr "添加到队列"
@@ -408,7 +420,7 @@ msgstr "添加到队列"
 msgid "Add to Playlist…"
 msgstr "添加到播放列表…"
 
-#: src/ui/music-list.vala:394 src/ui/music-list.vala:625
+#: src/ui/music-list.vala:394 src/ui/music-list.vala:648
 msgid "Remove"
 msgstr "移除"
 
@@ -420,7 +432,7 @@ msgstr "显示封面文件(_C)"
 msgid "_Export Cover"
 msgstr "导出封面(_E)"
 
-#: src/ui/music-list.vala:614
+#: src/ui/music-list.vala:610
 msgid "Select All"
 msgstr "全选"
 
@@ -474,19 +486,19 @@ msgstr ""
 "拖放音乐文件到这里，\n"
 "或者修改曲库的位置："
 
-#: src/ui/preferences.vala:46 src/ui/preferences.vala:67
+#: src/ui/preferences.vala:42 src/ui/preferences.vala:63
 msgid "Never"
 msgstr "从不"
 
-#: src/ui/preferences.vala:46
+#: src/ui/preferences.vala:42
 msgid "Always"
 msgstr "总是"
 
-#: src/ui/preferences.vala:46
+#: src/ui/preferences.vala:42
 msgid "Art Only"
 msgstr "仅封面"
 
-#: src/ui/preferences.vala:67
+#: src/ui/preferences.vala:63
 msgid "Track"
 msgstr "曲目"
 
@@ -527,6 +539,9 @@ msgstr "未知专辑"
 #: src/utils/music.vala:3
 msgid "Unknown Artist"
 msgstr "未知艺术家"
+
+#~ msgid "Prefer dark theme"
+#~ msgstr "首选深色主题"
 
 #, fuzzy, c-format
 #~ msgid "No playlist found in: %s"
