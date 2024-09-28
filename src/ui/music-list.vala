@@ -170,7 +170,7 @@ namespace G4 {
             }
             set {
                 if (value && _header_revealer == null) {
-                    _header_bar_hided = get_first_child () as Gtk.HeaderBar;
+                    _header_bar_hided = get_first_child ();
                     var header = new Gtk.HeaderBar ();
                     setup_selection_header_bar (header);
                     var revealer = new Gtk.Revealer ();
