@@ -233,7 +233,7 @@ namespace G4 {
                     break;
 
                 case Button.REMOVE:
-                    _modified |= remove_items_from_store (_data_store, playlist.items) != 0;
+                    modified |= remove_items_from_store (_data_store, playlist.items) != 0;
                     on_selection_changed (0, 0);
                     break;
             }
@@ -261,7 +261,7 @@ namespace G4 {
                 var ret = yield show_alert_dialog (_("Playlist is modified, save it?"), root as Gtk.Window);
                 if (ret) {
                     ret = yield _app.add_playlist_to_file_async (playlist, false);
-                    _modified = !ret;
+                    modified = !ret;
                     return ret ? Result.OK : Result.FAILED;
                 }
             }
@@ -493,11 +493,11 @@ namespace G4 {
                     if (dst_obj == null || !_data_store.find ((!)dst_obj, out position))
                         position = _data_store.get_n_items ();
                     var playlist = (Playlist) obj;
-                    _modified |= merge_items_to_store (_data_store, playlist.items, ref position);
+                    modified |= merge_items_to_store (_data_store, playlist.items, ref position);
                 } else {
                     var files = get_dropped_files (value);
                     _app.open_files_async.begin (files, position, false,
-                                                (obj, res) => _modified |= _app.open_files_async.end (res));
+                                                (obj, res) => modified |= _app.open_files_async.end (res));
                 }
             }
             dropping_item = -1;
@@ -598,7 +598,7 @@ namespace G4 {
                     prompt_save_if_modified.begin ((obj, res) => {
                         var ret = prompt_save_if_modified.end (res);
                         if (ret != Result.FAILED) {
-                            _modified = false;
+                            modified = false;
                             multi_selection = false;
                         }
                     });
@@ -669,7 +669,7 @@ namespace G4 {
                     uris.add (music.uri);
                 }
                 var ret = yield run_async<bool> (() => save_playlist_file (file, uris, null, false), false, true);
-                _modified = !ret;
+                modified = !ret;
             }
             return !_modified;
         }
