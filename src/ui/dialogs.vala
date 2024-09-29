@@ -211,7 +211,10 @@ namespace G4 {
         public static string embellish_tag_name (string name) {
             var text = dgettext (GST_DOMAIN, Gst.Tags.get_nick (name) ?? name);
             var sb = new StringBuilder ();
-            foreach (var str in text.split (" ")) {
+            var arr = text.split (" ");
+            var count = arr.length;
+            for (var i = 0; i < count; i++) {
+                var str = arr[i];
                 var first = true;
                 var next = 0;
                 unichar c = 0;
@@ -224,11 +227,14 @@ namespace G4 {
                         sb.append (s);
                     }
                 }
-                sb.append_c (' ');
+                if (i < count - 1)
+                    sb.append_c (' ');
             }
             return sb.str;
         }
 
+        private GenericArray<TagItem> items = new GenericArray<TagItem>();
+        private Gtk.Button copy_btn = new Gtk.Button.from_icon_name ("edit-copy-symbolic");
         private Gtk.ListBox list_box = new Gtk.ListBox ();
         private Gtk.Spinner spinner = new Gtk.Spinner ();
 
@@ -242,6 +248,10 @@ namespace G4 {
             header.title_widget = new Gtk.Label (null);
             header.add_css_class ("flat");
             content.append (header);
+
+            copy_btn.clicked.connect (copy_to_clipboard);
+            copy_btn.tooltip_text = _("Copy");
+            header.pack_start (copy_btn);
 
             spinner.margin_start = 6;
             header.pack_start (spinner);
@@ -268,20 +278,32 @@ namespace G4 {
             }
         }
 
+        private void copy_to_clipboard () {
+            var sb = new StringBuilder ();
+            foreach (var ti in items) {
+                sb.append (ti.tag);
+                sb.append_c ('=');
+                sb.append (ti.value);
+                sb.append_c ('\n');
+            }
+            get_clipboard ().set_text (sb.str);
+        }
+
         private async void laod_tags_async (string uri) {
             child.height_request = 480;
+            copy_btn.sensitive = false;
             spinner.start ();
             var file = File.new_for_uri (uri);
             var tags = yield run_async<Gst.TagList?> (() => parse_gst_tags (file));
             if (tags != null) {
                 load_tags ((!)tags);
             }
+            copy_btn.sensitive = true;
             spinner.stop ();
         }
 
         private void load_tags (Gst.TagList tags) {
             var count = tags.n_tags ();
-            var arr = new GenericArray<TagItem> (count);
             for (var i = 0; i < count; i++) {
                 var tag = tags.nth_tag_name (i);
                 var values = new GenericArray<string> (4);
@@ -294,12 +316,12 @@ namespace G4 {
                         if (j != size - 1)
                             sb.append_c ('/');
                     }
-                    arr.add (new TagItem (tag, sb.str));
+                    items.add (new TagItem (tag, sb.str));
                 }
             }
-            arr.sort (TagItem.compare_by_name);
+            items.sort (TagItem.compare_by_name);
 
-            foreach (var ti in arr) {
+            foreach (var ti in items) {
                 var row = new Adw.ActionRow ();
                 row.title = ti.tag;
                 row.subtitle = ti.value;
