@@ -282,7 +282,7 @@ namespace G4 {
             var sb = new StringBuilder ();
             foreach (var ti in items) {
                 sb.append (ti.tag);
-                sb.append_c ('=');
+                sb.append (ti.value.contains ("\n") ? ":\n" : "=");
                 sb.append (ti.value);
                 sb.append_c ('\n');
             }
@@ -314,7 +314,7 @@ namespace G4 {
                     for (var j = 0; j < size; j++) {
                         sb.append (values[j]);
                         if (j != size - 1)
-                            sb.append_c ('/');
+                            sb.append_c ('\n');
                     }
                     items.add (new TagItem (tag, sb.str));
                 }

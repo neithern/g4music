@@ -104,22 +104,26 @@ namespace G4 {
                 changed = true;
             }
             Gst.DateTime? dt = null;
-            uint dt2 = 0;
+            uint dtu = 0;
             if (tags.get_date_time (Gst.Tags.DATE_TIME, out dt)
-                    && dt != null && (dt2 = gst_date_time_to_uint (dt)) != date) {
-                date = dt2;
+                    && dt != null && (dtu = gst_date_time_to_uint (dt)) != date) {
+                date = dtu;
                 changed = true;
             }
-            uint tr = 0;
-            if (tags.get_uint (Gst.Tags.TRACK_NUMBER, out tr)
-                    && (int) tr > 0 && track != tr) {
-                track = (int) tr;
+            if ((dt = parse_gst_original_date (tags)) != null
+                    && dt != null && (dtu = gst_date_time_to_uint (dt)) != date) {
+                date = dtu;
                 changed = true;
             }
-            uint album_disc = 0;
-            if (tags.get_uint (Gst.Tags.ALBUM_VOLUME_NUMBER, out album_disc)
-                && (int) album_disc > 0 && disc != album_disc) { 
-                disc = (int) album_disc;
+            uint tn = 0, avn = 0;
+            if (tags.get_uint (Gst.Tags.TRACK_NUMBER, out tn)
+                    && (int) tn > 0 && track != tn) {
+                track = (int) tn;
+                changed = true;
+            }
+            if (tags.get_uint (Gst.Tags.ALBUM_VOLUME_NUMBER, out avn)
+                && (int) avn > 0 && disc != avn) {
+                disc = (int) avn;
                 changed = true;
             }
             Gst.Sample? sample = null;
@@ -278,6 +282,25 @@ namespace G4 {
                     + (d.has_day () ? d.get_day () : 0);
             }
             return 0;
+        }
+
+        public static Gst.DateTime? parse_gst_original_date (Gst.TagList tags) {
+            Gst.DateTime? date = null;
+            Gst.DateTime? year = null;
+            var ec_size = tags.get_tag_size (Gst.Tags.EXTENDED_COMMENT);
+            for (int i = 0; i < ec_size; i++) {
+                string? s = null;
+                if (tags.peek_string_index (Gst.Tags.EXTENDED_COMMENT, i, out s) && s != null) {
+                    var str = (!)s;
+                    if (str.has_prefix ("ORIGINALDATE="))
+                        date = new Gst.DateTime.from_iso8601_string (str.substring (13));
+                    else if (str.has_prefix ("ORIGINALYEAR="))
+                        year = new Gst.DateTime.from_iso8601_string (str.substring (13));
+                    if (date != null && year != null)
+                        break;
+                }
+            }
+            return date ?? year;
         }
 
         public static void original_order (GenericArray<Music> arr) {
