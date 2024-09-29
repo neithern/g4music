@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/neithern/g4music/issues\n"
-"POT-Creation-Date: 2024-09-28 04:26+0000\n"
-"PO-Revision-Date: 2024-09-28 09:38+0200\n"
+"POT-Creation-Date: 2024-09-29 10:43+0000\n"
+"PO-Revision-Date: 2024-09-29 20:56+0200\n"
 "Last-Translator: Martin Srebotnjak <miles@filmsi.net>\n"
 "Language-Team: Slovenian <gnome-si@googlegroups.com>\n"
 "Language: sl\n"
@@ -20,7 +20,7 @@ msgstr ""
 "X-Generator: Poedit 2.2.1\n"
 "X-Poedit-SourceCharset: ISO-8859-1\n"
 
-#: data/app.desktop.in:3 data/app.metainfo.xml.in:4 src/application.vala:245
+#: data/app.desktop.in:3 data/app.metainfo.xml.in:4 src/application.vala:234
 #: src/main.vala:24
 msgid "Gapless"
 msgstr "Brez vrzeli"
@@ -202,7 +202,7 @@ msgctxt "shortcut window"
 msgid "Reload Library"
 msgstr "Znova naloži knjižnico"
 
-#: src/gtk/play-panel.ui:16 src/ui/music-list.vala:610
+#: src/gtk/play-panel.ui:16 src/ui/music-list.vala:606
 #: src/ui/store-panel.vala:413
 msgid "Back"
 msgstr "Nazaj"
@@ -212,70 +212,66 @@ msgid "General"
 msgstr "Splošno"
 
 #: src/gtk/preferences.ui:14
-msgid "Prefer dark theme"
-msgstr "Prednost ima temna tema"
-
-#: src/gtk/preferences.ui:26
 msgid "Background blur mode"
 msgstr "Način zabrisanosti ozadja"
 
-#: src/gtk/preferences.ui:32
+#: src/gtk/preferences.ui:20
 msgid "Compact playlist view"
 msgstr "Strnjen pogled seznama predvajanja"
 
-#: src/gtk/preferences.ui:44
+#: src/gtk/preferences.ui:32
 msgid "Grid view for artists/albums"
 msgstr "Mrežni pogled za izvajalce/albume"
 
-#: src/gtk/preferences.ui:56 src/application.vala:414
+#: src/gtk/preferences.ui:44 src/application.vala:403
 msgid "Keep playing after window closed"
 msgstr "Nadaljuj s predvajanjem po zaprtju okna"
 
-#: src/gtk/preferences.ui:69
+#: src/gtk/preferences.ui:57
 msgid "Library"
 msgstr "Knjižnica"
 
-#: src/gtk/preferences.ui:73
+#: src/gtk/preferences.ui:61
 msgid "Load music from folder"
 msgstr "Naloži glasbo iz mape"
 
-#: src/gtk/preferences.ui:85
+#: src/gtk/preferences.ui:73
 msgid "Monitor local file changes"
 msgstr "Spremljaj krajevne spremembe datotek"
 
-#: src/gtk/preferences.ui:97
+#: src/gtk/preferences.ui:85
 msgid "Load thumbnails for non-local files"
 msgstr "Naloži sličice za datoteke, ki niso krajevne"
 
-#: src/gtk/preferences.ui:98
+#: src/gtk/preferences.ui:86
 msgid "May cause slowdowns and excess network usage"
 msgstr "Lahko povzroči upočasnitve in prekomerno porabo omrežja"
 
-#: src/gtk/preferences.ui:111
+#: src/gtk/preferences.ui:99
 msgid "Playback"
 msgstr "Predvajanje"
 
-#: src/gtk/preferences.ui:115
+#: src/gtk/preferences.ui:103
 msgid "Show audio peak level"
 msgstr "Pokaži najvišjo raven zvoka"
 
-#: src/gtk/preferences.ui:119
+#: src/gtk/preferences.ui:107
 msgid "Display characters"
 msgstr "Prikaz znakov"
 
-#: src/gtk/preferences.ui:134
+#: src/gtk/preferences.ui:122
 msgid "Rotate album cover"
 msgstr "Zasukaj naslovnico albuma"
 
-#: src/gtk/preferences.ui:146
+#: src/gtk/preferences.ui:134
 msgid "Enable gapless playback"
 msgstr "Omogoči predvajanje brez premorov"
 
-#: src/gtk/preferences.ui:158
+#: src/gtk/preferences.ui:146
 msgid "Normalize volume with ReplayGain"
 msgstr "Normaliziraj glasnost s funkcijo ReplayGain"
 
-#: src/gtk/preferences.ui:164
+#: src/gtk/preferences.ui:152
 msgid "Prefer audio sink of GStreamer"
 msgstr "Prednost naj ima zvočni odtok GStreamer"
 
@@ -291,88 +287,104 @@ msgstr "Iskanje"
 msgid "Sort By"
 msgstr "Razvrsti po"
 
-#: src/gtk/store-panel.ui:59
+#: src/gtk/store-panel.ui:58
+msgid "_Color Scheme"
+msgstr "_Barvna shema"
+
+#: src/gtk/store-panel.ui:60
+msgid "_System"
+msgstr "S_istemska"
+
+#: src/gtk/store-panel.ui:65
+msgid "_Light"
+msgstr "_Svetla"
+
+#: src/gtk/store-panel.ui:70
+msgid "_Dark"
+msgstr "_Temna"
+
+#: src/gtk/store-panel.ui:77
 msgid "_Reload Library"
 msgstr "Znova naloži _knjižnico"
 
-#: src/gtk/store-panel.ui:63
+#: src/gtk/store-panel.ui:81
 msgid "_Select"
 msgstr "_Izberi"
 
-#: src/gtk/store-panel.ui:69
+#: src/gtk/store-panel.ui:87
 msgid "_Preferences"
 msgstr "_Možnosti"
 
-#: src/gtk/store-panel.ui:73
+#: src/gtk/store-panel.ui:91
 msgid "_Keyboard Shortcuts"
 msgstr "_Tipkovne bližnjice"
 
-#: src/gtk/store-panel.ui:77
+#: src/gtk/store-panel.ui:95
 msgid "_About"
 msgstr "_O programu"
 
-#: src/gtk/store-panel.ui:86 src/ui/preferences.vala:67
+#: src/gtk/store-panel.ui:104 src/ui/preferences.vala:63
 msgid "Album"
 msgstr "Album"
 
-#: src/gtk/store-panel.ui:91
+#: src/gtk/store-panel.ui:109
 msgid "Artist"
 msgstr "Izvajalec"
 
-#: src/gtk/store-panel.ui:96
+#: src/gtk/store-panel.ui:114
 msgid "Artist/Album"
 msgstr "Izvajalec/album"
 
-#: src/gtk/store-panel.ui:101
+#: src/gtk/store-panel.ui:119
 msgid "Title"
 msgstr "Naslov"
 
-#: src/gtk/store-panel.ui:106
+#: src/gtk/store-panel.ui:124
 msgid "Recent"
 msgstr "Nedavno"
 
-#: src/gtk/store-panel.ui:111
+#: src/gtk/store-panel.ui:129
 msgid "Shuffle"
 msgstr "Premešaj"
 
-#: src/action-handles.vala:95
+#: src/action-handles.vala:97
 msgid "Image Files"
 msgstr "Slikovne datoteke"
 
-#: src/action-handles.vala:102
+#: src/action-handles.vala:104
 msgid "Export cover successfully"
 msgstr "Izvoz ovitka je uspešno zaključen"
 
-#: src/action-handles.vala:102
+#: src/action-handles.vala:104
 msgid "Export cover failed"
 msgstr "Izvoz ovitka je spodletel"
 
-#: src/action-handles.vala:186
+#: src/action-handles.vala:196
 msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr "Hiter, tekoč, lahek predvajalnik glasbe, napisan v GTK4."
 
 #. Translators: Replace "translator-credits" with your names, one name per line
-#: src/action-handles.vala:188
+#: src/action-handles.vala:198
 msgid "translator-credits"
 msgstr "Martin Srebotnjak <miles@filmsi.net>"
 
-#: src/application.vala:318
+#: src/application.vala:307
 msgid "Save playlist failed"
 msgstr "Shranjevanje seznama predvajanja je spodletelo"
 
-#: src/application.vala:436
+#: src/application.vala:425
 msgid "Playlist Files"
 msgstr "Datoteke seznama predvajanja"
 
-#: src/application.vala:450
+#: src/application.vala:439
 msgid "Save playlist successfully"
 msgstr "Seznam predvajanja uspešno shranjen"
 
-#: src/application.vala:629
+#: src/application.vala:618
 msgid "Keep playing"
 msgstr "Nadaljuj s predvajanjem"
 
-#: src/ui/dialogs.vala:50 src/ui/music-list.vala:646
+#: src/ui/dialogs.vala:50 src/ui/music-list.vala:641
 msgid "Add to Playlist"
 msgstr "Dodaj na seznam predvajanja"
 
@@ -389,11 +401,15 @@ msgstr "Zapri"
 msgid "No playlist found in %s"
 msgstr "V %s ni mogoče najti seznama predvajanja"
 
-#: src/ui/dialogs.vala:322 src/ui/dialogs.vala:334
+#: src/ui/dialogs.vala:253
+msgid "Copy"
+msgstr "Kopiraj"
+
+#: src/ui/dialogs.vala:344 src/ui/dialogs.vala:356
 msgid "No"
 msgstr "Ne"
 
-#: src/ui/dialogs.vala:323 src/ui/dialogs.vala:334
+#: src/ui/dialogs.vala:345 src/ui/dialogs.vala:356
 msgid "Yes"
 msgstr "Da"
 
@@ -403,13 +419,13 @@ msgstr "Seznam predvajanja je spremenjen, ga želite shraniti?"
 
 #. Translators: Play this music at next position of current playing music
 #: src/ui/music-list.vala:390 src/ui/music-list.vala:407
-#: src/ui/music-list.vala:632 src/ui/music-widgets.vala:219
+#: src/ui/music-list.vala:627 src/ui/music-widgets.vala:219
 #: src/ui/music-widgets.vala:230
 msgid "Play at Next"
 msgstr "Predvajaj kot naslednje"
 
 #: src/ui/music-list.vala:392 src/ui/music-list.vala:405
-#: src/ui/music-list.vala:639 src/ui/music-widgets.vala:220
+#: src/ui/music-list.vala:634 src/ui/music-widgets.vala:220
 #: src/ui/music-widgets.vala:231
 msgid "Add to Queue"
 msgstr "Dodaj v čakalno vrsto"
@@ -419,7 +435,7 @@ msgstr "Dodaj v čakalno vrsto"
 msgid "Add to Playlist…"
 msgstr "Dodaj na seznam predvajanja …"
 
-#: src/ui/music-list.vala:394 src/ui/music-list.vala:625
+#: src/ui/music-list.vala:394 src/ui/music-list.vala:648
 msgid "Remove"
 msgstr "Odstrani"
 
@@ -431,7 +447,7 @@ msgstr "Pokaži datoteko _ovitka"
 msgid "_Export Cover"
 msgstr "_Izvozi ovitek"
 
-#: src/ui/music-list.vala:614
+#: src/ui/music-list.vala:610
 msgid "Select All"
 msgstr "Izberi vse"
 
@@ -485,19 +501,19 @@ msgstr ""
 "Povlecite in spustite glasbene datoteke semkaj\n"
 "ali spremenite mesto glasbe: "
 
-#: src/ui/preferences.vala:46 src/ui/preferences.vala:67
+#: src/ui/preferences.vala:42 src/ui/preferences.vala:63
 msgid "Never"
 msgstr "Nikoli"
 
-#: src/ui/preferences.vala:46
+#: src/ui/preferences.vala:42
 msgid "Always"
 msgstr "Vedno"
 
-#: src/ui/preferences.vala:46
+#: src/ui/preferences.vala:42
 msgid "Art Only"
 msgstr "Samo grafika"
 
-#: src/ui/preferences.vala:67
+#: src/ui/preferences.vala:63
 msgid "Track"
 msgstr "Skladba/posnetek"
 
