@@ -156,6 +156,12 @@ namespace G4 {
         }
     }
 
+    namespace TagGroup {
+        public const int BASIC = 1;
+        public const int FORMAT = 2;
+        public const int OTHER = 3;
+    }
+
     public class TagListDialog : Dialog {
         public struct TagOrder {
             unowned string tag;
@@ -163,23 +169,39 @@ namespace G4 {
         }
 
         public class TagItem : Object {
+            public int group;
             public string tag;
             public string value;
+            public string description;
             private string _key;
             private int _order;
 
             public TagItem (string t, string v) {
                 tag = embellish_tag_name (t);
                 value = v;
+                description = Gst.Tags.get_description (t) ?? "";
                 _key = tag.collate_key_for_filename ();
 
                 unowned string orig_key;
-                if (!ORDERS.lookup_extended (_key, out orig_key, out _order))
+                if (ORDERS.lookup_extended (_key, out orig_key, out _order)) {
+                    group = TagGroup.BASIC;
+                } else {
                     _order = int.MAX >> 1;
+                    if (t.contains ("bitrate") || t.contains ("channel")
+                        || t.contains ("crc") || t.contains ("code")
+                        || t.contains ("format")) {
+                        group = TagGroup.FORMAT;
+                    } else {
+                        group = TagGroup.OTHER;
+                        print (@"tag: $t\n");
+                    }
+                }
             }
 
             public static int compare_by_name (TagItem ti1, TagItem ti2) {
-                int ret = ti1._order - ti2._order;
+                int ret = ti1.group - ti2.group;
+                if (ret == 0)
+                    ret = ti1._order - ti2._order;
                 if (ret == 0)
                     ret = strcmp (ti1._key, ti2._key);
                 return ret;
@@ -200,6 +222,8 @@ namespace G4 {
                 { Gst.Tags.ALBUM_ARTIST, 4 },
                 { Gst.Tags.GENRE, 5 },
                 { Gst.Tags.DATE_TIME, 6 },
+                { Gst.Tags.TRACK_NUMBER, 7 },
+                { Gst.Tags.ALBUM_VOLUME_NUMBER, 8 },
                 { Gst.Tags.COMMENT, int.MAX - 1 },
                 { Gst.Tags.EXTENDED_COMMENT, int.MAX }
             };
@@ -235,7 +259,7 @@ namespace G4 {
 
         private GenericArray<TagItem> items = new GenericArray<TagItem>();
         private Gtk.Button copy_btn = new Gtk.Button.from_icon_name ("edit-copy-symbolic");
-        private Gtk.ListBox list_box = new Gtk.ListBox ();
+        private Gtk.Box group = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
         private Gtk.Spinner spinner = new Gtk.Spinner ();
 
         public TagListDialog (string uri, Gst.TagList? tags) {
@@ -257,25 +281,29 @@ namespace G4 {
             header.pack_start (spinner);
 
             var scroll_view = new Gtk.ScrolledWindow ();
+            scroll_view.child = group;
             scroll_view.hscrollbar_policy = Gtk.PolicyType.NEVER;
             scroll_view.vscrollbar_policy = Gtk.PolicyType.AUTOMATIC;
             scroll_view.propagate_natural_height = true;
             scroll_view.vexpand = true;
             content.append (scroll_view);
 
-            list_box.margin_start = 16;
-            list_box.margin_end = 16;
-            list_box.margin_top = 8;
-            list_box.margin_bottom = 16;
-            list_box.selection_mode = Gtk.SelectionMode.NONE;
-            list_box.add_css_class ("boxed-list");
-            scroll_view.child = list_box;
-
             if (tags != null) {
                 load_tags ((!)tags);
             } else {
                 laod_tags_async.begin (uri, (obj, res) => laod_tags_async.end (res));
             }
+        }
+
+        private Gtk.ListBox create_list_box () {
+            var box = new Gtk.ListBox ();
+            box.margin_start = 16;
+            box.margin_end = 16;
+            box.margin_top = 8;
+            box.margin_bottom = 16;
+            box.selection_mode = Gtk.SelectionMode.NONE;
+            box.add_css_class ("boxed-list");
+            return box;
         }
 
         private void copy_to_clipboard () {
@@ -321,10 +349,13 @@ namespace G4 {
             }
             items.sort (TagItem.compare_by_name);
 
+            var tag_group = -1;
+            Gtk.ListBox? list_box = null;
             foreach (var ti in items) {
                 var row = new Adw.ActionRow ();
                 row.title = ti.tag;
                 row.subtitle = ti.value;
+                row.tooltip_text = ti.description;
 #if ADW_1_2
                 row.use_markup = false;
 #endif
@@ -332,7 +363,12 @@ namespace G4 {
                 row.subtitle_selectable = true;
 #endif
                 row.add_css_class ("property");
-                list_box.append (row);
+                if (tag_group != ti.group || list_box == null) {
+                    tag_group = ti.group;
+                    list_box = create_list_box ();
+                    group.append ((!)list_box);
+                }
+                list_box?.append (row);
             }
         }
     }
