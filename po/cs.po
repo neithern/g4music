@@ -1,0 +1,558 @@
+# Czech translation for g4music.
+# Copyright (C) 2024 Nanling
+# This file is distributed under the same license as the g4music package.
+# Peri123214 <codegemjava@gmail.com>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: g4music master\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/neithern/g4music/issues\n"
+"POT-Creation-Date: 2024-09-30 04:20+0000\n"
+"PO-Revision-Date: 2024-09-30 13:20+0200\n"
+"Last-Translator: Daniel Rusek <mail@asciiwolf.com>\n"
+"Language-Team: Czech <gnome-cs-list@gnome.org>\n"
+"Language: cs\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"X-Generator: Poedit 3.5\n"
+
+#: data/app.desktop.in:3 data/app.metainfo.xml.in:4 src/application.vala:234
+#: src/main.vala:24
+msgid "Gapless"
+msgstr "Gapless"
+
+#: data/app.desktop.in:4
+msgid "Music Player"
+msgstr "Přehrávač hudby"
+
+#: data/app.desktop.in:5
+msgid "Play music"
+msgstr "Přehrát hudbu"
+
+#: data/app.desktop.in:12
+msgid "music;sound;player;media;audio;playlist;"
+msgstr "hudba;zvuk;přehrávač;média;audio;seznam skladeb;"
+
+#: data/app.metainfo.xml.in:7
+msgid "Play your music elegantly"
+msgstr "Přehrávejte hudbu elegantně"
+
+#: data/app.metainfo.xml.in:9
+msgid "Nanling"
+msgstr "Nanling"
+
+#: data/app.metainfo.xml.in:22
+msgid ""
+"Gapless (AKA: G4Music) is a light weight music player written in GTK4, "
+"focuses on large music collection."
+msgstr ""
+"Gapless (také známý jako G4Music) je lehký hudební přehrávač napsaný v GTK4, "
+"zaměřuje se na velkou hudební sbírku."
+
+#: data/app.metainfo.xml.in:23
+msgid "Features"
+msgstr "Funkce"
+
+#: data/app.metainfo.xml.in:25
+msgid ""
+"Supports most music file types, Samba and any other remote protocols "
+"(depends on GIO and GStreamer)."
+msgstr ""
+"Podporuje většinu typů hudebních souborů, Sambu a jakékoli další vzdálené "
+"protokoly (závisí na GIO a GStreamer)."
+
+#: data/app.metainfo.xml.in:26
+msgid ""
+"Fast loading and parsing thousands of music files in very few seconds, "
+"monitor local changes."
+msgstr ""
+"Rychlé načítání a analýza tisíců hudebních souborů během několika sekund, "
+"sledování místních změn."
+
+#: data/app.metainfo.xml.in:27
+msgid ""
+"Low memory usage for large music collection with album covers (embedded and "
+"external), no thumbnail caches to store."
+msgstr ""
+"Nízké využití paměti při velké hudební sbírce s obaly alb (vloženými i "
+"externími), žádná mezipaměť pro miniatury k ukládání."
+
+#: data/app.metainfo.xml.in:28
+msgid ""
+"Group and sorts by album/artist/title, shuffle list, full-text searching."
+msgstr ""
+"Seskupení a řazení podle alba / umělce / názvu, náhodného seznamu, "
+"fulltextového vyhledávání."
+
+#: data/app.metainfo.xml.in:29
+msgid ""
+"Fluent adaptive user interface for different screen (Desktop, Tablet, "
+"Mobile)."
+msgstr ""
+"Plynule adaptivní uživatelské rozhraní pro různé obrazovky (desktop, tablet, "
+"telefon)."
+
+#: data/app.metainfo.xml.in:30
+msgid "Gaussian blurred cover as background, follows GNOME light/dark mode."
+msgstr ""
+"Gaussovský rozmazaný přebal jako pozadí, následuje světlý / tmavý režim "
+"GNOME."
+
+#: data/app.metainfo.xml.in:31
+msgid "Drag-drop from GNOME Files, showing music in Files."
+msgstr "Přetažení ze Souborů GNOME, zobrazení hudby v Souborech."
+
+#: data/app.metainfo.xml.in:32
+msgid "Supports audio peaks visualizer."
+msgstr "Podporuje vizualizér maximálních úrovní zvuku."
+
+# Myslím si, že v kontextu aplikace toto bude lepší překlad než ten doslovný
+#: data/app.metainfo.xml.in:33
+msgid "Supports gapless playback."
+msgstr "Podporuje automatické opakování."
+
+#: data/app.metainfo.xml.in:34
+msgid "Supports normalizing volume with ReplayGain."
+msgstr "Podporuje normalizaci hlasitosti s ReplayGain."
+
+#: data/app.metainfo.xml.in:35
+msgid "Supports PipeWire and other audio sink."
+msgstr "Podporuje PipeWire a další vstupní body zvuku."
+
+#: data/app.metainfo.xml.in:36
+msgid "Supports MPRIS control."
+msgstr "Podporuje ovládání MPRIS."
+
+#: data/app.metainfo.xml.in:47
+msgid "Main window"
+msgstr "Hlavní okno"
+
+#: data/app.metainfo.xml.in:51
+msgid "Albums view"
+msgstr "Zobrazení alb"
+
+#: data/app.metainfo.xml.in:55
+msgid "Playing view"
+msgstr "Zobrazení přehrávání"
+
+#: data/app.metainfo.xml.in:59
+msgid "Playlist view"
+msgstr "Zobrazení seznamu skladeb"
+
+#: src/gtk/help-overlay.ui:11
+msgctxt "shortcut window"
+msgid "General"
+msgstr "Obecné"
+
+#: src/gtk/help-overlay.ui:14
+msgctxt "shortcut window"
+msgid "Show Shortcuts"
+msgstr "Zobrazit zkratky"
+
+#: src/gtk/help-overlay.ui:20
+msgctxt "shortcut window"
+msgid "Preferences"
+msgstr "Předvolby"
+
+#: src/gtk/help-overlay.ui:26
+msgctxt "shortcut window"
+msgid "Quit"
+msgstr "Ukončit"
+
+#: src/gtk/help-overlay.ui:34
+msgctxt "shortcut window"
+msgid "Playback"
+msgstr "Přehrávání"
+
+#: src/gtk/help-overlay.ui:37
+msgctxt "shortcut window"
+msgid "Play/Pause"
+msgstr "Přehrát / pozastavit"
+
+#: src/gtk/help-overlay.ui:43
+msgctxt "shortcut window"
+msgid "Play Next"
+msgstr "Přehrát další"
+
+#: src/gtk/help-overlay.ui:49
+msgctxt "shortcut window"
+msgid "Play Previous"
+msgstr "Přehrát předchozí"
+
+#: src/gtk/help-overlay.ui:57
+msgctxt "shortcut window"
+msgid "Playlist"
+msgstr "Seznam skladeb"
+
+#: src/gtk/help-overlay.ui:60
+msgctxt "shortcut window"
+msgid "Search"
+msgstr "Hledat"
+
+#: src/gtk/help-overlay.ui:66
+msgctxt "shortcut window"
+msgid "Toggle Sort"
+msgstr "Přepnout řazení"
+
+#: src/gtk/help-overlay.ui:72
+msgctxt "shortcut window"
+msgid "Reload Library"
+msgstr "Obnovit knihovnu"
+
+#: src/gtk/play-panel.ui:16 src/ui/music-list.vala:606
+#: src/ui/store-panel.vala:413
+msgid "Back"
+msgstr "Zpět"
+
+#: src/gtk/preferences.ui:10
+msgid "General"
+msgstr "Obecné"
+
+#: src/gtk/preferences.ui:14
+msgid "Background blur mode"
+msgstr "Režim rozostření pozadí"
+
+#: src/gtk/preferences.ui:20
+msgid "Compact playlist view"
+msgstr "Kompaktní zobrazení seznamu skladeb"
+
+#: src/gtk/preferences.ui:32
+msgid "Grid view for artists/albums"
+msgstr "Mřížkové zobrazení umělců / alb"
+
+#: src/gtk/preferences.ui:44 src/application.vala:403
+msgid "Keep playing after window closed"
+msgstr "Nechat přehrávat po zavření okna"
+
+#: src/gtk/preferences.ui:57
+msgid "Library"
+msgstr "Knihovna"
+
+#: src/gtk/preferences.ui:61
+msgid "Load music from folder"
+msgstr "Načíst hudbu ze složky"
+
+#: src/gtk/preferences.ui:73
+msgid "Monitor local file changes"
+msgstr "Kontrolovat místní změny souborů"
+
+#: src/gtk/preferences.ui:85
+msgid "Load thumbnails for non-local files"
+msgstr "Načítat přebaly vzdálených souborů"
+
+#: src/gtk/preferences.ui:86
+msgid "May cause slowdowns and excess network usage"
+msgstr "Může způsobit zpomalení a přebytečné použití sítě"
+
+#: src/gtk/preferences.ui:99
+msgid "Playback"
+msgstr "Přehrávání"
+
+#: src/gtk/preferences.ui:103
+msgid "Show audio peak level"
+msgstr "Zobrazovat maximální úrovně zvuku"
+
+# Myslím si, že v kontextu aplikace toto bude lepší překlad než ten doslovný
+#: src/gtk/preferences.ui:107
+msgid "Display characters"
+msgstr "Zobrazováno pomocí"
+
+#: src/gtk/preferences.ui:122
+msgid "Rotate album cover"
+msgstr "Otáčet přebal alba"
+
+# Myslím si, že v kontextu aplikace toto bude lepší překlad než ten doslovný
+#: src/gtk/preferences.ui:134
+msgid "Enable gapless playback"
+msgstr "Povolit automatické opakování"
+
+#: src/gtk/preferences.ui:146
+msgid "Normalize volume with ReplayGain"
+msgstr "Normalizovat hlasitost s ReplayGain"
+
+#: src/gtk/preferences.ui:152
+msgid "Prefer audio sink of GStreamer"
+msgstr "Preferovaný vstupní bod GStreamer"
+
+#: src/gtk/store-panel.ui:22
+msgid "Main Menu"
+msgstr "Hlavní nabídka"
+
+#: src/gtk/store-panel.ui:29 src/ui/dialogs.vala:75
+msgid "Search"
+msgstr "Hledat"
+
+#: src/gtk/store-panel.ui:35
+msgid "Sort By"
+msgstr "Seřadit podle"
+
+#: src/gtk/store-panel.ui:58
+msgid "_Color Scheme"
+msgstr "Barevné s_chéma"
+
+#: src/gtk/store-panel.ui:60
+msgid "_System"
+msgstr "S_ystémové"
+
+#: src/gtk/store-panel.ui:65
+msgid "_Light"
+msgstr "_Světlé"
+
+#: src/gtk/store-panel.ui:70
+msgid "_Dark"
+msgstr "_Tmavé"
+
+#: src/gtk/store-panel.ui:77
+msgid "_Reload Library"
+msgstr "O_bnovit knihovnu"
+
+#: src/gtk/store-panel.ui:81
+msgid "_Select"
+msgstr "_Vybrat"
+
+#: src/gtk/store-panel.ui:87
+msgid "_Preferences"
+msgstr "_Předvolby"
+
+#: src/gtk/store-panel.ui:91
+msgid "_Keyboard Shortcuts"
+msgstr "_Klávesové zkratky"
+
+#: src/gtk/store-panel.ui:95
+msgid "_About"
+msgstr "O _aplikaci"
+
+#: src/gtk/store-panel.ui:104 src/ui/preferences.vala:63
+msgid "Album"
+msgstr "Album"
+
+#: src/gtk/store-panel.ui:109
+msgid "Artist"
+msgstr "Umělec"
+
+#: src/gtk/store-panel.ui:114
+msgid "Artist/Album"
+msgstr "Umělec / album"
+
+#: src/gtk/store-panel.ui:119
+msgid "Title"
+msgstr "Název"
+
+#: src/gtk/store-panel.ui:124
+msgid "Recent"
+msgstr "Nedávné"
+
+#: src/gtk/store-panel.ui:129
+msgid "Shuffle"
+msgstr "Náhodné"
+
+#: src/action-handles.vala:97
+msgid "Image Files"
+msgstr "Soubory obrázků"
+
+#: src/action-handles.vala:104
+msgid "Export cover successfully"
+msgstr "Přebal byl úspěšně exportován"
+
+#: src/action-handles.vala:104
+msgid "Export cover failed"
+msgstr "Exportování přebalu se nezdařilo"
+
+#: src/action-handles.vala:196
+msgid "A fast, fluent, light weight music player written in GTK4."
+msgstr "Rychlý, plynulý a lehký hudební přehrávač napsaný v GTK4."
+
+# Pozn.: V šabloně pro překlad chybí některé klíče (např. pro tlačítko smazání ve vyhledávání)
+#. Translators: Replace "translator-credits" with your names, one name per line
+#: src/action-handles.vala:198
+msgid "translator-credits"
+msgstr "Peri123214 <codegemjava@gmail.com>"
+
+#: src/application.vala:307
+msgid "Save playlist failed"
+msgstr "Uložení seznamu skladeb se nezdařilo"
+
+#: src/application.vala:425
+msgid "Playlist Files"
+msgstr "Soubory seznamu skladeb"
+
+#: src/application.vala:439
+msgid "Save playlist successfully"
+msgstr "Seznam skladeb byl úspěšně uložen"
+
+#: src/application.vala:618
+msgid "Keep playing"
+msgstr "Nechat přehrávat"
+
+#: src/ui/dialogs.vala:50 src/ui/music-list.vala:641
+msgid "Add to Playlist"
+msgstr "Přidat do seznamu skladeb"
+
+#: src/ui/dialogs.vala:55
+msgid "New Playlist"
+msgstr "Nový seznam skladeb"
+
+#: src/ui/dialogs.vala:62
+msgid "Close"
+msgstr "Zavřít"
+
+#: src/ui/dialogs.vala:127 src/ui/store-panel.vala:662
+#, c-format
+msgid "No playlist found in %s"
+msgstr "V %s nebyl nalezen žádný seznam skladeb"
+
+#: src/ui/dialogs.vala:253
+msgid "Copy"
+msgstr "Kopírovat"
+
+#: src/ui/dialogs.vala:344 src/ui/dialogs.vala:356
+msgid "No"
+msgstr "Ne"
+
+#: src/ui/dialogs.vala:345 src/ui/dialogs.vala:356
+msgid "Yes"
+msgstr "Ano"
+
+#: src/ui/music-list.vala:262
+msgid "Playlist is modified, save it?"
+msgstr "Seznam skladeb je upraven, uložit jej?"
+
+#. Translators: Play this music at next position of current playing music
+#: src/ui/music-list.vala:390 src/ui/music-list.vala:407
+#: src/ui/music-list.vala:627 src/ui/music-widgets.vala:219
+#: src/ui/music-widgets.vala:230
+msgid "Play at Next"
+msgstr "Přehrát jako další"
+
+#: src/ui/music-list.vala:392 src/ui/music-list.vala:405
+#: src/ui/music-list.vala:634 src/ui/music-widgets.vala:220
+#: src/ui/music-widgets.vala:231
+msgid "Add to Queue"
+msgstr "Přidat do fronty"
+
+#: src/ui/music-list.vala:393 src/ui/music-widgets.vala:221
+#: src/ui/music-widgets.vala:232 src/ui/music-widgets.vala:245
+msgid "Add to Playlist…"
+msgstr "Přidat do seznamu skladeb…"
+
+#: src/ui/music-list.vala:394 src/ui/music-list.vala:648
+msgid "Remove"
+msgstr "Odstranit"
+
+#: src/ui/music-list.vala:410 src/ui/play-panel.vala:145
+msgid "Show _Cover File"
+msgstr "Zob_razit přebal alba"
+
+#: src/ui/music-list.vala:412 src/ui/play-panel.vala:147
+msgid "_Export Cover"
+msgstr "_Exportovat přebal"
+
+#: src/ui/music-list.vala:610
+msgid "Select All"
+msgstr "Vybrat vše"
+
+#: src/ui/music-widgets.vala:223
+msgid "Show List File"
+msgstr "Zobrazit seznam"
+
+#: src/ui/music-widgets.vala:238 src/ui/play-panel.vala:60
+msgid "Search Title"
+msgstr "Vyhledat název"
+
+#: src/ui/music-widgets.vala:239 src/ui/play-panel.vala:58
+msgid "Search Album"
+msgstr "Vyhledat album"
+
+#: src/ui/music-widgets.vala:240 src/ui/play-panel.vala:59
+msgid "Search Artist"
+msgstr "Vyhledat umělce"
+
+#: src/ui/music-widgets.vala:242
+msgid "Show _Tags…"
+msgstr "Zobrazit š_títky…"
+
+#: src/ui/music-widgets.vala:243
+msgid "_Show Music File"
+msgstr "_Zobrazit hudební soubor"
+
+#. Translators: single loop the current music
+#: src/ui/play-bar.vala:72
+msgid "Single Loop"
+msgstr "Opakovat jednu skladbu"
+
+#: src/ui/play-bar.vala:82
+msgid "Play Previous"
+msgstr "Přehrát předchozí"
+
+#. media-playback-pause-symbolic
+#: src/ui/play-bar.vala:88
+msgid "Play/Pause"
+msgstr "Přehrát / pozastavit"
+
+#: src/ui/play-bar.vala:95
+msgid "Play Next"
+msgstr "Přehrát další"
+
+#: src/ui/play-panel.vala:264
+msgid ""
+"Drag and drop music files here,\n"
+"or change music location: "
+msgstr ""
+"Táhněte a pusťte sem soubory s hudbou,\n"
+"nebo změňte umístění hudby: "
+
+#: src/ui/preferences.vala:42 src/ui/preferences.vala:63
+msgid "Never"
+msgstr "Nikdy"
+
+#: src/ui/preferences.vala:42
+msgid "Always"
+msgstr "Vždy"
+
+#: src/ui/preferences.vala:42
+msgid "Art Only"
+msgstr "Pouze u skladeb s přebalem"
+
+#: src/ui/preferences.vala:63
+msgid "Track"
+msgstr "Skladba"
+
+#: src/ui/store-panel.vala:82
+msgid "Playing"
+msgstr "Přehrává se"
+
+#: src/ui/store-panel.vala:86
+msgid "Artists"
+msgstr "Umělci"
+
+#: src/ui/store-panel.vala:90
+msgid "Albums"
+msgstr "Alba"
+
+#: src/ui/store-panel.vala:94
+msgid "Playlists"
+msgstr "Seznamy skladeb"
+
+#: src/ui/store-panel.vala:421
+msgid "Play"
+msgstr "Přehrát"
+
+#. Translators: Current volume percent: 0~100%
+#: src/ui/volume-button.vala:33
+#, c-format
+msgid "Volume %d%%"
+msgstr "Hlasitost %d%%"
+
+#: src/ui/window.vala:110
+msgid "Show"
+msgstr "Zobrazit"
+
+#: src/utils/music.vala:2
+msgid "Unknown Album"
+msgstr "Neznámé album"
+
+#: src/utils/music.vala:3
+msgid "Unknown Artist"
+msgstr "Neznámý umělec"
