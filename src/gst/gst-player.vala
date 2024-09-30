@@ -16,12 +16,9 @@ namespace G4 {
 
         public static void get_audio_sinks (GenericArray<Gst.ElementFactory> sinks) {
             var caps = new Gst.Caps.simple ("audio/x-raw", "format", Type.STRING, "S16LE", null);
-            var list = Gst.ElementFactory.list_get_elements (Gst.ElementFactoryType.AUDIOVIDEO_SINKS, Gst.Rank.NONE);
+            var list = Gst.ElementFactory.list_get_elements (Gst.ElementFactoryType.AUDIOVIDEO_SINKS, Gst.Rank.SECONDARY);
             list = Gst.ElementFactory.list_filter (list, caps, Gst.PadDirection.SINK, false);
-            list.foreach ((factory) => {
-                if (factory.get_rank () >= Gst.Rank.MARGINAL || factory.name == "pipewiresink")
-                    sinks.add (factory);
-            });
+            list.foreach ((factory) => sinks.add (factory));
         }
 
         private dynamic Gst.Pipeline? _pipeline = null;
@@ -126,8 +123,11 @@ namespace G4 {
             }
             set {
                 _current_uri = value;
-                if (_pipeline != null)
+                if (_pipeline != null) {
                     ((!)_pipeline).uri = value;
+                    if (AtomicInt.compare_and_exchange (ref _audio_sink_requested, 1, 0))
+                        update_audio_sink ();
+                }
             }
         }
 
@@ -137,11 +137,10 @@ namespace G4 {
             }
             set {
                 var sink_name = value;
-                if (sink_name.length == 0) {
-                    var sinks = new GenericArray<Gst.ElementFactory> (8);
-                    get_audio_sinks (sinks);
-                    if (sinks.length > 0)
-                        sink_name = sinks[0].name;
+                if (sink_name.length == 0 || (Gst.ElementFactory.find (sink_name)?.get_rank () ?? Gst.Rank.NONE) <= Gst.Rank.MARGINAL) {
+                    var list = Gst.ElementFactory.list_get_elements (Gst.ElementFactoryType.AUDIOVIDEO_SINKS, Gst.Rank.PRIMARY);
+                    if (!list.is_empty ())
+                        sink_name = list.first ().data.name;
                 }
                 var sink = Gst.ElementFactory.make (sink_name, sink_name);
                 if (sink != null) {
@@ -149,7 +148,7 @@ namespace G4 {
                     _audio_sink_name = value;
                     ((!)_audio_sink).enable_last_sample = true;
                 }
-                if (_pipeline != null && _state == Gst.State.PLAYING)
+                if (_pipeline != null && _current_uri != null)
                     update_audio_sink ();
                 else
                     AtomicInt.set (ref _audio_sink_requested, 1);
@@ -190,7 +189,7 @@ namespace G4 {
                 _replay_gain = value != 0 ? Gst.ElementFactory.make ("rgvolume", "gain") : null;
                 if (_replay_gain != null)
                     ((!)_replay_gain).album_mode = value == 2;
-                if (_pipeline != null && _state == Gst.State.PLAYING)
+                    if (_pipeline != null && _current_uri != null)
                     update_audio_sink ();
                 else
                     AtomicInt.set (ref _audio_sink_requested, 1);
@@ -302,8 +301,6 @@ namespace G4 {
                 _state = state;
                 state_changed (state);
                 //  print (@"State changed: $old -> $state\n");
-                if (state == Gst.State.PLAYING && AtomicInt.compare_and_exchange (ref _audio_sink_requested, 1, 0))
-                    update_audio_sink ();
             }
             if (_timer_handle == 0 && state == Gst.State.PLAYING) {
                 _timer_handle = Timeout.add (100, parse_position);
@@ -350,28 +347,31 @@ namespace G4 {
         }
 
         private Gst.Element? setup_audio_sink () {
-            if (_audio_sink != null) {
-                var bin = _audio_sink?.parent as Gst.Bin;
-                bin?.remove_element ((!)_audio_sink);
-                var name = _audio_sink?.name ?? "";
-                print (@"Audio sink: $name\n");
+            dynamic Gst.Bin? sink_bin = Gst.ElementFactory.make ("bin", "audio-sink-bin") as Gst.Bin;
+            if (sink_bin != null) {
+                ((!)sink_bin).async_handling = true;
             }
+
             if (_replay_gain != null) {
-                var bin = _replay_gain?.parent as Gst.Bin;
-                bin?.remove_element ((!)_replay_gain);
+                (_replay_gain?.parent as Gst.Bin)?.remove_element ((!)_replay_gain);
+                sink_bin?.add ((!)_replay_gain);
             }
             print (@"Enable ReplayGain: $(_replay_gain != null)\n");
 
-            dynamic Gst.Bin? bin = null;
-            Gst.Pad? static_pad = null;
-            if (_audio_sink != null && _replay_gain != null
-                    && (static_pad = _replay_gain?.get_static_pad ("sink")) != null
-                    && (bin = Gst.ElementFactory.make ("bin", "audio-sink-bin") as Gst.Bin) != null) {
-                bin?.add_many ((!)_replay_gain, (!)_audio_sink);
-                bin?.add_pad (new Gst.GhostPad ("sink", (!)static_pad));
+            if (_audio_sink != null) {
+                (_audio_sink?.parent as Gst.Bin)?.remove_element ((!)_audio_sink);
+                sink_bin?.add ((!)_audio_sink);
                 _replay_gain?.link ((!)_audio_sink);
             }
-            return bin != null ? bin : _audio_sink;
+            print ("Audio Sink: %s\n", _audio_sink?.name ?? "");
+
+            Gst.Pad? static_pad = (_replay_gain ?? _audio_sink)?.get_static_pad ("sink");
+            if (static_pad != null) {
+                sink_bin?.add_pad (new Gst.GhostPad ("sink", (!)static_pad));
+            } else {
+                (_audio_sink?.parent as Gst.Bin)?.remove_element ((!)_audio_sink);
+            }
+            return static_pad != null ? sink_bin : _audio_sink;
         }
 
         private void update_audio_sink () {
