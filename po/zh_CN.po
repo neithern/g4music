@@ -1,22 +1,22 @@
 # Chinese translations for g4music package.
 # Copyright (C) 2022 THE g4music'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the g4music package.
-# lumingzh <lumingzh@qq.com>, 2024.
 # Nanling <neithern@outlook.com>, 2022-2024.
+# lumingzh <lumingzh@qq.com>, 2024.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-28 20:24+0800\n"
-"PO-Revision-Date: 2024-09-28 20:27+0800\n"
-"Last-Translator: Nanling <neithern@outlook.com>\n"
-"Language-Team: Chinese - China <i18n-zh@googlegroups.com>\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/neithern/g4music/issues\n"
+"POT-Creation-Date: 2024-09-29 10:43+0000\n"
+"PO-Revision-Date: 2024-09-30 20:48+0800\n"
+"Last-Translator: lumingzh <lumingzh@qq.com>\n"
+"Language-Team: Chinese (China) <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Gtranslator 46.1\n"
 
 #: data/app.desktop.in:3 data/app.metainfo.xml.in:4 src/application.vala:234
@@ -40,6 +40,10 @@ msgstr ""
 #: data/app.metainfo.xml.in:7
 msgid "Play your music elegantly"
 msgstr "优雅地播放您的音乐"
+
+#: data/app.metainfo.xml.in:9
+msgid "Nanling"
+msgstr "Nanling"
 
 #: data/app.metainfo.xml.in:22
 msgid ""
@@ -390,11 +394,15 @@ msgstr "关闭"
 msgid "No playlist found in %s"
 msgstr "在 %s 中未找到播放列表"
 
-#: src/ui/dialogs.vala:322 src/ui/dialogs.vala:334
+#: src/ui/dialogs.vala:253
+msgid "Copy"
+msgstr "复制"
+
+#: src/ui/dialogs.vala:344 src/ui/dialogs.vala:356
 msgid "No"
 msgstr "否"
 
-#: src/ui/dialogs.vala:323 src/ui/dialogs.vala:334
+#: src/ui/dialogs.vala:345 src/ui/dialogs.vala:356
 msgid "Yes"
 msgstr "是"
 
@@ -546,9 +554,6 @@ msgstr "未知艺术家"
 #, fuzzy, c-format
 #~ msgid "No playlist found in: %s"
 #~ msgstr "未找到播放列表"
-
-#~ msgid "Nanling"
-#~ msgstr "Nanling"
 
 #~ msgid "_Add to Playlist…"
 #~ msgstr "添加到播放列表(_A)…"
