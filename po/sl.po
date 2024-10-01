@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/neithern/g4music/issues\n"
-"POT-Creation-Date: 2024-09-29 10:43+0000\n"
-"PO-Revision-Date: 2024-09-29 20:56+0200\n"
+"POT-Creation-Date: 2024-10-01 06:04+0000\n"
+"PO-Revision-Date: 2024-10-01 15:18+0200\n"
 "Last-Translator: Martin Srebotnjak <miles@filmsi.net>\n"
 "Language-Team: Slovenian <gnome-si@googlegroups.com>\n"
 "Language: sl\n"
@@ -103,42 +103,50 @@ msgstr ""
 "GNOME."
 
 #: data/app.metainfo.xml.in:31
-msgid "Drag-drop from GNOME Files, showing music in Files."
-msgstr "Povlecite in spustite iz Datotek GNOME, ki prikazuje glasbo v mapah."
+msgid ""
+"Supports creating and editing playlists, drag cover to change order or add "
+"to another playlist."
+msgstr ""
+"Podpira ustvarjanje in urejanje seznamov predvajanja, povlek naslovnice za "
+"spremembo vrstnega reda ali dodajanje na drug seznam predvajanja."
 
 #: data/app.metainfo.xml.in:32
+msgid "Supports drag and drop with other apps."
+msgstr "Podpira povleci in spusti z drugimi programi."
+
+#: data/app.metainfo.xml.in:33
 msgid "Supports audio peaks visualizer."
 msgstr "Podpira vizualizacijo najvišjih ravni zvoka."
 
-#: data/app.metainfo.xml.in:33
+#: data/app.metainfo.xml.in:34
 msgid "Supports gapless playback."
 msgstr "Podpira predvajanje brez premorov."
 
-#: data/app.metainfo.xml.in:34
+#: data/app.metainfo.xml.in:35
 msgid "Supports normalizing volume with ReplayGain."
 msgstr "Podpira normaliziranje glasnosti s funkcijo ReplayGain."
 
-#: data/app.metainfo.xml.in:35
-msgid "Supports PipeWire and other audio sink."
-msgstr "Podpira PipeWire in druge zvokovne ponore."
-
 #: data/app.metainfo.xml.in:36
+msgid "Supports specified audio sink."
+msgstr "Podpira navedeni zvočni ponor."
+
+#: data/app.metainfo.xml.in:37
 msgid "Supports MPRIS control."
 msgstr "Podpira nadzor MPRIS."
 
-#: data/app.metainfo.xml.in:47
+#: data/app.metainfo.xml.in:48
 msgid "Main window"
 msgstr "Glavno okno"
 
-#: data/app.metainfo.xml.in:51
+#: data/app.metainfo.xml.in:52
 msgid "Albums view"
 msgstr "Pogled albumov"
 
-#: data/app.metainfo.xml.in:55
+#: data/app.metainfo.xml.in:56
 msgid "Playing view"
 msgstr "Predvajalni pogled"
 
-#: data/app.metainfo.xml.in:59
+#: data/app.metainfo.xml.in:60
 msgid "Playlist view"
 msgstr "Pogled seznama predvajanja"
 
@@ -401,15 +409,15 @@ msgstr "Zapri"
 msgid "No playlist found in %s"
 msgstr "V %s ni mogoče najti seznama predvajanja"
 
-#: src/ui/dialogs.vala:253
+#: src/ui/dialogs.vala:277
 msgid "Copy"
 msgstr "Kopiraj"
 
-#: src/ui/dialogs.vala:344 src/ui/dialogs.vala:356
+#: src/ui/dialogs.vala:380 src/ui/dialogs.vala:392
 msgid "No"
 msgstr "Ne"
 
-#: src/ui/dialogs.vala:345 src/ui/dialogs.vala:356
+#: src/ui/dialogs.vala:381 src/ui/dialogs.vala:392
 msgid "Yes"
 msgstr "Da"
 
