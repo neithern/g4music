@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/neithern/g4music/issues\n"
-"POT-Creation-Date: 2024-09-29 10:43+0000\n"
-"PO-Revision-Date: 2024-09-30 20:48+0800\n"
+"POT-Creation-Date: 2024-10-01 06:04+0000\n"
+"PO-Revision-Date: 2024-10-01 16:00+0800\n"
 "Last-Translator: lumingzh <lumingzh@qq.com>\n"
 "Language-Team: Chinese (China) <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
@@ -94,42 +94,48 @@ msgid "Gaussian blurred cover as background, follows GNOME light/dark mode."
 msgstr "高斯模糊封面作为背景，跟随 GNOME 亮色/暗色模式。"
 
 #: data/app.metainfo.xml.in:31
-msgid "Drag-drop from GNOME Files, showing music in Files."
-msgstr "从 GNOME 文件管理器拖放音乐文件，显示文件管理器中的音乐文件。"
+msgid ""
+"Supports creating and editing playlists, drag cover to change order or add "
+"to another playlist."
+msgstr "支持创建和编辑播放列表，拖拽封面更改排序或添加到另一个播放列表。"
 
 #: data/app.metainfo.xml.in:32
+msgid "Supports drag and drop with other apps."
+msgstr "支持通过其它应用拖放文件。"
+
+#: data/app.metainfo.xml.in:33
 msgid "Supports audio peaks visualizer."
 msgstr "支持音频峰值可视化。"
 
-#: data/app.metainfo.xml.in:33
+#: data/app.metainfo.xml.in:34
 msgid "Supports gapless playback."
 msgstr "支持无缝播放。"
 
-#: data/app.metainfo.xml.in:34
+#: data/app.metainfo.xml.in:35
 msgid "Supports normalizing volume with ReplayGain."
 msgstr "支持通过回放增益实现音量平衡。"
 
-#: data/app.metainfo.xml.in:35
-msgid "Supports PipeWire and other audio sink."
-msgstr "支持 PipeWire 和其它音频输出。"
-
 #: data/app.metainfo.xml.in:36
+msgid "Supports specified audio sink."
+msgstr "支持指定音频输出。"
+
+#: data/app.metainfo.xml.in:37
 msgid "Supports MPRIS control."
 msgstr "支持 MPRIS 控制。"
 
-#: data/app.metainfo.xml.in:47
+#: data/app.metainfo.xml.in:48
 msgid "Main window"
 msgstr "主窗口"
 
-#: data/app.metainfo.xml.in:51
+#: data/app.metainfo.xml.in:52
 msgid "Albums view"
 msgstr "专辑视图"
 
-#: data/app.metainfo.xml.in:55
+#: data/app.metainfo.xml.in:56
 msgid "Playing view"
 msgstr "正在播放视图"
 
-#: data/app.metainfo.xml.in:59
+#: data/app.metainfo.xml.in:60
 msgid "Playlist view"
 msgstr "播放列表视图"
 
@@ -394,15 +400,15 @@ msgstr "关闭"
 msgid "No playlist found in %s"
 msgstr "在 %s 中未找到播放列表"
 
-#: src/ui/dialogs.vala:253
+#: src/ui/dialogs.vala:277
 msgid "Copy"
 msgstr "复制"
 
-#: src/ui/dialogs.vala:344 src/ui/dialogs.vala:356
+#: src/ui/dialogs.vala:380 src/ui/dialogs.vala:392
 msgid "No"
 msgstr "否"
 
-#: src/ui/dialogs.vala:345 src/ui/dialogs.vala:356
+#: src/ui/dialogs.vala:381 src/ui/dialogs.vala:392
 msgid "Yes"
 msgstr "是"
 
@@ -547,6 +553,9 @@ msgstr "未知专辑"
 #: src/utils/music.vala:3
 msgid "Unknown Artist"
 msgstr "未知艺术家"
+
+#~ msgid "Drag-drop from GNOME Files, showing music in Files."
+#~ msgstr "从 GNOME 文件管理器拖放音乐文件，显示文件管理器中的音乐文件。"
 
 #~ msgid "Prefer dark theme"
 #~ msgstr "首选深色主题"
