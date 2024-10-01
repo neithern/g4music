@@ -200,8 +200,6 @@ namespace G4 {
         private Adw.NavigationPage? _last_page = null;
         private Adw.NavigationView _widget = new Adw.NavigationView ();
 
-        public signal void popped (Gtk.Widget? child);
-
         public Stack (bool retain_last_popped = false) {
             _retain_last_popped = retain_last_popped;
             _widget = new Adw.NavigationView ();
@@ -212,7 +210,6 @@ namespace G4 {
                 notify_property ("visible-child");
             });
             _widget.popped.connect((page) => {
-                popped (page.child);
                 notify_property ("visible-child");
                 if (_retain_last_popped)
                     _last_page = page;
@@ -320,8 +317,6 @@ namespace G4 {
     public class Stack : Object {
         private Gtk.Stack _widget = new Gtk.Stack ();
 
-        public signal void popped (Gtk.Widget? child);
-
         public Stack (bool retain_last_popped = false) {
             _widget = new Gtk.Stack ();
             animate_transitions = true;
@@ -362,6 +357,7 @@ namespace G4 {
             bin.child = child;
             _widget.add_named (bin, tag);
             _widget.visible_child = bin;
+            notify_property ("visible-child");
             return bin;
         }
 
@@ -370,7 +366,6 @@ namespace G4 {
             var previous = child?.get_prev_sibling ();
             if (child != null && previous != null) {
                 _widget.visible_child = (!)previous;
-                popped (child);
                 notify_property ("visible-child");
                 run_timeout_once (_widget.transition_duration, () => {
                     _widget.remove ((!)child);
