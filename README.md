@@ -17,11 +17,12 @@ Gapless (AKA: G4Music) is a light weight music player written in GTK4, focuses o
 - Group and sorts by album/artist/title, shuffle list, full-text searching.
 - Fluent adaptive user interface for different screen (Desktop, Tablet, Mobile).
 - Gaussian blurred cover as background, follows GNOME light/dark mode.
-- Drag-drop from GNOME Files, showing music in Files.
+- Supports creating and editing playlists, drag cover to change order or add to another playlist.
+- Supports drag and drop with other apps.
 - Supports audio peaks visualizer.
 - Supports gapless playback.
 - Supports normalizing volume with ReplayGain.
-- Supports PipeWire and other audio sink.
+- Supports specified audio sink.
 - Supports MPRIS control.
 
 ## Install from Flathub

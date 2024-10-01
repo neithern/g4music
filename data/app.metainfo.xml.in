@@ -28,11 +28,12 @@
         <li>Group and sorts by album/artist/title, shuffle list, full-text searching.</li>
         <li>Fluent adaptive user interface for different screen (Desktop, Tablet, Mobile).</li>
         <li>Gaussian blurred cover as background, follows GNOME light/dark mode.</li>
-        <li>Drag-drop from GNOME Files, showing music in Files.</li>
+        <li>Supports creating and editing playlists, drag cover to change order or add to another playlist.</li>
+        <li>Supports drag and drop with other apps.</li>
         <li>Supports audio peaks visualizer.</li>
         <li>Supports gapless playback.</li>
         <li>Supports normalizing volume with ReplayGain.</li>
-        <li>Supports PipeWire and other audio sink.</li>
+        <li>Supports specified audio sink.</li>
         <li>Supports MPRIS control.</li>
         </ul>
     </description>
