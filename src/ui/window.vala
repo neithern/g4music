@@ -109,7 +109,6 @@ namespace G4 {
                 toast.action_target = new Variant.bytestring_array ({"uri", uri});
                 toast.button_label = _("Show");
             }
-            toast.timeout = 3;
             _toast.add_toast (toast);
         }
 
