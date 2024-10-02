@@ -346,7 +346,7 @@ namespace G4 {
             }
 
             var musics = new GenericArray<Music> (4096);
-            yield _loader.load_files_async (files, musics, !default_mode, !default_mode, _sort_map[_music_queue]);
+            yield _loader.load_files_async (files, musics, !default_mode, !default_mode, default_mode ? _sort_map[_music_queue] : -1);
             if (default_mode) {
                 var arr = new GenericArray<Music> (4096);
                 var file = get_playing_list_file ();
