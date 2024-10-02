@@ -89,20 +89,21 @@ namespace G4 {
         }
 
         public override void open (File[] files, string hint) {
+            var first = !(active_window is Window);
             var window = (active_window as Window) ?? new Window (this);
             window.present ();
 
-            var files_ref = files;
-            var saved_modified = _list_modified;
-            load_music_folder_async.begin (files.length == 0, (obj, res) => {
-                load_music_folder_async.end (res);
-                if (files_ref.length > 0) {
-                    open_files_async.begin (files_ref, -1, true, (obj, res) => {
-                        open_files_async.end (res);
-                        _list_modified = saved_modified;
-                    });
-                }
-            });
+            if (files.length > 0) {
+                var saved_modified = _list_modified;
+                open_files_async.begin (files, -1, true, (obj, res) => {
+                    var ret = open_files_async.end (res);
+                    _list_modified = saved_modified;
+                    if (first)
+                        load_music_folder_async.begin (!ret, (obj, res) => load_music_folder_async.end (res));
+                });
+            } else if (first) {
+                load_music_folder_async.begin (true, (obj, res) => load_music_folder_async.end (res));
+            }
         }
 
         public override void shutdown () {
@@ -327,10 +328,12 @@ namespace G4 {
         public bool insert_to_queue (Playlist playlist, uint position = -1, bool play_now = false) {
             var changed = merge_items_to_store (_music_queue, playlist.items, ref position);
             list_modified |= changed;
-            if (play_now)
+            if (play_now) {
                 current_item = (int) position;
-            else if (changed)
+                _player.play ();
+            } else if (changed) {
                 update_current_item ();
+            }
             return changed;
         }
 
@@ -351,18 +354,21 @@ namespace G4 {
 
             var musics = new GenericArray<Music> (4096);
             yield _loader.load_files_async (files, musics, false, false, _sort_map[_music_queue]);
-            _store_external_changed = true;
             if (load_last) {
                 var file = get_playing_list_file ();
                 var playlist = yield _loader.load_playlist_async (file);
                 if (playlist.length > 0)
                     musics = playlist.items;
 
+                _store_external_changed = true;
                 _music_queue.splice (0, _music_queue.get_n_items (), (Object[]) musics.data);
 
                 var count = _music_queue.get_n_items ();
                 var item = (count > 0 && last_uri.length > 0) ? find_music_item_by_uri (last_uri) : -1;
                 current_item = (count > 0 && item == -1) ? 0 : item;
+            } else {
+                _store_external_changed = true;
+                on_music_library_changed (_music_queue.get_n_items (), 1, 1);
             }
         }
 
