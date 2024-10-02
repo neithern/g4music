@@ -348,11 +348,10 @@ namespace G4 {
             var musics = new GenericArray<Music> (4096);
             yield _loader.load_files_async (files, musics, !default_mode, !default_mode, default_mode ? _sort_map[_music_queue] : -1);
             if (default_mode) {
-                var arr = new GenericArray<Music> (4096);
                 var file = get_playing_list_file ();
-                yield run_void_async (() => _loader.load_playlist (file, arr));
-                if (arr.length > 0)
-                    musics = arr;
+                var playlist = yield _loader.load_playlist_async (file);
+                if (playlist.length > 0)
+                    musics = playlist.items;
             }
             _store_external_changed = true;
             _music_queue.splice (0, _music_queue.get_n_items (), (Object[]) musics.data);

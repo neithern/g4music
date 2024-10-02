@@ -163,6 +163,20 @@ namespace G4 {
             save_tag_cache ();
         }
 
+        public async Playlist load_playlist_async (File file) {
+            var playlist = new Playlist ("", file.get_uri ());
+            yield run_void_async (() => {
+                var uris = new GenericArray<string> (1024);
+                var name = load_playlist_file (file, uris);
+                if (name != null && uris.length > 0) {
+                    playlist.set_title ((!)name);
+                    uris.foreach ((uri) => add_file (File.new_for_uri (uri), playlist.items));
+                    load_tags_in_threads (playlist.items);
+                }
+            });
+            return playlist;
+        }
+
         public void remove_all () {
             lock (_dir_monitor) {
                 _dir_monitor.remove_all ();
@@ -279,27 +293,15 @@ namespace G4 {
             }
         }
 
-        public string? load_playlist (File file, GenericArray<Music> musics) {
-            var uris = new GenericArray<string> (1024);
-            var name = load_playlist_file (file, uris);
-            foreach (var uri in uris) {
-                var cached_music = _tag_cache[uri];
-                if (cached_music != null) {
-                    musics.add ((!)cached_music);
-                } else {
-                    add_file (File.new_for_uri (uri), musics);
-                }
-            }
-            return name;
-        }
-
         private void load_playlists (GenericArray<Music> musics, GenericArray<File> list_files, GenericArray<Playlist> playlists, bool merge_lists) {
             foreach (var file in list_files) {
                 if (file.is_native ()) {
-                    var playlist = new Playlist ("", file.get_uri ());
-                    var name = load_playlist (file, playlist.items);
-                    if (name != null && playlist.length > 0) {
+                    var uris = new GenericArray<string> (1024);
+                    var name = load_playlist_file (file, uris);
+                    if (name != null && uris.length > 0) {
+                        var playlist = new Playlist ("", file.get_uri ());
                         playlist.set_title ((!)name);
+                        uris.foreach ((uri) => add_file (File.new_for_uri (uri), playlist.items));
                         playlists.add (playlist);
                         if (merge_lists)
                             musics.extend (playlist.items, (src) => src);
