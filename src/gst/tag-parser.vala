@@ -429,6 +429,9 @@ namespace G4 {
                     case 0xa9696e66u: // _inf
                         parse_mp4_string_value (data, Gst.Tags.COMMENT, tags);
                         break;
+                    case 0xa96c7972u: // _lyr
+                        parse_mp4_string_value (data, Gst.Tags.LYRICS, tags);
+                        break;
                     case 0xa9646179u: // _day
                     case 0x79727263u: // yrrc
                         parse_mp4_date_value (data, Gst.Tags.DATE_TIME, tags);
