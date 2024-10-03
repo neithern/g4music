@@ -14,6 +14,8 @@ namespace G4 {
         [GtkChild]
         unowned Gtk.Switch grid_btn;
         [GtkChild]
+        unowned Gtk.Switch single_btn;
+        [GtkChild]
         unowned Gtk.Button music_dir_btn;
         [GtkChild]
         unowned Gtk.Switch monitor_btn;
@@ -44,6 +46,7 @@ namespace G4 {
 
             settings.bind ("compact-playlist", compact_btn, "active", SettingsBindFlags.DEFAULT);
             settings.bind ("grid-mode", grid_btn, "active", SettingsBindFlags.DEFAULT);
+            settings.bind ("single-click-activate", single_btn, "active", SettingsBindFlags.DEFAULT);
 
             music_dir_btn.label = get_display_name (app.music_folder);
             music_dir_btn.clicked.connect (() => {

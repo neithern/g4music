@@ -38,6 +38,18 @@
                 </child>
               </object>
             </child>
+             <child>
+              <object class="AdwActionRow">
+                <property name="icon-name">input-mouse-symbolic</property>
+                <property name="title" translatable="yes">Single click to activate item</property>
+                <property name="activatable_widget">single_btn</property>
+                <child>
+                  <object class="GtkSwitch" id="single_btn">
+                    <property name="valign">center</property>
+                  </object>
+                </child>
+              </object>
+            </child>
             <child>
               <object class="AdwActionRow">
                 <property name="icon-name">media-playback-start-symbolic</property>

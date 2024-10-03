@@ -22,6 +22,7 @@ namespace G4 {
         private Music? _music_node = null;
         private Gtk.ScrolledWindow _scroll_view = new Gtk.ScrolledWindow ();
         private bool _selectable = false;
+        private bool _single_click_activate = true;
         private Gtk.MultiSelection _selection;
         private Thumbnailer _thmbnailer;
 
@@ -47,16 +48,15 @@ namespace G4 {
             _selectable = selectable;
             _thmbnailer = app.thumbnailer;
 
-            _grid_view.enable_rubberband = false;
             _grid_view.max_columns = 5;
             _grid_view.margin_start = 6;
             _grid_view.margin_end = 6;
             _grid_view.model = _selection = new Gtk.MultiSelection (_filter_model);
-            _grid_view.single_click_activate = true;
             _grid_view.activate.connect ((position) => item_activated (position, _filter_model.get_item (position)));
             _grid_view.add_css_class ("navigation-sidebar");
             _selection.selection_changed.connect (on_selection_changed);
             create_factory ();
+            update_grid_view ();
 
             _scroll_view.child = _grid_view;
             _scroll_view.hscrollbar_policy = Gtk.PolicyType.NEVER;
@@ -185,9 +185,7 @@ namespace G4 {
 
                 if (_multi_selection != value) {
                     _multi_selection = value;
-                    _grid_view.enable_rubberband = value;
-                    _grid_view.single_click_activate = !value;
-                    _binding_items.foreach ((music, item) => item.selectable = value);
+                    update_grid_view ();
                     if (value)
                         on_selection_changed (0, 0);
                     else
@@ -205,6 +203,18 @@ namespace G4 {
         public bool playable {
             get {
                 return _item_type == typeof (Music);
+            }
+        }
+
+        public bool single_click_activate {
+            get {
+                return _single_click_activate;
+            }
+            set {
+                if (_single_click_activate != value) {
+                    _single_click_activate = value;
+                    update_grid_view ();
+                }
             }
         }
 
@@ -420,7 +430,7 @@ namespace G4 {
             var child = _grid_mode ? (MusicWidget) new MusicCell () : (MusicWidget) new MusicEntry (_compact_list);
             var item = (Gtk.ListItem) obj;
             item.child = child;
-            item.selectable = _multi_selection;
+            item.selectable = _multi_selection || !_single_click_activate;
             item_created (item);
 
             if (_selectable) {
@@ -572,6 +582,8 @@ namespace G4 {
             return to_playlist (musics.data, _music_node?.title);
         }
 
+        private uint _remove_selection_handle = 0;
+
         private void on_selection_changed (uint position, uint n_items) {
             var bits = _selection.get_selection ();
             var selected = bits.get_size ();
@@ -582,6 +594,14 @@ namespace G4 {
             var enabled = selected > 0;
             foreach (var button in _action_buttons)
                 button.sensitive = enabled;
+
+            if (_remove_selection_handle != 0)
+                Source.remove (_remove_selection_handle);
+            _remove_selection_handle = run_timeout_once (3000, () => {
+                _remove_selection_handle = 0;
+                if (!_multi_selection && bits.get_size () == 1)
+                    _selection.unselect_item (bits.get_minimum ());
+            });
         }
 
         private void setup_selection_header_bar (Gtk.Box header) {
@@ -652,6 +672,13 @@ namespace G4 {
             }
 
             _action_buttons.foreach (header.append);
+        }
+
+        private void update_grid_view () {
+            var enable = _multi_selection || !_single_click_activate;
+            _grid_view.enable_rubberband = enable;
+            _grid_view.single_click_activate = !enable;
+            _binding_items.foreach ((music, item) => item.selectable = enable);
         }
     }
 

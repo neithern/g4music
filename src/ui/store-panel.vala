@@ -249,6 +249,13 @@ namespace G4 {
             return search_btn.active;
         }
 
+        private void bind_music_list_properties (MusicList list) {
+            _app.settings.bind ("compact-playlist", list, "compact-list", SettingsBindFlags.DEFAULT);
+            _app.settings.bind ("single-click-activate", list, "single-click-activate", SettingsBindFlags.DEFAULT);
+            if (list.item_type != typeof (Music))
+                _app.settings.bind ("grid-mode", list, "grid-mode", SettingsBindFlags.DEFAULT);
+        }
+
         private MusicList create_album_list (Artist? artist = null) {
             var list = new MusicList (_app, typeof (Album), artist);
             list.item_activated.connect ((position, obj) => create_stack_page (artist, obj as Album));
@@ -265,8 +272,7 @@ namespace G4 {
                     subtitle = (album_artist.length > 0 ? album_artist + " " : "") + subtitle;
                 cell.subtitle = subtitle;
             });
-            _app.settings.bind ("compact-playlist", list, "compact-list", SettingsBindFlags.DEFAULT);
-            _app.settings.bind ("grid-mode", list, "grid-mode", SettingsBindFlags.DEFAULT);
+            bind_music_list_properties (list);
             return list;
         }
 
@@ -282,8 +288,7 @@ namespace G4 {
                 cell.title = artist.artist;
                 cell.subtitle = "";
             });
-            _app.settings.bind ("compact-playlist", list, "compact-list", SettingsBindFlags.DEFAULT);
-            _app.settings.bind ("grid-mode", list, "grid-mode", SettingsBindFlags.DEFAULT);
+            bind_music_list_properties (list);
             return list;
         }
 
@@ -307,7 +312,7 @@ namespace G4 {
                 entry.set_titles (music, mode);
             });
             _app.set_list_sort_mode (store, SortMode.ALBUM);
-            _app.settings.bind ("compact-playlist", list, "compact-list", SettingsBindFlags.DEFAULT);
+            bind_music_list_properties (list);
             return list;
         }
 
@@ -320,7 +325,7 @@ namespace G4 {
                 entry.paintable = _loading_paintable;
                 entry.set_titles (music, _main_sort_mode);
             });
-            _app.settings.bind ("compact-playlist", list, "compact-list", SettingsBindFlags.DEFAULT);
+            bind_music_list_properties (list);
             return list;
         }
 
@@ -334,8 +339,7 @@ namespace G4 {
                 cell.paintable = _loading_paintable;
                 cell.title = playlist.title;
             });
-            _app.settings.bind ("compact-playlist", list, "compact-list", SettingsBindFlags.DEFAULT);
-            _app.settings.bind ("grid-mode", list, "grid-mode", SettingsBindFlags.DEFAULT);
+            bind_music_list_properties (list);
             return list;
         }
 

@@ -67,6 +67,10 @@
       <default>true</default>
       <summary>Show audio peak level</summary>
     </key>
+    <key name="single-click-activate" type="b">
+      <default>true</default>
+      <summary>Single click to activate item</summary>
+    </key>
     <key name="sort-mode" type="u">
       <range min="0" max="5"/>
       <default>3</default>
