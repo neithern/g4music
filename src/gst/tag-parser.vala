@@ -418,15 +418,25 @@ namespace G4 {
                         parse_mp4_string_value (data, Gst.Tags.ARTIST, tags);
                         break;
                     case 0xa9616c62u: // _alb
-                    case 0x616c626du: // alum
+                    case 0x616c626du: // albm
                         parse_mp4_string_value (data, Gst.Tags.ALBUM, tags);
                         break;
+                    case 0xa9777274u: // _wrt
+                    case 0x61757468u: // auth
+                        parse_mp4_string_value (data, Gst.Tags.COMPOSER, tags);
+                        break;
+                    case 0xa9636d74u: // _cmt
+                    case 0xa9696e66u: // _inf
+                        parse_mp4_string_value (data, Gst.Tags.COMMENT, tags);
+                        break;
                     case 0xa9646179u: // _day
+                    case 0x79727263u: // yrrc
                         parse_mp4_date_value (data, Gst.Tags.DATE_TIME, tags);
                         break;
                     case 0x636f7672u: // covr
                         parse_mp4_image_value (data, Gst.Tags.IMAGE, tags);
                         break;
+                    case 0x64697363u: // disc
                     case 0x6469736bu: // disk
                         parse_mp4_number_value (data, Gst.Tags.ALBUM_VOLUME_NUMBER, Gst.Tags.ALBUM_VOLUME_COUNT, tags);
                         break;
