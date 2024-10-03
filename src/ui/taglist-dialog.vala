@@ -40,7 +40,6 @@ namespace G4 {
                         group = TagGroup.SORT;
                     } else {
                         group = TagGroup.OTHER;
-                        print (@"tag: $t\n");
                     }
                 }
             }
@@ -226,7 +225,6 @@ namespace G4 {
             foreach (var ti in items) {
                 var row = new Adw.ActionRow ();
                 row.title = ti.tag;
-                row.subtitle = ti.value;
                 row.tooltip_text = ti.description;
 #if ADW_1_2
                 row.use_markup = false;
@@ -234,6 +232,7 @@ namespace G4 {
 #if ADW_1_3
                 row.subtitle_selectable = true;
 #endif
+                row.subtitle = ti.value;
                 row.add_css_class ("property");
                 if (tag_group != ti.group || list_box == null) {
                     tag_group = ti.group;
