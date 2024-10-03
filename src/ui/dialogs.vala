@@ -158,8 +158,9 @@ namespace G4 {
 
     namespace TagGroup {
         public const int BASIC = 1;
-        public const int FORMAT = 2;
-        public const int OTHER = 3;
+        public const int SORT = 2;
+        public const int FORMAT = 3;
+        public const int OTHER = 4;
     }
 
     public class TagListDialog : Dialog {
@@ -191,6 +192,8 @@ namespace G4 {
                         || t.contains ("crc") || t.contains ("code")
                         || t.contains ("format")) {
                         group = TagGroup.FORMAT;
+                    } else if (t.contains ("sortname")) {
+                        group = TagGroup.SORT;
                     } else {
                         group = TagGroup.OTHER;
                         print (@"tag: $t\n");
@@ -220,10 +223,11 @@ namespace G4 {
                 { Gst.Tags.ARTIST, 2 },
                 { Gst.Tags.ALBUM, 3 },
                 { Gst.Tags.ALBUM_ARTIST, 4 },
-                { Gst.Tags.GENRE, 5 },
-                { Gst.Tags.DATE_TIME, 6 },
-                { Gst.Tags.TRACK_NUMBER, 7 },
-                { Gst.Tags.ALBUM_VOLUME_NUMBER, 8 },
+                { Gst.Tags.COMPOSER, 5 },
+                { Gst.Tags.GENRE, 6 },
+                { Gst.Tags.DATE_TIME, 7 },
+                { Gst.Tags.TRACK_NUMBER, 8 },
+                { Gst.Tags.ALBUM_VOLUME_NUMBER, 9 },
                 { Gst.Tags.COMMENT, int.MAX - 1 },
                 { Gst.Tags.EXTENDED_COMMENT, int.MAX }
             };
@@ -331,6 +335,10 @@ namespace G4 {
         }
 
         private void load_tags (Gst.TagList tags) {
+            TagItem? tag_track_count = null;
+            TagItem? tag_track_number = null;
+            TagItem? tag_volumn_count = null;
+            TagItem? tag_volumn_number = null;
             var count = tags.n_tags ();
             for (var i = 0; i < count; i++) {
                 var tag = tags.nth_tag_name (i);
@@ -344,8 +352,28 @@ namespace G4 {
                         if (j != size - 1)
                             sb.append_c ('\n');
                     }
-                    items.add (new TagItem (tag, sb.str));
+                    var ti = new TagItem (tag, sb.str);
+                    if (tag == Gst.Tags.TRACK_COUNT)
+                        tag_track_count = ti;
+                    else if (tag == Gst.Tags.TRACK_NUMBER)
+                        tag_track_number = ti;
+                    else if (tag == Gst.Tags.ALBUM_VOLUME_COUNT)
+                        tag_volumn_count = ti;
+                    else if (tag == Gst.Tags.ALBUM_VOLUME_NUMBER)
+                        tag_volumn_number = ti;
+                    else
+                        items.add (ti);
                 }
+            }
+            if (tag_track_number != null) {
+                if (tag_track_count != null)
+                    ((!)tag_track_number).value += "/" + ((!)tag_track_count).value;
+                items.add ((!)tag_track_number);
+            }
+            if (tag_volumn_number != null) {
+                if (tag_volumn_count != null)
+                    ((!)tag_volumn_number).value += "/" + ((!)tag_volumn_count).value;
+                items.add ((!)tag_volumn_number);
             }
             items.sort (TagItem.compare_by_name);
 
