@@ -123,7 +123,11 @@ namespace G4 {
                 }
                 if (initial) {
                     // 3. Load music folder to build the library
-                    load_music_folder_async.begin (!ret, (obj, res) => load_music_folder_async.end (res));
+                    load_music_folder_async.begin (!ret, (obj, res) => {
+                        load_music_folder_async.end (res);
+                        if (_current_music == null && _current_list.get_n_items () > 0)
+                            current_item = 0;
+                    });
                 }
             });
         }
