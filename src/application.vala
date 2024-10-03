@@ -89,21 +89,43 @@ namespace G4 {
         }
 
         public override void open (File[] files, string hint) {
-            var first = !(active_window is Window);
+            var initial = !(active_window is Window);
             var window = (active_window as Window) ?? new Window (this);
             window.present ();
 
-            if (files.length > 0) {
-                var saved_modified = _list_modified;
-                open_files_async.begin (files, -1, true, (obj, res) => {
-                    var ret = open_files_async.end (res);
-                    _list_modified = saved_modified;
-                    if (first)
-                        load_music_folder_async.begin (!ret, (obj, res) => load_music_folder_async.end (res));
-                });
-            } else if (first) {
-                load_music_folder_async.begin (true, (obj, res) => load_music_folder_async.end (res));
+            if (initial && _current_music == null) {
+                var folders = files;
+                folders.resize (folders.length + 1);
+                folders[folders.length - 1] = File.new_for_uri (music_folder);
+                var last_uri = _current_music?.uri ?? _settings.get_string ("played-uri");
+                foreach (var file in folders) {
+                    if (last_uri.has_prefix (file.get_uri ())) {
+                        // 1.Load last played uri if in folders
+                        _current_music = new Music (last_uri, "", 0);
+                        _player.uri = _current_uri = last_uri;
+                        _player.state = Gst.State.PAUSED;
+                        break;
+                    }
+                }
             }
+
+            var saved_modified = _list_modified;
+            var plist_file = get_playing_list_file ();
+            var load_plist = initial && files.length == 0;
+            var files_ref = load_plist ? new File[] { plist_file } : files;
+            // 2.Load last playing queue if no other files to load
+            open_files_async.begin (files_ref, -1, files.length > 0, (obj, res) => {
+                var ret = open_files_async.end (res);
+                if (ret) {
+                    _list_modified = saved_modified;
+                    if (load_plist)
+                        _loader.library.playlists.remove (plist_file.get_uri ());
+                }
+                if (initial) {
+                    // 3. Load music folder to build the library
+                    load_music_folder_async.begin (!ret, (obj, res) => load_music_folder_async.end (res));
+                }
+            });
         }
 
         public override void shutdown () {
@@ -337,37 +359,14 @@ namespace G4 {
             return changed;
         }
 
-        public async void load_music_folder_async (bool load_last) {
+        public async void load_music_folder_async (bool replace) {
             var files = new File[] { File.new_for_uri (music_folder) };
-            var last_uri = _current_music?.uri ?? _settings.get_string ("played-uri");
-            if (load_last && _current_music == null) {
-                foreach (var file in files) {
-                    if (last_uri.has_prefix (file.get_uri ())) {
-                        // Load last played uri before load files
-                        _current_music = new Music (last_uri, "", 0);
-                        _player.uri = _current_uri = last_uri;
-                        _player.state = Gst.State.PAUSED;
-                        break;
-                    }
-                }
-            }
-
             var musics = new GenericArray<Music> (4096);
             yield _loader.load_files_async (files, musics, false, false, _sort_map[_music_queue]);
-            if (load_last) {
-                var file = get_playing_list_file ();
-                var playlist = yield _loader.load_playlist_async (file);
-                if (playlist.length > 0)
-                    musics = playlist.items;
-
-                _store_external_changed = true;
+            _store_external_changed = true;
+            if (replace) {
                 _music_queue.splice (0, _music_queue.get_n_items (), (Object[]) musics.data);
-
-                var count = _music_queue.get_n_items ();
-                var item = (count > 0 && last_uri.length > 0) ? find_music_item_by_uri (last_uri) : -1;
-                current_item = (count > 0 && item == -1) ? 0 : item;
             } else {
-                _store_external_changed = true;
                 on_music_library_changed (_music_queue.get_n_items (), 1, 1);
             }
         }
@@ -375,7 +374,7 @@ namespace G4 {
         public async bool open_files_async (File[] files, uint position = -1, bool play_now = false) {
             var playlist = new Playlist ("");
             yield _loader.load_files_async (files, playlist.items);
-            return playlist.length > 0 && insert_to_queue (playlist, position, play_now);
+            return playlist.length > 0 && insert_to_queue (playlist, position, play_now || _current_music == null);
         }
 
         public void play_next () {
@@ -560,7 +559,7 @@ namespace G4 {
                     _pending_msc_handler = 0;
                     music_library_changed (_store_external_changed);
                     _store_external_changed = false;
-                    index_changed (_current_item, _current_list.get_n_items ());
+                    update_current_item ();
                 });
             }
         }
@@ -701,14 +700,22 @@ namespace G4 {
         }
 
         private void update_current_item () {
-            var item = _current_music != null ? find_item_in_model (_current_list, _current_music, _current_item) : -1;
+            var item = _current_item;
+            if (_current_music != null) {
+                item = find_item_in_model (_current_list, _current_music, _current_item);
+                if (item == -1) {
+                    unowned var uri = ((!)_current_music).uri;
+                    item = find_music_item_by_uri (uri);
+                    current_music = item != -1 ? _current_list.get_item (item) as Music : _loader.find_cache (uri);
+                }
+            }
             change_current_item (item);
         }
     }
 
     public File get_playing_list_file () {
         var cache_dir = Environment.get_user_cache_dir ();
-        return File.new_build_filename (cache_dir, Config.APP_ID, "playing.m3u");
+        return File.new_build_filename (cache_dir, Config.APP_ID, PageName.PLAYING + ".m3u");
     }
 
     public async bool save_sample_to_file_async (File file, Gst.Sample sample) {
