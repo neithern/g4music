@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/neithern/g4music/issues\n"
-"POT-Creation-Date: 2024-09-29 10:43+0000\n"
-"PO-Revision-Date: 2024-09-29 19:55+0300\n"
+"POT-Creation-Date: 2024-10-03 05:49+0000\n"
+"PO-Revision-Date: 2024-10-03 11:27+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -19,7 +19,7 @@ msgstr ""
 "%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Generator: Lokalize 23.04.3\n"
 
-#: data/app.desktop.in:3 data/app.metainfo.xml.in:4 src/application.vala:234
+#: data/app.desktop.in:3 data/app.metainfo.xml.in:4 src/application.vala:263
 #: src/main.vala:24
 msgid "Gapless"
 msgstr "Неперервний"
@@ -105,43 +105,53 @@ msgstr ""
 "темного режиму GNOME."
 
 #: data/app.metainfo.xml.in:31
-msgid "Drag-drop from GNOME Files, showing music in Files."
+msgid ""
+"Supports creating and editing playlists, drag cover to change order or add "
+"to another playlist."
 msgstr ""
-"Перетягування зі скиданням з «Файлів GNOME», показ музичних даних у «Файлах»."
+"Передбачено підтримку створення та редагування списків відтворення,"
+" перетягування за обкладинку для зміни порядку або додавання до іншого"
+" списку відтворення."
 
 #: data/app.metainfo.xml.in:32
+#| msgid "Supports PipeWire and other audio sink."
+msgid "Supports drag and drop with other apps."
+msgstr "Підтримка перетягування зі скиданням з інших програм."
+
+#: data/app.metainfo.xml.in:33
 msgid "Supports audio peaks visualizer."
 msgstr "Підтримка візуалізації піків звукового сигналу."
 
-#: data/app.metainfo.xml.in:33
+#: data/app.metainfo.xml.in:34
 msgid "Supports gapless playback."
 msgstr "Підтримка неперервного відтворення."
 
-#: data/app.metainfo.xml.in:34
+#: data/app.metainfo.xml.in:35
 msgid "Supports normalizing volume with ReplayGain."
 msgstr "Підтримка нормалізації гучності за допомогою ReplayGain."
 
-#: data/app.metainfo.xml.in:35
-msgid "Supports PipeWire and other audio sink."
-msgstr "Підтримка PipeWire та інших приймачів звуку."
-
 #: data/app.metainfo.xml.in:36
+#| msgid "Supports PipeWire and other audio sink."
+msgid "Supports specified audio sink."
+msgstr "Підтримка вказаного приймача звукових даних."
+
+#: data/app.metainfo.xml.in:37
 msgid "Supports MPRIS control."
 msgstr "Підтримка керування за допомогою MPRIS."
 
-#: data/app.metainfo.xml.in:47
+#: data/app.metainfo.xml.in:48
 msgid "Main window"
 msgstr "Головне вікно"
 
-#: data/app.metainfo.xml.in:51
+#: data/app.metainfo.xml.in:52
 msgid "Albums view"
 msgstr "Перегляд «Альбоми»"
 
-#: data/app.metainfo.xml.in:55
+#: data/app.metainfo.xml.in:56
 msgid "Playing view"
 msgstr "Перегляд «Відтворення»"
 
-#: data/app.metainfo.xml.in:59
+#: data/app.metainfo.xml.in:60
 msgid "Playlist view"
 msgstr "Перегляд «Список відтворення»"
 
@@ -205,8 +215,8 @@ msgctxt "shortcut window"
 msgid "Reload Library"
 msgstr "Перезавантажити бібліотеку"
 
-#: src/gtk/play-panel.ui:16 src/ui/music-list.vala:606
-#: src/ui/store-panel.vala:413
+#: src/gtk/play-panel.ui:16 src/ui/music-list.vala:626
+#: src/ui/store-panel.vala:417
 msgid "Back"
 msgstr "Назад"
 
@@ -226,55 +236,59 @@ msgstr "Стислий перегляд списку"
 msgid "Grid view for artists/albums"
 msgstr "Таблиця для виконавців/альбомів"
 
-#: src/gtk/preferences.ui:44 src/application.vala:403
+#: src/gtk/preferences.ui:44
+msgid "Single click to activate item"
+msgstr "Активація одинарним клацанням"
+
+#: src/gtk/preferences.ui:56 src/application.vala:409
 msgid "Keep playing after window closed"
 msgstr "Продовжити відтворення після закриття вікна"
 
-#: src/gtk/preferences.ui:57
+#: src/gtk/preferences.ui:69
 msgid "Library"
 msgstr "Бібліотека"
 
-#: src/gtk/preferences.ui:61
+#: src/gtk/preferences.ui:73
 msgid "Load music from folder"
 msgstr "Завантажити музику з теки"
 
-#: src/gtk/preferences.ui:73
+#: src/gtk/preferences.ui:85
 msgid "Monitor local file changes"
 msgstr "Стежити за змінами у локальних файлах"
 
-#: src/gtk/preferences.ui:85
+#: src/gtk/preferences.ui:97
 msgid "Load thumbnails for non-local files"
 msgstr "Завантажувати мініатюри для нелокальних файлів"
 
-#: src/gtk/preferences.ui:86
+#: src/gtk/preferences.ui:98
 msgid "May cause slowdowns and excess network usage"
 msgstr "Може спричинити уповільнення роботи та зайве використання мережі"
 
-#: src/gtk/preferences.ui:99
+#: src/gtk/preferences.ui:111
 msgid "Playback"
 msgstr "Відтворення"
 
-#: src/gtk/preferences.ui:103
+#: src/gtk/preferences.ui:115
 msgid "Show audio peak level"
 msgstr "Показувати піковий рівень звуку"
 
-#: src/gtk/preferences.ui:107
+#: src/gtk/preferences.ui:119
 msgid "Display characters"
 msgstr "Показати символи"
 
-#: src/gtk/preferences.ui:122
+#: src/gtk/preferences.ui:134
 msgid "Rotate album cover"
 msgstr "Обертати обкладинку альбому"
 
-#: src/gtk/preferences.ui:134
+#: src/gtk/preferences.ui:146
 msgid "Enable gapless playback"
 msgstr "Увімкнути неперервне відтворення"
 
-#: src/gtk/preferences.ui:146
+#: src/gtk/preferences.ui:158
 msgid "Normalize volume with ReplayGain"
 msgstr "Нормалізувати гучність за допомогою ReplayGain"
 
-#: src/gtk/preferences.ui:152
+#: src/gtk/preferences.ui:164
 msgid "Prefer audio sink of GStreamer"
 msgstr "Перевага приймача звуку GStreamer"
 
@@ -326,7 +340,7 @@ msgstr "_Клавіатурні скорочення"
 msgid "_About"
 msgstr "_Про програму"
 
-#: src/gtk/store-panel.ui:104 src/ui/preferences.vala:63
+#: src/gtk/store-panel.ui:104 src/ui/preferences.vala:66
 msgid "Album"
 msgstr "Альбом"
 
@@ -372,23 +386,23 @@ msgstr ""
 msgid "translator-credits"
 msgstr "Юрій Чорноіван <yurchor@ukr.net>, 2023"
 
-#: src/application.vala:307
+#: src/application.vala:336
 msgid "Save playlist failed"
 msgstr "Не вдалося зберегти список відтворення"
 
-#: src/application.vala:425
+#: src/application.vala:431
 msgid "Playlist Files"
 msgstr "файли списків відтворення"
 
-#: src/application.vala:439
+#: src/application.vala:445
 msgid "Save playlist successfully"
 msgstr "Список відтворення успішно збережено"
 
-#: src/application.vala:618
+#: src/application.vala:625
 msgid "Keep playing"
 msgstr "Продовжувати відтворення"
 
-#: src/ui/dialogs.vala:50 src/ui/music-list.vala:641
+#: src/ui/dialogs.vala:50 src/ui/music-list.vala:661
 msgid "Add to Playlist"
 msgstr "Додати до списку відтворення"
 
@@ -400,58 +414,58 @@ msgstr "Новий список"
 msgid "Close"
 msgstr "Закрити"
 
-#: src/ui/dialogs.vala:127 src/ui/store-panel.vala:662
+#: src/ui/dialogs.vala:127 src/ui/store-panel.vala:666
 #, c-format
 msgid "No playlist found in %s"
 msgstr "У %s не виявлено списку відтворення"
 
-#: src/ui/dialogs.vala:253
+#: src/ui/dialogs.vala:277
 msgid "Copy"
 msgstr "Копіювати"
 
-#: src/ui/dialogs.vala:344 src/ui/dialogs.vala:356
+#: src/ui/dialogs.vala:380 src/ui/dialogs.vala:392
 msgid "No"
 msgstr "Ні"
 
-#: src/ui/dialogs.vala:345 src/ui/dialogs.vala:356
+#: src/ui/dialogs.vala:381 src/ui/dialogs.vala:392
 msgid "Yes"
 msgstr "Так"
 
-#: src/ui/music-list.vala:262
+#: src/ui/music-list.vala:272
 msgid "Playlist is modified, save it?"
 msgstr "До списку відтворення внесено зміни, зберегти їх?"
 
 #. Translators: Play this music at next position of current playing music
-#: src/ui/music-list.vala:390 src/ui/music-list.vala:407
-#: src/ui/music-list.vala:627 src/ui/music-widgets.vala:219
+#: src/ui/music-list.vala:400 src/ui/music-list.vala:417
+#: src/ui/music-list.vala:647 src/ui/music-widgets.vala:219
 #: src/ui/music-widgets.vala:230
 msgid "Play at Next"
 msgstr "Відтворити наступною"
 
-#: src/ui/music-list.vala:392 src/ui/music-list.vala:405
-#: src/ui/music-list.vala:634 src/ui/music-widgets.vala:220
+#: src/ui/music-list.vala:402 src/ui/music-list.vala:415
+#: src/ui/music-list.vala:654 src/ui/music-widgets.vala:220
 #: src/ui/music-widgets.vala:231
 msgid "Add to Queue"
 msgstr "Додати до черги відтворення"
 
-#: src/ui/music-list.vala:393 src/ui/music-widgets.vala:221
+#: src/ui/music-list.vala:403 src/ui/music-widgets.vala:221
 #: src/ui/music-widgets.vala:232 src/ui/music-widgets.vala:245
 msgid "Add to Playlist…"
 msgstr "Додати до списку відтворення…"
 
-#: src/ui/music-list.vala:394 src/ui/music-list.vala:648
+#: src/ui/music-list.vala:404 src/ui/music-list.vala:668
 msgid "Remove"
 msgstr "Вилучити"
 
-#: src/ui/music-list.vala:410 src/ui/play-panel.vala:145
+#: src/ui/music-list.vala:420 src/ui/play-panel.vala:145
 msgid "Show _Cover File"
 msgstr "Показати файл _обкладинки"
 
-#: src/ui/music-list.vala:412 src/ui/play-panel.vala:147
+#: src/ui/music-list.vala:422 src/ui/play-panel.vala:147
 msgid "_Export Cover"
 msgstr "_Експортувати обкладинку"
 
-#: src/ui/music-list.vala:610
+#: src/ui/music-list.vala:630
 msgid "Select All"
 msgstr "Позначити все"
 
@@ -505,19 +519,19 @@ msgstr ""
 "Перетягніть і скиньте музику сюди\n"
 "або змініть розташування музики: "
 
-#: src/ui/preferences.vala:42 src/ui/preferences.vala:63
+#: src/ui/preferences.vala:44 src/ui/preferences.vala:66
 msgid "Never"
 msgstr "Ніколи"
 
-#: src/ui/preferences.vala:42
+#: src/ui/preferences.vala:44
 msgid "Always"
 msgstr "Завжди"
 
-#: src/ui/preferences.vala:42
+#: src/ui/preferences.vala:44
 msgid "Art Only"
 msgstr "Лише оформлення"
 
-#: src/ui/preferences.vala:63
+#: src/ui/preferences.vala:66
 msgid "Track"
 msgstr "Композиція"
 
@@ -537,7 +551,7 @@ msgstr "Альбоми"
 msgid "Playlists"
 msgstr "Списки відтворення"
 
-#: src/ui/store-panel.vala:421
+#: src/ui/store-panel.vala:425
 msgid "Play"
 msgstr "Відтворити"
 
@@ -558,6 +572,11 @@ msgstr "Невідомий альбом"
 #: src/utils/music.vala:3
 msgid "Unknown Artist"
 msgstr "Невідомий виконавець"
+
+#~ msgid "Drag-drop from GNOME Files, showing music in Files."
+#~ msgstr ""
+#~ "Перетягування зі скиданням з «Файлів GNOME», показ музичних даних у "
+#~ "«Файлах»."
 
 #~ msgid "Prefer dark theme"
 #~ msgstr "Перевага темної теми"
