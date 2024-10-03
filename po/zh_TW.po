@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-28 20:24+0800\n"
-"PO-Revision-Date: 2024-09-28 20:30+0800\n"
+"POT-Creation-Date: 2024-10-03 14:07+0800\n"
+"PO-Revision-Date: 2024-10-03 14:12+0800\n"
 "Last-Translator: Nanling <neithern@outlook.com>\n"
 "Language-Team: Chinese - China <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0\n"
 "X-Generator: Gtranslator 46.1\n"
 
-#: data/app.desktop.in:3 data/app.metainfo.xml.in:4 src/application.vala:234
+#: data/app.desktop.in:3 data/app.metainfo.xml.in:4 src/application.vala:263
 #: src/main.vala:24
 msgid "Gapless"
 msgstr "無暇"
@@ -92,42 +92,48 @@ msgid "Gaussian blurred cover as background, follows GNOME light/dark mode."
 msgstr "高斯模糊封面作為背景，遵循 GNOME 明暗模式。"
 
 #: data/app.metainfo.xml.in:31
-msgid "Drag-drop from GNOME Files, showing music in Files."
-msgstr "從 GNOME 檔案拖放、顯示檔案中的音樂。"
+msgid ""
+"Supports creating and editing playlists, drag cover to change order or add "
+"to another playlist."
+msgstr "支援建立與編輯播放清單，拖曳封面可變更順序或加入另一個播放清單。"
 
 #: data/app.metainfo.xml.in:32
+msgid "Supports drag and drop with other apps."
+msgstr "支援與其他應用拖放功能。"
+
+#: data/app.metainfo.xml.in:33
 msgid "Supports audio peaks visualizer."
 msgstr "支援音訊峰值顯示器。"
 
-#: data/app.metainfo.xml.in:33
+#: data/app.metainfo.xml.in:34
 msgid "Supports gapless playback."
 msgstr "支援無間隙播放。"
 
-#: data/app.metainfo.xml.in:34
+#: data/app.metainfo.xml.in:35
 msgid "Supports normalizing volume with ReplayGain."
 msgstr "支援使用 ReplayGain 將音量正常化。"
 
-#: data/app.metainfo.xml.in:35
-msgid "Supports PipeWire and other audio sink."
-msgstr "支援 PipeWire 和其它音訊匯流排。"
-
 #: data/app.metainfo.xml.in:36
+msgid "Supports specified audio sink."
+msgstr "支援指定的音訊輸出。"
+
+#: data/app.metainfo.xml.in:37
 msgid "Supports MPRIS control."
 msgstr "支援 MPRIS 控制。"
 
-#: data/app.metainfo.xml.in:47
+#: data/app.metainfo.xml.in:48
 msgid "Main window"
 msgstr "主視窗"
 
-#: data/app.metainfo.xml.in:51
+#: data/app.metainfo.xml.in:52
 msgid "Albums view"
 msgstr "專輯檢視"
 
-#: data/app.metainfo.xml.in:55
+#: data/app.metainfo.xml.in:56
 msgid "Playing view"
 msgstr "正在播放檢視"
 
-#: data/app.metainfo.xml.in:59
+#: data/app.metainfo.xml.in:60
 msgid "Playlist view"
 msgstr "播放清單檢視"
 
@@ -191,8 +197,8 @@ msgctxt "shortcut window"
 msgid "Reload Library"
 msgstr "更新音樂庫"
 
-#: src/gtk/play-panel.ui:16 src/ui/music-list.vala:606
-#: src/ui/store-panel.vala:413
+#: src/gtk/play-panel.ui:16 src/ui/music-list.vala:626
+#: src/ui/store-panel.vala:417
 msgid "Back"
 msgstr "返回"
 
@@ -212,57 +218,61 @@ msgstr "緊湊播放列表"
 msgid "Grid view for artists/albums"
 msgstr "藝術家/專輯使用網格檢視"
 
-#: src/gtk/preferences.ui:44 src/application.vala:403
+#: src/gtk/preferences.ui:44
+msgid "Single click to activate item"
+msgstr "單擊啟動項目"
+
+#: src/gtk/preferences.ui:56 src/application.vala:409
 msgid "Keep playing after window closed"
 msgstr "關閉視窗後繼續播放"
 
-#: src/gtk/preferences.ui:57
+#: src/gtk/preferences.ui:69
 msgid "Library"
 msgstr "音樂庫"
 
-#: src/gtk/preferences.ui:61
+#: src/gtk/preferences.ui:73
 msgid "Load music from folder"
 msgstr "從資料夾載入音樂"
 
-#: src/gtk/preferences.ui:73
+#: src/gtk/preferences.ui:85
 msgid "Monitor local file changes"
 msgstr "監控本地檔案變化"
 
-#: src/gtk/preferences.ui:85
+#: src/gtk/preferences.ui:97
 msgid "Load thumbnails for non-local files"
 msgstr "載入非本機檔案的縮圖"
 
-#: src/gtk/preferences.ui:86
+#: src/gtk/preferences.ui:98
 msgid "May cause slowdowns and excess network usage"
 msgstr "可能會導致速度減慢與增加網路使用"
 
-#: src/gtk/preferences.ui:99
+#: src/gtk/preferences.ui:111
 msgid "Playback"
 msgstr "播放"
 
-#: src/gtk/preferences.ui:103
+#: src/gtk/preferences.ui:115
 msgid "Show audio peak level"
 msgstr "顯示音訊峰值"
 
-#: src/gtk/preferences.ui:107
+#: src/gtk/preferences.ui:119
 msgid "Display characters"
 msgstr "顯示的字元"
 
-#: src/gtk/preferences.ui:122
+#: src/gtk/preferences.ui:134
 msgid "Rotate album cover"
 msgstr "旋轉專輯封面"
 
-#: src/gtk/preferences.ui:134
+#: src/gtk/preferences.ui:146
 msgid "Enable gapless playback"
 msgstr "啟用無縫播放"
 
-#: src/gtk/preferences.ui:146
+#: src/gtk/preferences.ui:158
 msgid "Normalize volume with ReplayGain"
 msgstr "使用 ReplayGain 正規化音量"
 
-#: src/gtk/preferences.ui:152
+#: src/gtk/preferences.ui:164
 msgid "Prefer audio sink of GStreamer"
-msgstr "首選音訊匯流排"
+msgstr "首選音訊輸出"
 
 #: src/gtk/store-panel.ui:22
 msgid "Main Menu"
@@ -312,7 +322,7 @@ msgstr "快捷鍵(_K)"
 msgid "_About"
 msgstr "關於(_A)"
 
-#: src/gtk/store-panel.ui:104 src/ui/preferences.vala:63
+#: src/gtk/store-panel.ui:104 src/ui/preferences.vala:66
 msgid "Album"
 msgstr "專輯"
 
@@ -359,23 +369,23 @@ msgstr ""
 "Julian\n"
 "Nanling"
 
-#: src/application.vala:307
+#: src/application.vala:336
 msgid "Save playlist failed"
 msgstr "儲存播放清單失敗"
 
-#: src/application.vala:425
+#: src/application.vala:431
 msgid "Playlist Files"
 msgstr "播放清單檔案"
 
-#: src/application.vala:439
+#: src/application.vala:445
 msgid "Save playlist successfully"
 msgstr "儲存播放清單成功"
 
-#: src/application.vala:618
+#: src/application.vala:625
 msgid "Keep playing"
 msgstr "持續播放"
 
-#: src/ui/dialogs.vala:50 src/ui/music-list.vala:641
+#: src/ui/dialogs.vala:50 src/ui/music-list.vala:661
 msgid "Add to Playlist"
 msgstr "加入播放清單"
 
@@ -387,54 +397,58 @@ msgstr "新建播放清單"
 msgid "Close"
 msgstr "关闭"
 
-#: src/ui/dialogs.vala:127 src/ui/store-panel.vala:662
+#: src/ui/dialogs.vala:127 src/ui/store-panel.vala:666
 #, c-format
 msgid "No playlist found in %s"
 msgstr "在 %s 中找不到播放清單"
 
-#: src/ui/dialogs.vala:322 src/ui/dialogs.vala:334
+#: src/ui/dialogs.vala:277
+msgid "Copy"
+msgstr "複製"
+
+#: src/ui/dialogs.vala:380 src/ui/dialogs.vala:392
 msgid "No"
 msgstr "否"
 
-#: src/ui/dialogs.vala:323 src/ui/dialogs.vala:334
+#: src/ui/dialogs.vala:381 src/ui/dialogs.vala:392
 msgid "Yes"
 msgstr "是"
 
-#: src/ui/music-list.vala:262
+#: src/ui/music-list.vala:272
 msgid "Playlist is modified, save it?"
 msgstr "播放清單已修改，要儲存嗎？"
 
 #. Translators: Play this music at next position of current playing music
-#: src/ui/music-list.vala:390 src/ui/music-list.vala:407
-#: src/ui/music-list.vala:627 src/ui/music-widgets.vala:219
+#: src/ui/music-list.vala:400 src/ui/music-list.vala:417
+#: src/ui/music-list.vala:647 src/ui/music-widgets.vala:219
 #: src/ui/music-widgets.vala:230
 msgid "Play at Next"
 msgstr "插播"
 
-#: src/ui/music-list.vala:392 src/ui/music-list.vala:405
-#: src/ui/music-list.vala:634 src/ui/music-widgets.vala:220
+#: src/ui/music-list.vala:402 src/ui/music-list.vala:415
+#: src/ui/music-list.vala:654 src/ui/music-widgets.vala:220
 #: src/ui/music-widgets.vala:231
 msgid "Add to Queue"
 msgstr "加入列隊"
 
-#: src/ui/music-list.vala:393 src/ui/music-widgets.vala:221
+#: src/ui/music-list.vala:403 src/ui/music-widgets.vala:221
 #: src/ui/music-widgets.vala:232 src/ui/music-widgets.vala:245
 msgid "Add to Playlist…"
 msgstr "加入播放清單…"
 
-#: src/ui/music-list.vala:394 src/ui/music-list.vala:648
+#: src/ui/music-list.vala:404 src/ui/music-list.vala:668
 msgid "Remove"
 msgstr "移除"
 
-#: src/ui/music-list.vala:410 src/ui/play-panel.vala:145
+#: src/ui/music-list.vala:420 src/ui/play-panel.vala:145
 msgid "Show _Cover File"
 msgstr "顯示封面檔案(_C)"
 
-#: src/ui/music-list.vala:412 src/ui/play-panel.vala:147
+#: src/ui/music-list.vala:422 src/ui/play-panel.vala:147
 msgid "_Export Cover"
 msgstr "輸出封面(_E)"
 
-#: src/ui/music-list.vala:610
+#: src/ui/music-list.vala:630
 msgid "Select All"
 msgstr "全選"
 
@@ -488,19 +502,19 @@ msgstr ""
 "將音樂拖曳至這裡，\n"
 "或者修改音樂庫位置："
 
-#: src/ui/preferences.vala:42 src/ui/preferences.vala:63
+#: src/ui/preferences.vala:44 src/ui/preferences.vala:66
 msgid "Never"
 msgstr "從不"
 
-#: src/ui/preferences.vala:42
+#: src/ui/preferences.vala:44
 msgid "Always"
 msgstr "總是"
 
-#: src/ui/preferences.vala:42
+#: src/ui/preferences.vala:44
 msgid "Art Only"
 msgstr "僅封面"
 
-#: src/ui/preferences.vala:63
+#: src/ui/preferences.vala:66
 msgid "Track"
 msgstr "曲目"
 
@@ -520,7 +534,7 @@ msgstr "專輯"
 msgid "Playlists"
 msgstr "播放清單"
 
-#: src/ui/store-panel.vala:421
+#: src/ui/store-panel.vala:425
 msgid "Play"
 msgstr "播放"
 
@@ -541,6 +555,9 @@ msgstr "未知專輯"
 #: src/utils/music.vala:3
 msgid "Unknown Artist"
 msgstr "未知藝術家"
+
+#~ msgid "Drag-drop from GNOME Files, showing music in Files."
+#~ msgstr "從 GNOME 檔案拖放、顯示檔案中的音樂。"
 
 #~ msgid "Prefer dark theme"
 #~ msgstr "首選暗色主題"

@@ -1,25 +1,25 @@
 # Chinese translations for g4music package.
 # Copyright (C) 2022 THE g4music'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the g4music package.
-# Nanling <neithern@outlook.com>, 2022-2024.
 # lumingzh <lumingzh@qq.com>, 2024.
+# Nanling <neithern@outlook.com>, 2022-2024.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
-"Report-Msgid-Bugs-To: https://gitlab.gnome.org/neithern/g4music/issues\n"
-"POT-Creation-Date: 2024-10-01 06:04+0000\n"
-"PO-Revision-Date: 2024-10-01 16:00+0800\n"
-"Last-Translator: lumingzh <lumingzh@qq.com>\n"
-"Language-Team: Chinese (China) <i18n-zh@googlegroups.com>\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-10-03 14:07+0800\n"
+"PO-Revision-Date: 2024-10-03 14:08+0800\n"
+"Last-Translator: Nanling <neithern@outlook.com>\n"
+"Language-Team: Chinese - China <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Plural-Forms: nplurals=1; plural=0\n"
 "X-Generator: Gtranslator 46.1\n"
 
-#: data/app.desktop.in:3 data/app.metainfo.xml.in:4 src/application.vala:234
+#: data/app.desktop.in:3 data/app.metainfo.xml.in:4 src/application.vala:263
 #: src/main.vala:24
 msgid "Gapless"
 msgstr "无暇"
@@ -40,10 +40,6 @@ msgstr ""
 #: data/app.metainfo.xml.in:7
 msgid "Play your music elegantly"
 msgstr "优雅地播放您的音乐"
-
-#: data/app.metainfo.xml.in:9
-msgid "Nanling"
-msgstr "Nanling"
 
 #: data/app.metainfo.xml.in:22
 msgid ""
@@ -199,8 +195,8 @@ msgctxt "shortcut window"
 msgid "Reload Library"
 msgstr "重载曲库"
 
-#: src/gtk/play-panel.ui:16 src/ui/music-list.vala:606
-#: src/ui/store-panel.vala:413
+#: src/gtk/play-panel.ui:16 src/ui/music-list.vala:626
+#: src/ui/store-panel.vala:417
 msgid "Back"
 msgstr "返回"
 
@@ -220,55 +216,59 @@ msgstr "紧凑播放列表"
 msgid "Grid view for artists/albums"
 msgstr "艺术家/专辑使用网格视图"
 
-#: src/gtk/preferences.ui:44 src/application.vala:403
+#: src/gtk/preferences.ui:44
+msgid "Single click to activate item"
+msgstr "单击激活项目"
+
+#: src/gtk/preferences.ui:56 src/application.vala:409
 msgid "Keep playing after window closed"
 msgstr "关闭窗口后继续播放"
 
-#: src/gtk/preferences.ui:57
+#: src/gtk/preferences.ui:69
 msgid "Library"
 msgstr "曲库"
 
-#: src/gtk/preferences.ui:61
+#: src/gtk/preferences.ui:73
 msgid "Load music from folder"
 msgstr "从文件夹加载音乐"
 
-#: src/gtk/preferences.ui:73
+#: src/gtk/preferences.ui:85
 msgid "Monitor local file changes"
 msgstr "监控本地文件变化"
 
-#: src/gtk/preferences.ui:85
+#: src/gtk/preferences.ui:97
 msgid "Load thumbnails for non-local files"
 msgstr "加载非本地文件的缩略图"
 
-#: src/gtk/preferences.ui:86
+#: src/gtk/preferences.ui:98
 msgid "May cause slowdowns and excess network usage"
 msgstr "可能会导致速度减慢和过多的网络使用"
 
-#: src/gtk/preferences.ui:99
+#: src/gtk/preferences.ui:111
 msgid "Playback"
 msgstr "播放"
 
-#: src/gtk/preferences.ui:103
+#: src/gtk/preferences.ui:115
 msgid "Show audio peak level"
 msgstr "显示音频峰值"
 
-#: src/gtk/preferences.ui:107
+#: src/gtk/preferences.ui:119
 msgid "Display characters"
 msgstr "显示的字符"
 
-#: src/gtk/preferences.ui:122
+#: src/gtk/preferences.ui:134
 msgid "Rotate album cover"
 msgstr "旋转专辑封面"
 
-#: src/gtk/preferences.ui:134
+#: src/gtk/preferences.ui:146
 msgid "Enable gapless playback"
 msgstr "启用无缝续播"
 
-#: src/gtk/preferences.ui:146
+#: src/gtk/preferences.ui:158
 msgid "Normalize volume with ReplayGain"
 msgstr "自动音量平衡"
 
-#: src/gtk/preferences.ui:152
+#: src/gtk/preferences.ui:164
 msgid "Prefer audio sink of GStreamer"
 msgstr "首选音频输出"
 
@@ -320,7 +320,7 @@ msgstr "键盘快捷键(_K)"
 msgid "_About"
 msgstr "关于(_A)"
 
-#: src/gtk/store-panel.ui:104 src/ui/preferences.vala:63
+#: src/gtk/store-panel.ui:104 src/ui/preferences.vala:66
 msgid "Album"
 msgstr "专辑"
 
@@ -367,23 +367,23 @@ msgstr ""
 "Nanling <neithern@outlook.com>, 2022-2024.\n"
 "lumingzh <lumingzh@qq.com>, 2024."
 
-#: src/application.vala:307
+#: src/application.vala:336
 msgid "Save playlist failed"
 msgstr "保存播放列表失败"
 
-#: src/application.vala:425
+#: src/application.vala:431
 msgid "Playlist Files"
 msgstr "播放列表文件"
 
-#: src/application.vala:439
+#: src/application.vala:445
 msgid "Save playlist successfully"
 msgstr "保存播放列表成功"
 
-#: src/application.vala:618
+#: src/application.vala:625
 msgid "Keep playing"
 msgstr "持续播放"
 
-#: src/ui/dialogs.vala:50 src/ui/music-list.vala:641
+#: src/ui/dialogs.vala:50 src/ui/music-list.vala:661
 msgid "Add to Playlist"
 msgstr "添加到播放列表"
 
@@ -395,7 +395,7 @@ msgstr "新建播放列表"
 msgid "Close"
 msgstr "关闭"
 
-#: src/ui/dialogs.vala:127 src/ui/store-panel.vala:662
+#: src/ui/dialogs.vala:127 src/ui/store-panel.vala:666
 #, c-format
 msgid "No playlist found in %s"
 msgstr "在 %s 中未找到播放列表"
@@ -412,41 +412,41 @@ msgstr "否"
 msgid "Yes"
 msgstr "是"
 
-#: src/ui/music-list.vala:262
+#: src/ui/music-list.vala:272
 msgid "Playlist is modified, save it?"
 msgstr "播放列表已修改，是否保存？"
 
 #. Translators: Play this music at next position of current playing music
-#: src/ui/music-list.vala:390 src/ui/music-list.vala:407
-#: src/ui/music-list.vala:627 src/ui/music-widgets.vala:219
+#: src/ui/music-list.vala:400 src/ui/music-list.vala:417
+#: src/ui/music-list.vala:647 src/ui/music-widgets.vala:219
 #: src/ui/music-widgets.vala:230
 msgid "Play at Next"
 msgstr "插播"
 
-#: src/ui/music-list.vala:392 src/ui/music-list.vala:405
-#: src/ui/music-list.vala:634 src/ui/music-widgets.vala:220
+#: src/ui/music-list.vala:402 src/ui/music-list.vala:415
+#: src/ui/music-list.vala:654 src/ui/music-widgets.vala:220
 #: src/ui/music-widgets.vala:231
 msgid "Add to Queue"
 msgstr "添加到队列"
 
-#: src/ui/music-list.vala:393 src/ui/music-widgets.vala:221
+#: src/ui/music-list.vala:403 src/ui/music-widgets.vala:221
 #: src/ui/music-widgets.vala:232 src/ui/music-widgets.vala:245
 msgid "Add to Playlist…"
 msgstr "添加到播放列表…"
 
-#: src/ui/music-list.vala:394 src/ui/music-list.vala:648
+#: src/ui/music-list.vala:404 src/ui/music-list.vala:668
 msgid "Remove"
 msgstr "移除"
 
-#: src/ui/music-list.vala:410 src/ui/play-panel.vala:145
+#: src/ui/music-list.vala:420 src/ui/play-panel.vala:145
 msgid "Show _Cover File"
 msgstr "显示封面文件(_C)"
 
-#: src/ui/music-list.vala:412 src/ui/play-panel.vala:147
+#: src/ui/music-list.vala:422 src/ui/play-panel.vala:147
 msgid "_Export Cover"
 msgstr "导出封面(_E)"
 
-#: src/ui/music-list.vala:610
+#: src/ui/music-list.vala:630
 msgid "Select All"
 msgstr "全选"
 
@@ -500,19 +500,19 @@ msgstr ""
 "拖放音乐文件到这里，\n"
 "或者修改曲库的位置："
 
-#: src/ui/preferences.vala:42 src/ui/preferences.vala:63
+#: src/ui/preferences.vala:44 src/ui/preferences.vala:66
 msgid "Never"
 msgstr "从不"
 
-#: src/ui/preferences.vala:42
+#: src/ui/preferences.vala:44
 msgid "Always"
 msgstr "总是"
 
-#: src/ui/preferences.vala:42
+#: src/ui/preferences.vala:44
 msgid "Art Only"
 msgstr "仅封面"
 
-#: src/ui/preferences.vala:63
+#: src/ui/preferences.vala:66
 msgid "Track"
 msgstr "曲目"
 
@@ -532,7 +532,7 @@ msgstr "专辑"
 msgid "Playlists"
 msgstr "播放列表"
 
-#: src/ui/store-panel.vala:421
+#: src/ui/store-panel.vala:425
 msgid "Play"
 msgstr "播放"
 
@@ -553,6 +553,9 @@ msgstr "未知专辑"
 #: src/utils/music.vala:3
 msgid "Unknown Artist"
 msgstr "未知艺术家"
+
+#~ msgid "Nanling"
+#~ msgstr "Nanling"
 
 #~ msgid "Drag-drop from GNOME Files, showing music in Files."
 #~ msgstr "从 GNOME 文件管理器拖放音乐文件，显示文件管理器中的音乐文件。"
