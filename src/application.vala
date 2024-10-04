@@ -473,8 +473,13 @@ namespace G4 {
     
         public void show_uri_with_portal (string? uri) {
             if (uri != null) {
-                _portal.open_directory_async.begin ((!)uri,
-                    (obj, res) => _portal.open_directory_async.end (res));
+                _portal.open_directory_async.begin ((!)uri, (obj, res) => {
+                    try {
+                        _portal.open_directory_async.end (res);
+                    } catch (Error e) {
+                        (active_window as Window)?.show_toast (e.message);
+                    }
+                });
             }
         }
 
