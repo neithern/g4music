@@ -17,6 +17,7 @@ namespace G4 {
     public const string ACTION_SHOW_TAGS = "show-tags";
     public const string ACTION_SORT = "sort";
     public const string ACTION_TOGGLE_SORT = "toggle-sort";
+    public const string ACTION_TRASH_FILE = "trash-file";
     public const string ACTION_QUIT = "quit";
 
     public const string ACTION_WIN = "win.";
@@ -32,6 +33,7 @@ namespace G4 {
 
     public class ActionHandles : Object {
         private Application _app;
+        private Portal _portal = new Portal ();
 
         public ActionHandles (Application app) {
             _app = app;
@@ -53,6 +55,7 @@ namespace G4 {
                 { ACTION_SHOW_TAGS, show_tags, "aay" },
                 { ACTION_SORT, sort_by, "s", "'2'" },
                 { ACTION_TOGGLE_SORT, toggle_sort },
+                { ACTION_TRASH_FILE, trash_file, "aay" },
                 { ACTION_QUIT, () => _app.quit () }
             };
             app.add_action_entries (action_entries, this);
@@ -75,6 +78,12 @@ namespace G4 {
             };
             foreach (var item in win_keys) {
                 app.set_accels_for_action (ACTION_WIN + item.name, {item.key});
+            }
+        }
+
+        public Portal portal {
+            get {
+                return _portal;
             }
         }
 
@@ -234,7 +243,15 @@ namespace G4 {
 
         private void show_file (SimpleAction action, Variant? parameter) {
             var uri = _parse_uri_form_parameter (parameter);
-            _app.show_uri_with_portal (uri);
+            if (uri != null) {
+                _portal.open_directory_async.begin ((!)uri, (obj, res) => {
+                    try {
+                        _portal.open_directory_async.end (res);
+                    } catch (Error e) {
+                        (_app.active_window as Window)?.show_toast (e.message);
+                    }
+                });
+            }
         }
 
         private void show_tags (SimpleAction action, Variant? parameter) {
@@ -272,6 +289,21 @@ namespace G4 {
                 _app.sort_mode = SortMode.ALBUM;
             else
                 _app.sort_mode = _app.sort_mode + 1;
+        }
+
+        private void trash_file (SimpleAction action, Variant? parameter) {
+            var uri = _parse_uri_form_parameter (parameter);
+            if (uri != null) {
+                _portal.trash_file_async.begin ((!)uri, (obj, res) => {
+                    try {
+                        if (_portal.trash_file_async.end (res)) {
+                            _app.loader.on_file_removed (File.new_for_uri ((!)uri));
+                        }
+                    } catch (Error e) {
+                        (_app.active_window as Window)?.show_toast (e.message);
+                    }
+                });
+            }
         }
     }
 }

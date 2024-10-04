@@ -219,8 +219,13 @@ namespace G4 {
         menu.append_item (create_menu_item_for_strv (strv, _("Play at Next"), ACTION_APP + ACTION_PLAY_AT_NEXT));
         menu.append_item (create_menu_item_for_strv (strv, _("Add to Queue"), ACTION_APP + ACTION_ADD_TO_QUEUE));
         menu.append_item (create_menu_item_for_strv (strv, _("Add to Playlist…"), ACTION_APP + ACTION_ADD_TO_PLAYLIST));
-        if (album is Playlist)
-            menu.append_item (create_menu_item_for_uri (((Playlist) album).list_uri, _("Show List File"), ACTION_APP + ACTION_SHOW_FILE));
+        if (album is Playlist) {
+            unowned var list_uri = ((Playlist) album).list_uri;
+            var section = new Menu ();
+            section.append_item (create_menu_item_for_uri (list_uri, _("Show List File"), ACTION_APP + ACTION_SHOW_FILE));
+            section.append_item (create_menu_item_for_uri (list_uri, _("Move to Trash"), ACTION_APP + ACTION_TRASH_FILE));
+            menu.append_section (null, section);
+        }
         return menu;
     }
 
@@ -233,16 +238,22 @@ namespace G4 {
         return menu;
     }
 
-    public Menu create_menu_for_music (Music music) {
+    public Menu create_menu_for_music (Music music, bool has_cover) {
         var section = new Menu ();
         section.append_item (create_menu_item_for_strv ({"title", music.title}, _("Search Title"), ACTION_WIN + ACTION_SEARCH));
         section.append_item (create_menu_item_for_strv ({"album", music.album}, _("Search Album"), ACTION_WIN + ACTION_SEARCH));
         section.append_item (create_menu_item_for_strv ({"artist", music.artist}, _("Search Artist"), ACTION_WIN + ACTION_SEARCH));
+        unowned var uri = music.uri;
         var section2 = new Menu ();
-        section2.append_item (create_menu_item_for_uri (music.uri, _("Show _Tags…"), ACTION_APP + ACTION_SHOW_TAGS));
-        section2.append_item (create_menu_item_for_uri (music.uri, _("_Show Music File"), ACTION_APP + ACTION_SHOW_FILE));
+        if (music.cover_uri != null)
+            section2.append_item (create_menu_item_for_uri ((!)music.cover_uri, _("Show _Cover File"), ACTION_APP + ACTION_SHOW_FILE));
+        else if (has_cover)
+            section2.append_item (create_menu_item_for_uri (uri, _("_Export Cover"), ACTION_APP + ACTION_EXPORT_COVER));
+        section2.append_item (create_menu_item_for_uri (uri, _("Show _Tags…"), ACTION_APP + ACTION_SHOW_TAGS));
+        section2.append_item (create_menu_item_for_uri (uri, _("_Show Music File"), ACTION_APP + ACTION_SHOW_FILE));
+        section2.append_item (create_menu_item_for_uri (uri, _("Move to Trash"), ACTION_APP + ACTION_TRASH_FILE));
         var menu = new Menu ();
-        menu.append_item (create_menu_item_for_uri (music.uri, _("Add to Playlist…"), ACTION_APP + ACTION_ADD_TO_PLAYLIST));
+        menu.append_item (create_menu_item_for_uri (uri, _("Add to Playlist…"), ACTION_APP + ACTION_ADD_TO_PLAYLIST));
         menu.append_section (null, section);
         menu.append_section (null, section2);
         return menu;

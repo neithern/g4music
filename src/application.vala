@@ -15,7 +15,6 @@ namespace G4 {
         private ListStore _music_queue = new ListStore (typeof (Music));
         private StringBuilder _next_uri = new StringBuilder ();
         private GstPlayer _player = new GstPlayer ();
-        private Portal _portal = new Portal ();
         private Settings _settings;
         private bool _store_external_changed = false;
         private HashTable<unowned ListModel, uint> _sort_map = new HashTable<unowned ListModel, uint> (direct_hash, direct_equal);
@@ -410,8 +409,9 @@ namespace G4 {
         }
 
         public void request_background () {
-            _portal.request_background_async.begin (_("Keep playing after window closed"),
-                (obj, res) => _portal.request_background_async.end (res));
+            var portal = _actions?.portal ?? new Portal ();
+            portal.request_background_async.begin (_("Keep playing after window closed"),
+                (obj, res) => portal.request_background_async.end (res));
         }
 
         public async bool rename_playlist_async (Playlist playlist, string title) {
@@ -468,18 +468,6 @@ namespace G4 {
                 } else {
                     yield save_to_playlist_file_async (playlist);
                 }
-            }
-        }
-    
-        public void show_uri_with_portal (string? uri) {
-            if (uri != null) {
-                _portal.open_directory_async.begin ((!)uri, (obj, res) => {
-                    try {
-                        _portal.open_directory_async.end (res);
-                    } catch (Error e) {
-                        (active_window as Window)?.show_toast (e.message);
-                    }
-                });
             }
         }
 

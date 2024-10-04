@@ -5,14 +5,16 @@ namespace G4 {
         private static string OBJECT_PATH = "/org/freedesktop/portal/desktop";
 
         private DBusConnection? _bus = null;
-        private string _parent = "";
+        private string _parent;
 
         public Portal (string? parent = null) {
             _parent = parent ?? "";
         }
 
         public async bool open_directory_async (string uri) throws Error {
-            var ret = yield call_with_uri_async (uri, "org.freedesktop.portal.OpenURI", "OpenDirectory");
+            var options = make_options_builder ();
+            var parameters = new Variant ("(sha{sv})", _parent, 0, options);
+            var ret = yield call_with_uri_async (uri, "org.freedesktop.portal.OpenURI", "OpenDirectory", parameters);
             return ret != null;
         }
 
@@ -34,14 +36,20 @@ namespace G4 {
             }
         }
 
-        private async Variant? call_with_uri_async (string uri, string interface_name, string method_name) throws Error {
+        public async bool trash_file_async (string uri) throws Error {
+            var parameters = new Variant ("(h)", 0);
+            var ret = yield call_with_uri_async (uri, "org.freedesktop.portal.Trash", "TrashFile", parameters);
+            uint val = 0;
+            ret?.get ("(u)", out val);
+            return val == 1;
+        }
+
+        private async Variant? call_with_uri_async (string uri, string interface_name, string method_name, Variant? parameters = null) throws Error {
             var file = File.new_for_uri (uri);
             var fd = Posix.open ((!)file.get_path (), Posix.O_CLOEXEC);
             try {
                 var fd_list = new GLib.UnixFDList ();
                 fd_list.append (fd);
-                var options = make_options_builder ();
-                var parameters = new Variant ("(sha{sv})", _parent, 0, options);
                 _bus = _bus ?? yield Bus.get (BusType.SESSION);
                 return yield ((!)_bus).call_with_unix_fd_list (BUS_NAME, OBJECT_PATH,
                                         interface_name, method_name, parameters,

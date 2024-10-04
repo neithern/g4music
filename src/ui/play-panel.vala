@@ -140,13 +140,7 @@ namespace G4 {
 
         private Menu create_music_action_menu () {
             var music = _app.current_music ?? new Music.empty ();
-            var menu = create_menu_for_music (music);
-            if (music.cover_uri != null) {
-                menu.append_item (create_menu_item_for_uri ((!)music.cover_uri, _("Show _Cover File"), ACTION_APP + ACTION_SHOW_FILE));
-            } else if (_app.current_cover != null) {
-                menu.append_item (create_menu_item_for_uri (music.uri, _("_Export Cover"), ACTION_APP + ACTION_EXPORT_COVER));
-            }
-            return menu;
+            return create_menu_for_music (music, _app.current_cover != null);
         }
 
         private void on_index_changed (int index, uint size) {

@@ -409,17 +409,12 @@ namespace G4 {
                 return create_menu_for_artist ((Artist) node);
             } else if (node is Music) {
                 var music = (Music) node;
-                var menu = create_menu_for_music (music);
+                var menu = create_menu_for_music (music, _app.thumbnailer.find (music) is Gdk.Texture);
                 if (music != _app.current_music) {
                     if (_has_add_to_queque)
                         menu.prepend_item (create_menu_item_for_uri (music.uri, _("Add to Queue"), ACTION_APP + ACTION_ADD_TO_QUEUE));
                     /* Translators: Play this music at next position of current playing music */
                     menu.prepend_item (create_menu_item_for_uri (music.uri, _("Play at Next"), ACTION_APP + ACTION_PLAY_AT_NEXT));
-                }
-                if (music.cover_uri != null) {
-                    menu.append_item (create_menu_item_for_uri ((!)music.cover_uri, _("Show _Cover File"), ACTION_APP + ACTION_SHOW_FILE));
-                } else if (_app.thumbnailer.find (music) is Gdk.Texture) {
-                    menu.append_item (create_menu_item_for_uri (music.uri, _("_Export Cover"), ACTION_APP + ACTION_EXPORT_COVER));
                 }
                 return menu;
             }

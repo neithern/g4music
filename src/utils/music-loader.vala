@@ -339,7 +339,7 @@ namespace G4 {
             }
         }
 
-        private async void on_file_added (File file) {
+        public async void on_file_added (File file) {
             try {
                 var info = yield file.query_info_async (FileAttribute.STANDARD_IS_HIDDEN, FileQueryInfoFlags.NONE);
                 if (info.get_is_hidden ())
@@ -362,7 +362,7 @@ namespace G4 {
             }
         }
 
-        private void on_file_removed (File file) {
+        public void on_file_removed (File file) {
             var uri = file.get_uri ();
             var music = _tag_cache.remove (uri);
             var removed = new GenericSet<Music> (direct_hash, direct_equal);
