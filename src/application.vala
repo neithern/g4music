@@ -459,11 +459,11 @@ namespace G4 {
 
         public async void show_add_playlist_dialog (Playlist playlist) {
             var dialog = new PlaylistDialog (this);
-            var result = yield dialog.choose (active_window);
-            if (result) {
-                var pls = dialog.playlist;
-                if (pls != null) {
-                    playlist.list_uri = ((!)pls).list_uri;
+            var pls = yield dialog.choose (active_window);
+            if (pls != null) {
+                var list_uri = ((!)pls).list_uri;
+                if (list_uri.length > 0) {
+                    playlist.list_uri = list_uri;
                     yield add_playlist_to_file_async (playlist, true);
                 } else {
                     yield save_to_playlist_file_async (playlist);

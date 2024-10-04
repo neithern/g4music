@@ -6,9 +6,8 @@ namespace G4 {
 
         private Application _app;
         private SourceFunc? _callback = null;
-        private MusicList _list;
+        private MusicList? _list = null;
         private Playlist? _playlist = null;
-        private bool _result = false;
 
         public PlaylistDialog (Application app) {
             _app = app;
@@ -17,24 +16,15 @@ namespace G4 {
             this.child = content;
 
             var header = new Gtk.HeaderBar ();
-            header.show_title_buttons = false;
             header.title_widget = new Gtk.Label (_("Add to Playlist"));
             header.add_css_class ("flat");
             content.append (header);
 
             var new_btn = new Gtk.Button.from_icon_name ("folder-new-symbolic");
             new_btn.tooltip_text = _("New Playlist");
-            new_btn.clicked.connect (() => {
-                close_with_result (true);
-            });
+            new_btn.clicked.connect (() => close_with_result (new Playlist ("")));
             header.pack_start (new_btn);
 
-            var close_btn = new Gtk.Button.from_icon_name ("window-close-symbolic");
-            close_btn.tooltip_text = _("Close");
-            close_btn.clicked.connect (() => {
-                close_with_result (false);
-            });
-            header.pack_end (close_btn);
             header.pack_end (search_btn);
 
             var search_bar = new Gtk.SearchBar ();
@@ -50,14 +40,11 @@ namespace G4 {
             search_entry.search_changed.connect (on_search_text_changed);
 
             var loading_paintable = app.thumbnailer.create_simple_text_paintable ("...", Thumbnailer.ICON_SIZE);
-            var list = _list = new MusicList (app, typeof (Playlist), null, false, false);
+            var list = new MusicList (app, typeof (Playlist), null, false, false);
             list.hexpand = true;
             list.vexpand = true;
             list.margin_bottom = 2;
-            list.item_activated.connect ((position, obj) => {
-                _playlist = obj as Playlist;
-                close_with_result (true);
-            });
+            list.item_activated.connect ((position, obj) => close_with_result (obj as Playlist));
             list.item_binded.connect ((item) => {
                 var cell = (MusicWidget) item.child;
                 var playlist = (Playlist) item.item;
@@ -66,38 +53,43 @@ namespace G4 {
                 cell.title = playlist.title;
             });
             content.append (list);
+            _list = list;
 
             app.music_library_changed.connect (on_music_library_changed);
             on_music_library_changed (true);
         }
 
-        public Playlist? playlist {
-            get {
-                return _playlist;
-            }
-        }
-
-        public async bool choose (Gtk.Window? parent = null) {
+        public async Playlist? choose (Gtk.Window? parent = null) {
             _callback = choose.callback;
             present (parent);
             yield;
-            return _result;
+            return _playlist;
         }
 
-        private void close_with_result (bool result) {
+        public override void closed () {
             _app.music_library_changed.disconnect (on_music_library_changed);
-            _result = result;
-            if (_callback != null)
-                Idle.add ((!)_callback);
+
+            var list = _list;
+            _list = null;
+            run_idle_once (() => list?.unparent (), Priority.LOW);
+
+            var callback = _callback;
+            _callback = null;
+            if (callback != null)
+                Idle.add ((!)callback);
+        }
+
+        private void close_with_result (Playlist? playlist) {
+            _playlist = playlist;
             close ();
         }
 
         private void on_music_library_changed (bool external) {
-            if (external) {
-                unowned var store = _list.data_store;
+            if (external && _list != null) {
+                unowned var store = ((!)_list).data_store;
                 var text = _("No playlist found in %s").printf (get_display_name (_app.music_folder));
                 _app.loader.library.overwrite_playlists_to (store);
-                _list.set_empty_text (text);
+                ((!)_list).set_empty_text (text);
             }
         }
 
@@ -117,13 +109,13 @@ namespace G4 {
 
         private void on_search_text_changed () {
             _search_text = search_entry.text;
-            var model = _list.filter_model;
-            if (search_btn.active && model.get_filter () == null) {
-                model.set_filter (new Gtk.CustomFilter (on_search_match));
-            } else if (!search_btn.active && model.get_filter () != null) {
-                model.set_filter (null);
+            var model = _list?.filter_model;
+            if (search_btn.active && model?.get_filter () == null) {
+                model?.set_filter (new Gtk.CustomFilter (on_search_match));
+            } else if (!search_btn.active && model?.get_filter () != null) {
+                model?.set_filter (null);
             }
-            model.get_filter ()?.changed (Gtk.FilterChange.DIFFERENT);
+            model?.get_filter ()?.changed (Gtk.FilterChange.DIFFERENT);
         }
     }
 }

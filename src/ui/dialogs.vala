@@ -5,8 +5,9 @@ namespace G4 {
 #else
     public class Dialog : Gtk.Window {
 
-        public new void close () {
-            base.destroy ();
+        public override bool close_request () {
+            closed ();
+            return false;
         }
 
         public new void present (Gtk.Window? parent = null) {
@@ -25,6 +26,9 @@ namespace G4 {
                 if (natural > height && height > 0)
                     natural = height;
             }
+        }
+
+        public virtual signal void closed () {
         }
 #endif
     }
