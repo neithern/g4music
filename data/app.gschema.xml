@@ -88,7 +88,10 @@
     <key name="height" type="i">
       <default>600</default>
     </key>
-    <key name="played-uri" type="s">
+    <key name="recent-music" type="s">
+      <default>''</default>
+    </key>
+    <key name="recent-playlist" type="s">
       <default>''</default>
     </key>
     <key name="volume" type="d">

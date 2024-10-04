@@ -45,6 +45,10 @@ namespace G4 {
             list.vexpand = true;
             list.margin_bottom = 2;
             list.item_activated.connect ((position, obj) => close_with_result (obj as Playlist));
+            list.item_created.connect ((item) => {
+                var cell = (MusicWidget) item.child;
+                cell.playing.icon_name = "document-open-recent-symbolic";
+            });
             list.item_binded.connect ((item) => {
                 var cell = (MusicWidget) item.child;
                 var playlist = (Playlist) item.item;
@@ -81,15 +85,23 @@ namespace G4 {
 
         private void close_with_result (Playlist? playlist) {
             _playlist = playlist;
+            if ((playlist?.list_uri?.length ?? 0) > 0)
+                _app.settings.set_string ("recent-playlist", ((!)playlist).list_uri);
             close ();
         }
 
         private void on_music_library_changed (bool external) {
             if (external && _list != null) {
-                unowned var store = ((!)_list).data_store;
+                var list = (!)_list;
+                var library = _app.loader.library;
+                var store = list.data_store;
                 var text = _("No playlist found in %s").printf (get_display_name (_app.music_folder));
-                _app.loader.library.overwrite_playlists_to (store);
-                ((!)_list).set_empty_text (text);
+                library.overwrite_playlists_to (store);
+                list.set_empty_text (text);
+
+                var recent_uri = _app.settings.get_string ("recent-playlist");
+                list.current_node = library.playlists[(!)recent_uri];
+                run_idle_once (() => list.set_to_current_item (true), Priority.LOW);
             }
         }
 

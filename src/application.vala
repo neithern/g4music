@@ -96,12 +96,12 @@ namespace G4 {
                 var folders = files;
                 folders.resize (folders.length + 1);
                 folders[folders.length - 1] = File.new_for_uri (music_folder);
-                var last_uri = _current_music?.uri ?? _settings.get_string ("played-uri");
+                var recent_uri = _current_music?.uri ?? _settings.get_string ("recent-music");
                 foreach (var file in folders) {
-                    if (last_uri.has_prefix (file.get_uri ())) {
-                        // 1.Load last played uri if in folders
-                        _current_music = new Music (last_uri, "", 0);
-                        _player.uri = _current_uri = last_uri;
+                    if (recent_uri.has_prefix (file.get_uri ())) {
+                        // 1.Load recent played uri if in folders
+                        _current_music = new Music (recent_uri, "", 0);
+                        _player.uri = _current_uri = recent_uri;
                         _player.state = Gst.State.PAUSED;
                         break;
                     }
@@ -200,7 +200,7 @@ namespace G4 {
                     if (uri.length > 0)
                         _player.state = playing ? Gst.State.PLAYING : Gst.State.PAUSED;
                 }
-                _settings.set_string ("played-uri", uri);
+                _settings.set_string ("recent-music", uri);
             }
         }
 
