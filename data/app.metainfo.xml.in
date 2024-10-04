@@ -6,7 +6,9 @@
     <project_license>GPL-3.0-or-later</project_license>
     <summary>Play your music elegantly</summary>
 
-    <developer_name translate="no">Nanling</developer_name>
+    <developer id="com.github.neithern">
+        <name translate="no">Nanling</name>
+    </developer>
     <update_contact>neithern@outlook.com</update_contact>
 
     <url type="homepage">https://gitlab.gnome.org/neithern/g4music</url>
@@ -535,13 +537,6 @@
             </description>
         </release>
     </releases>
-
-    <kudos>
-        <kudo>HiDpiIcon</kudo>
-        <kudo>HighContrast</kudo>
-        <kudo>ModernToolkit</kudo>
-        <kudo>Notifications</kudo>
-    </kudos>
 
     <requires>
         <display_length compare="ge">360</display_length>
