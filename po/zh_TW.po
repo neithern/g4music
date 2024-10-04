@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-03 14:07+0800\n"
-"PO-Revision-Date: 2024-10-03 14:12+0800\n"
+"POT-Creation-Date: 2024-10-04 16:39+0800\n"
+"PO-Revision-Date: 2024-10-04 16:41+0800\n"
 "Last-Translator: Nanling <neithern@outlook.com>\n"
 "Language-Team: Chinese - China <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0\n"
 "X-Generator: Gtranslator 46.1\n"
 
-#: data/app.desktop.in:3 data/app.metainfo.xml.in:4 src/application.vala:263
+#: data/app.desktop.in:3 data/app.metainfo.xml.in:4 src/application.vala:266
 #: src/main.vala:24
 msgid "Gapless"
 msgstr "無暇"
@@ -197,7 +197,7 @@ msgctxt "shortcut window"
 msgid "Reload Library"
 msgstr "更新音樂庫"
 
-#: src/gtk/play-panel.ui:16 src/ui/music-list.vala:626
+#: src/gtk/play-panel.ui:16 src/ui/music-list.vala:621
 #: src/ui/store-panel.vala:417
 msgid "Back"
 msgstr "返回"
@@ -222,7 +222,7 @@ msgstr "藝術家/專輯使用網格檢視"
 msgid "Single click to activate item"
 msgstr "單擊啟動項目"
 
-#: src/gtk/preferences.ui:56 src/application.vala:409
+#: src/gtk/preferences.ui:56 src/application.vala:413
 msgid "Keep playing after window closed"
 msgstr "關閉視窗後繼續播放"
 
@@ -278,7 +278,7 @@ msgstr "首選音訊輸出"
 msgid "Main Menu"
 msgstr "主選單"
 
-#: src/gtk/store-panel.ui:29 src/ui/dialogs.vala:75
+#: src/gtk/store-panel.ui:29 src/ui/playlist-dialog.vala:36
 msgid "Search"
 msgstr "搜尋"
 
@@ -346,71 +346,50 @@ msgstr "最近"
 msgid "Shuffle"
 msgstr "亂序播放"
 
-#: src/action-handles.vala:97
+#: src/action-handles.vala:106
 msgid "Image Files"
 msgstr "圖像檔案"
 
-#: src/action-handles.vala:104
+#: src/action-handles.vala:113
 msgid "Export cover successfully"
 msgstr "輸出封面成功"
 
-#: src/action-handles.vala:104
+#: src/action-handles.vala:113
 msgid "Export cover failed"
 msgstr "輸出封面失败"
 
-#: src/action-handles.vala:196
+#: src/action-handles.vala:205
 msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr "一個快速、流暢、輕量，基於 GTK4 的音樂播放軟體。"
 
 #. Translators: Replace "translator-credits" with your names, one name per line
-#: src/action-handles.vala:198
+#: src/action-handles.vala:207
 msgid "translator-credits"
 msgstr ""
 "Julian\n"
 "Nanling"
 
-#: src/application.vala:336
+#: src/application.vala:339
 msgid "Save playlist failed"
 msgstr "儲存播放清單失敗"
 
-#: src/application.vala:431
+#: src/application.vala:435
 msgid "Playlist Files"
 msgstr "播放清單檔案"
 
-#: src/application.vala:445
+#: src/application.vala:449
 msgid "Save playlist successfully"
 msgstr "儲存播放清單成功"
 
-#: src/application.vala:625
+#: src/application.vala:622
 msgid "Keep playing"
 msgstr "持續播放"
 
-#: src/ui/dialogs.vala:50 src/ui/music-list.vala:661
-msgid "Add to Playlist"
-msgstr "加入播放清單"
-
-#: src/ui/dialogs.vala:55
-msgid "New Playlist"
-msgstr "新建播放清單"
-
-#: src/ui/dialogs.vala:62
-msgid "Close"
-msgstr "关闭"
-
-#: src/ui/dialogs.vala:127 src/ui/store-panel.vala:666
-#, c-format
-msgid "No playlist found in %s"
-msgstr "在 %s 中找不到播放清單"
-
-#: src/ui/dialogs.vala:277
-msgid "Copy"
-msgstr "複製"
-
-#: src/ui/dialogs.vala:380 src/ui/dialogs.vala:392
+#: src/ui/dialogs.vala:40 src/ui/dialogs.vala:52
 msgid "No"
 msgstr "否"
 
-#: src/ui/dialogs.vala:381 src/ui/dialogs.vala:392
+#: src/ui/dialogs.vala:41 src/ui/dialogs.vala:52
 msgid "Yes"
 msgstr "是"
 
@@ -420,59 +399,67 @@ msgstr "播放清單已修改，要儲存嗎？"
 
 #. Translators: Play this music at next position of current playing music
 #: src/ui/music-list.vala:400 src/ui/music-list.vala:417
-#: src/ui/music-list.vala:647 src/ui/music-widgets.vala:219
-#: src/ui/music-widgets.vala:230
+#: src/ui/music-list.vala:642 src/ui/music-widgets.vala:219
+#: src/ui/music-widgets.vala:235
 msgid "Play at Next"
 msgstr "插播"
 
 #: src/ui/music-list.vala:402 src/ui/music-list.vala:415
-#: src/ui/music-list.vala:654 src/ui/music-widgets.vala:220
-#: src/ui/music-widgets.vala:231
+#: src/ui/music-list.vala:649 src/ui/music-widgets.vala:220
+#: src/ui/music-widgets.vala:236
 msgid "Add to Queue"
 msgstr "加入列隊"
 
 #: src/ui/music-list.vala:403 src/ui/music-widgets.vala:221
-#: src/ui/music-widgets.vala:232 src/ui/music-widgets.vala:245
+#: src/ui/music-widgets.vala:237 src/ui/music-widgets.vala:256
 msgid "Add to Playlist…"
 msgstr "加入播放清單…"
 
-#: src/ui/music-list.vala:404 src/ui/music-list.vala:668
+#: src/ui/music-list.vala:404 src/ui/music-list.vala:663
 msgid "Remove"
 msgstr "移除"
 
-#: src/ui/music-list.vala:420 src/ui/play-panel.vala:145
-msgid "Show _Cover File"
-msgstr "顯示封面檔案(_C)"
-
-#: src/ui/music-list.vala:422 src/ui/play-panel.vala:147
-msgid "_Export Cover"
-msgstr "輸出封面(_E)"
-
-#: src/ui/music-list.vala:630
+#: src/ui/music-list.vala:625
 msgid "Select All"
 msgstr "全選"
 
-#: src/ui/music-widgets.vala:223
+#: src/ui/music-list.vala:656 src/ui/playlist-dialog.vala:19
+msgid "Add to Playlist"
+msgstr "加入播放清單"
+
+#: src/ui/music-widgets.vala:225
 msgid "Show List File"
 msgstr "顯示清單檔案"
 
-#: src/ui/music-widgets.vala:238 src/ui/play-panel.vala:60
+#: src/ui/music-widgets.vala:226 src/ui/music-widgets.vala:254
+msgid "Move to Trash"
+msgstr "移至垃圾桶"
+
+#: src/ui/music-widgets.vala:243 src/ui/play-panel.vala:60
 msgid "Search Title"
 msgstr "搜尋歌名"
 
-#: src/ui/music-widgets.vala:239 src/ui/play-panel.vala:58
+#: src/ui/music-widgets.vala:244 src/ui/play-panel.vala:58
 msgid "Search Album"
 msgstr "搜尋專輯"
 
-#: src/ui/music-widgets.vala:240 src/ui/play-panel.vala:59
+#: src/ui/music-widgets.vala:245 src/ui/play-panel.vala:59
 msgid "Search Artist"
 msgstr "搜尋藝術家"
 
-#: src/ui/music-widgets.vala:242
+#: src/ui/music-widgets.vala:249
+msgid "Show _Cover File"
+msgstr "顯示封面檔案(_C)"
+
+#: src/ui/music-widgets.vala:251
+msgid "_Export Cover"
+msgstr "輸出封面(_E)"
+
+#: src/ui/music-widgets.vala:252
 msgid "Show _Tags…"
 msgstr "顯示標籤(_T)..."
 
-#: src/ui/music-widgets.vala:243
+#: src/ui/music-widgets.vala:253
 msgid "_Show Music File"
 msgstr "顯示音樂檔案(_S)"
 
@@ -494,13 +481,22 @@ msgstr "播放/暫停"
 msgid "Play Next"
 msgstr "播放下一首"
 
-#: src/ui/play-panel.vala:264
+#: src/ui/play-panel.vala:258
 msgid ""
 "Drag and drop music files here,\n"
 "or change music location: "
 msgstr ""
 "將音樂拖曳至這裡，\n"
 "或者修改音樂庫位置："
+
+#: src/ui/playlist-dialog.vala:24
+msgid "New Playlist"
+msgstr "新建播放清單"
+
+#: src/ui/playlist-dialog.vala:90 src/ui/store-panel.vala:666
+#, c-format
+msgid "No playlist found in %s"
+msgstr "在 %s 中找不到播放清單"
 
 #: src/ui/preferences.vala:44 src/ui/preferences.vala:66
 msgid "Never"
@@ -538,6 +534,10 @@ msgstr "播放清單"
 msgid "Play"
 msgstr "播放"
 
+#: src/ui/taglist-dialog.vala:124
+msgid "Copy"
+msgstr "複製"
+
 #. Translators: Current volume percent: 0~100%
 #: src/ui/volume-button.vala:33
 #, c-format
@@ -555,6 +555,9 @@ msgstr "未知專輯"
 #: src/utils/music.vala:3
 msgid "Unknown Artist"
 msgstr "未知藝術家"
+
+#~ msgid "Close"
+#~ msgstr "关闭"
 
 #~ msgid "Drag-drop from GNOME Files, showing music in Files."
 #~ msgstr "從 GNOME 檔案拖放、顯示檔案中的音樂。"

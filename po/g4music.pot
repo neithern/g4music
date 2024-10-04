@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-03 14:07+0800\n"
+"POT-Creation-Date: 2024-10-04 16:39+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: data/app.desktop.in:3 data/app.metainfo.xml.in:4 src/application.vala:263
+#: data/app.desktop.in:3 data/app.metainfo.xml.in:4 src/application.vala:266
 #: src/main.vala:24
 msgid "Gapless"
 msgstr ""
@@ -187,7 +187,7 @@ msgctxt "shortcut window"
 msgid "Reload Library"
 msgstr ""
 
-#: src/gtk/play-panel.ui:16 src/ui/music-list.vala:626
+#: src/gtk/play-panel.ui:16 src/ui/music-list.vala:621
 #: src/ui/store-panel.vala:417
 msgid "Back"
 msgstr ""
@@ -212,7 +212,7 @@ msgstr ""
 msgid "Single click to activate item"
 msgstr ""
 
-#: src/gtk/preferences.ui:56 src/application.vala:409
+#: src/gtk/preferences.ui:56 src/application.vala:413
 msgid "Keep playing after window closed"
 msgstr ""
 
@@ -268,7 +268,7 @@ msgstr ""
 msgid "Main Menu"
 msgstr ""
 
-#: src/gtk/store-panel.ui:29 src/ui/dialogs.vala:75
+#: src/gtk/store-panel.ui:29 src/ui/playlist-dialog.vala:36
 msgid "Search"
 msgstr ""
 
@@ -336,69 +336,48 @@ msgstr ""
 msgid "Shuffle"
 msgstr ""
 
-#: src/action-handles.vala:97
+#: src/action-handles.vala:106
 msgid "Image Files"
 msgstr ""
 
-#: src/action-handles.vala:104
+#: src/action-handles.vala:113
 msgid "Export cover successfully"
 msgstr ""
 
-#: src/action-handles.vala:104
+#: src/action-handles.vala:113
 msgid "Export cover failed"
 msgstr ""
 
-#: src/action-handles.vala:196
+#: src/action-handles.vala:205
 msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr ""
 
 #. Translators: Replace "translator-credits" with your names, one name per line
-#: src/action-handles.vala:198
+#: src/action-handles.vala:207
 msgid "translator-credits"
 msgstr ""
 
-#: src/application.vala:336
+#: src/application.vala:339
 msgid "Save playlist failed"
 msgstr ""
 
-#: src/application.vala:431
+#: src/application.vala:435
 msgid "Playlist Files"
 msgstr ""
 
-#: src/application.vala:445
+#: src/application.vala:449
 msgid "Save playlist successfully"
 msgstr ""
 
-#: src/application.vala:625
+#: src/application.vala:622
 msgid "Keep playing"
 msgstr ""
 
-#: src/ui/dialogs.vala:50 src/ui/music-list.vala:661
-msgid "Add to Playlist"
-msgstr ""
-
-#: src/ui/dialogs.vala:55
-msgid "New Playlist"
-msgstr ""
-
-#: src/ui/dialogs.vala:62
-msgid "Close"
-msgstr ""
-
-#: src/ui/dialogs.vala:127 src/ui/store-panel.vala:666
-#, c-format
-msgid "No playlist found in %s"
-msgstr ""
-
-#: src/ui/dialogs.vala:277
-msgid "Copy"
-msgstr ""
-
-#: src/ui/dialogs.vala:380 src/ui/dialogs.vala:392
+#: src/ui/dialogs.vala:40 src/ui/dialogs.vala:52
 msgid "No"
 msgstr ""
 
-#: src/ui/dialogs.vala:381 src/ui/dialogs.vala:392
+#: src/ui/dialogs.vala:41 src/ui/dialogs.vala:52
 msgid "Yes"
 msgstr ""
 
@@ -408,59 +387,67 @@ msgstr ""
 
 #. Translators: Play this music at next position of current playing music
 #: src/ui/music-list.vala:400 src/ui/music-list.vala:417
-#: src/ui/music-list.vala:647 src/ui/music-widgets.vala:219
-#: src/ui/music-widgets.vala:230
+#: src/ui/music-list.vala:642 src/ui/music-widgets.vala:219
+#: src/ui/music-widgets.vala:235
 msgid "Play at Next"
 msgstr ""
 
 #: src/ui/music-list.vala:402 src/ui/music-list.vala:415
-#: src/ui/music-list.vala:654 src/ui/music-widgets.vala:220
-#: src/ui/music-widgets.vala:231
+#: src/ui/music-list.vala:649 src/ui/music-widgets.vala:220
+#: src/ui/music-widgets.vala:236
 msgid "Add to Queue"
 msgstr ""
 
 #: src/ui/music-list.vala:403 src/ui/music-widgets.vala:221
-#: src/ui/music-widgets.vala:232 src/ui/music-widgets.vala:245
+#: src/ui/music-widgets.vala:237 src/ui/music-widgets.vala:256
 msgid "Add to Playlist…"
 msgstr ""
 
-#: src/ui/music-list.vala:404 src/ui/music-list.vala:668
+#: src/ui/music-list.vala:404 src/ui/music-list.vala:663
 msgid "Remove"
 msgstr ""
 
-#: src/ui/music-list.vala:420 src/ui/play-panel.vala:145
-msgid "Show _Cover File"
-msgstr ""
-
-#: src/ui/music-list.vala:422 src/ui/play-panel.vala:147
-msgid "_Export Cover"
-msgstr ""
-
-#: src/ui/music-list.vala:630
+#: src/ui/music-list.vala:625
 msgid "Select All"
 msgstr ""
 
-#: src/ui/music-widgets.vala:223
+#: src/ui/music-list.vala:656 src/ui/playlist-dialog.vala:19
+msgid "Add to Playlist"
+msgstr ""
+
+#: src/ui/music-widgets.vala:225
 msgid "Show List File"
 msgstr ""
 
-#: src/ui/music-widgets.vala:238 src/ui/play-panel.vala:60
+#: src/ui/music-widgets.vala:226 src/ui/music-widgets.vala:254
+msgid "Move to Trash"
+msgstr ""
+
+#: src/ui/music-widgets.vala:243 src/ui/play-panel.vala:60
 msgid "Search Title"
 msgstr ""
 
-#: src/ui/music-widgets.vala:239 src/ui/play-panel.vala:58
+#: src/ui/music-widgets.vala:244 src/ui/play-panel.vala:58
 msgid "Search Album"
 msgstr ""
 
-#: src/ui/music-widgets.vala:240 src/ui/play-panel.vala:59
+#: src/ui/music-widgets.vala:245 src/ui/play-panel.vala:59
 msgid "Search Artist"
 msgstr ""
 
-#: src/ui/music-widgets.vala:242
+#: src/ui/music-widgets.vala:249
+msgid "Show _Cover File"
+msgstr ""
+
+#: src/ui/music-widgets.vala:251
+msgid "_Export Cover"
+msgstr ""
+
+#: src/ui/music-widgets.vala:252
 msgid "Show _Tags…"
 msgstr ""
 
-#: src/ui/music-widgets.vala:243
+#: src/ui/music-widgets.vala:253
 msgid "_Show Music File"
 msgstr ""
 
@@ -482,10 +469,19 @@ msgstr ""
 msgid "Play Next"
 msgstr ""
 
-#: src/ui/play-panel.vala:264
+#: src/ui/play-panel.vala:258
 msgid ""
 "Drag and drop music files here,\n"
 "or change music location: "
+msgstr ""
+
+#: src/ui/playlist-dialog.vala:24
+msgid "New Playlist"
+msgstr ""
+
+#: src/ui/playlist-dialog.vala:90 src/ui/store-panel.vala:666
+#, c-format
+msgid "No playlist found in %s"
 msgstr ""
 
 #: src/ui/preferences.vala:44 src/ui/preferences.vala:66
@@ -522,6 +518,10 @@ msgstr ""
 
 #: src/ui/store-panel.vala:425
 msgid "Play"
+msgstr ""
+
+#: src/ui/taglist-dialog.vala:124
+msgid "Copy"
 msgstr ""
 
 #. Translators: Current volume percent: 0~100%
