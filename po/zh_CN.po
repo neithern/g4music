@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-05 14:49+0800\n"
-"PO-Revision-Date: 2024-10-05 14:55+0800\n"
+"POT-Creation-Date: 2024-10-05 23:03+0800\n"
+"PO-Revision-Date: 2024-10-05 23:04+0800\n"
 "Last-Translator: Nanling <neithern@outlook.com>\n"
 "Language-Team: Chinese - China <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0\n"
 "X-Generator: Gtranslator 46.1\n"
 
-#: data/app.desktop.in:3 data/app.metainfo.xml.in:4 src/application.vala:266
+#: data/app.desktop.in:3 data/app.metainfo.xml.in:4 src/application.vala:267
 #: src/main.vala:24
 msgid "Gapless"
 msgstr "无暇"
@@ -28,18 +28,14 @@ msgstr "无暇"
 msgid "Music Player"
 msgstr "音乐播放器"
 
-#: data/app.desktop.in:5
-msgid "Play music"
-msgstr "播放音乐"
+#: data/app.desktop.in:5 data/app.metainfo.xml.in:7
+msgid "Play your music elegantly"
+msgstr "优雅地播放您的音乐"
 
 #: data/app.desktop.in:12
 msgid "music;sound;player;media;audio;playlist;"
 msgstr ""
 "music;sound;player;media;audio;playlist;音乐;声音;播放器;媒体;音频;播放列表;"
-
-#: data/app.metainfo.xml.in:7
-msgid "Play your music elegantly"
-msgstr "优雅地播放您的音乐"
 
 #: data/app.metainfo.xml.in:24
 msgid ""
@@ -155,45 +151,55 @@ msgctxt "shortcut window"
 msgid "Quit"
 msgstr "退出"
 
-#: src/gtk/help-overlay.ui:34
+#: src/gtk/help-overlay.ui:32
+msgctxt "shortcut window"
+msgid "Show Tags"
+msgstr "显示标签"
+
+#: src/gtk/help-overlay.ui:40
 msgctxt "shortcut window"
 msgid "Playback"
 msgstr "播放"
 
-#: src/gtk/help-overlay.ui:37
+#: src/gtk/help-overlay.ui:43
 msgctxt "shortcut window"
 msgid "Play/Pause"
 msgstr "播放/暂停"
 
-#: src/gtk/help-overlay.ui:43
+#: src/gtk/help-overlay.ui:49
 msgctxt "shortcut window"
 msgid "Play Next"
 msgstr "播放下一首"
 
-#: src/gtk/help-overlay.ui:49
+#: src/gtk/help-overlay.ui:55
 msgctxt "shortcut window"
 msgid "Play Previous"
 msgstr "播放上一首"
 
-#: src/gtk/help-overlay.ui:57
+#: src/gtk/help-overlay.ui:63
 msgctxt "shortcut window"
 msgid "Playlist"
 msgstr "播放列表"
 
-#: src/gtk/help-overlay.ui:60
+#: src/gtk/help-overlay.ui:66
 msgctxt "shortcut window"
 msgid "Search"
 msgstr "搜索"
 
-#: src/gtk/help-overlay.ui:66
+#: src/gtk/help-overlay.ui:72
 msgctxt "shortcut window"
 msgid "Toggle Sort"
 msgstr "切换排序"
 
-#: src/gtk/help-overlay.ui:72
+#: src/gtk/help-overlay.ui:78
 msgctxt "shortcut window"
 msgid "Reload Library"
 msgstr "重载曲库"
+
+#: src/gtk/help-overlay.ui:84
+msgctxt "shortcut window"
+msgid "Save List"
+msgstr "保存列表"
 
 #: src/gtk/play-panel.ui:16 src/ui/music-list.vala:628
 #: src/ui/store-panel.vala:425
@@ -220,7 +226,7 @@ msgstr "艺术家/专辑使用网格视图"
 msgid "Single click to activate item"
 msgstr "单击激活项目"
 
-#: src/gtk/preferences.ui:56 src/application.vala:413
+#: src/gtk/preferences.ui:56 src/application.vala:412
 msgid "Keep playing after window closed"
 msgstr "关闭窗口后继续播放"
 
@@ -344,42 +350,42 @@ msgstr "最近"
 msgid "Shuffle"
 msgstr "乱序"
 
-#: src/action-handles.vala:107
+#: src/action-handles.vala:112
 msgid "Image Files"
 msgstr "图像文件"
 
-#: src/action-handles.vala:114
+#: src/action-handles.vala:119
 msgid "Export cover successfully"
 msgstr "导出封面成功"
 
-#: src/action-handles.vala:114
+#: src/action-handles.vala:119
 msgid "Export cover failed"
 msgstr "导出封面失败"
 
-#: src/action-handles.vala:193
+#: src/action-handles.vala:198
 msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr "一个快速、流畅、轻量的，基于 GTK4 的音乐播放器。"
 
 #. Translators: Replace "translator-credits" with your names, one name per line
-#: src/action-handles.vala:195
+#: src/action-handles.vala:200
 msgid "translator-credits"
 msgstr ""
 "Nanling <neithern@outlook.com>, 2022-2024.\n"
 "lumingzh <lumingzh@qq.com>, 2024."
 
-#: src/application.vala:339
+#: src/application.vala:340
 msgid "Save playlist failed"
 msgstr "保存播放列表失败"
 
-#: src/application.vala:435
+#: src/application.vala:434
 msgid "Playlist Files"
 msgstr "播放列表文件"
 
-#: src/application.vala:449
+#: src/application.vala:448
 msgid "Save playlist successfully"
 msgstr "保存播放列表成功"
 
-#: src/application.vala:625
+#: src/application.vala:592
 msgid "Keep playing"
 msgstr "持续播放"
 
@@ -552,7 +558,7 @@ msgstr "复制"
 msgid "Volume %d%%"
 msgstr "音量 %d%%"
 
-#: src/ui/window.vala:111
+#: src/ui/window.vala:112
 msgid "Show"
 msgstr "显示"
 
@@ -563,6 +569,9 @@ msgstr "未知专辑"
 #: src/utils/music.vala:3
 msgid "Unknown Artist"
 msgstr "未知艺术家"
+
+#~ msgid "Play music"
+#~ msgstr "播放音乐"
 
 #~ msgid "Close"
 #~ msgstr "关闭"
