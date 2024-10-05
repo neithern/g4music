@@ -258,7 +258,7 @@ namespace G4 {
             _grid_view.factory = factory;
         }
 
-        public async Result save_if_modified (bool prompt = true) {
+        public virtual async Result save_if_modified (bool prompt = true) {
             if (_modified && _music_node is Playlist) {
                 var playlist = new Playlist (_music_node?.title ?? "Untitled");
                 playlist.list_uri = ((Playlist)_music_node).list_uri;
@@ -691,7 +691,7 @@ namespace G4 {
             _prompt_to_save = false;
         }
 
-        public async bool save_if_modified () {
+        public override async Result save_if_modified (bool prompt = true) {
             if (_modified) {
                 var file = get_playing_list_file ();
                 var store = data_store;
@@ -703,8 +703,9 @@ namespace G4 {
                 }
                 var ret = yield run_async<bool> (() => save_playlist_file (file, uris, null, false), false, true);
                 modified = !ret;
+                return ret ? Result.OK : Result.FAILED;
             }
-            return !_modified;
+            return Result.OK;
         }
     }
 

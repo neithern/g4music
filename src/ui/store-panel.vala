@@ -153,6 +153,7 @@ namespace G4 {
                 if (_size_allocated) {
                     update_visible_stack ();
                 }
+                save_if_modified (true);
                 if (value == stack_view.visible_child) {
                     var stack = get_current_stack ();
                     if (stack != null)
@@ -193,8 +194,16 @@ namespace G4 {
             initialize_library_view ();
         }
 
+        public void remove_from_list (Music music) {
+            uint position = -1;
+            if (_current_list.data_store.find (music, out position)) {
+                _current_list.data_store.remove (position);
+                _current_list.modified = true;
+            }
+        }
+
         public bool save_if_modified (bool prompt = true, VoidFunc? done = null) {
-            if (_current_list.modified && _current_list != _main_list) {
+            if (_current_list.modified) {
                 _current_list.save_if_modified.begin (prompt, (obj, res) => {
                     var ret = _current_list.save_if_modified.end (res);
                     if (ret != Result.FAILED) {
@@ -206,19 +215,6 @@ namespace G4 {
                 return true;
             }
             return false;
-        }
-
-        public void remove_from_list (Music music) {
-            uint position = -1;
-            if (_current_list.data_store.find (music, out position)) {
-                _current_list.data_store.remove (position);
-                _current_list.modified = true;
-            }
-        }
-
-        public void save_main_list_if_modified () {
-            _main_list.save_if_modified.begin ((obj, res)
-                => _main_list.save_if_modified.end (res));
         }
 
         public void set_mini_cover (Gdk.Paintable? cover) {
@@ -423,10 +419,7 @@ namespace G4 {
             var stack = artist_mode ? _artist_stack : playlist_mode ? _playlist_stack : _album_stack;
             var back_btn = new Gtk.Button.from_icon_name ("go-previous-symbolic");
             back_btn.tooltip_text = _("Back");
-            back_btn.clicked.connect (() => {
-                if (!save_if_modified (true, stack.pop))
-                    stack.pop ();
-            });
+            back_btn.clicked.connect (stack.pop);
             header.prepend (back_btn);
 
             var button = new Gtk.Button.from_icon_name ("media-playback-start-symbolic");

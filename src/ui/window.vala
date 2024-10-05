@@ -141,7 +141,6 @@ namespace G4 {
                 present ();
                 return true;
             }
-            _store_panel.save_main_list_if_modified ();
             return false;
         }
 
