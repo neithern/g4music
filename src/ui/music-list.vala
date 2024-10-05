@@ -258,7 +258,7 @@ namespace G4 {
             _grid_view.factory = factory;
         }
 
-        public async Result prompt_save_if_modified () {
+        public async Result save_if_modified (bool prompt = true) {
             if (_modified && _music_node is Playlist) {
                 var playlist = new Playlist (_music_node?.title ?? "Untitled");
                 playlist.list_uri = ((Playlist)_music_node).list_uri;
@@ -269,7 +269,7 @@ namespace G4 {
                     playlist.add_music (music);
                 }
 
-                var ret = yield show_alert_dialog (_("Playlist is modified, save it?"), root as Gtk.Window);
+                var ret = !prompt || yield show_alert_dialog (_("Playlist is modified, save it?"), root as Gtk.Window);
                 if (ret) {
                     ret = yield _app.add_playlist_to_file_async (playlist, false);
                     modified = !ret;
@@ -614,8 +614,8 @@ namespace G4 {
             var back_btn = new Gtk.Button.from_icon_name ("go-previous-symbolic");
             back_btn.clicked.connect (() => {
                 if (_modified && _prompt_to_save) {
-                    prompt_save_if_modified.begin ((obj, res) => {
-                        var ret = prompt_save_if_modified.end (res);
+                    save_if_modified.begin (true, (obj, res) => {
+                        var ret = save_if_modified.end (res);
                         if (ret != Result.FAILED) {
                             modified = false;
                             multi_selection = false;

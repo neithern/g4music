@@ -26,6 +26,7 @@ namespace G4 {
             ActionEntry[] action_entries = {
                 { ACTION_BUTTON, button_command, "s" },
                 { ACTION_REMOVE, remove_from_list, "aay" },
+                { ACTION_SAVE_LIST, save_list },
                 { ACTION_SEARCH, search_by, "aay" },
                 { ACTION_SELECT, start_select },
                 { ACTION_TOGGLE_SEARCH, toggle_search },
@@ -136,7 +137,7 @@ namespace G4 {
                 this.visible = false;
                 return true;
             }
-            if (_store_panel.prompt_to_save_if_modified (close)) {
+            if (_store_panel.save_if_modified (true, close)) {
                 present ();
                 return true;
             }
@@ -260,6 +261,10 @@ namespace G4 {
             if (music != null) {
                 _store_panel.remove_from_list ((!)music);
             }
+        }
+
+        private void save_list () {
+            _store_panel.save_if_modified (false);
         }
 
         private void search_by (SimpleAction action, Variant? parameter) {

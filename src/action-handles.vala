@@ -13,9 +13,11 @@ namespace G4 {
     public const string ACTION_NEXT = "next";
     public const string ACTION_RELOAD = "reload";
     public const string ACTION_REMOVE = "remove";
+    public const string ACTION_SAVE_LIST = "save-list";
     public const string ACTION_SCHEME = "scheme";
     public const string ACTION_SHOW_FILE = "show-file";
     public const string ACTION_SHOW_TAGS = "show-tags";
+    public const string ACTION_SHOW_TAGS_CURRENT = "show-cur-tags";
     public const string ACTION_SORT = "sort";
     public const string ACTION_TOGGLE_SORT = "toggle-sort";
     public const string ACTION_TRASH_FILE = "trash-file";
@@ -54,6 +56,7 @@ namespace G4 {
                 { ACTION_SCHEME, scheme, "s", "'0'" },
                 { ACTION_SHOW_FILE, show_file, "aay" },
                 { ACTION_SHOW_TAGS, show_tags, "aay" },
+                { ACTION_SHOW_TAGS_CURRENT, show_tags },
                 { ACTION_SORT, sort_by, "s", "'2'" },
                 { ACTION_TOGGLE_SORT, toggle_sort },
                 { ACTION_TRASH_FILE, trash_file, "aay" },
@@ -67,7 +70,8 @@ namespace G4 {
                 { ACTION_PREV, "<primary>Left" },
                 { ACTION_NEXT, "<primary>Right" },
                 { ACTION_RELOAD, "<primary>r" },
-                { ACTION_TOGGLE_SORT, "<primary>s" },
+                { ACTION_SHOW_TAGS_CURRENT, "<primary>t" },
+                { ACTION_TOGGLE_SORT, "<primary>m" },
                 { ACTION_QUIT, "<primary>q" }
             };
             foreach (var item in app_keys) {
@@ -75,6 +79,7 @@ namespace G4 {
             }
 
             ActionShortKey[] win_keys = {
+                { ACTION_SAVE_LIST, "<primary>s" },
                 { ACTION_TOGGLE_SEARCH, "<primary>f" },
             };
             foreach (var item in win_keys) {
@@ -243,7 +248,7 @@ namespace G4 {
         }
 
         private void show_tags (SimpleAction action, Variant? parameter) {
-            var uri = parse_uri_from_parameter (parameter);
+            var uri = parse_uri_from_parameter (parameter) ?? _app.current_music?.uri;
             if (uri != null) {
                 var tags = strcmp (_app.current_music?.uri, uri) == 0 ? _app.player.tag_list : (Gst.TagList?) null;
                 var dialog = new TagListDialog ((!)uri, tags);

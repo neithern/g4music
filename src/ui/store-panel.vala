@@ -193,10 +193,10 @@ namespace G4 {
             initialize_library_view ();
         }
 
-        public bool prompt_to_save_if_modified (VoidFunc? done) {
+        public bool save_if_modified (bool prompt = true, VoidFunc? done = null) {
             if (_current_list.modified && _current_list != _main_list) {
-                _current_list.prompt_save_if_modified.begin ((obj, res) => {
-                    var ret = _current_list.prompt_save_if_modified.end (res);
+                _current_list.save_if_modified.begin (prompt, (obj, res) => {
+                    var ret = _current_list.save_if_modified.end (res);
                     if (ret != Result.FAILED) {
                         _current_list.modified = false;
                         if (done != null)
@@ -424,7 +424,7 @@ namespace G4 {
             var back_btn = new Gtk.Button.from_icon_name ("go-previous-symbolic");
             back_btn.tooltip_text = _("Back");
             back_btn.clicked.connect (() => {
-                if (!prompt_to_save_if_modified (stack.pop))
+                if (!save_if_modified (true, stack.pop))
                     stack.pop ();
             });
             header.prepend (back_btn);
