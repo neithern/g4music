@@ -2,7 +2,7 @@ namespace G4 {
 
     public class Application : Adw.Application {
         private ActionHandles? _actions = null;
-        private int _current_item = -1;
+        private int _current_index = -1;
         private Music? _current_music = null;
         private string _current_uri = "";
         private Gst.Sample? _current_cover = null;
@@ -154,19 +154,20 @@ namespace G4 {
 
         public int current_item {
             get {
-                return _current_item;
+                return _current_index;
             }
             set {
-                var item = value;
-                if (item >= (int) _current_list.get_n_items ()) {
+                var index = value;
+                if (index >= (int) _current_list.get_n_items ()) {
                     end_of_playlist (true);
-                    item = _current_list.get_n_items () > 0 ? 0 : -1;
-                } else if (item < 0) {
+                    index = _current_list.get_n_items () > 0 ? 0 : -1;
+                } else if (index < 0) {
                     end_of_playlist (false);
-                    item = (int) _current_list.get_n_items () - 1;
+                    index = (int) _current_list.get_n_items () - 1;
                 }
-                current_music = _current_list.get_item (item) as Music;
-                change_current_item (item);
+                _current_index = index;
+                current_music = _current_list.get_item (index) as Music;
+                update_next_item (index);
             }
         }
 
@@ -341,7 +342,7 @@ namespace G4 {
         }
 
         public bool insert_after_current (Playlist playlist) {
-            uint position = _current_item;
+            uint position = _current_index;
             if (_current_music != null) {
                 if (!_music_queue.find ((!)_current_music, out position))
                     position = -1;
@@ -356,8 +357,6 @@ namespace G4 {
             if (play_now) {
                 current_item = (int) position;
                 _player.play ();
-            } else if (changed) {
-                update_current_item ();
             }
             return changed;
         }
@@ -370,7 +369,7 @@ namespace G4 {
             if (replace) {
                 _music_queue.splice (0, _music_queue.get_n_items (), (Object[]) musics.data);
             } else {
-                on_music_library_changed (_music_queue.get_n_items (), 1, 1);
+                on_music_library_changed (0, 1, 1);
             }
         }
 
@@ -471,24 +470,6 @@ namespace G4 {
             }
         }
 
-        private uint _last_list_count = -1;
-
-        private void change_current_item (int item) {
-            //  update _current_item but don't change current music
-            var count = _current_list.get_n_items ();
-            if (_current_item != item || _last_list_count != count) {
-                _current_item = item;
-                _last_list_count = count;
-                index_changed (item, count);
-            }
-
-            var next = item + 1;
-            var next_music = next < (int) count ? (Music) _current_list.get_item (next) : (Music?) null;
-            lock (_next_uri) {
-                _next_uri.assign (next_music?.uri ?? "");
-            }
-        }
-
         private File? _cover_tmp_file = null;
 
         private async void delete_cover_tmp_file_async () {
@@ -504,9 +485,9 @@ namespace G4 {
         private int find_music_item_by_uri (string uri) {
             var music = _loader.find_cache (uri);
             if (music != null) {
-                var item = find_item_in_model (_current_list, music, _current_item);
-                if (item != -1)
-                    return item;
+                var index = find_item_in_model (_current_list, music, _current_index);
+                if (index != -1)
+                    return index;
             }
             var count = _current_list.get_n_items ();
             for (var i = 0; i < count; i++) {
@@ -527,13 +508,11 @@ namespace G4 {
         }
 
         private void on_music_found (GenericArray<Music> arr) {
-            var n_items = _music_queue.get_n_items ();
+            _store_external_changed = true;
             if (arr.length > 0) {
-                _store_external_changed = true;
-                _music_queue.splice (n_items, 0, (Object[]) arr.data);
+                _music_queue.splice (_music_queue.get_n_items (), 0, (Object[]) arr.data);
             } else {
-                _store_external_changed = true;
-                _music_queue.items_changed (0, n_items, n_items);
+                on_music_library_changed (0, 1, 1);
             }
         }
 
@@ -559,30 +538,18 @@ namespace G4 {
                     _pending_msc_handler = 0;
                     music_library_changed (_store_external_changed);
                     _store_external_changed = false;
-                    update_current_item ();
                 });
             }
         }
 
         private void on_music_lost (GenericSet<Music> removed) {
-            var n_items = _music_queue.get_n_items ();
+            _store_external_changed = true;
             if (removed.length > 0) {
-                var remain = new GenericArray<Music> (n_items);
-                for (var i = 0; i < n_items; i++) {
-                    var music = (Music) _music_queue.get_item (i);
-                    if (removed.contains (music)) {
-                        if (_current_item > i)
-                            _current_item--;
-                    } else {
-                        remain.add (music);
-                    }
-                }
-                _store_external_changed = true;
-                _music_queue.splice (0, n_items, (Object[]) remain.data);
-                current_item = _current_item;
+                var arr = new GenericArray<Music> (removed.length);
+                removed.foreach ((music) => arr.add (music));
+                remove_items_from_store (_music_queue, arr);
             } else {
-                _store_external_changed = true;
-                _music_queue.items_changed (0, n_items, n_items);
+                on_music_library_changed (0, 1, 1);
             }
         }
 
@@ -703,16 +670,23 @@ namespace G4 {
         }
 
         private void update_current_item () {
-            var item = _current_item;
-            if (_current_music != null) {
-                item = find_item_in_model (_current_list, _current_music, _current_item);
-                if (item == -1) {
-                    unowned var uri = ((!)_current_music).uri;
-                    item = find_music_item_by_uri (uri);
-                    current_music = item != -1 ? _current_list.get_item (item) as Music : _loader.find_cache (uri);
-                }
+            _current_index = find_item_in_model (_current_list, _current_music, _current_index);
+            if (_current_index == -1 && _current_music != null) {
+                unowned var uri = ((!)_current_music).uri;
+                _current_index = find_music_item_by_uri (uri);
+                current_music = _current_index != -1 ? _current_list.get_item (_current_index) as Music : _loader.find_cache (uri);
             }
-            change_current_item (item);
+            index_changed (_current_index, _current_list.get_n_items ());
+            update_next_item (_current_index);
+        }
+
+        private void update_next_item (int index) {
+            var count = _current_list.get_n_items ();
+            var next = index + 1;
+            var next_music = next < (int) count ? (Music) _current_list.get_item (next) : (Music?) null;
+            lock (_next_uri) {
+                _next_uri.assign (next_music?.uri ?? "");
+            }
         }
     }
 
