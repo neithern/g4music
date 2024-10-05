@@ -104,6 +104,7 @@ namespace G4 {
             return sb.str;
         }
 
+        private File file;
         private GenericArray<TagItem> items = new GenericArray<TagItem>();
         private Gtk.Button copy_btn = new Gtk.Button.from_icon_name ("edit-copy-symbolic");
         private Gtk.Box group = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
@@ -112,6 +113,7 @@ namespace G4 {
         public TagListDialog (string uri, Gst.TagList? tags) {
             var content = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
             this.child = content;
+            this.file = File.new_for_uri (uri);
 
             var header = new Gtk.HeaderBar ();
             header.show_title_buttons = true;
@@ -127,12 +129,15 @@ namespace G4 {
             header.pack_start (spinner);
 
             var scroll_view = new Gtk.ScrolledWindow ();
-            scroll_view.child = group;
             scroll_view.hscrollbar_policy = Gtk.PolicyType.NEVER;
             scroll_view.vscrollbar_policy = Gtk.PolicyType.AUTOMATIC;
             scroll_view.propagate_natural_height = true;
             scroll_view.vexpand = true;
             content.append (scroll_view);
+
+            var viewport = new Gtk.Viewport (null, scroll_view.vadjustment);
+            viewport.child = group;
+            scroll_view.child = viewport;
 
             if (tags != null) {
                 load_tags ((!)tags);
@@ -153,7 +158,9 @@ namespace G4 {
         }
 
         private void copy_to_clipboard () {
-            var sb = new StringBuilder ();
+            var path = file.get_path () ?? file.get_parse_name ();
+            var sb = new StringBuilder (path);
+            sb.append_c ('\n');
             foreach (var ti in items) {
                 sb.append (ti.tag);
                 sb.append (ti.value.contains ("\n") ? ":\n" : "=");
@@ -167,7 +174,6 @@ namespace G4 {
             child.height_request = 480;
             copy_btn.sensitive = false;
             spinner.start ();
-            var file = File.new_for_uri (uri);
             var tags = yield run_async<Gst.TagList?> (() => parse_gst_tags (file));
             if (tags != null) {
                 load_tags ((!)tags);
