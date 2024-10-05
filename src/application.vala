@@ -632,7 +632,10 @@ namespace G4 {
             var uri = u ?? "";
             if (_current_music != null && _current_uri == uri) {
                 var music = _loader.find_cache (_current_uri) ?? (!)_current_music;
-                if (music.has_unknown () && tags != null && music.from_gst_tags ((!)tags)) {
+                if (music != _current_music) {
+                    _current_music = music;
+                    music_changed (music);
+                } else if (music.has_unknown () && tags != null && music.from_gst_tags ((!)tags)) {
                     _loader.add_to_cache (music);
                     music_changed (music);
                 }
