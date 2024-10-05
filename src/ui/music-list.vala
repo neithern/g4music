@@ -397,11 +397,11 @@ namespace G4 {
             if (_selection.get_selection ().get_size () > 1) {
                 var action = ACTION_WIN + ACTION_BUTTON;
                 var menu = new Menu ();
-                menu.append_item (create_menu_item_for_button (Button.INSERT, _("Play at Next"), action));
+                menu.append_item (create_menu_item_for_button (Button.INSERT, _("Play at _Next"), action));
                 if (_has_add_to_queque)
-                    menu.append_item (create_menu_item_for_button (Button.QUEUE, _("Add to Queue"), action));
-                menu.append_item (create_menu_item_for_button (Button.ADDTO, _("Add to Playlist…"), action));
-                menu.append_item (create_menu_item_for_button (Button.REMOVE, _("Remove"), action));
+                    menu.append_item (create_menu_item_for_button (Button.QUEUE, _("Add to _Queue"), action));
+                menu.append_item (create_menu_item_for_button (Button.ADDTO, _("Add to _Playlist…"), action));
+                menu.append_item (create_menu_item_for_button (Button.REMOVE, _("_Remove"), action));
                 return menu;
             } else if (node is Album) {
                 return create_menu_for_album ((Album) node);
@@ -412,9 +412,9 @@ namespace G4 {
                 var menu = create_menu_for_music (music, _app.thumbnailer.find (music) is Gdk.Texture);
                 if (music != _app.current_music) {
                     if (_has_add_to_queque)
-                        menu.prepend_item (create_menu_item_for_uri (music.uri, _("Add to Queue"), ACTION_APP + ACTION_ADD_TO_QUEUE));
+                        menu.prepend_item (create_menu_item_for_uri (music.uri, _("Add to _Queue"), ACTION_APP + ACTION_ADD_TO_QUEUE));
                     /* Translators: Play this music at next position of current playing music */
-                    menu.prepend_item (create_menu_item_for_uri (music.uri, _("Play at Next"), ACTION_APP + ACTION_PLAY_AT_NEXT));
+                    menu.prepend_item (create_menu_item_for_uri (music.uri, _("Play at _Next"), ACTION_APP + ACTION_PLAY_AT_NEXT));
                 }
                 return menu;
             }

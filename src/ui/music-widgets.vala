@@ -216,14 +216,14 @@ namespace G4 {
     public Menu create_menu_for_album (Album album) {
         var strv = build_action_target_for_album (album);
         var menu = new Menu ();
-        menu.append_item (create_menu_item_for_strv (strv, _("Play at Next"), ACTION_APP + ACTION_PLAY_AT_NEXT));
-        menu.append_item (create_menu_item_for_strv (strv, _("Add to Queue"), ACTION_APP + ACTION_ADD_TO_QUEUE));
-        menu.append_item (create_menu_item_for_strv (strv, _("Add to Playlist…"), ACTION_APP + ACTION_ADD_TO_PLAYLIST));
+        menu.append_item (create_menu_item_for_strv (strv, _("Play at _Next"), ACTION_APP + ACTION_PLAY_AT_NEXT));
+        menu.append_item (create_menu_item_for_strv (strv, _("Add to _Queue"), ACTION_APP + ACTION_ADD_TO_QUEUE));
+        menu.append_item (create_menu_item_for_strv (strv, _("Add to _Playlist…"), ACTION_APP + ACTION_ADD_TO_PLAYLIST));
         if (album is Playlist) {
             unowned var list_uri = ((Playlist) album).list_uri;
             var section = new Menu ();
-            section.append_item (create_menu_item_for_uri (list_uri, _("Show List File"), ACTION_APP + ACTION_SHOW_FILE));
-            section.append_item (create_menu_item_for_uri (list_uri, _("Move to Trash"), ACTION_APP + ACTION_TRASH_FILE));
+            section.append_item (create_menu_item_for_uri (list_uri, _("Show List _File"), ACTION_APP + ACTION_SHOW_FILE));
+            section.append_item (create_menu_item_for_uri (list_uri, _("_Move to Trash"), ACTION_APP + ACTION_TRASH_FILE));
             menu.append_section (null, section);
         }
         return menu;
@@ -232,9 +232,9 @@ namespace G4 {
     public Menu create_menu_for_artist (Artist artist) {
         string[] strv = { PageName.ARTIST, artist.artist };
         var menu = new Menu ();
-        menu.append_item (create_menu_item_for_strv (strv, _("Play at Next"), ACTION_APP + ACTION_PLAY_AT_NEXT));
-        menu.append_item (create_menu_item_for_strv (strv, _("Add to Queue"), ACTION_APP + ACTION_ADD_TO_QUEUE));
-        menu.append_item (create_menu_item_for_strv (strv, _("Add to Playlist…"), ACTION_APP + ACTION_ADD_TO_PLAYLIST));
+        menu.append_item (create_menu_item_for_strv (strv, _("Play at _Next"), ACTION_APP + ACTION_PLAY_AT_NEXT));
+        menu.append_item (create_menu_item_for_strv (strv, _("Add to _Queue"), ACTION_APP + ACTION_ADD_TO_QUEUE));
+        menu.append_item (create_menu_item_for_strv (strv, _("Add to _Playlist…"), ACTION_APP + ACTION_ADD_TO_PLAYLIST));
         return menu;
     }
 
@@ -246,14 +246,14 @@ namespace G4 {
         unowned var uri = music.uri;
         var section2 = new Menu ();
         if (music.cover_uri != null)
-            section2.append_item (create_menu_item_for_uri ((!)music.cover_uri, _("Show _Cover File"), ACTION_APP + ACTION_SHOW_FILE));
+            section2.append_item (create_menu_item_for_uri ((!)music.cover_uri, _("Show Cover _File"), ACTION_APP + ACTION_SHOW_FILE));
         else if (has_cover)
             section2.append_item (create_menu_item_for_uri (uri, _("_Export Cover"), ACTION_APP + ACTION_EXPORT_COVER));
         section2.append_item (create_menu_item_for_uri (uri, _("Show _Tags…"), ACTION_APP + ACTION_SHOW_TAGS));
-        section2.append_item (create_menu_item_for_uri (uri, _("_Show Music File"), ACTION_APP + ACTION_SHOW_FILE));
-        section2.append_item (create_menu_item_for_uri (uri, _("Move to Trash"), ACTION_APP + ACTION_TRASH_FILE));
+        section2.append_item (create_menu_item_for_uri (uri, _("Show Music _File"), ACTION_APP + ACTION_SHOW_FILE));
+        section2.append_item (create_menu_item_for_uri (uri, _("_Move to Trash"), ACTION_APP + ACTION_TRASH_FILE));
         var menu = new Menu ();
-        menu.append_item (create_menu_item_for_uri (uri, _("Add to Playlist…"), ACTION_APP + ACTION_ADD_TO_PLAYLIST));
+        menu.append_item (create_menu_item_for_uri (uri, _("Add to _Playlist…"), ACTION_APP + ACTION_ADD_TO_PLAYLIST));
         menu.append_section (null, section);
         menu.append_section (null, section2);
         return menu;
