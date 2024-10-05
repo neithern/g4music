@@ -221,7 +221,8 @@ namespace G4 {
                     }
                 }
             } catch (Error e) {
-                warning ("Query %s: %s\n", file.get_parse_name (), e.message);
+                if (e.code != IOError.NOT_FOUND)
+                    print ("Query %s, %s: %s\n", e.domain.to_string (), file.get_parse_name (), e.message);
             }
         }
 
@@ -264,7 +265,8 @@ namespace G4 {
                 _cover_cache.put (dir, cover_name ?? "");
                 get_save_dir_pool ()?.add (cache);
             } catch (Error e) {
-                warning ("Enumerate %s: %s\n", dir.get_parse_name (), e.message);
+                if (e.code != IOError.NOT_FOUND)
+                    print ("Enumerate %s: %s\n", dir.get_parse_name (), e.message);
             }
             if (cover_name != null && ((!)cover_name).length > 0) {
                 for (var i = musics.length - 1; i >= start; i--) {
