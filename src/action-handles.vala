@@ -12,6 +12,7 @@ namespace G4 {
     public const string ACTION_PREV = "prev";
     public const string ACTION_NEXT = "next";
     public const string ACTION_RELOAD = "reload";
+    public const string ACTION_REMOVE = "remove";
     public const string ACTION_SCHEME = "scheme";
     public const string ACTION_SHOW_FILE = "show-file";
     public const string ACTION_SHOW_TAGS = "show-tags";
@@ -115,11 +116,6 @@ namespace G4 {
             }
         }
 
-        private Music? _get_music_from_parameter (Variant? parameter) {
-            var uri = _parse_uri_form_parameter (parameter);
-            return uri != null ? _app.loader.find_cache ((!)uri) : null;
-        }
-
         private void add_to_playlist (SimpleAction action, Variant? parameter) {
             var strv = parameter?.get_bytestring_array ();
             var playlist = _parse_playist_form_strv (strv);
@@ -129,18 +125,10 @@ namespace G4 {
         }
 
         private void export_cover (SimpleAction action, Variant? parameter) {
-            var music = _get_music_from_parameter (parameter);
+            var uri = parse_uri_from_parameter (parameter);
+            var music = uri != null ? _app.loader.find_cache ((!)uri) : null;
             if (music != null)
                 _export_cover_async.begin ((!)music, (obj, res) => _export_cover_async.end (res));
-        }
-
-        private unowned string? _parse_uri_form_parameter (Variant? parameter) {
-            unowned var strv = parameter?.get_bytestring_array ();
-            if (strv != null && ((!)strv).length > 1) {
-                var arr = (!)strv;
-                return arr[0] == "uri" ? (string?) arr[1] : null;
-            }
-            return null;
         }
 
         private Playlist? _parse_playist_form_strv (string[]? strv) {
@@ -242,7 +230,7 @@ namespace G4 {
         }
 
         private void show_file (SimpleAction action, Variant? parameter) {
-            var uri = _parse_uri_form_parameter (parameter);
+            var uri = parse_uri_from_parameter (parameter);
             if (uri != null) {
                 _portal.open_directory_async.begin ((!)uri, (obj, res) => {
                     try {
@@ -255,7 +243,7 @@ namespace G4 {
         }
 
         private void show_tags (SimpleAction action, Variant? parameter) {
-            var uri = _parse_uri_form_parameter (parameter);
+            var uri = parse_uri_from_parameter (parameter);
             if (uri != null) {
                 var tags = strcmp (_app.current_music?.uri, uri) == 0 ? _app.player.tag_list : (Gst.TagList?) null;
                 var dialog = new TagListDialog ((!)uri, tags);
@@ -292,7 +280,7 @@ namespace G4 {
         }
 
         private void trash_file (SimpleAction action, Variant? parameter) {
-            var uri = _parse_uri_form_parameter (parameter);
+            var uri = parse_uri_from_parameter (parameter);
             if (uri != null) {
                 _portal.trash_file_async.begin ((!)uri, (obj, res) => {
                     try {
@@ -305,5 +293,14 @@ namespace G4 {
                 });
             }
         }
+    }
+
+    public unowned string? parse_uri_from_parameter (Variant? parameter) {
+        unowned var strv = parameter?.get_bytestring_array ();
+        if (strv != null && ((!)strv).length > 1) {
+            var arr = (!)strv;
+            return arr[0] == "uri" ? (string?) arr[1] : null;
+        }
+        return null;
     }
 }

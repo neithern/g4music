@@ -251,7 +251,6 @@ namespace G4 {
             section2.append_item (create_menu_item_for_uri (uri, _("_Export Cover"), ACTION_APP + ACTION_EXPORT_COVER));
         section2.append_item (create_menu_item_for_uri (uri, _("Show _Tags…"), ACTION_APP + ACTION_SHOW_TAGS));
         section2.append_item (create_menu_item_for_uri (uri, _("Show Music _File"), ACTION_APP + ACTION_SHOW_FILE));
-        section2.append_item (create_menu_item_for_uri (uri, _("_Move to Trash"), ACTION_APP + ACTION_TRASH_FILE));
         var menu = new Menu ();
         menu.append_item (create_menu_item_for_uri (uri, _("Add to _Playlist…"), ACTION_APP + ACTION_ADD_TO_PLAYLIST));
         menu.append_section (null, section);

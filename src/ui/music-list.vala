@@ -409,12 +409,19 @@ namespace G4 {
                 return create_menu_for_artist ((Artist) node);
             } else if (node is Music) {
                 var music = (Music) node;
+                unowned var uri = music.uri;
                 var menu = create_menu_for_music (music, _app.thumbnailer.find (music) is Gdk.Texture);
                 if (music != _app.current_music) {
-                    if (_has_add_to_queque)
-                        menu.prepend_item (create_menu_item_for_uri (music.uri, _("Add to _Queue"), ACTION_APP + ACTION_ADD_TO_QUEUE));
                     /* Translators: Play this music at next position of current playing music */
-                    menu.prepend_item (create_menu_item_for_uri (music.uri, _("Play at _Next"), ACTION_APP + ACTION_PLAY_AT_NEXT));
+                    menu.insert_item (0, create_menu_item_for_uri (uri, _("Play at _Next"), ACTION_APP + ACTION_PLAY_AT_NEXT));
+                    if (_has_add_to_queque)
+                        menu.insert_item (1, create_menu_item_for_uri (uri, _("Add to _Queue"), ACTION_APP + ACTION_ADD_TO_QUEUE));
+                }
+                if (_editable) {
+                    var section = new Menu ();
+                    section.append_item (create_menu_item_for_uri (uri, _("_Remove"), ACTION_WIN + ACTION_REMOVE));
+                    section.append_item (create_menu_item_for_uri (uri, _("_Move to Trash"), ACTION_APP + ACTION_TRASH_FILE));
+                    menu.append_section (null, section);
                 }
                 return menu;
             }

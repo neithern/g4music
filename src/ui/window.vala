@@ -25,6 +25,7 @@ namespace G4 {
 
             ActionEntry[] action_entries = {
                 { ACTION_BUTTON, button_command, "s" },
+                { ACTION_REMOVE, remove_from_list, "aay" },
                 { ACTION_SEARCH, search_by, "aay" },
                 { ACTION_SELECT, start_select },
                 { ACTION_TOGGLE_SEARCH, toggle_search },
@@ -249,6 +250,15 @@ namespace G4 {
             var name = parameter?.get_string ();
             if (name != null) {
                 _store_panel.current_list.button_command ((!)name);
+            }
+        }
+
+        private void remove_from_list (SimpleAction action, Variant? parameter) {
+            var app = (Application) application;
+            var uri = parse_uri_from_parameter (parameter);
+            var music = uri != null ? app.loader.find_cache ((!)uri) : null;
+            if (music != null) {
+                _store_panel.remove_from_list ((!)music);
             }
         }
 

@@ -471,11 +471,14 @@ namespace G4 {
             }
         }
 
+        private uint _last_list_count = -1;
+
         private void change_current_item (int item) {
             //  update _current_item but don't change current music
             var count = _current_list.get_n_items ();
-            if (_current_item != item) {
+            if (_current_item != item || _last_list_count != count) {
                 _current_item = item;
+                _last_list_count = count;
                 index_changed (item, count);
             }
 

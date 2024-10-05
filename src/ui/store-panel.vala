@@ -208,6 +208,14 @@ namespace G4 {
             return false;
         }
 
+        public void remove_from_list (Music music) {
+            uint position = -1;
+            if (_current_list.data_store.find (music, out position)) {
+                _current_list.data_store.remove (position);
+                _current_list.modified = true;
+            }
+        }
+
         public void save_main_list_if_modified () {
             _main_list.save_if_modified.begin ((obj, res)
                 => _main_list.save_if_modified.end (res));
