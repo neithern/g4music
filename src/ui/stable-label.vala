@@ -15,6 +15,7 @@ namespace G4 {
         private int _label_width = 0;
 
         construct {
+            _label.xalign = 0;
             _label.set_parent (this);
         }
 
@@ -105,14 +106,14 @@ namespace G4 {
                 if (_label_offset < _label_width) {
                     point.x = - _label_offset;
                     snapshot.translate (point);
-                    base.snapshot (snapshot);
+                    _label.snapshot (snapshot);
                     point.x = - point.x;
                     snapshot.translate (point);
                 }
                 if (_label_offset >= total_width - width) {
                     point.x = - _label_offset + total_width;
                     snapshot.translate (point);
-                    base.snapshot (snapshot);
+                    _label.snapshot (snapshot);
                     point.x = - point.x;
                     snapshot.translate (point);
                 }
@@ -121,7 +122,7 @@ namespace G4 {
                 snapshot.pop ();  // Must call again if snapshot.push_mask() ???
 #endif
             } else {
-                base.snapshot (snapshot);
+                _label.snapshot (snapshot);
             }
         }
 
