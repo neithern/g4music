@@ -106,14 +106,14 @@ namespace G4 {
                 if (_label_offset < _label_width) {
                     point.x = - _label_offset;
                     snapshot.translate (point);
-                    _label.snapshot (snapshot);
+                    base.snapshot (snapshot);
                     point.x = - point.x;
                     snapshot.translate (point);
                 }
                 if (_label_offset >= total_width - width) {
                     point.x = - _label_offset + total_width;
                     snapshot.translate (point);
-                    _label.snapshot (snapshot);
+                    base.snapshot (snapshot);
                     point.x = - point.x;
                     snapshot.translate (point);
                 }
@@ -122,7 +122,7 @@ namespace G4 {
                 snapshot.pop ();  // Must call again if snapshot.push_mask() ???
 #endif
             } else {
-                _label.snapshot (snapshot);
+                base.snapshot (snapshot);
             }
         }
 
