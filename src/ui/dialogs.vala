@@ -2,6 +2,12 @@ namespace G4 {
 
 #if ADW_1_5
     public class Dialog : Adw.Dialog {
+
+        public new void present (Gtk.Widget? parent) {
+            var width = (parent?.get_width () ?? 360) * 3 / 8;
+            width_request = width.clamp (360, 480);
+            base.present (parent);
+        }
 #else
     public class Dialog : Gtk.Window {
 
@@ -16,6 +22,8 @@ namespace G4 {
                 transient_for = (!)parent;
             }
             set_titlebar (new Adw.Bin ());
+            var width = (parent?.get_width () ?? 360) * 3 / 8;
+            width_request = width.clamp (360, 480);
             base.present ();
         }
 

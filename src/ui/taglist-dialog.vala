@@ -112,7 +112,6 @@ namespace G4 {
         public TagListDialog (string uri, Gst.TagList? tags) {
             var content = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
             this.child = content;
-            content.width_request = 340;
 
             var header = new Gtk.HeaderBar ();
             header.show_title_buttons = true;
@@ -142,11 +141,11 @@ namespace G4 {
             }
         }
 
-        private Gtk.ListBox create_list_box () {
+        private Gtk.ListBox create_list_box (Gtk.ListBox? previous) {
             var box = new Gtk.ListBox ();
             box.margin_start = 16;
             box.margin_end = 16;
-            box.margin_top = 8;
+            box.margin_top = previous == null ? 8 : 0;
             box.margin_bottom = 16;
             box.selection_mode = Gtk.SelectionMode.NONE;
             box.add_css_class ("boxed-list");
@@ -236,7 +235,7 @@ namespace G4 {
                 row.add_css_class ("property");
                 if (tag_group != ti.group || list_box == null) {
                     tag_group = ti.group;
-                    list_box = create_list_box ();
+                    list_box = create_list_box (list_box);
                     group.append ((!)list_box);
                 }
                 list_box?.append (row);

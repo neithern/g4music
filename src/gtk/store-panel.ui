@@ -48,7 +48,6 @@
     </child>
     <child>
       <object class="GtkStack" id="stack_view">
-        <property name="width_request">340</property>
       </object>
     </child>
   </template>

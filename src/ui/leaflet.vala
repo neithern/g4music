@@ -19,7 +19,7 @@ namespace G4 {
 
         private bool _folded = false;
         private float _content_fraction = 3/8f;
-        private int _content_min_width = 340;
+        private int _content_min_width = 360;
         private int _content_max_width = 480;
         private int _view_width = 0;
         private int _view_height = 0;
