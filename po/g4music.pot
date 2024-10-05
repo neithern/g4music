@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-04 16:39+0800\n"
+"POT-Creation-Date: 2024-10-05 14:49+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -38,92 +38,92 @@ msgstr ""
 msgid "Play your music elegantly"
 msgstr ""
 
-#: data/app.metainfo.xml.in:22
+#: data/app.metainfo.xml.in:24
 msgid ""
 "Gapless (AKA: G4Music) is a light weight music player written in GTK4, "
 "focuses on large music collection."
 msgstr ""
 
-#: data/app.metainfo.xml.in:23
+#: data/app.metainfo.xml.in:25
 msgid "Features"
 msgstr ""
 
-#: data/app.metainfo.xml.in:25
+#: data/app.metainfo.xml.in:27
 msgid ""
 "Supports most music file types, Samba and any other remote protocols "
 "(depends on GIO and GStreamer)."
 msgstr ""
 
-#: data/app.metainfo.xml.in:26
+#: data/app.metainfo.xml.in:28
 msgid ""
 "Fast loading and parsing thousands of music files in very few seconds, "
 "monitor local changes."
 msgstr ""
 
-#: data/app.metainfo.xml.in:27
+#: data/app.metainfo.xml.in:29
 msgid ""
 "Low memory usage for large music collection with album covers (embedded and "
 "external), no thumbnail caches to store."
 msgstr ""
 
-#: data/app.metainfo.xml.in:28
+#: data/app.metainfo.xml.in:30
 msgid ""
 "Group and sorts by album/artist/title, shuffle list, full-text searching."
 msgstr ""
 
-#: data/app.metainfo.xml.in:29
+#: data/app.metainfo.xml.in:31
 msgid ""
 "Fluent adaptive user interface for different screen (Desktop, Tablet, "
 "Mobile)."
 msgstr ""
 
-#: data/app.metainfo.xml.in:30
+#: data/app.metainfo.xml.in:32
 msgid "Gaussian blurred cover as background, follows GNOME light/dark mode."
 msgstr ""
 
-#: data/app.metainfo.xml.in:31
+#: data/app.metainfo.xml.in:33
 msgid ""
 "Supports creating and editing playlists, drag cover to change order or add "
 "to another playlist."
 msgstr ""
 
-#: data/app.metainfo.xml.in:32
+#: data/app.metainfo.xml.in:34
 msgid "Supports drag and drop with other apps."
 msgstr ""
 
-#: data/app.metainfo.xml.in:33
+#: data/app.metainfo.xml.in:35
 msgid "Supports audio peaks visualizer."
 msgstr ""
 
-#: data/app.metainfo.xml.in:34
+#: data/app.metainfo.xml.in:36
 msgid "Supports gapless playback."
 msgstr ""
 
-#: data/app.metainfo.xml.in:35
+#: data/app.metainfo.xml.in:37
 msgid "Supports normalizing volume with ReplayGain."
 msgstr ""
 
-#: data/app.metainfo.xml.in:36
+#: data/app.metainfo.xml.in:38
 msgid "Supports specified audio sink."
 msgstr ""
 
-#: data/app.metainfo.xml.in:37
+#: data/app.metainfo.xml.in:39
 msgid "Supports MPRIS control."
 msgstr ""
 
-#: data/app.metainfo.xml.in:48
+#: data/app.metainfo.xml.in:50
 msgid "Main window"
 msgstr ""
 
-#: data/app.metainfo.xml.in:52
+#: data/app.metainfo.xml.in:54
 msgid "Albums view"
 msgstr ""
 
-#: data/app.metainfo.xml.in:56
+#: data/app.metainfo.xml.in:58
 msgid "Playing view"
 msgstr ""
 
-#: data/app.metainfo.xml.in:60
+#: data/app.metainfo.xml.in:62
 msgid "Playlist view"
 msgstr ""
 
@@ -187,8 +187,8 @@ msgctxt "shortcut window"
 msgid "Reload Library"
 msgstr ""
 
-#: src/gtk/play-panel.ui:16 src/ui/music-list.vala:621
-#: src/ui/store-panel.vala:417
+#: src/gtk/play-panel.ui:16 src/ui/music-list.vala:628
+#: src/ui/store-panel.vala:425
 msgid "Back"
 msgstr ""
 
@@ -276,84 +276,84 @@ msgstr ""
 msgid "Sort By"
 msgstr ""
 
-#: src/gtk/store-panel.ui:58
+#: src/gtk/store-panel.ui:57
 msgid "_Color Scheme"
 msgstr ""
 
-#: src/gtk/store-panel.ui:60
+#: src/gtk/store-panel.ui:59
 msgid "_System"
 msgstr ""
 
-#: src/gtk/store-panel.ui:65
+#: src/gtk/store-panel.ui:64
 msgid "_Light"
 msgstr ""
 
-#: src/gtk/store-panel.ui:70
+#: src/gtk/store-panel.ui:69
 msgid "_Dark"
 msgstr ""
 
-#: src/gtk/store-panel.ui:77
+#: src/gtk/store-panel.ui:76
 msgid "_Reload Library"
 msgstr ""
 
-#: src/gtk/store-panel.ui:81
+#: src/gtk/store-panel.ui:80
 msgid "_Select"
 msgstr ""
 
-#: src/gtk/store-panel.ui:87
+#: src/gtk/store-panel.ui:86
 msgid "_Preferences"
 msgstr ""
 
-#: src/gtk/store-panel.ui:91
+#: src/gtk/store-panel.ui:90
 msgid "_Keyboard Shortcuts"
 msgstr ""
 
-#: src/gtk/store-panel.ui:95
+#: src/gtk/store-panel.ui:94
 msgid "_About"
 msgstr ""
 
-#: src/gtk/store-panel.ui:104 src/ui/preferences.vala:66
+#: src/gtk/store-panel.ui:103 src/ui/preferences.vala:66
 msgid "Album"
 msgstr ""
 
-#: src/gtk/store-panel.ui:109
+#: src/gtk/store-panel.ui:108
 msgid "Artist"
 msgstr ""
 
-#: src/gtk/store-panel.ui:114
+#: src/gtk/store-panel.ui:113
 msgid "Artist/Album"
 msgstr ""
 
-#: src/gtk/store-panel.ui:119
+#: src/gtk/store-panel.ui:118
 msgid "Title"
 msgstr ""
 
-#: src/gtk/store-panel.ui:124
+#: src/gtk/store-panel.ui:123
 msgid "Recent"
 msgstr ""
 
-#: src/gtk/store-panel.ui:129
+#: src/gtk/store-panel.ui:128
 msgid "Shuffle"
 msgstr ""
 
-#: src/action-handles.vala:106
+#: src/action-handles.vala:107
 msgid "Image Files"
 msgstr ""
 
-#: src/action-handles.vala:113
+#: src/action-handles.vala:114
 msgid "Export cover successfully"
 msgstr ""
 
-#: src/action-handles.vala:113
+#: src/action-handles.vala:114
 msgid "Export cover failed"
 msgstr ""
 
-#: src/action-handles.vala:205
+#: src/action-handles.vala:193
 msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr ""
 
 #. Translators: Replace "translator-credits" with your names, one name per line
-#: src/action-handles.vala:207
+#: src/action-handles.vala:195
 msgid "translator-credits"
 msgstr ""
 
@@ -369,15 +369,15 @@ msgstr ""
 msgid "Save playlist successfully"
 msgstr ""
 
-#: src/application.vala:622
+#: src/application.vala:625
 msgid "Keep playing"
 msgstr ""
 
-#: src/ui/dialogs.vala:40 src/ui/dialogs.vala:52
+#: src/ui/dialogs.vala:48 src/ui/dialogs.vala:60
 msgid "No"
 msgstr ""
 
-#: src/ui/dialogs.vala:41 src/ui/dialogs.vala:52
+#: src/ui/dialogs.vala:49 src/ui/dialogs.vala:60
 msgid "Yes"
 msgstr ""
 
@@ -386,41 +386,51 @@ msgid "Playlist is modified, save it?"
 msgstr ""
 
 #. Translators: Play this music at next position of current playing music
-#: src/ui/music-list.vala:400 src/ui/music-list.vala:417
-#: src/ui/music-list.vala:642 src/ui/music-widgets.vala:219
-#: src/ui/music-widgets.vala:235
-msgid "Play at Next"
+#: src/ui/music-list.vala:400 src/ui/music-list.vala:416
+#: src/ui/music-widgets.vala:219 src/ui/music-widgets.vala:235
+msgid "Play at _Next"
 msgstr ""
 
-#: src/ui/music-list.vala:402 src/ui/music-list.vala:415
-#: src/ui/music-list.vala:649 src/ui/music-widgets.vala:220
-#: src/ui/music-widgets.vala:236
-msgid "Add to Queue"
+#: src/ui/music-list.vala:402 src/ui/music-list.vala:418
+#: src/ui/music-widgets.vala:220 src/ui/music-widgets.vala:236
+msgid "Add to _Queue"
 msgstr ""
 
 #: src/ui/music-list.vala:403 src/ui/music-widgets.vala:221
-#: src/ui/music-widgets.vala:237 src/ui/music-widgets.vala:256
-msgid "Add to Playlist…"
+#: src/ui/music-widgets.vala:237 src/ui/music-widgets.vala:255
+msgid "Add to _Playlist…"
 msgstr ""
 
-#: src/ui/music-list.vala:404 src/ui/music-list.vala:663
-msgid "Remove"
+#: src/ui/music-list.vala:404 src/ui/music-list.vala:422
+msgid "_Remove"
 msgstr ""
 
-#: src/ui/music-list.vala:625
+#: src/ui/music-list.vala:423 src/ui/music-widgets.vala:226
+msgid "_Move to Trash"
+msgstr ""
+
+#: src/ui/music-list.vala:632
 msgid "Select All"
 msgstr ""
 
-#: src/ui/music-list.vala:656 src/ui/playlist-dialog.vala:19
+#: src/ui/music-list.vala:649
+msgid "Play at Next"
+msgstr ""
+
+#: src/ui/music-list.vala:656
+msgid "Add to Queue"
+msgstr ""
+
+#: src/ui/music-list.vala:663 src/ui/playlist-dialog.vala:19
 msgid "Add to Playlist"
 msgstr ""
 
-#: src/ui/music-widgets.vala:225
-msgid "Show List File"
+#: src/ui/music-list.vala:670
+msgid "Remove"
 msgstr ""
 
-#: src/ui/music-widgets.vala:226 src/ui/music-widgets.vala:254
-msgid "Move to Trash"
+#: src/ui/music-widgets.vala:225
+msgid "Show List _File"
 msgstr ""
 
 #: src/ui/music-widgets.vala:243 src/ui/play-panel.vala:60
@@ -436,7 +446,7 @@ msgid "Search Artist"
 msgstr ""
 
 #: src/ui/music-widgets.vala:249
-msgid "Show _Cover File"
+msgid "Show Cover _File"
 msgstr ""
 
 #: src/ui/music-widgets.vala:251
@@ -448,7 +458,7 @@ msgid "Show _Tags…"
 msgstr ""
 
 #: src/ui/music-widgets.vala:253
-msgid "_Show Music File"
+msgid "Show Music _File"
 msgstr ""
 
 #. Translators: single loop the current music
@@ -479,7 +489,7 @@ msgstr ""
 msgid "New Playlist"
 msgstr ""
 
-#: src/ui/playlist-dialog.vala:90 src/ui/store-panel.vala:666
+#: src/ui/playlist-dialog.vala:98 src/ui/store-panel.vala:674
 #, c-format
 msgid "No playlist found in %s"
 msgstr ""
@@ -516,11 +526,11 @@ msgstr ""
 msgid "Playlists"
 msgstr ""
 
-#: src/ui/store-panel.vala:425
+#: src/ui/store-panel.vala:433
 msgid "Play"
 msgstr ""
 
-#: src/ui/taglist-dialog.vala:124
+#: src/ui/taglist-dialog.vala:125
 msgid "Copy"
 msgstr ""
 
@@ -530,7 +540,7 @@ msgstr ""
 msgid "Volume %d%%"
 msgstr ""
 
-#: src/ui/window.vala:110
+#: src/ui/window.vala:111
 msgid "Show"
 msgstr ""
 
