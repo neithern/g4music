@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Gapless
 GenericName=Music Player
-Comment=Play music
+Comment=Play your music elegantly
 Exec=g4music %U
 Icon=@app_id@
 Terminal=false

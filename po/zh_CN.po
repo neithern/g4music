@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: g4music\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-05 14:49+0800\n"
-"PO-Revision-Date: 2024-10-05 14:51+0800\n"
+"PO-Revision-Date: 2024-10-05 14:55+0800\n"
 "Last-Translator: Nanling <neithern@outlook.com>\n"
 "Language-Team: Chinese - China <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
@@ -413,7 +413,7 @@ msgstr "添加到播放列表(_P)…"
 
 #: src/ui/music-list.vala:404 src/ui/music-list.vala:422
 msgid "_Remove"
-msgstr "移除(_R)…"
+msgstr "移除(_R)"
 
 #: src/ui/music-list.vala:423 src/ui/music-widgets.vala:226
 msgid "_Move to Trash"
