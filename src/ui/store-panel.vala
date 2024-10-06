@@ -144,7 +144,7 @@ namespace G4 {
                 return _current_list.modified;
             }
             set {
-                indicator.visible = value;
+                indicator.visible = _current_list.modified;
             }
         }
 
@@ -204,7 +204,6 @@ namespace G4 {
             stack_view.transition_type = Gtk.StackTransitionType.SLIDE_LEFT_RIGHT;
             stack_view.bind_property ("visible-child", this, "visible-child");
             _size_allocated = true;
-            //  update_visible_stack ();
             initialize_library_view ();
         }
 
@@ -438,9 +437,9 @@ namespace G4 {
             back_btn.clicked.connect (stack.pop);
             header.prepend (back_btn);
 
-            var button = new Gtk.Button.from_icon_name ("media-playback-start-symbolic");
-            button.tooltip_text = _("Play");
-            button.clicked.connect (() => {
+            var play_btn = new Gtk.Button.from_icon_name ("media-playback-start-symbolic");
+            play_btn.tooltip_text = _("Play");
+            play_btn.clicked.connect (() => {
                 if (album_mode) {
                     _app.current_item = 0;
                 } else {
@@ -448,7 +447,17 @@ namespace G4 {
                     _app.activate_action (ACTION_PLAY, new Variant.bytestring_array (strv));
                 }
             });
-            header.append (button);
+            header.append (play_btn);
+
+            var menu_btn = new Gtk.MenuButton ();
+            menu_btn.icon_name = "view-more-symbolic";
+            menu_btn.set_create_popup_func (() => {
+                if (artist != null)
+                    menu_btn.menu_model = (album == null || album is Playlist) ? create_menu_for_artist ((!)artist) : create_menu_for_album ((!)album);
+                else if (album != null)
+                    menu_btn.menu_model = create_menu_for_album ((!)album);
+            });
+            header.append (menu_btn);
 
             if (stack.animate_transitions && stack.visible_child == _current_list)
                 _overlayed_lists.add (_current_list);
@@ -580,9 +589,6 @@ namespace G4 {
                     _changing_stacks.add (flag);
                 if (_size_allocated) {
                     update_visible_stack ();
-                    update_stack_pages (_artist_stack);
-                    update_stack_pages (_album_stack);
-                    update_stack_pages (_playlist_stack);
                     initialize_library_view ();
                 }
             }
@@ -676,10 +682,13 @@ namespace G4 {
             _updating_store = true;
             var child = stack_view.visible_child;
             if (child == _album_stack.widget && _changing_stacks.remove (StackFlags.ALBUMS)) {
+                update_stack_pages (_album_stack);
                 _library.overwrite_albums_to (_album_list.data_store);
             } else if (child == _artist_stack.widget && _changing_stacks.remove (StackFlags.ARTISTS)) {
+                update_stack_pages (_artist_stack);
                 _library.overwrite_artists_to (_artist_list.data_store);
             } else if (child == _playlist_stack.widget && _changing_stacks.remove (StackFlags.PLAYLISTS)) {
+                update_stack_pages (_playlist_stack);
                 var text = _("No playlist found in %s").printf (get_display_name (_app.music_folder));
                 _library.overwrite_playlists_to (_playlist_list.data_store);
                 _playlist_list.set_empty_text (text);

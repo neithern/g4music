@@ -221,10 +221,12 @@ namespace G4 {
         menu.append_item (create_menu_item_for_strv (strv, _("Add to _Playlist…"), ACTION_APP + ACTION_ADD_TO_PLAYLIST));
         if (album is Playlist) {
             unowned var list_uri = ((Playlist) album).list_uri;
-            var section = new Menu ();
-            section.append_item (create_menu_item_for_uri (list_uri, _("Show List _File"), ACTION_APP + ACTION_SHOW_FILE));
-            section.append_item (create_menu_item_for_uri (list_uri, _("_Move to Trash"), ACTION_APP + ACTION_TRASH_FILE));
-            menu.append_section (null, section);
+            if (list_uri.length > 0) {
+                var section = new Menu ();
+                section.append_item (create_menu_item_for_uri (list_uri, _("Show List _File"), ACTION_APP + ACTION_SHOW_FILE));
+                section.append_item (create_menu_item_for_uri (list_uri, _("_Move to Trash"), ACTION_APP + ACTION_TRASH_FILE));
+                menu.append_section (null, section);
+            }
         }
         return menu;
     }
