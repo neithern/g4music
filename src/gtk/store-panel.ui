@@ -11,7 +11,8 @@
           <class name="flat"/>
         </style>
         <child type="title">
-          <object class="GtkLabel">
+          <object class="GtkLabel" id="indicator">
+            <property name="label">•</property>
             <property name="visible">false</property>
           </object>
         </child>

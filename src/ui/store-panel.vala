@@ -29,6 +29,8 @@ namespace G4 {
         [GtkChild]
         public unowned Gtk.HeaderBar header_bar;
         [GtkChild]
+        public unowned Gtk.Label indicator;
+        [GtkChild]
         private unowned Gtk.MenuButton sort_btn;
         [GtkChild]
         private unowned Gtk.ToggleButton search_btn;
@@ -137,6 +139,15 @@ namespace G4 {
             }
         }
 
+        public bool modified {
+            get {
+                return _current_list.modified;
+            }
+            set {
+                indicator.visible = value;
+            }
+        }
+
         public uint sort_mode {
             get {
                 return _app.sort_mode;
@@ -154,6 +165,7 @@ namespace G4 {
                     update_visible_stack ();
                 }
                 save_if_modified (true);
+
                 if (value == stack_view.visible_child) {
                     var stack = get_current_stack ();
                     if (stack != null)
@@ -168,12 +180,14 @@ namespace G4 {
                     }
                     on_music_changed (_app.current_music);
 
+                    indicator.visible = _current_list.modified;
+                    sort_btn.sensitive = _current_list.playable;
+                    _search_mode = SearchMode.ANY;
+                    on_search_btn_toggled ();
+
                     var scroll = !_overlayed_lists.remove (list);
                     run_idle_once (() => list.set_to_current_item (scroll), Priority.LOW);
                 }
-                sort_btn.sensitive = _current_list.playable;
-                _search_mode = SearchMode.ANY;
-                on_search_btn_toggled ();
 
                 var paths = new GenericArray<string> (4);
                 get_library_paths (paths);
@@ -253,11 +267,13 @@ namespace G4 {
             return search_btn.active;
         }
 
-        private void bind_music_list_properties (MusicList list) {
+        private void bind_music_list_properties (MusicList list, bool editable = false) {
             _app.settings.bind ("compact-playlist", list, "compact-list", SettingsBindFlags.DEFAULT);
             _app.settings.bind ("single-click-activate", list, "single-click-activate", SettingsBindFlags.DEFAULT);
             if (list.item_type != typeof (Music))
                 _app.settings.bind ("grid-mode", list, "grid-mode", SettingsBindFlags.DEFAULT);
+            if (editable)
+                list.bind_property ("modified", this, "modified");
         }
 
         private MusicList create_album_list (Artist? artist = null) {
@@ -316,7 +332,7 @@ namespace G4 {
                 entry.set_titles (music, mode);
             });
             _app.set_list_sort_mode (store, SortMode.ALBUM);
-            bind_music_list_properties (list);
+            bind_music_list_properties (list, is_playlist);
             return list;
         }
 
@@ -329,7 +345,7 @@ namespace G4 {
                 entry.paintable = _loading_paintable;
                 entry.set_titles (music, _main_sort_mode);
             });
-            bind_music_list_properties (list);
+            bind_music_list_properties (list, true);
             return list;
         }
 
