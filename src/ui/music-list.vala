@@ -275,6 +275,8 @@ namespace G4 {
                     modified = !ret;
                     return ret ? Result.OK : Result.FAILED;
                 }
+                update_store ();
+                modified = false;
             }
             return _modified ? Result.CANCEL : Result.OK;
         }
