@@ -16,6 +16,7 @@ namespace G4 {
             this.application = app;
             this.icon_name = app.application_id;
             this.title = app.name;
+            this.width_request = ContentWidth.MIN;
             this.close_request.connect (on_close_request);
 
             var overlay = new Gtk.Overlay ();

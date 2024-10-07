@@ -1,13 +1,18 @@
 namespace G4 {
 
-    public interface SizeWatcher {
-        public abstract void first_allocated ();
-        public abstract void size_to_change (int width, int height);
+    namespace ContentWidth {
+        public const int MIN = 340;
+        public const int MAX = 480;
     }
 
     namespace LeafletMode {
         public const int SIDEBAR = 1;
         public const int CONTENT = 2;
+    }
+
+    public interface SizeWatcher {
+        public abstract void first_allocated ();
+        public abstract void size_to_change (int width, int height);
     }
 
     public class Leaflet : Gtk.Widget {
@@ -19,8 +24,8 @@ namespace G4 {
 
         private bool _folded = false;
         private float _content_fraction = 3/8f;
-        private int _content_min_width = 360;
-        private int _content_max_width = 480;
+        private int _content_min_width = ContentWidth.MIN;
+        private int _content_max_width = ContentWidth.MAX;
         private int _view_width = 0;
         private int _view_height = 0;
         private int _visible_mode = LeafletMode.SIDEBAR;

@@ -4,8 +4,7 @@ namespace G4 {
     public class Dialog : Adw.Dialog {
 
         public new void present (Gtk.Widget? parent) {
-            var width = (parent?.get_width () ?? 360) * 3 / 8;
-            width_request = width.clamp (360, 480);
+            content_width = compute_dialog_width (parent);
             base.present (parent);
         }
 #else
@@ -22,8 +21,7 @@ namespace G4 {
                 transient_for = (!)parent;
             }
             set_titlebar (new Adw.Bin ());
-            var width = (parent?.get_width () ?? 360) * 3 / 8;
-            width_request = width.clamp (360, 480);
+            width_request = compute_dialog_width (parent);
             base.present ();
         }
 
@@ -39,6 +37,13 @@ namespace G4 {
         public virtual signal void closed () {
         }
 #endif
+    }
+
+    public int compute_dialog_width (Gtk.Widget? parent) {
+        var width = parent?.get_width () ?? ContentWidth.MIN;
+        if (width > 360)
+            width = (width * 3 / 8).clamp (360, ContentWidth.MAX);
+        return width;
     }
 
     public async bool show_alert_dialog (string text, Gtk.Window? parent = null) {
