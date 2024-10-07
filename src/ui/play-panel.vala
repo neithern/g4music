@@ -101,9 +101,7 @@ namespace G4 {
         public void first_allocated () {
             // Delay update info after the window size allocated to avoid showing slowly
             _size_allocated = true;
-            if (_app.current_music != _current_music || _current_music == null) {
-                on_music_changed (_app.current_music);
-            }
+            on_music_changed (_app.current_music);
         }
 
         public void size_to_change (int width, int height) {
@@ -129,8 +127,9 @@ namespace G4 {
             source.drag_begin.connect ((drag) => source.set_icon (create_widget_paintable (music_cover, ref point), (int) point.x, (int) point.y));
             source.prepare.connect ((x, y) => {
                 point.init ((float) x, (float) y);
-                if (_current_music != null) {
-                    var playlist = to_playlist ({ (!)_current_music });
+                var music = _app.current_music;
+                if (music != null) {
+                    var playlist = to_playlist ({ (!)music });
                     return create_content_provider (playlist);
                 }
                 return null;
@@ -149,10 +148,9 @@ namespace G4 {
             index_label.label = size > 0 ? @"$(index+1)/$(size)" : "";
         }
 
-        private Music? _current_music = null;
-
         private void on_music_changed (Music? music) {
-            _current_music = music;
+            if (!_size_allocated)
+                return;
 
             music_album.label = music?.album ?? "";
             music_artist.label = music?.artist ?? "";

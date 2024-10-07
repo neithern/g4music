@@ -122,11 +122,8 @@ namespace G4 {
                 }
                 if (initial) {
                     // 3. Load music folder to build the library
-                    load_music_folder_async.begin (!ret, (obj, res) => {
-                        load_music_folder_async.end (res);
-                        if (_current_music == null && _current_list.get_n_items () > 0)
-                            current_item = 0;
-                    });
+                    load_music_folder_async.begin (!ret, (obj, res)
+                        => load_music_folder_async.end (res));
                 }
             });
         }
@@ -370,6 +367,9 @@ namespace G4 {
                 _music_queue.splice (0, _music_queue.get_n_items (), (Object[]) musics.data);
             } else {
                 on_music_library_changed (0, 1, 1);
+            }
+            if (_current_music == null) {
+                current_item = 0;
             }
         }
 
