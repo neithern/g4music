@@ -67,6 +67,7 @@ namespace G4 {
                 warning ("Initialize MPRIS session failed\n");
 
             var settings = _settings = new Settings (application_id); 
+            settings.bind ("color-scheme", this, "color-scheme", SettingsBindFlags.DEFAULT);
             settings.bind ("music-dir", this, "music-folder", SettingsBindFlags.DEFAULT);
             settings.bind ("sort-mode", this, "sort-mode", SettingsBindFlags.DEFAULT);
             settings.bind ("monitor-changes", _loader, "monitor-changes", SettingsBindFlags.DEFAULT);
@@ -141,6 +142,17 @@ namespace G4 {
                 _mpris_id = 0;
             }
             base.shutdown ();
+        }
+
+        public uint color_scheme {
+            get {
+                return (uint) style_manager.color_scheme;
+            }
+            set {
+                var action = lookup_action (ACTION_SCHEME);
+                (action as SimpleAction)?.set_state (value.to_string ());
+                style_manager.color_scheme = (Adw.ColorScheme) value;
+            }
         }
 
         public unowned Gst.Sample? current_cover {

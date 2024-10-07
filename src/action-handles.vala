@@ -186,11 +186,9 @@ namespace G4 {
         }
 
         private void scheme (SimpleAction action, Variant? state) {
-            unowned var value = state?.get_string () ?? "";
-            action.set_state (value);
-            int scheme = 0;
-            if (int.try_parse (value, out scheme))
-                _app.style_manager.color_scheme = (Adw.ColorScheme) scheme;
+            uint scheme = 0;
+            if (uint.try_parse (state?.get_string () ?? "", out scheme))
+                _app.settings.set_uint ("color-scheme", scheme);
         }
 
         private void show_about () {
