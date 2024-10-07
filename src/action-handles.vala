@@ -53,7 +53,7 @@ namespace G4 {
                 { ACTION_PREV, () => _app.play_previous () },
                 { ACTION_PREFS, show_preferences },
                 { ACTION_RELOAD, () => _app.reload_library () },
-                { ACTION_SCHEME, scheme, "s", "'0'" },
+                { ACTION_SCHEME, scheme, "s", "'default'" },
                 { ACTION_SHOW_FILE, show_file, "aay" },
                 { ACTION_SHOW_TAGS, show_tags, "aay" },
                 { ACTION_SHOW_TAGS_CURRENT, show_tags },
@@ -188,9 +188,9 @@ namespace G4 {
         private void scheme (SimpleAction action, Variant? state) {
             unowned var value = state?.get_string () ?? "";
             action.set_state (value);
-            int scheme = 0;
-            if (int.try_parse (value, out scheme))
-                _app.style_manager.color_scheme = (Adw.ColorScheme) scheme;
+            var enum_value = ((EnumClass) typeof (Adw.ColorScheme).class_ref ()).get_value_by_name (value);
+            if (enum_value != null)
+                _app.style_manager.color_scheme = (Adw.ColorScheme) ((!) enum_value).value;
         }
 
         private void show_about () {

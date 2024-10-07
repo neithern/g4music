@@ -67,6 +67,7 @@ namespace G4 {
                 warning ("Initialize MPRIS session failed\n");
 
             var settings = _settings = new Settings (application_id); 
+            settings.bind ("color-scheme", style_manager, "color-scheme", SettingsBindFlags.DEFAULT);
             settings.bind ("music-dir", this, "music-folder", SettingsBindFlags.DEFAULT);
             settings.bind ("sort-mode", this, "sort-mode", SettingsBindFlags.DEFAULT);
             settings.bind ("monitor-changes", _loader, "monitor-changes", SettingsBindFlags.DEFAULT);
@@ -75,6 +76,10 @@ namespace G4 {
             settings.bind ("replay-gain", _player, "replay-gain", SettingsBindFlags.DEFAULT);
             settings.bind ("audio-sink", _player, "audio-sink", SettingsBindFlags.DEFAULT);
             settings.bind ("volume", _player, "volume", SettingsBindFlags.DEFAULT);
+
+            var action = lookup_action (ACTION_SCHEME);
+            var state = new Variant.string (style_manager.color_scheme.to_string ());
+            (action as SimpleAction)?.set_state (state);
         }
 
         public override void activate () {
