@@ -174,8 +174,9 @@ namespace G4 {
                     end_of_playlist (false);
                     index = (int) _current_list.get_n_items () - 1;
                 }
-                _current_index = index;
                 current_music = _current_list.get_item (index) as Music;
+                _current_index = index;
+                index_changed (_current_index, _current_list.get_n_items ());
                 update_next_item (index);
             }
         }
