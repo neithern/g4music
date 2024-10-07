@@ -177,10 +177,6 @@ namespace G4 {
         }
 
         public new bool add_music (Music music, bool unique = false) {
-            if (!has_cover && music.has_cover) {
-                has_cover = true;
-                this.uri = music.uri;
-            }
             if (!unique || insert_music (music)) {
                 var count = items.length;
                 items.add (music);
@@ -227,11 +223,14 @@ namespace G4 {
         public void set_cover_uri () {
             has_cover = false;
             foreach (var music in items) {
-                if (!has_cover && music.has_cover) {
+                if (music.has_cover) {
                     has_cover = true;
                     this.uri = music.uri;
                     break;
                 }
+            }
+            if (!has_cover && items.length > 0) {
+                this.uri = items[0].uri;
             }
         }
 
