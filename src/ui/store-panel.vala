@@ -21,7 +21,7 @@ namespace G4 {
         public const uint ARTISTS = 1;
         public const uint ALBUMS = 2;
         public const uint PLAYLISTS = 3;
-        public const uint LAST = 3;
+        public const uint LAST = 4;
     }
 
     [GtkTemplate (ui = "/com/github/neithern/g4music/gtk/store-panel.ui")]
@@ -204,7 +204,8 @@ namespace G4 {
             stack_view.transition_type = Gtk.StackTransitionType.SLIDE_LEFT_RIGHT;
             stack_view.bind_property ("visible-child", this, "visible-child");
             _size_allocated = true;
-            initialize_library_view ();
+            if (!_changing_stacks.is_empty ())
+                initialize_library_view ();
         }
 
         public void remove_from_list (Music music) {
@@ -585,8 +586,7 @@ namespace G4 {
         private void on_music_library_changed (bool external) {
             _main_list.modified |= _app.list_modified;
             if (external) {
-                for (var flag = StackFlags.FIRST; flag <= StackFlags.LAST; flag++)
-                    _changing_stacks.add (flag);
+                _changing_stacks.add_range (StackFlags.FIRST, StackFlags.LAST - StackFlags.FIRST);
                 if (_size_allocated) {
                     update_visible_stack ();
                     initialize_library_view ();
@@ -672,7 +672,7 @@ namespace G4 {
             var children = stack.get_children ();
             for (var i = children.length - 1; i >= 0; i--) {
                 var mlist = (MusicList) children[i];
-                if (mlist.update_store () == 0)
+                if (mlist.music_node != null && mlist.update_store () == 0)
                     stack.pop ();
             }
             stack.animate_transitions = animate;
