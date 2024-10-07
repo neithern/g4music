@@ -348,9 +348,6 @@ namespace G4 {
 
         private Gst.Element? setup_audio_sink () {
             dynamic Gst.Bin? sink_bin = Gst.ElementFactory.make ("bin", "audio-sink-bin") as Gst.Bin;
-            if (sink_bin != null) {
-                ((!)sink_bin).async_handling = true;
-            }
 
             if (_replay_gain != null) {
                 (_replay_gain?.parent as Gst.Bin)?.remove_element ((!)_replay_gain);
