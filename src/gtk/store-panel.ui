@@ -59,17 +59,17 @@
       <item>
         <attribute name="label" translatable="yes">_System</attribute>
         <attribute name="action">app.scheme</attribute>
-        <attribute name="target">ADW_COLOR_SCHEME_DEFAULT</attribute>
+        <attribute name="target">0</attribute>
       </item>
       <item>
         <attribute name="label" translatable="yes">_Light</attribute>
         <attribute name="action">app.scheme</attribute>
-        <attribute name="target">ADW_COLOR_SCHEME_FORCE_LIGHT</attribute>
+        <attribute name="target">1</attribute>
       </item>
       <item>
         <attribute name="label" translatable="yes">_Dark</attribute>
         <attribute name="action">app.scheme</attribute>
-        <attribute name="target">ADW_COLOR_SCHEME_FORCE_DARK</attribute>
+        <attribute name="target">4</attribute>
       </item>
     </submenu>
     <section>
