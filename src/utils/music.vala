@@ -203,19 +203,19 @@ namespace G4 {
                 }
 
                 //  split the file name by '-'
-                var sa = split_string (name, "-");
+                var sa = name.split ("-");
                 var len = sa.length;
                 if (title.length == 0) {
-                    title = len >= 1 ? sa[len - 1] : name;
+                    title = len >= 1 ? sa[len - 1].strip () : name;
                     _title_key = title.collate_key_for_filename ();
                 }
                 if (artist.length == 0) {
-                    artist = len >= 2 ? sa[len - 2] : UNKNOWN_ARTIST;
+                    artist = len >= 2 ? sa[len - 2].strip () : UNKNOWN_ARTIST;
                     _artist_key = artist.collate_key_for_filename ();
                 }
                 if (track_index == 0) {
                     if (track_index == 0 && len >= 3)
-                        int.try_parse (sa[0], out track_index, null, 10);
+                        int.try_parse (sa[0].strip (), out track_index, null, 10);
                     if (track_index > 0)
                         this.track = track_index;
                 }
@@ -359,9 +359,11 @@ namespace G4 {
     public string parse_abbreviation (string text) {
         var sb = new StringBuilder ();
         var char_count = 0;
-        foreach (var s in text.split (" ")) {
-            var c = find_first_letter (s);
-            if (c > 0) {
+        var arr = text.tokenize_and_fold ("", null);
+        for (var i = 0; i < arr.length && char_count < 2; i++) {
+            unowned var s = arr[i];
+            unichar c = 0;
+            if (s.ascii_ncasecmp ("feat", 4) != 0 && (c = find_first_letter (s)) > 0) {
                 sb.append_unichar (c);
                 char_count++;
                 if (char_count >= 2)
@@ -376,16 +378,5 @@ namespace G4 {
             return text.substring (0, index).up ();
         }
         return text.up ();
-    }
-
-    public GenericArray<string> split_string (string text, string delimiter) {
-        var ar = text.split ("-");
-        var sa = new GenericArray<string> (ar.length);
-        foreach (var str in ar) {
-            var s = str.strip ();
-            if (s.length > 0)
-                sa.add (s);
-        }
-        return sa;
     }
 }
