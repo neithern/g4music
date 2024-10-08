@@ -230,7 +230,7 @@ namespace G4 {
             foreach (var ti in items) {
                 var row = new Adw.ActionRow ();
                 row.title = ti.tag;
-                row.tooltip_text = ti.description;
+                row.tooltip_text = dgettext (GST_DOMAIN, ti.description);
 #if ADW_1_2
                 row.use_markup = false;
 #endif
