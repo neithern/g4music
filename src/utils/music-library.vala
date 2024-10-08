@@ -33,6 +33,7 @@ namespace G4 {
         public bool add_music (Music music) {
             if (music.has_cover && music.track < track) {
                 // For cover
+                has_cover = true;
                 uri = music.uri;
             }
             return insert_music (music);
@@ -95,10 +96,6 @@ namespace G4 {
         }
 
         public bool add_music (Music music) {
-            if (music.has_cover && compare_album (music, this) < 0) {
-                // For cover
-                uri = music.uri;
-            }
             unowned string key;
             unowned var album_key = music.album_key;
             Album album;
@@ -107,7 +104,12 @@ namespace G4 {
                 album.album_artist = artist;
                 _albums[album_key] = album;
             }
-            return album.add_music (music);
+            var added = album.add_music (music);
+            if (added && album.has_cover && !has_cover) {
+                has_cover = true;
+                uri = album.uri;
+            }
+            return added;
         }
 
         public Album? find_by_partial_artist (string artist) {
@@ -225,12 +227,13 @@ namespace G4 {
             foreach (var music in items) {
                 if (music.has_cover) {
                     has_cover = true;
-                    this.uri = music.uri;
+                    uri = music.uri;
                     break;
                 }
             }
             if (!has_cover && items.length > 0) {
-                this.uri = items[0].uri;
+                has_cover = true;
+                uri = items[0].uri;
             }
         }
 
