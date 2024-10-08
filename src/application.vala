@@ -184,10 +184,12 @@ namespace G4 {
                 return _current_list;
             }
             set {
-                _current_list.items_changed.disconnect (on_music_list_changed);
-                _current_list = value;
-                _current_list.items_changed.connect (on_music_list_changed);
-                update_current_item ();
+                if (_current_list != value) {
+                    _current_list.items_changed.disconnect (on_music_list_changed);
+                    _current_list = value;
+                    _current_list.items_changed.connect (on_music_list_changed);
+                    update_current_item ();
+                }
             }
         }
 

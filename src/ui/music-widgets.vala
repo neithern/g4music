@@ -236,7 +236,7 @@ namespace G4 {
     }
 
     public Menu create_menu_for_artist (Artist artist) {
-        string[] strv = { PageName.ARTIST, artist.artist };
+        string[] strv = { PageName.ARTIST, artist.artist, "" };
         var menu = new Menu ();
         menu.append_item (create_menu_item_for_strv (strv, _("Play"), ACTION_APP + ACTION_PLAY));
         menu.append_item (create_menu_item_for_strv (strv, _("_Random Play"), ACTION_APP + ACTION_RANDOM_PLAY));

@@ -175,11 +175,6 @@ namespace G4 {
                 }
                 if (value is MusicList) {
                     var list = _current_list = (MusicList) value;
-                    if (list.playable) {
-                        _app.current_list = list.filter_model;
-                        //  Update sort menu item
-                        this.sort_mode = _app.sort_mode;
-                    }
                     on_music_changed (_app.current_music);
 
                     indicator.visible = _current_list.modified;
@@ -319,7 +314,7 @@ namespace G4 {
             var is_artist_playlist = is_playlist && from_artist;
             var sort_mode = is_artist_playlist ? SortMode.ALBUM : SortMode.TITLE;
             var list = new MusicList (_app, typeof (Music), album, is_playlist);
-            list.item_activated.connect ((position, obj) => _app.current_item = (int) position);
+            list.item_activated.connect ((position, obj) => play_current_list ((int) position));
             list.item_binded.connect ((item) => {
                 var entry = (MusicEntry) item.child;
                 var music = (Music) item.item;
@@ -332,7 +327,7 @@ namespace G4 {
 
         private MainMusicList create_main_music_list () {
             var list = new MainMusicList (_app);
-            list.item_activated.connect ((position, obj) => _app.current_item = (int) position);
+            list.item_activated.connect ((position, obj) => play_current_list ((int) position));
             list.item_binded.connect ((item) => {
                 var entry = (MusicEntry) item.child;
                 var music = (Music) item.item;
@@ -437,19 +432,16 @@ namespace G4 {
                 split_btn.icon_name = "media-playback-start-symbolic";
                 split_btn.tooltip_text = _("Play");
                 split_btn.clicked.connect (() => {
-                    if (album_mode) {
-                        _app.current_item = 0;
-                    } else {
-                        string[] strv = { PageName.ARTIST, artist?.artist_name ?? "" };
-                        _app.activate_action (ACTION_PLAY, new Variant.bytestring_array (strv));
-                    }
+                    var album_key = album?.album_key ?? "";
+                    var strv = (artist != null) ? new string[] { PageName.ARTIST, ((!)artist).artist_name, album_key }
+                                        : (album is Playlist) ? new string[] { PageName.PLAYLIST, album_key }
+                                        : new string[] { PageName.ALBUM, album_key };
+                    open_paths (strv, true);
                 });
                 if (artist != null)
                     split_btn.menu_model = (album == null || album is Playlist) ? create_menu_for_artist ((!)artist) : create_menu_for_album ((!)album);
                 else if (album != null)
                     split_btn.menu_model = create_menu_for_album ((!)album);
-                if (album != null && key_length == 0)
-                    (split_btn.menu_model as Menu)?.remove (1); // Random Play
                 (split_btn.menu_model as Menu)?.remove (0); // Play
                 header.append (split_btn);
             }
@@ -489,47 +481,55 @@ namespace G4 {
                 for (var i = 0; i < paths.length; i++) {
                     paths[i] = Uri.unescape_string (paths[i]) ?? paths[i];
                 }
-                locate_to_path (paths, null, true);
+                open_paths (paths, false);
             }
         }
 
-        public void locate_to_path (string[] paths, Object? obj = null, bool initializing = false) {
+        public void open_paths (string[] paths, bool play_now = false, bool shuffle = false) {
             if (paths.length > 0) {
                 stack_view.transition_type = Gtk.StackTransitionType.NONE;
                 stack_view.visible_child_name = paths[0];
                 stack_view.transition_type = Gtk.StackTransitionType.SLIDE_LEFT_RIGHT;
                 var stack = get_current_stack ();
                 if (stack != null && paths.length > 1) {
-                    if (initializing) {
+                    if (!play_now) {
                         ((!)stack).animate_transitions = false;
                     }
                     Artist? artist = null;
-                    Album? album = obj as Album;
+                    Album? album = null;
                     if (paths[0] == PageName.ARTIST) {
                         artist = _library.artists[paths[1]];
                         if (artist is Artist) {
                             if (stack?.get_child_by_name (((!)artist).artist) == null) {
                                 create_stack_page (artist);
                             }
-                            if (album == null && paths.length > 2) {
+                            if (paths.length > 2) {
                                 unowned var album_key = paths[2];
                                 if (album_key.length > 0)
                                     album = ((!)artist)[album_key];
-                                else if (album == null)
+                                else
                                     album = ((!)artist).to_playlist ();
                             }
                         }
-                    } else if (album == null) {
-                        if (paths[0] == PageName.ALBUM) {
-                            album = _library.albums[paths[1]];
-                        } else if (paths[0] == PageName.PLAYLIST) {
-                            album = _library.playlists[paths[1]];
-                        }
+                    } else if (paths[0] == PageName.ALBUM) {
+                        album = _library.albums[paths[1]];
+                    } else if (paths[0] == PageName.PLAYLIST) {
+                        album = _library.playlists[paths[1]];
                     }
                     if (album != null && stack?.get_child_by_name (((!)album).album_key) == null) {
                         create_stack_page (artist, album);
                     }
                     ((!)stack).animate_transitions = true;
+                    if (album != null) {
+                        if (shuffle) {
+                            sort_music_store (_current_list.data_store, SortMode.SHUFFLE);
+                        } else {
+                            ((!)album).overwrite_to (_current_list.data_store);
+                        }
+                        if (play_now) {
+                            play_current_list ();
+                        }
+                    }
                 }
             }
         }
@@ -552,8 +552,10 @@ namespace G4 {
                     item = _current_list.set_to_current_item (false);
                 }
                 _current_list.activate_item (forward ? item + 1 : item - 1);
-                if (!_current_list.playable)
+                while (!_current_list.playable) {
                     _current_list.activate_item (0);
+                }
+                _app.current_list = _current_list.filter_model;
             }
         }
 
@@ -651,6 +653,13 @@ namespace G4 {
 
         private void on_thumbnail_changed (Music music, Gdk.Paintable paintable) {
             _current_list.update_item_cover (music, paintable);
+        }
+
+        private void play_current_list (int index = 0) {
+            if (_current_list.playable) {
+                _app.current_list = _current_list.filter_model;
+                _app.current_item = index;
+            }
         }
 
         private void update_stack_pages (Stack stack) {

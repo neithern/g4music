@@ -151,7 +151,7 @@ namespace G4 {
                         break;
                     case PageName.ARTIST:
                         var artist = library.artists[key];
-                        if ((artist is Artist) && arr.length > 2)
+                        if ((artist is Artist) && arr.length > 2 && arr[2].length > 0)
                             node = ((Artist) artist)[arr[2]];
                         else
                             node = artist;
@@ -169,18 +169,12 @@ namespace G4 {
 
         private void play_or_queue (SimpleAction action, Variant? parameter) {
             var strv = parameter?.get_bytestring_array ();
-            var pls = _parse_playlist_from_strv (strv);
-            if (pls != null) {
-                var playlist = (!)pls;
-                if (action.name.has_suffix (ACTION_ADD_TO_QUEUE)) {
-                    _app.insert_to_queue (playlist, -1, false);
-                } else {
-                    if (action.name.has_suffix (ACTION_RANDOM_PLAY)) {
-                        sort_music_array (playlist.items, SortMode.SHUFFLE);
-                    }
-                    Window.get_default ()?.open_page (strv, playlist);
-                    _app.current_item = 0;
-                }
+            if (action.name.has_suffix (ACTION_ADD_TO_QUEUE)) {
+                var playlist = _parse_playlist_from_strv (strv);
+                if (playlist != null)
+                    _app.insert_to_queue ((!)playlist, -1, false);
+            } else {
+                Window.get_default ()?.open_page (strv, action.name.has_suffix (ACTION_RANDOM_PLAY));
             }
         }
 
