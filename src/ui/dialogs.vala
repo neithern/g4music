@@ -46,6 +46,52 @@ namespace G4 {
         return width;
     }
 
+    public void show_about_dialog (Application app) {
+        string[] authors = { "Nanling" };
+        var comments = _("A fast, fluent, light weight music player written in GTK4.");
+        /* Translators: Replace "translator-credits" with your names, one name per line */
+        var translator_credits = _("translator-credits");
+        var website = "https://gitlab.gnome.org/neithern/g4music";
+        var parent = get_main_window ();
+#if ADW_1_5
+        var win = new Adw.AboutDialog ();
+        run_idle_once (() => {
+            if (parent != null && ((!)parent).get_width () < win.width_request)
+                ((!)parent).default_width = win.width_request;
+        });
+#elif ADW_1_2
+        var win = new Adw.AboutWindow ();
+#endif
+#if ADW_1_2
+        win.application_icon = app.application_id;
+        win.application_name = app.name;
+        win.version = Config.VERSION;
+        win.comments = comments;
+        win.license_type = Gtk.License.GPL_3_0;
+        win.developers = authors;
+        win.website = website;
+        win.issue_url = "https://gitlab.gnome.org/neithern/g4music/issues";
+        win.translator_credits = translator_credits;
+#if ADW_1_5
+        win.present (parent);
+#else
+        win.transient_for = parent;
+        win.present ();
+#endif
+#else
+        Gtk.show_about_dialog (parent,
+                               "logo-icon-name", app.application_id,
+                               "program-name", app.name,
+                               "version", Config.VERSION,
+                               "comments", comments,
+                               "authors", authors,
+                               "translator-credits", translator_credits,
+                               "license-type", Gtk.License.GPL_3_0,
+                               "website", website
+                              );
+#endif
+    }
+
     public async bool show_alert_dialog (string text, Gtk.Window? parent = null) {
 #if ADW_1_5
         var result = new bool[] { false };
@@ -107,7 +153,7 @@ namespace G4 {
         }
         return null;
 #else
-        var result = new File?[] { (File?) null };
+        File? result = null;
         var chooser = new Gtk.FileChooserNative (null, parent, Gtk.FileChooserAction.SAVE, null, null);
         chooser.modal = true;
         try {
@@ -124,13 +170,45 @@ namespace G4 {
         chooser.response.connect ((id) => {
             var file = chooser.get_file ();
             if (id == Gtk.ResponseType.ACCEPT && file is File) {
-                result[0] = file;
+                result = file;
                 Idle.add (show_save_file_dialog.callback);
             }
         });
         chooser.show ();
         yield;
-        return result[0];
+        return result;
+#endif
+    }
+
+    public async File? show_select_folder_dialog (Gtk.Window? parent, File? initial = null) {
+#if GTK_4_10
+        var dialog = new Gtk.FileDialog ();
+        dialog.set_initial_folder (initial);
+        dialog.modal = true;
+        try {
+            return yield dialog.select_folder (parent, null);
+        } catch (Error e) {
+        }
+        return null;
+#else
+        File? result = null;
+        var chooser = new Gtk.FileChooserNative (null, parent,
+                        Gtk.FileChooserAction.SELECT_FOLDER, null, null);
+        try {
+            if (initial != null)
+                chooser.set_file ((!)initial);
+        } catch (Error e) {
+        }
+        chooser.modal = true;
+        chooser.response.connect ((id) => {
+            if (id == Gtk.ResponseType.ACCEPT) {
+                result = chooser.get_file ();
+                Idle.add (show_select_folder_dialog.callback);
+            }
+        });
+        chooser.show ();
+        yield;
+        return result;
 #endif
     }
 }

@@ -81,17 +81,18 @@ namespace G4 {
         public override void activate () {
             base.activate ();
 
-            if (active_window is Window) {
-                active_window.present ();
+            var window = get_main_window ();
+            if (window != null) {
+                ((!)window).present ();
             } else {
                 open ({}, "");
             }
         }
 
         public override void open (File[] files, string hint) {
-            var initial = !(active_window is Window);
-            var window = (active_window as Window) ?? new Window (this);
-            window.present ();
+            var window = get_main_window ();
+            var initial = window == null;
+            (window ?? new Window (this))?.present ();
 
             if (initial && _current_music == null) {
                 var folders = files;
@@ -257,7 +258,7 @@ namespace G4 {
             set {
                 if (_music_folder != value) {
                     _music_folder = value;
-                    if (active_window is Window)
+                    if (get_main_window () != null)
                         reload_library ();
                 }
             }
@@ -344,7 +345,7 @@ namespace G4 {
             if (saved)
                 playlist_added (_loader.library.add_playlist (playlist));
             else
-                (active_window as Window)?.show_toast (_("Save playlist failed"));
+                get_main_window ()?.show_toast (_("Save playlist failed"));
             return saved;
         }
 
@@ -455,12 +456,12 @@ namespace G4 {
             }
             var saved = yield add_playlist_to_file_async (playlist, append);
             if (saved && append)
-                (active_window as Window)?.show_toast (_("Save playlist successfully"), file);
+                get_main_window ()?.show_toast (_("Save playlist successfully"), file);
         }
 
         public async void show_add_playlist_dialog (Playlist playlist) {
             var dialog = new PlaylistDialog (this);
-            var pls = yield dialog.choose (active_window);
+            var pls = yield dialog.choose (get_main_window ());
             if (pls != null) {
                 var list_uri = ((!)pls).list_uri;
                 if (list_uri.length > 0) {
@@ -566,7 +567,7 @@ namespace G4 {
 
         private void on_player_error (Error err) {
             print ("Player error: %s\n", err.message);
-            (active_window as Window)?.show_toast (err.message);
+            get_main_window ()?.show_toast (err.message);
             if (!_player.gapless) {
                 on_player_end ();
             }
@@ -591,7 +592,7 @@ namespace G4 {
 
         private void on_player_state_changed (Gst.State state) {
             if (state == Gst.State.PLAYING && _inhibit_id == 0) {
-                _inhibit_id = this.inhibit (active_window, Gtk.ApplicationInhibitFlags.SUSPEND, _("Keep playing"));
+                _inhibit_id = this.inhibit (get_main_window (), Gtk.ApplicationInhibitFlags.SUSPEND, _("Keep playing"));
             } else if (state != Gst.State.PLAYING && _inhibit_id != 0) {
                 this.uninhibit (_inhibit_id);
                 _inhibit_id = 0;

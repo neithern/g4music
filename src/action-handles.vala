@@ -43,7 +43,7 @@ namespace G4 {
             _app = app;
 
             ActionEntry[] action_entries = {
-                { ACTION_ABOUT, show_about },
+                { ACTION_ABOUT, () => show_about_dialog (_app) },
                 { ACTION_ADD_TO_PLAYLIST, add_to_playlist, "aay" },
                 { ACTION_ADD_TO_QUEUE, play_or_queue, "aay" },
                 { ACTION_EXPORT_COVER, export_cover, "aay" },
@@ -178,7 +178,7 @@ namespace G4 {
                     if (action.name.has_suffix (ACTION_RANDOM_PLAY)) {
                         sort_music_array (playlist.items, SortMode.SHUFFLE);
                     }
-                    (_app.active_window as Window)?.open_page (strv, playlist);
+                    get_main_window ()?.open_page (strv, playlist);
                     _app.current_item = 0;
                 }
             }
@@ -197,47 +197,6 @@ namespace G4 {
                 _app.settings.set_uint ("color-scheme", scheme);
         }
 
-        private void show_about () {
-            string[] authors = { "Nanling" };
-            var comments = _("A fast, fluent, light weight music player written in GTK4.");
-            /* Translators: Replace "translator-credits" with your names, one name per line */
-            var translator_credits = _("translator-credits");
-            var website = "https://gitlab.gnome.org/neithern/g4music";
-#if ADW_1_5
-            var win = new Adw.AboutDialog ();
-#elif ADW_1_2
-            var win = new Adw.AboutWindow ();
-#endif
-#if ADW_1_2
-            win.application_icon = _app.application_id;
-            win.application_name = _app.name;
-            win.version = Config.VERSION;
-            win.comments = comments;
-            win.license_type = Gtk.License.GPL_3_0;
-            win.developers = authors;
-            win.website = website;
-            win.issue_url = "https://gitlab.gnome.org/neithern/g4music/issues";
-            win.translator_credits = translator_credits;
-#if ADW_1_5
-            win.present ( _app.active_window);
-#else
-            win.transient_for = _app.active_window;
-            win.present ();
-#endif
-#else
-            Gtk.show_about_dialog (_app.active_window,
-                                   "logo-icon-name", _app.application_id,
-                                   "program-name", _app.name,
-                                   "version", Config.VERSION,
-                                   "comments", comments,
-                                   "authors", authors,
-                                   "translator-credits", translator_credits,
-                                   "license-type", Gtk.License.GPL_3_0,
-                                   "website", website
-                                  );
-#endif
-        }
-
         private void show_file (SimpleAction action, Variant? parameter) {
             var uri = parse_uri_from_parameter (parameter);
             if (uri != null) {
@@ -245,7 +204,7 @@ namespace G4 {
                     try {
                         _portal.open_directory_async.end (res);
                     } catch (Error e) {
-                        (_app.active_window as Window)?.show_toast (e.message);
+                        get_main_window ()?.show_toast (e.message);
                     }
                 });
             }
@@ -256,7 +215,7 @@ namespace G4 {
             if (uri != null) {
                 var tags = strcmp (_app.current_music?.uri, uri) == 0 ? _app.player.tag_list : (Gst.TagList?) null;
                 var dialog = new TagListDialog ((!)uri, tags);
-                dialog.present (_app.active_window);
+                dialog.present (get_main_window ());
             }
         }
 
@@ -297,7 +256,7 @@ namespace G4 {
                             _app.loader.on_file_removed (File.new_for_uri ((!)uri));
                         }
                     } catch (Error e) {
-                        (_app.active_window as Window)?.show_toast (e.message);
+                        get_main_window ()?.show_toast (e.message);
                     }
                 });
             }

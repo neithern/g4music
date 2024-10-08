@@ -171,13 +171,12 @@ namespace G4 {
             }
             action_btn.sensitive = enabled;
             root.action_set_enabled (ACTION_APP + ACTION_PLAY_PAUSE, enabled);
-            (_app.active_window as Window)?.set_title (music?.get_artist_and_title () ?? _app.name);
+            get_main_window ()?.set_title (music?.get_artist_and_title () ?? _app.name);
         }
 
         private bool on_music_folder_clicked (string uri) {
-            pick_music_folder_async.begin (_app, _app.active_window,
-                (dir) => update_initial_label (dir.get_uri ()),
-                (obj, res) => pick_music_folder_async.end (res));
+            pick_music_folder (_app, root as Window,
+                (dir) => update_initial_label (dir.get_uri ()));
             return true;
         }
 

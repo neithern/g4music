@@ -341,4 +341,14 @@ namespace G4 {
         }
         return files;
     }
+
+    public inline Window? get_main_window () {
+        unowned var list = (GLib.Application.get_default () as Application)?.get_windows ();
+        for (; list != null; list = list?.next) {
+            var window = ((!)list).data;
+            if (window is Window)
+                return (Window) window;
+        }
+        return null;
+    }
 }

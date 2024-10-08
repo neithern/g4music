@@ -50,9 +50,9 @@ namespace G4 {
 
             music_dir_btn.label = get_display_name (app.music_folder);
             music_dir_btn.clicked.connect (() => {
-                pick_music_folder_async.begin (app, this, (dir) => {
+                pick_music_folder (app, this, (dir) => {
                     music_dir_btn.label = get_display_name (app.music_folder);
-                }, (obj, res) => pick_music_folder_async.end (res));
+                });
             });
 
             settings.bind ("monitor-changes", monitor_btn, "active", SettingsBindFlags.DEFAULT);
@@ -109,42 +109,16 @@ namespace G4 {
 
     public delegate void FolderPicked (File dir);
 
-    public async void pick_music_folder_async (Application app, Gtk.Window? parent, FolderPicked picked) {
+    public void pick_music_folder (Application app, Gtk.Window? parent, FolderPicked picked) {
         var music_dir = File.new_for_uri (app.music_folder);
-#if GTK_4_10
-        var dialog = new Gtk.FileDialog ();
-        dialog.initial_folder = music_dir;
-        dialog.modal = true;
-        try {
-            var dir = yield dialog.select_folder (parent, null);
+        show_select_folder_dialog.begin (parent, music_dir, (obj, res) => {
+            var dir = show_select_folder_dialog.end (res);
             if (dir != null) {
                 var uri = ((!)dir).get_uri ();
                 if (app.music_folder != uri)
                     app.music_folder = uri;
                 picked ((!)dir);
             }
-        } catch (Error e) {
-        }
-#else
-        var chooser = new Gtk.FileChooserNative (null, parent,
-                        Gtk.FileChooserAction.SELECT_FOLDER, null, null);
-        try {
-            chooser.set_file (music_dir);
-        } catch (Error e) {
-        }
-        chooser.modal = true;
-        chooser.response.connect ((id) => {
-            if (id == Gtk.ResponseType.ACCEPT) {
-                var dir = chooser.get_file ();
-                if (dir is File) {
-                    var uri = ((!)dir).get_uri ();
-                    if (app.music_folder != uri)
-                        app.music_folder = uri;
-                    picked ((!)dir);
-                }
-            }
         });
-        chooser.show ();
-#endif
     }
 }
