@@ -216,16 +216,20 @@ namespace G4 {
     public Menu create_menu_for_album (Album album) {
         var strv = build_action_target_for_album (album);
         var menu = new Menu ();
-        menu.append_item (create_menu_item_for_strv (strv, _("Play at _Next"), ACTION_APP + ACTION_PLAY_AT_NEXT));
-        menu.append_item (create_menu_item_for_strv (strv, _("Add to _Queue"), ACTION_APP + ACTION_ADD_TO_QUEUE));
-        menu.append_item (create_menu_item_for_strv (strv, _("Add to _Playlist…"), ACTION_APP + ACTION_ADD_TO_PLAYLIST));
+        menu.append_item (create_menu_item_for_strv (strv, _("Play"), ACTION_APP + ACTION_PLAY));
+        menu.append_item (create_menu_item_for_strv (strv, _("_Random Play"), ACTION_APP + ACTION_RANDOM_PLAY));
+        var section = new Menu ();
+        section.append_item (create_menu_item_for_strv (strv, _("Play at _Next"), ACTION_APP + ACTION_PLAY_AT_NEXT));
+        section.append_item (create_menu_item_for_strv (strv, _("Add to _Queue"), ACTION_APP + ACTION_ADD_TO_QUEUE));
+        section.append_item (create_menu_item_for_strv (strv, _("Add to _Playlist…"), ACTION_APP + ACTION_ADD_TO_PLAYLIST));
+        menu.append_section (null, section);
         if (album is Playlist) {
             unowned var list_uri = ((Playlist) album).list_uri;
             if (list_uri.length > 0) {
-                var section = new Menu ();
-                section.append_item (create_menu_item_for_uri (list_uri, _("Show List _File"), ACTION_APP + ACTION_SHOW_FILE));
-                section.append_item (create_menu_item_for_uri (list_uri, _("_Move to Trash"), ACTION_APP + ACTION_TRASH_FILE));
-                menu.append_section (null, section);
+                var section2 = new Menu ();
+                section2.append_item (create_menu_item_for_uri (list_uri, _("Show List _File"), ACTION_APP + ACTION_SHOW_FILE));
+                section2.append_item (create_menu_item_for_uri (list_uri, _("_Move to Trash"), ACTION_APP + ACTION_TRASH_FILE));
+                menu.append_section (null, section2);
             }
         }
         return menu;
@@ -234,9 +238,13 @@ namespace G4 {
     public Menu create_menu_for_artist (Artist artist) {
         string[] strv = { PageName.ARTIST, artist.artist };
         var menu = new Menu ();
-        menu.append_item (create_menu_item_for_strv (strv, _("Play at _Next"), ACTION_APP + ACTION_PLAY_AT_NEXT));
-        menu.append_item (create_menu_item_for_strv (strv, _("Add to _Queue"), ACTION_APP + ACTION_ADD_TO_QUEUE));
-        menu.append_item (create_menu_item_for_strv (strv, _("Add to _Playlist…"), ACTION_APP + ACTION_ADD_TO_PLAYLIST));
+        menu.append_item (create_menu_item_for_strv (strv, _("Play"), ACTION_APP + ACTION_PLAY));
+        menu.append_item (create_menu_item_for_strv (strv, _("_Random Play"), ACTION_APP + ACTION_RANDOM_PLAY));
+        var section = new Menu ();
+        section.append_item (create_menu_item_for_strv (strv, _("Play at _Next"), ACTION_APP + ACTION_PLAY_AT_NEXT));
+        section.append_item (create_menu_item_for_strv (strv, _("Add to _Queue"), ACTION_APP + ACTION_ADD_TO_QUEUE));
+        section.append_item (create_menu_item_for_strv (strv, _("Add to _Playlist…"), ACTION_APP + ACTION_ADD_TO_PLAYLIST));
+        menu.append_section (null, section);
         return menu;
     }
 

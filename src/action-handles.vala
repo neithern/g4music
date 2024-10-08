@@ -11,6 +11,7 @@ namespace G4 {
     public const string ACTION_PLAY_PAUSE = "play-pause";
     public const string ACTION_PREV = "prev";
     public const string ACTION_NEXT = "next";
+    public const string ACTION_RANDOM_PLAY = "random-play";
     public const string ACTION_RELOAD = "reload";
     public const string ACTION_REMOVE = "remove";
     public const string ACTION_SAVE_LIST = "save-list";
@@ -52,6 +53,7 @@ namespace G4 {
                 { ACTION_PLAY_PAUSE, () => _app.play_pause () },
                 { ACTION_PREV, () => _app.play_previous () },
                 { ACTION_PREFS, show_preferences },
+                { ACTION_RANDOM_PLAY, play_or_queue, "aay" },
                 { ACTION_RELOAD, () => _app.reload_library () },
                 { ACTION_SCHEME, scheme, "s", "'0'" },
                 { ACTION_SHOW_FILE, show_file, "aay" },
@@ -123,7 +125,7 @@ namespace G4 {
 
         private void add_to_playlist (SimpleAction action, Variant? parameter) {
             var strv = parameter?.get_bytestring_array ();
-            var playlist = _parse_playist_form_strv (strv);
+            var playlist = _parse_playlist_from_strv (strv);
             if (playlist != null) {
                 _app.show_add_playlist_dialog.begin ((!)playlist, (obj, res) => _app.show_add_playlist_dialog.end (res));
             }
@@ -136,7 +138,7 @@ namespace G4 {
                 _export_cover_async.begin ((!)music, (obj, res) => _export_cover_async.end (res));
         }
 
-        private Playlist? _parse_playist_form_strv (string[]? strv) {
+        private Playlist? _parse_playlist_from_strv (string[]? strv) {
             Music? node = null;
             if (strv != null && ((!)strv).length > 1) {
                 var arr = (!)strv;
@@ -167,12 +169,16 @@ namespace G4 {
 
         private void play_or_queue (SimpleAction action, Variant? parameter) {
             var strv = parameter?.get_bytestring_array ();
-            var playlist = _parse_playist_form_strv (strv);
-            if (playlist != null) {
+            var pls = _parse_playlist_from_strv (strv);
+            if (pls != null) {
+                var playlist = (!)pls;
                 if (action.name.has_suffix (ACTION_ADD_TO_QUEUE)) {
-                    _app.insert_to_queue ((!)playlist, -1, false);
+                    _app.insert_to_queue (playlist, -1, false);
                 } else {
-                    (_app.active_window as Window)?.open_page (strv, (!)playlist);
+                    if (action.name.has_suffix (ACTION_RANDOM_PLAY)) {
+                        sort_music_array (playlist.items, SortMode.SHUFFLE);
+                    }
+                    (_app.active_window as Window)?.open_page (strv, playlist);
                     _app.current_item = 0;
                 }
             }
@@ -180,7 +186,7 @@ namespace G4 {
 
         private void play_at_next (SimpleAction action, Variant? parameter) {
             var strv = parameter?.get_bytestring_array ();
-            var playlist = _parse_playist_form_strv (strv);
+            var playlist = _parse_playlist_from_strv (strv);
             if (playlist != null)
                 _app.insert_after_current ((!)playlist);
         }

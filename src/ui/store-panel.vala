@@ -438,27 +438,25 @@ namespace G4 {
             back_btn.clicked.connect (stack.pop);
             header.prepend (back_btn);
 
-            var play_btn = new Gtk.Button.from_icon_name ("media-playback-start-symbolic");
-            play_btn.tooltip_text = _("Play");
-            play_btn.clicked.connect (() => {
-                if (album_mode) {
-                    _app.current_item = 0;
-                } else {
-                    string[] strv = { PageName.ARTIST, artist?.artist_name ?? "" };
-                    _app.activate_action (ACTION_PLAY, new Variant.bytestring_array (strv));
-                }
-            });
-            header.append (play_btn);
-
-            var menu_btn = new Gtk.MenuButton ();
-            menu_btn.icon_name = "view-more-symbolic";
-            menu_btn.set_create_popup_func (() => {
+            if (artist_mode || (album?.album_key?.length ?? 0) > 0) {
+                var split_btn = new Adw.SplitButton ();
+                split_btn.icon_name = "media-playback-start-symbolic";
+                split_btn.tooltip_text = _("Play");
+                split_btn.clicked.connect (() => {
+                    if (album_mode) {
+                        _app.current_item = 0;
+                    } else {
+                        string[] strv = { PageName.ARTIST, artist?.artist_name ?? "" };
+                        _app.activate_action (ACTION_PLAY, new Variant.bytestring_array (strv));
+                    }
+                });
                 if (artist != null)
-                    menu_btn.menu_model = (album == null || album is Playlist) ? create_menu_for_artist ((!)artist) : create_menu_for_album ((!)album);
+                    split_btn.menu_model = (album == null || album is Playlist) ? create_menu_for_artist ((!)artist) : create_menu_for_album ((!)album);
                 else if (album != null)
-                    menu_btn.menu_model = create_menu_for_album ((!)album);
-            });
-            header.append (menu_btn);
+                    split_btn.menu_model = create_menu_for_album ((!)album);
+                (split_btn.menu_model as Menu)?.remove (0);
+                header.append (split_btn);
+            }
 
             if (stack.animate_transitions && stack.visible_child == _current_list)
                 _overlayed_lists.add (_current_list);
@@ -517,7 +515,7 @@ namespace G4 {
                             if (stack?.get_child_by_name (((!)artist).artist) == null) {
                                 create_stack_page (artist);
                             }
-                            if (paths.length > 2) {
+                            if (album == null && paths.length > 2) {
                                 unowned var album_key = paths[2];
                                 if (album_key.length > 0)
                                     album = ((!)artist)[album_key];
@@ -525,12 +523,14 @@ namespace G4 {
                                     album = ((!)artist).to_playlist ();
                             }
                         }
-                    } else if (paths[0] == PageName.ALBUM) {
-                        album = _library.albums[paths[1]];
-                    } else if (paths[0] == PageName.PLAYLIST) {
-                        album = _library.playlists[paths[1]];
+                    } else if (album == null) {
+                        if (paths[0] == PageName.ALBUM) {
+                            album = _library.albums[paths[1]];
+                        } else if (paths[0] == PageName.PLAYLIST) {
+                            album = _library.playlists[paths[1]];
+                        }
                     }
-                    if ((album is Album) && stack?.get_child_by_name (((!)album).album_key) == null) {
+                    if (album != null && stack?.get_child_by_name (((!)album).album_key) == null) {
                         create_stack_page (artist, album);
                     }
                     ((!)stack).animate_transitions = true;
