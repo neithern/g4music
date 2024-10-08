@@ -336,7 +336,7 @@ namespace G4 {
                     foreach (var uri in uris) {
                         var music = _loader.find_cache (uri);
                         if (music != null)
-                            playlist.add_music ((!)music, true);
+                            playlist.add_music ((!)music);
                     }
                     playlist.set_cover_uri ();
                     if (title != null)

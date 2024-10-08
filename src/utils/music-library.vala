@@ -176,8 +176,8 @@ namespace G4 {
             }
         }
 
-        public new bool add_music (Music music, bool unique = false) {
-            if (!unique || insert_music (music)) {
+        public new bool add_music (Music music) {
+            if (insert_music (music)) {
                 var count = items.length;
                 items.add (music);
                 items[count]._order = count;
@@ -476,7 +476,7 @@ namespace G4 {
         store.splice (0, count, (Object[]) arr.data);
     }
 
-    public Playlist to_playlist (Music[] musics, string? title = null, bool unique = true) {
+    public Playlist to_playlist (Music[] musics, string? title = null) {
         var count = musics.length;
         var arr = new GenericArray<Music> (count);
         foreach (var music in musics) {
@@ -492,7 +492,7 @@ namespace G4 {
             title = musics[0].title;
         }
         var playlist = new Playlist (title ?? _("Untitled"));
-        arr.foreach ((music) => playlist.add_music (music, unique));
+        arr.foreach ((music) => playlist.add_music (music));
         return playlist;
     }
 }

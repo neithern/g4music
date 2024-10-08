@@ -262,11 +262,11 @@ namespace G4 {
             if (_modified && _music_node is Playlist) {
                 var playlist = new Playlist (_music_node?.title ?? "Untitled");
                 playlist.list_uri = ((Playlist)_music_node).list_uri;
-
+                var items = playlist.items;
                 var count = _data_store.get_n_items ();
                 for (var i = 0; i < count; i++) {
                     var music = (Music) _data_store.get_item (i);
-                    playlist.add_music (music);
+                    items.add (music);
                 }
 
                 var ret = !prompt || yield show_alert_dialog (_("Playlist is modified, save it?"), root as Gtk.Window);
