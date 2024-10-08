@@ -260,8 +260,8 @@ namespace G4 {
 
         public virtual async Result save_if_modified (bool prompt = true) {
             if (_modified && _music_node is Playlist) {
-                var playlist = new Playlist (_music_node?.title ?? "Untitled");
-                playlist.list_uri = ((Playlist)_music_node).list_uri;
+                var pls = (Playlist) _music_node;
+                var playlist = new Playlist (pls.title, pls.list_uri);
                 var items = playlist.items;
                 var count = _data_store.get_n_items ();
                 for (var i = 0; i < count; i++) {

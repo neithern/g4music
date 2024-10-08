@@ -453,7 +453,7 @@ namespace G4 {
                 if (file_new == null)
                     return;
                 file = (!)file_new;
-                playlist.list_uri = file.get_uri ();
+                playlist.set_list_uri (file.get_uri ());
                 playlist.set_title (get_file_display_name (file));
             }
             var saved = yield add_playlist_to_file_async (playlist, append);
@@ -467,7 +467,7 @@ namespace G4 {
             if (pls != null) {
                 var list_uri = ((!)pls).list_uri;
                 if (list_uri.length > 0) {
-                    playlist.list_uri = list_uri;
+                    playlist.set_list_uri (list_uri);
                     yield add_playlist_to_file_async (playlist, true);
                 } else {
                     yield save_to_playlist_file_async (playlist);

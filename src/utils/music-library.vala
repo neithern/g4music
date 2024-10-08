@@ -168,8 +168,7 @@ namespace G4 {
         public Playlist (string name, string uri = "") {
             base.titled (name, "");
             base.album = name;
-            base._album_key = uri;
-            this.list_uri = uri;
+            set_list_uri (uri);
         }
 
         public new uint length {
@@ -235,6 +234,11 @@ namespace G4 {
                 has_cover = true;
                 uri = items[0].uri;
             }
+        }
+
+        public void set_list_uri (string uri) {
+            _album_key = uri;
+            list_uri = uri;
         }
 
         public void set_title (string title) {
