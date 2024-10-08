@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/neithern/g4music/issues\n"
-"POT-Creation-Date: 2024-10-05 15:09+0000\n"
-"PO-Revision-Date: 2024-10-05 18:26+0300\n"
+"POT-Creation-Date: 2024-10-08 08:48+0000\n"
+"PO-Revision-Date: 2024-10-08 21:24+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -19,7 +19,7 @@ msgstr ""
 "%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Generator: Lokalize 23.04.3\n"
 
-#: data/app.desktop.in:3 data/app.metainfo.xml.in:4 src/application.vala:267
+#: data/app.desktop.in:3 data/app.metainfo.xml.in:4 src/application.vala:274
 #: src/main.vala:24
 msgid "Gapless"
 msgstr "Неперервний"
@@ -166,7 +166,6 @@ msgid "Quit"
 msgstr "Вийти"
 
 #: src/gtk/help-overlay.ui:32
-#| msgid "Show _Tags…"
 msgctxt "shortcut window"
 msgid "Show Tags"
 msgstr "Показувати мітки"
@@ -216,8 +215,8 @@ msgctxt "shortcut window"
 msgid "Save List"
 msgstr "Зберегти список"
 
-#: src/gtk/play-panel.ui:16 src/ui/music-list.vala:628
-#: src/ui/store-panel.vala:425
+#: src/gtk/play-panel.ui:16 src/ui/music-list.vala:630
+#: src/ui/store-panel.vala:430
 msgid "Back"
 msgstr "Назад"
 
@@ -241,7 +240,7 @@ msgstr "Таблиця для виконавців/альбомів"
 msgid "Single click to activate item"
 msgstr "Активація одинарним клацанням"
 
-#: src/gtk/preferences.ui:56 src/application.vala:412
+#: src/gtk/preferences.ui:56 src/application.vala:422
 msgid "Keep playing after window closed"
 msgstr "Продовжити відтворення після закриття вікна"
 
@@ -301,113 +300,113 @@ msgstr "Головне меню"
 msgid "Search"
 msgstr "Пошук"
 
-#: src/gtk/store-panel.ui:35
+#: src/gtk/store-panel.ui:39
 msgid "Sort By"
 msgstr "Критерій впорядкування"
 
-#: src/gtk/store-panel.ui:57
+#: src/gtk/store-panel.ui:70
 msgid "_Color Scheme"
 msgstr "Схема _кольорів"
 
-#: src/gtk/store-panel.ui:59
+#: src/gtk/store-panel.ui:72
 msgid "_System"
 msgstr "Загальнос_истемна"
 
-#: src/gtk/store-panel.ui:64
+#: src/gtk/store-panel.ui:77
 msgid "_Light"
 msgstr "С_вітла"
 
-#: src/gtk/store-panel.ui:69
+#: src/gtk/store-panel.ui:82
 msgid "_Dark"
 msgstr "_Темна"
 
-#: src/gtk/store-panel.ui:76
+#: src/gtk/store-panel.ui:89
 msgid "_Reload Library"
 msgstr "П_ерезавантажити бібліотеку"
 
-#: src/gtk/store-panel.ui:80
+#: src/gtk/store-panel.ui:93
 msgid "_Select"
 msgstr "_Вибрати"
 
-#: src/gtk/store-panel.ui:86
+#: src/gtk/store-panel.ui:99
 msgid "_Preferences"
 msgstr "_Налаштування"
 
-#: src/gtk/store-panel.ui:90
+#: src/gtk/store-panel.ui:103
 msgid "_Keyboard Shortcuts"
 msgstr "_Клавіатурні скорочення"
 
-#: src/gtk/store-panel.ui:94
+#: src/gtk/store-panel.ui:107
 msgid "_About"
 msgstr "_Про програму"
 
-#: src/gtk/store-panel.ui:103 src/ui/preferences.vala:66
+#: src/gtk/store-panel.ui:116 src/ui/preferences.vala:66
 msgid "Album"
 msgstr "Альбом"
 
-#: src/gtk/store-panel.ui:108
+#: src/gtk/store-panel.ui:121
 msgid "Artist"
 msgstr "Виконавець"
 
-#: src/gtk/store-panel.ui:113
+#: src/gtk/store-panel.ui:126
 msgid "Artist/Album"
 msgstr "Виконавець/Альбом"
 
-#: src/gtk/store-panel.ui:118
+#: src/gtk/store-panel.ui:131
 msgid "Title"
 msgstr "Назва"
 
-#: src/gtk/store-panel.ui:123
+#: src/gtk/store-panel.ui:136
 msgid "Recent"
 msgstr "Нещодавні"
 
-#: src/gtk/store-panel.ui:128
+#: src/gtk/store-panel.ui:141
 msgid "Shuffle"
 msgstr "Перемішати"
 
-#: src/action-handles.vala:112
+#: src/action-handles.vala:114
 msgid "Image Files"
 msgstr "файли зображень"
 
-#: src/action-handles.vala:119
+#: src/action-handles.vala:121
 msgid "Export cover successfully"
 msgstr "Обкладинку успішно експортовано"
 
-#: src/action-handles.vala:119
+#: src/action-handles.vala:121
 msgid "Export cover failed"
 msgstr "Не вдалося експортувати обкладинку"
 
-#: src/action-handles.vala:198
+#: src/action-handles.vala:202
 msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr ""
 "Швидкий, плавний, невибагливий програвач музики, який засновано на GTK4."
 
 #. Translators: Replace "translator-credits" with your names, one name per line
-#: src/action-handles.vala:200
+#: src/action-handles.vala:204
 msgid "translator-credits"
 msgstr "Юрій Чорноіван <yurchor@ukr.net>, 2023"
 
-#: src/application.vala:340
+#: src/application.vala:347
 msgid "Save playlist failed"
 msgstr "Не вдалося зберегти список відтворення"
 
-#: src/application.vala:434
+#: src/application.vala:444
 msgid "Playlist Files"
 msgstr "файли списків відтворення"
 
-#: src/application.vala:448
+#: src/application.vala:458
 msgid "Save playlist successfully"
 msgstr "Список відтворення успішно збережено"
 
-#: src/application.vala:592
+#: src/application.vala:594
 msgid "Keep playing"
 msgstr "Продовжувати відтворення"
 
-#: src/ui/dialogs.vala:48 src/ui/dialogs.vala:60
+#: src/ui/dialogs.vala:53 src/ui/dialogs.vala:65
 msgid "No"
 msgstr "Ні"
 
-#: src/ui/dialogs.vala:49 src/ui/dialogs.vala:60
+#: src/ui/dialogs.vala:54 src/ui/dialogs.vala:65
 msgid "Yes"
 msgstr "Так"
 
@@ -416,78 +415,87 @@ msgid "Playlist is modified, save it?"
 msgstr "До списку відтворення внесено зміни, зберегти їх?"
 
 #. Translators: Play this music at next position of current playing music
-#: src/ui/music-list.vala:400 src/ui/music-list.vala:416
-#: src/ui/music-widgets.vala:219 src/ui/music-widgets.vala:235
+#: src/ui/music-list.vala:402 src/ui/music-list.vala:418
+#: src/ui/music-widgets.vala:222 src/ui/music-widgets.vala:244
 msgid "Play at _Next"
 msgstr "Відтворити _наступною"
 
-#: src/ui/music-list.vala:402 src/ui/music-list.vala:418
-#: src/ui/music-widgets.vala:220 src/ui/music-widgets.vala:236
+#: src/ui/music-list.vala:404 src/ui/music-list.vala:420
+#: src/ui/music-widgets.vala:223 src/ui/music-widgets.vala:245
 msgid "Add to _Queue"
 msgstr "Додати до _черги відтворення"
 
-#: src/ui/music-list.vala:403 src/ui/music-widgets.vala:221
-#: src/ui/music-widgets.vala:237 src/ui/music-widgets.vala:255
+#: src/ui/music-list.vala:405 src/ui/music-widgets.vala:224
+#: src/ui/music-widgets.vala:246 src/ui/music-widgets.vala:265
 msgid "Add to _Playlist…"
 msgstr "Додати до с_писку відтворення…"
 
-#: src/ui/music-list.vala:404 src/ui/music-list.vala:422
+#: src/ui/music-list.vala:406 src/ui/music-list.vala:424
 msgid "_Remove"
 msgstr "В_илучити"
 
-#: src/ui/music-list.vala:423 src/ui/music-widgets.vala:226
+#: src/ui/music-list.vala:425 src/ui/music-widgets.vala:231
 msgid "_Move to Trash"
 msgstr "П_ересунути до смітника"
 
-#: src/ui/music-list.vala:632
+#: src/ui/music-list.vala:634
 msgid "Select All"
 msgstr "Позначити все"
 
-#: src/ui/music-list.vala:649
+#: src/ui/music-list.vala:651
 msgid "Play at Next"
 msgstr "Відтворити наступною"
 
-#: src/ui/music-list.vala:656
+#: src/ui/music-list.vala:658
 msgid "Add to Queue"
 msgstr "Додати до черги відтворення"
 
-#: src/ui/music-list.vala:663 src/ui/playlist-dialog.vala:19
+#: src/ui/music-list.vala:665 src/ui/playlist-dialog.vala:19
 msgid "Add to Playlist"
 msgstr "Додати до списку відтворення"
 
-#: src/ui/music-list.vala:670
+#: src/ui/music-list.vala:672
 msgid "Remove"
 msgstr "Вилучити"
 
-#: src/ui/music-widgets.vala:225
+#: src/ui/music-widgets.vala:219 src/ui/music-widgets.vala:241
+#: src/ui/store-panel.vala:437
+msgid "Play"
+msgstr "Відтворити"
+
+#: src/ui/music-widgets.vala:220 src/ui/music-widgets.vala:242
+msgid "_Random Play"
+msgstr "_Випадкове відтворення"
+
+#: src/ui/music-widgets.vala:230
 msgid "Show List _File"
 msgstr "Показати _файл списку"
 
-#: src/ui/music-widgets.vala:243 src/ui/play-panel.vala:60
+#: src/ui/music-widgets.vala:253 src/ui/play-panel.vala:60
 msgid "Search Title"
 msgstr "Шукати за назвою"
 
-#: src/ui/music-widgets.vala:244 src/ui/play-panel.vala:58
+#: src/ui/music-widgets.vala:254 src/ui/play-panel.vala:58
 msgid "Search Album"
 msgstr "Шукати альбом"
 
-#: src/ui/music-widgets.vala:245 src/ui/play-panel.vala:59
+#: src/ui/music-widgets.vala:255 src/ui/play-panel.vala:59
 msgid "Search Artist"
 msgstr "Шукати виконавця"
 
-#: src/ui/music-widgets.vala:249
+#: src/ui/music-widgets.vala:259
 msgid "Show Cover _File"
 msgstr "Показати файл _обкладинки"
 
-#: src/ui/music-widgets.vala:251
+#: src/ui/music-widgets.vala:261
 msgid "_Export Cover"
 msgstr "_Експортувати обкладинку"
 
-#: src/ui/music-widgets.vala:252
+#: src/ui/music-widgets.vala:262
 msgid "Show _Tags…"
 msgstr "Показати _мітки…"
 
-#: src/ui/music-widgets.vala:253
+#: src/ui/music-widgets.vala:263
 msgid "Show Music _File"
 msgstr "Показати файл _музики"
 
@@ -509,7 +517,7 @@ msgstr "Пуск/Пауза"
 msgid "Play Next"
 msgstr "Відтворити наступну"
 
-#: src/ui/play-panel.vala:258
+#: src/ui/play-panel.vala:256
 msgid ""
 "Drag and drop music files here,\n"
 "or change music location: "
@@ -521,7 +529,7 @@ msgstr ""
 msgid "New Playlist"
 msgstr "Новий список"
 
-#: src/ui/playlist-dialog.vala:98 src/ui/store-panel.vala:674
+#: src/ui/playlist-dialog.vala:98 src/ui/store-panel.vala:676
 #, c-format
 msgid "No playlist found in %s"
 msgstr "У %s не виявлено списку відтворення"
@@ -542,25 +550,21 @@ msgstr "Лише оформлення"
 msgid "Track"
 msgstr "Композиція"
 
-#: src/ui/store-panel.vala:82
+#: src/ui/store-panel.vala:84
 msgid "Playing"
 msgstr "Відтворення"
 
-#: src/ui/store-panel.vala:86
+#: src/ui/store-panel.vala:88
 msgid "Artists"
 msgstr "Виконавці"
 
-#: src/ui/store-panel.vala:90
+#: src/ui/store-panel.vala:92
 msgid "Albums"
 msgstr "Альбоми"
 
-#: src/ui/store-panel.vala:94
+#: src/ui/store-panel.vala:96
 msgid "Playlists"
 msgstr "Списки відтворення"
-
-#: src/ui/store-panel.vala:433
-msgid "Play"
-msgstr "Відтворити"
 
 #: src/ui/taglist-dialog.vala:125
 msgid "Copy"
@@ -572,7 +576,7 @@ msgstr "Копіювати"
 msgid "Volume %d%%"
 msgstr "Гучність %d%%"
 
-#: src/ui/window.vala:112
+#: src/ui/window.vala:113
 msgid "Show"
 msgstr "Показати"
 
