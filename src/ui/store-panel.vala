@@ -364,7 +364,7 @@ namespace G4 {
             var box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6);
             box.append (icon);
             box.append (label);
-            if (plist != null) {
+            if (plist != null && ((!)plist).list_uri.length > 0) {
                 var playlist = (!)plist;
                 var entry = new Gtk.Entry ();
                 entry.max_width_chars = 1024;
@@ -412,10 +412,9 @@ namespace G4 {
             var mlist = album_mode ? create_music_list ((!)album, artist_mode) : create_album_list (artist);
             mlist.update_store ();
 
-            var real_playlist = (!artist_mode && playlist_mode) ? (album as Playlist) : (Playlist?) null;
             var icon_name = (album is Playlist) ? "emblem-documents-symbolic" : (album_mode ? "media-optical-cd-audio-symbolic" : "avatar-default-symbolic");
             var title = (album_mode ? album?.title : artist?.title) ?? "";
-            var title_box = create_title_box (icon_name, title, real_playlist);
+            var title_box = create_title_box (icon_name, title, album as Playlist);
             title_box.halign = Gtk.Align.CENTER;
             title_box.hexpand = true;
 
