@@ -431,7 +431,8 @@ namespace G4 {
             back_btn.clicked.connect (stack.pop);
             header.prepend (back_btn);
 
-            if (artist_mode || (album?.album_key?.length ?? 0) > 0) {
+            var key_length = album?.album_key?.length ?? 0;
+            if (artist_mode || key_length > 0) {
                 var split_btn = new Adw.SplitButton ();
                 split_btn.icon_name = "media-playback-start-symbolic";
                 split_btn.tooltip_text = _("Play");
@@ -447,7 +448,9 @@ namespace G4 {
                     split_btn.menu_model = (album == null || album is Playlist) ? create_menu_for_artist ((!)artist) : create_menu_for_album ((!)album);
                 else if (album != null)
                     split_btn.menu_model = create_menu_for_album ((!)album);
-                (split_btn.menu_model as Menu)?.remove (0);
+                if (album != null && key_length == 0)
+                    (split_btn.menu_model as Menu)?.remove (1); // Random Play
+                (split_btn.menu_model as Menu)?.remove (0); // Play
                 header.append (split_btn);
             }
 
