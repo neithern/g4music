@@ -57,10 +57,10 @@ namespace G4 {
         private MusicLibrary _library;
         private string[]? _library_path = null;
         private Gdk.Paintable _loading_paintable;
-        private uint _main_sort_mode = SortMode.TITLE;
         private uint _search_mode = SearchMode.ANY;
         private string _search_text = "";
         private bool _size_allocated = false;
+        private uint _sort_mode = -1;
         private bool _updating_store = false;
 
         public StorePanel (Application app, Window win, Leaflet leaflet) {
@@ -150,12 +150,14 @@ namespace G4 {
 
         public uint sort_mode {
             get {
-                return _app.sort_mode;
+                return _sort_mode;
             }
             set {
-                if (_current_list == _main_list)
-                    _main_sort_mode = value;
-                update_sort_mode (value);
+                _sort_mode = value;
+                if (value < SORT_MODE_ICONS.length)
+                    sort_btn.set_icon_name (SORT_MODE_ICONS[value]);
+                if (_main_list.get_height () > 0)
+                    _main_list.create_factory ();
             }
         }
 
@@ -181,7 +183,7 @@ namespace G4 {
                     on_music_changed (_app.current_music);
 
                     indicator.visible = _current_list.modified;
-                    sort_btn.sensitive = _current_list.playable;
+                    sort_btn.sensitive = _current_list == _main_list;
                     _search_mode = SearchMode.ANY;
                     on_search_btn_toggled ();
 
@@ -315,23 +317,15 @@ namespace G4 {
         private MusicList create_music_list (Album album, bool from_artist = false) {
             var is_playlist = album is Playlist;
             var is_artist_playlist = is_playlist && from_artist;
+            var sort_mode = is_artist_playlist ? SortMode.ALBUM : SortMode.TITLE;
             var list = new MusicList (_app, typeof (Music), album, is_playlist);
-            var store = list.data_store;
             list.item_activated.connect ((position, obj) => _app.current_item = (int) position);
             list.item_binded.connect ((item) => {
                 var entry = (MusicEntry) item.child;
                 var music = (Music) item.item;
                 entry.paintable = _loading_paintable;
-                var mode = _app.get_list_sort_mode (store);
-                if (is_artist_playlist && mode <= SortMode.ARTIST_ALBUM)
-                    mode = SortMode.ALBUM;
-                else if (from_artist && mode == SortMode.ARTIST)
-                    mode = SortMode.ALBUM;
-                else if (mode == SortMode.ALBUM)
-                    mode = SortMode.TITLE;
-                entry.set_titles (music, mode);
+                entry.set_titles (music, sort_mode);
             });
-            _app.set_list_sort_mode (store, SortMode.ALBUM);
             bind_music_list_properties (list, is_playlist);
             return list;
         }
@@ -343,7 +337,7 @@ namespace G4 {
                 var entry = (MusicEntry) item.child;
                 var music = (Music) item.item;
                 entry.paintable = _loading_paintable;
-                entry.set_titles (music, _main_sort_mode);
+                entry.set_titles (music, _sort_mode);
             });
             bind_music_list_properties (list, true);
             return list;
@@ -655,15 +649,6 @@ namespace G4 {
 
         private void on_thumbnail_changed (Music music, Gdk.Paintable paintable) {
             _current_list.update_item_cover (music, paintable);
-        }
-
-        private void update_sort_mode (uint mode) {
-            if (mode < SORT_MODE_ICONS.length) {
-                sort_btn.set_icon_name (SORT_MODE_ICONS[mode]);
-            }
-            if (_current_list.get_height () > 0) {
-                _current_list.create_factory ();
-            }
         }
 
         private void update_stack_pages (Stack stack) {

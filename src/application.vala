@@ -16,8 +16,8 @@ namespace G4 {
         private StringBuilder _next_uri = new StringBuilder ();
         private GstPlayer _player = new GstPlayer ();
         private Settings _settings;
+        private uint _sort_mode = SortMode.TITLE;
         private bool _store_external_changed = false;
-        private HashTable<unowned ListModel, uint> _sort_map = new HashTable<unowned ListModel, uint> (direct_hash, direct_equal);
         private Thumbnailer _thumbnailer = new Thumbnailer ();
 
         public signal void end_of_playlist (bool forward);
@@ -133,9 +133,6 @@ namespace G4 {
             _actions = null;
             _loader.save_tag_cache ();
             delete_cover_tmp_file_async.begin ((obj, res) => delete_cover_tmp_file_async.end (res));
-
-            //  save playing-list's sort mode only
-            _settings.set_uint ("sort-mode", _sort_map[_music_queue]);
 
             if (_mpris_id != 0) {
                 Bus.unown_name (_mpris_id);
@@ -294,16 +291,16 @@ namespace G4 {
 
         public uint sort_mode {
             get {
-                return _sort_map[_current_list.model];
+                return _sort_mode;
             }
             set {
                 var action = lookup_action (ACTION_SORT);
                 var state = new Variant.string (value.to_string ());
                 (action as SimpleAction)?.set_state (state);
 
-                if (_sort_map[_current_list.model] != value) {
-                    _sort_map[_current_list.model] = value;
-                    sort_music_store ((ListStore) _current_list.model, value);
+                if (_sort_mode != value) {
+                    _sort_mode = value;
+                    sort_music_store ((ListStore) _music_queue, value);
                 }
             }
         }
@@ -374,7 +371,7 @@ namespace G4 {
         public async void load_music_folder_async (bool replace) {
             var files = new File[] { File.new_for_uri (music_folder) };
             var musics = new GenericArray<Music> (4096);
-            yield _loader.load_files_async (files, musics, false, false, _sort_map[_music_queue]);
+            yield _loader.load_files_async (files, musics, false, false, _sort_mode);
             _store_external_changed = true;
             if (replace) {
                 _music_queue.splice (0, _music_queue.get_n_items (), (Object[]) musics.data);
@@ -459,14 +456,6 @@ namespace G4 {
             var saved = yield add_playlist_to_file_async (playlist, append);
             if (saved && append)
                 (active_window as Window)?.show_toast (_("Save playlist successfully"), file);
-        }
-
-        public uint get_list_sort_mode (ListModel model) {
-            return _sort_map[model];
-        }
-
-        public void set_list_sort_mode (ListModel model, uint mode) {
-            _sort_map[model] = mode;
         }
 
         public async void show_add_playlist_dialog (Playlist playlist) {
