@@ -46,6 +46,12 @@ namespace G4 {
             }
         }
 
+        public unowned string artist_name {
+            get {
+                return album_artist.length > 0 ? album_artist : artist;
+            }
+        }
+
         public unowned string cover_key {
             get {
                 return _cover_key ?? uri;

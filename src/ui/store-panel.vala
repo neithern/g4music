@@ -444,7 +444,7 @@ namespace G4 {
                 if (album_mode) {
                     _app.current_item = 0;
                 } else {
-                    string[] strv = { PageName.ARTIST, artist?.artist ?? "" };
+                    string[] strv = { PageName.ARTIST, artist?.artist_name ?? "" };
                     _app.activate_action (ACTION_PLAY, new Variant.bytestring_array (strv));
                 }
             });
@@ -462,7 +462,7 @@ namespace G4 {
 
             if (stack.animate_transitions && stack.visible_child == _current_list)
                 _overlayed_lists.add (_current_list);
-            stack.add (mlist, album_mode ? album?.album_key : artist?.artist);
+            stack.add (mlist, album_mode ? album?.album_key : artist?.artist_name);
         }
 
         private Stack? get_current_stack () {
@@ -571,8 +571,8 @@ namespace G4 {
             if (_current_list.playable) {
                 _current_list.current_node = music;
             } else if (_current_list.item_type == typeof (Artist)) {
-                var artist = music?.artist ?? "";
-                _current_list.current_node = _library.artists[artist];
+                var artist_name = music?.artist_name ?? "";
+                _current_list.current_node = _library.artists[artist_name];
             } else if (_current_list.item_type == typeof (Album)) {
                 var album = music?.album_key ?? "";
                 var artist = _current_list.music_node as Artist;

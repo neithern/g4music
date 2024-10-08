@@ -289,8 +289,7 @@ namespace G4 {
             }
             var added = album.add_music (music);
 
-            unowned var album_artist = music.album_artist;
-            unowned var artist_name = album_artist.length > 0 ? album_artist : music.artist;
+            unowned var artist_name = music.artist_name;
             Artist artist;
             if (!_artists.lookup_extended (artist_name, out key, out artist)) {
                 artist = new Artist (music, artist_name);
@@ -345,8 +344,7 @@ namespace G4 {
                 _albums.foreach_remove ((name, album) => album.remove_music (music) && album.length == 0);
             }
 
-            unowned var album_artist = music.album_artist;
-            unowned var artist_name = album_artist.length > 0 ? album_artist : music.artist;
+            unowned var artist_name = music.artist_name;
             var artist = _artists[artist_name];
             if (artist is Artist) {
                 artist.remove_music (music);
