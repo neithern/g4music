@@ -183,7 +183,7 @@ namespace G4 {
                     on_music_changed (_app.current_music);
 
                     indicator.visible = _current_list.modified;
-                    sort_btn.sensitive = _current_list == _main_list;
+                    sort_btn.visible = _current_list == _main_list;
                     _search_mode = SearchMode.ANY;
                     on_search_btn_toggled ();
 

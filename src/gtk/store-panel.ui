@@ -11,8 +11,7 @@
           <class name="flat"/>
         </style>
         <child type="title">
-          <object class="GtkLabel" id="indicator">
-            <property name="label">•</property>
+          <object class="GtkLabel">
             <property name="visible">false</property>
           </object>
         </child>
@@ -31,9 +30,22 @@
           </object>
         </child>
         <child type="start">
-          <object class="GtkMenuButton" id="sort_btn">
-            <property name="menu_model">sort_menu</property>
-            <property name="tooltip-text" translatable="yes">Sort By</property>
+          <object class="GtkBox">
+            <property name="orientation">horizontal</property>
+            <property name="width-request">52</property>
+            <child>
+              <object class="GtkMenuButton" id="sort_btn">
+                <property name="menu_model">sort_menu</property>
+                <property name="tooltip-text" translatable="yes">Sort By</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="indicator">
+                <property name="label">•</property>
+                <property name="margin-start">4</property>
+                <property name="visible">false</property>
+              </object>
+            </child>
           </object>
         </child>
       </object>
