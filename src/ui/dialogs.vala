@@ -52,7 +52,7 @@ namespace G4 {
         /* Translators: Replace "translator-credits" with your names, one name per line */
         var translator_credits = _("translator-credits");
         var website = "https://gitlab.gnome.org/neithern/g4music";
-        var parent = get_main_window ();
+        var parent = Window.get_default ();
 #if ADW_1_5
         var win = new Adw.AboutDialog ();
         run_idle_once (() => {

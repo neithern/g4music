@@ -171,7 +171,7 @@ namespace G4 {
             }
             action_btn.sensitive = enabled;
             root.action_set_enabled (ACTION_APP + ACTION_PLAY_PAUSE, enabled);
-            get_main_window ()?.set_title (music?.get_artist_and_title () ?? _app.name);
+            Window.get_default ()?.set_title (music?.get_artist_and_title () ?? _app.name);
         }
 
         private bool on_music_folder_clicked (string uri) {

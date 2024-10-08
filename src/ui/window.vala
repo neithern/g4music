@@ -301,6 +301,16 @@ namespace G4 {
                 _bkgnd_paintable.paintable = null;
             }
         }
+
+        public static Window? get_default () {
+            unowned var list = (GLib.Application.get_default () as Application)?.get_windows ();
+            for (; list != null; list = list?.next) {
+                var window = ((!)list).data;
+                if (window is Window)
+                    return (Window) window;
+            }
+            return null;
+        }
     }
 
     public Gtk.Button? find_button_by_action_name (Gtk.Widget widget, string action) {
@@ -340,15 +350,5 @@ namespace G4 {
             }
         }
         return files;
-    }
-
-    public inline Window? get_main_window () {
-        unowned var list = (GLib.Application.get_default () as Application)?.get_windows ();
-        for (; list != null; list = list?.next) {
-            var window = ((!)list).data;
-            if (window is Window)
-                return (Window) window;
-        }
-        return null;
     }
 }

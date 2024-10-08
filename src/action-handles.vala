@@ -178,7 +178,7 @@ namespace G4 {
                     if (action.name.has_suffix (ACTION_RANDOM_PLAY)) {
                         sort_music_array (playlist.items, SortMode.SHUFFLE);
                     }
-                    get_main_window ()?.open_page (strv, playlist);
+                    Window.get_default ()?.open_page (strv, playlist);
                     _app.current_item = 0;
                 }
             }
@@ -204,7 +204,7 @@ namespace G4 {
                     try {
                         _portal.open_directory_async.end (res);
                     } catch (Error e) {
-                        get_main_window ()?.show_toast (e.message);
+                        Window.get_default ()?.show_toast (e.message);
                     }
                 });
             }
@@ -215,7 +215,7 @@ namespace G4 {
             if (uri != null) {
                 var tags = strcmp (_app.current_music?.uri, uri) == 0 ? _app.player.tag_list : (Gst.TagList?) null;
                 var dialog = new TagListDialog ((!)uri, tags);
-                dialog.present (get_main_window ());
+                dialog.present (Window.get_default ());
             }
         }
 
@@ -256,7 +256,7 @@ namespace G4 {
                             _app.loader.on_file_removed (File.new_for_uri ((!)uri));
                         }
                     } catch (Error e) {
-                        get_main_window ()?.show_toast (e.message);
+                        Window.get_default ()?.show_toast (e.message);
                     }
                 });
             }

@@ -81,7 +81,7 @@ namespace G4 {
         public override void activate () {
             base.activate ();
 
-            var window = get_main_window ();
+            var window = Window.get_default ();
             if (window != null) {
                 ((!)window).present ();
             } else {
@@ -90,7 +90,7 @@ namespace G4 {
         }
 
         public override void open (File[] files, string hint) {
-            var window = get_main_window ();
+            var window = Window.get_default ();
             var initial = window == null;
             (window ?? new Window (this))?.present ();
 
@@ -258,7 +258,7 @@ namespace G4 {
             set {
                 if (_music_folder != value) {
                     _music_folder = value;
-                    if (get_main_window () != null)
+                    if (Window.get_default () != null)
                         reload_library ();
                 }
             }
@@ -345,7 +345,7 @@ namespace G4 {
             if (saved)
                 playlist_added (_loader.library.add_playlist (playlist));
             else
-                get_main_window ()?.show_toast (_("Save playlist failed"));
+                Window.get_default ()?.show_toast (_("Save playlist failed"));
             return saved;
         }
 
@@ -456,12 +456,12 @@ namespace G4 {
             }
             var saved = yield add_playlist_to_file_async (playlist, append);
             if (saved && append)
-                get_main_window ()?.show_toast (_("Save playlist successfully"), file);
+                Window.get_default ()?.show_toast (_("Save playlist successfully"), file);
         }
 
         public async void show_add_playlist_dialog (Playlist playlist) {
             var dialog = new PlaylistDialog (this);
-            var pls = yield dialog.choose (get_main_window ());
+            var pls = yield dialog.choose (Window.get_default ());
             if (pls != null) {
                 var list_uri = ((!)pls).list_uri;
                 if (list_uri.length > 0) {
@@ -567,7 +567,7 @@ namespace G4 {
 
         private void on_player_error (Error err) {
             print ("Player error: %s\n", err.message);
-            get_main_window ()?.show_toast (err.message);
+            Window.get_default ()?.show_toast (err.message);
             if (!_player.gapless) {
                 on_player_end ();
             }
@@ -592,7 +592,7 @@ namespace G4 {
 
         private void on_player_state_changed (Gst.State state) {
             if (state == Gst.State.PLAYING && _inhibit_id == 0) {
-                _inhibit_id = this.inhibit (get_main_window (), Gtk.ApplicationInhibitFlags.SUSPEND, _("Keep playing"));
+                _inhibit_id = this.inhibit (Window.get_default (), Gtk.ApplicationInhibitFlags.SUSPEND, _("Keep playing"));
             } else if (state != Gst.State.PLAYING && _inhibit_id != 0) {
                 this.uninhibit (_inhibit_id);
                 _inhibit_id = 0;
