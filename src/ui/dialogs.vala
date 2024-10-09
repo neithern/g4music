@@ -94,18 +94,18 @@ namespace G4 {
 
     public async bool show_alert_dialog (string text, Gtk.Window? parent = null) {
 #if ADW_1_5
-        var result = new bool[] { false };
+        var result = false;
         var dialog = new Adw.AlertDialog (null, text);
         dialog.add_response ("no", _("No"));
         dialog.add_response ("yes", _("Yes"));
         dialog.default_response = "yes";
         dialog.response.connect ((id) => {
-            result[0] = id == "yes";
+            result = id == "yes";
             Idle.add (show_alert_dialog.callback);
         });
         dialog.present (parent);
         yield;
-        return result[0];
+        return result;
 #elif GTK_4_10
         var dialog = new Gtk.AlertDialog (text);
         dialog.buttons = { _("No"), _("Yes") };
@@ -119,18 +119,18 @@ namespace G4 {
         }
         return false;
 #else
-        var result = new int[] { -1 };
+        var result = -1;
         var dialog = new Gtk.MessageDialog (parent, Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                             Gtk.MessageType.QUESTION, Gtk.ButtonsType.YES_NO, text);
         dialog.response.connect ((id) => {
             dialog.destroy ();
-            result[0] = id;
+            result = id;
             Idle.add (show_alert_dialog.callback);
         });
         dialog.set_titlebar (new Adw.Bin ());
         dialog.present ();
         yield;
-        return result[0] == Gtk.ResponseType.YES;
+        return result == Gtk.ResponseType.YES;
 #endif
     }
 
