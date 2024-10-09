@@ -547,7 +547,8 @@ namespace G4 {
         }
 
         private void on_index_changed (int index, uint size) {
-            if (_current_list.playable && _current_list.dropping_item == -1 && !_current_list.multi_selection) {
+            if (_current_list.filter_model == _app.current_list && _current_list.playable
+                    && _current_list.dropping_item == -1 && !_current_list.multi_selection) {
                 _current_list.scroll_to_item (index);
             }
         }
