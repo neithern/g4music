@@ -44,24 +44,24 @@ namespace G4 {
 
             ActionEntry[] action_entries = {
                 { ACTION_ABOUT, () => show_about_dialog (_app) },
-                { ACTION_ADD_TO_PLAYLIST, add_to_playlist, "aay" },
-                { ACTION_ADD_TO_QUEUE, play_or_queue, "aay" },
-                { ACTION_EXPORT_COVER, export_cover, "aay" },
+                { ACTION_ADD_TO_PLAYLIST, add_to_playlist, "s" },
+                { ACTION_ADD_TO_QUEUE, play_or_queue, "s" },
+                { ACTION_EXPORT_COVER, export_cover, "s" },
                 { ACTION_NEXT, () => _app.play_next () },
-                { ACTION_PLAY, play_or_queue, "aay" },
-                { ACTION_PLAY_AT_NEXT, play_at_next, "aay" },
+                { ACTION_PLAY, play_or_queue, "s" },
+                { ACTION_PLAY_AT_NEXT, play_at_next, "s" },
                 { ACTION_PLAY_PAUSE, () => _app.play_pause () },
                 { ACTION_PREV, () => _app.play_previous () },
                 { ACTION_PREFS, show_preferences },
-                { ACTION_RANDOM_PLAY, play_or_queue, "aay" },
+                { ACTION_RANDOM_PLAY, play_or_queue, "s" },
                 { ACTION_RELOAD, () => _app.reload_library () },
                 { ACTION_SCHEME, scheme, "s", "'0'" },
-                { ACTION_SHOW_FILE, show_file, "aay" },
-                { ACTION_SHOW_TAGS, show_tags, "aay" },
+                { ACTION_SHOW_FILE, show_file, "s" },
+                { ACTION_SHOW_TAGS, show_tags, "s" },
                 { ACTION_SHOW_TAGS_CURRENT, show_tags },
                 { ACTION_SORT, sort_by, "s", "'2'" },
                 { ACTION_TOGGLE_SORT, toggle_sort },
-                { ACTION_TRASH_FILE, trash_file, "aay" },
+                { ACTION_TRASH_FILE, trash_file, "s" },
                 { ACTION_QUIT, () => _app.quit () }
             };
             app.add_action_entries (action_entries, this);
@@ -118,69 +118,64 @@ namespace G4 {
                 if (file != null) {
                     var saved = yield save_sample_to_file_async ((!)file, sample);
                     (_app.active_window as Window)?.show_toast (
-                        saved ? _("Export cover successfully") : _("Export cover failed"), saved ? file : (File?) null);
+                        saved ? _("Export cover successfully") : _("Export cover failed"), saved ? file?.get_uri () : (string?) null);
                 }
             }
         }
 
         private void add_to_playlist (SimpleAction action, Variant? parameter) {
-            var strv = parameter?.get_bytestring_array ();
-            var playlist = _parse_playlist_from_strv (strv);
+            var uri = parameter?.get_string ();
+            var playlist = parse_playlist_from_music_uri (uri);
             if (playlist != null) {
                 _app.show_add_playlist_dialog.begin ((!)playlist, (obj, res) => _app.show_add_playlist_dialog.end (res));
             }
         }
 
         private void export_cover (SimpleAction action, Variant? parameter) {
-            var uri = parse_uri_from_parameter (parameter);
+            var uri = parameter?.get_string ();
             var music = uri != null ? _app.loader.find_cache ((!)uri) : null;
             if (music != null)
                 _export_cover_async.begin ((!)music, (obj, res) => _export_cover_async.end (res));
         }
 
-        private Playlist? _parse_playlist_from_strv (string[]? strv) {
+        private Playlist? parse_playlist_from_music_uri (string? uri) {
             Music? node = null;
-            if (strv != null && ((!)strv).length > 1) {
-                var arr = (!)strv;
+            if (uri != null) {
+                string? ar = null, al = null, pl = null;
+                parse_library_uri ((!)uri, out ar, out al, out pl);
                 var loader = _app.loader;
                 var library = loader.library;
-                unowned var key = arr[1];
-                switch (arr[0]) {
-                    case PageName.ALBUM:
-                        node = library.albums[key];
-                        break;
-                    case PageName.ARTIST:
-                        var artist = library.artists[key];
-                        if ((artist is Artist) && arr.length > 2 && arr[2].length > 0)
-                            node = ((Artist) artist)[arr[2]];
-                        else
-                            node = artist;
-                        break;
-                    case PageName.PLAYLIST:
-                        node = library.playlists[key];
-                        break;
-                    default:
-                        node = loader.find_cache (key);
-                        break;
+                if (ar != null) {
+                    var artist = library.artists[(!)ar];
+                    if ((artist is Artist) && al != null && ((!)al).length > 0)
+                        node = ((Artist) artist)[(!)al];
+                    else
+                        node = artist;
+                } else if (al != null) {
+                    node = library.albums[(!)al];
+                } else if (pl != null) {
+                    node = library.playlists[(!)pl];
+                } else {
+                    node = loader.find_cache ((!)uri);
                 }
             }
             return node != null ? to_playlist ({(!)node}) : (Playlist?) null;
         }
 
         private void play_or_queue (SimpleAction action, Variant? parameter) {
-            var strv = parameter?.get_bytestring_array ();
+            var uri = parameter?.get_string ();
             if (action.name.has_suffix (ACTION_ADD_TO_QUEUE)) {
-                var playlist = _parse_playlist_from_strv (strv);
+                var playlist = parse_playlist_from_music_uri (uri);
                 if (playlist != null)
                     _app.insert_to_queue ((!)playlist, -1, false);
-            } else {
-                Window.get_default ()?.open_page (strv, action.name.has_suffix (ACTION_RANDOM_PLAY));
+            } else if (uri != null) {
+                Window.get_default ()?.open_page ((!)uri, true, action.name.has_suffix (ACTION_RANDOM_PLAY));
             }
         }
 
         private void play_at_next (SimpleAction action, Variant? parameter) {
-            var strv = parameter?.get_bytestring_array ();
-            var playlist = _parse_playlist_from_strv (strv);
+            var uri = parameter?.get_string ();
+            var playlist = parse_playlist_from_music_uri (uri);
             if (playlist != null)
                 _app.insert_after_current ((!)playlist);
         }
@@ -192,20 +187,24 @@ namespace G4 {
         }
 
         private void show_file (SimpleAction action, Variant? parameter) {
-            var uri = parse_uri_from_parameter (parameter);
+            var uri = parameter?.get_string ();
             if (uri != null) {
-                _portal.open_directory_async.begin ((!)uri, (obj, res) => {
-                    try {
-                        _portal.open_directory_async.end (res);
-                    } catch (Error e) {
-                        Window.get_default ()?.show_toast (e.message);
-                    }
-                });
+                if (((!)uri).has_prefix (LIBRARY_SCHEME)) {
+                    Window.get_default ()?.open_page ((!)uri, false);
+                } else {
+                    _portal.open_directory_async.begin ((!)uri, (obj, res) => {
+                        try {
+                            _portal.open_directory_async.end (res);
+                        } catch (Error e) {
+                            Window.get_default ()?.show_toast (e.message);
+                        }
+                    });
+                }
             }
         }
 
         private void show_tags (SimpleAction action, Variant? parameter) {
-            var uri = parse_uri_from_parameter (parameter) ?? _app.current_music?.uri;
+            var uri = parameter?.get_string () ?? _app.current_music?.uri;
             if (uri != null) {
                 var tags = strcmp (_app.current_music?.uri, uri) == 0 ? _app.player.tag_list : (Gst.TagList?) null;
                 var dialog = new TagListDialog ((!)uri, tags);
@@ -242,7 +241,7 @@ namespace G4 {
         }
 
         private void trash_file (SimpleAction action, Variant? parameter) {
-            var uri = parse_uri_from_parameter (parameter);
+            var uri = parameter?.get_string ();
             if (uri != null) {
                 _portal.trash_file_async.begin ((!)uri, (obj, res) => {
                     try {
@@ -255,14 +254,5 @@ namespace G4 {
                 });
             }
         }
-    }
-
-    public unowned string? parse_uri_from_parameter (Variant? parameter) {
-        unowned var strv = parameter?.get_bytestring_array ();
-        if (strv != null && ((!)strv).length > 1) {
-            var arr = (!)strv;
-            return arr[0] == "uri" ? (string?) arr[1] : null;
-        }
-        return null;
     }
 }

@@ -458,7 +458,7 @@ namespace G4 {
             }
             var saved = yield add_playlist_to_file_async (playlist, append);
             if (saved && append)
-                Window.get_default ()?.show_toast (_("Save playlist successfully"), file);
+                Window.get_default ()?.show_toast (_("Save playlist successfully"), build_library_uri (null, playlist));
         }
 
         public async void show_add_playlist_dialog (Playlist playlist) {

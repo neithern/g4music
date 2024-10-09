@@ -26,9 +26,9 @@ namespace G4 {
 
             ActionEntry[] action_entries = {
                 { ACTION_BUTTON, button_command, "s" },
-                { ACTION_REMOVE, remove_from_list, "aay" },
+                { ACTION_REMOVE, remove_from_list, "s" },
                 { ACTION_SAVE_LIST, save_list },
-                { ACTION_SEARCH, search_by, "aay" },
+                { ACTION_SEARCH, search_by, "as" },
                 { ACTION_SELECT, start_select },
                 { ACTION_TOGGLE_SEARCH, toggle_search },
             };
@@ -100,16 +100,15 @@ namespace G4 {
             base.snapshot (snapshot);
         }
 
-        public void open_page (string[] paths, bool shuffle = false) {
-            _store_panel.open_paths (paths, true, shuffle);
+        public void open_page (string uri, bool play_now = false, bool shuffle = false) {
+            _store_panel.open_page (uri, play_now, shuffle);
         }
 
-        public void show_toast (string message, File? file = null) {
+        public void show_toast (string message, string? uri = null) {
             var toast = new Adw.Toast (message);
-            if (file != null) {
-                var uri = ((!)file).get_uri ();
+            if (uri != null) {
                 toast.action_name = ACTION_APP + ACTION_SHOW_FILE;
-                toast.action_target = new Variant.bytestring_array ({"uri", uri});
+                toast.action_target = new Variant.string ((!)uri);
                 toast.button_label = _("Show");
             }
             _toast.add_toast (toast);
@@ -256,7 +255,7 @@ namespace G4 {
 
         private void remove_from_list (SimpleAction action, Variant? parameter) {
             var app = (Application) application;
-            var uri = parse_uri_from_parameter (parameter);
+            var uri = parameter?.get_string ();
             var music = uri != null ? app.loader.find_cache ((!)uri) : null;
             if (music != null) {
                 _store_panel.remove_from_list ((!)music);
@@ -268,7 +267,7 @@ namespace G4 {
         }
 
         private void search_by (SimpleAction action, Variant? parameter) {
-            var strv = parameter?.get_bytestring_array ();
+            var strv = parameter?.get_strv ();
             if (strv != null && ((!)strv).length > 1) {
                 var arr = (!)strv;
                 var text = arr[0] + ":";

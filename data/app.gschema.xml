@@ -19,9 +19,6 @@
       <default>true</default>
       <summary>Grid view for artists/albums</summary>
     </key>
-    <key name="library-path" type="as">
-      <default>[]</default>
-    </key>
     <key name="monitor-changes" type="b">
       <default>false</default>
       <summary>Monitor local file changes</summary>
@@ -87,6 +84,9 @@
     </key>
     <key name="height" type="i">
       <default>600</default>
+    </key>
+    <key name="library-uri" type="s">
+      <default>''</default>
     </key>
     <key name="recent-music" type="s">
       <default>''</default>

@@ -203,25 +203,80 @@ namespace G4 {
             return { PageName.ALBUM, album_key };
     }
 
+    public const string LIBRARY_SCHEME = "library://";
+
+    public string build_library_uri (Artist? artist, Album? album) {
+        var album_key = album?.album_key ?? "";
+        var arr = (artist != null) ? new string[] { PageName.ARTIST, ((!)artist).artist_name, album_key }
+                    : (album is Playlist) ? new string[] { PageName.PLAYLIST, album_key }
+                        : (album != null) ? new string[] { PageName.ALBUM, album_key }
+                            : new string[] { PageName.PLAYING };
+        return build_library_uri_from_sa (arr);
+    }
+
+    public string build_library_uri_from_sa (string[] arr) {
+        var sb = new StringBuilder (LIBRARY_SCHEME);
+        if (arr.length > 0) {
+            sb.append (arr[0]);
+            for (var i = 1; i < arr.length; i++) {
+                sb.append_c ('/');
+                sb.append (Uri.escape_string (arr[i]));
+            }
+        }
+        return sb.str;
+    }
+
+    public bool parse_library_uri (string uri_str, out string? artist, out string? album, out string? playlist, out string? host = null) {
+        host = null;
+        artist = null;
+        album = null;
+        playlist = null;
+        if (uri_str.has_prefix (LIBRARY_SCHEME)) {
+            var path = uri_str.substring (LIBRARY_SCHEME.length);
+            var arr = path.split ("/");
+            if (arr.length > 1) {
+                var key = Uri.unescape_string (arr[1]) ?? "";
+                switch (arr[0]) {
+                    case PageName.ALBUM:
+                        album = key;
+                        break;
+                    case PageName.ARTIST:
+                        artist = key;
+                        if (arr.length > 2)
+                            album = Uri.unescape_string (arr[2]);
+                        break;
+                    case PageName.PLAYLIST:
+                        playlist = key;
+                        break;
+                }
+            }
+            host = arr[0];
+            return true;
+        }
+        return false;
+    }
+
     public MenuItem create_menu_item_for_strv (string[] strv, string label, string action) {
         var item = new MenuItem (label, null);
-        item.set_action_and_target_value (action, new Variant.bytestring_array (strv));
+        item.set_action_and_target_value (action, new Variant.strv (strv));
         return item;
     }
 
     public MenuItem create_menu_item_for_uri (string uri, string label, string action) {
-        return create_menu_item_for_strv ({"uri", uri}, label, action);
+        var item = new MenuItem (label, null);
+        item.set_action_and_target_value (action, new Variant.string (uri));
+        return item;
     }
 
     public Menu create_menu_for_album (Album album) {
-        var strv = build_action_target_for_album (album);
+        var uri = build_library_uri (null, album);
         var menu = new Menu ();
-        menu.append_item (create_menu_item_for_strv (strv, _("Play"), ACTION_APP + ACTION_PLAY));
-        menu.append_item (create_menu_item_for_strv (strv, _("_Random Play"), ACTION_APP + ACTION_RANDOM_PLAY));
+        menu.append_item (create_menu_item_for_uri (uri, _("Play"), ACTION_APP + ACTION_PLAY));
+        menu.append_item (create_menu_item_for_uri (uri, _("_Random Play"), ACTION_APP + ACTION_RANDOM_PLAY));
         var section = new Menu ();
-        section.append_item (create_menu_item_for_strv (strv, _("Play at _Next"), ACTION_APP + ACTION_PLAY_AT_NEXT));
-        section.append_item (create_menu_item_for_strv (strv, _("Add to _Queue"), ACTION_APP + ACTION_ADD_TO_QUEUE));
-        section.append_item (create_menu_item_for_strv (strv, _("Add to _Playlist…"), ACTION_APP + ACTION_ADD_TO_PLAYLIST));
+        section.append_item (create_menu_item_for_uri (uri, _("Play at _Next"), ACTION_APP + ACTION_PLAY_AT_NEXT));
+        section.append_item (create_menu_item_for_uri (uri, _("Add to _Queue"), ACTION_APP + ACTION_ADD_TO_QUEUE));
+        section.append_item (create_menu_item_for_uri (uri, _("Add to _Playlist…"), ACTION_APP + ACTION_ADD_TO_PLAYLIST));
         menu.append_section (null, section);
         if (album is Playlist) {
             unowned var list_uri = ((Playlist) album).list_uri;
@@ -236,14 +291,14 @@ namespace G4 {
     }
 
     public Menu create_menu_for_artist (Artist artist) {
-        string[] strv = { PageName.ARTIST, artist.artist, "" };
+        var uri = build_library_uri (artist, null);
         var menu = new Menu ();
-        menu.append_item (create_menu_item_for_strv (strv, _("Play"), ACTION_APP + ACTION_PLAY));
-        menu.append_item (create_menu_item_for_strv (strv, _("_Random Play"), ACTION_APP + ACTION_RANDOM_PLAY));
+        menu.append_item (create_menu_item_for_uri (uri, _("Play"), ACTION_APP + ACTION_PLAY));
+        menu.append_item (create_menu_item_for_uri (uri, _("_Random Play"), ACTION_APP + ACTION_RANDOM_PLAY));
         var section = new Menu ();
-        section.append_item (create_menu_item_for_strv (strv, _("Play at _Next"), ACTION_APP + ACTION_PLAY_AT_NEXT));
-        section.append_item (create_menu_item_for_strv (strv, _("Add to _Queue"), ACTION_APP + ACTION_ADD_TO_QUEUE));
-        section.append_item (create_menu_item_for_strv (strv, _("Add to _Playlist…"), ACTION_APP + ACTION_ADD_TO_PLAYLIST));
+        section.append_item (create_menu_item_for_uri (uri, _("Play at _Next"), ACTION_APP + ACTION_PLAY_AT_NEXT));
+        section.append_item (create_menu_item_for_uri (uri, _("Add to _Queue"), ACTION_APP + ACTION_ADD_TO_QUEUE));
+        section.append_item (create_menu_item_for_uri (uri, _("Add to _Playlist…"), ACTION_APP + ACTION_ADD_TO_PLAYLIST));
         menu.append_section (null, section);
         return menu;
     }
