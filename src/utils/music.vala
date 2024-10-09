@@ -317,7 +317,7 @@ namespace G4 {
 
         public static void shuffle_order (GenericArray<Music> arr) {
             for (var i = arr.length - 1; i > 0; i--) {
-                var r = Random.int_range (0, i);
+                var r = Random.int_range (0, i + 1);
                 var s = arr[i];
                 arr[i] = arr[r];
                 arr[r] = s;
