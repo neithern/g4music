@@ -192,8 +192,6 @@ namespace G4 {
                     var scroll = !_overlayed_lists.remove (list);
                     run_idle_once (() => list.set_to_current_item (scroll), Priority.LOW);
                 }
-
-                save_library_uri ();
             }
         }
 
@@ -467,7 +465,7 @@ namespace G4 {
             }
         }
 
-        private void save_library_uri () {
+        private void save_playing_page () {
             var paths = new GenericArray<string> (4);
             var stack = get_current_stack ();
             if (stack != null) {
@@ -477,9 +475,6 @@ namespace G4 {
             }
             var uri = build_library_uri_from_sa (paths.data);
             _app.settings.set_string ("library-uri", uri);
-        }
-
-        private void save_playing_main () {
             _app.settings.set_boolean ("playing-main", _app.current_list == _main_list.filter_model);
         }
 
@@ -552,7 +547,7 @@ namespace G4 {
                     _current_list.activate_item (0);
                 }
                 _app.current_list = _current_list.filter_model;
-                save_playing_main ();
+                save_playing_page ();
             }
         }
 
@@ -654,10 +649,10 @@ namespace G4 {
         }
 
         private void play_current_list (int index = 0) {
-            if (_current_list.playable) {
+            if (_current_list.playable && _app.current_list != _current_list.filter_model) {
                 _app.current_list = _current_list.filter_model;
                 _app.current_item = index;
-                save_playing_main ();
+                save_playing_page ();
             }
         }
 
