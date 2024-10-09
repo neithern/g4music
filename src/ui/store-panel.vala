@@ -651,9 +651,9 @@ namespace G4 {
         private void play_current_list (int index = 0) {
             if (_current_list.playable && _app.current_list != _current_list.filter_model) {
                 _app.current_list = _current_list.filter_model;
-                _app.current_item = index;
                 save_playing_page ();
             }
+            _app.current_item = index;
         }
 
         private void update_stack_pages (Stack stack) {
