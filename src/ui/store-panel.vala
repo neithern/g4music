@@ -85,15 +85,21 @@ namespace G4 {
 
             _artist_list = create_artist_list ();
             _artist_stack.add (_artist_list, PageName.ARTIST);
+            _artist_stack.bind_property ("visible-child", this, "visible-child");
             stack_view.add_titled (_artist_stack.widget, PageName.ARTIST, _("Artists")).icon_name = "system-users-symbolic";
 
             _album_list = create_album_list ();
             _album_stack.add (_album_list, PageName.ALBUM);
+            _album_stack.bind_property ("visible-child", this, "visible-child");
             stack_view.add_titled (_album_stack.widget, PageName.ALBUM, _("Albums")).icon_name = "drive-multidisk-symbolic";
 
             _playlist_list = create_playlist_list ();
             _playlist_stack.add (_playlist_list, PageName.PLAYLIST);
+            _playlist_stack.bind_property ("visible-child", this, "visible-child");
             stack_view.add_titled (_playlist_stack.widget, PageName.PLAYLIST, _("Playlists")).icon_name = "view-list-symbolic";
+
+            stack_view.transition_type = Gtk.StackTransitionType.SLIDE_LEFT_RIGHT;
+            stack_view.bind_property ("visible-child", this, "visible-child");
 
             var mini_revealer = new Gtk.Revealer ();
             mini_revealer.child = _mini_bar;
@@ -187,17 +193,12 @@ namespace G4 {
                     run_idle_once (() => list.set_to_current_item (scroll), Priority.LOW);
                 }
 
-                _app.settings.set_string ("library-uri", get_library_uri ());
+                save_library_uri ();
             }
         }
 
         public void first_allocated () {
             // Delay set model after the window size allocated to avoid showing slowly
-            _album_stack.bind_property ("visible-child", this, "visible-child");
-            _artist_stack.bind_property ("visible-child", this, "visible-child");
-            _playlist_stack.bind_property ("visible-child", this, "visible-child");
-            stack_view.transition_type = Gtk.StackTransitionType.SLIDE_LEFT_RIGHT;
-            stack_view.bind_property ("visible-child", this, "visible-child");
             _size_allocated = true;
         }
 
@@ -455,7 +456,18 @@ namespace G4 {
             return null;
         }
 
-        private string get_library_uri () {
+        private void initialize_library_page () {
+            if (_library_uri != null) {
+                open_page ((!)_library_uri, false);
+                if (!_library.empty) {
+                    _library_uri = null;
+                    if (!_app.settings.get_boolean ("playing-main") && _current_list.playable)
+                        _app.current_list = _current_list.filter_model;
+                }
+            }
+        }
+
+        private void save_library_uri () {
             var paths = new GenericArray<string> (4);
             var stack = get_current_stack ();
             if (stack != null) {
@@ -463,22 +475,19 @@ namespace G4 {
             } else {
                 paths.add (stack_view.get_visible_child_name () ?? "");
             }
-            return build_library_uri_from_sa (paths.data);
+            var uri = build_library_uri_from_sa (paths.data);
+            _app.settings.set_string ("library-uri", uri);
         }
 
-        private void initialize_library_page () {
-            if (_library_uri != null) {
-                open_page ((!)_library_uri, false);
-                if (!_library.empty)
-                    _library_uri = null;
-            }
+        private void save_playing_main () {
+            _app.settings.set_boolean ("playing-main", _app.current_list == _main_list.filter_model);
         }
 
         public void open_page (string uri, bool play_now = false, bool shuffle = false) {
-            string? ar = null, al = null, pl = null, host = null;
-            if (parse_library_uri (uri, out ar, out al, out pl, out host)) {
+            string? ar = null, al = null, pl = null, page = null;
+            if (parse_library_uri (uri, out ar, out al, out pl, out page)) {
                 stack_view.transition_type = Gtk.StackTransitionType.NONE;
-                stack_view.visible_child_name = (!)host;
+                stack_view.visible_child_name = (!)page;
                 stack_view.transition_type = Gtk.StackTransitionType.SLIDE_LEFT_RIGHT;
                 var stack = get_current_stack ();
                 if (stack != null) {
@@ -543,6 +552,7 @@ namespace G4 {
                     _current_list.activate_item (0);
                 }
                 _app.current_list = _current_list.filter_model;
+                save_playing_main ();
             }
         }
 
@@ -647,6 +657,7 @@ namespace G4 {
             if (_current_list.playable) {
                 _app.current_list = _current_list.filter_model;
                 _app.current_item = index;
+                save_playing_main ();
             }
         }
 
