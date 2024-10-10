@@ -372,8 +372,9 @@ namespace G4 {
         var logic_rect = Pango.Rectangle ();
         var layout = create_center_text_layout (context, "Serif", width, height, height * 0.4);
         layout.set_text (text, text.length);
+        layout.get_pixel_extents (out ink_rect, out logic_rect);
 
-        var x = - ink_rect.x + (width - logic_rect.width) * 0.5f;
+        var x = (width - logic_rect.width) * 0.5f;
         var y = - ink_rect.y + (height + logic_rect.height) * 0.5f;
         return TEXT_SVG_FORMAT.printf (c1, c2, c1, x, y, text);
     }
