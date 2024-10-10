@@ -459,7 +459,7 @@ namespace G4 {
                 open_page ((!)_library_uri, false);
                 if (!_library.empty) {
                     _library_uri = null;
-                    if (!_app.settings.get_boolean ("playing-main") && _current_list.playable)
+                    if (_current_list.playable)
                         _app.current_list = _current_list.filter_model;
                 }
             }
@@ -475,7 +475,6 @@ namespace G4 {
             }
             var uri = build_library_uri_from_sa (paths.data);
             _app.settings.set_string ("library-uri", uri);
-            _app.settings.set_boolean ("playing-main", _app.current_list == _main_list.filter_model);
         }
 
         public void open_page (string uri, bool play_now = false, bool shuffle = false) {

@@ -88,9 +88,6 @@
     <key name="library-uri" type="s">
       <default>''</default>
     </key>
-    <key name="playing-main" type="b">
-      <default>true</default>
-    </key>
     <key name="recent-music" type="s">
       <default>''</default>
     </key>
