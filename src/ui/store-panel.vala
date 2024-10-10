@@ -459,8 +459,10 @@ namespace G4 {
                 open_page ((!)_library_uri, false);
                 if (!_library.empty) {
                     _library_uri = null;
-                    if (_current_list.playable)
+                    if (_current_list.playable) {
                         _app.current_list = _current_list.filter_model;
+                        _album_key_of_list = _current_list.music_node?.album_key;
+                    }
                 }
             }
         }
@@ -567,6 +569,9 @@ namespace G4 {
                 var album = music?.album_key ?? "";
                 var artist = _current_list.music_node as Artist;
                 _current_list.current_node = artist != null ? ((!)artist)[album] : _library.albums[album];
+            } else if (_current_list.item_type == typeof (Playlist)) {
+                if (_album_key_of_list != null)
+                    _current_list.current_node = _library.playlists[(!)_album_key_of_list];
             }
             _mini_bar.title = music?.title ?? "";
         }
@@ -647,9 +652,12 @@ namespace G4 {
             _current_list.update_item_cover (music, paintable);
         }
 
+        private string? _album_key_of_list = null;
+
         private void play_current_list (int index = 0) {
             if (_current_list.playable && _app.current_list != _current_list.filter_model) {
                 _app.current_list = _current_list.filter_model;
+                _album_key_of_list = _current_list.music_node?.album_key;
                 save_playing_page ();
             }
             _app.current_item = index;
