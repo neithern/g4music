@@ -503,11 +503,10 @@ namespace G4 {
             if (_editable) {
                 uint position = uint.min (_dropping_item, visible_count);
                 if (value.holds (typeof (Playlist))) {
-                    var obj = value.get_object ();
                     var dst_obj = _filter_model.get_item (position);
                     if (dst_obj == null || !_data_store.find ((!)dst_obj, out position))
                         position = _data_store.get_n_items ();
-                    var playlist = (Playlist) obj;
+                    var playlist = (Playlist) value.get_object ();
                     modified |= merge_items_to_store (_data_store, playlist.items, ref position);
                 } else {
                     var files = get_dropped_files (value);

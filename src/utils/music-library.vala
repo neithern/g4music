@@ -406,19 +406,16 @@ namespace G4 {
     }
 
     public bool merge_items_to_store (ListStore store, GenericArray<Music> arr, ref uint position) {
-        var obj = store.get_item (position) as Music;
         var first_pos = -1;
-        var removed = remove_items_from_store (store, arr, obj, out first_pos);
-        if (removed != 0 && obj != null)
-            store.find ((!)obj, out position);
-        if (arr.length == 1 && arr[0] == store.get_item (position))
-            return false;
+        var removed = remove_items_from_store (store, arr, out first_pos);
+        if (position >= first_pos + removed)
+            position -= removed;
         position = uint.min (position, store.get_n_items ());
         store.splice (position, 0, arr.data);
         return !(arr.length == 1 && arr[0] == store.get_item (first_pos));
     }
 
-    public int remove_items_from_store (ListStore store, GenericArray<Music> arr, Music? exclude = null, out int first_pos = null) {
+    public int remove_items_from_store (ListStore store, GenericArray<Music> arr, out int first_pos = null) {
         var map = new GenericSet<Object?> (direct_hash, direct_equal);
         arr.foreach ((obj) => map.add (obj));
         var removed = 0;
@@ -427,7 +424,7 @@ namespace G4 {
         if (arr.length < size / 4) {
             for (var i = size - 1; i >= 0; i--) {
                 var obj = store.get_item (i);
-                if (obj != exclude && map.contains (obj)) {
+                if (map.contains (obj)) {
                     store.remove (i);
                     removed++;
                     first_removed = i;
@@ -437,7 +434,7 @@ namespace G4 {
             var remain = new GenericArray<Music> (size);
             for (var i = 0; i < size; i++) {
                 var obj = store.get_item (i);
-                if (obj == exclude || !map.contains (obj)) {
+                if (!map.contains (obj)) {
                     remain.add ((Music) obj);
                 } else {
                     removed++;
