@@ -528,9 +528,11 @@ namespace G4 {
 
         private void on_end_of_playlist (bool forward) {
             var stk = get_current_stack ();
-            if (stk != null && !_updating_store) {
+            if (stk == null) {
+                _app.current_list = _main_list.filter_model;
+            } else if (!_updating_store) {
                 var stack = (!)stk;
-                if (_current_list.playable) {
+                if (_app.current_list == _current_list.filter_model) {
                     stack.animate_transitions = false;
                     stack.pop ();
                     stack.animate_transitions = true;
@@ -548,8 +550,8 @@ namespace G4 {
                     _current_list.activate_item (0);
                 }
                 _app.current_list = _current_list.filter_model;
-                save_playing_page ();
             }
+            save_playing_page ();
         }
 
         private void on_index_changed (int index, uint size) {
