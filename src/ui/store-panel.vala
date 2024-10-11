@@ -152,6 +152,7 @@ namespace G4 {
             }
             set {
                 indicator.visible = _current_list.modified;
+                root.action_set_enabled (ACTION_WIN + ACTION_SAVE_LIST, _current_list.modified);
             }
         }
 

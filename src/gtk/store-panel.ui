@@ -90,8 +90,12 @@
         <attribute name="action">app.reload</attribute>
       </item>
       <item>
-        <attribute name="label" translatable="yes">_Select</attribute>
+        <attribute name="label" translatable="yes">_Multiple Select</attribute>
         <attribute name="action">win.select</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Save List</attribute>
+        <attribute name="action">win.save-list</attribute>
       </item>
     </section>
     <section>
