@@ -334,15 +334,15 @@ namespace G4 {
                 var rc_cell = Graphene.Rect ();
                 rc_cell.init (_cell_size.width * col, _cell_size.height * row, _cell_size.width, _cell_size.height);
                 rc_cell.offset (rc_grid.origin.x, rc_grid.origin.y);
-                rc_cell.origin.y -= (float) _scroll_view.vadjustment.value;
-                rc_cell.size.height = 2;
+                rc_cell.origin.y -= (float) (_scroll_view.vadjustment.value) - (_cell_size.height - _item_size.height);
+                rc_cell.size.height = 1;
 #if ADW_1_6
                 var color = Adw.StyleManager.get_for_display (get_display ())
                                         .get_accent_color ().to_rgba ();
+#elif GTK_4_10
+                var color = get_color ();
 #else
-                var color = Gdk.RGBA ();
-                color.alpha = 1;
-                color.red = color.green = color.blue = 0.5f;
+                var color = get_style_context ().get_color ();
 #endif
                 snapshot.append_color (color, rc_cell);
             }
