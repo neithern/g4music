@@ -20,7 +20,6 @@ namespace G4 {
         private bool _store_external_changed = false;
         private Thumbnailer _thumbnailer = new Thumbnailer ();
 
-        public signal void end_of_playlist (bool forward);
         public signal void index_changed (int index, uint size);
         public signal void music_changed (Music? music);
         public signal void music_cover_parsed (Music music, Gdk.Pixbuf? cover, string? cover_uri);
@@ -164,18 +163,13 @@ namespace G4 {
                 return _current_index;
             }
             set {
-                var index = value;
-                if (index >= (int) _current_list.get_n_items ()) {
-                    end_of_playlist (true);
-                    index = _current_list.get_n_items () > 0 ? 0 : -1;
-                } else if (index < 0) {
-                    end_of_playlist (false);
-                    index = (int) _current_list.get_n_items () - 1;
+                if (value >= (int) _current_list.get_n_items ()) {
+                    value = Window.get_default ()?.open_next_playable_page () ?? value;
                 }
-                current_music = _current_list.get_item (index) as Music;
-                _current_index = index;
+                current_music = _current_list.get_item (value) as Music;
+                _current_index = value;
                 index_changed (_current_index, _current_list.get_n_items ());
-                update_next_item (index);
+                update_next_item (value);
             }
         }
 

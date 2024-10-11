@@ -159,7 +159,7 @@ namespace G4 {
             var empty = _app.current_list.get_n_items () == 0;
             initial_label.visible = empty;
             if (empty) {
-                if (_app.loading)
+                if (_app.loading || !_app.loader.library.empty)
                     initial_label.label = "";
                 else
                     update_initial_label (_app.music_folder);

@@ -127,7 +127,6 @@ namespace G4 {
             _switcher_btm.stack = stack_view;
             fix_switcher_style (_switcher_btm);
 
-            app.end_of_playlist.connect (on_end_of_playlist);
             app.index_changed.connect (on_index_changed);
             app.music_changed.connect (on_music_changed);
             app.music_library_changed.connect (on_music_library_changed);
@@ -478,6 +477,7 @@ namespace G4 {
             }
             var uri = build_library_uri_from_sa (paths.data);
             _app.settings.set_string ("library-uri", uri);
+            _album_key_of_list = _current_list.music_node?.album_key;
         }
 
         public void open_page (string uri, bool play_now = false, bool shuffle = false) {
@@ -527,7 +527,7 @@ namespace G4 {
             }
         }
 
-        private void on_end_of_playlist (bool forward) {
+        public int open_next_playable_page () {
             var stk = get_current_stack ();
             if (stk == null) {
                 _app.current_list = _main_list.filter_model;
@@ -538,21 +538,24 @@ namespace G4 {
                     stack.pop ();
                     stack.animate_transitions = true;
                 }
-                var item = _current_list.set_to_current_item (false);
-                if ((forward && item >= (int) _current_list.visible_count - 1)
-                    || (!forward && item <= 0)) {
+                var index = _current_list.set_to_current_item (false);
+                if (index >= (int) _current_list.visible_count - 1) {
                     stack.animate_transitions = false;
                     stack.pop ();
                     stack.animate_transitions = true;
-                    item = _current_list.set_to_current_item (false);
+                    index = _current_list.set_to_current_item (false);
                 }
-                _current_list.activate_item (forward ? item + 1 : item - 1);
-                while (!_current_list.playable) {
+                _current_list.activate_item (index < (int) _current_list.visible_count - 1 ? index + 1 : 0);
+                if (!_current_list.playable) {
                     _current_list.activate_item (0);
                 }
                 _app.current_list = _current_list.filter_model;
             }
             save_playing_page ();
+
+            var count = (int) _app.current_list.get_n_items ();
+            var index = _app.current_item + 1;
+            return index < count ? index : 0;
         }
 
         private void on_index_changed (int index, uint size) {
@@ -660,7 +663,6 @@ namespace G4 {
         private void play_current_list (int index = 0) {
             if (_current_list.playable && _app.current_list != _current_list.filter_model) {
                 _app.current_list = _current_list.filter_model;
-                _album_key_of_list = _current_list.music_node?.album_key;
                 save_playing_page ();
             }
             _app.current_item = index;

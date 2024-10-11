@@ -104,6 +104,10 @@ namespace G4 {
             _store_panel.open_page (uri, play_now, shuffle);
         }
 
+        public int open_next_playable_page () {
+            return _store_panel.open_next_playable_page ();
+        }
+
         public void show_toast (string message, string? uri = null) {
             var toast = new Adw.Toast (message);
             if (uri != null) {
