@@ -47,13 +47,18 @@ namespace G4 {
 
             back_btn.clicked.connect (leaflet.pop);
 
-            initial_label.activate_link.connect (on_music_folder_clicked);
-
             _matrix_paintable.paintable = _round_paintable;
             _crossfade_paintable.paintable = _matrix_paintable;
             _crossfade_paintable.queue_draw.connect (music_cover.queue_draw);
             music_cover.paintable = _crossfade_paintable;
             create_drag_source ();
+
+            make_widget_clickable (index_label).released.connect (() => {
+                var uri = _app.settings.get_string ("library-uri");
+                (root as Window)?.open_page (uri);
+            });
+
+            initial_label.activate_link.connect (on_music_folder_clicked);
 
             music_album.tooltip_text = _("Search Album");
             music_artist.tooltip_text = _("Search Artist");

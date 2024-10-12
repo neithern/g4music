@@ -456,7 +456,7 @@ namespace G4 {
 
         private void initialize_library_page () {
             if (_library_uri != null) {
-                open_page ((!)_library_uri, false);
+                open_page ((!)_library_uri);
                 if (!_library.empty) {
                     _library_uri = null;
                     if (_current_list.playable) {
@@ -486,15 +486,16 @@ namespace G4 {
                 stack_view.transition_type = Gtk.StackTransitionType.NONE;
                 stack_view.visible_child_name = (!)page;
                 stack_view.transition_type = Gtk.StackTransitionType.SLIDE_LEFT_RIGHT;
-                var stack = get_current_stack ();
-                if (stack != null) {
-                    ((!)stack).animate_transitions = false;
+                var stk = get_current_stack ();
+                if (stk != null) {
+                    var stack = (!)stk;
+                    stack.animate_transitions = false;
                     Artist? artist = null;
                     Album? album = null;
                     if (ar != null) {
                         artist = _library.artists[(!)ar];
                         if (artist is Artist) {
-                            if (stack?.get_child_by_name (((!)artist).artist) == null) {
+                            if (stack.get_child_by_name (((!)artist).artist) == null) {
                                 create_stack_page (artist);
                             }
                             if (al != null) {
@@ -509,7 +510,9 @@ namespace G4 {
                     } else if (pl != null) {
                         album = _library.playlists[(!)pl];
                     }
-                    if (album != null && stack?.get_child_by_name (((!)album).album_key) == null) {
+                    if (album != null && stack.get_child_by_name (((!)album).album_key) == null) {
+                        if ((stack.visible_child as MusicList)?.playable ?? false)
+                            stack.pop ();
                         create_stack_page (artist, album);
                     }
                     ((!)stack).animate_transitions = true;
