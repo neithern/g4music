@@ -84,6 +84,7 @@
                 <li>Won't switch playing list unless activate manually or play end, open on next startup.</li>
                 <li>Parse ORIGINALDATE/YEAR from Extended-Comment as album's date.</li>
                 <li>Full support of color scheme: System/Light/Dark.</li>
+                <li>Don't enable pipewire manually, override the rank if still want to use it.</li>
                 </ul>
                 <p>Flatpak changes:</p>
                 <ul>
