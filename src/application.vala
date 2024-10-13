@@ -525,7 +525,7 @@ namespace G4 {
                 _pending_mic_handler = run_idle_once (() => {
                     _pending_mic_handler = 0;
                     update_current_item ();
-                });
+                }, Priority.LOW);
             }
         }
 
@@ -537,7 +537,7 @@ namespace G4 {
                     _pending_msc_handler = 0;
                     music_library_changed (_store_external_changed);
                     _store_external_changed = false;
-                });
+                }, Priority.LOW);
             }
         }
 
