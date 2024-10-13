@@ -102,6 +102,9 @@ namespace G4 {
 
         public void open_page (string uri, bool play_now = false, bool shuffle = false) {
             _store_panel.open_page (uri, play_now, shuffle);
+            if (_leaflet.folded) {
+                _leaflet.pop ();
+            }
         }
 
         public int open_next_playable_page () {
