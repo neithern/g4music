@@ -67,7 +67,7 @@
     <releases>
         <release version="4.0" date="2024-10-13">
             <description translate="no">
-                <p>New eatures:</p>
+                <p>New features:</p>
                 <ul>
                 <li>Add music to playlist, edit/rename/remove existing playlists.</li>
                 <li>Drag cover image to re-arrange in a playlist, add to another playlist, or share to another app.</li>
@@ -80,7 +80,7 @@
                 <ul>
                 <li>Long press an item to enter multiple selection mode.</li>
                 <li>The main queue is editable and recoverable on next startup.</li>
-                <li>Except the main queue, albums/playlists are no longer sortable, but can be random played.</li>
+                <li>Except the main queue, albums/playlists are no longer sort-able, but can be random played.</li>
                 <li>Won't switch playing list unless activate manually or play end, open on next startup.</li>
                 <li>Parse ORIGINALDATE/YEAR from Extended-Comment as album's date.</li>
                 <li>Full support of color scheme: System/Light/Dark.</li>
@@ -91,11 +91,11 @@
                 <li>Request writable permission of Music folder for editing playlists.</li>
                 <li>Upgrade to GNOME 47.</li>
                 </ul>
-                <p>Optimizings:</p>
+                <p>Optimizations:</p>
                 <ul>
                 <li>Improve performance of loading large playlist.</li>
                 <li>Group popover menu actions.</li>
-                <li>Many other optimizings by code refactoring.</li>
+                <li>Many other optimizations by code refactoring.</li>
                 </ul>
             </description>
         </release>
