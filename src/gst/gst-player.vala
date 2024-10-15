@@ -189,7 +189,7 @@ namespace G4 {
                 _replay_gain = value != 0 ? Gst.ElementFactory.make ("rgvolume", "gain") : null;
                 if (_replay_gain != null)
                     ((!)_replay_gain).album_mode = value == 2;
-                    if (_pipeline != null && _current_uri != null)
+                if (_pipeline != null && _current_uri != null)
                     update_audio_sink ();
                 else
                     AtomicInt.set (ref _audio_sink_requested, 1);
