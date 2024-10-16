@@ -88,6 +88,15 @@ namespace G4 {
             }
         }
 
+        public double volume {
+            get {
+                return _app.player.volume;
+            }
+            set {
+                _app.player.volume = value;
+            }
+        }
+
         public void next () throws Error {
             _app.play_next ();
         }
