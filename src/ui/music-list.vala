@@ -258,17 +258,21 @@ namespace G4 {
             _grid_view.factory = factory;
         }
 
+        public Playlist get_as_playlist () {
+            var pls = _music_node as Playlist;
+            var playlist = new Playlist (pls?.title ?? "", pls?.list_uri ?? "");
+            var items = playlist.items;
+            var count = _data_store.get_n_items ();
+            for (var i = 0; i < count; i++) {
+                var music = (Music) _data_store.get_item (i);
+                items.add (music);
+            }
+            return playlist;
+        }
+
         public virtual async Result save_if_modified (bool prompt = true) {
             if (_modified && _music_node is Playlist) {
-                var pls = (Playlist) _music_node;
-                var playlist = new Playlist (pls.title, pls.list_uri);
-                var items = playlist.items;
-                var count = _data_store.get_n_items ();
-                for (var i = 0; i < count; i++) {
-                    var music = (Music) _data_store.get_item (i);
-                    items.add (music);
-                }
-
+                var playlist = get_as_playlist ();
                 var ret = !prompt || yield show_alert_dialog (_("Playlist is modified, save it?"), root as Gtk.Window);
                 if (ret) {
                     ret = yield _app.add_playlist_to_file_async (playlist, false);

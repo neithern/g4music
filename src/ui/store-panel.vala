@@ -192,6 +192,7 @@ namespace G4 {
                     var scroll = !_overlayed_lists.remove (list);
                     run_idle_once (() => list.set_to_current_item (scroll), Priority.LOW);
                 }
+                save_current_page ();
             }
         }
 
@@ -209,6 +210,9 @@ namespace G4 {
         }
 
         public bool save_if_modified (bool prompt = true, VoidFunc? done = null) {
+            if (_current_list != _main_list) {
+                _main_list.save_if_modified.begin (false, (obj, res) => _main_list.save_if_modified.end (res));
+            }
             if (_current_list.modified) {
                 _current_list.save_if_modified.begin (prompt, (obj, res) => {
                     var ret = _current_list.save_if_modified.end (res);
@@ -426,10 +430,7 @@ namespace G4 {
                 var split_btn = new Adw.SplitButton ();
                 split_btn.icon_name = "media-playback-start-symbolic";
                 split_btn.tooltip_text = _("Play");
-                split_btn.clicked.connect (() => {
-                    var uri = build_library_uri (artist, album);
-                    open_page (uri, true);
-                });
+                split_btn.clicked.connect (() => open_page (build_library_uri (artist, album), true));
                 if (artist != null)
                     split_btn.menu_model = (album == null || album is Playlist) ? create_menu_for_artist ((!)artist) : create_menu_for_album ((!)album);
                 else if (album != null)
@@ -459,15 +460,13 @@ namespace G4 {
                 open_page ((!)_library_uri);
                 if (!_library.empty) {
                     _library_uri = null;
-                    if (_current_list.playable) {
-                        _app.current_list = _current_list.filter_model;
+                    if (_current_list.playable)
                         _album_key_of_list = _current_list.music_node?.album_key;
-                    }
                 }
             }
         }
 
-        private void save_playing_page () {
+        private void save_current_page () {
             var paths = new GenericArray<string> (4);
             var stack = get_current_stack ();
             if (stack != null) {
@@ -532,33 +531,35 @@ namespace G4 {
 
         public int open_next_playable_page () {
             var stk = get_current_stack ();
-            if (stk == null) {
-                _app.current_list = _main_list.filter_model;
-            } else if (!_updating_store) {
+            if (stk != null && !_updating_store) {
                 var stack = (!)stk;
-                if (_app.current_list == _current_list.filter_model) {
-                    stack.animate_transitions = false;
-                    stack.pop ();
-                    stack.animate_transitions = true;
+                if (_current_list.music_node is Playlist) {
+                    pop_page_without_animation (stack);
+                    if (_current_list.music_node is Artist)
+                        pop_page_without_animation (stack);
+                    on_music_changed (_app.current_music);
+                } else if (_current_list.set_to_current_item (false) >= (int) _current_list.visible_count - 1) {
+                    pop_page_without_animation (stack);
+                    on_music_changed (_app.current_music);
+                    if (_current_list.set_to_current_item (false) >= (int) _current_list.visible_count - 1) {
+                        pop_page_without_animation (stack);
+                        on_music_changed (_app.current_music);
+                    }
                 }
-                var index = _current_list.set_to_current_item (false);
-                if (index >= (int) _current_list.visible_count - 1) {
-                    stack.animate_transitions = false;
-                    stack.pop ();
-                    stack.animate_transitions = true;
-                    index = _current_list.set_to_current_item (false);
-                }
+
+                var index = _current_list.set_to_current_item ();
                 _current_list.activate_item (index < (int) _current_list.visible_count - 1 ? index + 1 : 0);
                 if (!_current_list.playable) {
                     _current_list.activate_item (0);
                 }
-                _app.current_list = _current_list.filter_model;
+                if (_current_list.playable) {
+                    var playlist = _current_list.get_as_playlist ();
+                    _app.insert_to_queue (playlist);
+                }
             }
-            save_playing_page ();
 
-            var count = (int) _app.current_list.get_n_items ();
             var index = _app.current_item + 1;
-            return index < count ? index : 0;
+            return index < (int) _app.current_list.get_n_items () ? index : 0;
         }
 
         private void on_index_changed (int index, uint size) {
@@ -664,23 +665,28 @@ namespace G4 {
         private string? _album_key_of_list = null;
 
         private void play_current_list (int index = 0) {
-            if (_current_list.playable && _app.current_list != _current_list.filter_model) {
-                _app.current_list = _current_list.filter_model;
-                save_playing_page ();
+            if (_app.current_list == _current_list.filter_model) {
+                _app.current_item = index;
+            } else if (_current_list.playable) {
+                var playlist = _current_list.get_as_playlist ();
+                _app.current_item = _app.insert_after_current (playlist, true) + index;
             }
-            _app.current_item = index;
+        }
+
+        private void pop_page_without_animation (Stack stack) {
+            var animate = stack.animate_transitions;
+            stack.animate_transitions = false;
+            stack.pop ();
+            stack.animate_transitions = animate;
         }
 
         private void update_stack_pages (Stack stack) {
-            var animate = stack.animate_transitions;
-            stack.animate_transitions = false;
             var children = stack.get_children ();
             for (var i = children.length - 1; i >= 0; i--) {
                 var mlist = (MusicList) children[i];
                 if (mlist.music_node != null && mlist.update_store () == 0)
-                    stack.pop ();
+                    pop_page_without_animation (stack);
             }
-            stack.animate_transitions = animate;
         }
 
         private void update_visible_stack () {

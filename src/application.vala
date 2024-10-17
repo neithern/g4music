@@ -345,14 +345,25 @@ namespace G4 {
             return saved;
         }
 
-        public bool insert_after_current (Playlist playlist) {
+        public int insert_after_current (Playlist playlist, bool replace = false) {
             uint position = _current_index;
             if (_current_music != null) {
                 if (!_music_queue.find ((!)_current_music, out position))
                     position = -1;
-                playlist.remove_music ((!)_current_music);
+                if (!replace)
+                    playlist.remove_music ((!)_current_music);
             }
-            return insert_to_queue (playlist, position + 1);
+            var changed = false;
+            if (replace) {
+                var count = (int) (_music_queue.get_n_items () - position) - 1;
+                changed = count > 0;
+                for (var i = count; i >= 1; i--)
+                    _music_queue.remove (position + i);
+            }
+            position++;
+            changed |= merge_items_to_store (_music_queue, playlist.items, ref position);
+            list_modified |= changed;
+            return (int) position;
         }
 
         public bool insert_to_queue (Playlist playlist, uint position = -1, bool play_now = false) {

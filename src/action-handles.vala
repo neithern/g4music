@@ -167,7 +167,7 @@ namespace G4 {
             if (action.name.has_suffix (ACTION_ADD_TO_QUEUE)) {
                 var playlist = parse_playlist_from_music_uri (uri);
                 if (playlist != null)
-                    _app.insert_to_queue ((!)playlist, -1, false);
+                    _app.insert_to_queue ((!)playlist);
             } else if (uri != null) {
                 Window.get_default ()?.open_page ((!)uri, true, action.name.has_suffix (ACTION_RANDOM_PLAY));
             }
