@@ -29,6 +29,7 @@ namespace G4 {
         private string? _current_uri = null;
         private Gst.ClockTime _duration = Gst.CLOCK_TIME_NONE;
         private Gst.ClockTime _position = Gst.CLOCK_TIME_NONE;
+        private int _last_error_code = 0;
         private ulong _about_to_finish_id = 0;
         private int _next_uri_requested = 0;
         private double _last_peak = 0;
@@ -268,7 +269,11 @@ namespace G4 {
                     Error err;
                     string debug;
                     message.parse_error (out err, out debug);
-                    error (err);
+                    print (@"Player error: $(err.domain), $(err.code), $(err.message)\n");
+                    if (_last_error_code < err.code) {
+                        _last_error_code = err.code;
+                        error (err);
+                    }
                     break;
 
                 case Gst.MessageType.EOS:
@@ -311,6 +316,7 @@ namespace G4 {
         }
 
         private void on_stream_start () {
+            _last_error_code = 0;
             _peak_calculator.clear ();
             _tag_list = null;
             _tag_parsed = false;

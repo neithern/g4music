@@ -573,7 +573,6 @@ namespace G4 {
         }
 
         private void on_player_error (Error err) {
-            print ("Player error: %s\n", err.message);
             Window.get_default ()?.show_toast (err.message);
             if (!_player.gapless) {
                 on_player_end ();
