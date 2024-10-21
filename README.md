@@ -39,12 +39,34 @@ Gapless (AKA: G4Music) is a light weight music player written in GTK4, focuses o
 pkg install vala meson libadwaita gstreamer1-plugins-all gettext gtk4
 ```
 
-## How to build 
-It is written in Vala, simple and clean code, with few third-party dependencies:
+## macOS Dependencies
 
-1. Clone the code from gitlab.
-2. Install vala, develop packages of gtk4, libadwaita, gstreamer.
-3. Run in the project directory:
+### Install Homebrew
+
+First, install Homebrew by running the following command in your terminal:
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+### Install Required Packages
+
+Once Homebrew is installed, install the necessary dependencies with:
+```bash
+brew install vala meson gobject-introspection libadwaita ninja gtk4 gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav desktop-file-utils
+```
+
+## How to build 
+
+Gapless is written in Vala with clean and straightforward code, relying on minimal third-party dependencies. Follow these steps to build the application:
+
+1. Clone the Repository:
+    
+    `git clone https://github.com/neithern/g4music.git`
+    
+    `cd g4music`
+    
+2. Install Dependencies: Ensure that Vala, GTK4 development packages, libadwaita, and GStreamer are installed on your system.
+3. Build the Project: Run the following commands in the project directory:
 
     `meson setup build --buildtype=release`
 
@@ -52,3 +74,18 @@ It is written in Vala, simple and clean code, with few third-party dependencies:
 
 ## Change Log
 Check the [release tags](https://gitlab.gnome.org/neithern/g4music/-/tags) for change log.
+
+## 问题排查
+
+### Mac运行无响应
+
+添加如下环境变量
+```bash
+# for g4music
+export GSK_RENDERER="gl"
+```
+
+然后重新运行
+```
+g4music
+```
