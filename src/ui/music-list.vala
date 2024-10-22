@@ -341,8 +341,7 @@ namespace G4 {
                 rc_cell.origin.y -= (float) (_scroll_view.vadjustment.value) - (_cell_size.height - _item_size.height);
                 rc_cell.size.height = 1;
 #if ADW_1_6
-                var color = Adw.StyleManager.get_for_display (get_display ())
-                                        .get_accent_color ().to_rgba ();
+                var color = Adw.StyleManager.get_default ().accent_color.to_rgba ();
 #elif GTK_4_10
                 var color = get_color ();
 #else
