@@ -443,6 +443,20 @@ namespace G4 {
             return saved;
         }
 
+        public async bool save_queue_to_file () {
+            var count = _music_queue.get_n_items ();
+            var uris = new GenericArray<string> (count);
+            for (var i = 0; i < count; i++) {
+                var music = (Music) _music_queue.get_item (i);
+                uris.add (music.uri);
+            }
+            var file = get_playing_list_file ();
+            var ret = yield run_async<bool> (() => save_playlist_file (file, uris, null, false), false, true);
+            if (ret)
+                _list_modified = false;
+            return ret;
+        }
+
         public async void save_to_playlist_file_async (Playlist playlist) {
             var uri = playlist.list_uri;
             var file = File.new_for_uri (uri);

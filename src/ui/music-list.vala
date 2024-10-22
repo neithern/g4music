@@ -276,7 +276,8 @@ namespace G4 {
                 var ret = !prompt || yield show_alert_dialog (_("Playlist is modified, save it?"), root as Gtk.Window);
                 if (ret) {
                     ret = yield _app.add_playlist_to_file_async (playlist, false);
-                    modified = !ret;
+                    if (ret)
+                        modified = false;
                     return ret ? Result.OK : Result.FAILED;
                 }
                 update_store ();
@@ -697,16 +698,9 @@ namespace G4 {
 
         public override async Result save_if_modified (bool prompt = true) {
             if (_modified) {
-                var file = get_playing_list_file ();
-                var store = data_store;
-                var count = store.get_n_items ();
-                var uris = new GenericArray<string> (count);
-                for (var i = 0; i < count; i++) {
-                    var music = (Music) store.get_item (i);
-                    uris.add (music.uri);
-                }
-                var ret = yield run_async<bool> (() => save_playlist_file (file, uris, null, false), false, true);
-                modified = !ret;
+                var ret = yield _app.save_queue_to_file ();
+                if (ret)
+                    modified = false;
                 return ret ? Result.OK : Result.FAILED;
             }
             return Result.OK;
