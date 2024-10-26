@@ -389,10 +389,6 @@ namespace G4 {
         point.y *= scale;
 
         var snapshot = new Gtk.Snapshot ();
-        snapshot.scale (scale, scale);
-        widget.snapshot (snapshot);
-        snapshot.scale (1 / scale, 1 / scale);
-
         if (title != null) {
             var text = (!)title;
             var ink_rect = Pango.Rectangle ();
@@ -402,28 +398,52 @@ namespace G4 {
             layout.get_pixel_extents (out ink_rect, out logic_rect);
 
             var pt = Graphene.Point ();
-            pt.x = - ink_rect.x + (width - logic_rect.width);
-            pt.y = (height - logic_rect.height * 0.5f);
+            pt.x = 0;
+            pt.y = logic_rect.height * 0.5f;
+            point.y += pt.y;
+            snapshot.translate (pt);
+            snapshot.scale (scale, scale);
+            widget.snapshot (snapshot);
+            snapshot.scale (1 / scale, 1 / scale);
+            pt.y = -pt.y;
+            snapshot.translate (pt);
+
+            pt.x = width - ink_rect.x - logic_rect.width * 0.5f;
+            pt.y = 2;
             snapshot.translate (pt);
 
             var rect = Graphene.Rect ();
             rect.init (0, 0, int.max (logic_rect.width, logic_rect.height), logic_rect.height);
-            rect.offset ((width - rect.get_width ()) * 0.5f, 0);
+            rect.offset ((width - rect.size.width) * 0.5f, 0);
             rect.inset (-2, -2);
             var bounds = Gsk.RoundedRect ();
-            bounds.init_from_rect (rect, rect.get_height () * 0.5f);
+            var radius = rect.size.height * 0.5f;
+            bounds.init_from_rect (rect, radius);
             snapshot.push_rounded_clip (bounds);
 
+#if ADW_1_6
+            var color = Adw.StyleManager.get_default ().accent_color.to_rgba ();
+#else
             var color = Gdk.RGBA ();
-            color.alpha = color.red = 1;
-            color.blue = color.green = 0;
+            color.red = color.green = color.blue = 0.5f;
+            color.alpha = 1;
+#endif
             snapshot.append_color (color, rect);
-            color.blue = color.green = 1;
+
+            color.red = color.green = color.blue = 1;
             pt.x = 0;
             pt.y = - ink_rect.y + (logic_rect.height - ink_rect.height) * 0.5f;
             snapshot.translate (pt);
             snapshot.append_layout (layout, color);
             snapshot.pop ();
+
+            color.alpha = 0.2f;
+            color.red = color.green = color.blue = 0;
+            snapshot.append_outset_shadow (bounds, color, 1, 1, 1, 5);
+        } else {
+            snapshot.scale (scale, scale);
+            widget.snapshot (snapshot);
+            snapshot.scale (1 / scale, 1 / scale);    
         }
         return snapshot.free_to_paintable (null);
     }
@@ -439,8 +459,8 @@ namespace G4 {
             var color = Gdk.RGBA ();
             color.alpha = 0.5f;
             color.red = color.green = color.blue = style.dark ? 1 : 0;
-            float[] border_width = {1,1,1,1};
-            Gdk.RGBA[] border_color = {color,color,color,color};
+            float[] border_width = { 1, 1, 1, 1 };
+            Gdk.RGBA[] border_color = { color, color, color, color };
             snapshot.append_border (outline, border_width, border_color);
         } else {
             var color = Gdk.RGBA ();
