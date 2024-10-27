@@ -341,18 +341,20 @@ namespace G4 {
             }
         }
 
-        public void on_file_removed (File file) {
-            var uri = file.get_uri ();
-            var music = _tag_cache.remove (uri);
-            var removed = new GenericSet<Music> (direct_hash, direct_equal);
+        public async void on_file_removed (File file) {
             var result = false;
-            if (music != null) {
-                _library.remove_music ((!)music);
-                removed.add ((!)music);
-            } else {
-                result = _library.remove_uri (uri, removed);
-                new DirCache (file).delete ();
-            }
+            var removed = new GenericSet<Music> (direct_hash, direct_equal);
+            yield run_void_async (() => {
+                var uri = file.get_uri ();
+                var music = _tag_cache.remove (uri);
+                if (music != null) {
+                    _library.remove_music ((!)music);
+                    removed.add ((!)music);
+                } else {
+                    result = _library.remove_uri (uri, removed);
+                    new DirCache (file).delete ();
+                }
+            });
             if (removed.length > 0 || result) {
                 music_lost (removed);
             }
