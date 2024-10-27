@@ -65,6 +65,17 @@
     </screenshots>
 
     <releases>
+        <release version="4.1" date="2024-10-27">
+            <description translate="no">
+                <ul>
+                <li>Use the main queue as the actual "Now Playing" and "Playing History".</li>
+                <li>New style for the number of files being dragging.</li>
+                <li>Optimize updating the library.</li>
+                <li>Support volume for mpris.</li>
+                <li>Update translation: German, Russian, Georgian, Belarusian.</li>
+                </ul>
+            </description>
+        </release>
         <release version="4.0" date="2024-10-13">
             <description translate="no">
                 <p>New features:</p>
