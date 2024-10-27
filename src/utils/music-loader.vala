@@ -104,15 +104,11 @@ namespace G4 {
         }
 
         public void add_to_cache (Music music) {
-            lock (_tag_cache) {
-                _tag_cache.add (music);
-            }
+            _tag_cache.add (music);
         }
 
         public Music? find_cache (string uri) {
-            lock (_tag_cache) {
-                return _tag_cache[uri];
-            }
+            return _tag_cache[uri];
         }
 
         public void load_tag_cache () {
@@ -149,27 +145,19 @@ namespace G4 {
                     sort_music_array (musics, sort_mode);
                 }
                 print ("Group %u artists %u albums %u playlists in %lld ms\n",
-                    _library.artists.length, _library.albums.length, _library.playlists.length,
+                    _library.artist_count, _library.album_count, _library.playlist_count,
                     stop_watch.lap () / 1000);
             });
             loading_changed (false);
 
-            run_void_async.begin (() => {
-                lock (_dir_monitor) {
-                    _dir_monitor.monitor (dirs);
-                }
-            }, (obj, res) => run_void_async.end (res));
+            run_void_async.begin (() => _dir_monitor.monitor (dirs), (obj, res) => run_void_async.end (res));
 
             save_tag_cache ();
         }
 
         public void remove_all () {
-            lock (_dir_monitor) {
-                _dir_monitor.remove_all ();
-            }
-            lock (_library) {
-                _library.remove_all ();
-            }
+            _dir_monitor.remove_all ();
+            _library.remove_all ();
         }
 
         private const string ATTRIBUTES = FileAttribute.STANDARD_CONTENT_TYPE + ","
@@ -276,21 +264,19 @@ namespace G4 {
         }
 
         private void add_musics_to_library (GenericArray<Music> musics, GenericArray<Playlist> playlists, bool ignore_exists) {
-            lock (_library) {
-                for (var i = musics.length - 1; i >= 0; i--) {
-                    var music = musics[i];
-                    if (!_library.add_music (music) && ignore_exists)
-                        musics.remove_index_fast (i);
+            for (var i = musics.length - 1; i >= 0; i--) {
+                var music = musics[i];
+                if (!_library.add_music (music) && ignore_exists)
+                    musics.remove_index_fast (i);
+            }
+            foreach (var playlist in playlists) {
+                unowned var items = playlist.items;
+                for (var i = items.length - 1; i >= 0; i--) {
+                    var music = items[i];
+                    items[i] = _tag_cache[music.uri] ?? music;
                 }
-                foreach (var playlist in playlists) {
-                    unowned var items = playlist.items;
-                    for (var i = items.length - 1; i >= 0; i--) {
-                        var music = items[i];
-                        items[i] = _tag_cache[music.uri] ?? music;
-                    }
-                    playlist.set_cover_uri ();
-                    _library.add_playlist (playlist);
-                }
+                playlist.set_cover_uri ();
+                _library.add_playlist (playlist);
             }
         }
 
@@ -313,16 +299,14 @@ namespace G4 {
         private void load_tags_in_threads (GenericArray<Music> musics) {
             var queue = new AsyncQueue<Music?> ();
             _tag_cache.wait_loading ();
-            lock (_tag_cache) {
-                for (var i = musics.length - 1; i >= 0; i--) {
-                    unowned var music = musics[i];
-                    var cached_music = _tag_cache[music.uri];
-                    if (cached_music != null && ((!)cached_music).modified_time == music.modified_time) {
-                        musics[i] = (!)cached_music;
-                    } else {
-                        _tag_cache.add (music);
-                        queue.push (music);
-                    }
+            for (var i = musics.length - 1; i >= 0; i--) {
+                unowned var music = musics[i];
+                var cached_music = _tag_cache[music.uri];
+                if (cached_music != null && ((!)cached_music).modified_time == music.modified_time) {
+                    musics[i] = (!)cached_music;
+                } else {
+                    _tag_cache.add (music);
+                    queue.push (music);
                 }
             }
             var queue_count = queue.length ();
@@ -349,14 +333,9 @@ namespace G4 {
             }
 
             var arr = new GenericArray<Music> (1024);
-            var n_playlists = 0;
-            lock (_library) {
-                n_playlists = (int) _library.playlists.length;
-            }
+            var n_playlists = (int) _library.playlist_count;
             yield load_files_async ({file}, arr, true, false, -1);
-            lock (_library) {
-                n_playlists -= (int) _library.playlists.length;
-            }
+            n_playlists -= (int) _library.playlist_count;
             if (arr.length > 0 || n_playlists != 0) {
                 music_found (arr);
             }
@@ -368,14 +347,10 @@ namespace G4 {
             var removed = new GenericSet<Music> (direct_hash, direct_equal);
             var result = false;
             if (music != null) {
-                lock (_library) {
-                    _library.remove_music ((!)music);
-                }
+                _library.remove_music ((!)music);
                 removed.add ((!)music);
             } else {
-                lock (_library) {
-                    result = _library.remove_uri (uri, removed);
-                }
+                result = _library.remove_uri (uri, removed);
                 new DirCache (file).delete ();
             }
             if (removed.length > 0 || result) {

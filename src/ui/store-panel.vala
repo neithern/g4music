@@ -492,8 +492,8 @@ namespace G4 {
                     Artist? artist = null;
                     Album? album = null;
                     if (ar != null) {
-                        artist = _library.artists[(!)ar];
-                        if (artist is Artist) {
+                        artist = _library.get_artist ((!)ar);
+                        if (artist != null) {
                             if (stack.get_child_by_name (((!)artist).artist) == null) {
                                 create_stack_page (artist);
                             }
@@ -505,9 +505,9 @@ namespace G4 {
                             }
                         }
                     } else if (al != null) {
-                        album = _library.albums[(!)al];
+                        album = _library.get_album ((!)al);
                     } else if (pl != null) {
-                        album = _library.playlists[(!)pl];
+                        album = _library.get_playlist ((!)pl);
                     }
                     if (album != null && stack.get_child_by_name (((!)album).album_key) == null) {
                         if ((stack.visible_child as MusicList)?.playable ?? false)
@@ -574,14 +574,14 @@ namespace G4 {
                 _current_list.current_node = music;
             } else if (_current_list.item_type == typeof (Artist)) {
                 var artist_name = music?.artist_name ?? "";
-                _current_list.current_node = _library.artists[artist_name];
+                _current_list.current_node = _library.get_artist (artist_name);
             } else if (_current_list.item_type == typeof (Album)) {
                 var album = music?.album_key ?? "";
                 var artist = _current_list.music_node as Artist;
-                _current_list.current_node = artist != null ? ((!)artist)[album] : _library.albums[album];
+                _current_list.current_node = artist != null ? ((!)artist)[album] : _library.get_album (album);
             } else if (_current_list.item_type == typeof (Playlist)) {
                 if (_album_key_of_list != null)
-                    _current_list.current_node = _library.playlists[(!)_album_key_of_list];
+                    _current_list.current_node = _library.get_playlist ((!)_album_key_of_list);
             }
             _mini_bar.title = music?.title ?? "";
         }

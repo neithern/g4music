@@ -23,21 +23,27 @@ namespace G4 {
             var uri = dir.get_uri ();
             unowned string orig_key;
             FileMonitor monitor;
-            if (_monitors.lookup_extended (uri, out orig_key, out monitor)) {
-                monitor.cancel ();
+            lock (_monitors) {
+                if (_monitors.lookup_extended (uri, out orig_key, out monitor)) {
+                    monitor.cancel ();
+                }
             }
             if (_enabled) try {
                 monitor = dir.monitor (FileMonitorFlags.WATCH_MOVES, null);
                 monitor.changed.connect (monitor_func);
-                _monitors[uri] = monitor;
+                lock (_monitors) {
+                    _monitors[uri] = monitor;
+                }
             } catch (Error e) {
                 print ("Monitor dir error: %s\n", e.message);
             }
         }
 
         public void remove_all () {
-            _monitors.foreach ((uri, monitor) => monitor.cancel ());
-            _monitors.remove_all ();
+            lock (_monitors) {
+                _monitors.foreach ((uri, monitor) => monitor.cancel ());
+                _monitors.remove_all ();
+            }
         }
 
         private void monitor_func (File file, File? other_file, FileMonitorEvent event) {

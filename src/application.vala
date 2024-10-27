@@ -119,7 +119,7 @@ namespace G4 {
                 if (ret) {
                     _list_modified = saved_modified;
                     if (load_plist)
-                        _loader.library.playlists.remove (plist_file.get_uri ());
+                        _loader.library.remove_playlist (plist_file.get_uri ());
                 }
                 if (initial) {
                     // 3. Load music folder to build the library

@@ -146,15 +146,15 @@ namespace G4 {
                 var loader = _app.loader;
                 var library = loader.library;
                 if (ar != null) {
-                    var artist = library.artists[(!)ar];
-                    if ((artist is Artist) && al != null && ((!)al).length > 0)
-                        node = ((Artist) artist)[(!)al];
+                    var artist = library.get_artist ((!)ar);
+                    if (artist != null && al != null && ((!)al).length > 0)
+                        node = ((!)artist)[(!)al];
                     else
                         node = artist;
                 } else if (al != null) {
-                    node = library.albums[(!)al];
+                    node = library.get_album ((!)al);
                 } else if (pl != null) {
-                    node = library.playlists[(!)pl];
+                    node = library.get_playlist ((!)pl);
                 } else {
                     node = loader.find_cache ((!)uri);
                 }

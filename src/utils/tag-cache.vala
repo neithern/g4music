@@ -22,23 +22,29 @@ namespace G4 {
         public Music? @get (string uri) {
             unowned string key;
             unowned Music music;
-            if (_cache.lookup_extended (uri, out key, out music)) {
-                return music;
+            lock (_cache) {
+                if (_cache.lookup_extended (uri, out key, out music)) {
+                    return music;
+                }
             }
             return null;
         }
 
         public void add (Music music) {
-            _cache[music.uri] = music;
-            _modified = true;
+            lock (_cache) {
+                _cache[music.uri] = music;
+                _modified = true;
+            }
         }
 
         public Music? remove (string uri) {
             string key;
             Music value;
-            if (_cache.steal_extended (uri, out key, out value)) {
-                _modified = true;
-                return value;
+            lock (_cache) {
+                if (_cache.steal_extended (uri, out key, out value)) {
+                    _modified = true;
+                    return value;
+                }
             }
             return null;
         }
@@ -53,9 +59,11 @@ namespace G4 {
                     throw new IOError.INVALID_DATA (@"Magic=$magic");
 
                 var count = dis.read_size ();
-                for (var i = 0; i < count; i++) {
-                    var music = new Music.deserialize (dis);
-                    _cache[music.uri] = music;
+                lock (_cache) {
+                    for (var i = 0; i < count; i++) {
+                        var music = new Music.deserialize (dis);
+                        _cache[music.uri] = music;
+                    }
                 }
             } catch (Error e) {
                 if (e.code != FileError.NOENT)
@@ -74,14 +82,16 @@ namespace G4 {
                 var fos = _file.replace (null, false, FileCreateFlags.NONE);
                 var dos = new DataOutputBytes ();
                 dos.write_uint32 (MAGIC);
-                dos.write_size (_cache.length);
-                _cache.foreach ((key, music) => {
-                    try {
-                        music.serialize (dos);
-                    } catch (Error e) {
-                    }
-                });
-                _modified = !dos.write_to (fos);
+                lock (_cache) {
+                    dos.write_size (_cache.length);
+                    _cache.foreach ((key, music) => {
+                        try {
+                            music.serialize (dos);
+                        } catch (Error e) {
+                        }
+                    });
+                    _modified = !dos.write_to (fos);
+                }
             } catch (Error e) {
                 print ("Save tags error: %s\n", e.message);
             }
