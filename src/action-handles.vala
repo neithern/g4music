@@ -246,7 +246,8 @@ namespace G4 {
                 _portal.trash_file_async.begin ((!)uri, (obj, res) => {
                     try {
                         if (_portal.trash_file_async.end (res)) {
-                            _app.loader.on_file_removed (File.new_for_uri ((!)uri));
+                            _app.loader.on_file_removed.begin (File.new_for_uri ((!)uri),
+                                (obj, res) => _app.loader.on_file_removed.end (res));
                         }
                     } catch (Error e) {
                         Window.get_default ()?.show_toast (e.message);
