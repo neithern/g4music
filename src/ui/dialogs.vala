@@ -75,7 +75,8 @@ namespace G4 {
 #if ADW_1_5
         win.present (parent);
 #else
-        win.transient_for = parent;
+        if (parent != null)
+            win.transient_for = (!)parent;
         win.present ();
 #endif
 #else
@@ -157,7 +158,9 @@ namespace G4 {
         var chooser = new Gtk.FileChooserNative (null, parent, Gtk.FileChooserAction.SAVE, null, null);
         chooser.modal = true;
         try {
-            chooser.set_current_folder (initial?.get_parent ());
+            var folder = initial?.get_parent ();
+            if (folder != null)
+                chooser.set_current_folder ((!)folder);
             chooser.set_current_name (initial?.get_basename () ?? "");
         } catch (Error e) {
         }

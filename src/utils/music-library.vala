@@ -464,7 +464,7 @@ namespace G4 {
         if (position >= first_pos + removed)
             position -= removed;
         position = uint.min (position, store.get_n_items ());
-        store.splice (position, 0, arr.data);
+        store.splice (position, 0, (Object[]) arr.data);
         return !(arr.length == 1 && arr[0] == store.get_item (first_pos));
     }
 
@@ -495,7 +495,7 @@ namespace G4 {
                         first_removed = i;
                 }
             }
-            store.splice (0, size, remain.data);
+            store.splice (0, size, (Object[]) remain.data);
         }
         first_pos = first_removed;
         return removed;
