@@ -61,22 +61,25 @@ namespace G4 {
             }
         }
 
-        public int year {
-            get {
-                return (int) (date / 400);
-            }
-        }
-
         public inline string get_artist_and_title () {
             return artist == UNKNOWN_ARTIST ? title : @"$artist - $title";
         }
 
-        public inline string get_album_and_year () {
-            return year > 0 ? @"$album ($year)" : album;
-        }
-
         public virtual string get_abbreviation () {
             return parse_abbreviation (album);
+        }
+
+        public inline string get_date_string () {
+            var year = date / 400;
+            if (year > 0) {
+                var month = (date - year * 400) / 32;
+                if (month > 0) {
+                    var d = date % 32;
+                    return d > 0 ? @"$year-$month-$d" : @"$year-$month";
+                }
+                return year.to_string ();
+            }
+            return "";
         }
 
         public bool from_gst_tags (Gst.TagList tags) {

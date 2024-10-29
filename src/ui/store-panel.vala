@@ -279,14 +279,13 @@ namespace G4 {
                 var cell = (MusicWidget) item.child;
                 var album = (Album) item.item;
                 var album_artist = album.album_artist;
-                var year = album.year;
                 cell.music = album;
                 cell.paintable = _loading_paintable;
                 cell.title = album.album;
-                var subtitle = year > 0 ? year.to_string () : " ";
+                var subtitle = album.get_date_string ();
                 if (artist == null)
                     subtitle = (album_artist.length > 0 ? album_artist + " " : "") + subtitle;
-                cell.subtitle = subtitle;
+                cell.subtitle = subtitle.length > 0 ? subtitle : " ";
             });
             bind_music_list_properties (list);
             return list;
