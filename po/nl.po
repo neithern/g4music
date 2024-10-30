@@ -2,36 +2,145 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Heimen Stoffels <vistausss@fastmail.com>, 2022.
+# Nathan Follens <nfollens@gnome.org>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-26 21:16+0800\n"
-"PO-Revision-Date: 2022-08-01 17:55+0200\n"
-"Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
-"Language-Team: Dutch\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/neithern/g4music/issues\n"
+"POT-Creation-Date: 2024-10-11 01:38+0000\n"
+"PO-Revision-Date: 2024-10-30 18:08+0100\n"
+"Last-Translator: Nathan Follens <nfollens@gnome.org>\n"
+"Language-Team: GNOME-NL https://matrix.to/#/#nl:gnome.org\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Poedit 3.4.4\n"
 
-#: data/app.desktop.in:3 src/application.vala:225 src/main.vala:24
-msgid "G4Music"
-msgstr "G4Music"
+#: data/app.desktop.in:3 data/app.metainfo.xml.in:4 src/application.vala:277
+#: src/main.vala:24
+msgid "Gapless"
+msgstr "Gapless"
 
 #: data/app.desktop.in:4
 msgid "Music Player"
 msgstr "Muziekspeler"
 
-#: data/app.desktop.in:5
-msgid "Play music"
-msgstr "Luister naar muziek"
+#: data/app.desktop.in:5 data/app.metainfo.xml.in:7
+msgid "Play your music elegantly"
+msgstr "Speel uw muziek op elegante wijze af"
 
 #: data/app.desktop.in:12
 msgid "music;sound;player;media;audio;playlist;"
-msgstr "Audio;Muziek;Speler;Afspeellijst;Media;Geluid;"
+msgstr ""
+"music;sound;player;media;audio;playlist;muziek;geluid;speler;muziekspeler;"
+"speellijst;afspeellijst;"
+
+#: data/app.metainfo.xml.in:24
+msgid ""
+"Gapless (AKA: G4Music) is a light weight music player written in GTK4, "
+"focuses on large music collection."
+msgstr ""
+"Gapless (AKA: G4Music) is een lichte muziekspeler, gemaakt in GTK4, gericht "
+"op grote muziekverzamelingen."
+
+#: data/app.metainfo.xml.in:25
+msgid "Features"
+msgstr "Functies"
+
+#: data/app.metainfo.xml.in:27
+msgid ""
+"Supports most music file types, Samba and any other remote protocols "
+"(depends on GIO and GStreamer)."
+msgstr ""
+"Ondersteunt de meeste muziekbestandstypes, Samba en andere "
+"netwerkprotocollen (afhankelijk van GIO en GStreamer)."
+
+#: data/app.metainfo.xml.in:28
+msgid ""
+"Fast loading and parsing thousands of music files in very few seconds, "
+"monitor local changes."
+msgstr ""
+"Laadt snel en kan duizenden muziekbestanden verwerken in luttele seconden, "
+"controleert op lokale wijzigingen."
+
+#: data/app.metainfo.xml.in:29
+msgid ""
+"Low memory usage for large music collection with album covers (embedded and "
+"external), no thumbnail caches to store."
+msgstr ""
+"Heeft een laag geheugengebruik voor grote muziekverzamelingen met "
+"albumhoezen (ingebed en extern), zonder miniatuurcaches bij te houden."
+
+#: data/app.metainfo.xml.in:30
+msgid ""
+"Group and sorts by album/artist/title, shuffle list, full-text searching."
+msgstr ""
+"Kan groeperen en sorteren op album/artiest/titel, willekeurig afspelen en "
+"zoeken in de volledige tekst."
+
+#: data/app.metainfo.xml.in:31
+msgid ""
+"Fluent adaptive user interface for different screen (Desktop, Tablet, "
+"Mobile)."
+msgstr ""
+"Heeft een vlotte, adaptieve gebruikersinterface voor verschillende "
+"schermgroottes (desktop, tablet, mobiel)."
+
+#: data/app.metainfo.xml.in:32
+msgid "Gaussian blurred cover as background, follows GNOME light/dark mode."
+msgstr ""
+"Heeft een gaussiaans vervaagde hoes als achtergrond, volgt de lichte/"
+"donkere modus van GNOME."
+
+#: data/app.metainfo.xml.in:33
+msgid ""
+"Supports creating and editing playlists, drag cover to change order or add "
+"to another playlist."
+msgstr ""
+"Ondersteunt het aanmaken en bewerken van afspeellijsten, versleep de hoes "
+"om de volgorde te wijzigen of aan een andere afspeellijst toe te voegen."
+
+#: data/app.metainfo.xml.in:34
+msgid "Supports drag and drop with other apps."
+msgstr "Ondersteunt inslepen uit andere toepassingen."
+
+#: data/app.metainfo.xml.in:35
+msgid "Supports audio peaks visualizer."
+msgstr "Ondersteunt visualisatie van het piekvolume."
+
+#: data/app.metainfo.xml.in:36
+msgid "Supports gapless playback."
+msgstr "Ondersteunt ononderbroken afspelen."
+
+#: data/app.metainfo.xml.in:37
+msgid "Supports normalizing volume with ReplayGain."
+msgstr "Ondersteunt ReplayGain om het volume te normaliseren."
+
+#: data/app.metainfo.xml.in:38
+msgid "Supports specified audio sink."
+msgstr "Ondersteunt de opgegeven audiosink."
+
+#: data/app.metainfo.xml.in:39
+msgid "Supports MPRIS control."
+msgstr "Ondersteunt MPRIS-besturing."
+
+#: data/app.metainfo.xml.in:50
+msgid "Main window"
+msgstr "Hoofdvenster"
+
+#: data/app.metainfo.xml.in:54
+msgid "Albums view"
+msgstr "Albumweergave"
+
+#: data/app.metainfo.xml.in:58
+msgid "Playing view"
+msgstr "Afspeelweergave"
+
+#: data/app.metainfo.xml.in:62
+msgid "Playlist view"
+msgstr "Afspeellijstweergave"
 
 #: src/gtk/help-overlay.ui:11
 msgctxt "shortcut window"
@@ -44,258 +153,374 @@ msgid "Show Shortcuts"
 msgstr "Sneltoetsen tonen"
 
 #: src/gtk/help-overlay.ui:20
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Preferences"
-msgstr "_Voorkeuren"
+msgstr "Voorkeuren"
 
 #: src/gtk/help-overlay.ui:26
 msgctxt "shortcut window"
 msgid "Quit"
 msgstr "Afsluiten"
 
-#: src/gtk/help-overlay.ui:34
+#: src/gtk/help-overlay.ui:32
+msgctxt "shortcut window"
+msgid "Show Tags"
+msgstr "Tags tonen"
+
+#: src/gtk/help-overlay.ui:40
 msgctxt "shortcut window"
 msgid "Playback"
 msgstr "Afspelen"
 
-#: src/gtk/help-overlay.ui:37
+#: src/gtk/help-overlay.ui:43
 msgctxt "shortcut window"
 msgid "Play/Pause"
-msgstr "Afspelen/Pauzeren"
+msgstr "Afspelen/pauzeren"
 
-#: src/gtk/help-overlay.ui:43
+#: src/gtk/help-overlay.ui:49
 msgctxt "shortcut window"
 msgid "Play Next"
 msgstr "Volgend nummer afspelen"
 
-#: src/gtk/help-overlay.ui:49
+#: src/gtk/help-overlay.ui:55
 msgctxt "shortcut window"
 msgid "Play Previous"
 msgstr "Vorig nummer afspelen"
 
-#: src/gtk/help-overlay.ui:57
+#: src/gtk/help-overlay.ui:63
 msgctxt "shortcut window"
 msgid "Playlist"
 msgstr "Afspeellijst"
 
-#: src/gtk/help-overlay.ui:60
+#: src/gtk/help-overlay.ui:66
 msgctxt "shortcut window"
 msgid "Search"
 msgstr "Zoeken"
 
-#: src/gtk/help-overlay.ui:66
+#: src/gtk/help-overlay.ui:72
 msgctxt "shortcut window"
 msgid "Toggle Sort"
-msgstr ""
+msgstr "Tussen sorteervolgordes schakelen"
 
-#: src/gtk/help-overlay.ui:72
-#, fuzzy
+#: src/gtk/help-overlay.ui:78
 msgctxt "shortcut window"
 msgid "Reload Library"
-msgstr "Lijst he_rladen"
+msgstr "Bibliotheek herladen"
 
-#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:290
+#: src/gtk/help-overlay.ui:84
+msgctxt "shortcut window"
+msgid "Save List"
+msgstr "Lijst opslaan"
+
+#: src/gtk/play-panel.ui:16 src/ui/music-list.vala:629
+#: src/ui/store-panel.vala:421
 msgid "Back"
 msgstr "Terug"
 
 #: src/gtk/preferences.ui:10
-#, fuzzy
 msgid "General"
 msgstr "Algemeen"
 
 #: src/gtk/preferences.ui:14
-msgid "Prefer dark theme"
-msgstr "Donker thema gebruiken"
-
-#: src/gtk/preferences.ui:26
 msgid "Background blur mode"
-msgstr ""
+msgstr "Achtergrond vervagen"
+
+#: src/gtk/preferences.ui:20
+msgid "Compact playlist view"
+msgstr "Compacte afspeellijstweergave"
 
 #: src/gtk/preferences.ui:32
-msgid "Compact playlist view"
-msgstr ""
+msgid "Grid view for artists/albums"
+msgstr "Rasterweergave voor artiesten/albums"
 
-#: src/gtk/preferences.ui:44 src/application.vala:424
+#: src/gtk/preferences.ui:44
+msgid "Single click to activate item"
+msgstr "Eén keer klikken om item te activeren"
+
+#: src/gtk/preferences.ui:56 src/application.vala:425
 msgid "Keep playing after window closed"
-msgstr "Doorgaan met afspelen na sluiten van venster"
+msgstr "Doorgaan met afspelen wanneer het venster gesloten is"
 
-#: src/gtk/preferences.ui:57
+#: src/gtk/preferences.ui:69
 msgid "Library"
-msgstr ""
+msgstr "Bibliotheek"
 
-#: src/gtk/preferences.ui:61
+#: src/gtk/preferences.ui:73
 msgid "Load music from folder"
 msgstr "Muziek laden uit map"
 
-#: src/gtk/preferences.ui:73
-msgid "Monitor local file changes"
-msgstr ""
-
 #: src/gtk/preferences.ui:85
+msgid "Monitor local file changes"
+msgstr "Controleren op lokale wijzigingen aan bestanden"
+
+#: src/gtk/preferences.ui:97
 msgid "Load thumbnails for non-local files"
 msgstr "Miniaturen van externe bestanden laden"
 
-#: src/gtk/preferences.ui:86
+#: src/gtk/preferences.ui:98
 msgid "May cause slowdowns and excess network usage"
 msgstr "Let op: dit kan vertragingen en bovenmatig netwerkgebruik veroorzaken"
 
-#: src/gtk/preferences.ui:99
+#: src/gtk/preferences.ui:111
 msgid "Playback"
 msgstr "Afspelen"
 
-#: src/gtk/preferences.ui:103
+#: src/gtk/preferences.ui:115
 msgid "Show audio peak level"
 msgstr "Piekvolume tonen"
 
-#: src/gtk/preferences.ui:107
+#: src/gtk/preferences.ui:119
 msgid "Display characters"
-msgstr ""
-
-#: src/gtk/preferences.ui:122
-msgid "Rotate album cover"
-msgstr ""
+msgstr "Gebruik deze tekens"
 
 #: src/gtk/preferences.ui:134
+msgid "Rotate album cover"
+msgstr "Albumhoes ronddraaien"
+
+#: src/gtk/preferences.ui:146
 msgid "Enable gapless playback"
 msgstr "Ononderbroken afspelen"
 
-#: src/gtk/preferences.ui:146
+#: src/gtk/preferences.ui:158
 msgid "Normalize volume with ReplayGain"
 msgstr "ReplayGain gebruiken om volume te normaliseren"
 
-#: src/gtk/preferences.ui:152
-#, fuzzy
-msgid "Prefer audio sink"
-msgstr "PipeWire-geluidssysteem gebruiken"
+#: src/gtk/preferences.ui:164
+msgid "Prefer audio sink of GStreamer"
+msgstr "Voorkeur voor audiosink van GStreamer"
 
 #: src/gtk/store-panel.ui:22
 msgid "Main Menu"
 msgstr "Hoofdmenu"
 
-#: src/gtk/store-panel.ui:28
-#, fuzzy
-msgid "Sort By"
-msgstr "Sorteren"
-
-#: src/gtk/store-panel.ui:35
+#: src/gtk/store-panel.ui:29 src/ui/playlist-dialog.vala:36
 msgid "Search"
 msgstr "Zoeken"
 
-#: src/gtk/store-panel.ui:73
-#, fuzzy
-msgid "_Reload Library"
-msgstr "Lijst he_rladen"
+#: src/gtk/store-panel.ui:39
+msgid "Sort By"
+msgstr "Sorteren op"
 
-#: src/gtk/store-panel.ui:79
+#: src/gtk/store-panel.ui:70
+msgid "_Color Scheme"
+msgstr "_Kleurenschema"
+
+#: src/gtk/store-panel.ui:72
+msgid "_System"
+msgstr "_Systeem"
+
+#: src/gtk/store-panel.ui:77
+msgid "_Light"
+msgstr "_Licht"
+
+#: src/gtk/store-panel.ui:82
+msgid "_Dark"
+msgstr "_Donker"
+
+#: src/gtk/store-panel.ui:89
+msgid "_Reload Library"
+msgstr "Bibliotheek he_rladen"
+
+#: src/gtk/store-panel.ui:93
+msgid "_Multiple Select"
+msgstr "_Meerdere selecteren"
+
+#: src/gtk/store-panel.ui:97
+msgid "_Save List"
+msgstr "Lijst op_slaan"
+
+#: src/gtk/store-panel.ui:103
 msgid "_Preferences"
 msgstr "_Voorkeuren"
 
-#: src/gtk/store-panel.ui:83
+#: src/gtk/store-panel.ui:107
 msgid "_Keyboard Shortcuts"
-msgstr "_Sneltoetsen"
+msgstr "Snel_toetsen"
 
-#: src/gtk/store-panel.ui:87
+#: src/gtk/store-panel.ui:111
 msgid "_About"
 msgstr "_Over"
 
-#: src/gtk/store-panel.ui:96 src/ui/preferences.vala:64
-#, fuzzy
+#: src/gtk/store-panel.ui:120 src/ui/preferences.vala:66
 msgid "Album"
-msgstr "Op album"
+msgstr "Album"
 
-#: src/gtk/store-panel.ui:101
-#, fuzzy
+#: src/gtk/store-panel.ui:125
 msgid "Artist"
-msgstr "Op artiest"
+msgstr "Artiest"
 
-#: src/gtk/store-panel.ui:106
+#: src/gtk/store-panel.ui:130
 msgid "Artist/Album"
-msgstr ""
+msgstr "Artiest/album"
 
-#: src/gtk/store-panel.ui:111
-#, fuzzy
+#: src/gtk/store-panel.ui:135
 msgid "Title"
-msgstr "Op titel"
+msgstr "Titel"
 
-#: src/gtk/store-panel.ui:116
+#: src/gtk/store-panel.ui:140
 msgid "Recent"
-msgstr ""
+msgstr "Recent"
 
-#: src/gtk/store-panel.ui:121
+#: src/gtk/store-panel.ui:145
 msgid "Shuffle"
 msgstr "Willekeurig"
 
-#: src/action-handles.vala:188
+#: src/action-handles.vala:114
+msgid "Image Files"
+msgstr "Afbeeldingsbestanden"
+
+#: src/action-handles.vala:121
+msgid "Export cover successfully"
+msgstr "Albumhoes geëxporteerd"
+
+#: src/action-handles.vala:121
+msgid "Export cover failed"
+msgstr "Exporteren van hoes mislukt"
+
+#: src/application.vala:350
+msgid "Save playlist failed"
+msgstr "Opslaan van afspeellijst mislukt"
+
+#: src/application.vala:447
+msgid "Playlist Files"
+msgstr "Afspeellijstbestanden"
+
+#: src/application.vala:461
+msgid "Save playlist successfully"
+msgstr "Afspeellijst opgeslagen"
+
+#: src/application.vala:597
+msgid "Keep playing"
+msgstr "Blijven afspelen"
+
+#: src/ui/dialogs.vala:51
 msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr "Een eenvoudige, lichte en snelle muziekspeler, gemaakt met GTK4."
 
 #. Translators: Replace "translator-credits" with your names, one name per line
-#: src/action-handles.vala:190
+#: src/ui/dialogs.vala:53
 msgid "translator-credits"
-msgstr "Heimen Stoffels <vistausss@fastmail.com>"
+msgstr ""
+"Heimen Stoffels <vistausss@fastmail.com>\n"
+"Nathan Follens <nfollens@gnome.org>\n"
+"Meer info over GNOME-NL http://nl.gnome.org"
 
-#: src/application.vala:573
-msgid "Keep playing"
-msgstr "Blijven afspelen"
+#: src/ui/dialogs.vala:99 src/ui/dialogs.vala:111
+msgid "No"
+msgstr "Nee"
 
-#: src/ui/music-widgets.vala:232 src/ui/music-widgets.vala:260
-#, fuzzy
+#: src/ui/dialogs.vala:100 src/ui/dialogs.vala:111
+msgid "Yes"
+msgstr "Ja"
+
+#: src/ui/music-list.vala:272
+msgid "Playlist is modified, save it?"
+msgstr "De afspeellijst is bewerkt, wilt u deze opslaan?"
+
+#. Translators: Play this music at next position of current playing music
+#: src/ui/music-list.vala:402 src/ui/music-list.vala:418
+#: src/ui/music-widgets.vala:277 src/ui/music-widgets.vala:299
+msgid "Play at _Next"
+msgstr "Afspelen na huidige"
+
+#: src/ui/music-list.vala:404 src/ui/music-list.vala:420
+#: src/ui/music-widgets.vala:278 src/ui/music-widgets.vala:300
+msgid "Add to _Queue"
+msgstr "Toevoegen aan _wachtrij"
+
+#: src/ui/music-list.vala:405 src/ui/music-widgets.vala:279
+#: src/ui/music-widgets.vala:301 src/ui/music-widgets.vala:320
+msgid "Add to _Playlist…"
+msgstr "Toevoegen aan afs_peellijst…"
+
+#: src/ui/music-list.vala:406 src/ui/music-list.vala:424
+msgid "_Remove"
+msgstr "Ve_rwijderen"
+
+#: src/ui/music-list.vala:425 src/ui/music-widgets.vala:286
+msgid "_Move to Trash"
+msgstr "Verplaatsen naar _prullenbak"
+
+#: src/ui/music-list.vala:633
+msgid "Select All"
+msgstr "Alles selecteren"
+
+#: src/ui/music-list.vala:650
 msgid "Play at Next"
-msgstr "Volgend nummer afspelen"
+msgstr "Afspelen na huidige"
 
-#: src/ui/music-widgets.vala:233 src/ui/music-widgets.vala:259
-#, fuzzy
+#: src/ui/music-list.vala:657
+msgid "Add to Queue"
+msgstr "Toevoegen aan wachtrij"
+
+#: src/ui/music-list.vala:664 src/ui/playlist-dialog.vala:19
+msgid "Add to Playlist"
+msgstr "Toevoegen aan afspeellijst"
+
+#: src/ui/music-list.vala:671
+msgid "Remove"
+msgstr "Verwijderen"
+
+#: src/ui/music-widgets.vala:274 src/ui/music-widgets.vala:296
+#: src/ui/store-panel.vala:429
 msgid "Play"
 msgstr "Afspelen"
 
-#: src/ui/music-widgets.vala:236 src/ui/play-panel.vala:222
-#, fuzzy
-msgid "Show _Cover File"
-msgstr "Tonen in be_standsbeheer"
+#: src/ui/music-widgets.vala:275 src/ui/music-widgets.vala:297
+msgid "_Random Play"
+msgstr "Willekeu_rig afspelen"
 
-#: src/ui/music-widgets.vala:238 src/ui/play-panel.vala:224
+#: src/ui/music-widgets.vala:285
+msgid "Show List _File"
+msgstr "Afspeellijst_bestand tonen"
+
+#: src/ui/music-widgets.vala:308 src/ui/play-panel.vala:60
+msgid "Search Title"
+msgstr "Titel zoeken"
+
+#: src/ui/music-widgets.vala:309 src/ui/play-panel.vala:58
+msgid "Search Album"
+msgstr "Album zoeken"
+
+#: src/ui/music-widgets.vala:310 src/ui/play-panel.vala:59
+msgid "Search Artist"
+msgstr "Artiest zoeken"
+
+#: src/ui/music-widgets.vala:314
+msgid "Show Cover _File"
+msgstr "Hoes_bestand tonen"
+
+#: src/ui/music-widgets.vala:316
 msgid "_Export Cover"
 msgstr "Hoes _exporteren"
 
-#: src/ui/music-widgets.vala:266 src/ui/play-panel.vala:56
-#, fuzzy
-msgid "Search Title"
-msgstr "Zoeken"
+#: src/ui/music-widgets.vala:317
+msgid "Show _Tags…"
+msgstr "_Tags tonen…"
 
-#: src/ui/music-widgets.vala:267 src/ui/play-panel.vala:54
-#, fuzzy
-msgid "Search Album"
-msgstr "Album tonen"
+#: src/ui/music-widgets.vala:318
+msgid "Show Music _File"
+msgstr "Muziek_bestand tonen"
 
-#: src/ui/music-widgets.vala:268 src/ui/play-panel.vala:55
-#, fuzzy
-msgid "Search Artist"
-msgstr "Artiest tonen"
+#. Translators: single loop the current music
+#: src/ui/play-bar.vala:72
+msgid "Single Loop"
+msgstr "1 keer herhalen"
 
-#: src/ui/music-widgets.vala:269
-#, fuzzy
-msgid "_Show Music File"
-msgstr "Tonen in be_standsbeheer"
-
-#: src/ui/play-bar.vala:75
-msgid "Repeat Music"
-msgstr "Nummer herhalen"
-
-#: src/ui/play-bar.vala:85
+#: src/ui/play-bar.vala:82
 msgid "Play Previous"
 msgstr "Vorig nummer afspelen"
 
 #. media-playback-pause-symbolic
-#: src/ui/play-bar.vala:91
+#: src/ui/play-bar.vala:88
 msgid "Play/Pause"
-msgstr "Afspelen/Pauzeren"
+msgstr "Afspelen/pauzeren"
 
-#: src/ui/play-bar.vala:98
+#: src/ui/play-bar.vala:95
 msgid "Play Next"
 msgstr "Volgend nummer afspelen"
 
-#: src/ui/play-panel.vala:263
+#: src/ui/play-panel.vala:255
 msgid ""
 "Drag and drop music files here,\n"
 "or change music location: "
@@ -303,40 +528,60 @@ msgstr ""
 "Sleep bestanden hierheen\n"
 "of wijzig de muzieklocatie: "
 
-#: src/ui/preferences.vala:44 src/ui/preferences.vala:64
+#: src/ui/playlist-dialog.vala:24
+msgid "New Playlist"
+msgstr "Nieuwe afspeellijst"
+
+#: src/ui/playlist-dialog.vala:98 src/ui/store-panel.vala:692
+#, c-format
+msgid "No playlist found in %s"
+msgstr "Geen afspeellijst gevonden in %s"
+
+#: src/ui/preferences.vala:44 src/ui/preferences.vala:66
 msgid "Never"
-msgstr ""
+msgstr "Nooit"
 
 #: src/ui/preferences.vala:44
 msgid "Always"
-msgstr ""
+msgstr "Altijd"
 
 #: src/ui/preferences.vala:44
 msgid "Art Only"
-msgstr ""
+msgstr "Enkel albumhoezen"
 
-#: src/ui/preferences.vala:64
+#: src/ui/preferences.vala:66
 msgid "Track"
-msgstr ""
+msgstr "Nummer"
 
-#: src/ui/store-panel.vala:66
-#, fuzzy
+#: src/ui/store-panel.vala:84
 msgid "Playing"
-msgstr "Afspeellijst"
+msgstr "U luistert naar"
 
-#: src/ui/store-panel.vala:72
-#, fuzzy
+#: src/ui/store-panel.vala:89
 msgid "Artists"
-msgstr "Op artiest"
+msgstr "Artiesten"
 
-#: src/ui/store-panel.vala:77
-#, fuzzy
+#: src/ui/store-panel.vala:94
 msgid "Albums"
-msgstr "Op album"
+msgstr "Albums"
 
-#: src/ui/volume-button.vala:32
-msgid "Volume: "
-msgstr ""
+#: src/ui/store-panel.vala:99
+msgid "Playlists"
+msgstr "Afspeellijsten"
+
+#: src/ui/taglist-dialog.vala:125
+msgid "Copy"
+msgstr "Kopiëren"
+
+#. Translators: Current volume percent: 0~100%
+#: src/ui/volume-button.vala:33
+#, c-format
+msgid "Volume %d%%"
+msgstr "Volume %d%%"
+
+#: src/ui/window.vala:112
+msgid "Show"
+msgstr "Tonen"
 
 #: src/utils/music.vala:2
 msgid "Unknown Album"
@@ -345,6 +590,18 @@ msgstr "Onbekend album"
 #: src/utils/music.vala:3
 msgid "Unknown Artist"
 msgstr "Onbekende artiest"
+
+#~ msgid "G4Music"
+#~ msgstr "G4Music"
+
+#~ msgid "Play music"
+#~ msgstr "Luister naar muziek"
+
+#~ msgid "Prefer dark theme"
+#~ msgstr "Donker thema gebruiken"
+
+#~ msgid "Repeat Music"
+#~ msgstr "Nummer herhalen"
 
 #~ msgid "Appearance"
 #~ msgstr "Vormgeving"
