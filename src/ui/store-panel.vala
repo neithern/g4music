@@ -283,8 +283,8 @@ namespace G4 {
                 cell.paintable = _loading_paintable;
                 cell.title = album.album;
                 var subtitle = album.get_date_string ();
-                if (artist == null)
-                    subtitle = (album_artist.length > 0 ? album_artist + " " : "") + subtitle;
+                if (artist == null && album_artist.length > 0)
+                    subtitle = album_artist + " " + subtitle;
                 cell.subtitle = subtitle.length > 0 ? subtitle : " ";
             });
             bind_music_list_properties (list);
