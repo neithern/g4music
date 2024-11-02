@@ -126,9 +126,17 @@ namespace G4 {
             source.actions = Gdk.DragAction.LINK;
             source.drag_begin.connect ((drag) => source.set_icon (create_widget_paintable (music_cover, ref point), (int) point.x, (int) point.y));
             source.prepare.connect ((x, y) => {
-                point.init ((float) x, (float) y);
+                var pt = Graphene.Point ();
+                pt.init ((float) x, (float) y);
+                var width = music_cover.get_width ();
+                var height = music_cover.get_height ();
+                if (width > height)
+                    pt.x -= (width - height) * 0.5f;
+                else if (height > width)
+                    pt.y -= (height - width) * 0.5f;
                 var music = _app.current_music;
-                if (music != null) {
+                if (music != null && _round_paintable.contains (pt)) {
+                    point.init ((float) x, (float) y);
                     var playlist = to_playlist ({ (!)music });
                     return create_content_provider (playlist);
                 }

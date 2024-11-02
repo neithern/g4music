@@ -62,6 +62,7 @@ namespace G4 {
     }
 
     public class RoundPaintable : BasePaintable {
+        private Gsk.RoundedRect _bounds = Gsk.RoundedRect ();
         private double _ratio = 0;
 
         public RoundPaintable (Gdk.Paintable? paintable = null, double ratio = 0.1) {
@@ -81,9 +82,12 @@ namespace G4 {
             }
         }
 
+        public bool contains (Graphene.Point point) {
+            return _bounds.contains_point (point);
+        }
+
         protected override void on_snapshot (Gtk.Snapshot snapshot, double width, double height) {
             var rect = Graphene.Rect ();
-            var rounded = Gsk.RoundedRect ();
             var size = (float) double.min (width, height);
             var circle = _ratio >= 0.5;
             if (circle) // Force clip to circle
@@ -92,7 +96,7 @@ namespace G4 {
                 rect.init (0, 0, (float) width, (float) height);
 
             var radius = (float) (_ratio * size);
-            rounded.init_from_rect (rect, radius);
+            _bounds.init_from_rect (rect, radius);
 
             var saved = false;
             if (radius > 0) {
@@ -102,7 +106,7 @@ namespace G4 {
                     snapshot.save ();
                     compute_matrix (snapshot, width, height, 0, scale);
                 }
-                snapshot.push_rounded_clip (rounded);
+                snapshot.push_rounded_clip (_bounds);
             }
             base.on_snapshot (snapshot, width, height);
             if (radius > 0) {
