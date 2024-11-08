@@ -166,7 +166,7 @@ namespace G4 {
                                         + FileAttribute.STANDARD_TYPE + ","
                                         + FileAttribute.TIME_MODIFIED;
 
-        private void add_file (File file, GenericArray<Music> musics, GenericArray<File>? dirs = null, GenericArray<File>? playlists = null) {
+        private void add_file (File file, GenericArray<Music> musics, GenericArray<File> dirs, GenericArray<File> playlists) {
             try {
                 var info = file.query_info (ATTRIBUTES, FileQueryInfoFlags.NONE);
                 if (info.get_file_type () == FileType.DIRECTORY) {
@@ -174,7 +174,7 @@ namespace G4 {
                     stack.push_head (new DirCache (file, info));
                     while (stack.length > 0) {
                         var cache = stack.pop_head ();
-                        dirs?.add (cache.dir);
+                        dirs.add (cache.dir);
                         add_directory (cache, stack, musics, playlists);
                     }
                 } else {
@@ -185,7 +185,7 @@ namespace G4 {
                         var music = new Music (file.get_uri (), name, time);
                         musics.add (music);
                     } else if (is_playlist_file (ctype)) {
-                        playlists?.add (file);
+                        playlists.add (file);
                     } else if (is_cover_file (ctype, name)) {
                         var parent = file.get_parent ();
                         if (parent != null)
@@ -200,7 +200,7 @@ namespace G4 {
             }
         }
 
-        private void add_directory (DirCache cache, Queue<DirCache> stack, GenericArray<Music> musics, GenericArray<File>? playlists) {
+        private void add_directory (DirCache cache, Queue<DirCache> stack, GenericArray<Music> musics, GenericArray<File> playlists) {
             var dir = cache.dir;
             var start = musics.length;
             string? cover_name = null;
@@ -228,7 +228,7 @@ namespace G4 {
                             cache.add_child (info, ChildType.MUSIC);
                         } else if (is_playlist_file (ctype)) {
                             var child = dir.get_child (info.get_name ());
-                            playlists?.add (child);
+                            playlists.add (child);
                             cache.add_child (info, ChildType.PLAYLIST);
                         } else if (cover_name == null && is_cover_file (ctype, name)) {
                             cover_name = name;
