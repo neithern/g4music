@@ -97,6 +97,39 @@ namespace G4 {
         return title;
     }
 
+    public string get_relative_path (File? parent, File file) {
+        var path = parent?.get_relative_path (file);
+        if (path != null)
+            return (!)path;
+
+        path = file.get_path ();
+        if (path == null)
+            return "";
+        var file_path = (!)path;
+
+        path = parent?.get_path ();
+        if (path == null)
+            return file_path;
+        var parent_path = (!)path;
+
+        var pos = 0;
+        do {
+            var ret = file_path.index_of_char ('/', pos + 1);
+            if (ret > pos && file_path.ascii_ncasecmp (parent_path, ret) == 0)
+                pos = ret;
+            else
+                break;
+        } while (pos > 0);
+        if (pos > 1) { // Skip the first '/'
+            var len = parent_path.length;
+            var sb = new StringBuilder ();
+            for (var p = pos; p > 0 && p < len; p = parent_path.index_of_char ('/', p + 1))
+                sb.append ("../");
+            file_path = sb.str + file_path.substring (pos + 1);
+        }
+        return file_path;
+    }
+
     public string? parse_relative_uri (string uri, File? parent = null) {
         if (uri.length > 0 && uri[0] == '/') {
             return File.new_for_path (uri).get_uri ();
@@ -114,7 +147,7 @@ namespace G4 {
             return false;
         foreach (var uri in uris) {
             var f = File.new_for_uri (uri);
-            var path = parent?.get_relative_path (f) ?? f.get_path () ?? "";
+            var path = get_relative_path (parent, f);
             if (with_titles) {
                 var name = get_file_display_name (f);
                 if (!dos.put_string (@"#EXTINF:,$name\n"))
@@ -136,7 +169,7 @@ namespace G4 {
             return false;
         for (var i = 0; i < count; i++) {
             var f = File.new_for_uri (uris[i]);
-            var path = parent?.get_relative_path (f) ?? f.get_path () ?? "";
+            var path = get_relative_path (parent, f);
             var n = i + 1;
             if (with_titles) {
                 var name = get_file_display_name (f);
