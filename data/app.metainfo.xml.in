@@ -65,6 +65,17 @@
     </screenshots>
 
     <releases>
+        <release version="4.2" date="2024-11-10">
+            <description translate="no">
+                <ul>
+                <li>Optimize relative file paths for playlists.</li>
+                <li>Start drag only when the pointer inside the cover image.</li>
+                <li>Show the full date of the album if possible.</li>
+                <li>Build with low version of vala compiler.</li>
+                <li>Update translation: Slovak, German, Dutch, Occitan.</li>
+                </ul>
+            </description>
+        </release>
         <release version="4.1" date="2024-10-27">
             <description translate="no">
                 <ul>
