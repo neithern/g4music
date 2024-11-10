@@ -19,6 +19,7 @@
           <object class="GtkMenuButton">
             <property name="icon_name">open-menu-symbolic</property>
             <property name="menu_model">primary_menu</property>
+            <property name="primary">true</property>
             <property name="tooltip-text" translatable="yes">Main Menu</property>
           </object>
         </child>
