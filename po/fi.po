@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/neithern/g4music/issues\n"
-"POT-Creation-Date: 2024-10-05 15:09+0000\n"
-"PO-Revision-Date: 2024-10-06 16:37+0300\n"
+"POT-Creation-Date: 2024-10-11 01:38+0000\n"
+"PO-Revision-Date: 2024-11-11 20:34+0200\n"
 "Last-Translator: Jiri Grönroos <jiri.gronroos+l10n@iki.fi>\n"
 "Language-Team: Finnish <lokalisointi-lista@googlegroups.com>\n"
 "Language: fi\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.4.4\n"
 
-#: data/app.desktop.in:3 data/app.metainfo.xml.in:4 src/application.vala:267
+#: data/app.desktop.in:3 data/app.metainfo.xml.in:4 src/application.vala:277
 #: src/main.vala:24
 msgid "Gapless"
 msgstr "Gapless"
@@ -88,8 +88,7 @@ msgstr ""
 
 #: data/app.metainfo.xml.in:32
 msgid "Gaussian blurred cover as background, follows GNOME light/dark mode."
-msgstr ""
-"Sumennettu kansikuva taustaksi, seuraa Gnomen vaaleaa ja tummaa tilaa."
+msgstr "Sumennettu kansikuva taustaksi, seuraa Gnomen vaaleaa ja tummaa tilaa."
 
 #: data/app.metainfo.xml.in:33
 msgid ""
@@ -209,8 +208,8 @@ msgctxt "shortcut window"
 msgid "Save List"
 msgstr "Tallenna lista"
 
-#: src/gtk/play-panel.ui:16 src/ui/music-list.vala:628
-#: src/ui/store-panel.vala:425
+#: src/gtk/play-panel.ui:16 src/ui/music-list.vala:629
+#: src/ui/store-panel.vala:421
 msgid "Back"
 msgstr "Takaisin"
 
@@ -234,7 +233,7 @@ msgstr "Ruudukkonäkymä esittäjille/albumeille"
 msgid "Single click to activate item"
 msgstr "Kertanapsautus aktivoi kohteen"
 
-#: src/gtk/preferences.ui:56 src/application.vala:412
+#: src/gtk/preferences.ui:56 src/application.vala:425
 msgid "Keep playing after window closed"
 msgstr "Jatka toistamista ikkunan sulkemisen jälkeen"
 
@@ -294,112 +293,116 @@ msgstr "Päävalikko"
 msgid "Search"
 msgstr "Etsi"
 
-#: src/gtk/store-panel.ui:35
+#: src/gtk/store-panel.ui:39
 msgid "Sort By"
 msgstr "Järjestä"
 
-#: src/gtk/store-panel.ui:57
+#: src/gtk/store-panel.ui:70
 msgid "_Color Scheme"
 msgstr "_Väriteema"
 
-#: src/gtk/store-panel.ui:59
+#: src/gtk/store-panel.ui:72
 msgid "_System"
 msgstr "_Järjestelmä"
 
-#: src/gtk/store-panel.ui:64
+#: src/gtk/store-panel.ui:77
 msgid "_Light"
 msgstr "_Vaalea"
 
-#: src/gtk/store-panel.ui:69
+#: src/gtk/store-panel.ui:82
 msgid "_Dark"
 msgstr "_Tumma"
 
-#: src/gtk/store-panel.ui:76
+#: src/gtk/store-panel.ui:89
 msgid "_Reload Library"
 msgstr "_Lataa kirjasto uudelleen"
 
-#: src/gtk/store-panel.ui:80
-msgid "_Select"
-msgstr "_Valitse"
+#: src/gtk/store-panel.ui:93
+msgid "_Multiple Select"
+msgstr "_Monivalinta"
 
-#: src/gtk/store-panel.ui:86
+#: src/gtk/store-panel.ui:97
+msgid "_Save List"
+msgstr "_Tallenna lista"
+
+#: src/gtk/store-panel.ui:103
 msgid "_Preferences"
 msgstr "_Asetukset"
 
-#: src/gtk/store-panel.ui:90
+#: src/gtk/store-panel.ui:107
 msgid "_Keyboard Shortcuts"
 msgstr "_Pikanäppäimet"
 
-#: src/gtk/store-panel.ui:94
+#: src/gtk/store-panel.ui:111
 msgid "_About"
 msgstr "_Tietoja"
 
-#: src/gtk/store-panel.ui:103 src/ui/preferences.vala:66
+#: src/gtk/store-panel.ui:120 src/ui/preferences.vala:66
 msgid "Album"
 msgstr "Albumi"
 
-#: src/gtk/store-panel.ui:108
+#: src/gtk/store-panel.ui:125
 msgid "Artist"
 msgstr "Esittäjä"
 
-#: src/gtk/store-panel.ui:113
+#: src/gtk/store-panel.ui:130
 msgid "Artist/Album"
 msgstr "Esittäjä/albumi"
 
-#: src/gtk/store-panel.ui:118
+#: src/gtk/store-panel.ui:135
 msgid "Title"
 msgstr "Nimi"
 
-#: src/gtk/store-panel.ui:123
+#: src/gtk/store-panel.ui:140
 msgid "Recent"
 msgstr "Viimeisimmät"
 
-#: src/gtk/store-panel.ui:128
+#: src/gtk/store-panel.ui:145
 msgid "Shuffle"
 msgstr "Sekoita"
 
-#: src/action-handles.vala:112
+#: src/action-handles.vala:114
 msgid "Image Files"
 msgstr "Kuvatiedostot"
 
-#: src/action-handles.vala:119
+#: src/action-handles.vala:121
 msgid "Export cover successfully"
 msgstr "Kansi viety onnistuneesti"
 
-#: src/action-handles.vala:119
+#: src/action-handles.vala:121
 msgid "Export cover failed"
 msgstr "Kannen vienti epäonnistui"
 
-#: src/action-handles.vala:198
+#: src/application.vala:350
+msgid "Save playlist failed"
+msgstr "Soittolistan tallentaminen epäonnistui"
+
+#: src/application.vala:447
+msgid "Playlist Files"
+msgstr "Soittolistatiedostot"
+
+#: src/application.vala:461
+msgid "Save playlist successfully"
+msgstr "Soittolista tallennettu"
+
+#: src/application.vala:597
+msgid "Keep playing"
+msgstr "Jatka toistamista"
+
+#: src/ui/dialogs.vala:51
 msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr "Nopea ja kevyt musiikkisoitin GTK4:llä toteutettuna."
 
 #. Translators: Replace "translator-credits" with your names, one name per line
-#: src/action-handles.vala:200
+#: src/ui/dialogs.vala:53
 msgid "translator-credits"
 msgstr "Jiri Grönroos"
 
-#: src/application.vala:340
-msgid "Save playlist failed"
-msgstr "Soittolistan tallentaminen epäonnistui"
-
-#: src/application.vala:434
-msgid "Playlist Files"
-msgstr "Soittolistatiedostot"
-
-#: src/application.vala:448
-msgid "Save playlist successfully"
-msgstr "Soittolista tallennettu"
-
-#: src/application.vala:592
-msgid "Keep playing"
-msgstr "Jatka toistamista"
-
-#: src/ui/dialogs.vala:48 src/ui/dialogs.vala:60
+#: src/ui/dialogs.vala:99 src/ui/dialogs.vala:111
 msgid "No"
 msgstr "Ei"
 
-#: src/ui/dialogs.vala:49 src/ui/dialogs.vala:60
+#: src/ui/dialogs.vala:100 src/ui/dialogs.vala:111
 msgid "Yes"
 msgstr "Kyllä"
 
@@ -408,78 +411,87 @@ msgid "Playlist is modified, save it?"
 msgstr "Soittolistaa on muokattu, tallennetaanko se?"
 
 #. Translators: Play this music at next position of current playing music
-#: src/ui/music-list.vala:400 src/ui/music-list.vala:416
-#: src/ui/music-widgets.vala:219 src/ui/music-widgets.vala:235
+#: src/ui/music-list.vala:402 src/ui/music-list.vala:418
+#: src/ui/music-widgets.vala:277 src/ui/music-widgets.vala:299
 msgid "Play at _Next"
 msgstr "Toista _seuraavaksi"
 
-#: src/ui/music-list.vala:402 src/ui/music-list.vala:418
-#: src/ui/music-widgets.vala:220 src/ui/music-widgets.vala:236
+#: src/ui/music-list.vala:404 src/ui/music-list.vala:420
+#: src/ui/music-widgets.vala:278 src/ui/music-widgets.vala:300
 msgid "Add to _Queue"
 msgstr "Lisää _jonoon"
 
-#: src/ui/music-list.vala:403 src/ui/music-widgets.vala:221
-#: src/ui/music-widgets.vala:237 src/ui/music-widgets.vala:255
+#: src/ui/music-list.vala:405 src/ui/music-widgets.vala:279
+#: src/ui/music-widgets.vala:301 src/ui/music-widgets.vala:320
 msgid "Add to _Playlist…"
 msgstr "Lisää _soittolistalle…"
 
-#: src/ui/music-list.vala:404 src/ui/music-list.vala:422
+#: src/ui/music-list.vala:406 src/ui/music-list.vala:424
 msgid "_Remove"
 msgstr "_Poista"
 
-#: src/ui/music-list.vala:423 src/ui/music-widgets.vala:226
+#: src/ui/music-list.vala:425 src/ui/music-widgets.vala:286
 msgid "_Move to Trash"
 msgstr "_Siirrä roskakoriin"
 
-#: src/ui/music-list.vala:632
+#: src/ui/music-list.vala:633
 msgid "Select All"
 msgstr "Valitse kaikki"
 
-#: src/ui/music-list.vala:649
+#: src/ui/music-list.vala:650
 msgid "Play at Next"
 msgstr "Toista seuraavaksi"
 
-#: src/ui/music-list.vala:656
+#: src/ui/music-list.vala:657
 msgid "Add to Queue"
 msgstr "Lisää jonoon"
 
-#: src/ui/music-list.vala:663 src/ui/playlist-dialog.vala:19
+#: src/ui/music-list.vala:664 src/ui/playlist-dialog.vala:19
 msgid "Add to Playlist"
 msgstr "Lisää soittolistalle"
 
-#: src/ui/music-list.vala:670
+#: src/ui/music-list.vala:671
 msgid "Remove"
 msgstr "Poista"
 
-#: src/ui/music-widgets.vala:225
+#: src/ui/music-widgets.vala:274 src/ui/music-widgets.vala:296
+#: src/ui/store-panel.vala:429
+msgid "Play"
+msgstr "Toista"
+
+#: src/ui/music-widgets.vala:275 src/ui/music-widgets.vala:297
+msgid "_Random Play"
+msgstr "_Satunnaistoisto"
+
+#: src/ui/music-widgets.vala:285
 msgid "Show List _File"
 msgstr "Näytä _listatiedosto"
 
-#: src/ui/music-widgets.vala:243 src/ui/play-panel.vala:60
+#: src/ui/music-widgets.vala:308 src/ui/play-panel.vala:60
 msgid "Search Title"
 msgstr "Etsi nimeä"
 
-#: src/ui/music-widgets.vala:244 src/ui/play-panel.vala:58
+#: src/ui/music-widgets.vala:309 src/ui/play-panel.vala:58
 msgid "Search Album"
 msgstr "Etsi albumia"
 
-#: src/ui/music-widgets.vala:245 src/ui/play-panel.vala:59
+#: src/ui/music-widgets.vala:310 src/ui/play-panel.vala:59
 msgid "Search Artist"
 msgstr "Etsi esittäjää"
 
-#: src/ui/music-widgets.vala:249
+#: src/ui/music-widgets.vala:314
 msgid "Show Cover _File"
 msgstr "Näytä _kansitiedosto"
 
-#: src/ui/music-widgets.vala:251
+#: src/ui/music-widgets.vala:316
 msgid "_Export Cover"
 msgstr "_Vie kansi"
 
-#: src/ui/music-widgets.vala:252
+#: src/ui/music-widgets.vala:317
 msgid "Show _Tags…"
 msgstr "Näytä _tunnisteet…"
 
-#: src/ui/music-widgets.vala:253
+#: src/ui/music-widgets.vala:318
 msgid "Show Music _File"
 msgstr "Näytä _musiikkitiedosto"
 
@@ -501,7 +513,7 @@ msgstr "Toista/keskeytä"
 msgid "Play Next"
 msgstr "Toista seuraava"
 
-#: src/ui/play-panel.vala:258
+#: src/ui/play-panel.vala:255
 msgid ""
 "Drag and drop music files here,\n"
 "or change music location: "
@@ -513,7 +525,7 @@ msgstr ""
 msgid "New Playlist"
 msgstr "Uusi soittolista"
 
-#: src/ui/playlist-dialog.vala:98 src/ui/store-panel.vala:674
+#: src/ui/playlist-dialog.vala:98 src/ui/store-panel.vala:692
 #, c-format
 msgid "No playlist found in %s"
 msgstr "Soittolistaa %s ei löytynyt"
@@ -534,25 +546,21 @@ msgstr "Vain kuvitus"
 msgid "Track"
 msgstr "Kappale"
 
-#: src/ui/store-panel.vala:82
+#: src/ui/store-panel.vala:84
 msgid "Playing"
 msgstr "Toistetaan"
 
-#: src/ui/store-panel.vala:86
+#: src/ui/store-panel.vala:89
 msgid "Artists"
 msgstr "Esittäjät"
 
-#: src/ui/store-panel.vala:90
+#: src/ui/store-panel.vala:94
 msgid "Albums"
 msgstr "Albumit"
 
-#: src/ui/store-panel.vala:94
+#: src/ui/store-panel.vala:99
 msgid "Playlists"
 msgstr "Soittolistat"
-
-#: src/ui/store-panel.vala:433
-msgid "Play"
-msgstr "Toista"
 
 #: src/ui/taglist-dialog.vala:125
 msgid "Copy"
