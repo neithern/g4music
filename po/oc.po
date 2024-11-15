@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/neithern/g4music/issues\n"
-"POT-Creation-Date: 2024-10-11 01:38+0000\n"
-"PO-Revision-Date: 2024-11-02 22:21+0100\n"
+"POT-Creation-Date: 2024-11-02 21:22+0000\n"
+"PO-Revision-Date: 2024-11-15 20:00+0100\n"
 "Last-Translator: Quentin PAGÈS\n"
 "Language-Team: \n"
 "Language: oc\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 "X-Generator: Poedit 3.5\n"
 
-#: data/app.desktop.in:3 data/app.metainfo.xml.in:4 src/application.vala:277
+#: data/app.desktop.in:3 data/app.metainfo.xml.in:4 src/application.vala:271
 #: src/main.vala:24
 msgid "Gapless"
 msgstr "Gapless"
@@ -97,12 +97,12 @@ msgid ""
 "Supports creating and editing playlists, drag cover to change order or add "
 "to another playlist."
 msgstr ""
+"Pren en carga la creacion e modificacion de listas de lectura, lisar "
+"depausar per cambiar l’òrdre o apondre a una autra lista de lectura."
 
 #: data/app.metainfo.xml.in:34
-#, fuzzy
-#| msgid "Supports PipeWire and other audio sink."
 msgid "Supports drag and drop with other apps."
-msgstr "Pren en carga PipeWire e d'autres receptors àudio."
+msgstr "Pren en carga del lisar depausar d’autras aplicacions."
 
 #: data/app.metainfo.xml.in:35
 msgid "Supports audio peaks visualizer."
@@ -210,8 +210,8 @@ msgctxt "shortcut window"
 msgid "Save List"
 msgstr "Enregistrar la lista"
 
-#: src/gtk/play-panel.ui:16 src/ui/music-list.vala:629
-#: src/ui/store-panel.vala:421
+#: src/gtk/play-panel.ui:16 src/ui/music-list.vala:633
+#: src/ui/store-panel.vala:423
 msgid "Back"
 msgstr "Tornar"
 
@@ -235,7 +235,7 @@ msgstr "Vista grasilha per artista/albums"
 msgid "Single click to activate item"
 msgstr "Clic simple per activar l’element"
 
-#: src/gtk/preferences.ui:56 src/application.vala:425
+#: src/gtk/preferences.ui:56 src/application.vala:430
 msgid "Keep playing after window closed"
 msgstr "Téner de legir un còp la fenèstra tampada"
 
@@ -375,19 +375,19 @@ msgstr "Succès de l’expòrt de la pocheta"
 msgid "Export cover failed"
 msgstr "Fracàs de l’expòrt de la pocheta"
 
-#: src/application.vala:350
+#: src/application.vala:344
 msgid "Save playlist failed"
 msgstr "Fracàs de l’expòrt de la lista de lectura"
 
-#: src/application.vala:447
+#: src/application.vala:466
 msgid "Playlist Files"
 msgstr "Fichièrs de lista de lectura"
 
-#: src/application.vala:461
+#: src/application.vala:480
 msgid "Save playlist successfully"
 msgstr "Succès de l’enregistrament de la lista de lectura"
 
-#: src/application.vala:597
+#: src/application.vala:615
 msgid "Keep playing"
 msgstr "Contunhar de legir"
 
@@ -400,64 +400,64 @@ msgstr "Un lector de musica rapid e leugièr esrich en GTK4."
 msgid "translator-credits"
 msgstr "Quentin PAGÈS"
 
-#: src/ui/dialogs.vala:99 src/ui/dialogs.vala:111
+#: src/ui/dialogs.vala:100 src/ui/dialogs.vala:112
 msgid "No"
 msgstr "Non"
 
-#: src/ui/dialogs.vala:100 src/ui/dialogs.vala:111
+#: src/ui/dialogs.vala:101 src/ui/dialogs.vala:112
 msgid "Yes"
 msgstr "Òc"
 
-#: src/ui/music-list.vala:272
+#: src/ui/music-list.vala:276
 msgid "Playlist is modified, save it?"
 msgstr "Lista de lectura modificada, l’enregistrar ?"
 
 #. Translators: Play this music at next position of current playing music
-#: src/ui/music-list.vala:402 src/ui/music-list.vala:418
+#: src/ui/music-list.vala:406 src/ui/music-list.vala:422
 #: src/ui/music-widgets.vala:277 src/ui/music-widgets.vala:299
 msgid "Play at _Next"
 msgstr "Legir a la _seguida"
 
-#: src/ui/music-list.vala:404 src/ui/music-list.vala:420
+#: src/ui/music-list.vala:408 src/ui/music-list.vala:424
 #: src/ui/music-widgets.vala:278 src/ui/music-widgets.vala:300
 msgid "Add to _Queue"
 msgstr "_Apondre a la lista d'espèra"
 
-#: src/ui/music-list.vala:405 src/ui/music-widgets.vala:279
+#: src/ui/music-list.vala:409 src/ui/music-widgets.vala:279
 #: src/ui/music-widgets.vala:301 src/ui/music-widgets.vala:320
 msgid "Add to _Playlist…"
 msgstr "_Apondre a la lista de lectura…"
 
-#: src/ui/music-list.vala:406 src/ui/music-list.vala:424
+#: src/ui/music-list.vala:410 src/ui/music-list.vala:428
 msgid "_Remove"
 msgstr "_Levar"
 
-#: src/ui/music-list.vala:425 src/ui/music-widgets.vala:286
+#: src/ui/music-list.vala:429 src/ui/music-widgets.vala:286
 msgid "_Move to Trash"
 msgstr "_Metre a l'escobilhièr"
 
-#: src/ui/music-list.vala:633
+#: src/ui/music-list.vala:637
 msgid "Select All"
 msgstr "Tot seleccionar"
 
-#: src/ui/music-list.vala:650
+#: src/ui/music-list.vala:654
 msgid "Play at Next"
 msgstr "Legir a la seguida"
 
-#: src/ui/music-list.vala:657
+#: src/ui/music-list.vala:661
 msgid "Add to Queue"
 msgstr "Apondre a la lista d'espèra"
 
-#: src/ui/music-list.vala:664 src/ui/playlist-dialog.vala:19
+#: src/ui/music-list.vala:668 src/ui/playlist-dialog.vala:19
 msgid "Add to Playlist"
 msgstr "Apondre a la lista de lectura"
 
-#: src/ui/music-list.vala:671
+#: src/ui/music-list.vala:675
 msgid "Remove"
 msgstr "Levar"
 
 #: src/ui/music-widgets.vala:274 src/ui/music-widgets.vala:296
-#: src/ui/store-panel.vala:429
+#: src/ui/store-panel.vala:431
 msgid "Play"
 msgstr "Lectura"
 
@@ -515,7 +515,7 @@ msgstr "Lectura/Pausa"
 msgid "Play Next"
 msgstr "Legir la seguenta"
 
-#: src/ui/play-panel.vala:255
+#: src/ui/play-panel.vala:263
 msgid ""
 "Drag and drop music files here,\n"
 "or change music location: "
@@ -527,7 +527,7 @@ msgstr ""
 msgid "New Playlist"
 msgstr "Lista de lectura novèla"
 
-#: src/ui/playlist-dialog.vala:98 src/ui/store-panel.vala:692
+#: src/ui/playlist-dialog.vala:98 src/ui/store-panel.vala:702
 #, c-format
 msgid "No playlist found in %s"
 msgstr "Cap de lista de lectura pas trobada dins %s"
@@ -574,7 +574,7 @@ msgstr "Copiar"
 msgid "Volume %d%%"
 msgstr "Volum %d%%"
 
-#: src/ui/window.vala:112
+#: src/ui/window.vala:119
 msgid "Show"
 msgstr "Mostrar"
 
