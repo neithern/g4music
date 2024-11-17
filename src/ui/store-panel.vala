@@ -182,15 +182,13 @@ namespace G4 {
                 }
                 if (value is MusicList) {
                     var list = _current_list = (MusicList) value;
-                    on_music_changed (_app.current_music);
-
                     indicator.visible = _current_list.modified;
                     sort_btn.visible = _current_list == _main_list;
                     _search_mode = SearchMode.ANY;
                     on_search_btn_toggled ();
 
                     var scroll = !_overlayed_lists.remove (list);
-                    run_idle_once (() => list.set_to_current_item (scroll), Priority.LOW);
+                    set_to_current_music (scroll);
                 }
                 save_current_page ();
             }
@@ -461,6 +459,7 @@ namespace G4 {
                     _library_uri = null;
                     if (_current_list.playable)
                         _album_key_of_list = _current_list.music_node?.album_key;
+                    set_to_current_music ();
                 }
             }
         }
@@ -536,13 +535,10 @@ namespace G4 {
                     pop_page_without_animation (stack);
                     if (_current_list.music_node is Artist)
                         pop_page_without_animation (stack);
-                    on_music_changed (_app.current_music);
                 } else if (_current_list.set_to_current_item (false) >= (int) _current_list.visible_count - 1) {
                     pop_page_without_animation (stack);
-                    on_music_changed (_app.current_music);
                     if (_current_list.set_to_current_item (false) >= (int) _current_list.visible_count - 1) {
                         pop_page_without_animation (stack);
-                        on_music_changed (_app.current_music);
                     }
                 }
 
@@ -677,6 +673,11 @@ namespace G4 {
             stack.animate_transitions = false;
             stack.pop ();
             stack.animate_transitions = animate;
+        }
+
+        private void set_to_current_music (bool scroll = true) {
+            on_music_changed (_app.current_music);
+            _current_list.set_to_current_item (scroll);
         }
 
         private void update_stack_pages (Stack stack) {

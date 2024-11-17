@@ -388,6 +388,8 @@ namespace G4 {
             }
             if (_current_music == null) {
                 current_item = 0;
+            } else {
+                update_current_item ();
             }
         }
 

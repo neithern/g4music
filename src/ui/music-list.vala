@@ -291,6 +291,7 @@ namespace G4 {
         public void scroll_to_item (int index, bool smoothly = true) {
             var adj = _scroll_view.vadjustment;
             var list_height = _grid_view.get_height ();
+            var scroll_done = false;
             _columns = get_grid_view_item_size (_grid_view, ref _item_size, ref _cell_size);
             if (smoothly && _columns > 0 && _cell_size.height > 0 && adj.upper - adj.lower > list_height) {
                 var from = adj.value;
@@ -298,22 +299,20 @@ namespace G4 {
                 var max_to = double.max ((row + 1) * _cell_size.height - list_height, 0);
                 var min_to = double.max (row * _cell_size.height, 0);
                 var scroll_to =  from < max_to ? max_to : (from > min_to ? min_to : from);
-                var diff = (scroll_to - from).abs ();
-                var jump = diff > list_height;
-                if (jump) {
-                    // Jump to correct position first
-                    scroll_to_directly (index);
+                if ((scroll_to - from).abs () < list_height) {
+                    //  Scroll smoothly
+                    var target = new Adw.CallbackAnimationTarget (adj.set_value);
+                    _scroll_animation?.pause ();
+                    _scroll_animation = new Adw.TimedAnimation (_scroll_view, adj.value, scroll_to, 500, target);
+                    _scroll_animation?.play ();
+                    scroll_done = true;
                 }
-                //  Scroll smoothly
-                var target = new Adw.CallbackAnimationTarget (adj.set_value);
-                _scroll_animation?.pause ();
-                _scroll_animation = new Adw.TimedAnimation (_scroll_view, adj.value, scroll_to, jump ? 50 : 500, target);
-                _scroll_animation?.play ();
-            } else {
-                scroll_to_directly (index);
-                // Hack: sometime show only first item if no child drawed, so scroll it when first draw an item
-                _scrolling_item = _columns > 0 ? -1 : index;
             }
+            if (!scroll_done) {
+                scroll_to_directly (index);
+            }
+            // Hack: sometime show only first item if no child drawed, so scroll it when first draw an item
+            _scrolling_item = index;
         }
 
         public void scroll_to_directly (uint index) {
