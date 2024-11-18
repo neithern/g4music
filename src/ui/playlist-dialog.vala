@@ -101,7 +101,7 @@ namespace G4 {
 
                 var recent_uri = _app.settings.get_string ("recent-playlist");
                 list.current_node = library.get_playlist ((!)recent_uri);
-                run_idle_once (() => list.set_to_current_item (true), Priority.LOW);
+                list.set_to_current_item (true);
             }
         }
 

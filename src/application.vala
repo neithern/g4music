@@ -476,6 +476,7 @@ namespace G4 {
                 file = (!)file_new;
                 playlist.set_list_uri (file.get_uri ());
                 playlist.set_title (get_file_display_name (file));
+                _settings.set_string ("recent-playlist", playlist.list_uri);
             }
             var saved = yield add_playlist_to_file_async (playlist, append);
             if (saved && append)
