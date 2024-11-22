@@ -3,6 +3,7 @@ namespace G4 {
     public class Application : Adw.Application {
         private ActionHandles? _actions = null;
         private int _current_index = -1;
+        private uint _current_list_size = 0;
         private Music? _current_music = null;
         private string _current_uri = "";
         private Gst.Sample? _current_cover = null;
@@ -168,8 +169,9 @@ namespace G4 {
                 }
                 current_music = _current_list.get_item (value) as Music;
                 _current_index = value;
-                index_changed (_current_index, _current_list.get_n_items ());
-                update_next_item (value);
+                _current_list_size = _current_list.get_n_items ();
+                index_changed (value, _current_list_size);
+                update_next_item ();
             }
         }
 
@@ -696,20 +698,23 @@ namespace G4 {
         }
 
         private void update_current_item () {
-            _current_index = find_item_in_model (_current_list, _current_music, _current_index);
-            if (_current_index == -1 && _current_music != null) {
+            var index = find_item_in_model (_current_list, _current_music, _current_index);
+            if (index == -1 && _current_music != null) {
                 unowned var uri = ((!)_current_music).uri;
-                _current_index = find_music_item_by_uri (uri);
-                current_music = _current_index != -1 ? _current_list.get_item (_current_index) as Music : _loader.find_cache (uri);
+                index = find_music_item_by_uri (uri);
+                current_music = index != -1 ? _current_list.get_item (index) as Music : _loader.find_cache (uri);
             }
-            index_changed (_current_index, _current_list.get_n_items ());
-            update_next_item (_current_index);
+            var size = _current_list.get_n_items ();
+            if (_current_index != index || _current_list_size != size) {
+                _current_index = index;
+                _current_list_size = size;
+                index_changed (index, size);
+            }
+            update_next_item ();
         }
 
-        private void update_next_item (int index) {
-            var count = _current_list.get_n_items ();
-            var next = index + 1;
-            var next_music = next < (int) count ? (Music) _current_list.get_item (next) : (Music?) null;
+        private void update_next_item () {
+            var next_music = (Music?) _current_list.get_item (_current_index + 1);
             lock (_next_uri) {
                 _next_uri.assign (next_music?.uri ?? "");
             }
