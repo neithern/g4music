@@ -16,6 +16,10 @@ vala_compiler = meson.get_compiler('vala')
 add_project_arguments('-DGETTEXT_PACKAGE="' + meson.project_name() + '"', language: 'c')
 add_project_arguments('--enable-experimental-non-null', language: 'vala')
 
+if vala_compiler.version().version_compare('>=0.56.10')
+  add_project_arguments('--define=VALA_56_10', language: 'vala')
+endif
+
 gtk_dep = dependency('gtk4')
 if gtk_dep.version().version_compare('>=4.8') and vala_compiler.version().version_compare('>=0.56.6')
   add_project_arguments('--define=GTK_4_8', language: 'vala')
