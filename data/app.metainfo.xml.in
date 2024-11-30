@@ -65,6 +65,14 @@
     </screenshots>
 
     <releases>
+        <release version="4.3" date="2024-11-30">
+            <description translate="no">
+                <ul>
+                <li>Optimize scrolling to current item at startup.</li>
+                <li>Update translation: Swedish, Finnish, Occitan, Turkish.</li>
+                </ul>
+            </description>
+        </release>
         <release version="4.2" date="2024-11-10">
             <description translate="no">
                 <ul>
