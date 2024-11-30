@@ -541,11 +541,11 @@ namespace G4 {
                         pop_page_without_animation (stack);
                     }
                 }
-
-                var index = _current_list.set_to_current_item ();
-                _current_list.activate_item (index < (int) _current_list.visible_count - 1 ? index + 1 : 0);
                 if (!_current_list.playable) {
-                    _current_list.activate_item (0);
+                    var index = _current_list.set_to_current_item ();
+                    _current_list.activate_item (index < (int) _current_list.visible_count - 1 ? index + 1 : 0);
+                    if (!_current_list.playable)
+                        _current_list.activate_item (0);
                 }
                 if (_current_list.playable) {
                     var playlist = _current_list.get_as_playlist ();
