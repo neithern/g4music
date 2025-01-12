@@ -12,10 +12,7 @@
         "--socket=pulseaudio",
         "--socket=wayland",
         "--filesystem=xdg-music",
-        "--filesystem=xdg-run/gvfsd",
-        "--filesystem=xdg-run/pipewire-0:ro",
         "--own-name=org.mpris.MediaPlayer2.Gapless",
-        "--talk-name=org.gnome.Shell",
         "--talk-name=org.gtk.vfs.*"
     ],
     "cleanup": [
