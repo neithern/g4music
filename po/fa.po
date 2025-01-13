@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: g4music master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/neithern/g4music/issues\n"
-"POT-Creation-Date: 2024-08-27 15:12+0000\n"
-"PO-Revision-Date: 2024-09-07 14:09+0330\n"
+"POT-Creation-Date: 2024-11-24 11:17+0000\n"
+"PO-Revision-Date: 2025-01-13 16:21+0330\n"
 "Last-Translator: Danial Behzadi <dani.behzi@ubuntu.com>\n"
 "Language-Team: Persian <kde-i18n-doc@kde.org>\n"
 "Language: fa\n"
@@ -17,49 +17,52 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.4.4\n"
+"X-Generator: Poedit 3.5\n"
 
-#: data/app.appdata.xml.in:4 data/app.desktop.in:3 src/application.vala:236
+#: data/app.desktop.in:3 data/app.metainfo.xml.in:4 src/application.vala:273
 #: src/main.vala:24
 msgid "Gapless"
 msgstr "بی‌وقفه"
 
-#: data/app.appdata.xml.in:7
+#: data/app.desktop.in:4
+msgid "Music Player"
+msgstr "پخش‌کنندهٔ آهنگ"
+
+#: data/app.desktop.in:5 data/app.metainfo.xml.in:7
 msgid "Play your music elegantly"
 msgstr "پخش شیک آهنگ‌هایتان"
 
-#: data/app.appdata.xml.in:9
-msgid "Nanling"
-msgstr "نانلینگ"
+#: data/app.desktop.in:12
+msgid "music;sound;player;media;audio;playlist;"
+msgstr "music;sound;player;media;audio;playlist;آهنگ;صدا;پخش‌کننده;رسانه;صوت;سیاهه‌پخش;"
 
-#: data/app.appdata.xml.in:22
+#: data/app.metainfo.xml.in:24
 msgid ""
-"Gapless (AKA: G4Music) is a light weight music player written in GTK4, "
-"focuses on large music collection."
+"Gapless (AKA: G4Music) is a light weight music player written in GTK4, focuses on "
+"large music collection."
 msgstr ""
-"بی‌وقفه (G4Music) پخش‌کنندهٔ آهنگی سبک است که با GTK4 نوشته شده و بر مجموعه‌های "
-"آهنگ بزرگ تمرکز دارد."
+"بی‌وقفه (G4Music) پخش‌کنندهٔ آهنگی سبک است که با GTK4 نوشته شده و بر مجموعه‌های آهنگ "
+"بزرگ تمرکز دارد."
 
-#: data/app.appdata.xml.in:23
+#: data/app.metainfo.xml.in:25
 msgid "Features"
 msgstr "ویژگی‌ها"
 
-#: data/app.appdata.xml.in:25
+#: data/app.metainfo.xml.in:27
 msgid ""
-"Supports most music file types, Samba and any other remote protocols "
-"(depends on GIO and GStreamer)."
+"Supports most music file types, Samba and any other remote protocols (depends on "
+"GIO and GStreamer)."
 msgstr ""
-"پشتیبانی از بیش‌تر گونه‌های پروندهٔ آهنگ، سامبا و دیگر شیوه‌نامه‌های دوردست "
-"(بسته به GIO و GStreamer)."
+"پشتیبانی از بیش‌تر گونه‌های پروندهٔ آهنگ، سامبا و دیگر شیوه‌نامه‌های دوردست (بسته به "
+"GIO و GStreamer)."
 
-#: data/app.appdata.xml.in:26
+#: data/app.metainfo.xml.in:28
 msgid ""
-"Fast loading and parsing thousands of music files in very few seconds, "
-"monitor local changes."
-msgstr ""
-"بار کردن سریع و تجزیهٔ هزاران پروندهٔ آهنگ در چند ثانیه. پایش تغییرات محلی."
+"Fast loading and parsing thousands of music files in very few seconds, monitor "
+"local changes."
+msgstr "بار کردن سریع و تجزیهٔ هزاران پروندهٔ آهنگ در چند ثانیه. پایش تغییرات محلی."
 
-#: data/app.appdata.xml.in:27
+#: data/app.metainfo.xml.in:29
 msgid ""
 "Low memory usage for large music collection with album covers (embedded and "
 "external), no thumbnail caches to store."
@@ -67,76 +70,67 @@ msgstr ""
 "استفادهٔ کم حافظه برای مجموعهٔ آهنگ بزرگ با طرح جلد (تعبیه شده و خارجی). بدون "
 "نگه‌داری انبارهٔ بندانگشی."
 
-#: data/app.appdata.xml.in:28
-msgid ""
-"Group and sorts by album/artist/title, shuffle list, full-text searching."
+#: data/app.metainfo.xml.in:30
+msgid "Group and sorts by album/artist/title, shuffle list, full-text searching."
 msgstr ""
-"گروه‌بندی و چینش بر اساس آلبوم، هنرمند و عنوان. بر زدن سیاهه. جست‌وجوی متن "
-"کامل."
+"گروه‌بندی و چینش بر اساس آلبوم، هنرمند و عنوان. بر زدن سیاهه. جست‌وجوی متن کامل."
 
-#: data/app.appdata.xml.in:29
+#: data/app.metainfo.xml.in:31
 msgid ""
-"Fluent adaptive user interface for different screen (Desktop, Tablet, "
-"Mobile)."
-msgstr "میانای کاربری سازوا برای صفحه‌ّای مختلف (میزکار، رایانک، تلفن همراه)."
+"Fluent adaptive user interface for different screen (Desktop, Tablet, Mobile)."
+msgstr "میانای کاربری سازوا برای صفحه‌های مختلف (میزکار، رایانک، تلفن همراه)."
 
-#: data/app.appdata.xml.in:30
+#: data/app.metainfo.xml.in:32
 msgid "Gaussian blurred cover as background, follows GNOME light/dark mode."
 msgstr "طرح جلد مات گوسی به عنوان پس‌زمینه. پیروی از حالت تیره و روشن گنوم."
 
-#: data/app.appdata.xml.in:31
-msgid "Drag-drop from GNOME Files, showing music in Files."
-msgstr "کشیدن-رها کردن از پرونده‌های کنوم، نمایش آهنگ در پرونده‌ها."
+#: data/app.metainfo.xml.in:33
+msgid ""
+"Supports creating and editing playlists, drag cover to change order or add to "
+"another playlist."
+msgstr ""
+"پشیبانی از ایجاد و ویرایشسیاهه‌های پخش، کشیدن طرح جلد برای تغییر ترتیب یا افزودن "
+"به سیاههٔ پخشی دیگر."
 
-#: data/app.appdata.xml.in:32
+#: data/app.metainfo.xml.in:34
+msgid "Supports drag and drop with other apps."
+msgstr "پشتیانی از کشیدن و رها کردن با دیگر کاره‌ها."
+
+#: data/app.metainfo.xml.in:35
 msgid "Supports audio peaks visualizer."
 msgstr "پشتیبانی از نمایش سطح اوج صدا."
 
-#: data/app.appdata.xml.in:33
+#: data/app.metainfo.xml.in:36
 msgid "Supports gapless playback."
 msgstr "پشتیبانی از پخش بی‌وقفه."
 
-#: data/app.appdata.xml.in:34
+#: data/app.metainfo.xml.in:37
 msgid "Supports normalizing volume with ReplayGain."
 msgstr "پشتیبانی از عادی سازی حجم صدا با ReplayGain."
 
-#: data/app.appdata.xml.in:35
-msgid "Supports PipeWire and other audio sink."
-msgstr "پشتیانی از پایپ‌وایر و سامانه‌ّای صوتی دیگر."
+#: data/app.metainfo.xml.in:38
+msgid "Supports specified audio sink."
+msgstr "پشتیانی از سامانهٔ صوتی مشخّص."
 
-#: data/app.appdata.xml.in:36
+#: data/app.metainfo.xml.in:39
 msgid "Supports MPRIS control."
 msgstr "پشتیبانی از واپایش MPRIS."
 
-#: data/app.appdata.xml.in:47
+#: data/app.metainfo.xml.in:50
 msgid "Main window"
 msgstr "پنجرهٔ اصلی"
 
-#: data/app.appdata.xml.in:51
+#: data/app.metainfo.xml.in:54
 msgid "Albums view"
 msgstr "نمای آلبوم‌ها"
 
-#: data/app.appdata.xml.in:55
+#: data/app.metainfo.xml.in:58
 msgid "Playing view"
 msgstr "نمای پخش کردن"
 
-#: data/app.appdata.xml.in:59
+#: data/app.metainfo.xml.in:62
 msgid "Playlist view"
 msgstr "نمایهٔ سیاههٔ پخش"
-
-#: data/app.desktop.in:4
-msgid "Music Player"
-msgstr "پخش‌کنندهٔ آهنگ"
-
-#: data/app.desktop.in:5
-msgid "Play music"
-msgstr "پخش آهنگ‌ها"
-
-#: data/app.desktop.in:12
-msgid "music;sound;player;media;audio;playlist;"
-msgstr ""
-"music;sound;player;media;audio;playlist;آهنگ;صدا;پخش‌کننده;رسانه;صوت;"
-"سیاهه‌پخش;"
 
 #: src/gtk/help-overlay.ui:11
 msgctxt "shortcut window"
@@ -158,47 +152,57 @@ msgctxt "shortcut window"
 msgid "Quit"
 msgstr "خروج"
 
-#: src/gtk/help-overlay.ui:34
+#: src/gtk/help-overlay.ui:32
+msgctxt "shortcut window"
+msgid "Show Tags"
+msgstr "نمایش برچسب‌ها"
+
+#: src/gtk/help-overlay.ui:40
 msgctxt "shortcut window"
 msgid "Playback"
 msgstr "پخش"
 
-#: src/gtk/help-overlay.ui:37
+#: src/gtk/help-overlay.ui:43
 msgctxt "shortcut window"
 msgid "Play/Pause"
 msgstr "پخش یا مکث"
 
-#: src/gtk/help-overlay.ui:43
+#: src/gtk/help-overlay.ui:49
 msgctxt "shortcut window"
 msgid "Play Next"
 msgstr "پخش بعدی"
 
-#: src/gtk/help-overlay.ui:49
+#: src/gtk/help-overlay.ui:55
 msgctxt "shortcut window"
 msgid "Play Previous"
 msgstr "پخش پیشین"
 
-#: src/gtk/help-overlay.ui:57
+#: src/gtk/help-overlay.ui:63
 msgctxt "shortcut window"
 msgid "Playlist"
 msgstr "سیاههٔ پخش"
 
-#: src/gtk/help-overlay.ui:60
+#: src/gtk/help-overlay.ui:66
 msgctxt "shortcut window"
 msgid "Search"
 msgstr "جست‌وجو"
 
-#: src/gtk/help-overlay.ui:66
+#: src/gtk/help-overlay.ui:72
 msgctxt "shortcut window"
 msgid "Toggle Sort"
 msgstr "تغییر ‌حالت چینش"
 
-#: src/gtk/help-overlay.ui:72
+#: src/gtk/help-overlay.ui:78
 msgctxt "shortcut window"
 msgid "Reload Library"
 msgstr "بازخوانی کتابخانه"
 
-#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:368
+#: src/gtk/help-overlay.ui:84
+msgctxt "shortcut window"
+msgid "Save List"
+msgstr "ذخیرهٔ سیاهه"
+
+#: src/gtk/play-panel.ui:16 src/ui/music-list.vala:632 src/ui/store-panel.vala:421
 msgid "Back"
 msgstr "بازگشت"
 
@@ -207,22 +211,22 @@ msgid "General"
 msgstr "عمومی"
 
 #: src/gtk/preferences.ui:14
-msgid "Prefer dark theme"
-msgstr "ترجیح پوستهٔ تیره"
-
-#: src/gtk/preferences.ui:26
 msgid "Background blur mode"
 msgstr "حالت محوی پس‌زمینه"
 
-#: src/gtk/preferences.ui:32
+#: src/gtk/preferences.ui:20
 msgid "Compact playlist view"
 msgstr "نمای‌ سیاههٔ پخش فشرده"
 
-#: src/gtk/preferences.ui:44
+#: src/gtk/preferences.ui:32
 msgid "Grid view for artists/albums"
 msgstr "نمای شبکه‌ای برای هنرمند‌ها و آلبوم‌ها"
 
-#: src/gtk/preferences.ui:56 src/application.vala:400
+#: src/gtk/preferences.ui:44
+msgid "Single click to activate item"
+msgstr "یک بار زدن برای فعّال کردن مورد"
+
+#: src/gtk/preferences.ui:56 src/application.vala:434
 msgid "Keep playing after window closed"
 msgstr "ادامهٔ پخش پس از بستن پنجره"
 
@@ -274,131 +278,237 @@ msgstr "عادی سازی حجم صدا با ReplayGain"
 msgid "Prefer audio sink of GStreamer"
 msgstr "ترجیح سینک صدای GStreamer"
 
-#: src/gtk/store-panel.ui:22
+#: src/gtk/store-panel.ui:23
 msgid "Main Menu"
 msgstr "فهرست اصلی"
 
-#: src/gtk/store-panel.ui:29
+#: src/gtk/store-panel.ui:30 src/ui/playlist-dialog.vala:36
 msgid "Search"
 msgstr "جست‌وجو"
 
-#: src/gtk/store-panel.ui:35
+#: src/gtk/store-panel.ui:40
 msgid "Sort By"
 msgstr "چینش بر پایه"
 
-#: src/gtk/store-panel.ui:59
+#: src/gtk/store-panel.ui:71
+msgid "_Color Scheme"
+msgstr "_طرحوارهٔ رنگی"
+
+#: src/gtk/store-panel.ui:73
+msgid "_System"
+msgstr "_سامانه"
+
+#: src/gtk/store-panel.ui:78
+msgid "_Light"
+msgstr "_روشن"
+
+#: src/gtk/store-panel.ui:83
+msgid "_Dark"
+msgstr "_تیره"
+
+#: src/gtk/store-panel.ui:90
 msgid "_Reload Library"
 msgstr "_بازخوانی کتابخانه"
 
-#: src/gtk/store-panel.ui:65
+#: src/gtk/store-panel.ui:94
+msgid "_Multiple Select"
+msgstr "گزینش _چندگانه"
+
+#: src/gtk/store-panel.ui:98
+msgid "_Save List"
+msgstr "_ذخیرهٔ سیاهه"
+
+#: src/gtk/store-panel.ui:104
 msgid "_Preferences"
 msgstr "_ترجیحات"
 
-#: src/gtk/store-panel.ui:69
+#: src/gtk/store-panel.ui:108
 msgid "_Keyboard Shortcuts"
 msgstr "میان‌برهای _صفحه‌کلید"
 
-#: src/gtk/store-panel.ui:73
+#: src/gtk/store-panel.ui:112
 msgid "_About"
 msgstr "_درباره‌"
 
-#: src/gtk/store-panel.ui:82 src/ui/preferences.vala:67
+#: src/gtk/store-panel.ui:121 src/ui/preferences.vala:66
 msgid "Album"
 msgstr "آلبوم"
 
-#: src/gtk/store-panel.ui:87
+#: src/gtk/store-panel.ui:126
 msgid "Artist"
 msgstr "هنرمند"
 
-#: src/gtk/store-panel.ui:92
+#: src/gtk/store-panel.ui:131
 msgid "Artist/Album"
 msgstr "هنرمند یا آلبوم"
 
-#: src/gtk/store-panel.ui:97
+#: src/gtk/store-panel.ui:136
 msgid "Title"
 msgstr "عنوان"
 
-#: src/gtk/store-panel.ui:102
+#: src/gtk/store-panel.ui:141
 msgid "Recent"
 msgstr "اخیر"
 
-#: src/gtk/store-panel.ui:107
+#: src/gtk/store-panel.ui:146
 msgid "Shuffle"
 msgstr "بُرزنی"
 
-#: src/action-handles.vala:184
+#: src/action-handles.vala:114
+msgid "Image Files"
+msgstr "پرونده‌های تصویر"
+
+#: src/action-handles.vala:121
+msgid "Export cover successfully"
+msgstr "برون‌ریزی موفّق طرح جلد"
+
+#: src/action-handles.vala:121
+msgid "Export cover failed"
+msgstr "برون‌ریزی طرح جلد شکست خورد"
+
+#: src/application.vala:346
+msgid "Save playlist failed"
+msgstr "ذخیرهٔ سیاههٔ پخش شکست خورد"
+
+#: src/application.vala:470
+msgid "Playlist Files"
+msgstr "پرونده‌های سیاههٔ پخش"
+
+#: src/application.vala:485
+msgid "Save playlist successfully"
+msgstr "ذخیرهٔ موفّق سیاههٔ پخش"
+
+#: src/application.vala:620
+msgid "Keep playing"
+msgstr "ادامهٔ پخش"
+
+#: src/ui/dialogs.vala:51
 msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr "پخش‌کنندهٔ آهنگ سریع، زیبا و سبک نوشته شده با GTK4."
 
 #. Translators: Replace "translator-credits" with your names, one name per line
-#: src/action-handles.vala:186
+#: src/ui/dialogs.vala:53
 msgid "translator-credits"
 msgstr ""
 "سهراب بهدانی <behdanisohrab@gmail.com>\n"
 "دانیال بهزادی <dani.behzi@ubuntu.com>"
 
-#: src/application.vala:602
-msgid "Keep playing"
-msgstr "ادامهٔ پخش"
+#: src/ui/dialogs.vala:100 src/ui/dialogs.vala:112
+msgid "No"
+msgstr "نه"
+
+#: src/ui/dialogs.vala:101 src/ui/dialogs.vala:112
+msgid "Yes"
+msgstr "بله"
+
+#: src/ui/music-list.vala:276
+msgid "Playlist is modified, save it?"
+msgstr "سیاههٔ پخش دستگاری شده. ذخیره شود؟"
 
 #. Translators: Play this music at next position of current playing music
-#: src/ui/music-widgets.vala:211 src/ui/music-widgets.vala:252
-#: src/ui/music-widgets.vala:262
+#: src/ui/music-list.vala:405 src/ui/music-list.vala:421
+#: src/ui/music-widgets.vala:277 src/ui/music-widgets.vala:299
+msgid "Play at _Next"
+msgstr "پخش در _بعدی"
+
+#: src/ui/music-list.vala:407 src/ui/music-list.vala:423
+#: src/ui/music-widgets.vala:278 src/ui/music-widgets.vala:300
+msgid "Add to _Queue"
+msgstr "افزودن به _صف"
+
+#: src/ui/music-list.vala:408 src/ui/music-widgets.vala:279
+#: src/ui/music-widgets.vala:301 src/ui/music-widgets.vala:320
+msgid "Add to _Playlist…"
+msgstr "افزودن به _سیاههٔ پخش…"
+
+#: src/ui/music-list.vala:409 src/ui/music-list.vala:427
+msgid "_Remove"
+msgstr "_برداشتن"
+
+#: src/ui/music-list.vala:428 src/ui/music-widgets.vala:286
+msgid "_Move to Trash"
+msgstr "انداختن به _زباله‌دان"
+
+#: src/ui/music-list.vala:636
+msgid "Select All"
+msgstr "گزینش همه"
+
+#: src/ui/music-list.vala:653
 msgid "Play at Next"
 msgstr "پخش در بعدی"
 
-#: src/ui/music-widgets.vala:212 src/ui/music-widgets.vala:251
-#: src/ui/music-widgets.vala:261 src/ui/store-panel.vala:373
+#: src/ui/music-list.vala:660
+msgid "Add to Queue"
+msgstr "افزودن به صف"
+
+#: src/ui/music-list.vala:667 src/ui/playlist-dialog.vala:19
+msgid "Add to Playlist"
+msgstr "افزودن به سیاههٔ پخش"
+
+#: src/ui/music-list.vala:674
+msgid "Remove"
+msgstr "برداشتن"
+
+#: src/ui/music-widgets.vala:274 src/ui/music-widgets.vala:296
+#: src/ui/store-panel.vala:429
 msgid "Play"
 msgstr "پخش"
 
-#: src/ui/music-widgets.vala:215 src/ui/play-panel.vala:125
-msgid "Show _Cover File"
-msgstr "نمایش پروندهٔ _طرح جلد"
+#: src/ui/music-widgets.vala:275 src/ui/music-widgets.vala:297
+msgid "_Random Play"
+msgstr "پخش _کاتوره‌ای"
 
-#: src/ui/music-widgets.vala:217 src/ui/play-panel.vala:127
-msgid "_Export Cover"
-msgstr "_برون‌ریزی طرح جلد"
+#: src/ui/music-widgets.vala:285
+msgid "Show List _File"
+msgstr "نمایش _پروندهٔ سیاهه"
 
-#: src/ui/music-widgets.vala:254
-msgid "Show List File"
-msgstr "نمایش پروندهٔ سیاهه"
-
-#: src/ui/music-widgets.vala:268 src/ui/play-panel.vala:59
+#: src/ui/music-widgets.vala:308 src/ui/play-panel.vala:60
 msgid "Search Title"
 msgstr "جست‌وجوی عنوان"
 
-#: src/ui/music-widgets.vala:269 src/ui/play-panel.vala:57
+#: src/ui/music-widgets.vala:309 src/ui/play-panel.vala:58
 msgid "Search Album"
 msgstr "جست‌وجوی آلبوم"
 
-#: src/ui/music-widgets.vala:270 src/ui/play-panel.vala:58
+#: src/ui/music-widgets.vala:310 src/ui/play-panel.vala:59
 msgid "Search Artist"
 msgstr "جست‌وجوی هنرمند"
 
-#: src/ui/music-widgets.vala:271
-msgid "_Show Music File"
-msgstr "_نمایش پروندهٔ آهنگ"
+#: src/ui/music-widgets.vala:314
+msgid "Show Cover _File"
+msgstr "نمایش _پروندهٔ طرح جلد"
+
+#: src/ui/music-widgets.vala:316
+msgid "_Export Cover"
+msgstr "_برون‌ریزی طرح جلد"
+
+#: src/ui/music-widgets.vala:317
+msgid "Show _Tags…"
+msgstr "نمایش _برچسب‌ها…"
+
+#: src/ui/music-widgets.vala:318
+msgid "Show Music _File"
+msgstr "نمایش _پروندهٔ آهنگ"
 
 #. Translators: single loop the current music
-#: src/ui/play-bar.vala:74
+#: src/ui/play-bar.vala:72
 msgid "Single Loop"
 msgstr "تکرار تکی"
 
-#: src/ui/play-bar.vala:84
+#: src/ui/play-bar.vala:82
 msgid "Play Previous"
 msgstr "پخش پیشین"
 
 #. media-playback-pause-symbolic
-#: src/ui/play-bar.vala:90
+#: src/ui/play-bar.vala:88
 msgid "Play/Pause"
 msgstr "پخش یا مکث"
 
-#: src/ui/play-bar.vala:97
+#: src/ui/play-bar.vala:95
 msgid "Play Next"
 msgstr "پخش بعدی"
 
-#: src/ui/play-panel.vala:246
+#: src/ui/play-panel.vala:263
 msgid ""
 "Drag and drop music files here,\n"
 "or change music location: "
@@ -406,47 +516,60 @@ msgstr ""
 "کشیدن و رها سازی پرونده‌های آهنگ‌ها در این‌جا،\n"
 "یا تغییر مکان آهنگ‌ها: "
 
-#: src/ui/preferences.vala:46 src/ui/preferences.vala:67
+#: src/ui/playlist-dialog.vala:24
+msgid "New Playlist"
+msgstr "سیاههٔ پخش جدید"
+
+#: src/ui/playlist-dialog.vala:98 src/ui/store-panel.vala:703
+#, c-format
+msgid "No playlist found in %s"
+msgstr "هیچ سیاههٔ پخشی در %s پیدا نشد."
+
+#: src/ui/preferences.vala:44 src/ui/preferences.vala:66
 msgid "Never"
 msgstr "هرگز"
 
-#: src/ui/preferences.vala:46
+#: src/ui/preferences.vala:44
 msgid "Always"
 msgstr "همیشه"
 
-#: src/ui/preferences.vala:46
+#: src/ui/preferences.vala:44
 msgid "Art Only"
 msgstr "فقط کار هنری"
 
-#: src/ui/preferences.vala:67
+#: src/ui/preferences.vala:66
 msgid "Track"
 msgstr "قطعه"
 
-#: src/ui/store-panel.vala:72
+#: src/ui/store-panel.vala:84
 msgid "Playing"
 msgstr "پخش کردن"
 
-#: src/ui/store-panel.vala:77
+#: src/ui/store-panel.vala:89
 msgid "Artists"
 msgstr "هنرمندان"
 
-#: src/ui/store-panel.vala:82
+#: src/ui/store-panel.vala:94
 msgid "Albums"
 msgstr "آلبوم‌ها"
 
-#: src/ui/store-panel.vala:87
+#: src/ui/store-panel.vala:99
 msgid "Playlists"
 msgstr "سیاهه‌‌های پخش"
 
-#: src/ui/store-panel.vala:570
-msgid "No playlist found"
-msgstr "هیچ سیاههٔ پخشی پیدا نشد."
+#: src/ui/taglist-dialog.vala:125
+msgid "Copy"
+msgstr "رونوشت"
 
 #. Translators: Current volume percent: 0~100%
 #: src/ui/volume-button.vala:33
 #, c-format
 msgid "Volume %d%%"
 msgstr "حجم صدا %d٪"
+
+#: src/ui/window.vala:119
+msgid "Show"
+msgstr "نمایش"
 
 #: src/utils/music.vala:2
 msgid "Unknown Album"
@@ -455,6 +578,18 @@ msgstr "آلبوم ناشناخته"
 #: src/utils/music.vala:3
 msgid "Unknown Artist"
 msgstr "هنرمند ناشناس"
+
+#~ msgid "Nanling"
+#~ msgstr "نانلینگ"
+
+#~ msgid "Drag-drop from GNOME Files, showing music in Files."
+#~ msgstr "کشیدن-رها کردن از پرونده‌های کنوم، نمایش آهنگ در پرونده‌ها."
+
+#~ msgid "Play music"
+#~ msgstr "پخش آهنگ‌ها"
+
+#~ msgid "Prefer dark theme"
+#~ msgstr "ترجیح پوستهٔ تیره"
 
 #~ msgid "G4Music"
 #~ msgstr "آهنگ‌های جی‌فور"
