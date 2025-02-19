@@ -48,7 +48,6 @@ namespace G4 {
 
     public void show_about_dialog (Application app) {
         string[] authors = { "Nanling" };
-        var comments = _("A fast, fluent, light weight music player written in GTK4.");
         /* Translators: Replace "translator-credits" with your names, one name per line */
         var translator_credits = _("translator-credits");
         var website = "https://gitlab.gnome.org/neithern/g4music";
@@ -66,7 +65,6 @@ namespace G4 {
         win.application_icon = app.application_id;
         win.application_name = app.name;
         win.version = Config.VERSION;
-        win.comments = comments;
         win.license_type = Gtk.License.GPL_3_0;
         win.developers = authors;
         win.website = website;
