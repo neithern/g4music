@@ -1,14 +1,14 @@
 # Danish translation for g4music.
 # Copyright (C) 2023 g4music's COPYRIGHT HOLDER
 # This file is distributed under the same license as the g4music package.
-# Alan Mortensen <alanmortensen.am@gmail.com>, 2023-24.
+# Alan Mortensen <alanmortensen.am@gmail.com>, 2023-25.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: g4music master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/neithern/g4music/issues\n"
-"POT-Creation-Date: 2024-09-23 11:33+0000\n"
-"PO-Revision-Date: 2024-09-24 18:38+0200\n"
+"POT-Creation-Date: 2025-01-21 14:09+0000\n"
+"PO-Revision-Date: 2025-02-18 15:06+0100\n"
 "Last-Translator: Alan Mortensen <alanmortensen.am@gmail.com>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
 "Language: da\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.4.2\n"
 
-#: data/app.desktop.in:3 data/app.metainfo.xml.in:4 src/application.vala:245
+#: data/app.desktop.in:3 data/app.metainfo.xml.in:4 src/application.vala:273
 #: src/main.vala:24
 msgid "Gapless"
 msgstr "Uden pauser"
@@ -27,23 +27,15 @@ msgstr "Uden pauser"
 msgid "Music Player"
 msgstr "Musikafspiller"
 
-#: data/app.desktop.in:5
-msgid "Play music"
-msgstr "Afspil musik"
+#: data/app.desktop.in:5 data/app.metainfo.xml.in:7
+msgid "Play your music elegantly"
+msgstr "Afspil din musik på en elegant måde"
 
 #: data/app.desktop.in:12
 msgid "music;sound;player;media;audio;playlist;"
 msgstr "musik;lyd;afspiller;medie;afspilningsliste;playliste;"
 
-#: data/app.metainfo.xml.in:7
-msgid "Play your music elegantly"
-msgstr "Afspil din musik på en elegant måde"
-
-#: data/app.metainfo.xml.in:9
-msgid "Nanling"
-msgstr "Nanling"
-
-#: data/app.metainfo.xml.in:22
+#: data/app.metainfo.xml.in:24
 msgid ""
 "Gapless (AKA: G4Music) is a light weight music player written in GTK4, "
 "focuses on large music collection."
@@ -51,11 +43,11 @@ msgstr ""
 "Gapless (også kendt som G4Music) er en letvægtsmusikafspiller skrevet i "
 "GTK4, der fokuserer på store musiksamlinger."
 
-#: data/app.metainfo.xml.in:23
+#: data/app.metainfo.xml.in:25
 msgid "Features"
 msgstr "Funktioner"
 
-#: data/app.metainfo.xml.in:25
+#: data/app.metainfo.xml.in:27
 msgid ""
 "Supports most music file types, Samba and any other remote protocols "
 "(depends on GIO and GStreamer)."
@@ -63,30 +55,30 @@ msgstr ""
 "Understøtter de fleste musikfiltyper, Samba og andre fjernprotokoller "
 "(afhænger af GIO og GStreamer)."
 
-#: data/app.metainfo.xml.in:26
+#: data/app.metainfo.xml.in:28
 msgid ""
 "Fast loading and parsing thousands of music files in very few seconds, "
 "monitor local changes."
 msgstr ""
-"Hurtig indlæsning og analyse af tusindvis af musikfiler på meget få "
-"sekunder plus overvågning af lokale ændringer."
+"Hurtig indlæsning og analyse af tusindvis af musikfiler på meget få sekunder "
+"plus overvågning af lokale ændringer."
 
-#: data/app.metainfo.xml.in:27
+#: data/app.metainfo.xml.in:29
 msgid ""
 "Low memory usage for large music collection with album covers (embedded and "
 "external), no thumbnail caches to store."
 msgstr ""
-"Lavt hukommelsesforbrug til store musiksamlinger med albumcovers "
-"(indlejrede og eksterne) og gemmer ingen miniaturecache."
+"Lavt hukommelsesforbrug til store musiksamlinger med albumcovers (indlejrede "
+"og eksterne) og gemmer ingen miniaturecache."
 
-#: data/app.metainfo.xml.in:28
+#: data/app.metainfo.xml.in:30
 msgid ""
 "Group and sorts by album/artist/title, shuffle list, full-text searching."
 msgstr ""
 "Gruppering og sortering efter album/kunstner/titel, blande-liste, "
 "fuldtekstsøgning."
 
-#: data/app.metainfo.xml.in:29
+#: data/app.metainfo.xml.in:31
 msgid ""
 "Fluent adaptive user interface for different screen (Desktop, Tablet, "
 "Mobile)."
@@ -94,48 +86,55 @@ msgstr ""
 "Flydende tilpasning af brugergrænseflade til forskellige skærme (desktop, "
 "tablet, mobil)."
 
-#: data/app.metainfo.xml.in:30
-msgid "Gaussian blurred cover as background, follows GNOME light/dark mode."
-msgstr ""
-"Gaussisk sløret cover som baggrund, følger GNOMEs lyse/mørke tilstand."
-
-#: data/app.metainfo.xml.in:31
-msgid "Drag-drop from GNOME Files, showing music in Files."
-msgstr "Træk-og-slip fra GNOME Filer og få vist musik i Filer."
-
 #: data/app.metainfo.xml.in:32
+msgid "Gaussian blurred cover as background, follows GNOME light/dark mode."
+msgstr "Gaussisk sløret cover som baggrund, følger GNOMEs lyse/mørke tilstand."
+
+#: data/app.metainfo.xml.in:33
+msgid ""
+"Supports creating and editing playlists, drag cover to change order or add "
+"to another playlist."
+msgstr ""
+"Understøtter oprettelse og redigering af afspilningslister, trækning af "
+"cover for at ændre rækkefølge eller tilføjelse til en anden afspilningsliste."
+
+#: data/app.metainfo.xml.in:34
+msgid "Supports drag and drop with other apps."
+msgstr "Understøtter træk-og-slip med andre programmer."
+
+#: data/app.metainfo.xml.in:35
 msgid "Supports audio peaks visualizer."
 msgstr "Understøtter visualisering af lydtoppe."
 
-#: data/app.metainfo.xml.in:33
+#: data/app.metainfo.xml.in:36
 msgid "Supports gapless playback."
 msgstr "Understøtter afspilning uden pauser."
 
-#: data/app.metainfo.xml.in:34
+#: data/app.metainfo.xml.in:37
 msgid "Supports normalizing volume with ReplayGain."
 msgstr "Understøtter normalisering af lydstyrke med ReplayGain"
 
-#: data/app.metainfo.xml.in:35
-msgid "Supports PipeWire and other audio sink."
-msgstr "Understøtter PipeWire og andre lyddatamodtagere."
+#: data/app.metainfo.xml.in:38
+msgid "Supports specified audio sink."
+msgstr "Understøtter angivet lyddatamodtager."
 
-#: data/app.metainfo.xml.in:36
+#: data/app.metainfo.xml.in:39
 msgid "Supports MPRIS control."
 msgstr "Understøtter MPRIS-kontrol."
 
-#: data/app.metainfo.xml.in:47
+#: data/app.metainfo.xml.in:50
 msgid "Main window"
 msgstr "Hovedvindue"
 
-#: data/app.metainfo.xml.in:51
+#: data/app.metainfo.xml.in:54
 msgid "Albums view"
 msgstr "Albumvisning"
 
-#: data/app.metainfo.xml.in:55
+#: data/app.metainfo.xml.in:58
 msgid "Playing view"
 msgstr "Afspilningsvisning"
 
-#: data/app.metainfo.xml.in:59
+#: data/app.metainfo.xml.in:62
 msgid "Playlist view"
 msgstr "Afspilningslistevisning"
 
@@ -159,48 +158,58 @@ msgctxt "shortcut window"
 msgid "Quit"
 msgstr "Afslut"
 
-#: src/gtk/help-overlay.ui:34
+#: src/gtk/help-overlay.ui:32
+msgctxt "shortcut window"
+msgid "Show Tags"
+msgstr "Vis mærkater"
+
+#: src/gtk/help-overlay.ui:40
 msgctxt "shortcut window"
 msgid "Playback"
 msgstr "Afspilning"
 
-#: src/gtk/help-overlay.ui:37
+#: src/gtk/help-overlay.ui:43
 msgctxt "shortcut window"
 msgid "Play/Pause"
 msgstr "Afspil/pause"
 
-#: src/gtk/help-overlay.ui:43
+#: src/gtk/help-overlay.ui:49
 msgctxt "shortcut window"
 msgid "Play Next"
 msgstr "Afspil næste"
 
-#: src/gtk/help-overlay.ui:49
+#: src/gtk/help-overlay.ui:55
 msgctxt "shortcut window"
 msgid "Play Previous"
 msgstr "Afspil forrige"
 
-#: src/gtk/help-overlay.ui:57
+#: src/gtk/help-overlay.ui:63
 msgctxt "shortcut window"
 msgid "Playlist"
 msgstr "Afspilningsliste"
 
-#: src/gtk/help-overlay.ui:60
+#: src/gtk/help-overlay.ui:66
 msgctxt "shortcut window"
 msgid "Search"
 msgstr "Søgning"
 
-#: src/gtk/help-overlay.ui:66
+#: src/gtk/help-overlay.ui:72
 msgctxt "shortcut window"
 msgid "Toggle Sort"
 msgstr "Skift sortering"
 
-#: src/gtk/help-overlay.ui:72
+#: src/gtk/help-overlay.ui:78
 msgctxt "shortcut window"
 msgid "Reload Library"
 msgstr "Genindlæs bibliotek"
 
-#: src/gtk/play-panel.ui:16 src/ui/music-list.vala:570
-#: src/ui/store-panel.vala:359
+#: src/gtk/help-overlay.ui:84
+msgctxt "shortcut window"
+msgid "Save List"
+msgstr "Gem liste"
+
+#: src/gtk/play-panel.ui:16 src/ui/music-list.vala:632
+#: src/ui/store-panel.vala:421
 msgid "Back"
 msgstr "Tilbage"
 
@@ -209,22 +218,22 @@ msgid "General"
 msgstr "Generelt"
 
 #: src/gtk/preferences.ui:14
-msgid "Prefer dark theme"
-msgstr "Foretræk mørkt tema"
-
-#: src/gtk/preferences.ui:26
 msgid "Background blur mode"
 msgstr "Baggrundssløringstilstand"
 
-#: src/gtk/preferences.ui:32
+#: src/gtk/preferences.ui:20
 msgid "Compact playlist view"
 msgstr "Kompakt visning af afspilningsliste"
 
-#: src/gtk/preferences.ui:44
+#: src/gtk/preferences.ui:32
 msgid "Grid view for artists/albums"
 msgstr "Gittervisning af kunstnere/album"
 
-#: src/gtk/preferences.ui:56 src/application.vala:462
+#: src/gtk/preferences.ui:44
+msgid "Single click to activate item"
+msgstr "Enkeltklik for at aktivere element"
+
+#: src/gtk/preferences.ui:56 src/application.vala:434
 msgid "Keep playing after window closed"
 msgstr "Fortsæt med at afspille, efter vinduet er lukket"
 
@@ -276,72 +285,116 @@ msgstr "Normalisér lydstyrke med ReplayGain"
 msgid "Prefer audio sink of GStreamer"
 msgstr "Foretræk GSteamers lyddatamodtager"
 
-#: src/gtk/store-panel.ui:22
+#: src/gtk/store-panel.ui:23
 msgid "Main Menu"
 msgstr "Hovedmenu"
 
-#: src/gtk/store-panel.ui:29 src/ui/dialogs.vala:50
+#: src/gtk/store-panel.ui:30 src/ui/playlist-dialog.vala:36
 msgid "Search"
 msgstr "Søg"
 
-#: src/gtk/store-panel.ui:35
+#: src/gtk/store-panel.ui:40
 msgid "Sort By"
 msgstr "Sortér efter"
 
-#: src/gtk/store-panel.ui:59
+#: src/gtk/store-panel.ui:71
+msgid "_Color Scheme"
+msgstr "_Farveskema"
+
+#: src/gtk/store-panel.ui:73
+msgid "_System"
+msgstr "_System"
+
+#: src/gtk/store-panel.ui:78
+msgid "_Light"
+msgstr "_Lys"
+
+#: src/gtk/store-panel.ui:83
+msgid "_Dark"
+msgstr "_Mørk"
+
+#: src/gtk/store-panel.ui:90
 msgid "_Reload Library"
 msgstr "_Genindlæs bibliotek"
 
-#: src/gtk/store-panel.ui:63
-msgid "_Select"
-msgstr "_Markér"
+#: src/gtk/store-panel.ui:94
+msgid "_Multiple Select"
+msgstr "_Vælg flere"
 
-#: src/gtk/store-panel.ui:69
+#: src/gtk/store-panel.ui:98
+msgid "_Save List"
+msgstr "G_em liste"
+
+#: src/gtk/store-panel.ui:104
 msgid "_Preferences"
 msgstr "_Indstillinger"
 
-#: src/gtk/store-panel.ui:73
+#: src/gtk/store-panel.ui:108
 msgid "_Keyboard Shortcuts"
 msgstr "_Tastaturgenveje"
 
-#: src/gtk/store-panel.ui:77
+#: src/gtk/store-panel.ui:112
 msgid "_About"
 msgstr "_Om"
 
-#: src/gtk/store-panel.ui:86 src/ui/preferences.vala:67
+#: src/gtk/store-panel.ui:121 src/ui/preferences.vala:66
 msgid "Album"
 msgstr "Album"
 
-#: src/gtk/store-panel.ui:91
+#: src/gtk/store-panel.ui:126
 msgid "Artist"
 msgstr "Kunstner"
 
-#: src/gtk/store-panel.ui:96
+#: src/gtk/store-panel.ui:131
 msgid "Artist/Album"
 msgstr "Kunstner/Album"
 
-#: src/gtk/store-panel.ui:101
+#: src/gtk/store-panel.ui:136
 msgid "Title"
 msgstr "Titel"
 
-#: src/gtk/store-panel.ui:106
+#: src/gtk/store-panel.ui:141
 msgid "Recent"
 msgstr "Seneste"
 
-#: src/gtk/store-panel.ui:111
+#: src/gtk/store-panel.ui:146
 msgid "Shuffle"
 msgstr "Bland"
 
-#: src/action-handles.vala:93
+#: src/action-handles.vala:114
 msgid "Image Files"
 msgstr "Billedfiler"
 
-#: src/action-handles.vala:183
+#: src/action-handles.vala:121
+msgid "Export cover successfully"
+msgstr "Eksport af cover gennemført"
+
+#: src/action-handles.vala:121
+msgid "Export cover failed"
+msgstr "Eksport af cover mislykkedes"
+
+#: src/application.vala:346
+msgid "Save playlist failed"
+msgstr "Afspilningsliste kunne ikke gemmes"
+
+#: src/application.vala:470
+msgid "Playlist Files"
+msgstr "Afspilningslistefiler"
+
+#: src/application.vala:485
+msgid "Save playlist successfully"
+msgstr "Afspilningsliste blev gemt"
+
+#: src/application.vala:620
+msgid "Keep playing"
+msgstr "Fortsæt med at afspille"
+
+#: src/ui/dialogs.vala:51
 msgid "A fast, fluent, light weight music player written in GTK4."
 msgstr "En hurtig og flydende letvægtsmusikafspiller skrevet i GTK4."
 
 #. Translators: Replace "translator-credits" with your names, one name per line
-#: src/action-handles.vala:185
+#: src/ui/dialogs.vala:53
 msgid "translator-credits"
 msgstr ""
 "Alan Mortensen <alanmortensen.am@gmail.com>\n"
@@ -350,95 +403,102 @@ msgstr ""
 "Websted http://dansk-gruppen.dk\n"
 "E-mail <dansk@dansk-gruppen.dk>"
 
-#: src/application.vala:471
-msgid "Playlist Files"
-msgstr "Afspilningslistefiler"
-
-#: src/application.vala:682
-msgid "Keep playing"
-msgstr "Fortsæt med at afspille"
-
-#: src/ui/dialogs.vala:25 src/ui/music-list.vala:640
-msgid "Add to Playlist"
-msgstr "Føj til afspilningsliste"
-
-#: src/ui/dialogs.vala:30
-msgid "New Playlist"
-msgstr "Ny afspilningsliste"
-
-#: src/ui/dialogs.vala:37
-msgid "Close"
-msgstr "Luk"
-
-#: src/ui/dialogs.vala:129 src/ui/store-panel.vala:600
-msgid "No playlist found"
-msgstr "Fandt ingen afspilningsliste"
-
-#: src/ui/dialogs.vala:163 src/ui/dialogs.vala:175
+#: src/ui/dialogs.vala:100 src/ui/dialogs.vala:112
 msgid "No"
 msgstr "Nej"
 
-#: src/ui/dialogs.vala:164 src/ui/dialogs.vala:175
+#: src/ui/dialogs.vala:101 src/ui/dialogs.vala:112
 msgid "Yes"
 msgstr "Ja"
 
-#: src/ui/music-list.vala:236
+#: src/ui/music-list.vala:276
 msgid "Playlist is modified, save it?"
 msgstr "Vil du gemme den ændrede afspilningsliste?"
 
 #. Translators: Play this music at next position of current playing music
-#: src/ui/music-list.vala:352 src/ui/music-list.vala:371
-#: src/ui/music-list.vala:616 src/ui/music-widgets.vala:220
-#: src/ui/music-widgets.vala:231
-msgid "Play at Next"
-msgstr "Afspil ved næste"
+#: src/ui/music-list.vala:405 src/ui/music-list.vala:421
+#: src/ui/music-widgets.vala:277 src/ui/music-widgets.vala:299
+msgid "Play at _Next"
+msgstr "Afspil ved _næste"
 
-#: src/ui/music-list.vala:354 src/ui/music-list.vala:369
-#: src/ui/music-list.vala:629 src/ui/music-widgets.vala:221
-#: src/ui/music-widgets.vala:232
-msgid "Add to Queue"
-msgstr "Føj til afspilningskø"
+#: src/ui/music-list.vala:407 src/ui/music-list.vala:423
+#: src/ui/music-widgets.vala:278 src/ui/music-widgets.vala:300
+msgid "Add to _Queue"
+msgstr "_Føj til afspilningskø"
 
-#: src/ui/music-list.vala:355 src/ui/music-widgets.vala:222
-#: src/ui/music-widgets.vala:233 src/ui/music-widgets.vala:245
-msgid "Add to Playlist…"
-msgstr "Føj til afspilningsliste …"
+#: src/ui/music-list.vala:408 src/ui/music-widgets.vala:279
+#: src/ui/music-widgets.vala:301 src/ui/music-widgets.vala:320
+msgid "Add to _Playlist…"
+msgstr "F_øj til afspilningsliste …"
 
-#: src/ui/music-list.vala:356 src/ui/music-list.vala:585
-msgid "Remove"
-msgstr "Fjern"
+#: src/ui/music-list.vala:409 src/ui/music-list.vala:427
+msgid "_Remove"
+msgstr "F_jern"
 
-#: src/ui/music-list.vala:374 src/ui/play-panel.vala:128
-msgid "Show _Cover File"
-msgstr "Vis _coverfil"
+#: src/ui/music-list.vala:428 src/ui/music-widgets.vala:286
+msgid "_Move to Trash"
+msgstr "Fl_yt til papirkurven"
 
-#: src/ui/music-list.vala:376 src/ui/play-panel.vala:130
-msgid "_Export Cover"
-msgstr "_Eksportér cover"
-
-#: src/ui/music-list.vala:574
+#: src/ui/music-list.vala:636
 msgid "Select All"
 msgstr "Markér alt"
 
-#: src/ui/music-widgets.vala:224
-msgid "Show List File"
-msgstr "Vis listefil"
+#: src/ui/music-list.vala:653
+msgid "Play at Next"
+msgstr "Afspil ved næste"
 
-#: src/ui/music-widgets.vala:239 src/ui/play-panel.vala:59
+#: src/ui/music-list.vala:660
+msgid "Add to Queue"
+msgstr "Føj til afspilningskø"
+
+#: src/ui/music-list.vala:667 src/ui/playlist-dialog.vala:19
+msgid "Add to Playlist"
+msgstr "Føj til afspilningsliste"
+
+#: src/ui/music-list.vala:674
+msgid "Remove"
+msgstr "Fjern"
+
+#: src/ui/music-widgets.vala:274 src/ui/music-widgets.vala:296
+#: src/ui/store-panel.vala:429
+msgid "Play"
+msgstr "Afspil"
+
+#: src/ui/music-widgets.vala:275 src/ui/music-widgets.vala:297
+msgid "_Random Play"
+msgstr "_Tilfældig afspilning"
+
+#: src/ui/music-widgets.vala:285
+msgid "Show List _File"
+msgstr "_Vis listefil"
+
+#: src/ui/music-widgets.vala:308 src/ui/play-panel.vala:60
 msgid "Search Title"
 msgstr "Søg efter titel"
 
-#: src/ui/music-widgets.vala:240 src/ui/play-panel.vala:57
+#: src/ui/music-widgets.vala:309 src/ui/play-panel.vala:58
 msgid "Search Album"
 msgstr "Søg efter album"
 
-#: src/ui/music-widgets.vala:241 src/ui/play-panel.vala:58
+#: src/ui/music-widgets.vala:310 src/ui/play-panel.vala:59
 msgid "Search Artist"
 msgstr "Søg efter kunstner"
 
-#: src/ui/music-widgets.vala:243
-msgid "_Show Music File"
-msgstr "_Vis musikfil"
+#: src/ui/music-widgets.vala:314
+msgid "Show Cover _File"
+msgstr "Vis _coverfil"
+
+#: src/ui/music-widgets.vala:316
+msgid "_Export Cover"
+msgstr "_Eksportér cover"
+
+#: src/ui/music-widgets.vala:317
+msgid "Show _Tags…"
+msgstr "Vis _mærkater …"
+
+#: src/ui/music-widgets.vala:318
+msgid "Show Music _File"
+msgstr "Vis musikfil"
 
 #. Translators: single loop the current music
 #: src/ui/play-bar.vala:72
@@ -458,7 +518,7 @@ msgstr "Afspil/pause"
 msgid "Play Next"
 msgstr "Afspil næste"
 
-#: src/ui/play-panel.vala:245
+#: src/ui/play-panel.vala:263
 msgid ""
 "Drag and drop music files here,\n"
 "or change music location: "
@@ -466,47 +526,60 @@ msgstr ""
 "Træk og slip musikfiler her,\n"
 "eller ændr musikplacering: "
 
-#: src/ui/preferences.vala:46 src/ui/preferences.vala:67
+#: src/ui/playlist-dialog.vala:24
+msgid "New Playlist"
+msgstr "Ny afspilningsliste"
+
+#: src/ui/playlist-dialog.vala:98 src/ui/store-panel.vala:703
+#, c-format
+msgid "No playlist found in %s"
+msgstr "Fandt ingen afspilningsliste i %s"
+
+#: src/ui/preferences.vala:44 src/ui/preferences.vala:66
 msgid "Never"
 msgstr "Aldrig"
 
-#: src/ui/preferences.vala:46
+#: src/ui/preferences.vala:44
 msgid "Always"
 msgstr "Altid"
 
-#: src/ui/preferences.vala:46
+#: src/ui/preferences.vala:44
 msgid "Art Only"
 msgstr "Kun kunst"
 
-#: src/ui/preferences.vala:67
+#: src/ui/preferences.vala:66
 msgid "Track"
 msgstr "Spor"
 
-#: src/ui/store-panel.vala:74
+#: src/ui/store-panel.vala:84
 msgid "Playing"
 msgstr "Afspiller"
 
-#: src/ui/store-panel.vala:78
+#: src/ui/store-panel.vala:89
 msgid "Artists"
 msgstr "Kunstnere"
 
-#: src/ui/store-panel.vala:82
+#: src/ui/store-panel.vala:94
 msgid "Albums"
 msgstr "Albummer"
 
-#: src/ui/store-panel.vala:86
+#: src/ui/store-panel.vala:99
 msgid "Playlists"
 msgstr "Afspilningslister"
 
-#: src/ui/store-panel.vala:364
-msgid "Play"
-msgstr "Afspil"
+#: src/ui/taglist-dialog.vala:125
+msgid "Copy"
+msgstr "Kopiér"
 
 #. Translators: Current volume percent: 0~100%
 #: src/ui/volume-button.vala:33
 #, c-format
 msgid "Volume %d%%"
 msgstr "Lydstyrke %d %%"
+
+#: src/ui/window.vala:119
+msgid "Show"
+msgstr "Vis"
 
 #: src/utils/music.vala:2
 msgid "Unknown Album"
@@ -515,6 +588,21 @@ msgstr "Ukendt album"
 #: src/utils/music.vala:3
 msgid "Unknown Artist"
 msgstr "Ukendt kunstner"
+
+#~ msgid "Play music"
+#~ msgstr "Afspil musik"
+
+#~ msgid "Nanling"
+#~ msgstr "Nanling"
+
+#~ msgid "Drag-drop from GNOME Files, showing music in Files."
+#~ msgstr "Træk-og-slip fra GNOME Filer og få vist musik i Filer."
+
+#~ msgid "Prefer dark theme"
+#~ msgstr "Foretræk mørkt tema"
+
+#~ msgid "Close"
+#~ msgstr "Luk"
 
 #~ msgid "G4Music"
 #~ msgstr "G4Musik"
