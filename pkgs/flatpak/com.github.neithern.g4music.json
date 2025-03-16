@@ -12,7 +12,6 @@
         "--socket=pulseaudio",
         "--socket=wayland",
         "--filesystem=xdg-music",
-        "--own-name=org.mpris.MediaPlayer2.Gapless",
         "--talk-name=org.gtk.vfs.*"
     ],
     "cleanup": [
