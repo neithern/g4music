@@ -219,11 +219,11 @@ namespace G4 {
             _pref_window = win;
             win.destroy_with_parent = true;
             win.modal = false;
+            win.transient_for = _app.active_window;
             win.close_request.connect (() => {
                 _pref_window = null;
                 return false;
             });
-            win.set_transient_for (_app.active_window);
             win.present ();
         }
 

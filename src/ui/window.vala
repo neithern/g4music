@@ -309,13 +309,7 @@ namespace G4 {
         }
 
         public static Window? get_default () {
-            unowned var list = (GLib.Application.get_default () as Application)?.get_windows ();
-            for (; list != null; list = list?.next) {
-                var window = ((!)list).data;
-                if (window is Window)
-                    return (Window) window;
-            }
-            return null;
+            return (GLib.Application.get_default () as Application)?.active_window as Window;
         }
     }
 
