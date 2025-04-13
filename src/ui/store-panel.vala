@@ -190,7 +190,6 @@ namespace G4 {
                     var scroll = !_overlayed_lists.remove (list);
                     set_to_current_music (scroll);
                 }
-                save_current_page ();
             }
         }
 
@@ -557,6 +556,12 @@ namespace G4 {
             return index < (int) _app.current_list.get_n_items () ? index : 0;
         }
 
+        public void open_playing_page () {
+            var uri = _app.settings.get_string ("library-uri");
+            open_page ((!)uri);
+            set_to_current_music ();
+        }
+
         private void on_index_changed (int index, uint size) {
             if (_current_list.filter_model == _app.current_list && _current_list.playable
                     && _current_list.dropping_item == -1 && !_current_list.multi_selection) {
@@ -665,6 +670,15 @@ namespace G4 {
             } else if (_current_list.playable) {
                 var playlist = _current_list.get_as_playlist ();
                 _app.current_item = _app.insert_after_current (playlist, true) + index;
+            }
+            if (!_app.player.playing) {
+                _app.player.play ();
+            }
+
+            var album_key = _current_list.music_node?.album_key;
+            if (_album_key_of_list != album_key) {
+                _album_key_of_list = album_key;
+                save_current_page ();
             }
         }
 

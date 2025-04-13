@@ -53,6 +53,8 @@ namespace G4 {
             music_cover.paintable = _crossfade_paintable;
             create_drag_source ();
 
+            make_widget_clickable (index_label).released.connect (() => win.open_playing_page ());
+
             initial_label.activate_link.connect (on_music_folder_clicked);
 
             music_album.tooltip_text = _("Search Album");
