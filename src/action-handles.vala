@@ -223,6 +223,7 @@ namespace G4 {
                 _pref_window = null;
                 return false;
             });
+            win.set_transient_for (_app.active_window);
             win.present ();
         }
 
