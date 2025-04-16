@@ -65,6 +65,16 @@
     </screenshots>
 
     <releases>
+        <release version="4.4" date="2025-4-16">
+            <description translate="no">
+                <ul>
+                <li>Click index to open playing page, restore on next startup.</li>
+                <li>Set the main window as parent.</li>
+                <li>Drop MPRIS permission of flatpak.</li>
+                <li>Update Danish translation.</li>
+                </ul>
+            </description>
+        </release>
         <release version="4.3.1" date="2025-2-15">
             <description translate="no">
                 <ul>
