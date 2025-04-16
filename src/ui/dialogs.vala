@@ -82,7 +82,7 @@ namespace G4 {
                                "logo-icon-name", app.application_id,
                                "program-name", app.name,
                                "version", Config.VERSION,
-                               "comments", comments,
+                               // "comments", comments,
                                "authors", authors,
                                "translator-credits", translator_credits,
                                "license-type", Gtk.License.GPL_3_0,
