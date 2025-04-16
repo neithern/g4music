@@ -71,6 +71,7 @@
                 <li>Click index to open playing page, restore on next startup.</li>
                 <li>Set the main window as parent.</li>
                 <li>Drop MPRIS permission of flatpak.</li>
+                <li>Upgrade to GNOME 48.</li>
                 <li>Update Danish translation.</li>
                 </ul>
             </description>
