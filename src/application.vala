@@ -349,12 +349,9 @@ namespace G4 {
 
         public int insert_after_current (Playlist playlist) {
             uint position = _current_index;
-            if (_current_music != null) {
-                if (!_music_queue.find ((!)_current_music, out position))
-                    position = -1;
-                playlist.remove_music ((!)_current_music);
+            if (_current_music != null && _music_queue.find ((!)_current_music, out position)) {
+                position++;
             }
-            position++;
             var changed = merge_items_to_store (_music_queue, playlist.items, ref position);
             list_modified |= changed;
             if (changed) {
