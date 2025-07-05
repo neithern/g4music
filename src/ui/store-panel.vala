@@ -346,11 +346,13 @@ namespace G4 {
             return list;
         }
 
-        private Gtk.Box create_title_box (string icon_name, string title, Playlist? plist) {
+        private Gtk.Box create_title_bar (string title, string? icon_name = null, Playlist? plist = null) {
             var label = new Gtk.Label (title);
             label.ellipsize = Pango.EllipsizeMode.MIDDLE;
             var icon = new Gtk.Image.from_icon_name (icon_name);
             var box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6);
+            box.halign = Gtk.Align.CENTER;
+            box.hexpand = true;
             box.append (icon);
             box.append (label);
             if (plist != null && ((!)plist).list_uri.length > 0) {
@@ -389,7 +391,13 @@ namespace G4 {
                 });
                 box.append (entry);
             }
-            return box;
+
+            var header = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
+            header.hexpand = true;
+            header.add_css_class ("flat");
+            header.add_css_class ("toolbar");
+            header.append (box);
+            return header;
         }
 
         private GenericSet<unowned MusicList> _overlayed_lists = new GenericSet<unowned MusicList> (direct_hash, direct_equal);
@@ -403,15 +411,7 @@ namespace G4 {
 
             var icon_name = (album is Playlist) ? "x-office-document-symbolic" : (album_mode ? "media-optical-cd-audio-symbolic" : "avatar-default-symbolic");
             var title = (album_mode ? album?.title : artist?.title) ?? "";
-            var title_box = create_title_box (icon_name, title, album as Playlist);
-            title_box.halign = Gtk.Align.CENTER;
-            title_box.hexpand = true;
-
-            var header = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
-            header.hexpand = true;
-            header.add_css_class ("flat");
-            header.add_css_class ("toolbar");
-            header.append (title_box);
+            var header = create_title_bar (title, icon_name, album as Playlist);
             mlist.prepend (header);
 
             var stack = artist_mode ? _artist_stack : playlist_mode ? _playlist_stack : _album_stack;
