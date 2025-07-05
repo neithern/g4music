@@ -411,8 +411,11 @@ namespace G4 {
             _player.play ();
         }
 
+        private bool _reloading = false;
+
         public void reload_library () {
-            if (!_loading) {
+            if (!_loading && !_reloading) {
+                _reloading = true;
                 var file = get_playing_list_file ();
                 file.delete_async.begin (Priority.DEFAULT, null, (obj, res) => {
                     try {
@@ -420,7 +423,10 @@ namespace G4 {
                     } catch (Error e) {
                     }
                     _loader.remove_all ();
-                    load_music_folder_async.begin (true, (obj, res) => load_music_folder_async.end (res));
+                    load_music_folder_async.begin (true, (obj, res) => {
+                        load_music_folder_async.end (res);
+                        _reloading = false;
+                    });
                 });
             }
         }
