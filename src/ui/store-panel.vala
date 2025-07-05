@@ -127,7 +127,6 @@ namespace G4 {
             _switcher_btm.stack = stack_view;
             fix_switcher_style (_switcher_btm);
 
-            app.index_changed.connect (on_index_changed);
             app.music_changed.connect (on_music_changed);
             app.music_library_changed.connect (on_music_library_changed);
             app.playlist_added.connect (on_playlist_added);
@@ -476,7 +475,7 @@ namespace G4 {
             _album_key_of_list = _current_list.music_node?.album_key;
         }
 
-        public void open_page (string uri, bool play_now = false, bool shuffle = false) {
+        public bool open_page (string uri, bool play_now = false, bool shuffle = false) {
             string? ar = null, al = null, pl = null, page = null;
             if (parse_library_uri (uri, out ar, out al, out pl, out page)) {
                 stack_view.transition_type = Gtk.StackTransitionType.NONE;
@@ -522,8 +521,10 @@ namespace G4 {
                             play_current_list ();
                         }
                     }
+                    return true;
                 }
             }
+            return false;
         }
 
         public int open_next_playable_page () {
@@ -558,15 +559,9 @@ namespace G4 {
 
         public void open_playing_page () {
             var uri = _app.settings.get_string ("library-uri");
-            open_page ((!)uri);
+            if (!open_page ((!)uri))
+                stack_view.visible_child = _main_list;
             set_to_current_music ();
-        }
-
-        private void on_index_changed (int index, uint size) {
-            if (_current_list.filter_model == _app.current_list && _current_list.playable
-                    && _current_list.dropping_item == -1 && !_current_list.multi_selection) {
-                _current_list.scroll_to_item (index);
-            }
         }
 
         private void on_music_changed (Music? music) {
@@ -584,6 +579,13 @@ namespace G4 {
                     _current_list.current_node = _library.get_playlist ((!)_album_key_of_list);
             }
             _mini_bar.title = music?.title ?? "";
+
+            var scroll = _current_list.dropping_item == -1 && !_current_list.multi_selection;
+            var item = _current_list.set_to_current_item (scroll);
+            if (item == -1 && _album_key_of_list != null && strcmp (_album_key_of_list, _current_list.music_node?.album_key) == 0) {
+                _album_key_of_list = null;
+                _app.settings.set_string ("library-uri", "");
+            }
         }
 
         private Gtk.Bitset _changing_stacks = new Gtk.Bitset.empty ();

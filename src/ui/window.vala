@@ -113,6 +113,9 @@ namespace G4 {
 
         public void open_playing_page () {
             _store_panel.open_playing_page ();
+            if (_leaflet.folded) {
+                _leaflet.pop ();
+            }
         }
 
         public void show_toast (string message, string? uri = null) {
