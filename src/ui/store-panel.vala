@@ -552,7 +552,7 @@ namespace G4 {
                 }
             }
 
-            var index = _app.current_item + 1;
+            var index = _app.current_item;
             return index < (int) _app.current_list.get_n_items () ? index : 0;
         }
 
@@ -669,7 +669,7 @@ namespace G4 {
                 _app.current_item = index;
             } else if (_current_list.playable) {
                 var playlist = _current_list.get_as_playlist ();
-                _app.current_item = _app.insert_after_current (playlist, true) + index;
+                _app.current_item = _app.insert_after_current (playlist) + index;
             }
             if (!_app.player.playing) {
                 _app.player.play ();
