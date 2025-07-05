@@ -553,7 +553,7 @@ namespace G4 {
                 }
             }
 
-            var index = _app.current_item;
+            var index = _app.current_item + 1;
             return index < (int) _app.current_list.get_n_items () ? index : 0;
         }
 

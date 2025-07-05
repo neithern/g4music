@@ -356,6 +356,9 @@ namespace G4 {
             position++;
             var changed = merge_items_to_store (_music_queue, playlist.items, ref position);
             list_modified |= changed;
+            if (changed) {
+                update_current_item ();
+            }
             return (int) position;
         }
 
@@ -365,6 +368,8 @@ namespace G4 {
             if (play_now) {
                 current_item = (int) position;
                 _player.play ();
+            } else if (changed) {
+                update_current_item ();
             }
             return changed;
         }
