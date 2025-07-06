@@ -65,6 +65,15 @@
     </screenshots>
 
     <releases>
+        <release version="4.5" date="2025-7-6">
+            <description translate="no">
+                <ul>
+                <li>Always insert to the next position when play an album.</li>
+                <li>Click index always to open the playing page.</li>
+                <li>Load the library into the queue only when it is empty.</li>
+                </ul>
+            </description>
+        </release>
         <release version="4.4" date="2025-4-16">
             <description translate="no">
                 <ul>
