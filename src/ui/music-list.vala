@@ -68,12 +68,6 @@ namespace G4 {
             if (editable || item_type == typeof (Playlist)) {
                 create_drop_target (_grid_view);
             }
-
-            print (@"MusicList created: $(++_instance_count)\n");
-        }
-        private static int _instance_count = 0;
-        ~MusicList () {
-            print (@"MusicList destroyed: $(--_instance_count)\n");
         }
 
         public bool compact_list {
