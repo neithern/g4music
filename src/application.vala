@@ -124,7 +124,7 @@ namespace G4 {
                 }
                 if (initial) {
                     // 3. Load music folder to build the library
-                    load_music_folder_async.begin (!ret, (obj, res)
+                    load_music_folder_async.begin ((obj, res)
                         => load_music_folder_async.end (res));
                 }
             });
@@ -372,17 +372,17 @@ namespace G4 {
             return changed;
         }
 
-        public async void load_music_folder_async (bool replace) {
+        public async void load_music_folder_async () {
             var files = new File[] { File.new_for_uri (music_folder) };
             var musics = new GenericArray<Music> (4096);
             yield _loader.load_files_async (files, musics, false, false, _sort_mode);
             _store_external_changed = true;
-            if (replace) {
+            if (_music_queue.get_n_items () == 0) {
                 _music_queue.splice (0, _music_queue.get_n_items (), (Object[]) musics.data);
             } else {
                 on_music_library_changed (0, 1, 1);
             }
-            if (_current_music == null) {
+            if (_current_music == null && _current_list.get_n_items () > 0) {
                 current_item = 0;
             } else {
                 update_current_item ();
@@ -421,7 +421,7 @@ namespace G4 {
                     } catch (Error e) {
                     }
                     _loader.remove_all ();
-                    load_music_folder_async.begin (true, (obj, res) => {
+                    load_music_folder_async.begin ((obj, res) => {
                         load_music_folder_async.end (res);
                         _reloading = false;
                     });
