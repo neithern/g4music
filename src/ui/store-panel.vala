@@ -189,6 +189,7 @@ namespace G4 {
                     var scroll = !_overlayed_lists.remove (list);
                     set_to_current_music (scroll);
                 }
+                save_current_page ();
             }
         }
 
@@ -558,10 +559,10 @@ namespace G4 {
         }
 
         public void open_playing_page () {
-            var uri = _app.settings.get_string ("library-uri");
-            if (!open_page ((!)uri))
+            if (stack_view.visible_child != _main_list)
                 stack_view.visible_child = _main_list;
-            set_to_current_music ();
+            else
+                set_to_current_music ();
         }
 
         private void on_music_changed (Music? music) {
@@ -581,11 +582,7 @@ namespace G4 {
             _mini_bar.title = music?.title ?? "";
 
             var scroll = _current_list.dropping_item == -1 && !_current_list.multi_selection;
-            var item = _current_list.set_to_current_item (scroll);
-            if (item == -1 && _album_key_of_list != null && strcmp (_album_key_of_list, _current_list.music_node?.album_key) == 0) {
-                _album_key_of_list = null;
-                _app.settings.set_string ("library-uri", "");
-            }
+            _current_list.set_to_current_item (scroll);
         }
 
         private Gtk.Bitset _changing_stacks = new Gtk.Bitset.empty ();
@@ -677,11 +674,7 @@ namespace G4 {
                 _app.player.play ();
             }
 
-            var album_key = _current_list.music_node?.album_key;
-            if (_album_key_of_list != album_key) {
-                _album_key_of_list = album_key;
-                save_current_page ();
-            }
+            _album_key_of_list = _current_list.music_node?.album_key;
         }
 
         private void pop_page_without_animation (Stack stack) {

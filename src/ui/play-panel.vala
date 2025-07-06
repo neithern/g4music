@@ -53,6 +53,7 @@ namespace G4 {
             music_cover.paintable = _crossfade_paintable;
             create_drag_source ();
 
+            index_label.tooltip_text = _("Playing");
             make_widget_clickable (index_label).released.connect (() => win.open_playing_page ());
 
             initial_label.activate_link.connect (on_music_folder_clicked);
