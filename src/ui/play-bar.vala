@@ -223,6 +223,7 @@ namespace G4 {
 
     public static Gtk.GestureClick make_widget_clickable (Gtk.Widget label) {
         var controller = new Gtk.GestureClick ();
+        controller.button = Gdk.BUTTON_PRIMARY;
         label.add_controller (controller);
         label.set_cursor_from_name ("pointer");
         return controller;
