@@ -256,9 +256,9 @@ namespace G4 {
             var pls = _music_node as Playlist;
             var playlist = new Playlist (pls?.title ?? "", pls?.list_uri ?? "");
             var items = playlist.items;
-            var count = _data_store.get_n_items ();
+            var count = _filter_model.get_n_items ();
             for (var i = 0; i < count; i++) {
-                var music = (Music) _data_store.get_item (i);
+                var music = (Music) _filter_model.get_item (i);
                 items.add (music);
             }
             return playlist;
