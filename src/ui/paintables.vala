@@ -392,6 +392,7 @@ namespace G4 {
         point.x *= scale;
         point.y *= scale;
 
+        var paintable = new Gtk.WidgetPaintable (widget);
         var snapshot = new Gtk.Snapshot ();
         if (title != null) {
             var text = (!)title;
@@ -407,7 +408,7 @@ namespace G4 {
             point.y += pt.y;
             snapshot.translate (pt);
             snapshot.scale (scale, scale);
-            widget.snapshot (snapshot);
+            paintable.snapshot (snapshot, widget.get_width (), widget.get_height ());
             snapshot.scale (1 / scale, 1 / scale);
             pt.y = -pt.y;
             snapshot.translate (pt);
@@ -446,7 +447,7 @@ namespace G4 {
             snapshot.append_outset_shadow (bounds, color, 1, 1, 1, 5);
         } else {
             snapshot.scale (scale, scale);
-            widget.snapshot (snapshot);
+            paintable.snapshot (snapshot, widget.get_width (), widget.get_height ());
             snapshot.scale (1 / scale, 1 / scale);    
         }
         return snapshot.free_to_paintable (null);
