@@ -142,6 +142,44 @@
             </child>
             <child>
               <object class="AdwActionRow">
+                <property name="icon-name">media-seek-forward-symbolic</property>
+                <property name="title" translatable="yes">Playback Speed</property>
+                <child>
+                  <object class="GtkScale" id="speed_scale">
+                    <property name="valign">center</property>
+                    <property name="draw-value">true</property>
+                    <property name="digits">2</property>
+                    <property name="width-request">150</property>
+                    <property name="hexpand">true</property>
+                    <property name="adjustment">
+                      <object class="GtkAdjustment">
+                        <property name="lower">0.5</property>
+                        <property name="upper">2.0</property>
+                        <property name="step-increment">0.05</property>
+                        <property name="page-increment">0.25</property>
+                        <property name="value">1.0</property>
+                      </object>
+                    </property>
+                    <marks>
+                      <mark value="1.0" position="bottom"/>
+                    </marks>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="AdwActionRow">
+                <property name="title" translatable="yes">Pitch correction</property>
+                <property name="activatable_widget">pitch_btn</property>
+                <child>
+                  <object class="GtkSwitch" id="pitch_btn">
+                    <property name="valign">center</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="AdwActionRow">
                 <property name="icon-name">media-playlist-repeat-symbolic</property>
                 <property name="title" translatable="yes">Enable gapless playback</property>
                 <property name="activatable_widget">gapless_btn</property>

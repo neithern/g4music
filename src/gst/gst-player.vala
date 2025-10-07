@@ -24,6 +24,7 @@ namespace G4 {
         private dynamic Gst.Pipeline? _pipeline = null;
         private dynamic Gst.Element? _audio_sink = null;
         private dynamic Gst.Element? _replay_gain = null;
+        private dynamic Gst.Element? _pitch_element = null;
         private string _audio_sink_name = "";
         private int _audio_sink_requested = 0;
         private string? _current_uri = null;
@@ -40,6 +41,7 @@ namespace G4 {
         private uint _tag_handle = 0;
         private bool _tag_parsed = false;
         private uint _timer_handle = 0;
+        private bool _pitch_correction_enabled = true;
         private unowned Thread<void> _main_thread = Thread<void>.self ();
 
         public signal void duration_changed (Gst.ClockTime duration);
@@ -66,6 +68,14 @@ namespace G4 {
                 var pipeline = (!)_pipeline;
                 pipeline.async_handling = true;
                 pipeline.flags = 0x0022; // audio | native audio
+                var pitch = Gst.ElementFactory.make ("pitch", "pitch");
+                if (pitch != null) {
+                    pipeline.audio_filter = pitch;
+                    _pitch_element = pitch;
+                } else {
+                    warning ("Could not create GStreamer pitch element - gst-plugins-bad may not be installed.");
+                    warning ("Playback speed control will not be available.");
+                }
                 pipeline.bind_property ("volume", this, "volume", BindingFlags.SYNC_CREATE | BindingFlags.BIDIRECTIONAL);
                 pipeline.get_bus ().add_watch (Priority.DEFAULT, bus_callback);
             } else {
@@ -194,6 +204,40 @@ namespace G4 {
                     update_audio_sink ();
                 else
                     AtomicInt.set (ref _audio_sink_requested, 1);
+            }
+        }
+
+        public double playback_speed {
+            get {
+                if (_pitch_element != null) {
+                    var value = new GLib.Value (typeof (double));
+                    var prop_name = _pitch_correction_enabled ? "tempo" : "rate";
+                    ((!)_pitch_element).get_property (prop_name, ref value);
+                    return value.get_double ();
+                }
+                return 1.0;
+            }
+            set {
+                if (_pitch_element != null) {
+                    if (_pitch_correction_enabled) {
+                        ((!)_pitch_element).set_property ("rate", 1.0);
+                        ((!)_pitch_element).set_property ("tempo", value);
+                    } else {
+                        ((!)_pitch_element).set_property ("tempo", 1.0);
+                        ((!)_pitch_element).set_property ("rate", value);
+                    }
+                }
+            }
+        }
+
+        public bool pitch_correction {
+            get {
+                return _pitch_correction_enabled;
+            }
+            set {
+                var current_speed = this.playback_speed;
+                _pitch_correction_enabled = value;
+                this.playback_speed = current_speed;
             }
         }
 
