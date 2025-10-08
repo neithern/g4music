@@ -367,6 +367,9 @@ namespace G4 {
             if (AtomicInt.compare_and_exchange (ref _next_uri_requested, 1, 0)) {
                 next_uri_start ();
             }
+            if (_pitch_element != null) {
+                Idle.add (() => { seek (0); return false; });
+            }
             parse_duration ();
             parse_position ();
         }
