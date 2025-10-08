@@ -75,6 +75,8 @@ namespace G4 {
             settings.bind ("gapless-playback", _player, "gapless", SettingsBindFlags.DEFAULT);
             settings.bind ("replay-gain", _player, "replay-gain", SettingsBindFlags.DEFAULT);
             settings.bind ("audio-sink", _player, "audio-sink", SettingsBindFlags.DEFAULT);
+            settings.bind ("playback-speed", _player, "playback-speed", SettingsBindFlags.DEFAULT);
+            settings.bind ("pitch-correction", _player, "pitch-correction", SettingsBindFlags.DEFAULT);
             settings.bind ("volume", _player, "volume", SettingsBindFlags.DEFAULT);
         }
 
