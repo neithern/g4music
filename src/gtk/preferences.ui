@@ -142,7 +142,7 @@
             </child>
             <child>
               <object class="AdwActionRow">
-                <property name="icon-name">media-seek-forward-symbolic</property>
+                <property name="icon-name">resources-symbolic</property>
                 <property name="title" translatable="yes">Playback Speed</property>
                 <child>
                   <object class="GtkScale" id="speed_scale">
@@ -169,6 +169,7 @@
             </child>
             <child>
               <object class="AdwActionRow">
+                <property name="icon-name">checkmark-symbolic</property>
                 <property name="title" translatable="yes">Pitch correction</property>
                 <property name="activatable_widget">pitch_btn</property>
                 <child>
