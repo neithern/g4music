@@ -65,6 +65,16 @@
     </screenshots>
 
     <releases>
+        <release version="4.6" date="2025-11-16">
+            <description translate="no">
+                <ul>
+                <li>Get filtered items as a playlist.</li>
+                <li>Upgrade to GNOME 49.</li>
+                <li>Add translation: Interlingua, Greek.</li>
+                <li>Update Hungarian translation.</li>
+                </ul>
+            </description>
+        </release>
         <release version="4.5" date="2025-7-6">
             <description translate="no">
                 <ul>
