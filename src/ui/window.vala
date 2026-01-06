@@ -13,6 +13,8 @@ namespace G4 {
         private Gdk.Paintable? _cover_paintable = null;
 
         public Window (Application app) {
+            Object (application: app);
+
             this.application = app;
             this.icon_name = app.application_id;
             this.title = app.name;
