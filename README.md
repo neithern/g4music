@@ -1,3 +1,35 @@
+
+<div align="right">
+  <details>
+    <summary >🌐 Language</summary>
+    <div>
+      <div align="center">
+        <a href="https://openaitx.github.io/view.html?user=neithern&project=g4music&lang=en">English</a>
+        | <a href="https://openaitx.github.io/view.html?user=neithern&project=g4music&lang=zh-CN">简体中文</a>
+        | <a href="https://openaitx.github.io/view.html?user=neithern&project=g4music&lang=zh-TW">繁體中文</a>
+        | <a href="https://openaitx.github.io/view.html?user=neithern&project=g4music&lang=ja">日本語</a>
+        | <a href="https://openaitx.github.io/view.html?user=neithern&project=g4music&lang=ko">한국어</a>
+        | <a href="https://openaitx.github.io/view.html?user=neithern&project=g4music&lang=hi">हिन्दी</a>
+        | <a href="https://openaitx.github.io/view.html?user=neithern&project=g4music&lang=th">ไทย</a>
+        | <a href="https://openaitx.github.io/view.html?user=neithern&project=g4music&lang=fr">Français</a>
+        | <a href="https://openaitx.github.io/view.html?user=neithern&project=g4music&lang=de">Deutsch</a>
+        | <a href="https://openaitx.github.io/view.html?user=neithern&project=g4music&lang=es">Español</a>
+        | <a href="https://openaitx.github.io/view.html?user=neithern&project=g4music&lang=it">Italiano</a>
+        | <a href="https://openaitx.github.io/view.html?user=neithern&project=g4music&lang=ru">Русский</a>
+        | <a href="https://openaitx.github.io/view.html?user=neithern&project=g4music&lang=pt">Português</a>
+        | <a href="https://openaitx.github.io/view.html?user=neithern&project=g4music&lang=nl">Nederlands</a>
+        | <a href="https://openaitx.github.io/view.html?user=neithern&project=g4music&lang=pl">Polski</a>
+        | <a href="https://openaitx.github.io/view.html?user=neithern&project=g4music&lang=ar">العربية</a>
+        | <a href="https://openaitx.github.io/view.html?user=neithern&project=g4music&lang=fa">فارسی</a>
+        | <a href="https://openaitx.github.io/view.html?user=neithern&project=g4music&lang=tr">Türkçe</a>
+        | <a href="https://openaitx.github.io/view.html?user=neithern&project=g4music&lang=vi">Tiếng Việt</a>
+        | <a href="https://openaitx.github.io/view.html?user=neithern&project=g4music&lang=id">Bahasa Indonesia</a>
+        | <a href="https://openaitx.github.io/view.html?user=neithern&project=g4music&lang=as">অসমীয়া</
+      </div>
+    </div>
+  </details>
+</div>
+
 <img align="left" alt="Project logo" src="data/icons/hicolor/scalable/apps/app.svg" />
 
 # Gapless
