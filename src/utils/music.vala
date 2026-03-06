@@ -237,7 +237,7 @@ namespace G4 {
         }
 
         private void update_album_key () {
-            _album_key = (album + date.to_string () + album_artist).collate_key_for_filename ();
+            _album_key = (album + album_artist).collate_key_for_filename ();
         }
 
         public static int compare_by_album (Music s1, Music s2) {
