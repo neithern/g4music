@@ -5,10 +5,12 @@ namespace G4 {
         public const uint ART_ONLY = 2;
     }
 
-    [GtkTemplate (ui = "/com/github/neithern/g4music/gtk/preferences.ui")]
+    [GtkTemplate (ui = "/com/github/lalaggi/semitone/gtk/preferences.ui")]
     public class PreferencesWindow : Adw.PreferencesWindow {
         [GtkChild]
         unowned Adw.ComboRow blur_row;
+        [GtkChild]
+        unowned Gtk.Scale scale_slider;
         [GtkChild]
         unowned Gtk.Switch compact_btn;
         [GtkChild]
@@ -35,6 +37,12 @@ namespace G4 {
         unowned Adw.ExpanderRow peak_row;
         [GtkChild]
         unowned Gtk.Entry peak_entry;
+        [GtkChild]
+        unowned Gtk.Switch betterlyrics_btn;
+        [GtkChild]
+        unowned Gtk.Switch simpmusic_btn;
+        [GtkChild]
+        unowned Gtk.Switch lrclib_btn;
 
         private GenericArray<Gst.ElementFactory> _audio_sinks = new GenericArray<Gst.ElementFactory> (8);
 
@@ -43,7 +51,12 @@ namespace G4 {
 
             blur_row.model = new Gtk.StringList ({_("Never"), _("Always"), _("Art Only")});
             settings.bind ("blur-mode", blur_row, "selected", SettingsBindFlags.DEFAULT);
-
+            scale_slider.set_value (settings.get_double ("ui-scale"));
+            scale_slider.value_changed.connect (() => {
+                var scale = scale_slider.get_value ();
+                settings.set_double ("ui-scale", scale);
+                apply_ui_scale (scale);
+            });
             settings.bind ("compact-playlist", compact_btn, "active", SettingsBindFlags.DEFAULT);
             settings.bind ("grid-mode", grid_btn, "active", SettingsBindFlags.DEFAULT);
             settings.bind ("single-click-activate", single_btn, "active", SettingsBindFlags.DEFAULT);
@@ -70,6 +83,9 @@ namespace G4 {
 
             settings.bind ("show-peak", peak_row, "enable_expansion", SettingsBindFlags.DEFAULT);
             settings.bind ("peak-characters", peak_entry, "text", SettingsBindFlags.DEFAULT);
+            settings.bind ("lyrics-betterlyrics-enabled", betterlyrics_btn, "active", SettingsBindFlags.DEFAULT);
+            settings.bind ("lyrics-simpmusic-enabled", simpmusic_btn, "active", SettingsBindFlags.DEFAULT);
+            settings.bind ("lyrics-lrclib-enabled", lrclib_btn, "active", SettingsBindFlags.DEFAULT);
 
             GstPlayer.get_audio_sinks (_audio_sinks);
             var sink_names = new string[_audio_sinks.length];
@@ -94,6 +110,21 @@ namespace G4 {
                     var app = (Application) GLib.Application.get_default ();
                     app.player.audio_sink = _audio_sinks[value].name;
                 }
+            }
+       }
+      public static void apply_ui_scale (double scale) {
+            var win = Window.get_default ();
+            if (win == null) return;
+            var css = new Gtk.CssProvider ();
+            css.load_from_string ("window { -gtk-icon-size: %dpx; } .semitone-root { zoom: %g; }".printf (
+                (int)(16 * scale), scale));
+            var display = Gdk.Display.get_default ();
+            if (display != null) {
+                Gtk.StyleContext.add_provider_for_display (
+                    (!)display,
+                    css,
+                    Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+                );
             }
         }
     }

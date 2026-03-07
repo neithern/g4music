@@ -1,8 +1,8 @@
 [Desktop Entry]
-Name=Gapless
+Name=Semitone
 GenericName=Music Player
 Comment=Play your music elegantly
-Exec=g4music %U
+Exec=semitone %U
 Icon=@app_id@
 Terminal=false
 Type=Application

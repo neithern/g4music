@@ -1,6 +1,6 @@
 namespace G4 {
 
-    [GtkTemplate (ui = "/com/github/neithern/g4music/gtk/play-panel.ui")]
+    [GtkTemplate (ui = "/com/github/lalaggi/semitone/gtk/play-panel.ui")]
     public class PlayPanel : Gtk.Box, SizeWatcher {
         [GtkChild]
         private unowned Gtk.MenuButton action_btn;
@@ -22,6 +22,7 @@ namespace G4 {
         private unowned Gtk.Label initial_label;
 
         private PlayBar _play_bar = new PlayBar ();
+        private QueueSheet? _queue_sheet = null;
 
         private Application _app;
         private double _degrees_per_second = 360 / 20; // 20s per lap
@@ -33,6 +34,8 @@ namespace G4 {
         private bool _size_allocated = false;
 
         public signal void cover_changed (Music? music, CrossFadePaintable cover);
+        public signal void queue_requested ();
+        public signal void lyrics_requested ();
 
         public PlayPanel (Application app, Window win, Leaflet leaflet) {
             _app = app;
@@ -77,6 +80,40 @@ namespace G4 {
             var settings = app.settings;
             settings.bind ("rotate-cover", this, "rotate-cover", SettingsBindFlags.DEFAULT);
             settings.bind ("show-peak", this, "show-peak", SettingsBindFlags.DEFAULT);
+            // Build bottom utility bar
+var utility_bar = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
+utility_bar.halign = Gtk.Align.FILL;
+utility_bar.margin_start = 24;
+utility_bar.margin_end = 24;
+utility_bar.margin_bottom = 12;
+
+var queue_btn = new Gtk.Button.from_icon_name ("media-playlist-consecutive-symbolic");
+queue_btn.tooltip_text = _("Queue");
+queue_btn.add_css_class ("flat");
+queue_btn.halign = Gtk.Align.START;
+queue_btn.hexpand = true;
+queue_btn.clicked.connect (on_queue_btn_clicked);
+utility_bar.append (queue_btn);
+
+var volume_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
+volume_box.halign = Gtk.Align.CENTER;
+volume_box.hexpand = true;
+volume_box.append (_play_bar.volume_button);
+utility_bar.append (volume_box);
+
+// Lyrics button placeholder (right)
+var lyrics_btn = new Gtk.Button.from_icon_name ("audio-input-microphone-symbolic");
+lyrics_btn.tooltip_text = _("Lyrics");
+lyrics_btn.add_css_class ("flat");
+lyrics_btn.halign = Gtk.Align.END;
+lyrics_btn.hexpand = true;
+lyrics_btn.clicked.connect (() => lyrics_requested ());
+utility_bar.append (lyrics_btn);
+
+music_box.append (utility_bar);
+
+// Queue sheet - attached to window so it overlays properly
+
         }
 
         public bool rotate_cover {
@@ -259,11 +296,14 @@ namespace G4 {
             _crossfade_paintable.paintable = _matrix_paintable;
             cover_changed (music, _crossfade_paintable);
         }
-
         private void update_initial_label (string uri) {
             var dir_name = Uri.escape_string (get_display_name (uri));
             var link = @"<a href=\"change_dir\">$dir_name</a>";
             initial_label.set_markup (_("Drag and drop music files here,\nor change music location: ") + link);
         }
+
+private void on_queue_btn_clicked () {
+    queue_requested ();
+}
     }
 }

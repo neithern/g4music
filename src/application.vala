@@ -1,4 +1,9 @@
 namespace G4 {
+namespace RepeatMode {
+    public const uint NONE = 0;
+    public const uint ALL  = 1;
+    public const uint ONE  = 2;
+}
 
     public class Application : Adw.Application {
         private ActionHandles? _actions = null;
@@ -14,12 +19,14 @@ namespace G4 {
         private MusicLoader _loader = new MusicLoader ();
         private Gtk.FilterListModel _current_list = new Gtk.FilterListModel (null, null);
         private ListStore _music_queue = new ListStore (typeof (Music));
+        private GenericArray<Music> _queue_original_order = new GenericArray<Music> ();
         private StringBuilder _next_uri = new StringBuilder ();
         private GstPlayer _player = new GstPlayer ();
         private Settings _settings;
         private uint _sort_mode = SortMode.TITLE;
         private bool _store_external_changed = false;
         private Thumbnailer _thumbnailer = new Thumbnailer ();
+        private SleepTimer? _sleep_timer = null;
 
         public signal void index_changed (int index, uint size);
         public signal void music_changed (Music? music);
@@ -65,7 +72,7 @@ namespace G4 {
             );
             if (_mpris_id == 0)
                 warning ("Initialize MPRIS session failed\n");
-
+            _sleep_timer = new SleepTimer (this);
             var settings = _settings = new Settings (application_id); 
             settings.bind ("color-scheme", this, "color-scheme", SettingsBindFlags.DEFAULT);
             settings.bind ("music-dir", this, "music-folder", SettingsBindFlags.DEFAULT);
@@ -76,7 +83,8 @@ namespace G4 {
             settings.bind ("replay-gain", _player, "replay-gain", SettingsBindFlags.DEFAULT);
             settings.bind ("audio-sink", _player, "audio-sink", SettingsBindFlags.DEFAULT);
             settings.bind ("volume", _player, "volume", SettingsBindFlags.DEFAULT);
-        }
+            _queue_shuffled = settings.get_boolean ("queue-shuffled");
+            }
 
         public override void activate () {
             base.activate ();
@@ -270,7 +278,7 @@ namespace G4 {
 
         public string name {
             get {
-                return _("Gapless");
+                return _("Semitone");
             }
         }
 
@@ -285,8 +293,21 @@ namespace G4 {
                 return _settings;
             }
         }
+        
+        private bool _queue_shuffled = false;
+        public bool queue_shuffled {
+          get { return _queue_shuffled; }
+          set {
+            _queue_shuffled = value;
+            _settings.set_boolean ("queue-shuffled", value);
+          }
+        }
 
-        public bool single_loop { get; set; }
+        private uint _repeat_mode = RepeatMode.NONE;
+        public uint repeat_mode {
+          get { return _repeat_mode; }
+          set { _repeat_mode = value; }
+        }
 
         public uint sort_mode {
             get {
@@ -309,7 +330,9 @@ namespace G4 {
                 return _thumbnailer;
             }
         }
-
+        public SleepTimer sleep_timer {
+          get { return (!)_sleep_timer; }
+        }
         public async bool add_playlist_to_file_async (Playlist playlist, bool append) {
             var file = File.new_for_uri (playlist.list_uri);
             var uris = new GenericArray<string> (1024);
@@ -379,6 +402,7 @@ namespace G4 {
             _store_external_changed = true;
             if (_music_queue.get_n_items () == 0) {
                 _music_queue.splice (0, _music_queue.get_n_items (), (Object[]) musics.data);
+                snapshot_queue_order ();
             } else {
                 on_music_library_changed (0, 1, 1);
             }
@@ -405,8 +429,12 @@ namespace G4 {
         }
 
         public void play_previous () {
-            current_item--;
-            _player.play ();
+            if (GstPlayer.to_second (_player.position) > 5.0) {
+                _player.seek (GstPlayer.from_second (0));
+            } else {
+                current_item--;
+                _player.play ();
+            }
         }
 
         private bool _reloading = false;
@@ -446,7 +474,19 @@ namespace G4 {
             }
             return saved;
         }
+        public void snapshot_queue_order () {
+    _queue_original_order.remove_range (0, _queue_original_order.length);
+    var count = _music_queue.get_n_items ();
+    for (var i = 0; i < count; i++) {
+        _queue_original_order.add ((Music) _music_queue.get_item (i));
+    }
+}
 
+public void restore_queue_order () {
+    if (_queue_original_order.length == 0) return;
+    _music_queue.remove_all ();
+    _music_queue.splice (0, 0, (Object[]) _queue_original_order.data);
+}
         public async bool save_queue_to_file () {
             var count = _music_queue.get_n_items ();
             var uris = new GenericArray<string> (count);
@@ -582,14 +622,26 @@ namespace G4 {
             }
         }
 
-        private void on_player_end () {
-            if (_single_loop) {
-                _player.seek (0);
-                _player.play ();
-            } else {
+private void on_player_end () {
+    switch (_repeat_mode) {
+        case RepeatMode.ONE:
+            _player.seek (0);
+            _player.play ();
+            break;
+        case RepeatMode.ALL:
+            var next = _current_index + 1;
+            if (next >= (int) _current_list.get_n_items ())
+                current_item = 0;
+            else
                 current_item++;
-            }
-        }
+            break;
+        case RepeatMode.NONE:
+        default:
+            if (_current_index + 1 < (int) _current_list.get_n_items ())
+                current_item++;
+            break;
+    }
+}
 
         private void on_player_error (Error err) {
             Window.get_default ()?.show_toast (err.message);
@@ -597,17 +649,15 @@ namespace G4 {
                 on_player_end ();
             }
         }
-
         private string? on_player_next_uri_request () {
             //  This is NOT called in main UI thread
             lock (_next_uri) {
-                if (!_single_loop)
-                    _current_uri = _next_uri.str;
+              if (_repeat_mode != RepeatMode.ONE)
+                _current_uri = _next_uri.str;
                 //  next_uri_start will be received soon later
                 return _current_uri;
             }
         }
-
         private void on_player_next_uri_start () {
             //  Received after next_uri_request
             on_player_end ();

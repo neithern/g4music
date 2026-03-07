@@ -5,6 +5,7 @@ namespace G4 {
         public const string ARTIST = "artist";
         public const string PLAYING = "playing";
         public const string PLAYLIST = "playlist";
+        public const string TRACKS = "tracks";
     }
 
     public class MusicWidget : Gtk.Box {
@@ -272,7 +273,7 @@ namespace G4 {
         var uri = build_library_uri (null, album);
         var menu = new Menu ();
         menu.append_item (create_menu_item_for_uri (uri, _("Play"), ACTION_APP + ACTION_PLAY));
-        menu.append_item (create_menu_item_for_uri (uri, _("_Random Play"), ACTION_APP + ACTION_RANDOM_PLAY));
+        menu.append_item (create_menu_item_for_uri (uri, _("_Shuffle Play"), ACTION_APP + ACTION_RANDOM_PLAY));
         var section = new Menu ();
         section.append_item (create_menu_item_for_uri (uri, _("Play at _Next"), ACTION_APP + ACTION_PLAY_AT_NEXT));
         section.append_item (create_menu_item_for_uri (uri, _("Add to _Queue"), ACTION_APP + ACTION_ADD_TO_QUEUE));
@@ -294,7 +295,7 @@ namespace G4 {
         var uri = build_library_uri (artist, null);
         var menu = new Menu ();
         menu.append_item (create_menu_item_for_uri (uri, _("Play"), ACTION_APP + ACTION_PLAY));
-        menu.append_item (create_menu_item_for_uri (uri, _("_Random Play"), ACTION_APP + ACTION_RANDOM_PLAY));
+        menu.append_item (create_menu_item_for_uri (uri, _("_Shuffle Play"), ACTION_APP + ACTION_RANDOM_PLAY));
         var section = new Menu ();
         section.append_item (create_menu_item_for_uri (uri, _("Play at _Next"), ACTION_APP + ACTION_PLAY_AT_NEXT));
         section.append_item (create_menu_item_for_uri (uri, _("Add to _Queue"), ACTION_APP + ACTION_ADD_TO_QUEUE));

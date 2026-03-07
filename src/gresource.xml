@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
-  <gresource prefix="/com/github/neithern/g4music">
+  <gresource prefix="/com/github/lalaggi/semitone">
     <file alias="style.css">gtk/style.css</file>
     <file>gtk/help-overlay.ui</file>
     <file>gtk/play-panel.ui</file>
