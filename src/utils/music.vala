@@ -9,6 +9,7 @@ namespace G4 {
         public string album_artist = "";
         public uint32 date = 0;
         public string genre = "";
+        public string comment = "";
         public int track = 0;
         public int disc = 0;
         public bool has_cover = false;
@@ -112,6 +113,29 @@ namespace G4 {
                 genre = (!)ge;
                 changed = true;
             }
+            var ec_size2 = tags.get_tag_size (Gst.Tags.EXTENDED_COMMENT);
+            for (int i = 0; i < ec_size2; i++) {
+                string? s = null;
+                if (tags.peek_string_index (Gst.Tags.EXTENDED_COMMENT, i, out s) && s != null) {
+                    var str = (!)s;
+                    string? val = null;
+                    if (str.has_prefix ("COMMENT="))
+                        val = str.substring (8);
+                    else if (!str.contains ("="))
+                        val = str;
+                    if (val != null && comment != (!)val) {
+                        comment = (!)val;
+                        changed = true;
+                        break;
+                    }
+                }
+            }
+            unowned string? co = null;
+            if (tags.peek_string_index (Gst.Tags.COMMENT, 0, out co)
+                    && co != null && comment.length == 0) {
+                comment = (!)co;
+                changed = true;
+            }
             Gst.DateTime? dt = null;
             uint dtu = 0;
             if (tags.get_date_time (Gst.Tags.DATE_TIME, out dt)
@@ -164,6 +188,7 @@ namespace G4 {
             genre = dis.read_string ();
             track = (int) dis.read_size ();
             disc = (int) dis.read_size ();
+            comment = dis.read_string ();
 
             update_album_key ();
             _artist_key = artist.collate_key_for_filename ();
@@ -183,6 +208,7 @@ namespace G4 {
             dos.write_string (genre);
             dos.write_size (track);
             dos.write_size (disc);
+            dos.write_string (comment);
         }
 
         public void parse_tags () {

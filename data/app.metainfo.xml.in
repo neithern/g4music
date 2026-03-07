@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
     <id>@app_id@</id>
-    <name>Gapless</name>
+    <name>Semitone</name>
     <metadata_license>CC0-1.0</metadata_license>
     <project_license>GPL-3.0-or-later</project_license>
     <summary>Play your music elegantly</summary>
 
-    <developer id="com.github.neithern">
-        <name translate="no">Nanling</name>
+    <developer id="com.github.lalaggi">
+        <name translate="no">Lalaggi</name>
     </developer>
-    <update_contact>neithern@outlook.com</update_contact>
+    <update_contact>elilovescomputers@gmail.com</update_contact>
 
-    <url type="homepage">https://gitlab.gnome.org/neithern/g4music</url>
-    <url type="bugtracker">https://gitlab.gnome.org/neithern/g4music/issues</url>
+  <url type="homepage">https://gitlab.gnome.org/lalaggi/semitone</url>
+  <url type="bugtracker">https://gitlab.gnome.org/lalaggi/semitone/issues</url>
     <url type="translate">https://l10n.gnome.org/module/g4music</url>
 
     <launchable type="desktop-id">@app_id@.desktop</launchable>

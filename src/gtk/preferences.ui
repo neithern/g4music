@@ -26,6 +26,37 @@
                 </child>
               </object>
             </child>
+              <child>
+              <object class="AdwActionRow" id="scale_row">
+                <property name="icon-name">zoom-fit-best-symbolic</property>
+                <property name="title" translatable="yes">Interface scale</property>
+                <property name="subtitle" translatable="yes">Adjust the size of the UI independently of system scaling</property>
+                <child type="suffix">
+                  <object class="GtkBox">
+                    <property name="valign">center</property>
+                    <property name="spacing">8</property>
+                    <child>
+                      <object class="GtkScale" id="scale_slider">
+                        <property name="valign">center</property>
+                        <property name="width-request">160</property>
+                        <property name="draw-value">true</property>
+                        <property name="value-pos">right</property>
+                        <property name="digits">2</property>
+                        <property name="adjustment">
+                          <object class="GtkAdjustment" id="scale_adjustment">
+                            <property name="lower">0.5</property>
+                            <property name="upper">2.0</property>
+                            <property name="step-increment">0.05</property>
+                            <property name="page-increment">0.1</property>
+                            <property name="value">1.0</property>
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
             <child>
               <object class="AdwActionRow">
                 <property name="icon-name">view-grid-symbolic</property>
@@ -162,6 +193,50 @@
               <object class="AdwComboRow" id="audiosink_row">
                 <property name="icon-name">audio-card-symbolic</property>
                 <property name="title" translatable="yes">Prefer audio sink of GStreamer</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="AdwPreferencesGroup">
+            <property name="title" translatable="yes">Lyrics</property>
+            <child>
+              <object class="AdwActionRow">
+                <property name="icon-name">audio-x-generic-symbolic</property>
+                <property name="title">BetterLyrics</property>
+                <property name="subtitle" translatable="yes">Word-timed lyrics via BetterLyrics API</property>
+                <property name="activatable_widget">betterlyrics_btn</property>
+                <child>
+                  <object class="GtkSwitch" id="betterlyrics_btn">
+                    <property name="valign">center</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="AdwActionRow">
+                <property name="icon-name">audio-x-generic-symbolic</property>
+                <property name="title">SimpMusic</property>
+                <property name="subtitle" translatable="yes">Word-timed lyrics for YouTube Music tracks</property>
+                <property name="activatable_widget">simpmusic_btn</property>
+                <child>
+                  <object class="GtkSwitch" id="simpmusic_btn">
+                    <property name="valign">center</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="AdwActionRow">
+                <property name="icon-name">audio-x-generic-symbolic</property>
+                <property name="title">LRCLib</property>
+                <property name="subtitle" translatable="yes">Synced and plain lyrics via LRCLib</property>
+                <property name="activatable_widget">lrclib_btn</property>
+                <child>
+                  <object class="GtkSwitch" id="lrclib_btn">
+                    <property name="valign">center</property>
+                  </object>
+                </child>
               </object>
             </child>
           </object>

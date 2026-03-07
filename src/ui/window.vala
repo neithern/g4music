@@ -5,6 +5,8 @@ namespace G4 {
         private Leaflet _leaflet = new Leaflet ();
         private Gtk.ProgressBar _progress_bar = new Gtk.ProgressBar ();
         private PlayPanel _play_panel;
+        private QueueSheet _queue_sheet;
+        private LyricsSheet _lyrics_sheet;
         private StorePanel _store_panel;
 
         private int _blur_size = 512;
@@ -21,8 +23,13 @@ namespace G4 {
 
             var overlay = new Gtk.Overlay ();
             this.content = overlay;
+            overlay.add_css_class ("semitone-root");
             overlay.child = _toast;
-            _toast.child = _leaflet;
+            _queue_sheet = new QueueSheet (app);
+            _lyrics_sheet = new LyricsSheet (app);
+            _lyrics_sheet.bottom_sheet.content = _leaflet;
+            _queue_sheet.bottom_sheet.content = _lyrics_sheet.bottom_sheet;
+            _toast.child = _queue_sheet.bottom_sheet;
 
             ActionEntry[] action_entries = {
                 { ACTION_BUTTON, button_command, "s" },
@@ -48,6 +55,8 @@ namespace G4 {
             _store_panel = new StorePanel (app, this, _leaflet);
 
             _play_panel = new PlayPanel (app, this, _leaflet);
+            _play_panel.queue_requested.connect (() => _queue_sheet.open ());
+            _play_panel.lyrics_requested.connect (() => _lyrics_sheet.open ());
             _play_panel.cover_changed.connect (on_cover_changed);
 
             _leaflet.content = _play_panel;
@@ -55,6 +64,7 @@ namespace G4 {
 
             setup_drop_target ();
             setup_focus_controller ();
+            setup_escape_key ();
 
             var settings = app.settings;
             settings.bind ("leaflet-mode", _leaflet, "visible-mode", SettingsBindFlags.DEFAULT);
@@ -62,6 +72,7 @@ namespace G4 {
             settings.bind ("width", this, "default-width", SettingsBindFlags.DEFAULT);
             settings.bind ("height", this, "default-height", SettingsBindFlags.DEFAULT);
             settings.bind ("blur-mode", this, "blur-mode", SettingsBindFlags.DEFAULT);
+            PreferencesWindow.apply_ui_scale (settings.get_double ("ui-scale"));
         }
 
         public uint blur_mode {
@@ -102,9 +113,8 @@ namespace G4 {
 
         public void open_page (string uri, bool play_now = false, bool shuffle = false) {
             _store_panel.open_page (uri, play_now, shuffle);
-            if (_leaflet.folded) {
+            if (_leaflet.folded)
                 _leaflet.pop ();
-            }
         }
 
         public int open_next_playable_page () {
@@ -113,9 +123,8 @@ namespace G4 {
 
         public void open_playing_page () {
             _store_panel.open_playing_page ();
-            if (_leaflet.folded) {
+            if (_leaflet.folded)
                 _leaflet.pop ();
-            }
         }
 
         public void show_toast (string message, string? uri = null) {
@@ -130,9 +139,8 @@ namespace G4 {
 
         public void start_search (string text, uint mode = SearchMode.ANY) {
             _store_panel.start_search (text, mode);
-            if (_leaflet.folded) {
+            if (_leaflet.folded)
                 _leaflet.pop ();
-            }
         }
 
         private void focus_to_play_later (int delay = 100) {
@@ -236,10 +244,6 @@ namespace G4 {
         }
 
         private void setup_drop_target () {
-            //  Hack: when drag a folder from nautilus,
-            //  the value is claimed as GdkFileList in accept(),
-            //  but the value can't be convert as GdkFileList in drop(),
-            //  so use STRING type to get the file/folder path.
             var target = new Gtk.DropTarget (Type.INVALID, Gdk.DragAction.COPY | Gdk.DragAction.LINK);
             target.set_gtypes ({ Type.STRING, typeof (Gdk.FileList) });
             target.accept.connect ((drop) => drop.formats.contain_gtype (typeof (Gdk.FileList))
@@ -258,6 +262,19 @@ namespace G4 {
             this.content.add_controller (controller);
             this.bind_property ("focus_visible", this, "focused_visible");
             this.bind_property ("focus_widget", this, "focused_widget");
+        }
+
+        private void setup_escape_key () {
+            var controller = new Gtk.EventControllerKey ();
+            controller.key_pressed.connect ((keyval, keycode, state) => {
+                if (keyval == Gdk.Key.Escape && _leaflet.folded &&
+                    _leaflet.visible_mode == LeafletMode.CONTENT) {
+                    _leaflet.pop ();
+                    return true;
+                }
+                return false;
+            });
+            this.content.add_controller (controller);
         }
 
         private void button_command (SimpleAction action, Variant? parameter) {
@@ -293,15 +310,13 @@ namespace G4 {
 
         private void start_select () {
             _store_panel.current_list.multi_selection = true;
-            if (_leaflet.folded) {
+            if (_leaflet.folded)
                 _leaflet.pop ();
-            }
         }
 
         private void toggle_search () {
-            if (_store_panel.toggle_search () && _leaflet.folded) {
+            if (_store_panel.toggle_search () && _leaflet.folded)
                 _leaflet.pop ();
-            }
         }
 
         private void update_background () {

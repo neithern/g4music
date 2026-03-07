@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schemalist gettext-domain="g4music">
-  <schema id="@app_id@" path="/com/github/neithern/g4music/">
+<schemalist gettext-domain="semitone">
+  <schema id="@app_id@" path="/com/github/lalaggi/semitone/">
+    <key name="queue-shuffled" type="b">
+    <default>false</default>
+    <summary>Whether the queue is currently shuffled</summary>
+    </key>
+      <key name="ui-scale" type="d">
+    <default>1.0</default>
+    <summary>Internal UI scale factor</summary>
+</key>
     <key name="blur-mode" type="u">
       <range min="0" max="2"/>
       <default>1</default>
@@ -96,6 +104,18 @@
     </key>
     <key name="volume" type="d">
       <default>1</default>
+    </key>
+    <key name="lyrics-betterlyrics-enabled" type="b">
+      <default>true</default>
+      <summary>Fetch lyrics from BetterLyrics</summary>
+    </key>
+    <key name="lyrics-simpmusic-enabled" type="b">
+      <default>true</default>
+      <summary>Fetch lyrics from SimpMusic</summary>
+    </key>
+    <key name="lyrics-lrclib-enabled" type="b">
+      <default>true</default>
+      <summary>Fetch lyrics from LRCLib</summary>
     </key>
   </schema>
 </schemalist>
