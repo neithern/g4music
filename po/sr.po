@@ -1,0 +1,570 @@
+# Serbian translation for g4music.
+# Copyright (C) 2026 g4music's COPYRIGHT HOLDER
+# This file is distributed under the same license as the g4music package.
+# Марко Костић <marko.m.kostic@gmail.com>,  2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: g4music master\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/neithern/g4music/issues\n"
+"POT-Creation-Date: 2025-11-16 06:55+0000\n"
+"PO-Revision-Date: 2026-03-25 21:32+0100\n"
+"Last-Translator: Марко М. Костић <marko.m.kostic@gmail.com>\n"
+"Language-Team: Serbian <Serbian>\n"
+"Language: sr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=n==1? 3 : n%10==1 && n%100!=11 ? 0 : "
+"n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Poedit 3.9\n"
+
+#: data/app.desktop.in:2 data/app.metainfo.xml.in:4 src/application.vala:273
+#: src/main.vala:24
+msgid "Gapless"
+msgstr "Вртешка"
+
+#: data/app.desktop.in:3
+msgid "Music Player"
+msgstr "Програм за пуштање музике"
+
+#: data/app.desktop.in:4 data/app.metainfo.xml.in:7
+msgid "Play your music elegantly"
+msgstr "Слушајте своју музику елегантно"
+
+#: data/app.desktop.in:11
+msgid "music;sound;player;media;audio;playlist;"
+msgstr "music;sound;player;media;audio;playlist;музика;звук;плејер;пуштач;медији;аудио;плејлиста;muzika;zvuk;plejer;puštač;mediji;audio;plejlista;"
+
+#: data/app.metainfo.xml.in:24
+msgid ""
+"Gapless (AKA: G4Music) is a light weight music player written in GTK4, "
+"focuses on large music collection."
+msgstr "Вртешка (тј. Г4-музика) је лаган музички пуштач написан у ГТК4, усредсређен на велике музичке колекције."
+
+#: data/app.metainfo.xml.in:25
+msgid "Features"
+msgstr "Могућности"
+
+#: data/app.metainfo.xml.in:27
+msgid ""
+"Supports most music file types, Samba and any other remote protocols "
+"(depends on GIO and GStreamer)."
+msgstr "Подржава већину врста музичких датотека, Самбу и све друге удаљене протоколе (зависи од ГИО-а и Гстримера)."
+
+#: data/app.metainfo.xml.in:28
+msgid ""
+"Fast loading and parsing thousands of music files in very few seconds, "
+"monitor local changes."
+msgstr "Брзо учитавање и рашчлањивање хиљада музичких датотека у свега неколико секунди, надгледање локалних измена."
+
+#: data/app.metainfo.xml.in:29
+msgid ""
+"Low memory usage for large music collection with album covers (embedded and "
+"external), no thumbnail caches to store."
+msgstr "Мала потрошња меморије за велике музичке колекције са омотима албума (уграђеним и спољним), без кеша сличица за складиштење."
+
+#: data/app.metainfo.xml.in:30
+msgid ""
+"Group and sorts by album/artist/title, shuffle list, full-text searching."
+msgstr "Групише и сортира према албуму/извођачу/наслову, меша спискове песама, претрага целог текста."
+
+#: data/app.metainfo.xml.in:31
+msgid ""
+"Fluent adaptive user interface for different screen (Desktop, Tablet, "
+"Mobile)."
+msgstr "Течно прилагодљиво корисничко прочеље за различите екране (рачунар, таблет, мобилни)."
+
+#: data/app.metainfo.xml.in:32
+msgid "Gaussian blurred cover as background, follows GNOME light/dark mode."
+msgstr "Гаусов замућени омот као позадина, прати Гномов светли/тамни режим."
+
+#: data/app.metainfo.xml.in:33
+msgid ""
+"Supports creating and editing playlists, drag cover to change order or add "
+"to another playlist."
+msgstr "Подржава стварање и уређивање спискова песама, превлачење омота за промену редоследа или додавање у други списак."
+
+#: data/app.metainfo.xml.in:34
+msgid "Supports drag and drop with other apps."
+msgstr "Подржава превлачење и спуштање са другим програмима."
+
+#: data/app.metainfo.xml.in:35
+msgid "Supports audio peaks visualizer."
+msgstr "Подржава визуелизатор врхова звука."
+
+#: data/app.metainfo.xml.in:36
+msgid "Supports gapless playback."
+msgstr "Подржава пуштање без застоја."
+
+#: data/app.metainfo.xml.in:37
+msgid "Supports normalizing volume with ReplayGain."
+msgstr "Подржава нормализацију јачине звука помоћу појачања понављања (ReplayGain)."
+
+#: data/app.metainfo.xml.in:38
+msgid "Supports specified audio sink."
+msgstr "Подржава наведени звучни излаз."
+
+#: data/app.metainfo.xml.in:39
+msgid "Supports MPRIS control."
+msgstr "Подржава МПРИС управљање."
+
+#: data/app.metainfo.xml.in:50
+msgid "Main window"
+msgstr "Главни прозор"
+
+#: data/app.metainfo.xml.in:54
+msgid "Albums view"
+msgstr "Преглед албума"
+
+#: data/app.metainfo.xml.in:58
+msgid "Playing view"
+msgstr "Преглед пуштања"
+
+#: data/app.metainfo.xml.in:62
+msgid "Playlist view"
+msgstr "Преглед списка песама"
+
+#: src/gtk/help-overlay.ui:11
+msgctxt "shortcut window"
+msgid "General"
+msgstr "Опште"
+
+#: src/gtk/help-overlay.ui:14
+msgctxt "shortcut window"
+msgid "Show Shortcuts"
+msgstr "Прикажи пречице"
+
+#: src/gtk/help-overlay.ui:20
+msgctxt "shortcut window"
+msgid "Preferences"
+msgstr "Преференце"
+
+#: src/gtk/help-overlay.ui:26
+msgctxt "shortcut window"
+msgid "Quit"
+msgstr "Изађи"
+
+#: src/gtk/help-overlay.ui:32
+msgctxt "shortcut window"
+msgid "Show Tags"
+msgstr "Прикажи ознаке"
+
+#: src/gtk/help-overlay.ui:40
+msgctxt "shortcut window"
+msgid "Playback"
+msgstr "Пуштање"
+
+#: src/gtk/help-overlay.ui:43
+msgctxt "shortcut window"
+msgid "Play/Pause"
+msgstr "Пушта/паузира"
+
+#: src/gtk/help-overlay.ui:49
+msgctxt "shortcut window"
+msgid "Play Next"
+msgstr "Пусти следеће"
+
+#: src/gtk/help-overlay.ui:55
+msgctxt "shortcut window"
+msgid "Play Previous"
+msgstr "Пусти претходно"
+
+#: src/gtk/help-overlay.ui:63
+msgctxt "shortcut window"
+msgid "Playlist"
+msgstr "Списак песама"
+
+#: src/gtk/help-overlay.ui:66
+msgctxt "shortcut window"
+msgid "Search"
+msgstr "Претрага"
+
+#: src/gtk/help-overlay.ui:72
+msgctxt "shortcut window"
+msgid "Toggle Sort"
+msgstr "Промени поредак"
+
+#: src/gtk/help-overlay.ui:78
+msgctxt "shortcut window"
+msgid "Reload Library"
+msgstr "Поново учитај библиотеку"
+
+#: src/gtk/help-overlay.ui:84
+msgctxt "shortcut window"
+msgid "Save List"
+msgstr "Сачувај списак"
+
+#: src/gtk/play-panel.ui:16 src/ui/music-list.vala:626
+#: src/ui/store-panel.vala:420
+msgid "Back"
+msgstr "Назад"
+
+#: src/gtk/preferences.ui:10
+msgid "General"
+msgstr "Опште"
+
+#: src/gtk/preferences.ui:14
+msgid "Background blur mode"
+msgstr "Режим замућења позадине"
+
+#: src/gtk/preferences.ui:20
+msgid "Compact playlist view"
+msgstr "Сажети преглед списка песама"
+
+#: src/gtk/preferences.ui:32
+msgid "Grid view for artists/albums"
+msgstr "Преглед мреже за извођаче/албуме"
+
+#: src/gtk/preferences.ui:44
+msgid "Single click to activate item"
+msgstr "Једноструки клик за активирање ставке"
+
+#: src/gtk/preferences.ui:56 src/application.vala:434
+msgid "Keep playing after window closed"
+msgstr "Настави репродукцију након затварања прозора"
+
+#: src/gtk/preferences.ui:69
+msgid "Library"
+msgstr "Библиотека"
+
+#: src/gtk/preferences.ui:73
+msgid "Load music from folder"
+msgstr "Учитај музику из фасцикле"
+
+#: src/gtk/preferences.ui:85
+msgid "Monitor local file changes"
+msgstr "Прати измене локалних датотека"
+
+#: src/gtk/preferences.ui:97
+msgid "Load thumbnails for non-local files"
+msgstr "Учитај сличице за нелокалне датотеке"
+
+#: src/gtk/preferences.ui:98
+msgid "May cause slowdowns and excess network usage"
+msgstr "Може проузроковати успорења и прекомерну употребу мреже"
+
+#: src/gtk/preferences.ui:111
+msgid "Playback"
+msgstr "Пуштање"
+
+#: src/gtk/preferences.ui:115
+msgid "Show audio peak level"
+msgstr "Прикажи вршни ниво звука"
+
+#: src/gtk/preferences.ui:119
+msgid "Display characters"
+msgstr "Прикажи знакове"
+
+#: src/gtk/preferences.ui:134
+msgid "Rotate album cover"
+msgstr "Окрени омот албума"
+
+#: src/gtk/preferences.ui:146
+msgid "Enable gapless playback"
+msgstr "Укључује пуштање без застоја"
+
+#: src/gtk/preferences.ui:158
+msgid "Normalize volume with ReplayGain"
+msgstr "Нормализуј јачину звука помоћу ReplayGain-а"
+
+#: src/gtk/preferences.ui:164
+msgid "Prefer audio sink of GStreamer"
+msgstr "Дај предност GStreamer-овом одводу звука"
+
+#: src/gtk/store-panel.ui:23
+msgid "Main Menu"
+msgstr "Главни мени"
+
+#: src/gtk/store-panel.ui:30 src/ui/playlist-dialog.vala:36
+msgid "Search"
+msgstr "Претрага"
+
+#: src/gtk/store-panel.ui:40
+msgid "Sort By"
+msgstr "Поређај по"
+
+#: src/gtk/store-panel.ui:71
+msgid "_Color Scheme"
+msgstr "_Шема боја"
+
+#: src/gtk/store-panel.ui:73
+msgid "_System"
+msgstr "_Систем"
+
+#: src/gtk/store-panel.ui:78
+msgid "_Light"
+msgstr "_Светла"
+
+#: src/gtk/store-panel.ui:83
+msgid "_Dark"
+msgstr "_Тамна"
+
+#: src/gtk/store-panel.ui:90
+msgid "_Reload Library"
+msgstr "_Поново учитај библиотеку"
+
+#: src/gtk/store-panel.ui:94
+msgid "_Multiple Select"
+msgstr "_Вишеструки избор"
+
+#: src/gtk/store-panel.ui:98
+msgid "_Save List"
+msgstr "_Сачувај списак"
+
+#: src/gtk/store-panel.ui:104
+msgid "_Preferences"
+msgstr "_Поставке"
+
+#: src/gtk/store-panel.ui:108
+msgid "_Keyboard Shortcuts"
+msgstr "Пречице _тастатуре"
+
+#: src/gtk/store-panel.ui:112
+msgid "_About"
+msgstr "_О програму"
+
+#: src/gtk/store-panel.ui:121 src/ui/preferences.vala:66
+msgid "Album"
+msgstr "Албум"
+
+#: src/gtk/store-panel.ui:126
+msgid "Artist"
+msgstr "Извођач"
+
+#: src/gtk/store-panel.ui:131
+msgid "Artist/Album"
+msgstr "Извођач/Албум"
+
+#: src/gtk/store-panel.ui:136
+msgid "Title"
+msgstr "Наслов"
+
+#: src/gtk/store-panel.ui:141
+msgid "Recent"
+msgstr "Скорашње"
+
+#: src/gtk/store-panel.ui:146
+msgid "Shuffle"
+msgstr "Измешај"
+
+#: src/action-handles.vala:114
+msgid "Image Files"
+msgstr "Слике"
+
+#: src/action-handles.vala:121
+msgid "Export cover successfully"
+msgstr "Извоз омота је успео"
+
+#: src/action-handles.vala:121
+msgid "Export cover failed"
+msgstr "Извоз омота није успео"
+
+#: src/application.vala:346
+msgid "Save playlist failed"
+msgstr "Чување списка песама није успело"
+
+#: src/application.vala:470
+msgid "Playlist Files"
+msgstr "Датотеке списка песама"
+
+#: src/application.vala:485
+msgid "Save playlist successfully"
+msgstr "Списак песама је успешно сачуван"
+
+#: src/application.vala:620
+msgid "Keep playing"
+msgstr "Настави пуштање"
+
+#. Translators: Replace "translator-credits" with your names, one name per line
+#: src/ui/dialogs.vala:52
+msgid "translator-credits"
+msgstr ""
+"Марко Костић <marko.m.kostic@gmail.com>\n"
+"Превод на српски језик https://гном.срб"
+
+#: src/ui/dialogs.vala:98 src/ui/dialogs.vala:110
+msgid "No"
+msgstr "Не"
+
+#: src/ui/dialogs.vala:99 src/ui/dialogs.vala:110
+msgid "Yes"
+msgstr "Да"
+
+#: src/ui/music-list.vala:270
+msgid "Playlist is modified, save it?"
+msgstr "Списак песама је измењен, да ли да га сачувам?"
+
+#. Translators: Play this music at next position of current playing music
+#: src/ui/music-list.vala:399 src/ui/music-list.vala:415
+#: src/ui/music-widgets.vala:277 src/ui/music-widgets.vala:299
+msgid "Play at _Next"
+msgstr "Пусти _следеће"
+
+#: src/ui/music-list.vala:401 src/ui/music-list.vala:417
+#: src/ui/music-widgets.vala:278 src/ui/music-widgets.vala:300
+msgid "Add to _Queue"
+msgstr "Додај у _ред"
+
+#: src/ui/music-list.vala:402 src/ui/music-widgets.vala:279
+#: src/ui/music-widgets.vala:301 src/ui/music-widgets.vala:320
+msgid "Add to _Playlist…"
+msgstr "Додај на _списак песама…"
+
+#: src/ui/music-list.vala:403 src/ui/music-list.vala:421
+msgid "_Remove"
+msgstr "_Уклони"
+
+#: src/ui/music-list.vala:422 src/ui/music-widgets.vala:286
+msgid "_Move to Trash"
+msgstr "_Премести у смеће"
+
+#: src/ui/music-list.vala:630
+msgid "Select All"
+msgstr "Изабери све"
+
+#: src/ui/music-list.vala:647
+msgid "Play at Next"
+msgstr "Пусти следеће"
+
+#: src/ui/music-list.vala:654
+msgid "Add to Queue"
+msgstr "Додај у заказано"
+
+#: src/ui/music-list.vala:661 src/ui/playlist-dialog.vala:19
+msgid "Add to Playlist"
+msgstr "Додај на списак нумера"
+
+#: src/ui/music-list.vala:668
+msgid "Remove"
+msgstr "Уклони"
+
+#: src/ui/music-widgets.vala:274 src/ui/music-widgets.vala:296
+#: src/ui/store-panel.vala:428
+msgid "Play"
+msgstr "Репродукуј"
+
+#: src/ui/music-widgets.vala:275 src/ui/music-widgets.vala:297
+msgid "_Random Play"
+msgstr "_Насумично пуштање"
+
+#: src/ui/music-widgets.vala:285
+msgid "Show List _File"
+msgstr "Прикажи _датотеку списка"
+
+#: src/ui/music-widgets.vala:308 src/ui/play-panel.vala:63
+msgid "Search Title"
+msgstr "Претражи наслов"
+
+#: src/ui/music-widgets.vala:309 src/ui/play-panel.vala:61
+msgid "Search Album"
+msgstr "Претражи албум"
+
+#: src/ui/music-widgets.vala:310 src/ui/play-panel.vala:62
+msgid "Search Artist"
+msgstr "Претражи извођача"
+
+#: src/ui/music-widgets.vala:314
+msgid "Show Cover _File"
+msgstr "Прикажи _датотеку омота"
+
+#: src/ui/music-widgets.vala:316
+msgid "_Export Cover"
+msgstr "_Извези омот"
+
+#: src/ui/music-widgets.vala:317
+msgid "Show _Tags…"
+msgstr "Прикажи _ознаке…"
+
+#: src/ui/music-widgets.vala:318
+msgid "Show Music _File"
+msgstr "Прикажи музичку _датотеку"
+
+#. Translators: single loop the current music
+#: src/ui/play-bar.vala:72
+msgid "Single Loop"
+msgstr "Једноструко понављање"
+
+#: src/ui/play-bar.vala:82
+msgid "Play Previous"
+msgstr "Пусти претходно"
+
+#. media-playback-pause-symbolic
+#: src/ui/play-bar.vala:88
+msgid "Play/Pause"
+msgstr "Пушта/паузира"
+
+#: src/ui/play-bar.vala:95
+msgid "Play Next"
+msgstr "Пусти следеће"
+
+#: src/ui/play-panel.vala:56 src/ui/store-panel.vala:84
+msgid "Playing"
+msgstr "Пушта се"
+
+#: src/ui/play-panel.vala:266
+msgid ""
+"Drag and drop music files here,\n"
+"or change music location: "
+msgstr ""
+"Превуците и спустите музичке датотеке овде,\n"
+"или промените место музике: "
+
+#: src/ui/playlist-dialog.vala:24
+msgid "New Playlist"
+msgstr "Нова листа песама"
+
+#: src/ui/playlist-dialog.vala:98 src/ui/store-panel.vala:712
+#, c-format
+msgid "No playlist found in %s"
+msgstr "Није пронађен списак песама у %s"
+
+#: src/ui/preferences.vala:44 src/ui/preferences.vala:66
+msgid "Never"
+msgstr "Никад"
+
+#: src/ui/preferences.vala:44
+msgid "Always"
+msgstr "Увек"
+
+#: src/ui/preferences.vala:44
+msgid "Art Only"
+msgstr "Само омот"
+
+#: src/ui/preferences.vala:66
+msgid "Track"
+msgstr "Прати"
+
+#: src/ui/store-panel.vala:89
+msgid "Artists"
+msgstr "Извођачи"
+
+#: src/ui/store-panel.vala:94
+msgid "Albums"
+msgstr "Албуми"
+
+#: src/ui/store-panel.vala:99
+msgid "Playlists"
+msgstr "Спискови нумера"
+
+#: src/ui/taglist-dialog.vala:125
+msgid "Copy"
+msgstr "Копирај"
+
+#. Translators: Current volume percent: 0~100%
+#: src/ui/volume-button.vala:33
+#, c-format
+msgid "Volume %d%%"
+msgstr "Јачина звука %d%%"
+
+#: src/ui/window.vala:126
+msgid "Show"
+msgstr "Прикажи"
+
+#: src/utils/music.vala:2
+msgid "Unknown Album"
+msgstr "Непознат албум"
+
+#: src/utils/music.vala:3
+msgid "Unknown Artist"
+msgstr "Непознат извођач"
