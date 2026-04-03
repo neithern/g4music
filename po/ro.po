@@ -2,37 +2,147 @@
 # Copyright (C) 2023 g4music's COPYRIGHT HOLDER
 # This file is distributed under the same license as the g4music package.
 # Florentina Mușat <florentina.musat.28@gmail.com>, 2023.
+# Antonio Marin <gnmer.6qxyg@slmail.me>, 2026.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: g4music master\n"
-"Report-Msgid-Bugs-To: https://gitlab.gnome.org/neithern/g4music/-/issues\n"
-"POT-Creation-Date: 2023-10-17 17:12+0000\n"
-"PO-Revision-Date: 2023-10-25 13:16+0300\n"
-"Last-Translator: Florentina Mușat <florentina [dot] musat [dot] 28 [at] gmail [dot] com>\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/neithern/g4music/issues\n"
+"POT-Creation-Date: 2025-11-16 06:55+0000\n"
+"PO-Revision-Date: 2026-04-03 13:20+0200\n"
+"Last-Translator: Antonio Marin <gnmer.6qxyg@slmail.me>\n"
 "Language-Team: Romanian <gnomero-list@lists.sourceforge.net>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);;\n"
-"X-Generator: Poedit 3.4\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
+"20)) ? 1 : 2);\n"
+"X-Generator: Gtranslator 48.0\n"
 
-#: data/app.desktop.in:3 src/application.vala:235 src/main.vala:24
-msgid "G4Music"
-msgstr "G4Music"
+#: data/app.desktop.in:2 data/app.metainfo.xml.in:4 src/application.vala:273
+#: src/main.vala:24
+msgid "Gapless"
+msgstr "Gapless"
 
-#: data/app.desktop.in:4
+#: data/app.desktop.in:3
 msgid "Music Player"
-msgstr "Player de muzică"
+msgstr "Ascultă muzică"
 
-#: data/app.desktop.in:5
-msgid "Play music"
-msgstr "Redă muzică"
+#: data/app.desktop.in:4 data/app.metainfo.xml.in:7
+msgid "Play your music elegantly"
+msgstr "Ascultă propria muzică cu eleganță"
 
-#: data/app.desktop.in:12
+#: data/app.desktop.in:11
 msgid "music;sound;player;media;audio;playlist;"
 msgstr "music;sound;player;media;audio;playlist;muzică;sunet;listă de redare;"
+
+#: data/app.metainfo.xml.in:24
+msgid ""
+"Gapless (AKA: G4Music) is a light weight music player written in GTK4, "
+"focuses on large music collection."
+msgstr ""
+"Gapless (cunoscută și sub numele de G4Music) este o aplicație lejeră de "
+"redat muzică, scrisă în GTK4, concepută pentru a gestiona colecții mari de "
+"muzică."
+
+#: data/app.metainfo.xml.in:25
+msgid "Features"
+msgstr "Caracteristici"
+
+#: data/app.metainfo.xml.in:27
+msgid ""
+"Supports most music file types, Samba and any other remote protocols "
+"(depends on GIO and GStreamer)."
+msgstr ""
+"Este compatibilă cu majoritatea formatelor audio și cu protocoale de acces "
+"de la distanță precum Samba (prin GIO și GStreamer)."
+
+#: data/app.metainfo.xml.in:28
+msgid ""
+"Fast loading and parsing thousands of music files in very few seconds, "
+"monitor local changes."
+msgstr ""
+"Încarcă și procesează rapid mii de fișiere muzicale în câteva secunde, "
+"detectând automat schimbările locale."
+
+#: data/app.metainfo.xml.in:29
+msgid ""
+"Low memory usage for large music collection with album covers (embedded and "
+"external), no thumbnail caches to store."
+msgstr ""
+"Utilizare redusă a memoriei chiar și pentru colecții vaste de muzică cu "
+"coperți de albume (integrate sau externe), fără ca miniaturile să fie "
+"stocate în cache."
+
+#: data/app.metainfo.xml.in:30
+msgid ""
+"Group and sorts by album/artist/title, shuffle list, full-text searching."
+msgstr ""
+"Grupare și aranjare după album/artist/titlu, redare aleatorie, căutare în "
+"tot textul."
+
+#: data/app.metainfo.xml.in:31
+msgid ""
+"Fluent adaptive user interface for different screen (Desktop, Tablet, "
+"Mobile)."
+msgstr ""
+"Interfață adaptabilă și fluidă pentru diferite ecrane (calculator, tabletă, "
+"mobil)."
+
+#: data/app.metainfo.xml.in:32
+msgid "Gaussian blurred cover as background, follows GNOME light/dark mode."
+msgstr ""
+"Copertă estompată cu efect Gaussian ca fundal, sincronizare cu aspectul "
+"luminos/întunecos al interfeței GNOME."
+
+#: data/app.metainfo.xml.in:33
+msgid ""
+"Supports creating and editing playlists, drag cover to change order or add "
+"to another playlist."
+msgstr ""
+"Permite crearea și modificarea listelor de redare, cu posibilitatea de a "
+"trage coperțile pentru a schimba ordinea sau a fi adăugate la alte liste."
+
+#: data/app.metainfo.xml.in:34
+msgid "Supports drag and drop with other apps."
+msgstr "Permite tragerea și așezarea fișierelor între aplicații."
+
+#: data/app.metainfo.xml.in:35
+msgid "Supports audio peaks visualizer."
+msgstr "Indicator vizual al amplitudinii sunetului."
+
+#: data/app.metainfo.xml.in:36
+msgid "Supports gapless playback."
+msgstr "Permite redarea fără întrerupere."
+
+#: data/app.metainfo.xml.in:37
+msgid "Supports normalizing volume with ReplayGain."
+msgstr "Normalizează volumul cu ReplayGain"
+
+#: data/app.metainfo.xml.in:38
+msgid "Supports specified audio sink."
+msgstr "Permite alegerea ieșirii audio."
+
+#: data/app.metainfo.xml.in:39
+msgid "Supports MPRIS control."
+msgstr "Permite controlul MPRIS."
+
+#: data/app.metainfo.xml.in:50
+msgid "Main window"
+msgstr "Fereastra principală"
+
+#: data/app.metainfo.xml.in:54
+msgid "Albums view"
+msgstr "Albume"
+
+#: data/app.metainfo.xml.in:58
+msgid "Playing view"
+msgstr "Redare"
+
+#: data/app.metainfo.xml.in:62
+msgid "Playlist view"
+msgstr "Lista de redare"
 
 #: src/gtk/help-overlay.ui:11
 msgctxt "shortcut window"
@@ -52,49 +162,60 @@ msgstr "Preferințe"
 #: src/gtk/help-overlay.ui:26
 msgctxt "shortcut window"
 msgid "Quit"
-msgstr "Ieșire"
+msgstr "Închide"
 
-#: src/gtk/help-overlay.ui:34
+#: src/gtk/help-overlay.ui:32
+msgctxt "shortcut window"
+msgid "Show Tags"
+msgstr "Arată etichetele"
+
+#: src/gtk/help-overlay.ui:40
 msgctxt "shortcut window"
 msgid "Playback"
 msgstr "Redare"
 
-#: src/gtk/help-overlay.ui:37
+#: src/gtk/help-overlay.ui:43
 msgctxt "shortcut window"
 msgid "Play/Pause"
-msgstr "Redare/pauză"
+msgstr "Redare/Pauză"
 
-#: src/gtk/help-overlay.ui:43
+#: src/gtk/help-overlay.ui:49
 msgctxt "shortcut window"
 msgid "Play Next"
 msgstr "Redă următoarea"
 
-#: src/gtk/help-overlay.ui:49
+#: src/gtk/help-overlay.ui:55
 msgctxt "shortcut window"
 msgid "Play Previous"
-msgstr "Redă anterioara"
+msgstr "Redă precedenta"
 
-#: src/gtk/help-overlay.ui:57
+#: src/gtk/help-overlay.ui:63
 msgctxt "shortcut window"
 msgid "Playlist"
-msgstr "Listă de redare"
+msgstr "Lista de redare"
 
-#: src/gtk/help-overlay.ui:60
+#: src/gtk/help-overlay.ui:66
 msgctxt "shortcut window"
 msgid "Search"
 msgstr "Caută"
 
-#: src/gtk/help-overlay.ui:66
+#: src/gtk/help-overlay.ui:72
 msgctxt "shortcut window"
 msgid "Toggle Sort"
-msgstr "Comută sortarea"
+msgstr "Schimbă aranjarea"
 
-#: src/gtk/help-overlay.ui:72
+#: src/gtk/help-overlay.ui:78
 msgctxt "shortcut window"
 msgid "Reload Library"
 msgstr "Reîncarcă biblioteca"
 
-#: src/gtk/play-panel.ui:16 src/ui/store-panel.vala:340
+#: src/gtk/help-overlay.ui:84
+msgctxt "shortcut window"
+msgid "Save List"
+msgstr "Salvează lista"
+
+#: src/gtk/play-panel.ui:16 src/ui/music-list.vala:626
+#: src/ui/store-panel.vala:420
 msgid "Back"
 msgstr "Înapoi"
 
@@ -103,22 +224,22 @@ msgid "General"
 msgstr "Generale"
 
 #: src/gtk/preferences.ui:14
-msgid "Prefer dark theme"
-msgstr "Preferă tema întunecată"
-
-#: src/gtk/preferences.ui:26
 msgid "Background blur mode"
-msgstr "Mod de estompare a fundalului"
+msgstr "Estomparea fundalului"
+
+#: src/gtk/preferences.ui:20
+msgid "Compact playlist view"
+msgstr "Afișare compactă a listei de redare"
 
 #: src/gtk/preferences.ui:32
-msgid "Compact playlist view"
-msgstr "Vizualizare compactă a listei de redare"
+msgid "Grid view for artists/albums"
+msgstr "Afișare tip grilă pentru artiști/albume"
 
 #: src/gtk/preferences.ui:44
-msgid "Grid view for artists/albums"
-msgstr "Vizualizare grilă pentru artiști/albume"
+msgid "Single click to activate item"
+msgstr "Un clic pentru a activa elementul"
 
-#: src/gtk/preferences.ui:56 src/application.vala:435
+#: src/gtk/preferences.ui:56 src/application.vala:434
 msgid "Keep playing after window closed"
 msgstr "Continuă redarea după ce s-a închis fereastra"
 
@@ -132,11 +253,11 @@ msgstr "Încarcă muzică din dosar"
 
 #: src/gtk/preferences.ui:85
 msgid "Monitor local file changes"
-msgstr "Monitorizează modificările fișierelor locale"
+msgstr "Monitorizează schimbările fișierelor locale"
 
 #: src/gtk/preferences.ui:97
 msgid "Load thumbnails for non-local files"
-msgstr "Încarcă miniaturile pentru fișierele nelocale"
+msgstr "Descarcă miniaturi pentru fișierele de la distanță"
 
 #: src/gtk/preferences.ui:98
 msgid "May cause slowdowns and excess network usage"
@@ -148,7 +269,7 @@ msgstr "Redare"
 
 #: src/gtk/preferences.ui:115
 msgid "Show audio peak level"
-msgstr "Arată nivelul de vârf audio"
+msgstr "Arată nivelul maxim al sunetului"
 
 #: src/gtk/preferences.ui:119
 msgid "Display characters"
@@ -168,175 +289,296 @@ msgstr "Normalizează volumul cu ReplayGain"
 
 #: src/gtk/preferences.ui:164
 msgid "Prefer audio sink of GStreamer"
-msgstr "Preferă receptorul audio al GStreamer"
+msgstr "Preferă ieșirea audio GStreamer"
 
-#: src/gtk/store-panel.ui:22
+#: src/gtk/store-panel.ui:23
 msgid "Main Menu"
-msgstr "Meniu principal"
+msgstr "Opțiuni"
 
-#: src/gtk/store-panel.ui:28
-msgid "Sort By"
-msgstr "Sortează după"
-
-#: src/gtk/store-panel.ui:35
+#: src/gtk/store-panel.ui:30 src/ui/playlist-dialog.vala:36
 msgid "Search"
 msgstr "Caută"
 
+#: src/gtk/store-panel.ui:40
+msgid "Sort By"
+msgstr "Aranjare după"
+
+#: src/gtk/store-panel.ui:71
+msgid "_Color Scheme"
+msgstr "Aspe_ctul"
+
 #: src/gtk/store-panel.ui:73
+msgid "_System"
+msgstr "_Sistem"
+
+#: src/gtk/store-panel.ui:78
+msgid "_Light"
+msgstr "_Luminos"
+
+#: src/gtk/store-panel.ui:83
+msgid "_Dark"
+msgstr "Î_ntunecos"
+
+#: src/gtk/store-panel.ui:90
 msgid "_Reload Library"
 msgstr "_Reîncarcă biblioteca"
 
-#: src/gtk/store-panel.ui:79
+#: src/gtk/store-panel.ui:94
+msgid "_Multiple Select"
+msgstr "Selecție _multiplă"
+
+#: src/gtk/store-panel.ui:98
+msgid "_Save List"
+msgstr "_Salvează lista"
+
+#: src/gtk/store-panel.ui:104
 msgid "_Preferences"
 msgstr "_Preferințe"
 
-#: src/gtk/store-panel.ui:83
+#: src/gtk/store-panel.ui:108
 msgid "_Keyboard Shortcuts"
-msgstr "Scurtături de _tastatură"
+msgstr "Scur_tături"
 
-#: src/gtk/store-panel.ui:87
+#: src/gtk/store-panel.ui:112
 msgid "_About"
 msgstr "_Despre"
 
-#: src/gtk/store-panel.ui:96 src/ui/preferences.vala:67
+#: src/gtk/store-panel.ui:121 src/ui/preferences.vala:66
 msgid "Album"
 msgstr "Album"
 
-#: src/gtk/store-panel.ui:101
+#: src/gtk/store-panel.ui:126
 msgid "Artist"
 msgstr "Artist"
 
-#: src/gtk/store-panel.ui:106
+#: src/gtk/store-panel.ui:131
 msgid "Artist/Album"
-msgstr "Artist/album"
+msgstr "Artist/Album"
 
-#: src/gtk/store-panel.ui:111
+#: src/gtk/store-panel.ui:136
 msgid "Title"
 msgstr "Titlu"
 
-#: src/gtk/store-panel.ui:116
+#: src/gtk/store-panel.ui:141
 msgid "Recent"
 msgstr "Recente"
 
-#: src/gtk/store-panel.ui:121
+#: src/gtk/store-panel.ui:146
 msgid "Shuffle"
 msgstr "Amestecă"
 
-#: src/action-handles.vala:184
-msgid "A fast, fluent, light weight music player written in GTK4."
-msgstr "Un player de muzică rapid, fluent și ușor scris în GTK4."
+#: src/action-handles.vala:114
+msgid "Image Files"
+msgstr "Fișiere imagine"
 
-#. Translators: Replace "translator-credits" with your names, one name per line
-#: src/action-handles.vala:186
-msgid "translator-credits"
-msgstr "Florentina Mușat <florentina [dot] musat [dot] 28 [at] gmail [dot] com>, 2023"
+#: src/action-handles.vala:121
+msgid "Export cover successfully"
+msgstr "Copertă exportată cu succes"
 
-#: src/application.vala:626
+#: src/action-handles.vala:121
+msgid "Export cover failed"
+msgstr "Nu s-a putut exporta coperta"
+
+#: src/application.vala:346
+msgid "Save playlist failed"
+msgstr "Nu s-a putut salva lista de redare"
+
+#: src/application.vala:470
+msgid "Playlist Files"
+msgstr "Fișiere Listă de redare"
+
+#: src/application.vala:485
+msgid "Save playlist successfully"
+msgstr "Listă de redare salvată cu succes"
+
+#: src/application.vala:620
 msgid "Keep playing"
 msgstr "Continuă redarea"
 
-#. Translators: Play this music at next position of current playing music
-#: src/ui/music-widgets.vala:252 src/ui/music-widgets.vala:293
-#: src/ui/music-widgets.vala:303
-msgid "Play at Next"
-msgstr "Redă la următoarea"
+#. Translators: Replace "translator-credits" with your names, one name per line
+#: src/ui/dialogs.vala:52
+msgid "translator-credits"
+msgstr ""
+"Florentina Mușat <florentina [dot] musat [dot] 28 [at] gmail [dot] com>\n"
+"Antonio Marin <gnmer.6qxyg@slmail.me>"
 
-#: src/ui/music-widgets.vala:253 src/ui/music-widgets.vala:292
-#: src/ui/music-widgets.vala:302 src/ui/store-panel.vala:345
+#: src/ui/dialogs.vala:98 src/ui/dialogs.vala:110
+msgid "No"
+msgstr "Nu"
+
+#: src/ui/dialogs.vala:99 src/ui/dialogs.vala:110
+msgid "Yes"
+msgstr "Da"
+
+#: src/ui/music-list.vala:270
+msgid "Playlist is modified, save it?"
+msgstr "Se salvează lista de redare modificată?"
+
+#. Translators: Play this music at next position of current playing music
+#: src/ui/music-list.vala:399 src/ui/music-list.vala:415
+#: src/ui/music-widgets.vala:277 src/ui/music-widgets.vala:299
+msgid "Play at _Next"
+msgstr "Redă _următoarea"
+
+#: src/ui/music-list.vala:401 src/ui/music-list.vala:417
+#: src/ui/music-widgets.vala:278 src/ui/music-widgets.vala:300
+msgid "Add to _Queue"
+msgstr "Adaugă la _coadă"
+
+#: src/ui/music-list.vala:402 src/ui/music-widgets.vala:279
+#: src/ui/music-widgets.vala:301 src/ui/music-widgets.vala:320
+msgid "Add to _Playlist…"
+msgstr "Adaugă în _Lista de redare…"
+
+#: src/ui/music-list.vala:403 src/ui/music-list.vala:421
+msgid "_Remove"
+msgstr "_Elimină"
+
+#: src/ui/music-list.vala:422 src/ui/music-widgets.vala:286
+msgid "_Move to Trash"
+msgstr "_Mută în coșul de gunoi"
+
+#: src/ui/music-list.vala:630
+msgid "Select All"
+msgstr "Selecționează tot"
+
+#: src/ui/music-list.vala:647
+msgid "Play at Next"
+msgstr "Redă următoarea"
+
+#: src/ui/music-list.vala:654
+msgid "Add to Queue"
+msgstr "Adaugă la coadă"
+
+#: src/ui/music-list.vala:661 src/ui/playlist-dialog.vala:19
+msgid "Add to Playlist"
+msgstr "Adaugă în Lista de redare"
+
+#: src/ui/music-list.vala:668
+msgid "Remove"
+msgstr "Elimină"
+
+#: src/ui/music-widgets.vala:274 src/ui/music-widgets.vala:296
+#: src/ui/store-panel.vala:428
 msgid "Play"
 msgstr "Redare"
 
-#: src/ui/music-widgets.vala:256 src/ui/play-panel.vala:237
-msgid "Show _Cover File"
-msgstr "Arată fișierul de _copertă"
+#: src/ui/music-widgets.vala:275 src/ui/music-widgets.vala:297
+msgid "_Random Play"
+msgstr "_Redare aleatorie"
 
-#: src/ui/music-widgets.vala:258 src/ui/play-panel.vala:239
+#: src/ui/music-widgets.vala:285
+msgid "Show List _File"
+msgstr "Arată _fișierul listei"
+
+#: src/ui/music-widgets.vala:308 src/ui/play-panel.vala:63
+msgid "Search Title"
+msgstr "Caută titlul"
+
+#: src/ui/music-widgets.vala:309 src/ui/play-panel.vala:61
+msgid "Search Album"
+msgstr "Caută albumul"
+
+#: src/ui/music-widgets.vala:310 src/ui/play-panel.vala:62
+msgid "Search Artist"
+msgstr "Caută artistul"
+
+#: src/ui/music-widgets.vala:314
+msgid "Show Cover _File"
+msgstr "Arată _fișierul copertei"
+
+#: src/ui/music-widgets.vala:316
 msgid "_Export Cover"
 msgstr "_Exportă coperta"
 
-#: src/ui/music-widgets.vala:295
-msgid "Show List File"
-msgstr "Arată fișierul de listă"
+#: src/ui/music-widgets.vala:317
+msgid "Show _Tags…"
+msgstr "Arată e_tichetele…"
 
-#: src/ui/music-widgets.vala:309 src/ui/play-panel.vala:56
-msgid "Search Title"
-msgstr "Caută titlu"
-
-#: src/ui/music-widgets.vala:310 src/ui/play-panel.vala:54
-msgid "Search Album"
-msgstr "Caută album"
-
-#: src/ui/music-widgets.vala:311 src/ui/play-panel.vala:55
-msgid "Search Artist"
-msgstr "Caută artist"
-
-#: src/ui/music-widgets.vala:312
-msgid "_Show Music File"
-msgstr "_Arată fișierul de muzică"
+#: src/ui/music-widgets.vala:318
+msgid "Show Music _File"
+msgstr "Arată _fișierul cu muzică"
 
 #. Translators: single loop the current music
-#: src/ui/play-bar.vala:74
+#: src/ui/play-bar.vala:72
 msgid "Single Loop"
-msgstr "O singură buclă"
+msgstr "Repetă melodia"
 
-#: src/ui/play-bar.vala:84
+#: src/ui/play-bar.vala:82
 msgid "Play Previous"
-msgstr "Redă anterioara"
+msgstr "Redă precedenta"
 
 #. media-playback-pause-symbolic
-#: src/ui/play-bar.vala:90
+#: src/ui/play-bar.vala:88
 msgid "Play/Pause"
-msgstr "Redare/pauză"
+msgstr "Redare/Pauză"
 
-#: src/ui/play-bar.vala:97
+#: src/ui/play-bar.vala:95
 msgid "Play Next"
 msgstr "Redă următoarea"
 
-#: src/ui/play-panel.vala:280
+#: src/ui/play-panel.vala:56 src/ui/store-panel.vala:84
+msgid "Playing"
+msgstr "Redare"
+
+#: src/ui/play-panel.vala:266
 msgid ""
 "Drag and drop music files here,\n"
 "or change music location: "
 msgstr ""
-"Trageți și plasați fișiere de muzică aici,\n"
-"sau modificați locația muzicii: "
+"Trage și așează aici fișierele,\n"
+"sau schimbă locul muzicii: "
 
-#: src/ui/preferences.vala:46 src/ui/preferences.vala:67
+#: src/ui/playlist-dialog.vala:24
+msgid "New Playlist"
+msgstr "Listă de redare nouă"
+
+#: src/ui/playlist-dialog.vala:98 src/ui/store-panel.vala:712
+#, c-format
+msgid "No playlist found in %s"
+msgstr "Nicio listă de redare în %s"
+
+#: src/ui/preferences.vala:44 src/ui/preferences.vala:66
 msgid "Never"
 msgstr "Niciodată"
 
-#: src/ui/preferences.vala:46
+#: src/ui/preferences.vala:44
 msgid "Always"
-msgstr "Întotdeauna"
+msgstr "Mereu"
 
-#: src/ui/preferences.vala:46
+#: src/ui/preferences.vala:44
 msgid "Art Only"
-msgstr "Doar arta"
+msgstr "Doar coperta"
 
-#: src/ui/preferences.vala:67
+#: src/ui/preferences.vala:66
 msgid "Track"
-msgstr "Pistă"
+msgstr "Titlul"
 
-#: src/ui/store-panel.vala:74
-msgid "Playing"
-msgstr "Redare"
-
-#: src/ui/store-panel.vala:79
+#: src/ui/store-panel.vala:89
 msgid "Artists"
 msgstr "Artiști"
 
-#: src/ui/store-panel.vala:84
+#: src/ui/store-panel.vala:94
 msgid "Albums"
 msgstr "Albume"
 
-#: src/ui/store-panel.vala:374
+#: src/ui/store-panel.vala:99
 msgid "Playlists"
 msgstr "Liste de redare"
+
+#: src/ui/taglist-dialog.vala:125
+msgid "Copy"
+msgstr "Copiază"
 
 #. Translators: Current volume percent: 0~100%
 #: src/ui/volume-button.vala:33
 #, c-format
 msgid "Volume %d%%"
 msgstr "Volum %d%%"
+
+#: src/ui/window.vala:126
+msgid "Show"
+msgstr "Arată"
 
 #: src/utils/music.vala:2
 msgid "Unknown Album"
