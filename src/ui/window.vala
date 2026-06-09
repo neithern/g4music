@@ -15,7 +15,6 @@ namespace G4 {
         public Window (Application app) {
             Object (application: app);
 
-            this.application = app;
             this.icon_name = app.application_id;
             this.title = app.name;
             this.width_request = ContentWidth.MIN;
