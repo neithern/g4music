@@ -20,6 +20,7 @@ namespace G4 {
         private uint _sort_mode = SortMode.TITLE;
         private bool _store_external_changed = false;
         private Thumbnailer _thumbnailer = new Thumbnailer ();
+        private bool inited = false;
 
         public signal void index_changed (int index, uint size);
         public signal void music_changed (Music? music);
@@ -82,16 +83,20 @@ namespace G4 {
             base.activate ();
 
             var window = Window.get_default ();
-            if (window != null) {
-                ((!)window).present ();
-            } else {
+            if (window == null) {
+	            window = new Window (this);
+            }
+            ((!)window).present();
+
+            if (!inited) {
                 open ({}, "");
             }
         }
 
         public override void open (File[] files, string hint) {
             var window = Window.get_default ();
-            var initial = window == null;
+            var initial = !inited;
+            inited = true;
             (window ?? new Window (this))?.present ();
 
             if (initial && _current_music == null) {
