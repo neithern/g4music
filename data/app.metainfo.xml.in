@@ -65,6 +65,16 @@
     </screenshots>
 
     <releases>
+        <release version="4.6.1" date="2026-6-9">
+            <description translate="no">
+                <ul>
+                <li>Present window from activate.</li>
+                <li>Upgrade to GNOME 50.</li>
+                <li>Add translation: Serbian, Polish, Portuguese, Kazakh.</li>
+                <li>Update translation: Georgian, Romanian.</li>
+                </ul>
+            </description>
+        </release>
         <release version="4.6" date="2025-11-16">
             <description translate="no">
                 <ul>
