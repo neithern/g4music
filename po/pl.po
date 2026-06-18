@@ -2,15 +2,15 @@
 # Copyright (C) 2026 g4music's COPYRIGHT HOLDER
 # This file is distributed under the same license as the g4music package.
 # Mateusz Dadura <mateusz.dadura@int.pl>,  2024.
-# Victoria Niedzielska <royal.victoria@proton.me>, 2026.
+# Victoria Niedzielska <victorian@gnome.org>, 2026.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: g4music master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/neithern/g4music/issues\n"
-"POT-Creation-Date: 2025-07-31 20:10+0000\n"
-"PO-Revision-Date: 2026-03-23 19:58+0100\n"
-"Last-Translator: Victoria Niedzielska <royal.victoria@proton.me>\n"
+"POT-Creation-Date: 2026-06-09 13:38+0000\n"
+"PO-Revision-Date: 2026-06-18 00:09+0200\n"
+"Last-Translator: Victoria Niedzielska <victorian@gnome.org>\n"
 "Language-Team: Polish <https://l10n.gnome.org/teams/pl/>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +20,7 @@ msgstr ""
 "|| n%100>=20) ? 1 : 2);\n"
 "X-Generator: Gtranslator 50.0\n"
 
-#: data/app.desktop.in:2 data/app.metainfo.xml.in:4 src/application.vala:273
+#: data/app.desktop.in:2 data/app.metainfo.xml.in:4 src/application.vala:275
 #: src/main.vala:24
 msgid "Gapless"
 msgstr "Gapless"
@@ -37,7 +37,7 @@ msgstr "Eleganckie odtwarzanie muzyki"
 msgid "music;sound;player;media;audio;playlist;"
 msgstr ""
 "muzyka;dźwięk;odtwarzacz;media;audio;lista "
-"odtwarzania;multimedia;music;gapless;playlist;"
+"odtwarzania;multimedia;music;gapless;playlist;playlista;plejlista;"
 
 #: data/app.metainfo.xml.in:24
 msgid ""
@@ -80,8 +80,8 @@ msgstr ""
 msgid ""
 "Group and sorts by album/artist/title, shuffle list, full-text searching."
 msgstr ""
-"Grupowanie i sortowanie według albumu/osoby wykonującej/utworu, losowe listy "
-"i wyszukiwanie pełnotekstowe."
+"Grupowanie i sortowanie według albumu/wykonawcy/utworu, losowe listy i "
+"wyszukiwanie pełnotekstowe."
 
 #: data/app.metainfo.xml.in:31
 msgid ""
@@ -153,12 +153,12 @@ msgstr "Ogólne"
 #: src/gtk/help-overlay.ui:14
 msgctxt "shortcut window"
 msgid "Show Shortcuts"
-msgstr "Pokazanie skrótów klawiszowych"
+msgstr "Wyświetlanie skrótów klawiszowych"
 
 #: src/gtk/help-overlay.ui:20
 msgctxt "shortcut window"
 msgid "Preferences"
-msgstr "Ustawienia"
+msgstr "Preferencje"
 
 #: src/gtk/help-overlay.ui:26
 msgctxt "shortcut window"
@@ -234,13 +234,13 @@ msgstr "Kompaktowy widok playlisty"
 
 #: src/gtk/preferences.ui:32
 msgid "Grid view for artists/albums"
-msgstr "Widok siatki dla osób wykonujących/albumów"
+msgstr "Widok siatki dla wykonawców/albumów"
 
 #: src/gtk/preferences.ui:44
 msgid "Single click to activate item"
 msgstr "Otwieranie elementów po pojedynczym kliknięciu"
 
-#: src/gtk/preferences.ui:56 src/application.vala:434
+#: src/gtk/preferences.ui:56 src/application.vala:436
 msgid "Keep playing after window closed"
 msgstr "Kontynuowanie odtwarzania po zamknięciu okna"
 
@@ -270,7 +270,7 @@ msgstr "Odtwarzanie"
 
 #: src/gtk/preferences.ui:115
 msgid "Show audio peak level"
-msgstr "Pokazywanie szczytowego poziomu dźwięku"
+msgstr "Wyświetl szczytowy poziom dźwięku"
 
 #: src/gtk/preferences.ui:119
 msgid "Display characters"
@@ -290,7 +290,7 @@ msgstr "Normalizowanie głośności z ReplayGain"
 
 #: src/gtk/preferences.ui:164
 msgid "Prefer audio sink of GStreamer"
-msgstr "Preferowanie źródeł dźwięku od GStreamer"
+msgstr "Preferowane źródło dźwięku biblioteki GStreamer"
 
 #: src/gtk/store-panel.ui:23
 msgid "Main Menu"
@@ -298,7 +298,7 @@ msgstr "Menu główne"
 
 #: src/gtk/store-panel.ui:30 src/ui/playlist-dialog.vala:36
 msgid "Search"
-msgstr "Wyszukiwanie"
+msgstr "Wyszukaj"
 
 #: src/gtk/store-panel.ui:40
 msgid "Sort By"
@@ -342,7 +342,7 @@ msgstr "S_króty klawiszowe"
 
 #: src/gtk/store-panel.ui:112
 msgid "_About"
-msgstr "_O programie"
+msgstr "_O aplikacji"
 
 #: src/gtk/store-panel.ui:121 src/ui/preferences.vala:66
 msgid "Album"
@@ -350,11 +350,11 @@ msgstr "Album"
 
 #: src/gtk/store-panel.ui:126
 msgid "Artist"
-msgstr "Osoba wykonująca"
+msgstr "Wykonawca"
 
 #: src/gtk/store-panel.ui:131
 msgid "Artist/Album"
-msgstr "Osoba wykonująca/album"
+msgstr "Wykonawca/album"
 
 #: src/gtk/store-panel.ui:136
 msgid "Title"
@@ -380,19 +380,19 @@ msgstr "Pomyślnie eksportowano okładkę"
 msgid "Export cover failed"
 msgstr "eksportować okładki nie powiodło się"
 
-#: src/application.vala:346
+#: src/application.vala:348
 msgid "Save playlist failed"
 msgstr "Nie udało się zapisać playlisty"
 
-#: src/application.vala:470
+#: src/application.vala:472
 msgid "Playlist Files"
 msgstr "Pliki playlisty"
 
-#: src/application.vala:485
+#: src/application.vala:487
 msgid "Save playlist successfully"
 msgstr "Pomyślnie zapisano playlistę"
 
-#: src/application.vala:620
+#: src/application.vala:622
 msgid "Keep playing"
 msgstr "Kontynuuj odtwarzanie"
 
@@ -400,8 +400,8 @@ msgstr "Kontynuuj odtwarzanie"
 #: src/ui/dialogs.vala:52
 msgid "translator-credits"
 msgstr ""
-"Mateusz Dadura <mateusz.dadura@int.pl>\n"
-"Victoria Niedzielska <royal.victoria@proton.me>"
+"Mateusz Dadura <mateusz.dadura@int.pl>, 2024\n"
+"Victoria Niedzielska <victorian@gnome.org>, 2026"
 
 #: src/ui/dialogs.vala:98 src/ui/dialogs.vala:110
 msgid "No"
@@ -482,7 +482,7 @@ msgstr "Wyszukaj album"
 
 #: src/ui/music-widgets.vala:310 src/ui/play-panel.vala:62
 msgid "Search Artist"
-msgstr "Wyszukaj osobę wykonującą"
+msgstr "Wyszukaj wykonawcę"
 
 #: src/ui/music-widgets.vala:314
 msgid "Show Cover _File"
@@ -507,20 +507,20 @@ msgstr "Pojedyncze powtarzanie"
 
 #: src/ui/play-bar.vala:82
 msgid "Play Previous"
-msgstr "Odtwarza poprzednie"
+msgstr "Odtwórz poprzedni"
 
 #. media-playback-pause-symbolic
 #: src/ui/play-bar.vala:88
 msgid "Play/Pause"
-msgstr "Odtwarza/wstrzymuje"
+msgstr "Odtwórz/wstrzymaj"
 
 #: src/ui/play-bar.vala:95
 msgid "Play Next"
-msgstr "Odtwarza następne"
+msgstr "Odtwórz następny"
 
 #: src/ui/play-panel.vala:56 src/ui/store-panel.vala:84
 msgid "Playing"
-msgstr "Odtwarzanie"
+msgstr "Odtwarzane"
 
 #: src/ui/play-panel.vala:266
 msgid ""
@@ -557,7 +557,7 @@ msgstr "Utwór"
 
 #: src/ui/store-panel.vala:89
 msgid "Artists"
-msgstr "Osoby wykonujące"
+msgstr "Wykonawcy"
 
 #: src/ui/store-panel.vala:94
 msgid "Albums"
@@ -569,7 +569,7 @@ msgstr "Playlisty"
 
 #: src/ui/taglist-dialog.vala:125
 msgid "Copy"
-msgstr "Skopiowanie"
+msgstr "Skopiuj"
 
 #. Translators: Current volume percent: 0~100%
 #: src/ui/volume-button.vala:33
@@ -577,7 +577,7 @@ msgstr "Skopiowanie"
 msgid "Volume %d%%"
 msgstr "Głośność %d%%"
 
-#: src/ui/window.vala:126
+#: src/ui/window.vala:127
 msgid "Show"
 msgstr "Wyświetlanie"
 
@@ -587,4 +587,4 @@ msgstr "Nieznany album"
 
 #: src/utils/music.vala:3
 msgid "Unknown Artist"
-msgstr "Nieznana osoba wykonująca"
+msgstr "Nieznany wykonawca"
