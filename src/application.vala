@@ -366,7 +366,13 @@ namespace G4 {
             var changed = merge_items_to_store (_music_queue, playlist.items, ref position);
             list_modified |= changed;
             if (play_now) {
-                current_item = (int) position;
+                if (playlist.items.length > 0) {
+                    var first = playlist.items[0];
+                    var actual = find_item_in_model (_current_list, first, 0);
+                    current_item = actual != -1 ? actual : (int) position;
+                } else {
+                    current_item = (int) position;
+                }
                 _player.play ();
             } else if (changed) {
                 update_current_item ();
