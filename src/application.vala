@@ -575,13 +575,18 @@ namespace G4 {
 
         private void on_music_lost (GenericSet<Music> removed) {
             _store_external_changed = true;
-            if (removed.length > 0) {
-                var arr = new GenericArray<Music> (removed.length);
-                removed.foreach ((music) => arr.add (music));
-                remove_items_from_store (_music_queue, arr);
-            } else {
-                on_music_library_changed (0, 1, 1);
+            // Match by URI: the queue may hold a different Music instance than the cache.
+            var uris = new GenericSet<string> (str_hash, str_equal);
+            removed.foreach ((music) => uris.add (music.uri));
+            var arr = new GenericArray<Music> (removed.length);
+            var count = _music_queue.get_n_items ();
+            for (uint i = 0; i < count; i++) {
+                var music = (Music) _music_queue.get_item (i);
+                if (uris.contains (music.uri))
+                    arr.add (music);
             }
+            remove_items_from_store (_music_queue, arr);
+            on_music_library_changed (0, 1, 1);
         }
 
         private void on_player_end () {
