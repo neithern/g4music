@@ -57,7 +57,7 @@ namespace G4 {
             if (orientation == Gtk.Orientation.VERTICAL) {
                 // Ensure enough space for different text
                 var text = _label.label;
-                _label.label = "A中";
+                _label.label = "y人";
                 _label.measure (orientation, for_size, out minimum, out natural, out minimum_baseline, out natural_baseline);
                 _label.label = text;
             } else {
