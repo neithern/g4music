@@ -65,6 +65,14 @@
     </screenshots>
 
     <releases>
+        <release version="4.6.2" date="2026-6-27">
+            <description translate="no">
+                <ul>
+                <li>Try to fix clipping labels.</li>
+                <li>Update translation: Italian, Polish.</li>
+                </ul>
+            </description>
+        </release>
         <release version="4.6.1" date="2026-6-9">
             <description translate="no">
                 <ul>
