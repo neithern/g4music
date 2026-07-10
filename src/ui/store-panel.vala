@@ -667,8 +667,15 @@ namespace G4 {
             if (_app.current_list == _current_list.filter_model) {
                 _app.current_item = index;
             } else if (_current_list.playable) {
+                var clicked_music = _current_list.filter_model.get_item (index) as Music;
                 var playlist = _current_list.get_as_playlist ();
-                _app.current_item = _app.insert_after_current (playlist) + index;
+                var insert_pos = _app.insert_after_current (playlist);
+                if (clicked_music != null) {
+                    var actual_index = find_item_in_model (_app.current_list, clicked_music, 0);
+                    _app.current_item = actual_index != -1 ? actual_index : insert_pos + index;
+                } else {
+                    _app.current_item = insert_pos + index;
+                }
             }
             if (!_app.player.playing) {
                 _app.player.play ();
