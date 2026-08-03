@@ -97,5 +97,11 @@
     <key name="volume" type="d">
       <default>1</default>
     </key>
+    <key name="playback-speed" type="d">
+      <default>1</default>
+    </key>
+    <key name="pitch-correction" type="b">
+      <default>true</default>
+    </key>
   </schema>
 </schemalist>

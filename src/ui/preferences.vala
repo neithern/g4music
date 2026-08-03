@@ -26,6 +26,10 @@ namespace G4 {
         [GtkChild]
         unowned Gtk.Switch rotate_btn;
         [GtkChild]
+        unowned Gtk.Switch pitch_btn;
+        [GtkChild]
+        unowned Gtk.Scale speed_scale;
+        [GtkChild]
         unowned Gtk.Switch gapless_btn;
         [GtkChild]
         unowned Adw.ComboRow replaygain_row;
@@ -62,6 +66,9 @@ namespace G4 {
             settings.bind ("play-background", playbkgnd_btn, "active", SettingsBindFlags.DEFAULT);
 
             settings.bind ("rotate-cover", rotate_btn, "active", SettingsBindFlags.DEFAULT);
+
+            settings.bind ("playback-speed", speed_scale.adjustment, "value", SettingsBindFlags.DEFAULT);
+            settings.bind ("pitch-correction", pitch_btn, "active", SettingsBindFlags.DEFAULT);
 
             replaygain_row.model = new Gtk.StringList ({_("Never"), _("Track"), _("Album")});
             settings.bind ("replay-gain", replaygain_row, "selected", SettingsBindFlags.DEFAULT);

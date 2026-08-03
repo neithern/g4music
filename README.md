@@ -21,6 +21,7 @@ Gapless (AKA: G4Music) is a light weight music player written in GTK4, focuses o
 - Supports drag and drop with other apps.
 - Supports audio peaks visualizer.
 - Supports gapless playback.
+- Supports playback speed with pitch correction (requires `gst-plugins-bad`)
 - Supports normalizing volume with ReplayGain.
 - Supports specified audio sink.
 - Supports MPRIS control.
