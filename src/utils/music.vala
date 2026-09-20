@@ -1,6 +1,7 @@
 namespace G4 {
     public const string UNKNOWN_ALBUM = _("Unknown Album");
     public const string UNKNOWN_ARTIST = _("Unknown Artist");
+    public const string MPRIS_NO_TRACK = "/org/mpris/MediaPlayer2/TrackList/NoTrack";
 
     public class Music : Object {
         public string album = "";
@@ -14,6 +15,7 @@ namespace G4 {
         public bool has_cover = false;
         public int64 modified_time = 0;
         public string uri = "";
+        private string dbus_basepath = "/" + Config.APP_ID.replace(".", "/") + "/";
 
         //  for runtime
         public string? cover_uri = null;
@@ -38,6 +40,12 @@ namespace G4 {
             this.title = title;
             this.uri = uri;
             _title_key = title.collate_key_for_filename ();
+        }
+
+        public string trackid {
+            owned get {
+                return uri == "" ? MPRIS_NO_TRACK : dbus_basepath + str_hash (uri).to_string();
+            }
         }
 
         public unowned string album_key {

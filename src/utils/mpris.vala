@@ -19,6 +19,7 @@ namespace G4 {
             app.music_cover_parsed.connect (on_music_cover_parsed);
             app.player.state_changed.connect (on_state_changed);
             app.player.duration_changed.connect (on_duration_changed);
+            _metadata.insert ("mpris:trackid", new Variant.string (MPRIS_NO_TRACK));
         }
 
         public bool can_control {
@@ -153,6 +154,9 @@ namespace G4 {
                 _metadata.insert ("xesam:album", new Variant.string (music?.album ?? ""));
                 _metadata.insert ("xesam:url", new Variant.string (music?.uri ?? ""));
                 _metadata.insert ("mpris:length", new Variant.int64 (_current_duration));
+                _metadata.insert ("mpris:trackid", new Variant.string (music?.trackid ?? MPRIS_NO_TRACK));
+            } else {
+                _metadata.insert ("mpris:trackid", new Variant.string (MPRIS_NO_TRACK));
             }
         }
 
