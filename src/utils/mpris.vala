@@ -151,6 +151,7 @@ namespace G4 {
                 _metadata.insert ("xesam:artist", artists.end());
                 _metadata.insert ("xesam:title", new Variant.string (music?.title ?? ""));
                 _metadata.insert ("xesam:album", new Variant.string (music?.album ?? ""));
+                _metadata.insert ("xesam:url", new Variant.string (music?.uri ?? ""));
                 _metadata.insert ("mpris:length", new Variant.int64 (_current_duration));
             }
         }
