@@ -89,6 +89,24 @@ namespace G4 {
             }
         }
 
+        public double rate {
+            get {
+                return 1.0;
+            }
+        }
+
+        public double minimum_rate {
+            get {
+                return 1.0;
+            }
+        }
+
+        public double maximum_rate {
+            get {
+                return 1.0;
+            }
+        }
+
         public double volume {
             get {
                 return _app.player.volume;
