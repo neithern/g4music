@@ -122,6 +122,18 @@ namespace G4 {
             _app.player.position += offset * Gst.USECOND;
         }
 
+        public void set_position (ObjectPath trackid, int64 position) throws Error {
+            var current_trackid = _current_music?.trackid ?? "";
+            if (position > _current_duration
+                || position < 0
+                || strcmp (current_trackid, MPRIS_NO_TRACK) == 0
+                || strcmp (trackid, current_trackid) != 0
+            ) {
+                return;
+            }
+            _app.player.position = position * Gst.USECOND;
+        }
+
         private void on_duration_changed (Gst.ClockTime duration) {
             var ms = (int64) duration / Gst.USECOND;
             if (_current_duration != ms) {
