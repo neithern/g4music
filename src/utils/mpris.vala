@@ -102,6 +102,14 @@ namespace G4 {
             _app.play_next ();
         }
 
+        public void open_uri (string uri) throws Error {
+            File[] files = new File[1];
+            files[0] = File.new_for_uri (uri);
+            _app.open_files_async.begin (files, -1, true, (obj, res) => {
+                var ret = _app.open_files_async.end (res);
+            });
+        }
+
         public void previous () throws Error {
             _app.play_previous ();
         }
