@@ -158,6 +158,7 @@ namespace G4 {
             builder.add ("{sv}", "CanGoPrevious", new Variant.boolean (index > 0));
             builder.add ("{sv}", "CanPlay", new Variant.boolean (_app.current_music != null));
             builder.add ("{sv}", "CanPause", new Variant.boolean (_app.current_music != null));
+            builder.add ("{sv}", "CanSeek", new Variant.boolean (_app.current_music != null));
             send_properties (builder);
         }
 
