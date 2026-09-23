@@ -182,8 +182,12 @@ namespace G4 {
 
         private void on_music_changed (Music? music) {
             _cover_parsed = false;
+            if (_current_music != null) {
+                // If there is no previous music, _current_duration is either 0,
+                // or already sent via duration_changed signal, so don't reset it.
+                _current_duration = 0;
+            }
             _current_music = music;
-            _current_duration = 0;
             _metadata.remove_all ();
             if (music != null) {
                 var artists = new VariantBuilder (new VariantType ("as"));
