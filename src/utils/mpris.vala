@@ -19,6 +19,7 @@ namespace G4 {
             app.music_cover_parsed.connect (on_music_cover_parsed);
             app.player.state_changed.connect (on_state_changed);
             app.player.duration_changed.connect (on_duration_changed);
+            _metadata.insert ("mpris:trackid", new Variant.string (MPRIS_NO_TRACK));
         }
 
         public bool can_control {
@@ -88,6 +89,24 @@ namespace G4 {
             }
         }
 
+        public double rate {
+            get {
+                return 1.0;
+            }
+        }
+
+        public double minimum_rate {
+            get {
+                return 1.0;
+            }
+        }
+
+        public double maximum_rate {
+            get {
+                return 1.0;
+            }
+        }
+
         public double volume {
             get {
                 return _app.player.volume;
@@ -99,6 +118,14 @@ namespace G4 {
 
         public void next () throws Error {
             _app.play_next ();
+        }
+
+        public void open_uri (string uri) throws Error {
+            File[] files = new File[1];
+            files[0] = File.new_for_uri (uri);
+            _app.open_files_async.begin (files, -1, true, (obj, res) => {
+                var ret = _app.open_files_async.end (res);
+            });
         }
 
         public void previous () throws Error {
@@ -121,6 +148,18 @@ namespace G4 {
             _app.player.position += offset * Gst.USECOND;
         }
 
+        public void set_position (ObjectPath trackid, int64 position) throws Error {
+            var current_trackid = _current_music?.trackid ?? "";
+            if (position > _current_duration
+                || position < 0
+                || strcmp (current_trackid, MPRIS_NO_TRACK) == 0
+                || strcmp (trackid, current_trackid) != 0
+            ) {
+                return;
+            }
+            _app.player.position = position * Gst.USECOND;
+        }
+
         private void on_duration_changed (Gst.ClockTime duration) {
             var ms = (int64) duration / Gst.USECOND;
             if (_current_duration != ms) {
@@ -137,13 +176,18 @@ namespace G4 {
             builder.add ("{sv}", "CanGoPrevious", new Variant.boolean (index > 0));
             builder.add ("{sv}", "CanPlay", new Variant.boolean (_app.current_music != null));
             builder.add ("{sv}", "CanPause", new Variant.boolean (_app.current_music != null));
+            builder.add ("{sv}", "CanSeek", new Variant.boolean (_app.current_music != null));
             send_properties (builder);
         }
 
         private void on_music_changed (Music? music) {
             _cover_parsed = false;
+            if (_current_music != null) {
+                // If there is no previous music, _current_duration is either 0,
+                // or already sent via duration_changed signal, so don't reset it.
+                _current_duration = 0;
+            }
             _current_music = music;
-            _current_duration = 0;
             _metadata.remove_all ();
             if (music != null) {
                 var artists = new VariantBuilder (new VariantType ("as"));
@@ -151,7 +195,11 @@ namespace G4 {
                 _metadata.insert ("xesam:artist", artists.end());
                 _metadata.insert ("xesam:title", new Variant.string (music?.title ?? ""));
                 _metadata.insert ("xesam:album", new Variant.string (music?.album ?? ""));
+                _metadata.insert ("xesam:url", new Variant.string (music?.uri ?? ""));
                 _metadata.insert ("mpris:length", new Variant.int64 (_current_duration));
+                _metadata.insert ("mpris:trackid", new Variant.string (music?.trackid ?? MPRIS_NO_TRACK));
+            } else {
+                _metadata.insert ("mpris:trackid", new Variant.string (MPRIS_NO_TRACK));
             }
         }
 
