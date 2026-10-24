@@ -6,6 +6,7 @@ namespace G4 {
         private Gtk.Label _positive = new Gtk.Label ("0:00");
         private Gtk.Label _negative = new Gtk.Label ("0:00");
         private Gtk.ToggleButton _repeat = new Gtk.ToggleButton ();
+        private Gtk.ToggleButton _shuffle = new Gtk.ToggleButton ();
         private Gtk.Button _prev = new Gtk.Button ();
         private Gtk.Button _play = new Gtk.Button ();
         private Gtk.Button _next = new Gtk.Button ();
@@ -60,6 +61,7 @@ namespace G4 {
             buttons.halign = Gtk.Align.CENTER;
             buttons.margin_top = 16;
             buttons.append (_repeat);
+            buttons.append (_shuffle);
             buttons.append (_prev);
             buttons.append (_play);
             buttons.append (_next);
@@ -68,12 +70,48 @@ namespace G4 {
 
             _repeat.icon_name = "media-playlist-repeat-symbolic";
             _repeat.valign = Gtk.Align.CENTER;
+
             /* Translators: single loop the current music */
             _repeat.tooltip_text = _("Single Loop");
             _repeat.add_css_class ("flat");
             _repeat.toggled.connect (() => {
                 _repeat.icon_name = _repeat.active ? "media-playlist-repeat-song-symbolic" : "media-playlist-repeat-symbolic";
                 app.single_loop = ! app.single_loop;
+            });
+
+            _shuffle.icon_name = "media-playlist-shuffle-symbolic";
+            _shuffle.valign = Gtk.Align.CENTER;
+            _shuffle.add_css_class ("flat");
+            _shuffle.active = app.sort_mode == SortMode.SHUFFLE;
+
+            void update_shuffle_state () {
+                if (_shuffle.active) {
+                    _shuffle.tooltip_text = _("Shuffle: On");
+                    _shuffle.remove_css_class ("dim-label");
+                    _shuffle.add_css_class ("accent");
+                } else {
+                    _shuffle.tooltip_text = _("Shuffle: Off");
+                    _shuffle.remove_css_class ("accent");
+                    _shuffle.add_css_class ("dim-label");
+                }
+            }
+            update_shuffle_state ();
+
+            _shuffle.toggled.connect (() => {
+                update_shuffle_state ();
+                if (_shuffle.active && app.sort_mode != SortMode.SHUFFLE) {
+                    app.sort_mode = SortMode.SHUFFLE;
+                } else if (!_shuffle.active && app.sort_mode == SortMode.SHUFFLE) {
+                    app.sort_mode = SortMode.TITLE;
+                }
+            });
+
+            app.notify["sort-mode"].connect (() => {
+                var is_shuffle = app.sort_mode == SortMode.SHUFFLE;
+                if (_shuffle.active != is_shuffle) {
+                    _shuffle.active = is_shuffle;
+                    update_shuffle_state ();
+                }
             });
 
             _prev.valign = Gtk.Align.CENTER;

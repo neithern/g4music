@@ -6,5 +6,10 @@
     <file>gtk/play-panel.ui</file>
     <file>gtk/preferences.ui</file>
     <file>gtk/store-panel.ui</file>
+    <file alias="icons/symbolic/status/media-playlist-shuffle-symbolic.svg">icons/media-playlist-shuffle-symbolic.svg</file>
+    <file alias="icons/symbolic/status/media-playlist-repeat-symbolic.svg">icons/media-playlist-repeat-symbolic.svg</file>
+    <file alias="icons/symbolic/status/media-playlist-repeat-song-symbolic.svg">icons/media-playlist-repeat-song-symbolic.svg</file>
+    <file alias="icons/symbolic/actions/media-skip-backward-symbolic.svg">icons/media-skip-backward-symbolic.svg</file>
+    <file alias="icons/symbolic/actions/media-skip-forward-symbolic.svg">icons/media-skip-forward-symbolic.svg</file>
   </gresource>
 </gresources>

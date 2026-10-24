@@ -36,6 +36,19 @@ namespace G4 {
         public override void startup () {
             base.startup ();
 
+            var display = Gdk.Display.get_default ();
+            if (display != null) {
+                var theme = Gtk.IconTheme.get_for_display ((!)display);
+                theme.add_resource_path ("/com/github/neithern/g4music/icons");
+            }
+            var gtk_settings = Gtk.Settings.get_default ();
+            if (gtk_settings != null && display != null) {
+                var theme = Gtk.IconTheme.get_for_display ((!)display);
+                if (!theme.has_icon ("media-skip-backward-symbolic") || !theme.has_icon ("media-playlist-shuffle-symbolic")) {
+                    ((!)gtk_settings).gtk_icon_theme_name = "Adwaita";
+                }
+            }
+
             //  Must load tag cache after the app register (GLib init), to make sort works
             _loader.load_tag_cache ();
 
