@@ -262,9 +262,9 @@ namespace G4 {
     }
 
     public class MusicLibrary : Object {
-        private HashTable<unowned string, Album> _albums = new HashTable<unowned string, Album> (str_hash, str_equal);        
-        private HashTable<unowned string, Artist> _artists = new HashTable<unowned string, Artist> (str_hash, str_equal);        
-        private HashTable<unowned string, Playlist> _playlists = new HashTable<unowned string, Playlist> (str_hash, str_equal);        
+        private HashTable<string, Album> _albums = new HashTable<string, Album> (str_hash, str_equal);        
+        private HashTable<string, Artist> _artists = new HashTable<string, Artist> (str_hash, str_equal);        
+        private HashTable<string, Playlist> _playlists = new HashTable<string, Playlist> (str_hash, str_equal);        
 
         public bool empty {
             get {
@@ -303,16 +303,44 @@ namespace G4 {
             }
             var added = album.add_music (music);
 
-            unowned var artist_name = music.artist_name;
-            Artist artist;
-            lock (_artists) {
-                if (!_artists.lookup_extended (artist_name, out key, out artist)) {
-                    artist = new Artist (music, artist_name);
-                    _artists[artist_name] = artist;
+            var artist_names = split_artists (music.artist_name);
+            bool added_artists = false;
+            foreach (var artist_name in artist_names) {
+                string trimmed = artist_name.strip ();
+                if (trimmed.length == 0) continue;
+                unowned string art_key = trimmed;
+                Artist artist;
+                lock (_artists) {
+                    if (!_artists.lookup_extended (trimmed, out art_key, out artist)) {
+                        artist = new Artist (music, trimmed);
+                        _artists[trimmed] = artist;
+                    }
                 }
+                added_artists |= artist.add_music (music);
             }
-            added |= artist.add_music (music);
+            added |= added_artists;
             return added;
+        }
+
+        private string[] split_artists (string name) {
+            var separators = new string[] { " / ", " feat. ", " feat ", " ft. ", " ft ", " ; ", "; " };
+            var parts = new GenericArray<string> (8);
+            parts.add (name);
+            foreach (var sep in separators) {
+                var new_parts = new GenericArray<string> (8);
+                foreach (var part in parts) {
+                    var split = part.split (sep);
+                    for (int i = 0; i < split.length; i++) {
+                        new_parts.add (split[i]);
+                    }
+                }
+                parts = new_parts;
+            }
+            var result = new string[parts.length];
+            for (uint i = 0; i < parts.length; i++) {
+                result[i] = parts[i];
+            }
+            return result;
         }
 
         public Playlist add_playlist (Playlist playlist) {
