@@ -207,7 +207,7 @@ namespace G4 {
 
     public string build_library_uri (Artist? artist, Album? album) {
         var album_key = album?.album_key ?? "";
-        var arr = (artist != null) ? new string[] { PageName.ARTIST, ((!)artist).artist_name, album_key }
+        var arr = (artist != null) ? new string[] { PageName.ARTIST, ((!)artist).artist, album_key }
                     : (album is Playlist) ? new string[] { PageName.PLAYLIST, album_key }
                         : (album != null) ? new string[] { PageName.ALBUM, album_key }
                             : new string[] { PageName.PLAYING };

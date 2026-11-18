@@ -437,7 +437,7 @@ namespace G4 {
 
             if (stack.animate_transitions && stack.visible_child == _current_list)
                 _overlayed_lists.add (_current_list);
-            stack.add (mlist, album_mode ? album?.album_key : artist?.artist_name);
+            stack.add (mlist, album_mode ? album?.album_key : artist?.artist);
         }
 
         private Stack? get_current_stack () {
