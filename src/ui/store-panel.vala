@@ -569,8 +569,7 @@ namespace G4 {
             if (_current_list.playable) {
                 _current_list.current_node = music;
             } else if (_current_list.item_type == typeof (Artist)) {
-                var artist_name = music?.artist_name ?? "";
-                _current_list.current_node = _library.get_artist (artist_name);
+                _current_list.current_node = music != null ? _library.find_artist_of ((!)music) : (Artist?) null;
             } else if (_current_list.item_type == typeof (Album)) {
                 var album = music?.album_key ?? "";
                 var artist = _current_list.music_node as Artist;
