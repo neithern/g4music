@@ -262,9 +262,9 @@ namespace G4 {
     }
 
     public class MusicLibrary : Object {
-        private HashTable<unowned string, Album> _albums = new HashTable<unowned string, Album> (str_hash, str_equal);        
-        private HashTable<unowned string, Artist> _artists = new HashTable<unowned string, Artist> (str_hash, str_equal);        
-        private HashTable<unowned string, Playlist> _playlists = new HashTable<unowned string, Playlist> (str_hash, str_equal);        
+        private HashTable<string, Album> _albums = new HashTable<string, Album> (str_hash, str_equal);        
+        private HashTable<string, Artist> _artists = new HashTable<string, Artist> (str_hash, str_equal);        
+        private HashTable<string, Playlist> _playlists = new HashTable<string, Playlist> (str_hash, str_equal);        
 
         public bool empty {
             get {
@@ -303,16 +303,52 @@ namespace G4 {
             }
             var added = album.add_music (music);
 
-            unowned var artist_name = music.artist_name;
-            Artist artist;
-            lock (_artists) {
-                if (!_artists.lookup_extended (artist_name, out key, out artist)) {
-                    artist = new Artist (music, artist_name);
-                    _artists[artist_name] = artist;
+            var artist_names = get_artist_names (music);
+            bool added_artists = false;
+            foreach (unowned var artist_name in artist_names) {
+                unowned string art_key;
+                Artist artist;
+                lock (_artists) {
+                    if (!_artists.lookup_extended (artist_name, out art_key, out artist)) {
+                        artist = new Artist (music, artist_name);
+                        _artists[artist_name] = artist;
+                    }
                 }
+                added_artists |= artist.add_music (music);
             }
-            added |= artist.add_music (music);
+            added |= added_artists;
             return added;
+        }
+
+        private const string[] ARTIST_SEPARATORS = { " / ", ";", " feat. ", " feat ", " ft. ", " ft " };
+
+        //  Names of every Artist group a music belongs to: the split ALBUMARTIST
+        //  tag first, then the split ARTIST tag, trimmed and without duplicates.
+        public static string[] get_artist_names (Music music) {
+            var names = new GenericArray<string> (4);
+            if (music.album_artist.length > 0)
+                append_split_artists (music.album_artist, names);
+            if (music.album_artist.length == 0 || music.artist != UNKNOWN_ARTIST)
+                append_split_artists (music.artist, names);
+            return names.steal ();
+        }
+
+        private static void append_split_artists (string name, GenericArray<string> names) {
+            var parts = new GenericArray<string> (4);
+            parts.add (name);
+            foreach (unowned var sep in ARTIST_SEPARATORS) {
+                var split_parts = new GenericArray<string> (4);
+                foreach (unowned var part in parts) {
+                    foreach (unowned var piece in part.split (sep))
+                        split_parts.add (piece);
+                }
+                parts = split_parts;
+            }
+            foreach (unowned var part in parts) {
+                var trimmed = part.strip ();
+                if (trimmed.length > 0 && !names.find_with_equal_func (trimmed, str_equal))
+                    names.add (trimmed);
+            }
         }
 
         public Playlist add_playlist (Playlist playlist) {
@@ -340,6 +376,17 @@ namespace G4 {
             lock (_artists) {
                 return _artists[key];
             }
+        }
+
+        //  The first Artist group that contains the music, if any.
+        public Artist? find_artist_of (Music music) {
+            var artist_names = get_artist_names (music);
+            foreach (unowned var artist_name in artist_names) {
+                var artist = get_artist (artist_name);
+                if (artist != null)
+                    return artist;
+            }
+            return null;
         }
 
         public Playlist? get_playlist (string key) {
@@ -388,14 +435,20 @@ namespace G4 {
                 }
             }
 
-            unowned var artist_name = music.artist_name;
+            var artist_names = get_artist_names (music);
             lock (_artists) {
-                var artist = _artists[artist_name];
-                if (artist is Artist) {
-                    artist.remove_music (music);
-                    if (artist.length == 0)
-                        _artists.remove (artist_name);
-                } else {
+                var all_found = true;
+                foreach (unowned var artist_name in artist_names) {
+                    var artist = _artists[artist_name];
+                    if (artist is Artist) {
+                        artist.remove_music (music);
+                        if (artist.length == 0)
+                            _artists.remove (artist_name);
+                    } else {
+                        all_found = false;
+                    }
+                }
+                if (!all_found) {
                     _artists.foreach_remove ((name, artist) => artist.remove_music (music) && artist.length == 0);
                 }
             }
